@@ -23,37 +23,41 @@ export default function useMaterialCs() {
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const materialCs = ref({
-        ref_no: '',
-        effective_date: '',
-        expire_date: '',
-        priority: '',
-        scmWarehouse: '',
-        scm_warehouse_id: '',
-        scm_warehouse_name: '',
-        acc_cost_center_id: '',
-        scmPr: '',
-        scm_pr_id: '',
-        pr_no: '',
-        special_instructions: '',
-        purchase_center: '',
-        business_unit: '',
-        required_days: '',
+        ref_no: null,
+        effective_date: null,
+        expire_date: null,
+        priority: null,
+        scmWarehouse: null,
+        scm_warehouse_id: null,
+        scm_warehouse_name: null,
+        acc_cost_center_id: null,
+        scmPr: null,
+        scm_pr_id: null,
+        pr_no: null,
+        special_instructions: null,
+        purchase_center: null,
+        business_unit: null,
+        required_days: null,
         scmCsMaterials: [
             {
-                scm_material_id: '',
-                scmMaterial: '',
-                unit : '',
-                quantity : '',
+                scmPr: null,
+                scm_pr_id: null,
+                scm_material_id: null,
+                scmMaterial: null,
+                unit : null,
+                quantity : null,
             }
         ]
     });
 
     const materialObj = {
-        scm_material_id: '',
-        scmMaterial: '',
-        unit: '',
-        quantity: '',
+        scm_material_id: null,
+        scmMaterial: null,
+        unit: null,
+        quantity: null,
     }
+
+    const materialList = ref([]);
 
 
     const errors = ref('');
@@ -241,6 +245,7 @@ export default function useMaterialCs() {
                 },
             });
             prMaterialList.value = data.value;
+            return data.value;
         } catch (error) {
             console.log('tag', error)
         } finally {
@@ -264,6 +269,7 @@ export default function useMaterialCs() {
         quotations,
         materialObj,
         prMaterialList,
+        materialList,
         getPrWiseMaterialList,
         // getSiWiseData,
         isTableLoading,

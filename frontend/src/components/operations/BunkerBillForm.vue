@@ -77,7 +77,7 @@
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700">Exchange Rate (To USD) </span>
-            <input type="text" v-model="form.opsBunkerBillLines[index].exchange_rate_usd" @input="calculatePrAmounts(index)" placeholder="Exchange Rate (To USD)" class="form-input" :readonly="isUSDCurrency(index)" />
+            <input type="text" v-model.number="form.opsBunkerBillLines[index].exchange_rate_usd" @input="calculatePrAmounts(index)" placeholder="Exchange Rate (To USD)" class="form-input" :readonly="isUSDCurrency(index)" />
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700">Exchange Rate (USD to BDT) </span>

@@ -281,20 +281,20 @@ class ScmPoController extends Controller
     public function getMaterialByPrId(): JsonResponse
     {
         $prMaterials = ScmPrLine::query()
-            ->with('scmMaterial', 'scmPoLines')
+            ->with('scmMaterial')
             ->where('scm_pr_id', request()->pr_id)
             ->get()
             ->map(function ($item) {
                 $data = $item->scmMaterial;
                 $data['brand'] = $item->brand;
                 $data['model'] = $item->model;
-                if (request()->po_id) {
-                    $data['po_quantity'] = $item->scmPoLines->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
-                } else {
-                    $data['po_quantity'] = 0;
-                }
-                $data['max_quantity'] = $item->quantity - $item->scmPoLines->sum('quantity') + $data['po_quantity'];
-                $data['po_quantity'] = $data['po_quantity'] ?? 0;
+                // if (request()->po_id) {
+                //     $data['po_quantity'] = $item->scmPoLines->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
+                // } else {
+                //     $data['po_quantity'] = 0;
+                // }
+                $data['max_quantity'] = 1000;
+                $data['po_quantity'] = $item->quantity;
                 return $data;
             });
         return response()->success('data list', $prMaterials, 200);

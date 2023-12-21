@@ -53,6 +53,7 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('search-warehouse', [ScmWarehouseController::class, "searchWarehouse"])->name('searchWarehouse');
     Route::get('search-vendor', [ScmVendorController::class, "searchVendor"])->name('searchVendor');
     Route::get('search-pr-wise-material', [ScmPoController::class, "getMaterialByPrId"])->name('getMaterialByPrId');
+    Route::get('search-pr-wise-material-for-cs', [ScmPoController::class, "getMaterialByPrIdForCs"])->name('getMaterialByPrIdForCs');
     Route::get('search-sr-wise-material', [ScmSrController::class, "getMaterialBySrId"])->name('getMaterialBySrId');
     Route::get('get-si-wise-materials', [ScmSiController::class, "getMaterialBySiId"])->name('getMaterialBySiId');
     Route::get('get-mmr-wise-materials', [ScmMmrController::class, "getMaterialByMmrId"])->name('getMaterialByMmrId');

@@ -10,7 +10,7 @@ import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 
 const icons = useHeroIcon();
 
-const { getMaterialCs, materialCs, storeMaterialCs,materialObject, errors, isLoading,getPrWiseCs,materialObj} = useMaterialCs();
+const { getMaterialCs, materialCs, storeMaterialCs,materialObject, errors, isLoading,getPrWiseCs,materialObj,materialList} = useMaterialCs();
 const page = ref('create');
 const { setTitle } = Title();
 
@@ -21,9 +21,9 @@ const props = defineProps({
   },
 });
 
-onMounted(() => {
-    getPrWiseCs(props.pr_id);
-}); 
+// onMounted(() => {
+//     getPrWiseCs(props.pr_id);
+// }); 
 
 setTitle('Create Material CS');
 </script>
@@ -35,7 +35,7 @@ setTitle('Create Material CS');
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
         <form @submit.prevent="storeMaterialCs(materialCs)">
-          <material-cs-form v-model:form="materialCs" :errors="errors" :page="page" :materialObj="materialObj"></material-cs-form>
+          <material-cs-form v-model:form="materialCs" :errors="errors" :page="page" :materialObj="materialObj" :materialList="materialList"></material-cs-form>
             <!-- Submit button -->
             <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
         </form>

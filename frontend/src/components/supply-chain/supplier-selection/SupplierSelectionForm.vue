@@ -45,6 +45,9 @@
   <thead class="bg-gray-50 dark-disabled:bg-gray-800">
     <tr class="text-gray-600 dark-disabled:text-gray-400 text-sm leading-normal">
       <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
+        PR No
+      </th>
+      <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
         Material Name
       </th>
       <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
@@ -69,24 +72,28 @@
     </tr>
   </thead>
   <tbody>
-    <tr v-for="(materialData,index) in (formData?.scmCsMaterial)" :key="index">
-      <td>{{ materialData[0].scmMaterial.name }}</td>
-      <td>{{ materialData[0].unit }}</td>
-      <td>{{ materialData[0].quantity }}</td>
-      <td></td>
-      <template v-for="(materialVendorData,index1) in (formData?.scmCsMaterialVendor[index])" :key="index1">
-          <td>{{ materialVendorData[0].negotiated_price }}</td>
-          <td>{{ materialVendorData[0].negotiated_price * materialData[0].quantity}}</td>
-      </template>
-      <td v-if="form.purchase_center == 'Foreign'">
-        <a @click="showModal(index)" style="display: inline-block;cursor: pointer" class="relative tooltip">
-                  <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-                  </svg>
-                  <span class="tooltiptext">Details</span>
-                </a>
-      </td>
-    </tr>
+    <template v-for="(materialprData,index1) in (formData?.scmCsMaterial)" :key="index1">
+      <tr v-for="(materialData,index) in (materialprData)" :key="index">
+        <td>{{ materialData[0].scmPr.ref_no }}</td>
+        <td>{{ materialData[0].scmMaterial.name }}</td>
+        <td>{{ materialData[0].unit }}</td>
+        <td>{{ materialData[0].quantity }}</td>
+        <td></td>
+        <template v-for="(materialVendorData,index11) in (formData?.scmCsMaterialVendor[index1][index])" :key="index11">
+            <td>{{ materialVendorData[0].negotiated_price }}</td>
+            <td>{{ materialVendorData[0].negotiated_price * materialData[0].quantity}}</td>
+         </template>
+        <td v-if="form.purchase_center == 'Foreign'">
+          <a @click="showModal(index)" style="display: inline-block;cursor: pointer" class="relative tooltip">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                    </svg>
+                    <span class="tooltiptext">Details</span>
+                  </a>
+        </td>
+      </tr>
+    </template>
+    
   </tbody>
   </table>  
   <h2 class="py-10">Other Consditions</h2>

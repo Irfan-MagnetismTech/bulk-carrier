@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('scm_cs_id')->constrained('scm_cs')->onDelete('cascade');
             $table->bigInteger('scm_material_id');
+            $table->bigInteger('scm_pr_id');
             $table->string('unit');
             $table->bigInteger('quantity');
             $table->timestamps();

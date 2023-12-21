@@ -33,7 +33,7 @@ class ScmCsController extends Controller
     public function index()
     {
         try {
-           
+
             $scmCs = ScmCs::query()
                 ->with('scmPr', 'scmWarehouse')
                 ->globalSearch(request()->all());
@@ -60,6 +60,7 @@ class ScmCsController extends Controller
             foreach ($request->scmCsMaterials as $key => $value) {
                 ScmCsMaterial::create([
                     'scm_cs_id' => $scmMi->id,
+                    'scm_pr_id' => $value['scm_pr_id'],
                     'scm_material_id' => $value['scm_material_id'],
                     'unit' => $value['unit'],
                     'quantity' => $value['quantity'],
@@ -85,7 +86,7 @@ class ScmCsController extends Controller
     {
         $materialCs = ScmCs::find($id);
         // $materialCs->load('scmPr', 'scmWarehouse');
-        $materialCs->load('scmCsMaterials.scmMaterial','scmPr', 'scmWarehouse');
+        $materialCs->load('scmCsMaterials.scmMaterial','scmPr','scmCsMaterials.scmPr', 'scmWarehouse');
         try {
             return response()->success('Detail data', $materialCs, 200);
         } catch (\Exception $e) {
@@ -204,6 +205,7 @@ class ScmCsController extends Controller
                     'scm_cs_vendor_id' => $scmCsVendor->id,
                     'scm_vendor_id' => $scmCsVendor->scm_vendor_id,
                     'scm_cs_material_id' => $csMaterial->id,
+                    'scm_pr_id' => $request->scmCsMaterialVendors[$key]['scm_pr_id'] ?? null,
                     'scm_material_id' => $request->scmCsMaterialVendors[$key]['scm_material_id'] ?? null,
                     'brand' => $request->scmCsMaterialVendors[$key]['brand'] ?? null,
                     'unit' => $request->scmCsMaterialVendors[$key]['unit'] ?? null,
@@ -227,7 +229,7 @@ class ScmCsController extends Controller
 
     public function showQuotation($id)
     {
-        $scmCsVendor = ScmCsVendor::with('scmCs', 'scmVendor.scmVendorContactPerson', 'scmCsMaterialVendors.scmMaterial')->find($id);
+        $scmCsVendor = ScmCsVendor::with('scmCs', 'scmVendor.scmVendorContactPerson', 'scmCsMaterialVendors.scmMaterial','scmCsMaterialVendors.scmPr')->find($id);
         try {
             return response()->success('Detail data', $scmCsVendor, 200);
         } catch (\Exception $e) {
@@ -235,7 +237,7 @@ class ScmCsController extends Controller
         }
     }
 
-    // update quotation 
+    // update quotation
     public function updateQuotation(ScmQuotationRequest $request, $id)
     {
         try {
@@ -273,7 +275,7 @@ class ScmCsController extends Controller
             $scmCsVendor->scmCsMaterialVendors->each(function ($item) {
                 $item->delete();
             });
-           
+
             foreach ($request->scmCsMaterialVendors as $key => $value) {
                 $csMaterial = ScmCsMaterial::where([
                     'scm_cs_id' => $scmCsVendor->scm_cs_id,
@@ -286,6 +288,7 @@ class ScmCsController extends Controller
                     'scm_vendor_id' => $scmCsVendor->scm_vendor_id,
                     'scm_cs_material_id' => $csMaterial->id,
                     'scm_material_id' => $request->scmCsMaterialVendors[$key]['scm_material_id'] ?? null,
+                    'scm_pr_id' => $request->scmCsMaterialVendors[$key]['scm_pr_id'] ?? null,
                     'brand' => $request->scmCsMaterialVendors[$key]['brand'] ?? null,
                     'unit' => $request->scmCsMaterialVendors[$key]['unit'] ?? null,
                     'model' => $request->scmCsMaterialVendors[$key]['model'] ?? null,
@@ -309,13 +312,13 @@ class ScmCsController extends Controller
 
     public function getCsData($csId)
     {
-        $scmCs = ScmCs::with('scmCsMaterials.scmMaterial', 'scmPr', 'scmWarehouse')->find($csId);
+        $scmCs = ScmCs::with('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr','scmPr', 'scmWarehouse')->find($csId);
         $CsVendor = ScmCsVendor::with('scmVendor')->where('scm_cs_id', $csId)->get()->groupBy('scm_vendor_id');
         $scmCs['scmCsVendor'] = $CsVendor;
-        $csVendorMaterial = ScmCsMaterialVendor::with('scmCsMaterial.scmMaterial')->where('scm_cs_id', $csId)->get()->groupBy(['scm_material_id','scm_vendor_id']); 
-        $scmCs['scmCsMaterialVendor'] = $csVendorMaterial; 
-        $csMaterial = ScmCsMaterial::with('scmMaterial')->where('scm_cs_id', $csId)->get()->groupBy('scm_material_id');
-        $scmCs['scmCsMaterial'] = $csMaterial; 
+        $csVendorMaterial = ScmCsMaterialVendor::with('scmCsMaterial.scmMaterial','scmCsMaterial.scmPr')->where('scm_cs_id', $csId)->get()->groupBy(['scm_material_id','scm_pr_id','scm_vendor_id']);
+        $scmCs['scmCsMaterialVendor'] = $csVendorMaterial;
+        $csMaterial = ScmCsMaterial::with('scmMaterial','scmPr')->where('scm_cs_id', $csId)->get()->groupBy(['scm_material_id','scm_pr_id']);
+        $scmCs['scmCsMaterial'] = $csMaterial;
 
         try {
             return response()->success('Detail data', $scmCs, 200);
@@ -326,9 +329,9 @@ class ScmCsController extends Controller
 
     public function selectedSupplierstore(SupplierSelectionRequest $request)
     {
-       
+
         $data = $request->only('id', 'selection_ground','auditor_remarks_date','auditor_remarks','scmCsVendor');
-       
+
         try {
             $cs = ScmCs::find($data['id']);
                 $cs->update(
@@ -342,7 +345,7 @@ class ScmCsController extends Controller
                     $csVendor = ScmCsVendor::find($value[0]['id']);
                     $csVendor->update(['is_selected' => $value[0]['is_selected']]);
                 }
-       
+
             DB::commit();
             return response()->success('Data updated succesfully', $cs, 202);
         } catch (\Exception $e) {

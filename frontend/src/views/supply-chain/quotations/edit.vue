@@ -9,7 +9,7 @@ import LocalQuotationForm from "../../../components/supply-chain/quotations/Loca
 import useQuotation from "../../../composables/supply-chain/useQuotation";
 import { useRoute } from 'vue-router';
 
-const { getMaterialCs, showMaterialCs, materialCs, updateMaterialCs,materialObject, errors, isLoading } = useMaterialCs();
+const { getMaterialCs, showMaterialCs, materialCs, updateMaterialCs,materialObject, errors, isLoading , getPrWiseCs} = useMaterialCs();
 const { updateQuotations, quotation, localQuotationLines, foreignQuotationLines,showQuotation } = useQuotation();
 
 import useHeroIcon from "../../../assets/heroIcon";
@@ -21,12 +21,17 @@ const { setTitle } = Title();
 const route = useRoute();
 const quotationId = route.params.quotationId;
 const csId = route.params.csId;
-const formType = 'edit';
+const page = ref('edit');
 
 setTitle('Update Quotation');
 
 onMounted(() => {
-    showQuotation(csId,quotationId);
+    showQuotation(csId, quotationId);
+    showMaterialCs(csId);
+});
+
+onMounted(() => {
+    
 });
 </script>
 <template>
@@ -38,10 +43,10 @@ onMounted(() => {
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
         <form @submit.prevent="updateQuotations(quotation, csId, quotationId)">
             <template v-if="materialCs.purchase_center == 'FOREIGN'">
-                <foreign-quotation-form v-model:form="quotation" :errors="errors" :page="page" :lineObj="foreignQuotationLines"></foreign-quotation-form>
+                <foreign-quotation-form v-model:form="quotation" :errors="errors" :page="page" :lineObj="foreignQuotationLines" :formType="page"></foreign-quotation-form>
             </template>
-            <template v-else>
-                <local-quotation-form v-model:form="quotation" :errors="errors" :page="page" :lineObj="localQuotationLines"></local-quotation-form>
+            <template v-if="materialCs.purchase_center == 'Local'">
+                <local-quotation-form v-model:form="quotation" :errors="errors" :page="page" :lineObj="localQuotationLines" :formType="page"></local-quotation-form>
             </template>
             <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update</button>
         </form>

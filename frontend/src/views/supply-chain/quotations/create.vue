@@ -50,10 +50,10 @@ setTitle('Create Material CS');
           <!-- <material-cs-form v-model:form="quotation" :errors="errors" :page="page"></material-cs-form> -->
             <!-- Submit button -->
             <template v-if="materialCs.purchase_center == 'Foreign'">
-                <foreign-quotation-form v-model:form="quotation" :errors="errors" :page="page" :lineObj="foreignQuotationLines"></foreign-quotation-form>
+                <foreign-quotation-form v-model:form="quotation" :errors="errors" :page="page" :lineObj="foreignQuotationLines" :formType="page"></foreign-quotation-form>
             </template>
             <template v-if="materialCs.purchase_center == 'Local'">
-                <local-quotation-form v-model:form="quotation" :errors="errors" :page="page" :lineObj="localQuotationLines"></local-quotation-form>
+                <local-quotation-form v-model:form="quotation" :errors="errors" :page="page" :lineObj="localQuotationLines" :formType="page"></local-quotation-form>
             </template>
             <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
         </form>
