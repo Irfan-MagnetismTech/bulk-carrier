@@ -3,14 +3,16 @@
 namespace Modules\SupplyChain\Http\Controllers;
 
 use Exception;
+use ReflectionClass;
+use ReflectionMethod;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
+use Modules\SupplyChain\Entities\ScmCs;
 use Modules\SupplyChain\Entities\ScmPo;
 use Modules\SupplyChain\Entities\ScmPr;
-use Modules\SupplyChain\Entities\ScmCs;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Entities\ScmVendor;
@@ -35,7 +37,7 @@ class ScmPoController extends Controller
     {
         try {
             $scmWarehouses = ScmPo::query()
-                ->with('scmPoLines', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPr','scmMrrs')
+                ->with('scmPoLines', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPr', 'scmMrrs')
                 ->globalSearch($request->all());
 
             return response()->success('Data list', $scmWarehouses, 200);
@@ -141,20 +143,55 @@ class ScmPoController extends Controller
      * @param ScmPo $purchaseOrder
      * @return JsonResponse
      */
-    public function destroy(ScmPo $purchaseOrder): JsonResponse
+    public function destroy(ScmPo $purchaseOrder)
     {
-        // return response()->json($purchaseOrder->getAllMethods(), 422);
-        try {
-            if ($purchaseOrder->scmLcRecords()->count() > 0 || $purchaseOrder->scmMrrs()->count() > 0) {
-                $error = [
-                    "message" => "Data could not be deleted!",
-                    "errors" => [
-                        "id" => ["This data could not be deleted as it has reference to other table"]
-                    ]
-                ];
-                return response()->json($error, 422);
-            }
 
+        // $purchaseOrder->delete();
+
+        // $purchaseOrder->getAllMethods();
+        // $expectedTypes = [
+        //     'Illuminate\Database\Eloquent\Relations\HasOne',
+        //     'Illuminate\Database\Eloquent\Relations\HasMany',
+        //     'Illuminate\Database\Eloquent\Relations\BelongsTo',
+        //     'Illuminate\Database\Eloquent\Relations\MorphMany',
+        //     'Illuminate\Database\Eloquent\Relations\MorphOne',
+        // ];
+        // return response()->json($purchaseOrder->getAllMethods($expectedTypes), 422);
+
+        // $allMethods = $purchaseOrder->getAllMethods();
+
+        // $dataPair = [];
+        // foreach ($allMethods as $method) {
+        //     $dataPair[$method] = $purchaseOrder->{$method}()->count();
+        //     if ($purchaseOrder->{$method}()->count() > 0) {
+        //         $error = [
+        //             "message" => "Data could not be deleted!",
+        //             "errors" => [
+        //                 "id" => ["This data could not be deleted as it has reference to other table"]
+        //             ]
+        //         ];
+        // return response()->json($purchaseOrder->getAllMethods(), 422);
+        //     }
+
+
+        // }
+        // return response()->json($dataPair, 422);
+
+
+
+
+
+        try {
+            // if ($purchaseOrder->scmLcRecords()->count() > 0 || $purchaseOrder->scmMrrs()->count() > 0) {
+            //     $error = [
+            //         "message" => "Data could not be deleted!",
+            //         "errors" => [
+            //             "id" => ["This data could not be deleted as it has reference to other table"]
+            //         ]
+            //     ];
+            //     return response()->json($error, 422);
+            // }
+            // return response()->error('Data could not be deleted as it has reference to other table', 422);
             DB::beginTransaction();
 
             $purchaseOrder->scmPoTerms()->delete();
@@ -164,14 +201,18 @@ class ScmPoController extends Controller
             DB::commit();
 
             return response()->success('Data deleted sucessfully!', null,  204);
-        } catch (QueryException  $e) {
+        } catch (QueryException $e) {
             DB::rollBack();
 
-            if ($e->errorInfo[1] == 1451) {
-                // Custom error response for foreign key constraint violation
-                return response()->json(['error' => 'Cannot delete parent record because it has related child records.'], 422);
-            }
-            return response()->error($e->getMessage(), 500);
+            return response()->json($purchaseOrder->preventDeletionIfRelated(), 422);
+
+            // return response()->json($e, 422);
+            // if ($e->errorInfo[1] == 1451) {
+            //     // Custom error response for foreign key constraint violation
+            //     return response()->json(['error' => 'Cannot delete parent record because it has related child records.'], 422);
+            // }
+            // return response()->error($e->getMessage(), 500);
+            return 'll';
         }
     }
 
@@ -251,8 +292,8 @@ class ScmPoController extends Controller
                 ];
             } else {
                 $scmCs = ScmCs::query()
-                ->with('scmWarehouse', 'scmPr')
-                ->find('id', $request->cs_id);
+                    ->with('scmWarehouse', 'scmPr')
+                    ->find('id', $request->cs_id);
 
                 $data = [
                     'scmWarehouse' => $scmCs->scmWarehouse,
