@@ -800,4 +800,18 @@ function closeModel() {
 #dataTable tr, th, td {
   @apply text-[12px]
 }
+
+/* Hide the default number input arrows */
+input[type=number] {
+  -moz-appearance: textfield; /* Firefox */
+  -webkit-appearance: textfield; /* Chrome, Safari, Edge */
+  appearance: textfield; /* Standard syntax */
+}
+
+/* Hide the spin buttons in Chrome */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 </style>

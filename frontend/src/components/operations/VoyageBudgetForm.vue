@@ -345,6 +345,19 @@ onMounted(() => {
   @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
 }
 
+/* Hide the default number input arrows */
+input[type=number] {
+  -moz-appearance: textfield; /* Firefox */
+  -webkit-appearance: textfield; /* Chrome, Safari, Edge */
+  appearance: textfield; /* Standard syntax */
+}
+
+/* Hide the spin buttons in Chrome */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 >>> {
   --vs-controls-color: #374151;
   --vs-border-color: #4b5563;

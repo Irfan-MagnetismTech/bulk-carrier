@@ -182,6 +182,11 @@ function removeHead(index){
 onMounted(() => {
   getCurrencies();
 })
+
+function attachFile(e) {
+  let attachment = e.target.files[0];
+  props.form.attachment = attachment;
+}
 </script>
 <template>
   <!-- Basic information -->
@@ -224,7 +229,7 @@ onMounted(() => {
   <div class="flex flex-col justify-center w-1/2 md:flex-row md:gap-2 my-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Attachment</span>
-            <input type="file" @change="attachFile" placeholder="Billing Email" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark-disabled:text-gray-400 focus:outline-none dark-disabled:bg-gray-700 dark-disabled:border-gray-600 dark-disabled:placeholder-gray-400" autocomplete="off" />
+            <input type="file" @change="attachFile" placeholder="Attachment" class="block form-input text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark-disabled:text-gray-400 focus:outline-none dark-disabled:bg-gray-700 dark-disabled:border-gray-600 dark-disabled:placeholder-gray-400" autocomplete="off" />
         </label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -256,6 +261,8 @@ onMounted(() => {
             <tr class="w-full">
               <th class="w-72">Expesne Head <span class="text-red-500">*</span></th>
               <th class="w-20">Quantity <span class="text-red-500">*</span></th>
+              <th class="w-24">Invoice Date <span class="text-red-500">*</span></th>
+              <th class="w-24">Invoice No. <span class="text-red-500">*</span></th>
               <th>Rate <span class="text-red-500">*</span></th>
               <th v-if="isOtherCurrency">Amount </th>
               <th>Amount USD</th>
@@ -286,9 +293,12 @@ onMounted(() => {
                 <span v-show="form.opsVoyageExpenditureEntries[index].isExpenseHeadDuplicate" class="text-yellow-600 absolute top-4 right-12 " title="Duplicate Warning" v-html="icons.ExclamationTriangle"></span>
 
               </td>
+
               <td>
                   <input type="number" step="0.0001" @input="calculateHeadAmounts()" required v-model="form.opsVoyageExpenditureEntries[index].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
               </td>
+              <td></td>
+              <td></td>
               <td>
                 <input type="number" step="0.0001" @input="calculateHeadAmounts()" required v-model="form.opsVoyageExpenditureEntries[index].rate" placeholder="Rate" class="form-input" autocomplete="off" />
               </td>
@@ -322,6 +332,20 @@ onMounted(() => {
 <style lang="postcss" scoped>
 #table, #table th, #table td{
   @apply border border-collapse border-gray-400 text-center text-gray-700 px-1 text-xs
+}
+
+/* Hide the default number input arrows */
+input[type=number] {
+  -moz-appearance: textfield; /* Firefox */
+  -webkit-appearance: textfield; /* Chrome, Safari, Edge */
+  appearance: textfield; /* Standard syntax */
+}
+
+/* Hide the spin buttons in Chrome */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .input-group {

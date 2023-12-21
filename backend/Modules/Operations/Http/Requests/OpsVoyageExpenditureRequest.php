@@ -6,6 +6,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class OpsVoyageExpenditureRequest extends FormRequest
 {
+
+    protected function prepareForValidation(){
+        $data=  request('info');
+        $dataArray = json_decode($data, true);
+        $mergeData = array_merge($dataArray , ['attachment' => request('attachment')]);
+
+        $this->replace($mergeData);
+    }
     /**
      * Get the validation rules that apply to the request.
      *
