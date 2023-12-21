@@ -31,6 +31,10 @@ class OpsBunkerBillLine extends Model
         'amount_usd' => 'float',
     ];
 
+    public function getExchangeRateBdtAttribute() {
+        return number_format($this->attributes['exchange_rate_bdt'], 2);
+  }
+
     public function opsBunkerBillLineItems()
     {
         return $this->hasMany(OpsBunkerBillLineItem::class, 'ops_bunker_bill_line_id' , 'id');
