@@ -3,7 +3,7 @@
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Requisition Date </span>
-            <input type="date" :value="form.requisition_date" placeholder="Requisition Date" class="form-input vms-readonly-input" readonly  />
+            <input type="text" :value="moment(form.requisition_date).format('DD/MM/YYYY')" placeholder="Requisition Date" class="form-input vms-readonly-input" readonly  />
           <Error v-if="errors?.requisition_date" :errors="errors.requisition_date" />
         </label>
         <label class="block w-full mt-2 text-sm">
@@ -49,14 +49,18 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Act. Start Date <span v-show="form.status != 0"  class="text-red-500">*</span></span>
-            <input type="date" :min="form.requisition_date" :required="form.status != 0"  v-model="form.act_start_date" placeholder="Act. Start Date" class="form-input" required  />
+            <!-- <input type="date" :min="form.requisition_date" :required="form.status != 0"  v-model="form.act_start_date" placeholder="Act. Start Date" class="form-input" required  /> -->
+            <VueDatePicker :min-date="form.requisition_date" :required="form.status != 0"  v-model="form.act_start_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
           <Error v-if="errors?.act_start_date" :errors="errors.act_start_date" />
         </label>
 
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Act. Completion Date <span v-show="!form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2)" class="text-red-500">*</span></span>
-            <input type="date" :min="form.act_start_date"  v-model="form.act_completion_date" placeholder="Act. completion Date" class="form-input" :class="{'vms-readonly-input' : form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2) }"  :readonly="form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2)" :required="!form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2)"  />
+            <!-- <input type="date" :min="form.act_start_date"  v-model="form.act_completion_date" placeholder="Act. completion Date" class="form-input" :class="{'vms-readonly-input' : form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2) }"  :readonly="form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2)" :required="!form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2)"  /> -->
+
+            <VueDatePicker :min-date="form.act_start_date"  v-model="form.act_completion_date" class="form-input" :class="{'vms-readonly-input' : form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2) }"  :readonly="form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2)" :required="!form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2)"   auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" ></VueDatePicker>
+
           <Error v-if="errors?.act_completion_date" :errors="errors.act_completion_date" />
         </label>
 
@@ -116,8 +120,8 @@
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="px-4 py-3 align-bottom" :class="{ 'w-3/12': businessUnit !== 'PSML', 'w-4/12': businessUnit === 'PSML'  }">Description</th>
             <th class="w-2/12 px-4 py-3 align-bottom">Status</th>
-            <th class="w-1/12 px-4 py-3 align-bottom">Start Date</th>
-            <th class="w-1/12 px-4 py-3 align-bottom">Completion Date</th>
+            <th class="w-1/12 px-4 py-3 align-bottom min-w-[170px]">Start Date</th>
+            <th class="w-1/12 px-4 py-3 align-bottom min-w-[170px]">Completion Date</th>
             <th class="w-1/12 px-4 py-3 align-bottom" v-show="businessUnit !== 'PSML'" >Checking</th>
             <th class="w-1/12 px-4 py-3 align-bottom" v-show="businessUnit !== 'PSML'" >Replace</th>
             <th class="w-1/12 px-4 py-3 align-bottom" v-show="businessUnit !== 'PSML'" >Cleaning</th>
@@ -153,13 +157,18 @@
 
             </td>
             <td class="px-1 py-1">
-              <input type="date" class="form-input" :min="form.act_start_date"  
-              :max="form.act_completion_date"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" :class="{ 'vms-readonly-input' : (mntWorkRequisitionLine.status == 0 || mntWorkRequisitionLine.status == null)  }"  :disabled="(mntWorkRequisitionLine.status == 0 || mntWorkRequisitionLine.status == null)" :required="(mntWorkRequisitionLine.status != 0 || mntWorkRequisitionLine.status != null)" /> 
+              <!-- <input type="date" class="form-input" :min="form.act_start_date"  
+              :max="form.act_completion_date"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" :class="{ 'vms-readonly-input' : (mntWorkRequisitionLine.status == 0 || mntWorkRequisitionLine.status == null)  }"  :disabled="(mntWorkRequisitionLine.status == 0 || mntWorkRequisitionLine.status == null)" :required="(mntWorkRequisitionLine.status != 0 || mntWorkRequisitionLine.status != null)" />  -->
+
+              <VueDatePicker :min-date="form.act_start_date"  
+              :max-date="form.act_completion_date"  v-model="mntWorkRequisitionLine.start_date" :class="{ 'vms-readonly-input' : (mntWorkRequisitionLine.status == 0 || mntWorkRequisitionLine.status == null)  }"  :disabled="(mntWorkRequisitionLine.status == 0 || mntWorkRequisitionLine.status == null)" :required="(mntWorkRequisitionLine.status != 0 || mntWorkRequisitionLine.status != null)" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
               <Error class="pb-1" v-if="mntWorkRequisitionLine?.start_date_error" :errors="mntWorkRequisitionLine?.start_date_error" />
             </td>
             <td class="px-1 py-1"> 
-              <input type="date" class="form-input" :min="mntWorkRequisitionLine.start_date" 
-              :max="form.act_completion_date"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date" :class="{ 'vms-readonly-input' : mntWorkRequisitionLine.status != 2  }"  :disabled="mntWorkRequisitionLine.status != 2" :required="mntWorkRequisitionLine.status == 2" /> 
+              <!-- <input type="date" class="form-input" :min="mntWorkRequisitionLine.start_date" 
+              :max="form.act_completion_date"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date" :class="{ 'vms-readonly-input' : mntWorkRequisitionLine.status != 2  }"  :disabled="mntWorkRequisitionLine.status != 2" :required="mntWorkRequisitionLine.status == 2" />  -->
+
+              <VueDatePicker :min-date="mntWorkRequisitionLine.start_date" :max-date="form.act_completion_date" v-model="mntWorkRequisitionLine.completion_date" class="form-input" :class="{ 'vms-readonly-input' : mntWorkRequisitionLine.status != 2  }"  :disabled="mntWorkRequisitionLine.status != 2" :required="mntWorkRequisitionLine.status == 2" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" ></VueDatePicker>
               <!-- <Error class="pb-1" v-if="mntWorkRequisitionLine?.errors?.completion_date" :errors="mntWorkRequisitionLine?.errors?.completion_date" /> -->
               <Error class="pb-1" v-if="mntWorkRequisitionLine?.completion_date_error" :errors="mntWorkRequisitionLine?.completion_date_error" />
             </td>
@@ -338,6 +347,9 @@ function setStartAndCompletionDate(mntWorkRequisitionLine) {
 
 watch(() => props.form.mntWorkRequisitionLines, (mntWorkRequisitionLines) => {
   mntWorkRequisitionLines?.forEach(mntWorkRequisitionLine => {
+    if (mntWorkRequisitionLine.completion_date != "" && mntWorkRequisitionLine.completion_date < mntWorkRequisitionLine.start_date) {
+      mntWorkRequisitionLine.completion_date = "";
+    }
     setStartAndCompletionDate(mntWorkRequisitionLine);
   });
 
@@ -405,5 +417,9 @@ onMounted(() => {
 
   --vs-dropdown-option--active-bg: #664cc3;
   --vs-dropdown-option--active-color: #eeeeee;
+
+  --dp-border-color: #4b5563;
+  --dp-border-color-hover: #4b5563;
+  --dp-icon-color: #4b5563;
 }
 </style>
