@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import useCrewRequisition from "../../../composables/crew/useCrewRequisition";
+import useCrewAssign from '../../../composables/crew/useCrewAssign.js';
 import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
@@ -10,99 +10,92 @@ import env from '../../../config/env';
 const icons = useHeroIcon();
 
 const route = useRoute();
-const crewRequisitionId = route.params.crewRequisitionId;
-const { crewRequisition, showCrewRequisition, errors } = useCrewRequisition();
+const crewAssignId = route.params.crewAssignId;
+const { crewAssign, showCrewAssign, errors } = useCrewAssign();
 
 const { setTitle } = Title();
 
-setTitle('Crew Requisition Details');
+setTitle('Crew Assign Details');
 
 onMounted(() => {
-  showCrewRequisition(crewRequisitionId);
+  showCrewAssign(crewAssignId);
 });
 </script>
 
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Crew Requisition Details # {{crewRequisitionId}}</h2>
-    <default-button :title="'Crew Requisition'" :to="{ name: 'crw.crewRequisitions.index' }" :icon="icons.DataBase"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">  Crew Assign Details  # {{crewAssignId}} </h2>
+    <default-button :title="' Crew Assign List'" :to="{ name: 'crw.crewAssigns.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
-      <div class="flex md:gap-4">
-        <div class="w-full">
-          <table class="w-full">
-            <thead>
+    <div class="flex md:gap-4">
+      <div class="w-full">
+
+        <table class="w-full">
+          <thead>
             <tr>
-              <td class="!text-center text-white font-bold uppercase bg-green-600" colspan="2">Basic Info</td>
+              <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="2">Basic Info</td>
             </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th class="w-40 text-left">Business Unit</th>
-                <td class="text-left"><span :class="crewRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crewRequisition?.business_unit }}</span></td>
-              </tr>
-              <tr>
-                <th class="w-40 text-left">Vessel Name</th>
-                <td class="text-left">{{ crewRequisition?.opsVessel?.name }}</td>
-              </tr>
-              <tr>
-                <th class="w-40 text-left">Applied Date</th>
-                <td class="text-left">{{ crewRequisition?.applied_date }}</td>
-              </tr>
-              <tr>
-                <th class="w-40 text-left">Total Crew</th>
-                <td class="text-left">{{ crewRequisition?.total_required_manpower }}</td>
-              </tr>
-              <tr>
-                <th class="w-40 text-left">Remarks</th>
-                <td class="text-left">{{ crewRequisition?.remarks ?? '----' }}</td>
-              </tr>
-            </tbody>
-          </table>
-          <table class="w-full mt-1" id="profileDetailTable">
-            <thead>
+          </thead>
+          <tbody>
             <tr>
-              <td class="!text-center text-white uppercase bg-green-600 font-bold" colspan="8">Crew Requisition List</td>
+              <th class="w-40"> Business Unit </th>
+              <td><span :class="crewAssign?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crewAssign?.business_unit }}</span></td>
             </tr>
             <tr>
-              <th>Sl.</th>
-              <th>Rank</th>
-              <th>Required Manpower</th>
-              <th>Remarks</th>
+              <th class="w-40"> Vessel Name </th>
+              <td>{{ crewAssign?.opsVessel?.name }}</td>
             </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(crewRequisitionData,index) in crewRequisition?.crwCrewRequisitionLines" :key="index">
-              <td>{{ index + 1 }}</td>
-              <td class="text-left">{{ crewRequisitionData?.crwRank?.name }}</td>
-              <td>{{ crewRequisitionData?.required_manpower }}</td>
-              <td>{{ crewRequisitionData?.remarks }}</td>
-            </tr>
-            </tbody>
-            <tfoot v-if="!crewRequisition?.crwCrewRequisitionLines?.length">
             <tr>
-              <td colspan="4">No data found.</td>
+              <th class="w-40"> Crew Name </th>
+              <td>{{ crewAssign?.crwCrew?.full_name }}</td>
             </tr>
-            </tfoot>
-          </table>
-        </div>
+            <tr>
+              <th class="w-40"> Crew Contact </th>
+              <td>{{ crewAssign?.crwCrew?.pre_mobile_no }}</td>
+            </tr>
+
+            <tr>
+              <th class="w-40"> Position Onboard </th>
+              <td>{{ crewAssign?.position_onboard }}</td>
+            </tr>
+            <tr>
+              <th class="w-40"> Joining Date </th>
+              <td>{{ crewAssign?.joining_date }}</td>
+            </tr>
+            <tr>
+              <th class="w-40"> Joining Port Code </th>
+              <td>{{ crewAssign?.joining_port_code }}</td>
+            </tr>
+            <tr>
+              <th class="w-40"> Duration (Months) </th>
+              <td>{{ crewAssign?.duration }}</td>
+            </tr>
+            <tr>
+              <th class="w-40"> Remarks </th>
+              <td>{{ crewAssign?.remarks }}</td>
+            </tr> 
+          </tbody>
+        </table>
+
       </div>
+    </div>
   </div>
 </template>
 <style lang="postcss" scoped>
-  th, td, tr {
-    @apply border-gray-500
-  }
+th, td, tr {
+  @apply text-left border-gray-500
+}
 
-  tfoot td{
-    @apply text-center
-  }
+tfoot td{
+  @apply text-center
+}
 
-  #profileDetailTable th{
-    text-align: center;
-  }
-  #profileDetailTable thead tr{
-    @apply bg-gray-200
-  }
+#profileDetailTable th{
+  text-align: center;
+}
+#profileDetailTable thead tr{
+  @apply bg-gray-200
+}
 
 </style>
