@@ -381,12 +381,12 @@ export default [
         component: () => import(`../views/crew/crew-salary-structure/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
-    // {
-    //     path: `/${BASE}/crew-salary-structures/:crewSalaryStructureId/show`,
-    //     name: `${BASE}.crewSalaryStructures.show`,
-    //     component: () => import(`../views/crew/crew-salary-structure/show.vue`),
-    //     meta: { requiresAuth: true, role: "all", permission: '' },
-    // },
+    {
+        path: `/${BASE}/crew-salary-structures/:crewSalaryStructureId/show`,
+        name: `${BASE}.crewSalaryStructures.show`,
+        component: () => import(`../views/crew/crew-salary-structure/show.vue`),
+        meta: { requiresAuth: true, role: "all", permission: '' },
+    },
 
     /* Crew Bank Accounts Routes */
     {
@@ -408,10 +408,10 @@ export default [
         component: () => import(`../views/crew/crew-bank-account/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
-    // {
-    //     path: `/${BASE}/crew-bank-accounts/:crewBankAccountId/show`,
-    //     name: `${BASE}.crewBankAccounts.show`,
-    //     component: () => import(`../views/crew/crew-bank-account/show.vue`),
-    //     meta: { requiresAuth: true, role: "all", permission: '' },
-    // },
+    {
+        path: `/${BASE}/crew-bank-accounts/:crewBankAccountId/show`,
+        name: `${BASE}.crewBankAccounts.show`,
+        component: () => import(`../views/crew/crew-bank-account/show.vue`),
+        meta: { requiresAuth: true, role: "all", permission: '' },
+    },
 ];
