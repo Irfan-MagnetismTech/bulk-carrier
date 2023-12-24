@@ -5,7 +5,7 @@ namespace Modules\SupplyChain\Traits;
 use ReflectionClass;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
-trait DeletedableModel
+trait DeletableModel
 {
     public function preventDeletionIfRelated()
     {
@@ -21,8 +21,8 @@ trait DeletedableModel
                 $models[] = $finalModelName;
             }
         }
-        
-        $modelNames = implode(', and ', array_slice($models, 0, -1)) . ' and ' . end($models);
+
+        $modelNames = implode(', ', array_slice($models, 0, -1)) . ' and ' . end($models);
 
         return [
             "message" => "Data could not be deleted!",
