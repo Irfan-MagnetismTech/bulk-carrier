@@ -53,6 +53,16 @@ let filterOptions = ref({
       "filter_type": "input"
     },
     {
+      "relation_name": "opsVessel",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Vessel",
+      "filter_type": "input"
+    },
+    {
       "relation_name": "opsVoyage",
       "field_name": "voyage_sequence",
       "search_param": "",
@@ -145,11 +155,10 @@ onMounted(() => {
               <tr v-for="(voyageExpenditure, index) in voyageExpenditures.data" :key="voyageExpenditure?.id">
                   <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
                   <td>{{ voyageExpenditure?.port_code }}</td>
+                  <td>{{ voyageExpenditure?.opsVessel?.name }}</td>
                   <td>{{ voyageExpenditure?.opsVoyage?.voyage_sequence }}</td>
                   <td class="!text-right">
-                    {{ numberFormat((voyageExpenditure?.opsVoyageExpenditureEntries.reduce((accumulator, currentObject) => {
-  return accumulator + (currentObject.amount_bdt ? parseFloat(currentObject.amount_bdt) : 0);
-}, 0)) || 0) }}
+                    {{ numberFormat(voyageExpenditure.grand_total_bdt) }}
                   </td>
                   <td>
                     <span :class="voyageExpenditure?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ voyageExpenditure?.business_unit }}</span>

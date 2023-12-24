@@ -65,7 +65,7 @@ onMounted(() => {
               <td>{{ checkListData?.remarks }}</td>
             </tr>
             </tbody>
-            <tfoot v-if="checkList?.crwCrewChecklistLines?.length">
+            <tfoot v-if="!checkList?.crwCrewChecklistLines?.length">
             <tr>
               <td colspan="3">No data found.</td>
             </tr>
