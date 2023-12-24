@@ -27,7 +27,7 @@ trait DeletableModel
             }
         }
 
-        $modelNames = implode(', ', array_slice($models, 0, -1)) . ' and ' . end($models);
+        $modelNames = count($models) > 1 ? implode(', ', array_slice($models, 0, -1)) . ' and ' . end($models) : implode('', $models);
 
         return [
             "message" => "Data could not be deleted! It has references in the {$modelNames} table.",
