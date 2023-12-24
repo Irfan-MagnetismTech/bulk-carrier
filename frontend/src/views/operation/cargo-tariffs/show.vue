@@ -6,48 +6,55 @@
   
   <!-- Cargo Tariff Show -->
   <div class="bg-white rounded-md p-2">
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Tariff Name <span class="text-red-500">*</span></span>
-            <span class="show-block">{{ cargoTariff?.tariff_name }}</span>
-        </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-            <span class="show-block">{{ cargoTariff?.opsVessel?.name }}</span>
-        </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300"> Loading Point <span class="text-red-500">*</span></span>
-            <span class="show-block">{{ cargoTariff?.loading_point }}</span>
-        </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Unloading Point <span class="text-red-500">*</span></span>
-            <span class="show-block">{{ cargoTariff?.unloading_point }}</span>
-        </label>
+    <div class="flex md:gap-4">
+      <div class="w-full">
+        <table class="w-full">
+            <thead>
+              <tr>
+                <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="2">Basic Info</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                  <th class="w-40">Tariff Name</th>
+                  <td>{{ cargoTariff?.tariff_name }}</td>
+              </tr>
+              <tr>
+                  <th class="w-40">Vessel</th>
+                  <td>{{ cargoTariff?.opsVessel?.name }}</td>
+              </tr>
+              <tr>
+                  <th class="w-40">Loading Point</th>
+                  <td>{{ cargoTariff?.loading_point }}</td>
+              </tr>
+              <tr>
+                  <th class="w-40">Unloading Point</th>
+                  <td>{{ cargoTariff?.unloading_point }}</td>
+              </tr>
+              <tr>
+                  <th class="w-40">Cargo Type</th>
+                  <td>{{ cargoTariff?.opsCargoType?.cargo_type }}</td>
+              </tr>
+              <tr>
+                  <th class="w-40">Currency</th>
+                  <td>{{ cargoTariff?.currency }}</td>
+              </tr>
+              <tr>
+                  <th class="w-40">Status</th>
+                  <td>{{ cargoTariff?.status }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+      </div>
     </div>
 
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Type <span class="text-red-500">*</span></span>
-              <span class="show-block">{{ cargoTariff?.opsCargoType?.cargo_type }}</span>
-          </label>
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Currency <span class="text-red-500">*</span></span>
-              <span class="show-block">{{ cargoTariff?.currency }}</span>
-
-          </label>
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Status <span class="text-red-500">*</span></span>
-              <span class="show-block">{{ cargoTariff?.status }}</span>
-          </label>
-          <label class="block w-full mt-2 text-sm"></label>
-    </div>
-
-    <div class="mt-3 md:mt-8">
-      <div id="customDataTable">
-        <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
-          
-          <table class="w-full whitespace-no-wrap" >
-              <thead v-once class="bg-gray-300">
+    <div class="mt-1 md:mt-2">
+      <table class="w-full mt-2">
+            <thead>
+                <tr>
+                  <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="14"> Bunker List </td>
+                </tr>
                 <tr class="w-full">
                   <th class="block">Particulars</th>
                   <th>Unit</th>
@@ -65,7 +72,6 @@
                   <th>Dec</th>
                 </tr>
               </thead>
-
               <tbody>
                   <tr v-for="(item, index) in cargoTariff.opsCargoTariffLines">
                     <td>
@@ -113,12 +119,26 @@
                   </tr>
               </tbody>
           </table>
-
-        </div>
-      </div>
     </div>
   </div>
 </template>
+<style lang="postcss" scoped>
+th, td, tr {
+  @apply text-left border-gray-500
+}
+
+tfoot td{
+  @apply text-center
+}
+
+#customDataTable th{
+  text-align: center;
+}
+#customDataTable thead tr{
+  @apply bg-gray-200
+}
+
+</style>
 <script setup>
 import { ref, watchEffect, onMounted } from 'vue';
 import { useRoute } from 'vue-router';

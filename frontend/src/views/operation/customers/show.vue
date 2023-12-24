@@ -4,89 +4,108 @@
     <default-button :title="'Customer List'" :to="{ name: 'ops.configurations.customers.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
-    <h4 class="text-md font-semibold">Customer Info</h4>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Customer Code </span>
-            <span class="show-block">{{ customer.code }}</span>
-        </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Legal Name </span>
-            <span class="show-block">{{ customer.legal_name }}</span>
-        </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Customer Name </span>
-            <span class="show-block">{{ customer.name }}</span>
-        </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Tax Identification</span>
-            <span class="show-block">{{ customer.tax_id }}</span>
-        </label>
-        
+    <div class="flex md:gap-4">
+        <div class="w-full">
+          <table class="w-full">
+            <thead>
+                <tr>
+                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="2">Basic Info</td>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- <tr>
+                    <th class="w-40">Business Unit</th>
+                    <td><span :class="cargoType?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ cargoType?.business_unit }}</span></td>
+                </tr> -->
+                <tr>
+                    <th class="w-40">Customer Code</th>
+                    <td>{{  customer.code }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">Name</th>
+                    <td>{{ customer?.name }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">Legal Name</th>
+                    <td>{{ customer?.legal_name }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">Tax Identification</th>
+                    <td>{{ customer?.tax_id }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">Postal Address</th>
+                    <td>{{ customer?.postal_address }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">Post Code</th>
+                    <td>{{ customer?.post_code }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">City</th>
+                    <td>{{ customer?.city }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">Country</th>
+                    <td>{{ customer?.country }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">Business License No.</th>
+                    <td>{{ customer?.business_license_no }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">BIN/GST/SST No.</th>
+                    <td>{{ customer?.bin_gst_sst_no }}</td>
+                </tr>
+            </tbody>
+          </table>
+        </div>
     </div>
-    
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Postal Address</span>
-            <span class="show-block">{{ customer.postal_address }}</span>
-      </label>
-      <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark-disabled:text-gray-300">Post Code</span>
-          <span class="show-block">{{ customer.post_code }}</span>
-      </label>
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">City</span>
-            <span class="show-block">{{ customer.city }}</span>
-        </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Country </span>
-            <span class="show-block">{{ customer.country }}</span>
-        </label>
-        
-        
-    </div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Business License No.</span>
-            <span class="show-block">{{ customer.business_license_no }}</span>
-        </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">BIN/GST/SST No.</span>
-            <span class="show-block">{{ customer.bin_gst_sst_no }}</span>
-        </label>
-        <label class="block w-full mt-2 text-sm"></label>
-        <label class="block w-full mt-2 text-sm"></label>
-
-    </div>
-    <div class="mt-3 md:mt-8">
-      <h4 class="text-md font-semibold">Contact Info</h4>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-          
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Phone </span>
-              <span class="show-block">{{ customer.phone }}</span> 
-          </label>
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Company Reg. No</span>
-              <span class="show-block">{{ customer.company_reg_no }}</span>
-          </label>
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Email <small>(General)</small></span>
-              <span class="show-block">{{ customer.email_general }}</span>
-          </label>
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Email <small>(Agreement)</small></span>
-              <span class="show-block">{{ customer.email_agreement }}</span>
-          </label>
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Email <small>(Invoice)</small></span>
-              <span class="show-block">{{ customer.email_invoice }}</span>
-          </label>
-      </div>
+    <div class="flex md:gap-4 mt-1 md:mt-2">
+        <div class="w-full">
+          <table class="w-full">
+            <thead>
+                <tr>
+                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="2">Contact Info</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th class="w-40">Phone</th>
+                    <td>{{  customer.phone }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">Company Reg. No</th>
+                    <td>{{ customer?.company_reg_no }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">Email <small>(General)</small></th>
+                    <td>{{ customer?.email_general }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">Email <small>(Agreement)</small></th>
+                    <td>{{ customer?.email_agreement }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">Email <small>(Invoice)</small></th>
+                    <td>{{ customer?.email_invoice }}</td>
+                </tr>
+            </tbody>
+          </table>
+        </div>
     </div>
   </div>
 </template>
+<style lang="postcss" scoped>
+    th, td, tr {
+      @apply text-left border-gray-500
+    }
+    
+    tfoot td{
+      @apply text-center
+    }
+  
+</style>
 <script setup>
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';

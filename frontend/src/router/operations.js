@@ -25,6 +25,12 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/port/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	{
+		path: `/${BASE}/ports/:portId`,
+		name: `${BASE}.configurations.ports.show`,
+		component: () => import (`../views/${ViEWBASE}/port/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 	/* Cargo Types */
 	{
 		path: `/${BASE}/cargo-types`,
@@ -43,6 +49,12 @@ export default [
 		path: `/${BASE}/cargo-types/:cargoTypeId/edit`,
 		name: `${BASE}.configurations.cargo-types.edit`,
 		component: () => import (`../views/${ViEWBASE}/cargo-types/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/cargo-types/:cargoTypeId/show`,
+		name: `${BASE}.configurations.cargo-types.show`,
+		component: () => import (`../views/${ViEWBASE}/cargo-types/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	/* Customer */
