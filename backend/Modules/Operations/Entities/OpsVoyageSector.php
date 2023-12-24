@@ -14,6 +14,7 @@ class OpsVoyageSector extends Model
         'ops_voyage_id',
         'loading_point',
         'unloading_point',
+        'pol_pod',
         'rate',
         'initial_survey_qty',
         'approx_amount',
@@ -43,6 +44,14 @@ class OpsVoyageSector extends Model
     public function unloadingPoint() {
         return $this->belongsTo(OpsPort::class, 'unloading_point', 'code');
     }
+
+    public function cargoTariffs() {
+        return $this->belongsTo(OpsCargoTariff::class, 'pol_pod','pol_pod');
+    }
+
+    // public function unloadingPointTariff() {
+    //     return $this->belongsTo(OpsCargoTariff::class, 'unloading_point', 'unloading_point');
+    // }
 
 
 }

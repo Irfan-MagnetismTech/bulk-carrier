@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreign('scm_material_id')->references('id')->on('scm_materials')->onDelete('cascade');
             $table->string('unit')->nullable();
             $table->decimal('quantity', 10, 2)->nullable();
-            $table->string('remarks')->nullable();
+            $table->text('remarks')->nullable();
             $table->string('mmr_composite_key')->nullable();
             $table->string('mi_composite_key')->nullable();
             $table->string('mo_composite_key')->nullable();

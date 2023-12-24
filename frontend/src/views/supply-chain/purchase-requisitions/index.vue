@@ -106,6 +106,16 @@ let filterOptions = ref({
       "filter_type": "input"
     },
     {
+      "relation_name": "scmPrLines.scmMaterial",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Material",
+      "filter_type": "input"
+    },
+    {
       "relation_name": "scmWarehouse",
       "field_name": "name",
       "search_param": "",
@@ -178,6 +188,17 @@ const navigateToMRRCreate = (purchaseRequisitionId) => {
 };
 
 
+const navigateToCSCreate = (purchaseRequisitionId) => {
+  const pr_id = purchaseRequisitionId; 
+  const routeOptions = {
+    name: 'scm.material-cs.create',
+    query: {
+      pr_id: pr_id
+    }
+  };
+  router.push(routeOptions);
+}; 
+
 function confirmDelete(id) {
         Swal.fire({
           title: 'Are you sure?',
@@ -226,6 +247,11 @@ function confirmDelete(id) {
               <td>{{ purchaseRequisition?.raised_date }}</td>
               <td>{{ critical[purchaseRequisition?.is_critical] }}</td>
               <td>{{ purchaseRequisition?.purchase_center }}</td>
+              <td style="text-align: left !important;">
+                <span v-for="(line,index) in purchaseRequisition?.scmPrLines" :key="index" class="text-xs mr-2 mb-2 inline-block py-1 px-2.5 leading-none whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded">
+                  {{ line?.scmMaterial?.name ?? '' }}
+                </span>
+              </td>
               <td>{{ purchaseRequisition?.scmWarehouse?.name?? '' }}</td>
               <td>
                 <span :class="purchaseRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.business_unit }}</span>
@@ -233,10 +259,24 @@ function confirmDelete(id) {
               <td>
                 <nobr>
                 <div class="grid grid-flow-col-dense gap-x-2">
+                    <template v-if="(purchaseRequisition?.scmCss.length > 0) || ((purchaseRequisition?.scmCss.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) && (purchaseRequisition?.scmPos.length <= 0))">
+                      <!-- <button @click="navigateToCSCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create CS</button> -->
+                    </template>
+                    <template v-if="purchaseRequisition?.scmPos.length > 0 || ((purchaseRequisition?.scmCss.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) && (purchaseRequisition?.scmPos.length <= 0))">
+
                     <button @click="navigateToPOCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
-                    <button @click="navigateToMRRCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button>
+
+                    </template>
+                    <template v-if="(purchaseRequisition?.scmMrrs.length > 0 && purchaseRequisition?.scmPos.length <= 0 ) || ((purchaseRequisition?.scmCss.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) && (purchaseRequisition?.scmPos.length <= 0))">
+
+                      <button @click="navigateToMRRCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button>
+
+                    </template>
+                    <template v-if="(purchaseRequisition?.scmPos.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) ">
+                      <action-button :action="'edit'" :to="{ name: 'scm.purchase-requisitions.edit', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>
+                    </template>
                     <action-button :action="'show'" :to="{ name: 'scm.purchase-requisitions.show', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>
-                    <action-button :action="'edit'" :to="{ name: 'scm.purchase-requisitions.edit', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>
+
                     <action-button @click="confirmDelete(purchaseRequisition.id)" :action="'delete'"></action-button>
                   </div>
                 </nobr>

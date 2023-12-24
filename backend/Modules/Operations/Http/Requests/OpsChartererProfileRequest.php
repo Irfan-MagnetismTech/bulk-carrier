@@ -17,7 +17,7 @@ class OpsChartererProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_legal_name'    => ['required', 'string', 'max:255'],
+            'company_legal_name'    => ['required', 'string', 'max:255',Rule::unique('ops_charterer_profiles')->ignore($this->route('charterer_profile'), 'id')],
             'name'                  => ['required', 'string', 'max:255'],
             'owner_code'            => ['required', 'string', 'max:20', Rule::unique('ops_charterer_profiles')->ignore($this->route('charterer_profile'), 'id')],
             'country'               => ['required', 'string', 'max:255'],
@@ -51,20 +51,21 @@ class OpsChartererProfileRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'company_legal_name.required' => 'Company legal name is required',
+            'company_legal_name.unique' => 'Company legal name is already taken.',
+            'company_legal_name.required' => 'Company legal name is required.',
             'company_legal_name.max' => 'Company legal name may not be greater than :max characters.',
-            'name.required' => 'Charterer Name is required',
+            'name.required' => 'Charterer Name is required.',
             'name.max' => 'Charterer Name may not be greater than :max characters.',
-            'owner_code.required' => 'Charterer owner code is required',
-            'owner_code.unique' => 'Charterer owner code is already taken',
+            'owner_code.required' => 'Charterer owner code is required.',
+            'owner_code.unique' => 'Charterer owner code is already taken.',
             'owner_code.max' => 'Charterer owner code may not be greater than :max characters.',
-            'country.required' => 'Country is required',
+            'country.required' => 'Country is required.',
             'country.max' => 'Country may not be greater than :max characters.',
-            'contact_no.required' => 'Contact No. is required',
+            'contact_no.required' => 'Contact No. is required.',
             'contact_no.digits_between' => 'Contact No. must be between :min and :max characters',
-            'address.required' => 'Address is required',
+            'address.required' => 'Address is required.',
             'address.max' => 'Address may not be greater than :max characters.',
-            'billing_address.required' => 'Billing address is required',
+            'billing_address.required' => 'Billing address is required.',
             'billing_address.max' => 'Billing address may not be greater than :max characters.',
             'billing_email.required' => 'Billing email is required',
             'billing_email.email' => 'Please enter a valid billing email',

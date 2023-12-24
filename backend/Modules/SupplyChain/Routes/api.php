@@ -20,6 +20,8 @@ use Modules\SupplyChain\Http\Controllers\ScmOpeningStockController;
 use Modules\SupplyChain\Http\Controllers\ScmMaterialCategoryController;
 use Modules\SupplyChain\Http\Controllers\ScmMoController;
 use Modules\SupplyChain\Http\Controllers\ScmMiController;
+use Modules\SupplyChain\Http\Controllers\ScmCsController;
+use Modules\SupplyChain\Http\Controllers\ScmAdjustmentController;
 
 Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::apiResources([
@@ -40,6 +42,8 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
         'movement-requisitions' => ScmMmrController::class,
         'movement-outs' => ScmMoController::class,
         'movement-ins' => ScmMiController::class,
+        'material-cs' => ScmCsController::class,
+        'adjustments' => ScmAdjustmentController::class,
     ]);
 
     //Search Apis
@@ -49,6 +53,9 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('search-warehouse', [ScmWarehouseController::class, "searchWarehouse"])->name('searchWarehouse');
     Route::get('search-vendor', [ScmVendorController::class, "searchVendor"])->name('searchVendor');
     Route::get('search-pr-wise-material', [ScmPoController::class, "getMaterialByPrId"])->name('getMaterialByPrId');
+    Route::get('search-sr-wise-material', [ScmSrController::class, "getMaterialBySrId"])->name('getMaterialBySrId');
+    Route::get('get-si-wise-materials', [ScmSiController::class, "getMaterialBySiId"])->name('getMaterialBySiId');
+    Route::get('get-mmr-wise-materials', [ScmMmrController::class, "getMaterialByMmrId"])->name('getMaterialByMmrId');
     Route::get('search-po', [ScmPoController::class, "searchPo"])->name('searchPo');
     Route::get('search-po-for-lc', [ScmPoController::class, "searchPoForLc"])->name('searchPoForLc');
     Route::get('search-lc-record', [ScmLcRecordController::class, "searchLcRecord"])->name('searchLcRecord');
@@ -59,11 +66,16 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('get-si-wise-data', [ScmSirController::class, "getSiWiseData"])->name('getSiWiseData');
     Route::get('get-mmr-wise-data', [ScmMmrController::class, "getMmrWiseData"])->name('getMmrWiseData');
     Route::get('get-mmr-wise-mi-data', [ScmMiController::class, "getMmrWiseMiData"])->name('getMmrWiseMiData');
+    Route::get('get-mo-wise-mi-data', [ScmMiController::class, "getMoWiseMiData"])->name('getMoWiseMiData');
+    Route::get('get-pr-wise-cs-data', [ScmPrController::class, "getPrWiseCsData"])->name('getPrWiseCsData');
     Route::get('search-mrr', [ScmMrrController::class, "searchMrr"])->name('searchMrr');
     Route::get('search-pr', [ScmPrController::class, "searchPr"])->name('searchPr');
     Route::get('search-mmr', [ScmMmrController::class, "searchMmr"])->name('searchMmr');
+    Route::get('search-mo', [ScmMoController::class, "searchMo"])->name('searchMo');
     Route::get('get-material-for-mrr', [ScmMrrController::class, "getMaterialByPrId"])->name('getMaterialForMrrId');
-    Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse');
+    Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse'); 
+    Route::get('getCsData/{csId}', [ScmCsController::class, "getCsData"])->name('getCsData');
+    Route::post('selected-supplier', [ScmCsController::class, "selectedSupplierstore"])->name('selectedSupplier.store');
     
     //Business Info Apis
     Route::get('store-categories', fn () => config('businessinfo.store_category'));
@@ -78,4 +90,10 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('current-stock-by-material', [ScmStockLedgerController::class, "currentStock"])->name('currentStock');
     Route::get('get-pr-cs-wise-po-data', [ScmPoController::class, "getPoOrPoCsWisePrData"]);
     Route::get('stock', [SupplyChainController::class, "getCurrentStock"]);
+
+    // CS quotation
+    Route::post('quotations', [ScmCsController::class, "storeQuotation"])->name('quotations.create');
+    Route::get('quotations', [ScmCsController::class, "getQuotations"])->name('quotations.index');
+    Route::get('quotations/{quotationId}', [ScmCsController::class, "showQuotation"])->name('quotations.show');
+    Route::put('quotations/{quotationId}', [ScmCsController::class, "updateQuotation"])->name('quotations.update');
 });

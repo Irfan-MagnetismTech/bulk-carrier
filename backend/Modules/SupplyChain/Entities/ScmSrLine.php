@@ -4,6 +4,7 @@ namespace Modules\SupplyChain\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmSiLine;
+use Modules\SupplyChain\Entities\ScmSr;
 use Modules\SupplyChain\Entities\ScmMaterial;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -25,5 +26,10 @@ class ScmSrLine extends Model
     public function scmSiLines(): HasMany
     {
         return $this->hasMany(ScmSiLine::class, 'sr_composite_key', 'sr_composite_key');
+    }
+
+    public function scmSr(): BelongsTo
+    {
+        return $this->belongsTo(ScmSr::class);
     }
 }

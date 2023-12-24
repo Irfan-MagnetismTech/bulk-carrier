@@ -1,7 +1,7 @@
 /* readonly field */
 .vms-readonly-input {
     background-color: #e7e6e6;
-    cursor: not-allowed;
+    cursor: not-allowed !important;
 }
 
 .vms-readonly-input .dp__input{
@@ -130,7 +130,7 @@
 }
 
 .custom_opacity{
-    opacity: 0.6;
+    opacity: 0.3;
     pointer-events: none;
 }
 
@@ -340,6 +340,11 @@ input.custom_date::-webkit-calendar-picker-indicator{
         max-width: calc(100vw - 36px);
     }
 }
+
+
+.attachment-block {
+    @apply flex items-center w-full mt-1 text-sm rounded dark-disabled:text-gray-300  dark-disabled:bg-gray-700 bg-white p-2 min-h-[2.4rem]
+  }
 
 /* #customDataTable::-webkit-scrollbar:horizontal {
     height: 0.3rem!important; 

@@ -17,6 +17,7 @@ export default function useMaterialAdjustment() {
     const filteredMaterialAdjustments = ref([]);
     const filteredToWarehouses = ref([]);
     const filteredFromWarehouses = ref([]);
+    const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
     const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
@@ -24,27 +25,20 @@ export default function useMaterialAdjustment() {
     const materialAdjustment = ref( {
         ref_no: '',
         date: '',
-        delivery_date: '',
-        fromWarehouse: '',
-        from_warehouse_id: '',
-        toWarehouse: '',
-        to_warehouse_id: '',
+        scmWarehouse: '',
         scm_warehouse_id: '',
-        from_cost_center_id: '',
-        to_cost_center_id: '',
-        requested_by: '',
-        required_for: '',
+        acc_cost_center_id: '',
+        type: '',
         remarks: '',
         business_unit: '',
-        scmMmrLines: [
+        scmAdjustmentLines: [
             {
                 scmMaterial: '',
                 scm_material_id: '',
                 unit: '',
-                specification: '',
-                available_stock: '',
-                present_stock: '',
-                quantity: 0.0
+                quantity: 0.0,
+                adjustment_composite_key: '',
+                rate: 0.0,
             }
         ],
     });
@@ -52,34 +46,37 @@ export default function useMaterialAdjustment() {
         scmMaterial: '',
         scm_material_id: '',
         unit: '',
-        specification: '',
-        available_stock: '',
-        present_stock: '',
-        quantity: 0.0
+        quantity: 0.0,
+        adjustment_composite_key: '',
+        rate: 0.0,
     }
 
+ 
     const errors = ref('');
     const isLoading = ref(false);
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
+    const filterParams = ref(null);
 
-    async function getMaterialAdjustments(page, businessUnit, columns = null, searchKey = null, table = null) {
-        //NProgress.start();
-        const loader = $loading.show(LoaderConfig);
-        isLoading.value = true;
-        
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+    async function getMaterialAdjustments(filterOptions) {
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show(LoaderConfig);
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+        filterParams.value = filterOptions;
 
         try {
-            const {data, status} = await Api.get(`/${BASE}/material-adjustments`,{
+            const {data, status} = await Api.get(`/${BASE}/adjustments`,{
                 params: {
-                    page: page || 1,
-                    columns: columns || null,
-                    searchKey: searchKey || null,
-                    table: table || null,
-                    business_unit: businessUnit,
-                },
+                   page: filterOptions.page,
+                   items_per_page: filterOptions.items_per_page,
+                   data: JSON.stringify(filterOptions)
+                }
             });
             materialAdjustments.value = data.value;
             notification.showSuccess(status);
@@ -101,7 +98,7 @@ export default function useMaterialAdjustment() {
         formData.append('data', JSON.stringify(form));
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/material-adjustments`, formData);
+            const { data, status } = await Api.post(`/${BASE}/adjustments`, formData);
             materialAdjustment.value = data.value;
             notification.showSuccess(status);
             router.push({ name: `${BASE}.material-adjustments.index` });
@@ -120,7 +117,7 @@ export default function useMaterialAdjustment() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/${BASE}/material-adjustments/${materialAdjustmentId}`);
+            const { data, status } = await Api.get(`/${BASE}/adjustments/${materialAdjustmentId}`);
             materialAdjustment.value = data.value;
 
         } catch (error) {
@@ -141,7 +138,7 @@ export default function useMaterialAdjustment() {
         formData.append('_method', 'PUT');
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/material-adjustments/${materialAdjustmentId}`, formData);
+            const { data, status } = await Api.post(`/${BASE}/adjustments/${materialAdjustmentId}`, formData);
             materialAdjustment.value = data.value;
             notification.showSuccess(status);
             router.push({ name: `${BASE}.material-adjustments.index` });
@@ -160,9 +157,9 @@ export default function useMaterialAdjustment() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/${BASE}/material-adjustments/${materialAdjustmentId}`);
+            const { data, status } = await Api.delete( `/${BASE}/adjustments/${materialAdjustmentId}`);
             notification.showSuccess(status);
-            await getMaterialAdjustments(indexPage.value,indexBusinessUnit.value);
+            await getMaterialAdjustments(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -204,6 +201,7 @@ export default function useMaterialAdjustment() {
         showMaterialAdjustment,
         updateMaterialAdjustment,
         deleteMaterialAdjustment,
+        isTableLoading,
         materialObject,
         isLoading,
         errors,

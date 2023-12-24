@@ -33,4 +33,10 @@ class AccCashRequisition extends Model
     {
         return $this->belongsTo(User::class, 'requisitor_id', 'id');
     }
+
+    
+    public function accAdvanceAdjustment()
+    {
+        return $this->hasOne(AccAdvanceAdjustment::class);
+    }
 }

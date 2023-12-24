@@ -49,11 +49,16 @@ onMounted(() => {
               <tr>
                 <th class="w-40">Profile Picture</th>
                 <td>
-                  <img
-                      :src="env.BASE_API_URL + '/' + crewProfile?.picture"
-                      alt="Crew Profile Image"
-                      class="h-20 w-auto"
-                  />
+                  <template v-if="crewProfile?.picture">
+                    <img
+                        :src="env.BASE_API_URL + '/' + crewProfile?.picture"
+                        alt="Crew Profile Image"
+                        class="h-20 w-auto"
+                    />
+                  </template>
+                  <template v-else>
+                    <span>Not Available</span>
+                  </template>
                 </td>
               </tr>
               <tr>
@@ -238,6 +243,11 @@ onMounted(() => {
               <td>{{ educationData?.achievement }}</td>
             </tr>
             </tbody>
+            <tfoot v-if="!crewProfile?.educations?.length">
+            <tr>
+              <td colspan="8">No data found.</td>
+            </tr>
+            </tfoot>
           </table>
           <table class="w-full mt-1" id="profileDetailTable">
             <thead>
@@ -265,6 +275,11 @@ onMounted(() => {
               <td>{{ trainingData?.duration }}</td>
             </tr>
             </tbody>
+            <tfoot v-if="!crewProfile?.trainings?.length">
+            <tr>
+              <td colspan="7">No data found.</td>
+            </tr>
+            </tfoot>
           </table>
           <table class="w-full mt-1" id="profileDetailTable">
             <thead>
@@ -290,6 +305,11 @@ onMounted(() => {
               <td>{{ experienceData?.reason_for_leave }}</td>
             </tr>
             </tbody>
+            <tfoot v-if="!crewProfile?.experiences?.length">
+            <tr>
+              <td colspan="6">No data found.</td>
+            </tr>
+            </tfoot>
           </table>
           <table class="w-full mt-1" id="profileDetailTable">
             <thead>
@@ -315,6 +335,11 @@ onMounted(() => {
               <td>{{ languageData?.listening }}</td>
             </tr>
             </tbody>
+            <tfoot v-if="!crewProfile?.languages?.length">
+            <tr>
+              <td colspan="6">No data found.</td>
+            </tr>
+            </tfoot>
           </table>
           <table class="w-full mt-1" id="profileDetailTable">
             <thead>
@@ -344,6 +369,11 @@ onMounted(() => {
               <td>{{ referenceData?.relation }}</td>
             </tr>
             </tbody>
+            <tfoot v-if="!crewProfile?.references?.length">
+            <tr>
+              <td colspan="8">No data found.</td>
+            </tr>
+            </tfoot>
           </table>
           <table class="w-full mt-1" id="profileDetailTable">
             <thead>
@@ -373,6 +403,11 @@ onMounted(() => {
               <td>{{ (nomineeData?.is_relative === "1") ? "Yes" : "No" }}</td>
             </tr>
             </tbody>
+            <tfoot v-if="!crewProfile?.nominees?.length">
+            <tr>
+              <td colspan="8">No data found.</td>
+            </tr>
+            </tfoot>
           </table>
         </div>
       </div>
@@ -381,6 +416,10 @@ onMounted(() => {
 <style lang="postcss" scoped>
   th, td, tr {
     @apply text-left border-gray-500
+  }
+
+  tfoot td{
+    @apply text-center
   }
 
   #profileDetailTable th{

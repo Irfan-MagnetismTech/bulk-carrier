@@ -7,7 +7,7 @@ import Store from '../../store/index.js';
 // import useFileDownload from 'vue-composable/dist/vue-composable.esm';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
-
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 export default function useMovementOut() {
     const BASE = 'scm' 
@@ -21,7 +21,7 @@ export default function useMovementOut() {
     const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const movementOut = ref( {
         ref_no: '',
@@ -38,14 +38,6 @@ export default function useMovementOut() {
         scm_mmr_id: '',
         business_unit: '',
         scmMoLines: [
-            {
-                scmMaterial: '',
-                scm_material_id: '',
-                unit: '',
-                remarks: '',
-                mmr_quantity: 0.00,
-                quantity: 0.00
-            }
         ],
     });
     const materialObject = {
@@ -54,6 +46,7 @@ export default function useMovementOut() {
         unit: '',
         remarks: '',
         mmr_quantity: 0.00,
+        mmr_composite_key: '',
         quantity: 0.00
     }
 
@@ -191,7 +184,7 @@ console.log(movementOut.value);
             loading(false)
         }
     }
-    async function getMmrWiseMo(mmrId) {
+    async function getMmrWiseMoData(mmrId) {
         try {
             const {data, status} = await Api.get(`/${BASE}/get-mmr-wise-data`,{
                 params: {
@@ -200,6 +193,22 @@ console.log(movementOut.value);
             });
             filteredMovementRequisitionLines.value = data.value.scmMmrLines;
             console.log(filteredMovementRequisitionLines.value);
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            //NProgress.done();
+        }
+    }
+
+    async function getMmrWiseMo(business_unit,mmrId) {
+        try {
+            const {data, status} = await Api.get(`/${BASE}/search-mo`,{
+                params: {
+                    mmr_id: mmrId,
+                    business_unit: business_unit,
+                },
+            });
+            filteredMovementOuts.value = data.value;
         } catch (error) {
             console.log('tag', error)
         } finally {
@@ -220,6 +229,7 @@ console.log(movementOut.value);
         updateMovementOut,
         deleteMovementOut,
         filteredMovementRequisitionLines,
+        getMmrWiseMoData,
         getMmrWiseMo,
         materialObject,
         isTableLoading,

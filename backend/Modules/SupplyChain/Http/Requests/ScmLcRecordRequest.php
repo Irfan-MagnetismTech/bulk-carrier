@@ -33,7 +33,7 @@ class ScmLcRecordRequest extends FormRequest
             'no_of_packet' => 'sometimes|nullable|numeric',
             'scm_po_id' => 'required|integer|exists:scm_pos,id',
             'invoice_value' => 'numeric',
-            'assessment_value' => 'numeric',
+            'assessment_value' => 'required|numeric',
             // 'issue_bank_id' => 'required|integer|exists:acc_banks,id',
             'issue_bank_name' => 'required|max:255',
             // 'advising_bank_id' => 'required|integer|exists:acc_banks,id',
@@ -41,7 +41,7 @@ class ScmLcRecordRequest extends FormRequest
             // 'discounting_bank_id' => 'required|integer|exists:acc_banks,id',
             'discounting_bank_name' => 'max:255',
             // 'beneficiary_bank_id' => 'required|integer|exists:acc_banks,id',
-            'beneficiary_bank_name' => 'max:255',
+            'beneficiary_bank_name' => 'required|max:255',
             'scm_vendor_id' => 'required|integer|exists:scm_vendors,id',
             'lc_type' => 'required',
             // 'acc_bank_id' => 'required|integer|exists:acc_banks,id',
@@ -78,6 +78,15 @@ class ScmLcRecordRequest extends FormRequest
 
             'raised_date.required' => 'Raised date is required',
             'raised_date.date' => 'Raised date must be a date',
+
+            'assessment_value.required' => 'Assessment value is required',
+            'assessment_value.numeric' => 'Assessment value must be a number',
+
+            'issue_bank_name.required' => 'Issue bank name is required',
+            'issue_bank_name.max' => 'Issue bank name must be less than 255 characters',
+
+            'beneficiary_bank_name.required' => 'Beneficiary bank name is required',
+            'beneficiary_bank_name.max' => 'Beneficiary bank name must be less than 255 characters',
 
             'remarks.max' => 'Remarks must be less than 255 characters',
 

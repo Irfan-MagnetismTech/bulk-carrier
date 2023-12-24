@@ -11,13 +11,14 @@ use Modules\SupplyChain\Entities\ScmWarehouse;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\GlobalSearchTrait;
 
 class ScmSir extends Model
 {
-    use HasFactory, StockLedger;
+    use HasFactory, StockLedger, GlobalSearchTrait;
 
     protected $fillable = [
-        'ref_no', 'scm_si_id', 'scm_warehouse_id', 'acc_cost_center_id', 'department_id', 'date', 'business_unit', 'created_by',
+        'ref_no', 'scm_si_id', 'scm_warehouse_id', 'acc_cost_center_id', 'department_id', 'date', 'business_unit', 'created_by', 'remarks',
     ];
 
     public function scmSirLines(): HasMany

@@ -3,8 +3,11 @@
 namespace Modules\Maintenance\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Modules\Maintenance\Entities\MntCriticalItem;
 use Modules\Maintenance\Entities\MntCriticalItemCat;
 use Modules\Maintenance\Http\Requests\MntCriticalItemCatRequest;
 
@@ -117,27 +120,20 @@ class MntCriticalItemCatController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(MntCriticalItemCat $criticalItemCat)
     {
         try {            
-            $criticalItemCat = MntCriticalItemCat::findorfail($id);
-            if ($criticalItemCat->mntCriticalItems()->count() > 0) {
-                $error = array(
-                    "message" => "Data could not be deleted!",
-                    "errors" => [
-                        "id"=>["This data could not be deleted as it  is in use."]
-                    ]
-                );
-                return response()->json($error, 422);
-            }
+            DB::beginTransaction();
             $criticalItemCat->delete();
-            
+            DB::commit();
             return response()->success('Critical item category deleted successfully', $criticalItemCat, 204);
             
         }
-        catch (\Exception $e)
+        catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($criticalItemCat->preventDeletionIfRelated(), 422);
+
         }
     }
 

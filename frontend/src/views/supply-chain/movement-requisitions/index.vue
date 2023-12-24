@@ -14,6 +14,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import moment from 'moment';
 
 const { getMovementRequisitions, movementRequisitions, deleteMovementRequisition, isLoading,isTableLoading } = useMovementRequisition();
 const { numberFormat } = useHelper();
@@ -81,17 +82,17 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Date",
+      "label": "Requested Date",
       "filter_type": "input"
     },
     {
       "relation_name": null,
-      "field_name": "required_date",
+      "field_name": "delivery_date",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Required Date",
+      "label": "Delivery Date",
       "filter_type": "input"
     },
   ]
@@ -163,7 +164,7 @@ onMounted(() => {
 function confirmDelete(id) {
         Swal.fire({
           title: 'Are you sure?',
-          text: "You want to change delete this Unit!",
+          text: "You want to delete this data!",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -195,17 +196,6 @@ function confirmDelete(id) {
     <h2 class="text-2xl font-semibold text-gray-700">Movement Requisition List</h2>
     <default-button :title="'Create Movement Requisition'" :to="{ name: 'scm.movement-requisitions.create' }" :icon="icons.AddIcon"></default-button>
   </div>
-  <div class="flex items-center justify-between mb-2 select-none">
-    <!-- <span class="w-full text-xs font-medium text-gray-500 whitespace-no-wrap">Showing {{ movementRequisitions?.from }}-{{ movementRequisitions?.to }} of {{ movementRequisitions?.total }}</span> -->
-    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
-    <!-- Search -->
-    <div class="relative w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 w-5 h-5 mr-2 text-gray-500 bottom-2" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-      </svg>
-      <input type="text" v-model="searchKey" placeholder="Search..." class="search" />
-    </div>
-  </div>
   <!-- Table -->
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
@@ -229,17 +219,15 @@ function confirmDelete(id) {
               <td>{{ movementRequisition?.ref_no }}</td>
               <td>{{ movementRequisition?.fromWarehouse?.name?? '' }}</td>
               <td>{{ movementRequisition?.toWarehouse?.name?? '' }}</td>
-              <td>{{ movementRequisition?.date }}</td>
-              <td>{{ movementRequisition?.required_date }}</td>
+              <td>{{ movementRequisition?.date ? moment(movementRequisition?.date).format('DD-MM-YYYY') : null }}</td>
+              <td>{{ movementRequisition?.delivery_date ? moment(movementRequisition?.delivery_date).format('DD-MM-YYYY') : null }}</td>
               <td>
                 <span :class="movementRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ movementRequisition?.business_unit }}</span>
               </td>
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">
-                  <!-- <button @click="navigateToSICreate(movementRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create SI</button> -->
-                  <!-- <button @click="navigateToPOCreate(movementRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
-                  <button @click="navigateToMRRCreate(movementRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
-                  <action-button :action="'edit'" :to="{ name: 'scm.movement-requisitions.edit', params: { movementRequisitionId: movementRequisition.id } }"></action-button>
+                  <action-button :action="'show'" :to="{ name: 'scm.movement-requisitions.show', params: { movementRequisitionId: movementRequisition.id } }"></action-button>
+                  <action-button :action="'edit'" :to="{ name: 'scm.movement-requisitions.edit', params: { movementRequisitionId: movementRequisition.id } }" v-if="(movementRequisition?.scmMos.length <= 0)"></action-button>
                   <action-button @click="confirmDelete(movementRequisition.id)" :action="'delete'"></action-button>
                 </div>
               </td>

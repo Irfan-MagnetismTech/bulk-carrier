@@ -12,7 +12,7 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Customer Code <span class="text-red-500">*</span></span>
-            <input type="text" v-model.trim="form.code" placeholder="Customer Code" class="form-input" required autocomplete="off" />
+            <input type="text" v-model.trim="form.code" maxlength="10" placeholder="Customer Code" class="form-input" required autocomplete="off" :class="{ 'bg-gray-200': formType === 'edit' }" :disabled="formType=='edit'" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Legal Name <span class="text-red-500">*</span></span>
@@ -102,6 +102,8 @@ const props = defineProps({
         default: {}
     },
     errors: { type: [Object, Array], required: false },
+    formType: { type: String, required : false },
+
 });
 </script>
 <style lang="postcss" scoped>

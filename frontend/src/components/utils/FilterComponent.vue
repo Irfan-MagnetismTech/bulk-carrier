@@ -56,25 +56,26 @@ function setSortState(index, order) {
                 </div>
               </th>
               <th v-for="(option, key) in filterOptions.filter_options" :key="key" :class="option?.class">
-                <nobr>
+                <div :class="{ 'no-wrap': !option.nobr_tag }">
                   <div class="flex justify-center items-center">
-                  <span class="mr-2">{{ option.label }}</span>
-                  <div class="flex flex-col cursor-pointer" v-if="option.filter_type">
-                    <div
-                      v-html="icons.descIcon"
-                      @click="setSortState(key, 'asc')"
-                      :class="{ 'text-gray-800': option.order_by === 'asc', 'text-gray-300': option.order_by !== 'asc' }"
-                      class="font-semibold"
-                    ></div>
-                    <div
-                      v-html="icons.ascIcon"
-                      @click="setSortState(key, 'desc')"
-                      :class="{ 'text-gray-800': option.order_by === 'desc', 'text-gray-300': option.order_by !== 'desc' }"
-                      class="font-semibold"
-                    ></div>
+                    <span class="mr-2">{{ option.label }}</span>
+                    <div class="flex flex-col cursor-pointer" v-if="option.filter_type">
+                      <div
+                          v-html="icons.descIcon"
+                          @click="setSortState(key, 'asc')"
+                          :class="{ 'text-gray-800': option.order_by === 'asc', 'text-gray-300': option.order_by !== 'asc' }"
+                          class="font-semibold"
+                      ></div>
+                      <div
+                          v-html="icons.ascIcon"
+                          @click="setSortState(key, 'desc')"
+                          :class="{ 'text-gray-800': option.order_by === 'desc', 'text-gray-300': option.order_by !== 'desc' }"
+                          class="font-semibold"
+                      ></div>
+                    </div>
                   </div>
                 </div>
-                </nobr>
+
               </th>
               <th v-if="filterOptions.business_unit"><nobr>Business Unit</nobr></th>
               <th class=""><nobr>Action</nobr></th>
@@ -124,5 +125,8 @@ function setSortState(index, order) {
   --dp-border-color-hover: #4b5563;
   --dp-icon-color: #4b5563;
   --dp-font-size: 12px;
+}
+.no-wrap {
+  white-space: nowrap;
 }
 </style>

@@ -9,7 +9,9 @@ import useMaterialReceiptReport from "../../composables/supply-chain/useMaterial
 import ErrorComponent from '../utils/ErrorComponent.vue';
 import usePurchaseRequisition from "../../composables/supply-chain/usePurchaseRequisition";
 import RemarksComponent from "../utils/RemarksComponent.vue";
+import useHeroIcon from "../../assets/heroIcon";
 const { vessels, searchVessels } = useVessel();
+const icons = useHeroIcon();
 
 const { allCostCenterLists, getCostCenter, isLoading } = useAccountCommonApiRequest();
 const { searchMrr, filteredMaterialReceiptReports } = useMaterialReceiptReport();
@@ -48,6 +50,7 @@ function accCashRequisitionLines() {
     particular: '',
     amount: '',
     remarks: '',
+    isParticularDuplicate: false
   };
   props.form.accCashRequisitionLines.push(obj);
 }
@@ -76,8 +79,6 @@ watch(
 );
 
 onMounted(() => {
-  console.log(props.form); 
-  //props.form.business_unit = businessUnit.value;
   watchEffect(() => {
     getCostCenter(null,props.form.business_unit);
     searchPr(props.form.business_unit,props.form.acc_cost_center_id,null)
@@ -134,8 +135,8 @@ onMounted(() => {
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="px-4 py-3 align-bottom"> Particular <span class="text-red-500">*</span></th>
-            <th class="px-4 py-3 align-bottom"> Amount <span class="text-red-500">*</span></th>
             <th class="px-4 py-3 align-bottom"> Remarks</th>
+            <th class="px-4 py-3 align-bottom"> Amount <span class="text-red-500">*</span></th>
             <th class="px-4 py-3 text-center align-bottom">Action</th>
           </tr>
           </thead>
@@ -143,13 +144,30 @@ onMounted(() => {
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(accCashRequisitionLine, index) in form.accCashRequisitionLines" :key="accCashRequisitionLine.id">
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.accCashRequisitionLines[index].particular" placeholder="Particular" class="form-input" autocomplete="off" required />
-            </td>
-            <td class="px-1 py-1">
-              <input type="number" step=".01" v-model.trim="form.accCashRequisitionLines[index].amount" class="form-input !text-right" autocomplete="off" required />
+              <div style="position: relative;">
+              <input
+                  type="text"
+                  v-model.trim="form.accCashRequisitionLines[index].particular"
+                  placeholder="Particular"
+                  class="form-input"
+                  autocomplete="off"
+                  required
+              />
+              <span
+                  v-show="accCashRequisitionLine.isParticularDuplicate"
+                  class="text-yellow-600 pl-1"
+                  title="Duplicate Particular"
+                  v-html="icons.ExclamationTriangle"
+                  style="position: absolute; top: 50%; transform: translateY(-50%); right: 5px;"
+              ></span>
+              </div>
+<!--              <input type="text" v-model.trim="form.accCashRequisitionLines[index].particular" placeholder="Particular" class="form-input" autocomplete="off" required />-->
             </td>
             <td class="px-1 py-1">
               <input type="text" v-model.trim="form.accCashRequisitionLines[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
+            </td>
+            <td class="px-1 py-1">
+              <input type="number" step=".01" v-model.trim="form.accCashRequisitionLines[index].amount" class="form-input !text-right" autocomplete="off" required />
             </td>
             <td class="px-1 py-1 text-center">
               <button v-if="index!==0" type="button" @click="removeAccCashRequisitionLines(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -165,11 +183,11 @@ onMounted(() => {
             </td>
           </tr>
           <tr class="text-gray-700 dark-disabled:text-gray-400">
+            <td class="px-1 py-1 font-bold text-right"></td>
             <td class="px-1 py-1 font-bold !text-right">Total Amount</td>
             <td class="px-1 py-1 font-bold text-right">
               <input type="number" step=".01" v-model.trim="form.total_amount" class="block w-full rounded form-input vms-readonly-input !text-right" readonly>
             </td>
-            <td class="px-1 py-1 font-bold text-right"></td>
           </tr>
           </tbody>
         </table>

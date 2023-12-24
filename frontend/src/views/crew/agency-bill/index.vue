@@ -142,12 +142,11 @@ onMounted(() => {
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
-      
       <table class="w-full whitespace-no-wrap" >
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
           <tr v-for="(bill,index) in agencyBills?.data" :key="index">
-            <td>{{ index + 1 }}</td>
+            <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td>{{ bill?.crwAgency?.agency_name }}</td>
             <td>{{ bill?.crwAgency?.phone }}</td>
             <td>{{ bill?.invoice_amount }}</td>
@@ -158,6 +157,7 @@ onMounted(() => {
             </td>
             <td>
               <nobr>
+                <action-button :action="'show'" :to="{ name: 'crw.agencyBills.show', params: { agencyBillId: bill?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'crw.agencyBills.edit', params: { agencyBillId: bill?.id } }"></action-button>
                 <action-button @click="confirmDelete(bill?.id)" :action="'delete'"></action-button>
               </nobr>
@@ -174,7 +174,7 @@ onMounted(() => {
             <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
           </td>
         </tr>
-        <tr v-else-if="!agencyBills?.data?.data?.length">
+        <tr v-else-if="!agencyBills?.data?.length">
           <td colspan="7">No data found.</td>
         </tr>
         </tfoot>

@@ -223,8 +223,11 @@ filterOptions.value.filter_options.forEach((option, index) => {
             </td>
             <!-- <td>Waiting</td> -->
             <td>
-              <action-button :action="'edit'" :to="{ name: 'crw.crewRequisitions.edit', params: { crewRequisitionId: requiredCrew?.id } }"></action-button>
-              <action-button @click="confirmDelete(requiredCrew?.id)" :action="'delete'"></action-button>
+              <nobr>
+                <action-button :action="'show'" :to="{ name: 'crw.crewRequisitions.show', params: { crewRequisitionId: requiredCrew?.id } }"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'crw.crewRequisitions.edit', params: { crewRequisitionId: requiredCrew?.id } }"></action-button>
+                <action-button @click="confirmDelete(requiredCrew?.id)" :action="'delete'"></action-button>
+              </nobr>
             </td>
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && crewRequisitions?.data?.length"></LoaderComponent>

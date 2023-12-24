@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Services\FileUploadService;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsVoyageExpenditure;
@@ -15,13 +16,13 @@ class OpsVoyageExpenditureController extends Controller
 {
    // use HasRoles;
    
-    //    function __construct(private FileUploadService $fileUpload)
-    //    {
+       function __construct(private FileUploadService $fileUpload)
+       {
     //     $this->middleware('permission:voyage-expenditure-create|voyage-expenditure-edit|voyage-expenditure-show|voyage-expenditure-delete', ['only' => ['index','show']]);
     //     $this->middleware('permission:voyage-expenditure-create', ['only' => ['store']]);
     //     $this->middleware('permission:voyage-expenditure-edit', ['only' => ['update']]);
     //     $this->middleware('permission:voyage-expenditure-delete', ['only' => ['destroy']]);
-    //    }
+       }
    /**
     * get all users with their roles.
     * @param Request $request
@@ -30,7 +31,7 @@ class OpsVoyageExpenditureController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $voyage_expenditures = OpsVoyageExpenditure::with('opsVessel','opsVoyageExpenditureEntries')
+            $voyage_expenditures = OpsVoyageExpenditure::with('opsVoyage','opsVessel','opsVoyage.opsCargoType','opsVoyageExpenditureEntries')
             ->globalSearch($request->all());
             
             return response()->success('Successfully retrieved voyage expenditures.', $voyage_expenditures, 200);
@@ -56,7 +57,13 @@ class OpsVoyageExpenditureController extends Controller
             $voyage_expenditure_info = $request->except(
                 '_token',
                 'opsVoyageExpenditureEntries',
+                'attachment'
             );
+
+            if(isset($request->attachment)){
+                $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/voyage_expenditures');
+                $voyage_expenditure_info['attachment'] = $attachment;
+            }
 
             $voyage_expenditure = OpsVoyageExpenditure::create($voyage_expenditure_info);
             $voyage_expenditure->opsVoyageExpenditureEntries()->createMany($request->opsVoyageExpenditureEntries);
@@ -78,7 +85,7 @@ class OpsVoyageExpenditureController extends Controller
     */
     public function show(OpsVoyageExpenditure $voyage_expenditure): JsonResponse
     {
-        $voyage_expenditure->load(['opsVoyage.opsVessel','opsVoyage.opsCargoType','opsVoyageExpenditureEntries']);
+        $voyage_expenditure->load(['opsVoyage','port','opsVessel','opsVoyage.opsCargoType','opsVoyageExpenditureEntries.opsExpenseHead']);
         try
         {
             return response()->success('Data retrieved successfully.', $voyage_expenditure, 200);
@@ -105,12 +112,19 @@ class OpsVoyageExpenditureController extends Controller
             $voyage_expenditure_info = $request->except(
                 '_token',
                 'opsVoyageExpenditureEntries',
+                'attachment'
             );
+
+            if(isset($request->attachment)){
+                $this->fileUpload->deleteFile($voyage_expenditure->attachment);
+                $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/voyage_expenditures');
+                $voyage_expenditure_info['attachment'] = $attachment;
+            }
             
             $voyage_expenditure->update($voyage_expenditure_info);
             $voyage_expenditure->opsVoyageExpenditureEntries()->createUpdateOrDelete($request->opsVoyageExpenditureEntries);
             DB::commit();
-            return response()->success('Data updated successfully.', $voyage_expenditure, 200);
+            return response()->success('Data updated successfully.', $voyage_expenditure, 202);
         }
         catch (QueryException $e)
         {            
@@ -130,6 +144,7 @@ class OpsVoyageExpenditureController extends Controller
         try
         {
             $voyage_expenditure->opsVoyageExpenditureEntries()->delete();
+            $this->fileUpload->deleteFile($voyage_expenditure->attachment);
             $voyage_expenditure->delete();
 
             return response()->json([

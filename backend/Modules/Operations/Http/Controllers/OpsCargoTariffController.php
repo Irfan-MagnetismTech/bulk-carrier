@@ -58,6 +58,18 @@ class OpsCargoTariffController extends Controller
                 '_token',
                 'opsCargoTariffLines',
             );
+            
+            $cargoTariffInfo['pol_pod']=$cargoTariffInfo['loading_point'] .'-'. $cargoTariffInfo['unloading_point'];
+
+            // if($cargoTariffInfo['loading_point'] == $cargoTariffInfo['unloading_point']){
+            //     $error= [
+            //         'message'=>'In Sectors - Loading Point and Unloading Point can not be same for the row '.$key++.'.',
+            //         'errors'=>[
+            //             'unloading_point'=>['In Sectors - Loading Point and Unloading Point can not be same for the row '.$key++.'.',]
+            //             ]
+            //         ];
+            //     return response()->json($error, 422);
+            // }
 
             $cargoTariff = OpsCargoTariff::create($cargoTariffInfo);
             $cargoTariff->opsCargoTariffLines()->createMany($request->opsCargoTariffLines);
@@ -107,8 +119,9 @@ class OpsCargoTariffController extends Controller
                 '_token',
                 'opsCargoTariffLines',
             );
-                       
-            $cargo_tariff->update($cargoTariffInfo);            
+
+            $cargoTariffInfo['pol_pod']=$cargoTariffInfo['loading_point'] .'-'. $cargoTariffInfo['unloading_point'];
+            $cargo_tariff->update($cargoTariffInfo);         
             $cargo_tariff->opsCargoTariffLines()->createUpdateOrDelete($request->opsCargoTariffLines);
             DB::commit();
             return response()->success('Data updated successfully.', $cargo_tariff, 202);
@@ -168,7 +181,20 @@ class OpsCargoTariffController extends Controller
             ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($q){
                 $q->where('business_unit', request()->business_unit);  
             })
+            ->when(isset(request()->ops_vessel_id), function ($query) {
+                $query->where('ops_vessel_id', request()->ops_vessel_id);                
+            })
             ->get();
+
+            // if(count($cargoTariffs)==0) {
+            //     $error= [
+            //         'message'=>'Vessel has not define in any Tariffs.',
+            //         'errors'=>[
+            //             'tariff'=>['Vessel has not define in any Tariffs.',]
+            //             ]
+            //         ];
+            //     return response()->json($error, 422);
+            // }
 
             return response()->success('Data retrieved successfully.', $cargoTariffs, 200);
         } catch (QueryException $e){

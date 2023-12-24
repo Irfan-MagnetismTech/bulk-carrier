@@ -3,6 +3,7 @@
 namespace Modules\Maintenance\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -140,34 +141,25 @@ class MntCriticalVesselItemController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(MntCriticalVesselItem $criticalVesselItem)
     {
         try {
             DB::beginTransaction();
-            $mntCriticalVesselItem = MntCriticalVesselItem::findorfail($id);
             
-            if ($mntCriticalVesselItem->mntCriticalSpListLines()->count() > 0) {
-                $error = array(
-                    "message" => "Data could not be deleted!",
-                    "errors" => [
-                        "id"=>["This data could not be deleted as it is in use."]
-                    ]
-                );
-                return response()->json($error, 422);
-            }
             // Delete critical item spare parts
-            $mntCriticalVesselItem->mntCriticalItemSps()->delete();
+            $criticalVesselItem->mntCriticalItemSps()->delete();
             // Delete critical item
-            $mntCriticalVesselItem->delete();
+            $criticalVesselItem->delete();
             
             DB::commit();
-            return response()->success('Critical vessel item deleted successfully', $mntCriticalVesselItem, 204);
+            return response()->success('Critical vessel item deleted successfully', $criticalVesselItem, 422);
             
         }
-        catch (\Exception $e)
+        catch (QueryException $e)
         {
             DB::rollBack();
-            return response()->error($e->getMessage(), 500);
+            return response()->json($criticalVesselItem->preventDeletionIfRelated(), 422);
+
         }
     }
 
