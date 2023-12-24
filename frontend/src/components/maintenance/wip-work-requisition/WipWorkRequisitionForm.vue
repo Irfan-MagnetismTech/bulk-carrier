@@ -50,7 +50,7 @@
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Act. Start Date <span v-show="form.status != 0"  class="text-red-500">*</span></span>
             <!-- <input type="date" :min="form.requisition_date" :required="form.status != 0"  v-model="form.act_start_date" placeholder="Act. Start Date" class="form-input" required  /> -->
-            <VueDatePicker :min-date="form.requisition_date" :required="form.status != 0"  v-model="form.act_start_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+            <VueDatePicker :min-date="form.requisition_date" :required="form.status != 0"  v-model="form.act_start_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" @update:model-value="processMntWorkRequisitionLines"></VueDatePicker>
           <Error v-if="errors?.act_start_date" :errors="errors.act_start_date" />
         </label>
 
@@ -59,7 +59,7 @@
             <span class="text-gray-700 dark-disabled:text-gray-300">Act. Completion Date <span v-show="!form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2)" class="text-red-500">*</span></span>
             <!-- <input type="date" :min="form.act_start_date"  v-model="form.act_completion_date" placeholder="Act. completion Date" class="form-input" :class="{'vms-readonly-input' : form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2) }"  :readonly="form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2)" :required="!form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2)"  /> -->
 
-            <VueDatePicker :min-date="form.act_start_date"  v-model="form.act_completion_date" class="form-input" :class="{'vms-readonly-input' : form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2) }"  :readonly="form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2)" :required="!form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2)"   auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" ></VueDatePicker>
+            <VueDatePicker :min-date="maxCompletionDate??form.act_start_date"  v-model="form.act_completion_date" class="form-input" :class="{'vms-readonly-input' : form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2) }"  :readonly="form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2)" :required="!form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2)"   auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" ></VueDatePicker>
 
           <Error v-if="errors?.act_completion_date" :errors="errors.act_completion_date" />
         </label>
@@ -168,7 +168,7 @@
               <!-- <input type="date" class="form-input" :min="mntWorkRequisitionLine.start_date" 
               :max="form.act_completion_date"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date" :class="{ 'vms-readonly-input' : mntWorkRequisitionLine.status != 2  }"  :disabled="mntWorkRequisitionLine.status != 2" :required="mntWorkRequisitionLine.status == 2" />  -->
 
-              <VueDatePicker :min-date="mntWorkRequisitionLine.start_date" :max-date="form.act_completion_date" v-model="mntWorkRequisitionLine.completion_date" class="form-input" :class="{ 'vms-readonly-input' : mntWorkRequisitionLine.status != 2  }"  :disabled="mntWorkRequisitionLine.status != 2" :required="mntWorkRequisitionLine.status == 2" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" ></VueDatePicker>
+              <VueDatePicker :min-date="mntWorkRequisitionLine.start_date" v-model="mntWorkRequisitionLine.completion_date" class="form-input" :class="{ 'vms-readonly-input' : mntWorkRequisitionLine.status != 2  }"  :disabled="mntWorkRequisitionLine.status != 2" :required="mntWorkRequisitionLine.status == 2" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" ></VueDatePicker>
               <!-- <Error class="pb-1" v-if="mntWorkRequisitionLine?.errors?.completion_date" :errors="mntWorkRequisitionLine?.errors?.completion_date" /> -->
               <Error class="pb-1" v-if="mntWorkRequisitionLine?.completion_date_error" :errors="mntWorkRequisitionLine?.completion_date_error" />
             </td>
@@ -266,6 +266,7 @@ const { material, materials, getMaterials, searchMaterial, isLoading : isMateria
 const { workRequisitionStatus } = useMaintenanceHelper();
 const icons = useHeroIcon();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const tab = ref('all_jobs');
 const currentTab = (tabValue) => {
   tab.value = tabValue;
@@ -345,14 +346,30 @@ function setStartAndCompletionDate(mntWorkRequisitionLine) {
   }
 }
 
-watch(() => props.form.mntWorkRequisitionLines, (mntWorkRequisitionLines) => {
+const maxCompletionDate = ref(null);
+
+const processMntWorkRequisitionLines = () => {
+  let mntWorkRequisitionLines = props.form.mntWorkRequisitionLines;
+  maxCompletionDate.value = null;
   mntWorkRequisitionLines?.forEach(mntWorkRequisitionLine => {
-    if (mntWorkRequisitionLine.completion_date != "" && mntWorkRequisitionLine.completion_date < mntWorkRequisitionLine.start_date) {
+    if (props.form.act_start_date > mntWorkRequisitionLine.start_date && mntWorkRequisitionLine.start_date != "") {
+      mntWorkRequisitionLine.start_date = "";
+    }
+    if ((mntWorkRequisitionLine.start_date > mntWorkRequisitionLine.completion_date || props.form.act_start_date > mntWorkRequisitionLine.completion_date) && mntWorkRequisitionLine.completion_date != "") {
       mntWorkRequisitionLine.completion_date = "";
+    }
+    if ((mntWorkRequisitionLine.completion_date > props.form.act_completion_date || mntWorkRequisitionLine.start_date > props.form.act_completion_date || props.form.act_start_date > props.form.act_completion_date) && props.form.act_completion_date != "") {
+      props.form.act_completion_date = "";
+    }
+    if (mntWorkRequisitionLine.completion_date && (mntWorkRequisitionLine.completion_date > maxCompletionDate.value || maxCompletionDate.value == null)) {
+      maxCompletionDate.value = mntWorkRequisitionLine.completion_date;
     }
     setStartAndCompletionDate(mntWorkRequisitionLine);
   });
+}
 
+watch(() => props.form.mntWorkRequisitionLines, (mntWorkRequisitionLines) => {
+  processMntWorkRequisitionLines();
 }, { deep: true });
 
 // function submitWipWorkRequisitionLine(mntWorkRequisitionLine) {

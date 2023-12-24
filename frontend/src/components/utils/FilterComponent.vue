@@ -17,7 +17,8 @@ const props = defineProps({
 
 })
 const { filterOptions } = toRefs(props);
-const {showFilter,  swapFilter, setSortingState, clearFilter } = useGlobalFilter()
+const { showFilter, swapFilter, setSortingState, clearFilter } = useGlobalFilter();
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const icons = useHeroIcon();
 const itemsPerPage = [
   { label: '15', value: 15 },
@@ -92,7 +93,8 @@ function setSortState(index, order) {
                   <input v-model="option.search_param" type="text" placeholder="" class="filter_input" autocomplete="off" />
                 </template>
                 <template v-else-if="option.filter_type === 'date'">
-                  <input v-model="option.search_param" type="date" placeholder="" class="filter_input" autocomplete="off" />
+                  <!-- <input v-model="option.search_param" type="date" placeholder="" class="filter_input" autocomplete="off" /> -->
+                  <VueDatePicker  v-model="option.search_param" class="filter_input min-w-[100px] text-center" auto-apply hide-input-icon  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" :clearable="false"></VueDatePicker>
                 </template>
                 <template v-else-if="option.filter_type === 'dropdown'">
                   <select v-model="option.search_param" class="filter_input" autocomplete="off">
@@ -116,5 +118,11 @@ function setSortState(index, order) {
           </thead>
 </template>
 <style lang="postcss" scoped>
-
+>>> {
+  --dp-input-padding: 3px 5px ;
+  --dp-border-color: #4b5563;
+  --dp-border-color-hover: #4b5563;
+  --dp-icon-color: #4b5563;
+  --dp-font-size: 12px;
+}
 </style>
