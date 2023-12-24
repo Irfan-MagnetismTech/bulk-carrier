@@ -148,6 +148,32 @@ class ScmCsController extends Controller
         }
     }
 
+    /**
+     * Show the specified resource.
+     * @param int $id
+     * @return Renderable
+     */
+    public function getCsWiseData($id)
+    {
+        $materialCs = ScmCs::find($id);
+        // $materialCs->load('scmPr', 'scmWarehouse');
+        $materialCs->load('scmCsMaterials.scmMaterial','scmPr','scmCsMaterials.scmPr', 'scmWarehouse');
+        //scmCsMaterials groupBy ['scm_material_id','scm_pr_id']
+        $data = $materialCs->scmCsMaterials->groupBy(['scm_material_id'])->values()->all();
+        data_forget($materialCs, 'scmCsMaterials');
+
+        $materialCs['scmCsMaterials'] = $data;
+
+
+        try {
+            return response()->success('Detail data', $materialCs, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+
+
     public function getQuotations(Request $request)
     {
         $scmCs = ScmCsVendor::query()

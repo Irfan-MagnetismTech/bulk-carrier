@@ -177,58 +177,75 @@
             </thead>
 
             <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-            <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmSrLine, index) in form.scmCsMaterialVendors" :key="index">
-              <td class="!w-72">
-                <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmSrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmSrLines[index].scmMaterial,index)"> -->
-                <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmCsMaterialVendors[index].scmPr" label="ref_no" class="block form-input" :disabled="true" @update:modelValue="changeMaterial(form.scmCsMaterialVendors[index].scmMaterial,index)">
-                  <template #search="{attributes, events}">
-                      <input
-                          class="vs__search"
-                          :required="!form.scmCsMaterialVendors[index].scmPr"
-                          v-bind="attributes"
-                          v-on="events"
-                          />
-                  </template>
-              </v-select>
-             
-              </td>
-              <td class="!w-72">
-                <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmSrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmSrLines[index].scmMaterial,index)"> -->
-                <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmCsMaterialVendors[index].scmMaterial" label="material_name_and_code" class="block form-input" :disabled="true" @update:modelValue="changeMaterial(form.scmCsMaterialVendors[index].scmMaterial,index)">
-                  <template #search="{attributes, events}">
-                      <input
-                          class="vs__search"
-                          :required="!form.scmCsMaterialVendors[index].scmMaterial"
-                          v-bind="attributes"
-                          v-on="events"
-                          />
-                  </template>
-              </v-select>
-             
-              </td>
-              <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="text" readonly v-model="form.scmCsMaterialVendors[index].unit" class=" form-input">
-                </label>
-                
-              </td>
-            
-              <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmCsMaterialVendors[index].brand" class="form-input">
-                </label>
-              </td>
-              <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmCsMaterialVendors[index].model" class="form-input">
-                </label>
-              </td>
-              <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmCsMaterialVendors[index].negotiated_price" class="form-input">
-                </label>
-              </td>
-            </tr>
+              
+              <template v-for="(lines, indexa) in form.scmCsMaterialVendors" :key="indexa">
+                <template v-for="(scmSrLine, index) in lines" :key="index">
+                  
+                  <tr v-if="index != 0">
+                    
+                    <td>{{ scmSrLine?.scmPr?.ref_no }}</td>
+                    <td>{{ scmSrLine?.scmMaterial?.unit }}</td>
+                    <td>{{ scmSrLine?.brand }}</td>
+                    <td>{{ scmSrLine?.model }}</td>
+                    <td v-if="form.scmCsMaterialVendors[indexa][index]"><input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price"/></td>
+                  </tr>
+                  <tr class="text-gray-700 dark-disabled:text-gray-400" v-else>
+                    <td :rowspan="lines.length">{{ first(values(lines))?.scmMaterial?.name }}</td>
+                    <td>{{ scmSrLine?.scmPr?.ref_no }}</td>
+                    <td>{{ scmSrLine?.scmMaterial?.unit }}</td>
+                    <td>{{ scmSrLine?.brand }}</td>
+                    <td>{{ scmSrLine?.model }}</td>
+                    <td v-if="form.scmCsMaterialVendors[indexa][index]"><input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price"/></td>
+                  </tr>
+                  
+                  <!-- <td class="!w-72">
+                    <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmSrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmSrLines[index].scmMaterial,index)"> -->
+                  <!--   <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmCsMaterialVendors[index].scmPr" label="ref_no" class="block form-input" :disabled="true" @update:modelValue="changeMaterial(form.scmCsMaterialVendors[index].scmMaterial,index)">
+                      <template #search="{attributes, events}">
+                          <input
+                              class="vs__search"
+                              :required="!form.scmCsMaterialVendors[index].scmPr"
+                              v-bind="attributes"
+                              v-on="events"
+                              />
+                      </template>
+                  </v-select>
+                  </td>
+                  <td class="!w-72">
+                    <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmSrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmSrLines[index].scmMaterial,index)"> -->
+                   <!--  <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmCsMaterialVendors[index].scmMaterial" label="material_name_and_code" class="block form-input" :disabled="true" @update:modelValue="changeMaterial(form.scmCsMaterialVendors[index].scmMaterial,index)">
+                      <template #search="{attributes, events}">
+                          <input
+                              class="vs__search"
+                              :required="!form.scmCsMaterialVendors[index].scmMaterial"
+                              v-bind="attributes"
+                              v-on="events"
+                              />
+                      </template>
+                  </v-select>
+                  </td>
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <input type="text" readonly v-model="form.scmCsMaterialVendors[index].unit" class=" form-input">
+                    </label>
+                  </td>
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <input type="text" v-model="form.scmCsMaterialVendors[index].brand" class="form-input">
+                    </label>
+                  </td>
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <input type="text" v-model="form.scmCsMaterialVendors[index].model" class="form-input">
+                    </label>
+                  </td>
+                  <td>
+                    <label class="block w-full mt-2 text-sm">
+                      <input type="text" v-model="form.scmCsMaterialVendors[index].negotiated_price" class="form-input">
+                    </label>
+                  </td> -->
+                </template>
+              </template>
             </tbody>
           </table>
         </fieldset>
@@ -250,7 +267,7 @@
     import {useStore} from "vuex";
     import env from '../../../config/env';
     // import cloneDeep from 'lodash/cloneDeep';
-    import { merge ,cloneDeep,groupBy} from 'lodash';
+    import { merge ,cloneDeep,groupBy,first, values} from 'lodash';
     import useStoreIssue from '../../../composables/supply-chain/useStoreIssue';
     import useStoreIssueReturn from '../../../composables/supply-chain/useStoreIssueReturn';
     import useVendor from '../../../composables/supply-chain/useVendor';
@@ -260,7 +277,7 @@
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
     const { searchVendor, vendors, vendor, isLoading: vendorLoading } = useVendor();
-    const { materialCs, showMaterialCs } = useMaterialCs();
+    const { materialCs, showMaterialCs, getCsData } = useMaterialCs();
     
     const props = defineProps({
       form: { type: Object, required: true },
@@ -277,22 +294,20 @@
     const route = useRoute();
     const CSID = route.params.csId;
 
-    watch(() => materialCs.value, (newVal, oldVal) => {
+watch(() => materialCs.value, (newVal, oldVal) => {
+  console.log(materialCs.value.scmCsMaterials);
       props.form.scmCs = newVal;
       props.form.scm_cs_id = newVal?.id;
 
       if (props.formType != 'edit') {
         props.form.scmCsMaterialVendors = [];
-        //groupBy using lodash
-
-        let dataasd = groupBy(newVal.scmCsMaterials, 'scm_material_id')
-        materialCs.value.scmCsMaterials.forEach((line, index) => {
-          const objLine = cloneDeep(props.lineObj); 
-          //group by using lodash
-          let data = merge(objLine, {scmMaterial: line.scmMaterial,scm_material_id: line.scm_material_id, unit:line.unit,quantity:line.quantity,scmPr: line.scmPr,scm_pr_id: line.scm_pr_id,})
-          props.form.scmCsMaterialVendors.push(data);
-          console.log(index, props.formType);
+       
+        materialCs.value.scmCsMaterials.map((lines, index) => {
+          lines.map((line, index) => {
+            line['negotiated_price'] = '';
+          });
         });
+        props.form.scmCsMaterialVendors = materialCs.value.scmCsMaterials;
       }
     });
 
@@ -459,7 +474,7 @@ onMounted(() => {
   tableWidth();
   searchVendor('');
   searchMaterial('');
-  showMaterialCs(CSID);
+  getCsData(CSID);
 });
 
 

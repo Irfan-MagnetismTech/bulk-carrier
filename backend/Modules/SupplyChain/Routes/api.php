@@ -98,4 +98,8 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('quotations', [ScmCsController::class, "getQuotations"])->name('quotations.index');
     Route::get('quotations/{quotationId}', [ScmCsController::class, "showQuotation"])->name('quotations.show');
     Route::put('quotations/{quotationId}', [ScmCsController::class, "updateQuotation"])->name('quotations.update');
+
+
+    //public function getCsData($id)
+    Route::get('get-cs-data/{id}', [ScmCsController::class, "getCsWiseData"])->name('getCsWiseData');
 });

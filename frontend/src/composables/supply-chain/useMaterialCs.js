@@ -193,6 +193,20 @@ export default function useMaterialCs() {
         }
     }
 
+
+    async function getCsData(id) {
+        //NProgress.start();
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-cs-data/${id}`);
+            materialCs.value = data.value;
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            //NProgress.done();
+        }
+    }
    
 
 
@@ -271,6 +285,7 @@ export default function useMaterialCs() {
         prMaterialList,
         materialList,
         getPrWiseMaterialList,
+        getCsData,
         // getSiWiseData,
         isTableLoading,
         isLoading,

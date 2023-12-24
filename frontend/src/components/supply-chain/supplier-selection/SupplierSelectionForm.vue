@@ -73,18 +73,37 @@
   </thead>
   <tbody>
     <template v-for="(materialprData,index1) in (formData?.scmCsMaterial)" :key="index1">
-      <tr v-for="(materialData,index) in (materialprData)" :key="index">
-        <td>{{ materialData[0].scmPr.ref_no }}</td>
-        <td>{{ materialData[0].scmMaterial.name }}</td>
+      <template v-for="(materialData,name,index) in (materialprData)" :key="index">
+      <tr v-if="index == 0">
+        <td :rowspan="Object.keys(materialprData).length">{{ materialData[0].scmMaterial.name }}</td>
+        <td>{{ materialData[0].scmPr.ref_no  }}</td>
         <td>{{ materialData[0].unit }}</td>
         <td>{{ materialData[0].quantity }}</td>
         <td></td>
-        <template v-for="(materialVendorData,index11) in (formData?.scmCsMaterialVendor[index1][index])" :key="index11">
+        <template v-for="(materialVendorData,index11) in (formData?.scmCsMaterialVendor[index1][name])" :key="index11">
             <td>{{ materialVendorData[0].negotiated_price }}</td>
             <td>{{ materialVendorData[0].negotiated_price * materialData[0].quantity}}</td>
          </template>
         <td v-if="form.purchase_center == 'Foreign'">
-          <a @click="showModal(index)" style="display: inline-block;cursor: pointer" class="relative tooltip">
+          <a @click="showModal(index1,name)" style="display: inline-block;cursor: pointer" class="relative tooltip">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                    </svg>
+                    <span class="tooltiptext">Details</span>
+                  </a>
+        </td>
+      </tr>
+      <tr v-else>
+        <td>{{ materialData[0].scmPr.ref_no  }}</td>
+        <td>{{ materialData[0].unit }}</td>
+        <td>{{ materialData[0].quantity }}</td>
+        <td></td>
+        <template v-for="(materialVendorData,index11) in (formData?.scmCsMaterialVendor[index1][name])" :key="index11">
+            <td>{{ materialVendorData[0].negotiated_price }}</td>
+            <td>{{ materialVendorData[0].negotiated_price * materialData[0].quantity}}</td>
+         </template>
+        <td v-if="form.purchase_center == 'Foreign'">
+          <a @click="showModal(index1,name)" style="display: inline-block;cursor: pointer" class="relative tooltip">
                     <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
                     </svg>
@@ -93,10 +112,10 @@
         </td>
       </tr>
     </template>
-    
+  </template>
   </tbody>
   </table>  
-  <h2 class="py-10">Other Consditions</h2>
+  <h2 class="py-10">Other Conditions</h2>
   <table class="min-w-full divide-y divide-gray-200 dark-disabled:divide-gray-700">
   <thead class="bg-gray-50 dark-disabled:bg-gray-800">
     <tr class="text-gray-600 dark-disabled:text-gray-400 text-sm leading-normal">
@@ -389,11 +408,11 @@ const details = ref([{type: ''}]);
 const currentIndex = ref(null);
 
 
-function showModal(index) {
+function showModal(index1,name) {
   isModalOpen.value = 1
-  currentIndex.value = index
-  if(props.formData?.scmCsMaterialVendor[index]) {
-    details.value = cloneDeep(props.formData?.scmCsMaterialVendor[index])
+  currentIndex.value = index1 + "-" + name;
+  if(props.formData?.scmCsMaterialVendor[index1][name]) {
+    details.value = cloneDeep(props.formData?.scmCsMaterialVendor[index1][name])
   } else {
     details.value = [{type: ''}]
   }
