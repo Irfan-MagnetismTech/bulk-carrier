@@ -19,7 +19,8 @@
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Record Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model="form.record_date" placeholder="Record date" class="form-input" required/>
+        <!-- <input type="date" v-model="form.record_date" placeholder="Record date" class="form-input" required/> -->
+        <VueDatePicker v-model="form.record_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
         <Error v-if="errors?.record_date" :errors="errors.record_date" />
       </label>
       
@@ -85,6 +86,7 @@ import useVessel from "../../../composables/operations/useVessel";
 import LoaderComponent from "../../utils/LoaderComponent.vue";
 import ErrorComponent from "../../utils/ErrorComponent.vue";
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date)
 
 const props = defineProps({
   form: {
@@ -176,5 +178,9 @@ onMounted(() => {
 
   --vs-dropdown-option--active-bg: #664cc3;
   --vs-dropdown-option--active-color: #eeeeee;
+  
+  --dp-border-color: #4b5563;
+  --dp-border-color-hover: #4b5563;
+  --dp-icon-color: #4b5563;
 }
 </style>

@@ -14,6 +14,7 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import moment from "moment";
 
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
@@ -223,7 +224,8 @@ onMounted(() => {
             
           <tr v-for="(wipWorkRequisition,index) in wipWorkRequisitions?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-            <td><nobr>{{ wipWorkRequisition?.requisition_date }}</nobr></td>
+            <!-- <td><nobr>{{ wipWorkRequisition?.requisition_date }}</nobr></td> -->
+            <td><nobr>{{  moment(wipWorkRequisition?.requisition_date).format('DD/MM/YYYY') }}</nobr></td>
             <td>{{ wipWorkRequisition?.reference_no }}</td>
             <td>{{ wipWorkRequisition?.opsVessel?.name }}</td>
             <td>{{ wipWorkRequisition?.maintenance_type }}</td>
