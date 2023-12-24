@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 
 trait DeletableModel
 {
-    public function preventDeletionIfRelated()
+    /**
+     * Prevents deletion of data if it is related to other models.
+     *
+     * @return array
+     */
+    public function preventDeletionIfRelated(): array
     {
         $methods = $this->getRelationMethods();
 
@@ -32,7 +37,12 @@ trait DeletableModel
         ];
     }
 
-    private function getRelationMethods()
+    /**
+     * Retrieves an array of all the relation methods in the class.
+     *
+     * @return array
+     */
+    private function getRelationMethods(): array
     {
         $reflection = new ReflectionClass($this);
         $methods = [];
@@ -46,13 +56,20 @@ trait DeletableModel
         return $methods;
     }
 
-    private function isRelationMethod($method)
+    /**
+     * Checks if a given method is a relation method.
+     *
+     * @param mixed
+     * @return bool
+     */
+    private function isRelationMethod($method): bool
     {
         $expectedTypes = [
             'Illuminate\Database\Eloquent\Relations\HasOne',
             'Illuminate\Database\Eloquent\Relations\HasMany',
             'Illuminate\Database\Eloquent\Relations\MorphMany',
-            'Illuminate\Database\Eloquent\Relations\MorphOne'
+            'Illuminate\Database\Eloquent\Relations\MorphOne',
+            'Illuminate\Database\Eloquent\Relations\HasManyThrough',
         ];
 
         return $method->hasReturnType() && in_array($method->getReturnType()->getName(), $expectedTypes);
