@@ -44,12 +44,12 @@ let filterOptions = ref({
   "filter_options": [
     {
       "relation_name": null,
-      "field_name": "title",
+      "field_name": "port_code",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Title",
+      "label": "Port",
       "filter_type": "input"
     },
     {
@@ -69,26 +69,6 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Effective From",
-      "filter_type": null
-    },
-    {
-      "relation_name": null,
-      "field_name": null,
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Effective Till",
-      "filter_type": null
-    },
-    {
-      "relation_name": null,
-      "field_name": null,
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
       "label": "Total (BDT)",
       "filter_type": null
     },
@@ -100,8 +80,6 @@ const currentPage = ref(1);
 const paginatedPage = ref(1);
 
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
-
-
 
 
 function confirmDelete(id) {
@@ -124,7 +102,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      router.push({ name: 'ops.voyage-Expenditures.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'ops.voyage-expenditures.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -154,7 +132,7 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Voyage Expenditure List</h2>
-    <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.voyage-Expenditures.create' }" :icon="icons.AddIcon"></default-button>
+    <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.voyage-expenditures.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   
 
@@ -166,14 +144,8 @@ onMounted(() => {
           <tbody v-if="voyageExpenditures?.data?.length" class="relative">
               <tr v-for="(voyageExpenditure, index) in voyageExpenditures.data" :key="voyageExpenditure?.id">
                   <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-                  <td>{{ voyageExpenditure?.title }}</td>
+                  <td>{{ voyageExpenditure?.port_code }}</td>
                   <td>{{ voyageExpenditure?.opsVoyage?.voyage_sequence }}</td>
-                  <td>
-                    <nobr>{{ voyageExpenditure?.effective_from ? moment(voyageExpenditure?.effective_from).format('DD-MM-YYYY') : null }}</nobr>
-                  </td>
-                  <td>
-                    <nobr>{{ voyageExpenditure?.effective_till ? moment(voyageExpenditure?.effective_till).format('DD-MM-YYYY') : null }}</nobr>
-                  </td>
                   <td class="!text-right">
                     {{ numberFormat((voyageExpenditure?.opsVoyageExpenditureEntries.reduce((accumulator, currentObject) => {
   return accumulator + (currentObject.amount_bdt ? parseFloat(currentObject.amount_bdt) : 0);
@@ -184,8 +156,8 @@ onMounted(() => {
                   </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
-                      <!-- <action-button :action="'show'" :to="{ name: 'ops.voyage-Expenditures.show', params: { voyageExpenditureId: voyageExpenditure.id } }"></action-button> -->
-                      <action-button :action="'edit'" :to="{ name: 'ops.voyage-Expenditures.edit', params: { voyageExpenditureId: voyageExpenditure.id } }"></action-button>
+                      <!-- <action-button :action="'show'" :to="{ name: 'ops.voyage-expenditures.show', params: { voyageExpenditureId: voyageExpenditure.id } }"></action-button> -->
+                      <action-button :action="'edit'" :to="{ name: 'ops.voyage-expenditures.edit', params: { voyageExpenditureId: voyageExpenditure.id } }"></action-button>
                       <action-button @click="confirmDelete(voyageExpenditure.id)" :action="'delete'"></action-button>
                     </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
@@ -207,6 +179,6 @@ onMounted(() => {
         </tfoot>
       </table>
     </div>
-    <Paginate :data="voyageExpenditures" to="ops.voyage-Expenditures.index" :page="page"></Paginate>
+    <Paginate :data="voyageExpenditures" to="ops.voyage-expenditures.index" :page="page"></Paginate>
   </div>
 </template>

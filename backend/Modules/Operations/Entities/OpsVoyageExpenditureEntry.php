@@ -17,10 +17,16 @@ class OpsVoyageExpenditureEntry extends Model
         'invoice_date',
         'invoice_no',
         'currency',
+        'quantity',
         'rate',
         'amount',
         'amount_bdt',
-        'attachment',
-        'remarks',
     ];
+
+    public function opsExpenseHead()
+    {
+        return $this->belongsTo(OpsExpenseHead::class);
+    }
+
+
 }

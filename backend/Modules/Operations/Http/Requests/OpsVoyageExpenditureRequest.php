@@ -11,7 +11,7 @@ class OpsVoyageExpenditureRequest extends FormRequest
         $data=  request('info');
         $dataArray = json_decode($data, true);
         $mergeData = array_merge($dataArray , ['attachment' => request('attachment')]);
-
+        // dd($mergeData['ops_voyage_id']);
         $this->replace($mergeData);
     }
     /**
@@ -22,16 +22,17 @@ class OpsVoyageExpenditureRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'voyage_id'         => ['required', 'numeric', 'max:20'],
-            'port'              => ['required', 'string', 'max:255'],
-            'currency'          => ['required', 'string', 'max:255'],
-            'rate'              => ['required', 'numeric'],
-            'total_usd'         => ['required', 'numeric'],
-            'total_bdt'         => ['required', 'numeric'],
-            'expense_json'      => ['required', 'string'],
-            'date'              => ['required', 'string', 'max:255'],
-            'type'              => ['required', 'string', 'max:255'],
-            'business_unit'     => ['required', 'string', 'max:255'],
+            'ops_voyage_id'         => ['required'],
+            'ops_vessel_id'         => ['required'],
+            'port_code'             => ['required', 'string', 'max:255'],
+            'currency'              => ['required', 'string', 'max:255'],
+            'sub_total_usd'         => ['required', 'numeric'],
+            'sub_total_bdt'         => ['required', 'numeric'],
+            'grand_total_usd'       => ['required', 'numeric'],
+            'grand_total_bdt'       => ['required', 'numeric'],
+            'expense_json'          => ['nullable', 'string'],
+            'date'                  => ['nullable', 'string', 'max:255'],
+            'business_unit'         => ['required', 'string', 'max:255'],
         ];
     }
 

@@ -15,11 +15,14 @@ export default function useVoyageExpenditure() {
 	const notification = useNotification();
 
 	const expenseHeadObject = {
-		ops_expense_head_id: '',
-		quantity: '',
-		amount: '',
-		amount_usd: '',
-		amount_bdt: ''
+		ops_expense_head_id: null,
+		invoice_date: null,
+		invoice_no: null,
+		quantity: null,
+		rate: null,
+		amount: null,
+		amount_usd: null,
+		amount_bdt: null
 	}
 
 	const voyageExpenditure = ref( {
@@ -28,10 +31,19 @@ export default function useVoyageExpenditure() {
 		ops_vessel_id: null,
 		opsVoyage: null,
 		ops_voyage_id: null,
+        port: '',
+        port_code: '',
         name: '',
 		currency: '',
-		exchange_rate_usd: '',
-		exchange_rate_bdt: '',
+		remarks: '',
+		exchange_rate_bdt: null,
+		exchange_rate_usd: null,
+		sub_total_usd: null,
+		sub_total_bdt: null,
+		grand_total_usd: null,
+		grand_total_bdt: null,
+		discount_bdt: null,
+		discount_usd: null,
 		opsVoyageExpenditureEntries: [
 			{...expenseHeadObject}
 		],
@@ -98,9 +110,13 @@ export default function useVoyageExpenditure() {
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
+		let formData = new FormData();
+		formData.append('attachment', form.attachment);
+		formData.append('info', JSON.stringify(form));
+
 		try {
 
-			const { data, status } = await Api.post('/ops/voyage-expenditures', form);
+			const { data, status } = await Api.post('/ops/voyage-expenditures', formData);
 			notification.showSuccess(status);
 			router.push({ name: 'ops.voyage-expenditures.index' });
 		} catch (error) {
@@ -150,13 +166,16 @@ export default function useVoyageExpenditure() {
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
-		
+		let formData = new FormData();
+		formData.append('attachment', form.attachment);
+		formData.append('info', JSON.stringify(form));
+        formData.append('_method', 'PUT');
 
 		try {
 
-			const { data, status } = await Api.put(
+			const { data, status } = await Api.post(
 				`/ops/voyage-expenditures/${voyageExpenditureId}`,
-				form
+				formData
 			);
 			// VoyageExpenditure.value = data.value;
 			notification.showSuccess(status);
