@@ -214,7 +214,7 @@
     <tr>
       <td>Selected Vendor</td>
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
-        <input type="checkbox" :class="'menu_' + VendoData.scm_cs_id" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray" :value="VendoData?.id" v-model="form.scmCsVendor[index][0].is_selected">
+        <input type="checkbox" :class="'menu_' + VendoData.scm_cs_id" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray" :value="VendoData?.id" v-model="form.scmCsVendor[index].is_selected">
       </td>
     </tr>
   </tbody>
