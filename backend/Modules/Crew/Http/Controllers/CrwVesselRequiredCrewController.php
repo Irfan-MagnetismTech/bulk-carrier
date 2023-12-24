@@ -62,7 +62,7 @@ class CrwVesselRequiredCrewController extends Controller
     public function show(CrwVesselRequiredCrew $crwVesselRequiredCrew)
     {
         try {
-            return response()->success('Retrieved Successfully', $crwVesselRequiredCrew->load('crwVesselRequiredCrewLines','opsVessel'), 200);
+            return response()->success('Retrieved Successfully', $crwVesselRequiredCrew->load('crwVesselRequiredCrewLines.crwRank','opsVessel'), 200);
         }
         catch (QueryException $e)
         {

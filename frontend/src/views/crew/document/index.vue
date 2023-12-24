@@ -157,12 +157,13 @@ onMounted(() => {
             <td>
               <span :class="crwDocument?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwDocument?.business_unit }}</span>
             </td>
-            <td>
+            <!-- <td>
               <nobr>
+                <action-button :action="'show'" :to="{ name: 'crw.documents.show', params: { documentId: crwDocument?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'crw.documents.edit', params: { documentId: crwDocument?.id } }"></action-button>
                 <action-button @click="confirmDelete(crwDocument?.id)" :action="'delete'"></action-button>
               </nobr>
-            </td>
+            </td> -->
           </tr>
           <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && crewDocuments?.data?.length"></LoaderComponent>
           </tbody>

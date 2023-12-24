@@ -22,4 +22,14 @@ class OpsBunkerBillLineItem extends Model
         'amount_bdt',
         'amount_usd',
     ];
+
+    protected $casts = [
+        'quantity' => 'float',
+        'rate' => 'float',
+        'exchange_rate_bdt' => 'float',
+        'exchange_rate_usd' => 'float',
+        'amount' => 'float',
+        'amount_bdt' => 'float',
+        'amount_usd' => 'float',
+    ];
 }
