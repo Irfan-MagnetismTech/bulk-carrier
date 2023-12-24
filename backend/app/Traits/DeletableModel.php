@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\SupplyChain\Traits;
+namespace App\Traits;
 
 use ReflectionClass;
 use Illuminate\Database\Eloquent\Relations\Relation;
