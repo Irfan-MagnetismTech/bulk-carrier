@@ -125,7 +125,15 @@ onMounted(() => {
                   {{ item?.opsMaritimeCertification?.name }}
                 </td>
                 <td>
-                  {{ item?.opsMaritimeCertification?.validity }}
+                    <span v-if="item?.opsMaritimeCertification?.validity=='0'">Permanent</span>  
+                    <span v-if="item?.opsMaritimeCertification?.validity=='3'">3 Months</span>  
+                    <span v-if="item?.opsMaritimeCertification?.validity=='6'">6 Months</span>  
+                    <span v-if="item?.opsMaritimeCertification?.validity=='12'">1 Years</span>  
+                    <span v-if="item?.opsMaritimeCertification?.validity=='24'">2 Years</span>  
+                    <span v-if="item?.opsMaritimeCertification?.validity=='36'">3 Years</span>  
+                    <span v-if="item?.opsMaritimeCertification?.validity=='48'">4 Years</span>  
+                    <span v-if="item?.opsMaritimeCertification?.validity=='60'">5 Years</span>  
+                    <span v-if="item?.opsMaritimeCertification?.validity=='120'">10 Years</span>  
                 </td>
                 <td>
                   <nobr>{{ item?.issue_date ? moment(item?.issue_date).format('DD-MM-YYYY') : null }}</nobr>

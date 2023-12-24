@@ -570,4 +570,77 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: 'material-adjustments-show'  },
     },
     /* Movement Requisition end */
+
+    /* Material Cs start */
+
+    // {
+    //     path: `/${BASE}/material-cs`,
+    //     name: `${BASE}.material-cs.index`,
+    //     component: () => import(`../views/${PATH_BASE}/material-cs/index.vue`),
+    //     meta: { requiresAuth: true, role: ROLE, permission: 'material-cs-index' },
+    //     props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    // },
+    {
+        path: `/${BASE}/material-cs/create`,
+        name: `${BASE}.material-cs.create`,
+        component: () => import(`../views/${PATH_BASE}/material-cs/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-cs-create' },
+        props: (route) => ({
+            pr_id: route.query.pr_id
+        })
+    },
+    {
+        path: `/${BASE}/material-cs/index`,
+        name: `${BASE}.material-cs.index`,
+        component: () => import(`../views/${PATH_BASE}/material-cs/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-cs-index' },
+    },
+    {
+        path: `/${BASE}/material-cs/:materialCsId/edit`,
+        name: `${BASE}.material-cs.edit`,
+        component: () => import(`../views/${PATH_BASE}/material-cs/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-cs-edit' },
+    },
+    {
+        path: `/${BASE}/material-cs/:materialCsId`,
+        name: `${BASE}.material-cs.show`,
+        component: () => import(`../views/${PATH_BASE}/material-cs/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-cs-show'  },
+    },
+    /* Material Cs end */
+    
+    {
+        path: `/${BASE}/quotations/:csId/create`,
+        name: `${BASE}.quotations.create`,
+        component: () => import(`../views/${PATH_BASE}/quotations/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'quotations-create' },
+        props: (route) => ({
+            cs_id: route.query.cs_id ?? null
+        })
+    },
+    {
+        path: `/${BASE}/quotations/:csId/:quotationId/edit`,
+        name: `${BASE}.quotations.edit`,
+        component: () => import(`../views/${PATH_BASE}/quotations/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'quotations-edit' },
+    },
+    {
+        path: `/${BASE}/quotations/:csId/:quotationId/show`,
+        name: `${BASE}.quotations.show`,
+        component: () => import(`../views/${PATH_BASE}/quotations/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'quotations-show'  },
+    },
+    {
+        path: `/${BASE}/quotations/:csId/index`,
+        name: `${BASE}.quotations.index`,
+        component: () => import(`../views/${PATH_BASE}/quotations/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'quotations-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/material-cs/:csId/supplier-selection`,
+        name: `${BASE}.supplier-selection`,
+        component: () => import(`../views/${PATH_BASE}/supplier-selection/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'supplier-selection' },
+    },
 ];

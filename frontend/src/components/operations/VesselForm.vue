@@ -31,7 +31,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Short Code <span class="text-red-500">*</span></span>
-            <input type="text" v-model.trim="form.short_code" placeholder="Vessel Short Code" class="form-input" required autocomplete="off" />
+            <input type="text" v-model.trim="form.short_code" maxlength="10" placeholder="Vessel Short Code" class="form-input" required autocomplete="off" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Call Sign <span class="text-red-500">*</span></span>
@@ -141,7 +141,7 @@
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       
-      <RemarksComponent v-model="form.remarks" :maxlength="255" :fieldLabel="'Remarks'"></RemarksComponent>
+      <RemarksComponent v-model="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
     </div>
 
     <div class="mt-3 md:mt-8">
@@ -280,7 +280,7 @@ const props = defineProps({
 });
 
 const { maritimeCertificates, getMaritimeCertificateList } = useMaritimeCertificates();
-const { ports, getPortList } = usePort();
+const { ports, searchPorts } = usePort();
 const { materials, getBunkerList } = useMaterial();
 function addVesselCertificate() {
   // console.log(props.maritimeCertificateObject, "dfdf")
@@ -320,8 +320,12 @@ function removeBunker(index){
 //       searchPorts(search, loading)
 // }
 
+watch(() => props.form.business_unit, (value) => {
+  searchPorts("", props.form.business_unit);
+}, { deep : true })
+
+
 onMounted(() => {
-  getPortList();
   getMaritimeCertificateList();
   getBunkerList();
   // getCurrencies();

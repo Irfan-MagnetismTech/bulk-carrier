@@ -33,7 +33,6 @@ class CrwCrewRequisitionController extends Controller
                 $crwRequisitionData = $request->only('ops_vessel_id', 'applied_date', 'total_required_manpower', 'remarks', 'business_unit');
                 $crwCrewRequisition     = CrwCrewRequisition::create($crwRequisitionData);
                 $crwCrewRequisition->crwCrewRequisitionLines()->createMany($request->crwCrewRequisitionLines);
-
             });
             return response()->success('Created Successfully', '', 201);
         }
@@ -46,7 +45,7 @@ class CrwCrewRequisitionController extends Controller
     public function show(CrwCrewRequisition $crwRequisition)
     {
         try {
-            return response()->success('Retrieved Successfully', $crwRequisition->load('crwCrewRequisitionLines','opsVessel'), 200);
+            return response()->success('Retrieved Successfully', $crwRequisition->load('crwCrewRequisitionLines.crwRank','opsVessel'), 200);
         }
         catch (QueryException $e)
         {

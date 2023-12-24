@@ -13,12 +13,22 @@ return new class extends Migration
      */
     public function up()
     {
+
         Schema::create('ops_customer_invoice_lines', function (Blueprint $table) {
             $table->id();
             $table->foreignId('ops_customer_invoice_id')->constrained('ops_customer_invoices')->onDelete('cascade');
-            $table->foreignId('ops_vessel_id')->constrained('ops_vessels')->onDelete('cascade');
-            $table->foreignId('ops_voyage_id')->constrained('ops_vessels')->onDelete('cascade');
-            $table->float('amount')->nullable();
+            $table->string('charge_or_deduct')->nullable();
+            $table->string('particular')->nullable();
+            $table->string('cost_unit')->nullable();
+            $table->string('currency')->nullable();
+            $table->float('quantity', 20, 2)->nullable();
+            $table->float('rate', 20, 2)->nullable();
+            $table->float('exchange_rate_bdt', 20, 2)->nullable();
+            $table->float('exchange_rate_usd', 20, 2)->nullable();
+            $table->float('amount', 20, 2)->nullable();
+            $table->float('amount_bdt', 20, 2)->nullable();
+            $table->float('amount_usd', 20, 2)->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL', 'ALL'])->nullable();
             $table->timestamps();
         });
     }

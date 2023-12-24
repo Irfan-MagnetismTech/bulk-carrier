@@ -19,8 +19,9 @@ return new class extends Migration
             $table->foreignId('scm_material_id')->constrained('scm_materials');
             $table->string('unit')->nullable();
             $table->bigInteger('quantity')->nullable();
-            $table->string('remarks')->nullable();
+            $table->text('remarks')->nullable();
             $table->string('mmr_composite_key')->nullable();
+            $table->string('mo_composite_key')->nullable();
             $table->timestamps();
         });
     }

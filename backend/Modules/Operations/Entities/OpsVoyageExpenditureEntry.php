@@ -11,14 +11,22 @@ class OpsVoyageExpenditureEntry extends Model
 
     protected $fillable = [
         'ops_voyage_expenditure_id',
-        'particular_id',
+        'ops_expense_head_id',
+        'particular',
         'type',
-        'invoice_id',
+        'invoice_date',
+        'invoice_no',
         'currency',
+        'quantity',
         'rate',
         'amount',
         'amount_bdt',
-        'attachment',
-        'remarks',
     ];
+
+    public function opsExpenseHead()
+    {
+        return $this->belongsTo(OpsExpenseHead::class);
+    }
+
+
 }

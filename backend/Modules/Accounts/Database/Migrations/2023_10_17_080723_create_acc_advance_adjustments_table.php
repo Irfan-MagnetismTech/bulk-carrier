@@ -15,8 +15,12 @@ return new class extends Migration
     {
         Schema::create('acc_advance_adjustments', function (Blueprint $table) {
             $table->id();
-			$table->enum('business_unit', ['PSML', 'TSLL']);                        
-            $table->softDeletes();
+            $table->unsignedBigInteger('acc_cost_center_id');
+			$table->unsignedBigInteger('acc_cash_requisition_id');
+			$table->date('adjustment_date');
+			$table->decimal('adjustment_amount');
+			$table->decimal('cash_amount')->nullable();
+			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
     }

@@ -85,4 +85,9 @@ class OpsVessel extends Model
     {
         return $this->hasMany(MntCriticalVesselItem::class)->where("is_critical", 1);
     }
+
+    public function opsCargoTariffs()
+    {
+        return $this->hasMany(OpsCargoTariff::class, 'ops_vessel_id', 'id');
+    }
 }

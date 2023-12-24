@@ -65,7 +65,7 @@ class AccFixedAssetController extends Controller
         try {
 
             return response()->success('Retrieved Successfully',
-                $accFixedAsset->load('fixedAssetCosts', 'account', 'costCenter', 'scmMrr', 'scmMaterial', 'fixedAssetCategory'),
+                $accFixedAsset->load('fixedAssetCosts', 'account', 'costCenter', 'scmMrr', 'scmMaterial.account', 'fixedAssetCategory'),
                 200);
         }
         catch (\Exception $e)

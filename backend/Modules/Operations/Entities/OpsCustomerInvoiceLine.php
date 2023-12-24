@@ -12,9 +12,18 @@ class OpsCustomerInvoiceLine extends Model
 
     protected $fillable = [
         'ops_customer_invoice_id',
-        'ops_vessel_id',
-        'ops_voyage_id',
-        'amount'
+        'charge_or_deduct',
+        'particular',
+        'cost_unit',
+        'currency',
+        'quantity',
+        'rate',
+        'exchange_rate_bdt',
+        'exchange_rate_usd',
+        'amount',
+        'amount_bdt',
+        'amount_usd',
+        'business_unit',
     ];
 
     public function opsVoyage()
@@ -25,5 +34,10 @@ class OpsCustomerInvoiceLine extends Model
     public function opsVessel()
     {
         return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
+    }
+
+    public function opsCustomerInvoice()
+    {
+        return $this->belongsTo(OpsCustomerInvoice::class, 'ops_customer_invoice_id' , 'id');
     }
 }

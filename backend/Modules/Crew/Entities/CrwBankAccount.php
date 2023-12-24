@@ -11,10 +11,10 @@ class CrwBankAccount extends Model
 {
     use HasFactory, GlobalSearchTrait;
 
-	protected $fillable = ['crw_crew_id', 'bank_name', 'account_holder', 'address', 'account_no', 'currency', 'swift_code', 'benificiary_name', 'benificiary_attachment', 'is_active', 'business_unit'];
+	protected $fillable = ['crw_crew_id', 'bank_name', 'branch_name', 'routing_number', 'account_name', 'account_number', 'benificiary_name', 'attachment', 'is_active', 'business_unit'];
 
     public function crwCrew()
     {
-        return $this->belongsTo(CrwCrew::class);
+        return $this->belongsTo(CrwCrewProfile::class, 'crw_crew_id', 'id');
     }  
 }

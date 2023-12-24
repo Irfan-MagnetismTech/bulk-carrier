@@ -38,11 +38,11 @@ class OpsPortRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Port Name is required',
-            'name.unique' => 'Port Name is already taken',
+            'name.required' => 'Port Name is required.',
+            'name.unique' => 'Port Name is already taken.',
             'name.max' => 'Port Name may not be greater than :max characters.',
-            'code.required' => 'Port code is required',
-            'code.unique' => 'Port code is already taken',
+            'code.required' => 'Port code is required.',
+            'code.unique' => 'Port code is already taken.',
             'code.max' => 'Port code may not be greater than :max characters.',
         ];
     }

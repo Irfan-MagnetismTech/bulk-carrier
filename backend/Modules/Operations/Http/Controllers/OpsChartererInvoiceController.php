@@ -11,6 +11,7 @@ use Illuminate\Database\QueryException;
 use Modules\Operations\Entities\OpsVoyage;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsChartererInvoice;
+use Modules\Operations\Entities\OpsChartererInvoiceVoyage;
 use Modules\Operations\Http\Requests\OpsChartererInvoiceRequest;
 
 class OpsChartererInvoiceController extends Controller
@@ -54,6 +55,27 @@ class OpsChartererInvoiceController extends Controller
     public function store(OpsChartererInvoiceRequest $request): JsonResponse
     {
         // return response()->json($request->all(),422);
+
+        if(isset($request->opsChartererInvoiceVoyages)){
+            $voyage_ids= [];
+            foreach($request->opsChartererInvoiceVoyages as $key=>$voyage){
+                $voyage_ids[]=$voyage['ops_voyage_id'];
+            }
+
+
+            $isBilled = OpsChartererInvoiceVoyage::whereIn('ops_voyage_id', $voyage_ids)->get();
+
+            if(count($isBilled) > 0) {
+                $error= [
+                    'message'=>'One or more voyages are already billed.',
+                    'errors'=>[
+                        'Voyage'=>['One or more voyages are already billed.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
+        }
+
         try {
             DB::beginTransaction();
             $charterer_invoice_info = $request->except(
@@ -86,8 +108,7 @@ class OpsChartererInvoiceController extends Controller
     public function show(OpsChartererInvoice $charterer_invoice): JsonResponse
     {
         $charterer_invoice->load('opsChartererProfile','opsChartererContract.opsChartererContractsFinancialTerms.opsCargoTariff.opsCargoType','opsChartererInvoiceOthers','opsChartererInvoiceServices','opsChartererInvoiceVoyages.opsVoyage.opsVoyageSectors',
-        'opsChartererContract.opsVessel');
-        
+        'opsChartererContract.opsVessel', 'opsChartererInvoiceVoyages.opsVoyage.opsCargoType','opsChartererContract.opsChartererInvoices','opsChartererContract.dayWiseInvoices');
         try
         {
             return response()->success('Data retrieved successfully.', $charterer_invoice, 200);
@@ -109,6 +130,31 @@ class OpsChartererInvoiceController extends Controller
     */
     public function update(OpsChartererInvoiceRequest $request, OpsChartererInvoice $charterer_invoice): JsonResponse
     {
+
+        if(isset($request->opsChartererInvoiceVoyages)){
+            $voyage_ids= [];
+            foreach($request->opsChartererInvoiceVoyages as $key=>$voyage){
+                $voyage_ids[]=$voyage['ops_voyage_id'];
+            }
+            
+            $currentVoyages = $charterer_invoice->opsChartererInvoiceVoyages->pluck('ops_voyage_id');
+
+            $notMatchedInArray1 = array_diff($voyage_ids, $currentVoyages->toArray());
+
+            $isBilled = OpsChartererInvoiceVoyage::whereIn('ops_voyage_id', $notMatchedInArray1)->get();
+
+
+            if(count($isBilled) > 0) {
+                $error= [
+                    'message'=>'One or more voyages are already billed.',
+                    'errors'=>[
+                        'Voyage'=>['One or more voyages are already billed.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
+        }
+
         try {
             DB::beginTransaction();
             $charterer_invoice_info = $request->except(
@@ -174,7 +220,7 @@ class OpsChartererInvoiceController extends Controller
 
     public function getVoyageByContract(Request $request): JsonResponse
     {
-        $voyages= OpsVoyage::with('opsVoyageSectors','opsContractAssign')->whereHas('opsContractAssign',function($item){
+        $voyages= OpsVoyage::with('opsVoyageSectors','opsCargoType','opsContractAssign')->whereHas('opsContractAssign',function($item){
             return $item->where('ops_charterer_contract_id', request()->contract_id);
         })
         ->get();
@@ -204,6 +250,7 @@ class OpsChartererInvoiceController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
  
 
 }

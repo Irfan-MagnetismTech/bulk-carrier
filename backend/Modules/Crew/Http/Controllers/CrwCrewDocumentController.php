@@ -106,14 +106,6 @@ class CrwCrewDocumentController extends Controller
     public function update(CrwCrewDocumentUpdateRequest $request, CrwCrewDocument $crwCrewDocument)
     {
         try {
-
-//            $crwCrewDocumentData = $request->only('crw_crew_profile_id', 'document_name', 'issuing_authority', 'validity_period', 'validity_period_in_month', 'business_unit');
-//
-//            $configData = Config::get('crew.crew_document_validity_period');
-//            if (array_key_exists($crwCrewDocumentData['validity_period_in_month'], $configData)) {
-//                $crwCrewDocumentData['validity_period'] = $configData[$crwCrewDocumentData['validity_period_in_month']];
-//            }
-
             $crwCrewDocument->update($request->all());
 
             return response()->success('Updated successfully', $crwCrewDocument, 202);

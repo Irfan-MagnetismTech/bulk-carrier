@@ -2,15 +2,20 @@
 
 namespace Modules\SupplyChain\Http\Controllers;
 
+use Exception;
+use ReflectionClass;
+use ReflectionMethod;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
+use Modules\SupplyChain\Entities\ScmCs;
 use Modules\SupplyChain\Entities\ScmPo;
 use Modules\SupplyChain\Entities\ScmPr;
-use Modules\SupplyChain\Entities\ScmVendor;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmPrLine;
+use Modules\SupplyChain\Entities\ScmVendor;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Http\Requests\ScmPoRequest;
 
@@ -32,7 +37,7 @@ class ScmPoController extends Controller
     {
         try {
             $scmWarehouses = ScmPo::query()
-                ->with('scmPoLines', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPr')
+                ->with('scmPoLines', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPr', 'scmMrrs')
                 ->globalSearch($request->all());
 
             return response()->success('Data list', $scmWarehouses, 200);
@@ -80,19 +85,19 @@ class ScmPoController extends Controller
 
             $scmPoLines = $purchaseOrder->scmPoLines->map(function ($item) {
                 $data = [
-                    'scm_material_id'=> $item->scmMaterial->id,
-                    'scmMaterial'=> $item->scmMaterial,
-                    'unit'=> $item->unit,
-                    'brand'=> $item->brand,
-                    'model'=> $item->model,
-                    'required_date'=> $item->required_date,
-                    'quantity'=> $item->quantity,
-                    'rate'=> $item->rate ?? 0,
-                    'total_price'=> $item->total_price,
-                    'net_rate'=> $item->net_rate,
-                    'po_composite_key'=> $item->po_composite_key,
-                    'pr_composite_key'=> $item->pr_composite_key,
-                    'max_quantity'=> $item->scmPrLine->quantity - $item->scmPrLine->scmPoLines->sum('quantity') + $item->quantity,
+                    'scm_material_id' => $item->scmMaterial->id,
+                    'scmMaterial' => $item->scmMaterial,
+                    'unit' => $item->unit,
+                    'brand' => $item->brand,
+                    'model' => $item->model,
+                    'required_date' => $item->required_date,
+                    'quantity' => $item->quantity,
+                    'rate' => $item->rate ?? 0,
+                    'total_price' => $item->total_price,
+                    'net_rate' => $item->net_rate,
+                    'po_composite_key' => $item->po_composite_key,
+                    'pr_composite_key' => $item->pr_composite_key,
+                    'max_quantity' => $item->scmPrLine->quantity - $item->scmPrLine->scmPoLines->sum('quantity') + $item->quantity,
                 ];
 
                 return $data;
@@ -138,16 +143,75 @@ class ScmPoController extends Controller
      * @param ScmPo $purchaseOrder
      * @return JsonResponse
      */
-    public function destroy(ScmPo $purchaseOrder): JsonResponse
+    public function destroy(ScmPo $purchaseOrder)
     {
+
+        // $purchaseOrder->delete();
+
+        // $purchaseOrder->getAllMethods();
+        // $expectedTypes = [
+        //     'Illuminate\Database\Eloquent\Relations\HasOne',
+        //     'Illuminate\Database\Eloquent\Relations\HasMany',
+        //     'Illuminate\Database\Eloquent\Relations\BelongsTo',
+        //     'Illuminate\Database\Eloquent\Relations\MorphMany',
+        //     'Illuminate\Database\Eloquent\Relations\MorphOne',
+        // ];
+        // return response()->json($purchaseOrder->getAllMethods($expectedTypes), 422);
+
+        // $allMethods = $purchaseOrder->getAllMethods();
+
+        // $dataPair = [];
+        // foreach ($allMethods as $method) {
+        //     $dataPair[$method] = $purchaseOrder->{$method}()->count();
+        //     if ($purchaseOrder->{$method}()->count() > 0) {
+        //         $error = [
+        //             "message" => "Data could not be deleted!",
+        //             "errors" => [
+        //                 "id" => ["This data could not be deleted as it has reference to other table"]
+        //             ]
+        //         ];
+        // return response()->json($purchaseOrder->getAllMethods(), 422);
+        //     }
+
+
+        // }
+        // return response()->json($dataPair, 422);
+
+
+
+
+
         try {
+            // if ($purchaseOrder->scmLcRecords()->count() > 0 || $purchaseOrder->scmMrrs()->count() > 0) {
+            //     $error = [
+            //         "message" => "Data could not be deleted!",
+            //         "errors" => [
+            //             "id" => ["This data could not be deleted as it has reference to other table"]
+            //         ]
+            //     ];
+            //     return response()->json($error, 422);
+            // }
+            // return response()->error('Data could not be deleted as it has reference to other table', 422);
+            DB::beginTransaction();
+
             $purchaseOrder->scmPoTerms()->delete();
             $purchaseOrder->scmPoLines()->delete();
             $purchaseOrder->delete();
 
+            DB::commit();
+
             return response()->success('Data deleted sucessfully!', null,  204);
-        } catch (\Exception $e) {
-            return response()->error($e->getMessage(), 500);
+        } catch (QueryException $e) {
+            DB::rollBack();
+
+            return response()->json($purchaseOrder->preventDeletionIfRelated(), 422);
+
+            // return response()->json($e, 422);
+            // if ($e->errorInfo[1] == 1451) {
+            //     // Custom error response for foreign key constraint violation
+            //     return response()->json(['error' => 'Cannot delete parent record because it has related child records.'], 422);
+            // }
+            // return response()->error($e->getMessage(), 500);
         }
     }
 
@@ -191,32 +255,8 @@ class ScmPoController extends Controller
 
     public function getPoOrPoCsWisePrData(Request $request): JsonResponse
     {
-
-        // {
-        //     scmWarehouse: '', //ok
-        //     scm_warehouse_id: '', //ok
-        //     pr_no: null,  //ok
-        //     scm_pr_id: null, //ok
-        //     scmPr: null, //ok
-        //     pr_date: '', //ok
-        //     cs_no: '',//if cs
-        //     scm_cs_id: '',//if cs
-        //     scmCs: null,//if cs
-        //     scmPoLines: [
-        //                     {
-        //                         scmMaterial: '',
-        //                         scm_material_id: '',
-        //                         unit: '',
-        //                         brand: '',
-        //                         model: '',
-        //                         quantity: 0.0,
-        //                         rate: 0.0,//if cs
-        //                         total_price: 0.0,//if cs
-        //                     }
-        //                 ], 
-        //     }
         try {
-            if ($request->pr_id != null) {
+            if ($request->cs_id == null) {
                 $scmPr = ScmPr::query()
                     ->with([
                         'scmWarehouse',
@@ -250,10 +290,21 @@ class ScmPoController extends Controller
                     })
                 ];
             } else {
-                // $scmCs = ScmCs::query()
-                // ->with('scmWarehouse', 'scmPr')
-                // ->where([['id', $request->cs_id], ['scm_pr_id', $request->pr_id]])
-                // ->get();
+                $scmCs = ScmCs::query()
+                    ->with('scmWarehouse', 'scmPr')
+                    ->find('id', $request->cs_id);
+
+                $data = [
+                    'scmWarehouse' => $scmCs->scmWarehouse,
+                    'scm_warehouse_id' => $scmCs->scm_warehouse_id,
+                    'pr_no' => $scmCs->scmPr->ref_no,
+                    'cs_no' => $scmCs->ref_no,
+                    'scm_pr_id' => $scmCs->scmPr->id,
+                    'scmPr' => $scmCs->scmPr,
+                    'pr_date' => $scmCs->scmPr->raised_date,
+                    'business_unit' => $scmCs->scmPr->business_unit,
+                    'purchase_center' => $scmCs->scmPr->purchase_center,
+                ];
             }
 
             return response()->success('data', $data, 200);
@@ -277,7 +328,13 @@ class ScmPoController extends Controller
                 $data = $item->scmMaterial;
                 $data['brand'] = $item->brand;
                 $data['model'] = $item->model;
-                $data['max_quantity'] = $item->quantity - $item->scmPoLines->sum('quantity');
+                if (request()->po_id) {
+                    $data['po_quantity'] = $item->scmPoLines->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
+                } else {
+                    $data['po_quantity'] = 0;
+                }
+                $data['max_quantity'] = $item->quantity - $item->scmPoLines->sum('quantity') + $data['po_quantity'];
+                $data['po_quantity'] = $data['po_quantity'] ?? 0;
                 return $data;
             });
         return response()->success('data list', $prMaterials, 200);
@@ -306,7 +363,7 @@ class ScmPoController extends Controller
         return response()->success('Search result', $scmPo, 200);
     }
 
-   public function searchPoForLc(Request $request): JsonResponse
+    public function searchPoForLc(Request $request): JsonResponse
     {
         if ($request->business_unit != 'ALL') {
             $scmPo = ScmPo::query()

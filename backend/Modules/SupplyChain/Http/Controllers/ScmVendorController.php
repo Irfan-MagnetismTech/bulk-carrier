@@ -72,10 +72,12 @@ class ScmVendorController extends Controller
      * @param ScmVendor $vendor
      * @return JsonResponse
      */
-    public function update(ScmVendorRequest $request, ScmVendor $vendor): JsonResponse
+    public function update(ScmVendorRequest $request, ScmVendor $vendor)
     {
         try {
             $vendor->update($request->all());
+
+            $vendor->scmVendorContactPersons()->delete();
 
             $vendor->scmVendorContactPersons()->createMany($request->scmVendorContactPersons);
 
@@ -107,7 +109,7 @@ class ScmVendorController extends Controller
     public function searchVendor(Request $request): JsonResponse
     {
         $vendor = ScmVendor::query()
-            ->with('scmVendorContactPersons')
+            ->with('scmVendorContactPersons','scmVendorContactPerson')
             // ->where('name', 'like', "%$request->searchParam%")
             ->orderByDesc('name')
             // ->limit(10)

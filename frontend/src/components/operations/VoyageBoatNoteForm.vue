@@ -14,7 +14,7 @@
       
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Voyage <span class="text-red-500">*</span></span>
-              <v-select :options="voyages" placeholder="--Choose an option--" :loading="isVoyageLoading"  v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
+              <v-select :options="voyages" placeholder="--Choose an option--" :loading="isVoyageLoading"  v-model="form.opsVoyage" label="voyage_sequence" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -158,9 +158,9 @@ watch(() => voyage, (value) => {
 
   } else {
       props.form.opsVoyageBoatNoteLines = [
-        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: sector.boat_note_qty, voyage_note_type: 'Boat Note' })),
-        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: sector.final_survey_qty, voyage_note_type: 'Final Survey' })),
-        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: sector.final_received_qty, voyage_note_type: 'Receipt Copy' }))
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: null, voyage_note_type: 'Boat Note' })),
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: null, voyage_note_type: 'Final Survey' })),
+        ...value?.value?.opsVoyageSectors.map((sector) => ({ ...sector, quantity: null, voyage_note_type: 'Receipt Copy' }))
     ];
   }
     
@@ -197,5 +197,19 @@ onMounted(() => {
 }
 .form-input {
   @apply block mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
+}
+
+/* Hide the default number input arrows */
+input[type=number] {
+  -moz-appearance: textfield; /* Firefox */
+  -webkit-appearance: textfield; /* Chrome, Safari, Edge */
+  appearance: textfield; /* Standard syntax */
+}
+
+/* Hide the spin buttons in Chrome */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 </style>

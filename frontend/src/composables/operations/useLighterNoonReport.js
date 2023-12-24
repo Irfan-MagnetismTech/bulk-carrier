@@ -26,7 +26,7 @@ export default function useLighterNoonReport() {
 		date: '',
 		last_port: '',
 		next_port: '',
-		business_unit: '',
+		business_unit: 'TSLL',
 		remarks: '',
 	});
 	const errors = ref(null);
@@ -154,7 +154,8 @@ export default function useLighterNoonReport() {
 		try {
 			const { data, status } = await Api.delete( `/ops/lighter-noon-reports/${lighterNoonReportId}`);
 			notification.showSuccess(status);
-			await getLighterNoonReports();
+			await getLighterNoonReports(filterParams.value);
+
 		} catch (error) {
 			const { data, status } = error.response;
 			notification.showError(status);

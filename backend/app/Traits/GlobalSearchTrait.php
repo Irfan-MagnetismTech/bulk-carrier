@@ -13,7 +13,7 @@ trait GlobalSearchTrait
      * @param mixed $query
      * @param mixed $request
      */
-    public function scopeGlobalSearch($query, $request)
+    public function scopeGlobalSearch($query, $request, $extraMethods = [])
     {
         $request = json_decode($request['data']);
 
@@ -94,7 +94,16 @@ trait GlobalSearchTrait
             }
         }
 
-        $items = $query_result->values()->all();
+
+        if(!empty($extraMethods)) {
+            foreach($extraMethods as $method => $fields) {
+                if($method == 'unique') {
+                    $items = $query_result->unique($fields)->values()->all();
+                }
+            }
+        } else {
+            $items = $query_result->values()->all();
+        }
         $total = count($items);
         $perPage = $request->items_per_page;
         $currentPage = LengthAwarePaginator::resolveCurrentPage();

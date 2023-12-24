@@ -64,7 +64,7 @@ class CrwRecruitmentApprovalController extends Controller
     public function show(CrwRecruitmentApproval $crwRecruitmentApproval)
     {
         try {
-            return response()->success('Retrieved Successfully', $crwRecruitmentApproval->load('crwRecruitmentApprovalLines'), 200);
+            return response()->success('Retrieved Successfully', $crwRecruitmentApproval->load('crwRecruitmentApprovalLines.crwRank'), 200);
         }
         catch (QueryException $e)
         {

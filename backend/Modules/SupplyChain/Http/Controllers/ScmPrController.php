@@ -10,13 +10,15 @@ use Illuminate\Support\Facades\DB;
 use App\Imports\ScmMaterialsImport;
 use App\Services\FileUploadService;
 use Maatwebsite\Excel\Facades\Excel;
+use Modules\SupplyChain\Entities\ScmCs;
+use Modules\SupplyChain\Entities\ScmPo;
 use Modules\SupplyChain\Entities\ScmPr;
+use Modules\SupplyChain\Entities\ScmMrr;
 use Modules\SupplyChain\Services\UniqueId;
+use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Http\Requests\ScmPrRequest;
 use Maatwebsite\Excel\Validators\ValidationException;
-use Modules\SupplyChain\Entities\ScmPo;
-use Modules\SupplyChain\Entities\ScmPrLine;
 
 class ScmPrController extends Controller
 {
@@ -36,7 +38,13 @@ class ScmPrController extends Controller
     {
         try {
             $scm_prs = ScmPr::query()
-                ->with('scmPrLines', 'scmWarehouse')
+                ->with(
+                    'scmPrLines.scmMaterial',
+                    'scmWarehouse',
+                    'scmPos',
+                    'scmMrrs',
+                    'scmCss'
+                )
                 ->globalSearch($request->all());
 
             return response()->success('Data list', $scm_prs, 200);
@@ -136,6 +144,7 @@ class ScmPrController extends Controller
             'business_unit' => $purchaseRequisition->business_unit,
             'scmWarehouse' => $purchaseRequisition->scmWarehouse,
             'scm_warehouse_id' => $purchaseRequisition->scm_warehouse_id,
+            'acc_cost_center_id' => $purchaseRequisition->acc_cost_center_id,
             'raised_date' => $purchaseRequisition->raised_date,
             'is_critical' => $purchaseRequisition->is_critical,
             'attachment' => $purchaseRequisition->attachment,
@@ -191,8 +200,11 @@ class ScmPrController extends Controller
     public function destroy(ScmPr $purchase_requisition): JsonResponse
     {
         try {
-            $poLines = ScmPo::where('scm_pr_id', $purchase_requisition->id)->count();
-            if ($poLines > 0) {
+            $pos = ScmPo::where('scm_pr_id', $purchase_requisition->id)->count();
+            $css = ScmCs::where('scm_pr_id', $purchase_requisition->id)->count();
+            $mrrs = ScmMrr::where('scm_pr_id', $purchase_requisition->id)->count();
+
+            if ($pos > 0 || $css > 0 || $mrrs > 0) {
                 $error = array(
                     "message" => "Data could not be deleted!",
                     "errors" => [
@@ -246,7 +258,68 @@ class ScmPrController extends Controller
         return response()->success('Search result', $purchase_requisition, 200);
     }
 
+    // getPrWiseCsData
 
+    // const materialCs = ref({
+    //     ref_no: '',
+    //     date: '',
+    //     expire_date: '',
+    //     priority: '',
+    //     scmWarehouse: '',
+    //     scm_warehouse_id: '',
+    //     scm_warehouse_name: '',
+    //     acc_cost_center_id: '',
+    //     scmPr: '',
+    //     scm_pr_id: '',
+    //     pr_no: '',
+    //     special_instruction: '',
+    //     purchase_center: '',
+    //     business_unit: '',
+    //     required_days: '',
+    // });
+
+
+    public function getPrWiseCsData(Request $request): JsonResponse
+    {
+        if(request()->filled('pr_id')){
+        $pr_data = ScmPr::query()
+            ->with('scmPrLines.scmMaterial', 'scmWarehouse')
+            ->find($request->pr_id);
+
+            $data = [
+                "scmWarehouse" => $pr_data->scmWarehouse,
+                "scm_warehouse_id" => $pr_data->scm_warehouse_id,
+                "scm_warehouse_name" => $pr_data->scmWarehouse->name,
+                "acc_cost_center_id" => $pr_data->acc_cost_center_id,
+                "scmPr" => $pr_data,
+                "scm_pr_id" => $pr_data->id,
+                "pr_no" => $pr_data->ref_no,
+                "purchase_center" => $pr_data->purchase_center,
+                "business_unit" => $pr_data->business_unit,
+                "scmCsMaterials" => $pr_data->scmPrLines,
+            ];
+         }else{
+            $data = [
+                "scmWarehouse" => null,
+                "scm_warehouse_id" => null,
+                "scm_warehouse_name" => null,
+                "acc_cost_center_id" => null,
+                "scmPr" => null,
+                "scm_pr_id" => null,
+                "pr_no" => null,
+                "purchase_center" => null,
+                "business_unit" => null,
+            ];
+         }
+
+        try {
+            return response()->success
+            ('Data updated sucessfully!', $data, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+     
     // public function searchMrr(Request $request): JsonResponse
     // {
     //     if($request->has('searchParam')) { 

@@ -3,10 +3,12 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
+import Swal from "sweetalert2";
 
 export default function useIncidentRecord() {
     const router = useRouter();
     const incidentRecords = ref([]);
+    const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
     const incidentRecord = ref( {
@@ -22,33 +24,41 @@ export default function useIncidentRecord() {
         crwIncidentParticipants: [
             {
                 crw_crew_id: '',
-                crw_crew_name: '',
-                crw_crew_rank: '',
+                crw_crew_name: null,
+                crw_crew_contact: '',
                 injury_status: '',
                 notes: '',
+                isCrewNameDuplicate: false,
             }
         ]
     });
 
-    const indexPage = ref(null);
-    const indexBusinessUnit = ref(null);
-
+    const filterParams = ref(null);
     const errors = ref(null);
     const isLoading = ref(false);
 
-    async function getIncidentRecords(page,businessUnit) {
+    async function getIncidentRecords(filterOptions) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        let loader = null;
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        }
+        else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
 
-        indexPage.value = page;
-        indexBusinessUnit.value = businessUnit;
+        filterParams.value = filterOptions;
 
         try {
             const {data, status} = await Api.get('/crw/crw-incidents',{
                 params: {
-                    page: page || 1,
-                    business_unit: businessUnit,
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
                 },
             });
             incidentRecords.value = data.value;
@@ -57,31 +67,41 @@ export default function useIncidentRecord() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
 
     async function storeIncidentRecord(form) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        const isUnique = checkUniqueArray(form);
 
-        let formData = new FormData();
-        formData.append('attachment', form.attachment);
-        formData.append('data', JSON.stringify(form));
+        if(isUnique){
+            const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
 
-        try {
-            const { data, status } = await Api.post('/crw/crw-incidents', formData);
-            incidentRecord.value = data.value;
-            notification.showSuccess(status);
-            await router.push({ name: "crw.incidentRecords.index" });
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
+            let formData = new FormData();
+            formData.append('attachment', form.attachment);
+            formData.append('data', JSON.stringify(form));
+
+            try {
+                const { data, status } = await Api.post('/crw/crw-incidents', formData);
+                incidentRecord.value = data.value;
+                notification.showSuccess(status);
+                await router.push({ name: "crw.incidentRecords.index" });
+            } catch (error) {
+                const { data, status } = error.response;
+                errors.value = notification.showError(status, data);
+            } finally {
+                loader.hide();
+                isLoading.value = false;
+            }
         }
     }
 
@@ -105,28 +125,32 @@ export default function useIncidentRecord() {
 
     async function updateIncidentRecord(form, incidentRecordId) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        const isUnique = checkUniqueArray(form);
 
-        let formData = new FormData();
-        formData.append('attachment', form.attachment);
-        formData.append('data', JSON.stringify(form));
-        formData.append('_method', 'PUT');
+        if(isUnique){
+            const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
 
-        try {
-            const { data, status } = await Api.post(
-                `/crw/crw-incidents/${incidentRecordId}`,
-                formData
-            );
-            incidentRecord.value = data.value;
-            notification.showSuccess(status);
-            await router.push({ name: "crw.incidentRecords.index" });
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
+            let formData = new FormData();
+            formData.append('attachment', form.attachment);
+            formData.append('data', JSON.stringify(form));
+            formData.append('_method', 'PUT');
+
+            try {
+                const { data, status } = await Api.post(
+                    `/crw/crw-incidents/${incidentRecordId}`,
+                    formData
+                );
+                incidentRecord.value = data.value;
+                notification.showSuccess(status);
+                await router.push({ name: "crw.incidentRecords.index" });
+            } catch (error) {
+                const { data, status } = error.response;
+                errors.value = notification.showError(status, data);
+            } finally {
+                loader.hide();
+                isLoading.value = false;
+            }
         }
     }
 
@@ -138,13 +162,51 @@ export default function useIncidentRecord() {
         try {
             const { data, status } = await Api.delete( `/crw/crw-incidents/${incidentRecordId}`);
             notification.showSuccess(status);
-            await getIncidentRecords(indexPage.value, indexBusinessUnit.value);
+            await getIncidentRecords(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
             loader.hide();
             isLoading.value = false;
+        }
+    }
+
+    function checkUniqueArray(form){
+        const itemNamesSet = new Set();
+        let isHasError = false;
+        const messages = ref([]);
+        const hasDuplicates = form.crwIncidentParticipants.some((item,index) => {
+            if (itemNamesSet.has(item.crw_crew_name)) {
+                let data = `Duplicate Crew Name [line no: ${index + 1}]`;
+                messages.value.push(data);
+                form.crwIncidentParticipants[index].isCrewNameDuplicate = true;
+            } else {
+                form.crwIncidentParticipants[index].isCrewNameDuplicate = false;
+            }
+            itemNamesSet.add(item.crw_crew_name);
+        });
+
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
         }
     }
 
@@ -156,6 +218,8 @@ export default function useIncidentRecord() {
         showIncidentRecord,
         updateIncidentRecord,
         deleteIncidentRecord,
+        checkUniqueArray,
+        isTableLoading,
         isLoading,
         errors,
     };

@@ -5,6 +5,7 @@ namespace Modules\Operations\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
@@ -61,8 +62,40 @@ class OpsVoyageController extends Controller
                 'opsBunkers',
             );
 
+            $voyageSectors= collect($request->opsVoyageSectors)->map(function($sector){
+                $sector['pol_pod']=$sector['loading_point'] .'-'. $sector['unloading_point'];
+                return $sector;
+            });
+
+            foreach($request->opsVoyageSectors as $key=>$sector){
+                if($sector['loading_point'] == $sector['unloading_point']){
+                    $error= [
+                        'message'=>'In Sectors - Loading Point and Unloading Point can not be same for the row '.$key++.'.',
+                        'errors'=>[
+                            'unloading_point'=>['In Sectors - Loading Point and Unloading Point can not be same for the row '.$key++.'.',]
+                            ]
+                        ];
+                    return response()->json($error, 422);
+                }
+            }
+
+            $schedules= [];
+            foreach($request->opsVoyagePortSchedules as $key=>$schedule){
+                $schedules[]=$schedule['port_code'];
+            }
+            
+            if (count($schedules) !== count(array_unique($schedules))) {
+                $error= [
+                    'message'=>'In Schedules - Port can not be same.',
+                    'errors'=>[
+                        'unloading_point'=>['In Schedules - Port can not be same.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
+
             $voyage = OpsVoyage::create($voyageInfo);
-            $voyage->opsVoyageSectors()->createMany($request->opsVoyageSectors);
+            $voyage->opsVoyageSectors()->createMany($voyageSectors);
             $voyage->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedules);
             $voyage->opsBunkers()->createMany($request->opsBunkers);
             DB::commit();
@@ -110,7 +143,7 @@ class OpsVoyageController extends Controller
  
      }
  
- 
+
        /**
       * Update the specified resource in storage.
       *
@@ -129,10 +162,44 @@ class OpsVoyageController extends Controller
                 'opsBunkers',
             );
 
+            $voyageSectors= collect($request->opsVoyageSectors)->map(function($sector){
+                $sector['pol_pod']=$sector['loading_point'] .'-'. $sector['unloading_point'];
+                return $sector;
+            });
+
+            foreach($request->opsVoyageSectors as $key=>$sector){
+                $sector['pol_pod']=$sector['loading_point'] .'-'. $sector['unloading_point'];
+                if($sector['loading_point'] == $sector['unloading_point']){
+                    $error= [
+                        'message'=>'In Sectors - Loading Point and Unloading Point can not be same for the row '.$key++.'.',
+                        'errors'=>[
+                            'unloading_point'=>['In Sectors - Loading Point and Unloading Point can not be same for the row '.$key++.'.',]
+                            ]
+                        ];
+                    return response()->json($error, 422);
+                }
+            }
+
+
+            $schedules= [];
+            foreach($request->opsVoyagePortSchedules as $key=>$schedule){
+                $schedules[]=$schedule['port_code'];
+            }
+            
+            if (count($schedules) !== count(array_unique($schedules))) {
+                $error= [
+                    'message'=>'In Schedules - Port can not be same.',
+                    'errors'=>[
+                        'unloading_point'=>['In Schedules - Port can not be same.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
+
             $voyage->update($voyageInfo);  
 
             $voyage->opsVoyageSectors()->delete();
-            $voyage->opsVoyageSectors()->createMany($request->opsVoyageSectors);
+            $voyage->opsVoyageSectors()->createMany($voyageSectors);
 
             $voyage->opsVoyagePortSchedules()->delete();
             $voyage->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedules);
@@ -197,17 +264,125 @@ class OpsVoyageController extends Controller
     }
 
     public function getSearchVoyages(Request $request){
+
         try {
             $voyages = OpsVoyage::query()
             ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
                 $query->where('business_unit', request()->business_unit);
             })
-            ->when(isset(request()->ops_vessel_id), function($query) {
+            ->when(isset(request()->ops_vessel_id) && (request()->ops_vessel_id != 'null'), function($query) {
                 $query->where('ops_vessel_id', request()->ops_vessel_id);
             })
+            ->with(['opsVoyageSectors.cargoTariffs.opsCargoTariffLines'])
             ->get();
 
-            return response()->success('Data retrieved successfully.', $voyages, 200);
+            // $voyages = $voyages->map(function($voyage) {
+            //     $voyage->opsVoyageSectors->map(function($sector) {
+            //         $sector['quantity'] = $this->chooseQuantity($sector);
+                    
+            //         return $sector;
+            //     });
+
+            //     return $voyage;
+            // });
+
+            $voyageInfo = $voyages->map(function ($voyage) {
+                $result =$voyage->opsVoyageSectors->map(function ($sector) {
+
+                    if (isset($sector->cargoTariffs)) {
+                        $sectorInfo = $sector->cargoTariffs()->get()->map(function ($tariff) {
+                            $tariff['jan'] = $tariff->opsCargoTariffLines->sum('jan');
+                            $tariff['feb'] = $tariff->opsCargoTariffLines->sum('feb');
+                            $tariff['mar'] = $tariff->opsCargoTariffLines->sum('mar');
+                            $tariff['apr'] = $tariff->opsCargoTariffLines->sum('apr');
+                            $tariff['may'] = $tariff->opsCargoTariffLines->sum('may');
+                            $tariff['jun'] = $tariff->opsCargoTariffLines->sum('jun');
+                            $tariff['jul'] = $tariff->opsCargoTariffLines->sum('jul');
+                            $tariff['aug'] = $tariff->opsCargoTariffLines->sum('aug');
+                            $tariff['sep'] = $tariff->opsCargoTariffLines->sum('sep');
+                            $tariff['oct'] = $tariff->opsCargoTariffLines->sum('oct');
+                            $tariff['nov'] = $tariff->opsCargoTariffLines->sum('nov');
+                            $tariff['dec'] = $tariff->opsCargoTariffLines->sum('dec');
+                            
+
+                            return $tariff;
+                        });
+                        data_forget($sector, 'cargoTariffs');
+
+
+
+                        $sector->cargoTariffs = $sectorInfo;
+                    }
+                    $sector['quantity'] = $this->chooseQuantity($sector);
+                    // $sector = $sector->only([
+                    //     'ops_voyage_id',
+                    //     'loading_point',
+                    //     'unloading_point',
+                    //     'rate',
+                    //     'quantity',
+                    //     'cargoTariffs',
+                    // ]);
+                    // $sector = $sector->only(['desired_attribute_1', 'desired_attribute_2']);
+                    return $sector;
+                });
+                data_forget($voyage, 'opsVoyageSectors');
+                $voyage->opsContractTariffs = $result;
+            
+                return $voyage;
+            });
+
+            return response()->success('Data retrieved successfully.', $voyageInfo, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function chooseQuantity($item) {
+        $cargo_quantity = 0;
+            if ($item->final_received_qty > 0) {
+                $cargo_quantity = $item->final_received_qty;
+            } elseif ($item->final_survey_qty > 0) {
+                $cargo_quantity = $item->final_survey_qty;
+            } elseif ($item->boat_note_qty > 0) {
+                $cargo_quantity = $item->boat_note_qty;
+            } elseif ($item->initial_survey_qty > 0) {
+                $cargo_quantity = $item->initial_survey_qty;
+            }
+
+            return $cargo_quantity;
+    }
+
+
+    public function getCargoTariffByVoyage(Request $request){
+        try {
+            $cargoTariffs = OpsVoyage::query()
+            ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
+                $query->where('business_unit', request()->business_unit);
+            })
+            ->when(isset(request()->ops_voyage_id), function($query) {
+                $query->where('id', request()->ops_voyage_id);
+            })
+            ->with(['opsVessel.opsCargoTariffs'])
+            ->get();
+
+
+            $cargoTariffs = $cargoTariffs->map(function ($tariffs) use($cargoTariffs){
+                return $tariffs->opsVessel->opsCargoTariffs->map(function($tariff) use($cargoTariffs){
+                    return $cargoTariffs[]= $tariff;
+                })->flatten();
+            })->flatten();
+
+            if(count($cargoTariffs)==0) {
+                $error= [
+                    'message'=>'Voyage has not define in any Tariffs.',
+                    'errors'=>[
+                        'tariff'=>['Voyage has not define in any Tariffs.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
+
+            return response()->success('Data retrieved successfully.', $cargoTariffs, 200);
         } catch (QueryException $e){
             return response()->error($e->getMessage(), 500);
         }

@@ -14,7 +14,7 @@ setTitle('Create Assign Crew ');
     <!-- Heading -->
     <div class="flex items-center justify-between w-full my-3 " v-once>
         <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Create Assign Crew</h2>
-      <default-button :title="'Vessel Required Crew List'" :to="{ name: 'crw.crewAssigns.index' }" :icon="icons.DataBase"></default-button>
+      <default-button :title="'Crew Assign List'" :to="{ name: 'crw.crewAssigns.index' }" :icon="icons.DataBase"></default-button>
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
         <form @submit.prevent="storeCrewAssign(crewAssign)">
