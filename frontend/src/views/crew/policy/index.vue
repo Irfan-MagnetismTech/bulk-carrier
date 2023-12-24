@@ -74,6 +74,15 @@ let filterOptions = ref( {
 			"date_from": null
 			},
       {
+        "relation_name": null,
+        "field_name": "attachment",
+        "search_param": "",
+        "action": null,
+        "order_by": null,
+        "date_from": null,
+        "label": "Attachment",
+      },
+      {
 			"relation_name": null,
 			"field_name": "business_unit",
 			"search_param": "",
@@ -160,6 +169,15 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
+                  <span>Attachment</span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(2,'asc',filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(2,'desc',filterOptions)" :class="{'text-gray-800' : filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
                   <span>Business Unit</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(2,'asc',filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
@@ -181,6 +199,7 @@ onMounted(() => {
               </th>
               <th><input v-model="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th><input v-model="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
@@ -195,18 +214,22 @@ onMounted(() => {
             <td class="text-left">{{ crwPolicy?.name }}</td>
             <td class="text-left">{{ crwPolicy?.type }}</td>
             <td>
+              <a v-html="icons.Attachment" type="button" v-if="typeof crwPolicy?.attachment === 'string'" class="text-green-800" target="_blank" :href="env.BASE_API_URL+'/'+crwPolicy?.attachment"></a>
+              <a v-else>---</a>
+            </td>
+            <td>
               <span :class="crwPolicy?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwPolicy?.business_unit }}</span>
             </td>
             <td>
               <nobr>
-                <a :href="env.BASE_API_URL+'/'+crwPolicy?.attachment" target="_blank" :class="{'custom_disabled' : !crwPolicy?.attachment}">
-                  <div class="tooltip">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icn w-6 h-6 text-green-800 dark-disabled:text-green-800 dark-disabled:hover:text-green-800" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                    </svg>
-                    <span class="tooltiptext">Download Attachment</span>
-                  </div>
-                </a>
+<!--                <a :href="env.BASE_API_URL+'/'+crwPolicy?.attachment" target="_blank" :class="{'custom_disabled' : !crwPolicy?.attachment}">-->
+<!--                  <div class="tooltip">-->
+<!--                    <svg xmlns="http://www.w3.org/2000/svg" class="icn w-6 h-6 text-green-800 dark-disabled:text-green-800 dark-disabled:hover:text-green-800" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">-->
+<!--                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />-->
+<!--                    </svg>-->
+<!--                    <span class="tooltiptext">Download Attachment</span>-->
+<!--                  </div>-->
+<!--                </a>-->
                 <action-button :action="'edit'" :to="{ name: 'crw.policies.edit', params: { policyId: crwPolicy?.id } }"></action-button>
                 <action-button @click="confirmDelete(crwPolicy?.id)" :action="'delete'"></action-button>
               </nobr>
