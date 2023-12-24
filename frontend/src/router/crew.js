@@ -389,4 +389,31 @@ export default [
     //     component: () => import(`../views/crew/crew-bank-account/show.vue`),
     //     meta: { requiresAuth: true, role: "all", permission: '' },
     // },
+
+    /* Crew Payroll Batch Routes */
+    {
+        path: `/${BASE}/crew-payroll-batches`,
+        name: `${BASE}.crewPayrollBatches.index`,
+        component: () => import(`../views/crew/crew-payroll-batch/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/crew-payroll-batches/create`,
+        name: `${BASE}.crewPayrollBatches.create`,
+        component: () => import(`../views/crew/crew-payroll-batch/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/crew-payroll-batches/:crewPayrollBatchId/edit`,
+        name: `${BASE}.crewPayrollBatches.edit`,
+        component: () => import(`../views/crew/crew-payroll-batch/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+    },
+    {
+        path: `/${BASE}/crew-payroll-batches/:crewPayrollBatchId/show`,
+        name: `${BASE}.crewPayrollBatches.show`,
+        component: () => import(`../views/crew/crew-payroll-batch/show.vue`),
+        meta: { requiresAuth: true, role: "all", permission: '' },
+    },
 ];
