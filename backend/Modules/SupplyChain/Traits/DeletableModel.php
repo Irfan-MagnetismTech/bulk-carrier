@@ -30,9 +30,9 @@ trait DeletableModel
         $modelNames = implode(', ', array_slice($models, 0, -1)) . ' and ' . end($models);
 
         return [
-            "message" => "Data could not be deleted!",
+            "message" => "Data could not be deleted! It has references in the {$modelNames} table.",
             "errors" => [
-                "id" => ["Data could not be deleted! It has references in the {$modelNames} table."]
+                "id" => ["Data is in use and cannot be deleted!"]
             ]
         ];
     }
