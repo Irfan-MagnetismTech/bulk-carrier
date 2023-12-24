@@ -5,162 +5,185 @@
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
       <div class="flex md:gap-4">
-        <div class="w-1/2">
-          <h2 class="bg-indigo-400 text-white text-md font-semibold uppercase mb-2 text-center py-2">Basic Information</h2>
+        <div class="w-full">
           <table class="w-full">
+            <thead>
+              <tr>
+                  <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="2">Basic Info</td>
+              </tr>
+            </thead>
             <tbody>
               <tr>
-                <th class="w-32">Voyage Type</th>
-                <td>{{ voyage?.voyage_type }}</td>
+                  <th class="w-40">Business Unit</th>
+                  <td><span :class="voyage?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ voyage?.business_unit }}</span></td>
               </tr>
               <tr>
-                <th class="w-32">Name</th>
-                <td>{{ voyage?.name }}</td>
+                <th class="w-32">Voyage No.</th>
+                <td>{{ voyage?.voyage_no }}</td>
               </tr>
               <tr>
-                <th class="w-32">Short Code</th>
-                <td>{{ voyage?.short_code }}</td>
+                <th class="w-32">Mother Vessel Name </th>
+                <td>{{ voyage?.mother_vessel }}</td>
               </tr>
               <tr>
-                <th class="w-32">Call Sign</th>
-                <td>{{ voyage?.call_sign }}</td>
+                <th class="w-32">Vessel</th>
+                <td>{{ voyage?.opsVessel?.name }}</td>
               </tr>
               <tr>
-                <th class="w-32">Owner Name</th>
-                <td>{{ voyage?.owner_name }}</td>
+                <th class="w-32">Customer Name</th>
+                <td>{{ voyage?.opsCustomer?.name }}</td>
               </tr>
               <tr>
-                <th class="w-32">Manager/Director</th>
-                <td>{{ voyage?.manager }}</td>
+                <th class="w-32">Cargo Type</th>
+                <td>{{ voyage?.opsCargoType?.cargo_type }}</td>
               </tr>
               <tr>
-                <th class="w-32">Classification</th>
-                <td>{{ voyage?.classification }}</td>
+                <th class="w-32">Voyage Sequence</th>
+                <td>{{ voyage?.voyage_sequence }}</td>
               </tr>
               <tr>
-                <th class="w-32">Flag</th>
-                <td>{{ voyage?.flag }}</td>
+                <th class="w-32">Route</th>
+                <td>{{ voyage?.route }}</td>
               </tr>
               <tr>
-                <th class="w-32">Port of Registry</th>
-                <td>{{ voyage?.port_of_registry }}</td>
+                <th class="w-32">Load Port Distance (NM)</th>
+                <td>{{ voyage?.load_port_distance }}</td>
               </tr>
               <tr>
-                <th class="w-32">GRT</th>
-                <td>{{ voyage?.grt }}</td>
+                <th class="w-32">Sail Date</th>
+                <td>{{ voyage?.sail_date?moment(voyage?.sail_date).format('DD-MM-YYYY') : null }}</td>
               </tr>
               <tr>
-                <th class="w-32">NRT</th>
-                <td>{{ voyage?.nrt }}</td>
-              </tr>
-              <tr>
-                <th class="w-32">DWT</th>
-                <td>{{ voyage?.dwt }}</td>
-              </tr>
-              <tr>
-                <th class="w-32">IMO Number</th>
-                <td>{{ voyage?.imo }}</td>
-              </tr>
-              <tr>
-                <th class="w-32">MMSI</th>
-                <td>{{ voyage?.mmsi }}</td>
-              </tr>
-              <tr>
-                <th class="w-32">Official Number</th>
-                <td>{{ voyage?.official_number }}</td>
-              </tr>
-              <tr>
-                <th class="w-32">Keel Laying Date</th>
-                <td>{{ voyage?.keel_laying_date }}</td>
-              </tr>
-              <tr>
-                <th class="w-32">Launching Date</th>
-                <td>{{ voyage?.launching_date }}</td>
-              </tr>
-              <tr>
-                <th class="w-32">Delivery Date</th>
-                <td>{{ voyage?.delivery_date }}</td>
-              </tr>
-              <tr>
-                <th class="w-32">Length Overall</th>
-                <td>{{ voyage?.overall_length }}</td>
-              </tr>
-              <tr>
-                <th class="w-32">Width Overall</th>
-                <td>{{ voyage?.overall_width }}</td>
-              </tr>
-              <tr>
-                <th class="w-32">Yearl Built</th>
-                <td>{{ voyage?.year_built }}</td>
-              </tr>
-              <tr>
-                <th class="w-32">Cargo Hold</th>
-                <td>{{ voyage?.total_cargo_hold }}</td>
-              </tr>
-              <tr>
-                <th class="w-32">Remarks</th>
-                <td>{{ voyage?.remarks }}</td>
+                <th class="w-32">Transit Date</th>
+                <td>{{ voyage?.transit_date?moment(voyage?.transit_date).format('DD-MM-YYYY') : null }}</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <div class="w-1/2">
-          <div class="h-72">
-            <!-- <h2 class="bg-indigo-400 text-white text-md font-semibold uppercase mb-2 text-center py-2">Other Information</h2> -->
-
-          </div>
-          <h2 class="bg-indigo-400 text-white text-md font-semibold uppercase mb-2 text-center py-2">Other Information</h2>
+      </div>
+      <div class="flex md:gap-4 mt-1 md:mt-2" v-if="voyage.opsVoyageSectors?.length">
+        <div class="w-full">
           <table class="w-full">
+            <thead>
+                <tr>
+                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="7">Bunker Information</td>
+                </tr>
+            </thead>
+            <thead v-once>
+              <tr class="w-full">
+                <th>SL</th>
+                <th>Loading Point</th>
+                <th>Unloading Point</th>
+                <th>Tonnage (Initial Survey) </th>
+              </tr>
+            </thead>
             <tbody>
-              <tr>
-                <th class="w-52">Current Charterer Owner</th>
-                <td></td>
+              <tr v-for="(sector, index) in voyage.opsVoyageSectors">
+                <td>
+                  {{ index+1 }}
+                </td>
+                <td>
+                  <span v-if="sector.loadingPoint?.name">{{ sector.loadingPoint?.name }}</span>
+                </td>
+                <td>
+                  <span v-if="sector.unloadingPoint?.name">{{ sector.unloadingPoint?.name }}</span>
+                </td>
+                <td>
+                  <span>
+                      {{ numberFormat(sector?.initial_survey_qty) }}
+                    </span>
+                </td>              
               </tr>
-              <tr>
-                <th class="w-52">All Charterer History</th>
-                <td></td>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="flex md:gap-4 mt-1 md:mt-2" v-if="voyage.opsVoyageSectors?.length">
+        <div class="w-full">
+          <table class="w-full">
+            <thead>
+                <tr>
+                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="7">Bunker Information</td>
+                </tr>
+            </thead>
+            <thead v-once>
+              <tr class="w-full">
+                <th>SL</th>
+                <th>Bunker Name</th>
+                <th>Unit</th>
+                <th>Presenet Stock</th>
+                <th>Stock In</th>
               </tr>
-              <tr>
-                <th class="w-52">Total Voyage</th>
-                <td></td>
+            </thead>
+            <tbody>
+              <tr v-for="(bunker, index) in voyage.opsBunkers">
+                <td>
+                  {{ index+1 }}
+                </td>
+                <td>
+                  <span v-if="bunker.scmMaterial?.name">{{ bunker.scmMaterial?.name }}</span>
+                </td>
+                <td>
+                  <span >{{ bunker.unit }}</span>
+                </td>
+                <td>
+                  <span >{{ numberFormat(bunker.opening_balance) }}</span>
+                </td>
+                <td>
+                  <span>
+                    {{ numberFormat(bunker?.fuel_stock_l) }}
+                  </span>
+                </td>              
               </tr>
-              <tr>
-                <th class="w-52">Total Inventory</th>
-                <td></td>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="flex md:gap-4 mt-1 md:mt-2" v-if="voyage.opsVoyagePortSchedules?.length">
+        <div class="w-full">
+          <table class="w-full">
+            <thead>
+                <tr>
+                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="7">Voyage Port Schedule</td>
+                </tr>
+            </thead>
+            <thead v-once>
+              <tr class="w-full">
+                <th>SL</th>
+                <th>Port</th>
+                <th>Operation Type</th>
+                <th>ATA</th>
+                <th>Load Commence</th>
+                <th>Unload Commence</th>
               </tr>
-              <tr>
-                <th class="w-52">Total Revenue</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Total Expenditure</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Total Billable Amount</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Total Due Amount</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Total Over Due Amount</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Total Collection</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Profit/Loss</th>
-                <td></td>
+            </thead>
+            <tbody>
+              <tr v-for="(schedule, index) in voyage.opsVoyagePortSchedules">
+                <td>
+                  {{ index+1 }}
+                </td>
+                <td>
+                  <span v-if="schedule.portCode?.code_name">{{ schedule.portCode?.code_name }}</span>
+                </td>
+                <td>
+                  <span >{{ schedule.operation_type }}</span>
+                </td>
+                <td>
+                  <span >{{ schedule?.ata ? moment(schedule?.ata).format('DD-MM-YYYY') : null }}</span>
+                </td>             
+                <td>
+                  <span >{{ schedule?.load_commence ? moment(schedule?.load_commence).format('DD-MM-YYYY') : null }}</span>
+                </td>             
+                <td>
+                  <span >{{ schedule?.unload_commence ? moment(schedule?.unload_commence).format('DD-MM-YYYY') : null }}</span>
+                </td>             
               </tr>
             </tbody>
           </table>
         </div>
       </div>
   </div>
+
 </template>
 <script setup>
 import { onMounted } from 'vue';
@@ -168,13 +191,16 @@ import { useRoute } from 'vue-router';
 import useVoyage from '../../../composables/operations/useVoyage';
 import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
+import useHelper from "../../../composables/useHelper";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
+import moment from 'moment';
 
 const icons = useHeroIcon();
 
 const route = useRoute();
 const voyageId = route.params.voyageId;
 const { voyage, showVoyage, errors } = useVoyage();
+const { numberFormat } = useHelper();
 
 const { setTitle } = Title();
 
