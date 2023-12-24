@@ -1,13 +1,18 @@
 <?php
 
-namespace Modules\SupplyChain\Traits;
+namespace App\Traits;
 
 use ReflectionClass;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
-trait DeletedableModel
+trait DeletableModel
 {
-    public function preventDeletionIfRelated()
+    /**
+     * Prevents deletion of data if it is related to other models.
+     *
+     * @return array
+     */
+    public function preventDeletionIfRelated(): array
     {
         $methods = $this->getRelationMethods();
 
@@ -21,18 +26,23 @@ trait DeletedableModel
                 $models[] = $finalModelName;
             }
         }
-        
-        $modelNames = implode(', and ', array_slice($models, 0, -1)) . ' and ' . end($models);
+
+        $modelNames = count($models) > 1 ? implode(', ', array_slice($models, 0, -1)) . ' and ' . end($models) : implode('', $models);
 
         return [
-            "message" => "Data could not be deleted!",
+            "message" => "Data could not be deleted! It has references in the {$modelNames} table.",
             "errors" => [
-                "id" => ["Data could not be deleted! It has references in the {$modelNames} table."]
+                "id" => ["Data is in use and cannot be deleted!"]
             ]
         ];
     }
 
-    private function getRelationMethods()
+    /**
+     * Retrieves an array of all the relation methods in the class.
+     *
+     * @return array
+     */
+    private function getRelationMethods(): array
     {
         $reflection = new ReflectionClass($this);
         $methods = [];
@@ -46,13 +56,20 @@ trait DeletedableModel
         return $methods;
     }
 
-    private function isRelationMethod($method)
+    /**
+     * Checks if a given method is a relation method.
+     *
+     * @param mixed
+     * @return bool
+     */
+    private function isRelationMethod($method): bool
     {
         $expectedTypes = [
             'Illuminate\Database\Eloquent\Relations\HasOne',
             'Illuminate\Database\Eloquent\Relations\HasMany',
             'Illuminate\Database\Eloquent\Relations\MorphMany',
-            'Illuminate\Database\Eloquent\Relations\MorphOne'
+            'Illuminate\Database\Eloquent\Relations\MorphOne',
+            'Illuminate\Database\Eloquent\Relations\HasManyThrough',
         ];
 
         return $method->hasReturnType() && in_array($method->getReturnType()->getName(), $expectedTypes);

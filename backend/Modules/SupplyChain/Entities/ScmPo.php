@@ -2,6 +2,7 @@
 
 namespace Modules\SupplyChain\Entities;
 
+use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmPr;
@@ -11,14 +12,13 @@ use Modules\SupplyChain\Entities\ScmPoTerm;
 use Modules\SupplyChain\Entities\ScmVendor;
 use Modules\SupplyChain\Entities\ScmLcRecord;
 use Modules\SupplyChain\Entities\ScmWarehouse;
-use Modules\SupplyChain\Traits\DeletedableModel;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmPo extends Model
 {
-    use HasFactory, GlobalSearchTrait, DeletedableModel;
+    use HasFactory, GlobalSearchTrait, DeletableModel;
 
     protected $fillable = [
         'ref_no', 'scm_pr_id', 'scm_cs_id', 'date', 'scm_vendor_id', 'scm_warehouse_id', 'acc_cost_center_id', 'currency', 'foreign_to_bdt', 'discount', 'vat', 'business_unit', 'created_by', 'sub_total', 'total_amount', 'net_amount', 'foreign_to_usd', 'pr_date', 'purchase_center', 'remarks',

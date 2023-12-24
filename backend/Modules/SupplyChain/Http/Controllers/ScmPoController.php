@@ -212,7 +212,6 @@ class ScmPoController extends Controller
             //     return response()->json(['error' => 'Cannot delete parent record because it has related child records.'], 422);
             // }
             // return response()->error($e->getMessage(), 500);
-            return 'll';
         }
     }
 
