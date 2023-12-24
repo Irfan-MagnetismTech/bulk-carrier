@@ -16,6 +16,8 @@ import 'vue-select/dist/vue-select.css';
 import VueToast from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
 import JsonExcel from "vue-json-excel3";
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 NProgress.configure({ showSpinner: false });
 
@@ -52,3 +54,4 @@ app.use(Store);
 app.mount("#app");
 app.component('v-select', vSelect);
 app.component("downloadExcel", JsonExcel);
+app.component('VueDatePicker', VueDatePicker);
