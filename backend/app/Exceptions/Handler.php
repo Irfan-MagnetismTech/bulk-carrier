@@ -35,30 +35,30 @@ class Handler extends ExceptionHandler
         /**
          * Handle the Authentication exception
          */
-        // $this->renderable(function (QueryException $e) {
-        //     $errorMessage = $e->getMessage();
+        $this->renderable(function (QueryException $e) {
+            $errorMessage = $e->getMessage();
 
-        //     if (app()->environment('production')) {
-        //         switch ($e->errorInfo[1]) {
-        //             case 1366:
-        //                 $errorMessage = 'Data type is not matching for some columns!';
-        //                 break;
+            // if (app()->environment('production')) {
+                switch ($e->errorInfo[1]) {
+                    case 1366:
+                        $errorMessage = 'Data type is not matching for some columns!';
+                        break;
 
-        //             case 3730:
-        //                 $errorMessage = 'Data is already used in another section!';
-        //                 break;
+                    case 3730:
+                        $errorMessage = 'Data is already used in another section!';
+                        break;
 
-        //             case 1451:
-        //                 $errorMessage = 'Related data is used in another section!';
-        //                 break;
-        //             case 1264:
-        //                 $errorMessage = 'Invaled number range!';
-        //                 break;
-        //         }
-        //     }
+                    case 1451:
+                        $errorMessage = 'Related data is used in another section!';
+                        break;
+                    case 1264:
+                        $errorMessage = 'Invaled number range!';
+                        break;
+                }
+            // }
 
-        //     return response()->error($errorMessage, 500);
-        // });
+            return response()->error($errorMessage, 500);
+        });
 
         /**
          * Handle the validation exception
