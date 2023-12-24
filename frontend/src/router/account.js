@@ -181,7 +181,7 @@ export default [
     {
         path: `/${BASE}/transactions/:transactionId`,
         name: `${BASE}.transactions.show`,
-        component: () => import(`../views/${BASE}/transactions/show.vue`),
+        component: () => import(`../views/${VIEW_BASE}/transaction/show.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
 
