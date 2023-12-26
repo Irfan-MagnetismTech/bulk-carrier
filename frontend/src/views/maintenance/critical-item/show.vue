@@ -44,7 +44,7 @@ onMounted(() => {
               </tr>
               
               <tr>
-                <th class="w-40">Catrgory Name</th>
+                <th class="w-40">Category Name</th>
                 <td>{{ criticalItem?.mntCriticalItemCat?.category_name }}</td>
               </tr>
 

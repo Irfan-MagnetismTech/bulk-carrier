@@ -57,13 +57,13 @@ onMounted(() => {
 
               
               <tr>
-                <th class="w-40">Critical Catrgory</th>
+                <th class="w-40">Category</th>
                 <td>{{ criticalVesselItem?.mntCriticalItem?.mntCriticalItemCat?.category_name }}</td>
               </tr>
 
               
               <tr>
-                <th class="w-40">Critical Item</th>
+                <th class="w-40">Item</th>
                 <td>{{ criticalVesselItem?.mntCriticalItem?.item_name }}</td>
               </tr>
 
@@ -84,10 +84,10 @@ onMounted(() => {
                 <th class="w-40">Spare Parts</th>
                 <td>
                     <div class="grid grid-cols-1 overflow-x-auto">
-                      <table class="w-full">
+                      <table class="w-full" v-if="criticalVesselItem?.mntCriticalItemSps?.length">
                         <thead>
                           <th class="text-center"> Spare Parts Name	 </th>
-                          <th class="text-center"> Minimum ROB	 </th>
+                          <th class="text-center"> Minimum Rob	 </th>
                         </thead>
                         <tbody>
                           <tr v-for="(mntCriticalItemSp, index) in criticalVesselItem.mntCriticalItemSps" :key="index">
