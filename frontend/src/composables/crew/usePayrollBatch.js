@@ -18,7 +18,7 @@ export default function usePayrollBatch() {
         month: '',
         year: '',
         working_days: '',
-        assignedCrewLists: [
+        payrollBatchLines: [
             {
                 crw_crew_id: '1',
                 crw_crew_name: 'Mr. A',
@@ -42,70 +42,8 @@ export default function usePayrollBatch() {
                 isCrewNameDuplicate: false,
             },
         ],
-        batchHeads: [
-            {
-                head_name: 'Mobile Allowance',
-                amount: '500',
-                type: 'addition',
-                key: 'pos-01'
-            },
-            {
-                head_name: 'Provident Fund',
-                amount: '200',
-                type: 'deduction',
-                key: 'neg-01'
-            },
-            {
-                head_name: 'Food Allowance',
-                amount: '500',
-                type: 'addition',
-                key: 'pos-02'
-            },
-            {
-                head_name: 'Tax',
-                amount: '100',
-                type: 'deduction',
-                key: 'neg-02'
-            },
-            {
-                head_name: 'Tax',
-                amount: '100',
-                type: 'deduction',
-                key: 'neg-03'
-            },
-        ],
-        batchHeadLines: [
-            {
-                crew_id: '1',
-                crew_name: '',
-                crew_rank: '',
-                lines: [
-                    {
-                        ref: 'pos-01',
-                        amount: ''
-                    },
-                    {
-                        ref: 'neg-01',
-                        amount: ''
-                    }
-                ]
-            },
-            {
-                crew_id: '2',
-                crew_name: '',
-                crew_rank: '',
-                lines: [
-                    {
-                        ref: 'pos-01',
-                        amount: ''
-                    },
-                    {
-                        ref: 'neg-01',
-                        amount: ''
-                    }
-                ]
-            }
-        ]
+        payrollBatchHeads: [],
+        payrollBatchHeadLines: [],
     });
 
     const filterParams = ref(null);
