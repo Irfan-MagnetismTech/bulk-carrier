@@ -494,6 +494,12 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/expense-heads/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	{
+		path: `/${BASE}/expense-heads/:expenseHeadId/show`,
+		name: `${BASE}.expense-heads.show`,
+		component: () => import (`../views/${ViEWBASE}/expense-heads/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 
 	/* Vessel Expense Heads */
 	{
