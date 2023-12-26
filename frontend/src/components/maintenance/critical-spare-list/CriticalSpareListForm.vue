@@ -35,7 +35,7 @@
       <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Critical Spare Parts <span class="text-red-500">*</span></legend>
       <table class="w-full whitespace-no-wrap" id="table" v-if="form.mntCriticalSpListLines?.length">
         <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="w-4/12 px-4 py-3 align-bottom">Spare Parts Name</th>
             <th class="w-2/12 px-4 py-3 align-bottom">Unit</th>
             <th class="w-2/12 px-4 py-3 align-bottom">Minimum Rob</th>
