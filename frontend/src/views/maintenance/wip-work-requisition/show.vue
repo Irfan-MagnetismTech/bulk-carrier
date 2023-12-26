@@ -7,6 +7,7 @@ import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useWipWorkRequisition from '../../../composables/maintenance/useWipWorkRequisition';
 import moment from 'moment';
 import useMaintenanceHelper from '../../../composables/maintenance/useMaintenanceHelper';
+import { formatDate } from '../../../utils/helper';
 
 
 
@@ -48,7 +49,8 @@ onMounted(() => {
 
               <tr>
                 <th class="w-40">Requisition Date</th>
-                <td>{{ moment(wipWorkRequisition?.requisition_date).format('DD/MM/YYYY') }}</td>
+                <!-- <td>{{ moment(wipWorkRequisition?.requisition_date).format('DD/MM/YYYY') }}</td> -->
+                <td>{{ formatDate(wipWorkRequisition?.requisition_date) }}</td>
               </tr>
 
               
@@ -90,19 +92,21 @@ onMounted(() => {
               
               <tr>
                 <th class="w-40">Present Runnig Hour</th>
-                <td>{{ wipWorkRequisition?.mntWorkRequisitionItem?.present_run_hour }} Hour</td>
+                <td>{{ wipWorkRequisition?.mntWorkRequisitionItem?.present_run_hour }} {{ wipWorkRequisition?.mntWorkRequisitionItem?.present_run_hour ? 'Hour' : '' }}</td>
               </tr>
 
               
               <tr>
                 <th class="w-40">Act. Start Date</th>
-                <td>{{ moment(wipWorkRequisition?.act_start_date).format('DD/MM/YYYY') }}</td>
+                <!-- <td>{{ moment(wipWorkRequisition?.act_start_date).format('DD/MM/YYYY') }}</td> -->
+                <td>{{ formatDate(wipWorkRequisition?.act_start_date) }}</td>
               </tr>
 
               
               <tr>
                 <th class="w-40">Act. Completion Date</th>
-                <td>{{ moment(wipWorkRequisition?.act_completion_date).format('DD/MM/YYYY') }}</td>
+                <!-- <td>{{ moment(wipWorkRequisition?.act_completion_date).format('DD/MM/YYYY') }}</td> -->
+                <td>{{ formatDate(wipWorkRequisition?.act_completion_date) }}</td>
               </tr>
 
               
@@ -122,31 +126,85 @@ onMounted(() => {
                 <th class="w-40">Status</th>
                 <td><span :class="wipWorkRequisition?.status == 0 ? 'text-yellow-700 bg-yellow-100' : (wipWorkRequisition?.status == 1 ? 'text-blue-700 bg-blue-100' : 'text-green-700 bg-green-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ wipWorkRequisition?.status == 0 ? 'Pending' : (wipWorkRequisition?.status == 1 ? 'WIP' : 'Done') }}</span></td>
               </tr>
-
-              
-              <!-- <tr>
-                <th class="w-40">Assigned Jobs</th>
-                <td>
-                    <table class="w-full">
-                    <thead>
-                      <th class="text-center"> Job Description </th>
-                      <th class="text-center"> Cycle </th>
-                      <th class="text-center"> Last Done </th>
-                      <th class="text-center"> Prev. Run Hrs. </th>
-                      <th class="text-center"> Next Due </th>
-                    </thead>
-                    <tbody>
-                      <tr v-for="(mntWorkRequisitionLine, index) in wipWorkRequisition.mntWorkRequisitionLines" :key="index">
-                        <td> {{ mntWorkRequisitionLine?.job_description  }} </td>
-                        <td> {{mntWorkRequisitionLine?.cycle }} {{ mntWorkRequisitionLine.cycle_unit }}</td>
-                        <td> {{ mntWorkRequisitionLine.last_done ? moment(mntWorkRequisitionLine.last_done).format('DD/MM/YYYY') : null }} </td>
-                        <td> {{ mntWorkRequisitionLine?.previous_run_hour }} </td>
-                        <td> {{ mntWorkRequisitionLine.cycle_unit == 'Hours' ? (mntWorkRequisitionLine.next_due + " Hour") : (mntWorkRequisitionLine.next_due ? moment(mntWorkRequisitionLine.next_due).format('DD/MM/YYYY') : null) }} </td>
-                      </tr>
-                    </tbody>
+<!-- {{ wipWorkRequisition.mntWorkRequisitionItem.MntItem.description }} -->
+              <tr>
+                <th class="w-40">Item Description</th>
+                <td class="w-60">
+                    <table class="w-full" v-if="wipWorkRequisition?.mntWorkRequisitionItem?.MntItem">   
+                      <tbody>
+                        <tr v-for="(des, index) in JSON.parse(wipWorkRequisition?.mntWorkRequisitionItem?.MntItem?.description)" :key="index">
+                          <th class="w-50"> {{ des.key  }} </th>
+                          <td> {{ des.value }} </td>
+                        </tr>
+                      </tbody>
                   </table>
                 </td>
-              </tr> -->
+              </tr>
+
+              
+              <tr class="">
+                <th class="w-1/4">Assigned Jobs</th>
+                <td class="w-3/4">
+                    <div class="grid grid-cols-1 overflow-x-auto">
+                      <table class="w-full">
+                        <thead>
+                          <th class="text-center" :class="{ 'w-3/12': wipWorkRequisition?.business_unit !== 'PSML', 'w-4/12': wipWorkRequisition?.business_unit === 'PSML'  }"> Description </th>
+                          <th class="text-center w-1/12"> Start Date </th>
+                          <th class="text-center w-1/12"> Completion Date </th>
+                          <th class="text-center w-1/12" v-show="wipWorkRequisition?.business_unit !== 'PSML'"> Checking </th>
+                          <th class="text-center w-1/12" v-show="wipWorkRequisition?.business_unit !== 'PSML'"> Replace </th>
+                          <th class="text-center w-1/12" v-show="wipWorkRequisition?.business_unit !== 'PSML'"> Cleaning </th>
+                          <th class="text-center" :class="{ 'w-2/12': wipWorkRequisition?.business_unit !== 'PSML', 'w-4/12': wipWorkRequisition?.business_unit === 'PSML'  }"> Remarks </th>
+                          <th class="text-center w-2/12"> Status </th>
+                        </thead>
+                        <tbody>
+                          <tr v-for="(mntWorkRequisitionLine, index) in wipWorkRequisition.mntWorkRequisitionLines" :key="index">
+                            <td> {{ mntWorkRequisitionLine.job_description }} </td>
+                            
+                            <td class="text-center"> {{ formatDate(mntWorkRequisitionLine.start_date) }} </td>
+                            <td class="text-center"> {{ formatDate(mntWorkRequisitionLine.completion_date) }} </td>
+                            <td class="text-center" v-show="wipWorkRequisition?.business_unit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.checking"  disabled /> </td>
+                            <td class="text-center" v-show="wipWorkRequisition?.business_unit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.replace" disabled /> </td>
+                            <td class="text-center" v-show="wipWorkRequisition?.business_unit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.cleaning" disabled /> </td>
+                            <td> {{ mntWorkRequisitionLine.remarks }} </td>
+                            <td class="text-center"> 
+                              <span :class="mntWorkRequisitionLine?.status == 0 ? 'text-yellow-700 bg-yellow-100' : (mntWorkRequisitionLine?.status == 1 ? 'text-blue-700 bg-blue-100' : 'text-green-700 bg-green-100') " class="px-2 py-1 mx-auto font-semibold leading-tight rounded-full">{{ mntWorkRequisitionLine?.status == 0 ? 'Pending' : (mntWorkRequisitionLine?.status == 1 ? 'WIP' : 'Done') }}</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                </td>
+              </tr>
+
+              
+              <tr class="">
+                <th class="w-1/4">Spare Parts Consumed</th>
+                <td class="w-3/4">
+                    <div class="grid grid-cols-1 overflow-x-auto" v-if="wipWorkRequisition.mntWorkRequisitionMaterials.length">
+                      <table class="w-full">
+                        <thead>
+                          <th class="text-center"> Material Name	 </th>
+                          <th class="text-center"> Specification	 </th>
+                          <!-- <th class="text-center"> Unit	 </th> -->
+                          <th class="text-center"> Quantity	 </th>
+                          <th class="text-center"> Remarks	 </th>
+                        </thead>
+                        <tbody>
+                          <tr v-for="(mntWorkRequisitionMaterial, index) in wipWorkRequisition.mntWorkRequisitionMaterials" :key="index">
+                            <td> {{ mntWorkRequisitionMaterial.material_name_and_code }} </td>
+                            <td> {{ mntWorkRequisitionMaterial.specification }} </td>
+                            <!-- <td> {{ mntWorkRequisitionMaterial.unit }} </td> -->
+                            <td class="text-center"> {{ mntWorkRequisitionMaterial.quantity }} {{ mntWorkRequisitionMaterial.unit }} </td>
+                            <td> {{ mntWorkRequisitionMaterial.remarks }} </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                </td>
+              </tr>
+
+
 
 
 
@@ -245,6 +303,10 @@ onMounted(() => {
   }
   #profileDetailTable thead tr{
     @apply bg-gray-200
+  }
+
+  th.text-center, td.text-center, tr.text-center {
+    @apply text-center border-gray-500
   }
 
 </style>
