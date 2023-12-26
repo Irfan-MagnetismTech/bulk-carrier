@@ -19,7 +19,7 @@
                     </tr>
                     <tr>
                         <th class="w-40">Date</th>
-                        <td>{{ bunkerBill?.date }}</td>
+                        <td>{{ bunkerBill?.date ? moment(bunkerBill?.date).format('DD-MM-YYYY') : null }}</td>
                     </tr>
                     <tr>
                         <th class="w-40">Vendor</th>
@@ -61,27 +61,27 @@
           <table class="w-full">
             <thead>
                 <tr>
-                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="7">Bunker Information</td>
+                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="7">Bunker Info</td>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(line, index) in bunkerBill.opsBunkerBillLines">
                     <td>
                       <table class="w-full">
-                        <tr>
+                        <tr class="bg-gray-300">
                           <th>PR No.</th>
                           <th>Currency</th>
                           <th>Exchange Rate (To USD)</th>
                           <th>Exchange Rate (USD to BDT)</th>                          
                         </tr>                        
                         <tr>
-                          <td>{{ bunkerBill.opsBunkerBillLines[index]?.opsBunkerRequisition?.requisition_no }}</td>
-                          <td>{{ bunkerBill.opsBunkerBillLines[index]?.currency }}</td>
-                          <td>{{ numberFormat(bunkerBill.opsBunkerBillLines[index]?.exchange_rate_usd) }}</td>
-                          <td>{{ numberFormat(bunkerBill.opsBunkerBillLines[index]?.exchange_rate_bdt) }}</td>                                                    
+                          <td>{{ bunkerBill?.opsBunkerBillLines[index]?.opsBunkerRequisition?.requisition_no }}</td>
+                          <td>{{ bunkerBill?.opsBunkerBillLines[index]?.currency }}</td>
+                          <td>{{ numberFormat(bunkerBill?.opsBunkerBillLines[index]?.exchange_rate_usd) }}</td>
+                          <td>{{ numberFormat(bunkerBill?.opsBunkerBillLines[index]?.exchange_rate_bdt) }}</td>                                                    
                         </tr>                        
                       </table>
-                      <table class="w-full mt-1 md:mt-2" v-if="bunkerBill.opsBunkerBillLines[index].opsBunkerBillLineItems.length">
+                      <table class="w-full mt-1 md:mt-2" v-if="bunkerBill?.opsBunkerBillLines[index]?.opsBunkerBillLineItems.length">
                         <tr>
                           <th>Bunker</th>
                           <th>Quantity</th>
@@ -89,12 +89,12 @@
                           <th>Amount USD</th>
                           <th>Amount BDT</th>
                         </tr>
-                        <tr  v-for="(item, key) in bunkerBill.opsBunkerBillLines[index].opsBunkerBillLineItems">
-                          <td>{{ item.requisition_material }}</td>
-                          <td>{{ item.quantity }}</td>
-                          <td>{{ item.rate }}</td>
-                          <td>{{ item.amount_usd }}</td>
-                          <td>{{ item.amount_bdt }}</td>
+                        <tr v-for="(item, key) in bunkerBill?.opsBunkerBillLines[index]?.opsBunkerBillLineItems">
+                          <td>{{ item?.requisition_material }}</td>
+                          <td>{{ item?.quantity }}</td>
+                          <td>{{ numberFormat(item?.rate) }}</td>
+                          <td>{{ numberFormat(item?.amount_usd) }}</td>
+                          <td>{{ numberFormat(item?.amount_bdt) }}</td>
                         </tr>
                       </table>
                     </td>
@@ -122,13 +122,13 @@
             <tbody>
               <tr>
                 <td>
-                  {{ numberFormat(bunkerBill.sub_total_bdt) }}
+                  {{ numberFormat(bunkerBill?.sub_total_bdt) }}
                 </td>
                 <td>
-                  {{ numberFormat(bunkerBill.discount_bdt) }}
+                  {{ numberFormat(bunkerBill?.discount_bdt) }}
                 </td>
                 <td>
-                  {{ numberFormat(bunkerBill.grand_total_bdt) }}
+                  {{ numberFormat(bunkerBill?.grand_total_bdt) }}
                 </td>
               </tr>
             </tbody>
