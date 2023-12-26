@@ -239,6 +239,7 @@ onMounted(() => {
             <td><span :class="survey?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ survey?.business_unit }}</span></td>
             <td>
               <nobr>
+                <action-button :action="'show'" :to="{ name: 'mnt.surveys.show', params: { surveyId: survey?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'mnt.surveys.edit', params: { surveyId: survey?.id } }"></action-button>
                 <action-button @click="confirmDelete(survey?.id)" :action="'delete'"></action-button>
               </nobr>

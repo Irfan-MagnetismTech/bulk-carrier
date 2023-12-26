@@ -312,6 +312,7 @@ onMounted(() => {
             
             <td>
               <nobr>
+                <action-button :action="'show'" :to="{ name: 'mnt.run-hours.show', params: { runHourId: runHour?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'mnt.run-hours.edit', params: { runHourId: runHour?.id } }"></action-button>
                 <!-- <action-button @click="confirmDelete(runHour?.id)" :action="'delete'"></action-button> -->
               </nobr>
