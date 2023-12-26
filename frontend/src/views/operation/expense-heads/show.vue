@@ -89,7 +89,7 @@ const { expenseHead, showExpenseHead, errors } = useExpenseHead();
 
 const { setTitle } = Title();
 
-setTitle('Edit Expense Head');
+setTitle('Expense Head Details');
 
 onMounted(() => {
   showExpenseHead(expenseHeadId);
