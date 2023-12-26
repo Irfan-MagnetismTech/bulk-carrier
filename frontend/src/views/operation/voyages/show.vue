@@ -66,7 +66,7 @@
           <table class="w-full">
             <thead>
                 <tr>
-                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="7">Bunker Information</td>
+                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="7">Sectors</td>
                 </tr>
             </thead>
             <thead v-once>
