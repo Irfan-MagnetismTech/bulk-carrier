@@ -210,6 +210,7 @@ watch(() => props.form.opsVessel, (value) => {
 
     if(props?.formType != 'edit' || (props?.formType == 'edit' && editInitiated.value == true)) {
       voyages.value = [];
+      props.form.opsBunkers = null;
       props.form.opsVoyage = null;
       props.form.ops_voyage_id = null;
     }
@@ -234,9 +235,9 @@ watch(() => props.form.nextPort, (value) => {
 }, { deep: true })
 
 
-watch(() => vessel, (value) => {
+watch(() => vessel, (value, oldValue) => {
   if(value?.value) {
-    if(props?.formType != 'edit' || (props?.formType == 'edit' && editInitiated.value == true)) {
+    if(props?.formType != 'edit' || (props?.formType == 'edit' && editInitiated.value == true && value?.value?.id != props.form.ops_vessel_id)) {
       props.form.opsBunkers = value?.value?.opsBunkers
     }
   }
