@@ -220,31 +220,36 @@
       <div class="flex md:gap-4 mt-1 md:mt-2">
         <div class="w-full">
           <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
-            <tr class="w-full">
-              <th>Subtotal</th>
-              <th>Total Service Fee (Deduction)</th>
-              <th>Discount (Deduction)</th>
-              <th>Grand Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                {{ numberFormat(chartererInvoice.sub_total_amount) }}
-              </td>
-              <td>
-                {{ numberFormat(chartererInvoice.service_fee_deduction_amount) }}
-              </td>
-              <td>
-                {{ numberFormat(chartererInvoice.discounted_amount) }}
-              </td>
-              <td>
-                {{ numberFormat(chartererInvoice.grand_total) }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+            <thead>
+                <tr>
+                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="4">Summary</td>
+                </tr>
+            </thead>
+            <thead v-once>
+              <tr class="w-full">
+                <th>Subtotal</th>
+                <th>Total Service Fee (Deduction)</th>
+                <th>Discount (Deduction)</th>
+                <th>Grand Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  {{ numberFormat(chartererInvoice.sub_total_amount) }}
+                </td>
+                <td>
+                  {{ numberFormat(chartererInvoice.service_fee_deduction_amount) }}
+                </td>
+                <td>
+                  {{ numberFormat(chartererInvoice.discounted_amount) }}
+                </td>
+                <td>
+                  {{ numberFormat(chartererInvoice.grand_total) }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
   </div>
