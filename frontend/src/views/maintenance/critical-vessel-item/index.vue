@@ -88,7 +88,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Critical Category",
+      "label": "Category",
       "filter_type": "input"
     },
     
@@ -100,7 +100,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Critical Item",
+      "label": "Item",
       "filter_type": "input"
     },
 

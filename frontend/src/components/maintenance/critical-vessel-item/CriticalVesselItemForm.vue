@@ -32,7 +32,7 @@
         <Error v-if="errors?.mnt_critical_function_id" :errors="errors.mnt_critical_function_id" />
       </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Critical Catrgory <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Category <span class="text-red-500">*</span></span>
             <v-select placeholder="Select Critical Category" :loading="isCriticalItemCategoryLoading"  :options="form.mntCriticalItemCategories" @search="" v-model="form.mnt_critical_item_cat" label="category_name" @update:modelValue="criticalItemCategoryChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
@@ -48,7 +48,7 @@
         </label>
         
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Critical Item <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Item <span class="text-red-500">*</span></span>
             <v-select placeholder="Select Critical Item" :loading="isCriticalItemLoading"  :options="form.mntCriticalItems" @search="" v-model="form.mnt_critical_item" label="item_name" @update:modelValue="criticalItemChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
@@ -68,9 +68,9 @@
         <input type="text" v-model="form.notes" placeholder="Notes" class="form-input"/>
         <Error v-if="errors?.notes" :errors="errors.notes" />
       </label> -->
-      <RemarksComponent v-model.trim="form.notes" :maxlength="500" :fieldLabel="'Notes'"></RemarksComponent>
+      <RemarksComponent  v-model.trim="form.notes" :maxlength="500" :fieldLabel="'Notes'"></RemarksComponent>
       
-      <div class="block w-full mt-2 text-sm">
+      <div class="block w-full mt-2 text-sm col-start-1">
         <!-- <span class="text-gray-700 dark-disabled:text-gray-300">Notes</span> -->
         <input type="checkbox" v-model="form.is_critical" @change="isCritical" /> Critical Item
         <Error v-if="errors?.notes" :errors="errors.notes" />
