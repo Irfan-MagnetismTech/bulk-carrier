@@ -167,8 +167,8 @@
           <table class="whitespace-no-wrap">
             <thead>
             <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-              <th class="py-3 align-center">PR No </th>
               <th class="py-3 align-center">Material Name </th>
+              <th class="py-3 align-center">PR No </th>
               <th class="py-3 align-center">Unit</th>
               <th class="py-3 align-center">Brand</th>
               <th class="py-3 align-center">Model</th>
@@ -182,20 +182,21 @@
                 <template v-for="(scmSrLine, index) in lines" :key="index">
                   
                   <tr v-if="index != 0">
-                    
                     <td>{{ scmSrLine?.scmPr?.ref_no }}</td>
-                    <td>{{ scmSrLine?.scmMaterial?.unit }}</td>
-                    <td>{{ scmSrLine?.brand }}</td>
-                    <td>{{ scmSrLine?.model }}</td>
-                    <td v-if="form.scmCsMaterialVendors[indexa][index]"><input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price"/></td>
                   </tr>
                   <tr class="text-gray-700 dark-disabled:text-gray-400" v-else>
                     <td :rowspan="lines.length">{{ first(values(lines))?.scmMaterial?.name }}</td>
                     <td>{{ scmSrLine?.scmPr?.ref_no }}</td>
-                    <td>{{ scmSrLine?.scmMaterial?.unit }}</td>
-                    <td>{{ scmSrLine?.brand }}</td>
-                    <td>{{ scmSrLine?.model }}</td>
-                    <td v-if="form.scmCsMaterialVendors[indexa][index]"><input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price"/></td>
+                    <td :rowspan="lines.length">{{ scmSrLine?.scmMaterial?.unit }}</td>
+                    <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
+                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].brand" class="form-input"/>
+                    </td>
+                    <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
+                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].model" class="form-input"/>
+                    </td>
+                    <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
+                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input"/>
+                    </td>
                   </tr>
                   
                   <!-- <td class="!w-72">
@@ -305,6 +306,8 @@ watch(() => materialCs.value, (newVal, oldVal) => {
         materialCs.value.scmCsMaterials.map((lines, index) => {
           lines.map((line, index) => {
             line['negotiated_price'] = '';
+            line['brand'] = '';
+            line['model'] = '';
           });
         });
         props.form.scmCsMaterialVendors = materialCs.value.scmCsMaterials;

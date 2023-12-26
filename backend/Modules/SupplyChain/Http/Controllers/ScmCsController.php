@@ -220,31 +220,78 @@ class ScmCsController extends Controller
             DB::beginTransaction();
 
             $scmCsVendor = ScmCsVendor::create($requestData);
+            $adadas = [];
+            foreach ($request->scmCsMaterialVendors as $key => $values) {
+                $negotiatedprice = $values[0]['negotiated_price'] ?? 0;
+                $offerprice = $values[0]['offered_price'] ?? 0;
+                $brand = $values[0]['brand'] ?? null;
+                $unit = $values[0]['unit'] ?? null;
+                $model = $values[0]['model'] ?? null;
+                $origin = $values[0]['origin'] ?? null;
+                $stock_type = $values[0]['stock_type'] ?? null;
+                $manufaturing_days = $values[0]['manufaturing_days'] ?? null;
 
-            foreach ($request->scmCsMaterialVendors as $key => $value) {
-                $csMaterial = ScmCsMaterial::where(['scm_cs_id' => $scmCs->id,
+                foreach($values as $key1 => $value){
+                    $csMaterial = ScmCsMaterial::where(['scm_cs_id' => $scmCs->id,
                     'scm_material_id' => $value['scm_material_id']
                 ])->first();
-
-                ScmCsMaterialVendor::create([
+                $adadas[] = [
                     'scm_cs_id' => $scmCs->id,
-                    'scm_cs_vendor_id' => $scmCsVendor->id,
-                    'scm_vendor_id' => $scmCsVendor->scm_vendor_id,
+                    'scm_cs_vendor_id' => $scmCsVendor->id ?? null,
+                    'scm_vendor_id' => $scmCsVendor->scm_vendor_id ?? null,
                     'scm_cs_material_id' => $csMaterial->id,
-                    'scm_pr_id' => $request->scmCsMaterialVendors[$key]['scm_pr_id'] ?? null,
-                    'scm_material_id' => $request->scmCsMaterialVendors[$key]['scm_material_id'] ?? null,
-                    'brand' => $request->scmCsMaterialVendors[$key]['brand'] ?? null,
-                    'unit' => $request->scmCsMaterialVendors[$key]['unit'] ?? null,
-                    'model' => $request->scmCsMaterialVendors[$key]['model'] ?? null,
-                    'origin' => $request->scmCsMaterialVendors[$key]['origin'] ?? null,
-                    'stock_type' => $request->scmCsMaterialVendors[$key]['stock_type'] ?? null,
-                    'manufaturing_days' => $request->scmCsMaterialVendors[$key]['manufaturing_days'] ?? null,
-                    'unit' => $request->scmCsMaterialVendors[$key]['unit'] ?? null,
-                    'offered_price' => $request->scmCsMaterialVendors[$key]['offered_price'] ?? null,
-                    'negotiated_price' => $request->scmCsMaterialVendors[$key]['negotiated_price'] ?? null,
-                ]);
+                    'scm_pr_id' => $value['scm_pr_id'] ?? null,
+                    'scm_material_id' => $value['scm_material_id'] ?? null,
+                    'brand' => $brand ?? null,
+                    'unit' => $unit ?? null,
+                    'model' => $model ?? null,
+                    'origin' => $origin ?? null,
+                    'stock_type' => $stock_type ?? null,
+                    'manufaturing_days' => $manufaturing_days ?? null,
+                    'offered_price' => $offerprice ?? null,
+                    'negotiated_price' => $negotiatedprice ?? null,
+                ];
+                ScmCsMaterialVendor::create(
+                    [
+                        'scm_cs_id' => $scmCs->id,
+                        'scm_cs_vendor_id' => $scmCsVendor->id ?? null,
+                        'scm_vendor_id' => $scmCsVendor->scm_vendor_id ?? null,
+                        'scm_cs_material_id' => $csMaterial->id,
+                        'scm_pr_id' => $value['scm_pr_id'] ?? null,
+                        'scm_material_id' => $value['scm_material_id'] ?? null,
+                        'brand' => $brand ?? null,
+                        'unit' => $unit ?? null,
+                        'model' => $model ?? null,
+                        'origin' => $origin ?? null,
+                        'stock_type' => $stock_type ?? null,
+                        'manufaturing_days' => $manufaturing_days ?? null,
+                        'offered_price' => $offerprice ?? null,
+                        'negotiated_price' => $negotiatedprice ?? null,
+                    ]
+                );
             }
+                // $csMaterial = ScmCsMaterial::where(['scm_cs_id' => $scmCs->id,
+                //     'scm_material_id' => $value['scm_material_id']
+                // ])->first();
 
+                // ScmCsMaterialVendor::create([
+                //     'scm_cs_id' => $scmCs->id,
+                //     'scm_cs_vendor_id' => $scmCsVendor->id,
+                //     'scm_vendor_id' => $scmCsVendor->scm_vendor_id,
+                //     'scm_cs_material_id' => $csMaterial->id,
+                //     'scm_pr_id' => $request->scmCsMaterialVendors[$key]['scm_pr_id'] ?? null,
+                //     'scm_material_id' => $request->scmCsMaterialVendors[$key]['scm_material_id'] ?? null,
+                //     'brand' => $request->scmCsMaterialVendors[$key]['brand'] ?? null,
+                //     'unit' => $request->scmCsMaterialVendors[$key]['unit'] ?? null,
+                //     'model' => $request->scmCsMaterialVendors[$key]['model'] ?? null,
+                //     'origin' => $request->scmCsMaterialVendors[$key]['origin'] ?? null,
+                //     'stock_type' => $request->scmCsMaterialVendors[$key]['stock_type'] ?? null,
+                //     'manufaturing_days' => $request->scmCsMaterialVendors[$key]['manufaturing_days'] ?? null,
+                //     'unit' => $request->scmCsMaterialVendors[$key]['unit'] ?? null,
+                //     'offered_price' => $request->scmCsMaterialVendors[$key]['offered_price'] ?? null,
+                //     'negotiated_price' => $request->scmCsMaterialVendors[$key]['negotiated_price'] ?? null,
+                // ]);
+            }
             DB::commit();
             return response()->success('Data created succesfully', $scmCsVendor, 201);
         } catch (\Exception $e) {
@@ -256,6 +303,9 @@ class ScmCsController extends Controller
     public function showQuotation($id)
     {
         $scmCsVendor = ScmCsVendor::with('scmCs', 'scmVendor.scmVendorContactPerson', 'scmCsMaterialVendors.scmMaterial','scmCsMaterialVendors.scmPr')->find($id);
+        $scmCsMaterialVendors = $scmCsVendor->scmCsMaterialVendors->groupBy(['scm_material_id'])->values()->all();
+        data_forget($scmCsVendor, 'scmCsMaterialVendors');
+        $scmCsVendor['scmCsMaterialVendors'] = $scmCsMaterialVendors;
         try {
             return response()->success('Detail data', $scmCsVendor, 200);
         } catch (\Exception $e) {
@@ -302,32 +352,67 @@ class ScmCsController extends Controller
                 $item->delete();
             });
 
-            foreach ($request->scmCsMaterialVendors as $key => $value) {
-                $csMaterial = ScmCsMaterial::where([
-                    'scm_cs_id' => $scmCsVendor->scm_cs_id,
-                    'scm_material_id' => $value['scm_material_id']
-                ])->first();
+//             foreach ($request->scmCsMaterialVendors as $key => $value) {
+//                 $csMaterial = ScmCsMaterial::where([
+//                     'scm_cs_id' => $scmCsVendor->scm_cs_id,
+//                     'scm_material_id' => $value['scm_material_id']
+//                 ])->first();
 
-                ScmCsMaterialVendor::create([
-                    'scm_cs_id' => $scmCsVendor->scm_cs_id,
-                    'scm_cs_vendor_id' => $scmCsVendor->id,
-                    'scm_vendor_id' => $scmCsVendor->scm_vendor_id,
-                    'scm_cs_material_id' => $csMaterial->id,
-                    'scm_material_id' => $request->scmCsMaterialVendors[$key]['scm_material_id'] ?? null,
-                    'scm_pr_id' => $request->scmCsMaterialVendors[$key]['scm_pr_id'] ?? null,
-                    'brand' => $request->scmCsMaterialVendors[$key]['brand'] ?? null,
-                    'unit' => $request->scmCsMaterialVendors[$key]['unit'] ?? null,
-                    'model' => $request->scmCsMaterialVendors[$key]['model'] ?? null,
-                    'origin' => $request->scmCsMaterialVendors[$key]['origin'] ?? null,
-                    'stock_type' => $request->scmCsMaterialVendors[$key]['stock_type'] ?? null,
-                    'manufaturing_days' => $request->scmCsMaterialVendors[$key]['manufaturing_days'] ?? null,
-                    'unit' => $request->scmCsMaterialVendors[$key]['unit'] ?? null,
-                    'offered_price' => $request->scmCsMaterialVendors[$key]['offered_price'] ?? null,
-                    'negotiated_price' => $request->scmCsMaterialVendors[$key]['negotiated_price'] ?? null,
-                ]);
+//                 ScmCsMaterialVendor::create([
+//                     'scm_cs_id' => $scmCsVendor->scm_cs_id,
+//                     'scm_cs_vendor_id' => $scmCsVendor->id,
+//                     'scm_vendor_id' => $scmCsVendor->scm_vendor_id,
+//                     'scm_cs_material_id' => $csMaterial->id,
+//                     'scm_material_id' => $request->scmCsMaterialVendors[$key]['scm_material_id'] ?? null,
+//                     'scm_pr_id' => $request->scmCsMaterialVendors[$key]['scm_pr_id'] ?? null,
+//                     'brand' => $request->scmCsMaterialVendors[$key]['brand'] ?? null,
+//                     'unit' => $request->scmCsMaterialVendors[$key]['unit'] ?? null,
+//                     'model' => $request->scmCsMaterialVendors[$key]['model'] ?? null,
+//                     'origin' => $request->scmCsMaterialVendors[$key]['origin'] ?? null,
+//                     'stock_type' => $request->scmCsMaterialVendors[$key]['stock_type'] ?? null,
+//                     'manufaturing_days' => $request->scmCsMaterialVendors[$key]['manufaturing_days'] ?? null,
+//                     'unit' => $request->scmCsMaterialVendors[$key]['unit'] ?? null,
+//                     'offered_price' => $request->scmCsMaterialVendors[$key]['offered_price'] ?? null,
+//                     'negotiated_price' => $request->scmCsMaterialVendors[$key]['negotiated_price'] ?? null,
+//                 ]);
 
-///need to add selected supplier later
-}
+// ///need to add selected supplier later
+// }
+
+foreach ($request->scmCsMaterialVendors as $key => $values) {
+    $negotiatedprice = $values[0]['negotiated_price'] ?? 0;
+    $offerprice = $values[0]['offered_price'] ?? 0;
+    $brand = $values[0]['brand'] ?? null;
+    $unit = $values[0]['unit'] ?? null;
+    $model = $values[0]['model'] ?? null;
+    $origin = $values[0]['origin'] ?? null;
+    $stock_type = $values[0]['stock_type'] ?? null;
+    $manufaturing_days = $values[0]['manufaturing_days'] ?? null;
+
+    foreach($values as $key1 => $value){
+        $csMaterial = ScmCsMaterial::where(['scm_cs_id' => $scmCsVendor->scm_cs_id,
+        'scm_material_id' => $value['scm_material_id']
+    ])->first();
+    ScmCsMaterialVendor::create(
+        [
+            'scm_cs_id' => $scmCsVendor->scm_cs_id,
+            'scm_cs_vendor_id' => $scmCsVendor->id ?? null,
+            'scm_vendor_id' => $scmCsVendor->scm_vendor_id ?? null,
+            'scm_cs_material_id' => $csMaterial->id,
+            'scm_pr_id' => $value['scm_pr_id'] ?? null,
+            'scm_material_id' => $value['scm_material_id'] ?? null,
+            'brand' => $brand ?? null,
+            'unit' => $unit ?? null,
+            'model' => $model ?? null,
+            'origin' => $origin ?? null,
+            'stock_type' => $stock_type ?? null,
+            'manufaturing_days' => $manufaturing_days ?? null,
+            'offered_price' => $offerprice ?? null,
+            'negotiated_price' => $negotiatedprice ?? null,
+                ]
+            );
+        }
+    }
             DB::commit();
             return response()->success('Data updated succesfully', $scmCsVendor, 202);
         } catch (\Exception $e) {
