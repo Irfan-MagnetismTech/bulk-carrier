@@ -549,6 +549,12 @@ export default [
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	{
+		path: `/${BASE}/bunker-requisitions/:bunkerRequisitionId/show`,
+		name: `${BASE}.bunker-requisitions.show`,
+		component: () => import (`../views/${ViEWBASE}/bunker-requisitions/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
 		path: `/${BASE}/bunker-requisitions/approved/:bunkerRequisitionId`,
 		name: `${BASE}.bunker-requisitions.approved`,
 		component: () => import (`../views/${ViEWBASE}/bunker-requisitions/approved.vue`),
