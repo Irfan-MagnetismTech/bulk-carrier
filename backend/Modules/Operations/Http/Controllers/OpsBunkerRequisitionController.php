@@ -102,7 +102,7 @@ class OpsBunkerRequisitionController extends Controller
             $bunker->id = $bunker->scmMaterial->id;
             $bunker['name_quantity'] = $bunker->scmMaterial['name'] . '-' . $bunker->quantity;
             $bunker->name = $bunker->scmMaterial->name;
-            $bunker->is_readonly = true;                
+            $bunker->is_readonly = true;
             return $bunker;
         });
 

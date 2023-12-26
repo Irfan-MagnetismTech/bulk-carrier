@@ -157,8 +157,8 @@ onMounted(() => {
                   </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
-                      <!-- <action-button :action="'show'" :to="{ name: 'ops.bunker-requisitions.show', params: { bunkerRequisitionId: bunkerRequisition.id } }"></action-button> -->
-                      <!-- <action-button :action="'approved'" :to="{ name: 'ops.bunker-requisitions.approved', params: { bunkerRequisitionId: bunkerRequisition.id } }"></action-button> -->
+                      <action-button :action="'show'" :to="{ name: 'ops.bunker-bills.show', params: { bunkerBillId: bunkerBill.id } }"></action-button>
+                      <!-- <action-button :action="'approved'" :to="{ name: 'ops.bunker-bills.approved', params: { bunkerBillId: bunkerBill.id } }"></action-button> -->
                       <action-button :action="'edit'" :to="{ name: 'ops.bunker-bills.edit', params: { bunkerBillId: bunkerBill.id } }"></action-button>
                       <action-button @click="confirmDelete(bunkerBill.id)" :action="'delete'"></action-button>
                     </nobr>

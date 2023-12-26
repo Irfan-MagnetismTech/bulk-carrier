@@ -582,6 +582,12 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/bunker-bills/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	{
+		path: `/${BASE}/bunker-bills/:bunkerBillId/show`,
+		name: `${BASE}.bunker-bills.show`,
+		component: () => import (`../views/${ViEWBASE}/bunker-bills/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 	/* Voyage Budgets */
 	{
 		path: `/${BASE}/voyage-budgets`,
