@@ -2,8 +2,9 @@
   <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2 ">
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Requisition Date <span class="text-red-500">*</span></span>
-            <input type="date" v-model="form.requisition_date" placeholder="Requisition Date" class="form-input" required  />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Requisition Date<span class="text-red-500">*</span></span>
+            <!-- <input type="date" v-model="form.requisition_date" placeholder="Requisition Date" class="form-input" required  /> -->
+            <VueDatePicker v-model="form.requisition_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" @update:model-value="requisitionDateChange"></VueDatePicker>
           <Error v-if="errors?.requisition_date" :errors="errors.requisition_date" />
         </label>
         <label class="block w-full mt-2 text-sm">
@@ -111,14 +112,16 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Est. Start Date <span class="text-red-500">*</span></span>
-            <input type="date" :min="form.requisition_date"  v-model="form.est_start_date" placeholder="Est. Start Date" class="form-input" required  />
+            <!-- <input type="date" :min="form.requisition_date"  v-model="form.est_start_date" placeholder="Est. Start Date" class="form-input" required  /> -->
+            <VueDatePicker v-model="form.est_start_date" :min-date="form.requisition_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" @update:model-value="estStartDateChange"></VueDatePicker>
           <Error v-if="errors?.est_start_date" :errors="errors.est_start_date" />
         </label>
 
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Est. Completion Date <span class="text-red-500">*</span></span>
-            <input type="date" :min="form.est_start_date ? form.est_start_date : form.requisition_date"  v-model="form.est_completion_date" placeholder="Est. completion Date" class="form-input" required  />
+            <!-- <input type="date" :min="form.est_start_date ? form.est_start_date : form.requisition_date"  v-model="form.est_completion_date" placeholder="Est. completion Date" class="form-input" required  /> -->
+            <VueDatePicker v-model="form.est_completion_date" :min-date="form.est_start_date ? form.est_start_date : form.requisition_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
           <Error v-if="errors?.est_completion_date" :errors="errors.est_completion_date" />
         </label>
 
@@ -271,9 +274,9 @@
               <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(jobLine, index) in (tab === 'added_jobs' ?  form.added_job_lines : itemWiseJobLines[tab])" :key="index">
                   <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.job_description" readonly /></td>
                   <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.cycle + ' ' + jobLine.cycle_unit" readonly /></td>
-                  <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.last_done ? moment(jobLine.last_done).format('MM/DD/YYYY') : null" readonly /></td>
+                  <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.last_done ? moment(jobLine.last_done).format('DD/MM/YYYY') : null" readonly /></td>
                   <td v-show="form.mnt_item_name?.has_run_hour"><input type="text"  class="form-input vms-readonly-input"   :value="jobLine.previous_run_hour" readonly /></td>
-                  <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.cycle_unit == 'Hours' ? jobLine.next_due : (jobLine.next_due ? moment(jobLine.next_due).format('MM/DD/YYYY') : null)" readonly /></td>
+                  <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.cycle_unit == 'Hours' ? jobLine.next_due : (jobLine.next_due ? moment(jobLine.next_due).format('DD/MM/YYYY') : null)" readonly /></td>
                   <td>
                     <button type="button" :class="{
                       'bg-yellow-700': jobLine.mnt_work_requisition_status == 0,
@@ -327,6 +330,7 @@ const { presentRunHour, getItemPresentRunHour, isRunHourLoading } = useRunHour()
 const { crews, getCrews, isCommonCrewLoading } = useCrewCommonApiRequest();
 const { maintenanceTypes, workRequisitionStatus, assignTo  } = useMaintenanceHelper();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const tab = ref('all_jobs');
 const currentTab = (tabValue) => {
   tab.value = tabValue;
@@ -469,6 +473,17 @@ function findAddedJobLine(jobLine){
 
 // const { shipDepartments, getShipDepartments } = useShipDepartment();
 
+function requisitionDateChange() {
+  if (props.form.est_start_date < props.form.requisition_date) {
+    props.form.est_start_date = '';
+    estStartDateChange();
+  }
+}
+function estStartDateChange() {
+  if ((props.form.est_completion_date < props.form.est_start_date) || (props.form.est_completion_date < props.form.requisition_date)) 
+    props.form.est_completion_date = '';
+}
+
 
 onMounted(() => {
   watchEffect(() => {
@@ -523,5 +538,9 @@ onMounted(() => {
 
   --vs-dropdown-option--active-bg: #664cc3;
   --vs-dropdown-option--active-color: #eeeeee;
+
+  --dp-border-color: #4b5563;
+  --dp-border-color-hover: #4b5563;
+  --dp-icon-color: #4b5563;
 }
 </style>

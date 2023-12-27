@@ -63,28 +63,32 @@
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Range Date (From) <span class="text-red-500">*</span></span>
-        <input type="date" v-model="form.range_date_from" placeholder="Range Date (From)" class="form-input" @input="setRangeDateTo"  required/>
+        <!-- <input type="date" v-model="form.range_date_from" placeholder="Range Date (From)" class="form-input" @input="setRangeDateTo"  required/> -->
+        <VueDatePicker v-model="form.range_date_from" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" @update:model-value="setRangeDateTo"></VueDatePicker>
         <Error v-if="errors?.range_date_from" :errors="errors.range_date_from" />
       </label>
 
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Range Date (To) <span class="text-red-500">*</span></span>
-        <input type="date" v-model="form.range_date_to" placeholder="Range Date (To)" class="form-input" required/>
+        <!-- <input type="date" v-model="form.range_date_to" placeholder="Range Date (To)" class="form-input" required/> -->
+        <VueDatePicker v-model="form.range_date_to" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
         <Error v-if="errors?.range_date_to" :errors="errors.range_date_to" />
       </label>
 
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Assigned Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model="form.assigned_date" placeholder="Assigned date" @input="setDueDate"  class="form-input" required/>
+        <!-- <input type="date" v-model="form.assigned_date" placeholder="Assigned date" @input="setDueDate"  class="form-input" required/> -->
+        <VueDatePicker v-model="form.assigned_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" @update:model-value="setDueDate"></VueDatePicker>
         <Error v-if="errors?.assigned_date" :errors="errors.assigned_date" />
       </label>
 
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Due Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model="form.due_date" placeholder="Due date" class="form-input" required/>
+        <!-- <input type="date" v-model="form.due_date" placeholder="Due date" class="form-input" required/> -->
+        <VueDatePicker v-model="form.due_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
         <Error v-if="errors?.due_date" :errors="errors.due_date" />
       </label>
 
@@ -110,6 +114,8 @@ import useSurveyType from "../../../composables/maintenance/useSurveyType";
 import ErrorComponent from "../../utils/ErrorComponent.vue";
 import moment from 'moment';
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date)
+
 
 const props = defineProps({
   form: {
@@ -144,11 +150,13 @@ function surveyTypeChange() {
 }
 
 function setRangeDateTo() {
+  props.form.range_date_to = "";
   if(props.form.range_date_from)
     props.form.range_date_to = moment(props.form.range_date_from).add(props.form?.mnt_survey_type?.window_period ?? 0, 'months').format('YYYY-MM-DD');
 }
 
 function setDueDate() {
+  props.form.due_date = "";
   if(props.form.assigned_date)
     props.form.due_date = moment(props.form.assigned_date).add(props.form?.mnt_survey_type?.due_period ?? 0, 'months').format('YYYY-MM-DD');
 }
@@ -210,5 +218,10 @@ onMounted(() => {
 
   --vs-dropdown-option--active-bg: #664cc3;
   --vs-dropdown-option--active-color: #eeeeee;
+
+  --dp-border-color: #4b5563;
+  --dp-border-color-hover: #4b5563;
+  --dp-icon-color: #4b5563;
+  
 }
 </style>
