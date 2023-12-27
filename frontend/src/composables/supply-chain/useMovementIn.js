@@ -58,8 +58,7 @@ export default function useMovementIn() {
             scmWarehouse: '',
             scm_warehouse_id: null,
             acc_cost_center_id: null,
-            scmMiShortageLines: [
-            ]
+            scmMiShortageLines: []
         },
     });
     const materialObject = {

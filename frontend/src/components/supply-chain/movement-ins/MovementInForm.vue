@@ -258,6 +258,7 @@
     });
 
     const mmrKey = ref(0);
+    const editIntitiated = ref(false);
 
     // const USER = Store.getters.getCurrentUser;
     // const ROLE = USER?.role ?? null;
@@ -380,29 +381,51 @@ function setMaterialOtherData(datas, index) {
 
 
 watch(() => props.form.scmMiLines, (newLines) => {
-  props.form.scmMiShortage.scmMiShortageLines = [];
-  newLines.forEach((line, index) => {
-    // const previousLine = previousLines.value[index];
-    if (Number(line.quantity) < Number(line.mo_quantity)) {
-      props.form.scmMiShortage.scmMiShortageLines.push({
-        scm_material_id: line.scm_material_id,
-        scmMaterial: line.scmMaterial,
-        unit: line.unit,
-        quantity: line.mo_quantity - line.quantity,
-      
-      });
-    }
-    if (line.scmMaterial) {
-      const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
-      if (selectedMaterial) {
-        if ( line.scm_material_id !== selectedMaterial.id
-        ) {
-          props.form.scmMiLines[index].unit = selectedMaterial.unit;
-          props.form.scmMiLines[index].scm_material_id = selectedMaterial.id;
+
+  if (props.formType == 'create') {
+    editIntitiated.value = true;
+  }
+
+  if (props.form.scmMiShortage && editIntitiated.value) {
+    props.form.scmMiShortage.scmMiShortageLines = [];
+  }
+
+  if (!props.form.scmMiShortage && props.formType == 'edit') {
+        props.form.scmMiShortage = {
+          shortage_type: '',
+          scmWarehouse: null,
+          scm_warehouse_id: '',
+          acc_cost_center_id: '',
+          scmMiShortageLines: [],
+        };
+      }
+
+  if (editIntitiated.value) {
+      newLines.forEach((line, index) => {
+      // const previousLine = previousLines.value[index];
+      if (Number(line.quantity) < Number(line.mo_quantity)) {
+        props.form.scmMiShortage.scmMiShortageLines.push({
+          scm_material_id: line.scm_material_id,
+          scmMaterial: line.scmMaterial,
+          unit: line.unit,
+          quantity: line.mo_quantity - line.quantity,
+        });
+      }
+      if (line.scmMaterial) {
+        const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
+        if (selectedMaterial) {
+          if ( line.scm_material_id !== selectedMaterial.id
+          ) {
+            props.form.scmMiLines[index].unit = selectedMaterial.unit;
+            props.form.scmMiLines[index].scm_material_id = selectedMaterial.id;
+          }
         }
       }
-    }
-  });
+    });
+  }
+  if (props.formType == 'edit') {
+      editIntitiated.value = true;
+  }
   // previousLines.value = cloneDeep(newLines);
 }, { deep: true });
 
