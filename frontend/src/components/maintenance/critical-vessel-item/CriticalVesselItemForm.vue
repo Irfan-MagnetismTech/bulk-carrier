@@ -83,7 +83,7 @@
         <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="w-6/12 px-4 py-3 align-bottom">Spare Parts Name<span class="text-red-500">*</span></th>
-            <th class="w-2/12 px-4 py-3 align-bottom">Minimum Rob <span class="text-red-500">*</span></th>
+            <th class="w-2/12 px-4 py-3 align-bottom">Minimum ROB <span class="text-red-500">*</span></th>
             <th class="w-2/12 px-4 py-3 align-bottom">Unit <span class="text-red-500">*</span></th>
             <th class="w-2/12 px-4 py-3 align-bottom text-center">Action</th>
           </tr>
@@ -91,7 +91,7 @@
         <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(mntCriticalItemSp, index) in form.mntCriticalItemSps" :key="index">
             <td class="px-1 py-1"><input type="text" class="form-input" required  v-model.trim="mntCriticalItemSp.sp_name" placeholder="Spare Parts Name"  /></td>
-            <td class="px-1 py-1"><input type="number" min="1" class="form-input" required v-model="mntCriticalItemSp.min_rob" placeholder="Minimum Rob" />
+            <td class="px-1 py-1"><input type="number" min="1" class="form-input" required v-model="mntCriticalItemSp.min_rob" placeholder="Minimum ROB" />
             </td>
             <td class="px-1 py-1"><input type="text" class="form-input" required  v-model.trim="mntCriticalItemSp.unit" placeholder="Unit" /></td>
             <td class="px-1 py-1"><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="index == 0" @click="addCriticalItemSp"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">

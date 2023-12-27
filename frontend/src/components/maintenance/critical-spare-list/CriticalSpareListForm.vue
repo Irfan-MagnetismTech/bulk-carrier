@@ -38,8 +38,8 @@
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="w-4/12 px-4 py-3 align-bottom">Spare Parts Name</th>
             <th class="w-2/12 px-4 py-3 align-bottom">Unit</th>
-            <th class="w-2/12 px-4 py-3 align-bottom">Minimum Rob</th>
-            <th class="w-2/12 px-4 py-3 align-bottom"> Rob <span class="text-red-500">*</span></th>
+            <th class="w-2/12 px-4 py-3 align-bottom">Minimum ROB</th>
+            <th class="w-2/12 px-4 py-3 align-bottom"> ROB <span class="text-red-500">*</span></th>
             <th class="w-2/12 px-4 py-3 align-bottom"> Remarks </th>
           </tr>
         </thead>
@@ -53,7 +53,7 @@
                 <td>{{ mntCriticalItemSp?.sp_name }}</td>
                 <td>{{ mntCriticalItemSp?.unit }}</td>
                 <td>{{ mntCriticalItemSp?.min_rob }}</td>
-                <td><input type="number" v-model="mntCriticalItemSp.rob" placeholder="Rob" class="form-input" required/></td>
+                <td><input type="number" v-model="mntCriticalItemSp.rob" placeholder="ROB" class="form-input" required/></td>
                 <td><input type="text" v-model.trim="mntCriticalItemSp.remarks" placeholder="Remarks" class="form-input"/></td>
                 
               </tr>
