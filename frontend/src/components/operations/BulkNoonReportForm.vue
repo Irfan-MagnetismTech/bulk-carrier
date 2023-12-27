@@ -105,7 +105,7 @@
 
       <!-- Upcoming Ports -->
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Upcoming Ports</legend>
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Upcoming Port</legend>
         <div class="dt-responsive table-responsive" v-for="(port, index) in form.opsBulkNoonReportPorts" :key="index">
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-full mt-2 text-sm">

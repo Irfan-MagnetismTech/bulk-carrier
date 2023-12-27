@@ -76,7 +76,7 @@
     <div class="flex flex-col justify-center  w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300"> </span>
-            <input type="checkbox" v-model="form.has_run_hour" :disabled="page === 'edit' && form.mntJobs?.length" /> Enable Regular Runnig Hour Entry
+            <input type="checkbox" v-model="form.has_run_hour" :disabled="page === 'edit' && form.mntJobs?.length" /> Enable Regular Running Hour Entry
           <Error v-if="errors?.has_run_hour" :errors="errors.has_run_hour" />
         </label>        
     </div>
