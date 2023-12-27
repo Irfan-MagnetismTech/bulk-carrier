@@ -87,7 +87,7 @@ onMounted(() => {
                       <table class="w-full" v-if="criticalVesselItem?.mntCriticalItemSps?.length">
                         <thead>
                           <th class="text-center"> Spare Parts Name	 </th>
-                          <th class="text-center"> Minimum Rob	 </th>
+                          <th class="text-center"> Minimum ROB	 </th>
                         </thead>
                         <tbody>
                           <tr v-for="(mntCriticalItemSp, index) in criticalVesselItem.mntCriticalItemSps" :key="index">

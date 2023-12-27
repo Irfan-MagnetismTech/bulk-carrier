@@ -87,8 +87,8 @@ onMounted(() => {
                     <table class="w-full" v-if="criticalSpareList?.mntCriticalSpListLines?.length">
                       <thead>
                         <th class="text-center"> Spare Parts Name </th>
-                        <th class="text-center"> Minimum Rob </th>
-                        <th class="text-center"> Rob </th>
+                        <th class="text-center"> Minimum ROB </th>
+                        <th class="text-center"> ROB </th>
                         <th class="text-center"> Remarks </th>
                       </thead>
                       <tbody>
