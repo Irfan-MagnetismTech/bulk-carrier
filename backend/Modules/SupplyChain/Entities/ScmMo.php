@@ -5,10 +5,12 @@ namespace Modules\SupplyChain\Entities;
 use App\Models\User;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
+use Modules\SupplyChain\Entities\ScmMi;
 use Modules\SupplyChain\Entities\ScmMmr;
 use Modules\SupplyChain\Entities\ScmMoLine;
 use Modules\SupplyChain\Traits\StockLedger;
 use Modules\SupplyChain\Entities\ScmWarehouse;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -43,5 +45,10 @@ class ScmMo extends Model
     public function scmMmr(): BelongsTo
     {
         return $this->belongsTo(ScmMmr::class);
+    }
+
+    public function scmMi(): HasOne
+    {
+        return $this->hasOne(ScmMi::class);
     }
 }

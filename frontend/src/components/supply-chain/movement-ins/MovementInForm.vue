@@ -341,7 +341,7 @@
 
     const refreshData = () => {
       // Use Vue Router to go to the current route, triggering a re-render
-      router.go(-1);
+      // router.go(-1);
     };
 
 
