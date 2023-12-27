@@ -757,7 +757,7 @@ watch(() => props.form.opsBulkNoonReportEngineInputs, (value) => {
 
 watch(() => vessel, (value) => {
 if(value?.value) {
-  if(props?.formType != 'edit' || (props?.formType == 'edit' && editInitiated.value == true)) {
+  if(props?.formType != 'edit') {
     props.form.opsBulkNoonReportConsumptions = value?.value?.opsBunkers
   }
 }
