@@ -154,6 +154,24 @@
               </tr>
             </tbody>
           </table>
+          <h2 class="!text-center font-bold bg-green-600 uppercase text-white py-1 mt-1">Bunker Information</h2>
+          <table class="w-full">
+            <tbody>
+              <tr>
+                <th class="w-10">SL</th>
+                <th class="w-52">Bunker Name</th>
+                <th class="w-52">Unit</th>
+                <th class="w-52">Opening Balance</th>
+              </tr>
+              <tr v-for="(bunker, index) in vessel.opsBunkers">
+                <td>{{ index+1 }}</td>
+                <td>{{ vessel.opsBunkers[index]?.scmMaterial?.name }}</td>
+                <td>{{ vessel.opsBunkers[index]?.unit }}</td>
+                <td>{{ vessel.opsBunkers[index]?.opening_balance }}</td>
+              </tr>
+             
+            </tbody>
+          </table>
         </div>
       </div>
   </div>
