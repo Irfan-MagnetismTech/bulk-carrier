@@ -90,7 +90,7 @@ onMounted(() => {
 
               
               <tr>
-                <th class="w-40">Present Runnig Hour</th>
+                <th class="w-40">Present Running Hour</th>
                 <td>{{ workRequisition?.mntWorkRequisitionItem?.present_run_hour }} Hour</td>
               </tr>
 
@@ -133,7 +133,7 @@ onMounted(() => {
                       <th class="text-center"> Job Description </th>
                       <th class="text-center"> Cycle </th>
                       <th class="text-center"> Last Done </th>
-                      <th class="text-center"> Prev. Run Hrs. </th>
+                      <th class="text-center"> Prev. Running Hrs. </th>
                       <th class="text-center"> Next Due </th>
                     </thead>
                     <tbody>
@@ -202,7 +202,7 @@ onMounted(() => {
 
               
               <tr>
-                <th class="w-40">Present Runnig Hour</th>
+                <th class="w-40">Present Running Hour</th>
                 <td>{{ job?.present_run_hour }} Hours</td>
               </tr>
                             

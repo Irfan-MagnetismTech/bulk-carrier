@@ -91,7 +91,7 @@ onMounted(() => {
 
               
               <tr>
-                <th class="w-40">Present Runnig Hour</th>
+                <th class="w-40">Present Running Hour</th>
                 <td>{{ doneWorkRequisition?.mntWorkRequisitionItem?.present_run_hour }} {{ doneWorkRequisition?.mntWorkRequisitionItem?.present_run_hour ? 'Hour' : 'N/A' }}</td>
               </tr>
 
@@ -258,7 +258,7 @@ onMounted(() => {
 
               
               <tr>
-                <th class="w-40">Present Runnig Hour</th>
+                <th class="w-40">Present Running Hour</th>
                 <td>{{ job?.present_run_hour }} Hours</td>
               </tr>
                             

@@ -70,7 +70,7 @@ onMounted(() => {
 
               
               <tr>
-                <th class="w-40">Present Runnig Hour</th>
+                <th class="w-40">Present Running Hour</th>
                 <td>{{ job?.present_run_hour }} Hours</td>
               </tr>
                             

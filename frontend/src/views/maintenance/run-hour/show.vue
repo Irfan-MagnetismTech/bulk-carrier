@@ -15,7 +15,7 @@ const { runHour, showRunHour, errors } = useRunHour();
 
 const { setTitle } = Title();
 
-setTitle('Run Hour Details');
+setTitle('Running Hour Details');
 
 onMounted(() => {
   showRunHour(runHourId);
@@ -24,13 +24,13 @@ onMounted(() => {
 
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Run Hour Details</h2>
-    <default-button :title="'Run Hour List'" :to="{ name: 'mnt.run-hours.index' }" :icon="icons.DataBase"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Running Hour Details</h2>
+    <default-button :title="'Running Hour List'" :to="{ name: 'mnt.run-hours.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
       <div class="flex md:gap-4">
         <div class="w-full">
-          <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Run Hour Information</h2>
+          <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Running Hour Information</h2>
           <table class="w-full">
             <!-- <thead>
             <tr>
@@ -66,7 +66,7 @@ onMounted(() => {
 
               
               <tr>
-                <th class="w-80">Previous Runnig Hour</th>
+                <th class="w-80">Previous Running Hour</th>
                 <td>{{ runHour?.previous_run_hour }} Hour</td>
               </tr>
 
@@ -78,7 +78,7 @@ onMounted(() => {
 
               
               <tr>
-                <th class="w-80">Present Runnig Hour</th>
+                <th class="w-80">Present Running Hour</th>
                 <td>{{ runHour?.present_run_hour }} Hour</td>
               </tr>
 
@@ -127,7 +127,7 @@ onMounted(() => {
 
               
               <tr>
-                <th class="w-80">Present Runnig Hour</th>
+                <th class="w-80">Present Running Hour</th>
                 <td>{{ job?.present_run_hour }} Hours</td>
               </tr> -->
                             
