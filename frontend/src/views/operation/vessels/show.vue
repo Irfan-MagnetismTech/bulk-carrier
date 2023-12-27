@@ -98,6 +98,10 @@
                 <td>{{ vessel?.total_cargo_hold }}</td>
               </tr>
               <tr>
+                <th class="w-32">Capacity</th>
+                <td>{{ vessel?.capacity }}</td>
+              </tr>
+              <tr>
                 <th class="w-32">Remarks</th>
                 <td>{{ vessel?.remarks }}</td>
               </tr>
@@ -105,7 +109,45 @@
           </table>
         </div>
         <div class="w-1/2">
-          <h2 class="!text-center font-bold bg-green-600 uppercase text-white py-1">Other Information</h2>
+          <h2 class="!text-center font-bold bg-green-600 uppercase text-white py-1">Certificate Information</h2>
+          <table class="w-full">
+            <tr>
+              <th class="w-10">SL</th>
+              <th class="w-52">Certificate Name</th>
+              <th class="w-52">Certificate Type</th>
+              <th class="w-52">Validity Period</th>
+            </tr>
+            <tbody>
+              <tr v-for="(bunker, index) in vessel.opsVesselCertificates">
+                <td>{{ index+1 }}</td>
+                <td>{{ vessel.opsVesselCertificates[index]?.opsMaritimeCertification?.name }}</td>
+                <td>{{ vessel.opsVesselCertificates[index]?.type }}</td>
+                <td>{{ vessel.opsVesselCertificates[index]?.validity }}</td>
+              </tr>
+             
+            </tbody>
+          </table>
+
+          <h2 class="!text-center font-bold bg-green-600 uppercase text-white py-1 mt-1">Bunker Information</h2>
+          <table class="w-full">
+            <tr>
+              <th class="w-10">SL</th>
+              <th class="w-52">Bunker Name</th>
+              <th class="w-52">Unit</th>
+              <th class="w-52">Opening Balance</th>
+            </tr>
+            <tbody>
+              <tr v-for="(bunker, index) in vessel.opsBunkers">
+                <td>{{ index+1 }}</td>
+                <td>{{ vessel.opsBunkers[index]?.scmMaterial?.name }}</td>
+                <td>{{ vessel.opsBunkers[index]?.unit }}</td>
+                <td>{{ vessel.opsBunkers[index]?.opening_balance }}</td>
+              </tr>
+             
+            </tbody>
+          </table>
+
+          <h2 class="!text-center font-bold bg-green-600 uppercase text-white py-1 mt-1">Other Information</h2>
           <table class="w-full">
             <tbody>
               <tr>
@@ -152,24 +194,6 @@
                 <th class="w-52">Profit/Loss</th>
                 <td></td>
               </tr>
-            </tbody>
-          </table>
-          <h2 class="!text-center font-bold bg-green-600 uppercase text-white py-1 mt-1">Bunker Information</h2>
-          <table class="w-full">
-            <tbody>
-              <tr>
-                <th class="w-10">SL</th>
-                <th class="w-52">Bunker Name</th>
-                <th class="w-52">Unit</th>
-                <th class="w-52">Opening Balance</th>
-              </tr>
-              <tr v-for="(bunker, index) in vessel.opsBunkers">
-                <td>{{ index+1 }}</td>
-                <td>{{ vessel.opsBunkers[index]?.scmMaterial?.name }}</td>
-                <td>{{ vessel.opsBunkers[index]?.unit }}</td>
-                <td>{{ vessel.opsBunkers[index]?.opening_balance }}</td>
-              </tr>
-             
             </tbody>
           </table>
         </div>
