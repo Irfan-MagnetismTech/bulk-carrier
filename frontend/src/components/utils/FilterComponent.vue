@@ -29,6 +29,7 @@ const itemsPerPage = [
 
 onMounted(() => {
   filterOptions.value.filter_options.forEach((option, index) => {
+  if ('filter_type' in filterOptions.value.filter_options[index] ? filterOptions.value.filter_options[index].filter_type != 'date' : true)
     filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
   });
 
