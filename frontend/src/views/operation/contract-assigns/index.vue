@@ -231,7 +231,7 @@ onMounted(() => {
                   </td> -->
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
-                      <!-- <action-button :action="'show'" :to="{ name: 'ops.contract-assigns.show', params: { contractAssignId: contractAssign.id } }"></action-button> -->
+                      <action-button :action="'show'" :to="{ name: 'ops.contract-assigns.show', params: { contractAssignId: contractAssign.id } }"></action-button>
                       <action-button :action="'edit'" :to="{ name: 'ops.contract-assigns.edit', params: { contractAssignId: contractAssign.id } }"></action-button>
                       <action-button @click="confirmDelete(contractAssign.id)" :action="'delete'"></action-button>
                     </nobr>

@@ -1,284 +1,177 @@
 <template>
-   <div class="flex items-center justify-between w-full my-3" v-once>
-      <h2 class="text-2xl font-semibold text-gray-700">Voyage Boat Note Details</h2>
-      <default-button :title="'Voyage Boat Note Index'" :to="{ name: 'ops.voyage-boat-notes.index' }" :icon="icons.DataBase"></default-button>
+  <div class="flex items-center justify-between w-full my-3" v-once>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Bunker Bill Details</h2>
+    <default-button :title="'Purchase Bill List'" :to="{ name: 'ops.bunker-bills.index' }" :icon="icons.DataBase"></default-button>
+  </div>
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
+    <div class="flex md:gap-4">
+        <div class="w-full">
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="2">Basic Info</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="w-40">Business Unit</th>
+                        <td><span :class="bunkerBill?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ bunkerBill?.business_unit }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Date</th>
+                        <td>{{ bunkerBill?.date ? moment(bunkerBill?.date).format('DD-MM-YYYY') : null }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Vendor</th>
+                        <td>{{ bunkerBill.scmVendor?.name }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Bill No.</th>
+                        <td>{{ bunkerBill?.vendor_bill_no }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Upload file(Supplier Invoice) </th>
+                        <td>
+                          <span v-if="bunkerBill?.attachment != 'null'">
+                            <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+'/'+bunkerBill?.attachment">{{ 'Click Here' }}</a>
+                          </span>
+                          <span v-else>Not Found...</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Upload file(SRM Copy) </th>
+                        <td>
+                          <span v-if="bunkerBill?.smr_file_path != 'null'">
+                            <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+'/'+bunkerBill?.smr_file_path">{{ 'Click Here' }}</a>
+                          </span>
+                          <span v-else>Not Found...</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Remarks </th>
+                        <td>{{ bunkerBill?.remarks }}</td>
+                    </tr>
+                   
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="flex md:gap-4 mt-1 md:mt-2" v-if="bunkerBill.opsBunkerBillLines?.length">
+        <div class="w-full">
+          <table class="w-full">
+            <thead>
+                <tr>
+                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="7">Bunker Info</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(line, index) in bunkerBill.opsBunkerBillLines">
+                    <td>
+                      <table class="w-full">
+                        <tr class="bg-gray-300">
+                          <th>PR No.</th>
+                          <th>Currency</th>
+                          <th>Exchange Rate (To USD)</th>
+                          <th>Exchange Rate (USD to BDT)</th>
+                        </tr>
+                        <tr>
+                          <td>{{ bunkerBill?.opsBunkerBillLines[index]?.opsBunkerRequisition?.requisition_no }}</td>
+                          <td>{{ bunkerBill?.opsBunkerBillLines[index]?.currency }}</td>
+                          <td>{{ numberFormat(bunkerBill?.opsBunkerBillLines[index]?.exchange_rate_usd) }}</td>
+                          <td>{{ numberFormat(bunkerBill?.opsBunkerBillLines[index]?.exchange_rate_bdt) }}</td>                                                    
+                        </tr>                        
+                      </table>
+                      <table class="w-full mt-1 md:mt-2" v-if="bunkerBill?.opsBunkerBillLines[index]?.opsBunkerBillLineItems.length">
+                        <tr>
+                          <th>Bunker</th>
+                          <th>Quantity</th>
+                          <th>Rate</th>
+                          <th>Amount USD</th>
+                          <th>Amount BDT</th>
+                        </tr>
+                        <tr v-for="(item, key) in bunkerBill?.opsBunkerBillLines[index]?.opsBunkerBillLineItems">
+                          <td>{{ item?.requisition_material }}</td>
+                          <td>{{ item?.quantity }}</td>
+                          <td>{{ numberFormat(item?.rate) }}</td>
+                          <td>{{ numberFormat(item?.amount_usd) }}</td>
+                          <td>{{ numberFormat(item?.amount_bdt) }}</td>
+                        </tr>
+                      </table>
+                    </td>
+                </tr>
+            </tbody>           
+          </table>
+        </div>
     </div>
 
-    <div id="basic-info">
-      <h4 class="text-md font-semibold">Basic Info</h4>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-          
-          <label class="block w-full mt-2 text-sm">
-            <span class="show-block">{{ voyageBoatNote.business_unit }}</span>
-          </label>
-          <label class="block w-full mt-2 text-sm"></label>
-          <label class="block w-full mt-2 text-sm"></label>
-          <label class="block w-full mt-2 text-sm"></label>
-
+    <div class="flex md:gap-4 mt-1 md:mt-2">
+        <div class="w-full">
+          <table class="w-full whitespace-no-wrap" >
+            <thead>
+                <tr>
+                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="3">Summary</td>
+                </tr>
+            </thead>
+            <thead v-once>
+              <tr class="w-full">
+                <th>Sub Total (BDT)</th>
+                <th>Discount (BDT) </th>
+                <th>Grand Total (BDT) </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  {{ numberFormat(bunkerBill?.sub_total_bdt) }}
+                </td>
+                <td>
+                  {{ numberFormat(bunkerBill?.discount_bdt) }}
+                </td>
+                <td>
+                  {{ numberFormat(bunkerBill?.grand_total_bdt) }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Contract Name</span>
-              <span class="show-block">{{ voyageBoatNote.contract_name }}</span>
-
-          </label>
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Contract Type</span>
-              <span class="show-block">{{ voyageBoatNote.contract_type }}</span>
-
-          </label>
-
-
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Select Vessel <span class="text-red-500">*</span></span>
-              
-              <span class="show-block">{{ voyageBoatNote.opsVessel?.name }}</span>
-
-          </label>
-
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Owner</span>
-              <span class="show-block">{{ voyageBoatNote.opsVessel?.owner_name }}</span>
-
-          </label>
-
-          
-          
-      </div>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Select Charterer <span class="text-red-500">*</span></span>
-              <span class="show-block">{{ voyageBoatNote.opsChartererProfile?.name }}</span>
-
-
-          </label>
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Code</span>
-              <span class="show-block">{{ voyageBoatNote.opsChartererProfile?.owner_code }}</span>
-
-          </label>
-        <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark-disabled:text-gray-300">Country</span>
-
-          <span class="show-block">{{ voyageBoatNote.country }}</span>
-
-          </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Address</span>
-            <span class="show-block">{{ voyageBoatNote.address }}</span>
-
-        </label>
-        
-      </div>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Billing Address</span>
-              <span class="show-block">{{ voyageBoatNote.billing_address }}</span>
-
-        </label>
-        
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Email</span>
-              <span class="show-block">{{ voyageBoatNote.email }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Contact No.</span>
-            <span class="show-block">{{ voyageBoatNote.contact_no }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Attachment </span>
-              <a download href="" class="block text-blue-500 hover:text-blue-700 ease-linear duration-200 font-semibold mt-2.5">Download Attachment</a>
-
-          </label>
-      </div>
-    </div>
-    
-    <div id="bank-account-info">
-      <h4 class="text-md font-semibold mt-4">Bank Account Info</h4>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Bank Name</span>
-              <span class="show-block">{{ voyageBoatNote.bank_name }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Bank Branch </span>
-              <span class="show-block">{{ voyageBoatNote.bank_branch_name }}</span>
-
-          </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Account No</span>
-            <span class="show-block">{{ voyageBoatNote.bank_account_no }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Account Name</span>
-              <span class="show-block">{{ voyageBoatNote.bank_account_name }}</span>
-
-          </label>
-          
-      </div>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Swift Code</span>
-              <span class="show-block">{{ voyageBoatNote.swift_code }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Routing No</span>
-            <span class="show-block">{{ voyageBoatNote.routing_no }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Currency</span>
-              <span class="show-block">{{ voyageBoatNote.currency }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm"></label>
-      </div>
-    </div>
-
-    <div id="local-agent-info">
-      <h4 class="text-md font-semibold mt-4">Local Agent Info</h4>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Port <span class="text-red-500">*</span></span>
-              <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesLocalAgents[0].port_code }}</span>
-          </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Agent Name</span>
-              <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesLocalAgents[0].agent_name }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Billing Name </span>
-              <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesLocalAgents[0].agent_billing_name }}</span>
-
-          </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Billing Email</span>
-            <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesLocalAgents[0].agent_billing_email }}</span>
-            
-        </label>
-      </div>
-    </div>
-
-    <div id="contract-validity">
-      <h4 class="text-md font-semibold mt-4">Contract Validity and Billing</h4>
-      <div v-if="voyageBoatNote.contract_type == 'Day Wise'" class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Credit Days</span>
-              <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.credit_days }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Billing Cycle </span>
-              <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.billing_cycle }}</span>
-          </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Valid From</span>
-            <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.valid_from }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Valid Till</span>
-            <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.valid_till }}</span>
-
-        </label>
-      </div>
-      <div v-if="voyageBoatNote.contract_type == 'Voyage Wise'" class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Tariff </span>
-              <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.opsCargoTariff?.tariff_name }}</span>
-
-          </label>
-        
-          <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300"> Status</span>
-              <span class="show-block">{{ voyageBoatNote.status }}</span>
-
-          </label>
-          <label v-if="voyageBoatNote.contract_type == 'Day Wise'" class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Approximate Load Amount</span>
-            <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.approximate_load_amount }}</span>
-
-          </label>
-          <label v-else class="block w-full mt-2 text-sm"></label>
-          <label class="block w-full mt-2 text-sm"></label>
-      </div>
-    </div>
-
-    <div id="rates-fess" class="mb-10">
-      <h4 class="text-md font-semibold mt-4">Rates and Fees</h4>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label v-if="voyageBoatNote.contract_type == 'Day Wise'" class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Per Day Charge</span>
-              <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.per_day_charge }}</span>
-
-        </label>
-        <label v-if="voyageBoatNote.contract_type == 'Voyage Wise'" class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Per MT Charge</span>
-              <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.per_ton_charge }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Cleaning Fee </span>
-              <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.cleaning_fee }}</span>
-
-          </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Cancellation Fee <small>(%)</small></span>
-            <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.cancellation_fee }}</span>
-
-        </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Others Fee</span>
-            <span class="show-block">{{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms.others_fee }}</span>
-
-        </label>
-      </div>
-      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300 font-semibold">Bunker Provider</span>
-        </label>
-        <label class="block w-full mt-2 text-sm">
-          <span class="">
-            <input type="radio" checked disabled />
-            {{ voyageBoatNote.opsVoyageBoatNotesFinancialTerms?.bunker_provider }}</span>
-
-              
-          </label>
-        <label class="block w-full mt-2 text-sm">
-            
-        </label>
-        <label class="block w-full mt-2 text-sm"></label>
-      </div>
-    </div>
+  </div>
 </template>
+<style lang="postcss" scoped>
+  th, td, tr {
+    @apply text-left border-gray-500
+  }
+  
+  tfoot td{
+    @apply text-center
+  }
+</style>
 <script setup>
-import { ref, watchEffect, onMounted } from 'vue';
+import { onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import useVoyageBoatNote from '../../../composables/operations/useVoyageBoatNote';
+import useBunkerBill from '../../../composables/operations/useBunkerBill';
 import Title from "../../../services/title";
+import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHeroIcon from "../../../assets/heroIcon";
 import useHelper from "../../../composables/useHelper";
-import DefaultButton from "../../../components/buttons/DefaultButton.vue";
+import moment from 'moment';
+import env from '../../../config/env';
 
 const icons = useHeroIcon();
 
 const route = useRoute();
-const voyageBoatNoteId = route.params.voyageBoatNoteId;
-const { voyageBoatNote, showVoyageBoatNote, errors } = useVoyageBoatNote();
+const bunkerBillId = route.params.bunkerBillId;
+const { bunkerBill, showBunkerBill, errors } = useBunkerBill();
 const { numberFormat } = useHelper();
-
 const { setTitle } = Title();
 
-setTitle('Voyage Boat Note Details');
+setTitle('Bunker Bill Details');
+
+watch(bunkerBill, (value) => {
+  bunkerBill.value.scmVendor = value?.scmVendor;
+});
 
 onMounted(() => {
-    showVoyageBoatNote(voyageBoatNoteId)
+  showBunkerBill(bunkerBillId);
 });
 </script>

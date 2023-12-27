@@ -263,7 +263,7 @@ onMounted(() => {
                   <td>{{ lighterNoonReport?.opsVoyage?.voyage_sequence }}</td>
                   <td><nobr>{{ lighterNoonReport?.next_port }}</nobr></td>
                   <td><nobr>{{ lighterNoonReport?.lat_long }}</nobr></td>
-                  <td><nobr>{{ lighterNoonReport?.ship_master }}</nobr></td>
+                  <td><nobr>{{ lighterNoonReport?.ship_master }}{{ lighterNoonReport?.opsBunkers[0].fuel_con_24h }}</nobr></td>
                   <!-- <td>
                     <span :class="lighterNoonReport?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ lighterNoonReport?.business_unit }}</span>
                   </td> -->

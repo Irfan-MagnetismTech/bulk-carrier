@@ -3,131 +3,122 @@
     <h2 class="text-2xl font-semibold text-gray-700">Charterer Profile Details</h2>
     <default-button :title="'Charterer Profile Index'" :to="{ name: 'ops.charterer-profiles.index' }" :icon="icons.DataBase"></default-button>
   </div>
-  <h4 class="text-md font-semibold">Basic Info</h4>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Business Unit </span>
-            <span class="show-block">{{ chartererProfile.business_unit }}</span>
-            
-        </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Name </span>
-            <span class="show-block">{{ chartererProfile.name }}</span>
-
-            
-        </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Company Legal Name </span>
-            
-            <span class="show-block">{{ chartererProfile.company_legal_name }}</span>
-          
-        </label>
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Owner Code </span>
-            
-            <span class="show-block">{{ chartererProfile.owner_code }}</span>
-          
-        </label>
-        
-        
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
+    <div class="flex md:gap-4">
+        <div class="w-full">
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="2">Basic Info</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="w-40">Business Unit</th>
+                        <td><span :class="chartererProfile?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chartererProfile?.business_unit }}</span></td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Charterer Name</th>
+                        <td>{{ chartererProfile?.name }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Company Legal Name</th>
+                        <td>{{ chartererProfile?.company_legal_name }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Charterer Owner Code</th>
+                        <td>{{ chartererProfile?.owner_code }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Contact No</th>
+                        <td>{{ chartererProfile?.contact_no }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Country</th>
+                        <td>{{ chartererProfile?.country }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Address</th>
+                        <td>{{ chartererProfile?.address }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Billing Address</th>
+                        <td>{{ chartererProfile?.billing_address }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Billing Email</th>
+                        <td>{{ chartererProfile?.billing_email }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Email</th>
+                        <td>{{ chartererProfile?.email }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Website</th>
+                        <td>{{ chartererProfile?.website }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Contact No</span>
-            
-            <span class="show-block">{{ chartererProfile.contact_no }}</span>
-          
-      </label>
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Country</span>
-            
-            <span class="show-block">{{ chartererProfile.country }}</span>
-          
-        </label>
-      <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark-disabled:text-gray-300">Address</span>
-          
-          <span class="show-block">{{ chartererProfile.address }}</span>
-        
-      </label>
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Billing Address</span>
-            
-            <span class="show-block">{{ chartererProfile.billing_address }}</span>
-          
-        </label>
+    <div class="flex md:gap-4 mt-1 md:mt-2">
+        <div class="w-full" v-if="chartererProfile?.opsChartererBankAccounts?.length">
+          <table class="w-full">
+            <thead>
+                <tr>
+                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="2">Bank Account Info</td>
+                </tr>
+            </thead>
+            <tbody v-for="(opsChartererBankAccount, index) in  chartererProfile?.opsChartererBankAccounts" :key="opsChartererBankAccount?.id">
+                <tr class="bg-gray-200">
+                    <th class="w-40">Bank No.</th>
+                    <td>{{ (index + 1) < 10 ? '0' + (index + 1) : (index + 1) }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">Bank Name</th>
+                    <td>{{  opsChartererBankAccount?.bank_name }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">Bank Branch</th>
+                    <td>{{ opsChartererBankAccount?.bank_branch_name }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">Account No</th>
+                    <td>{{ opsChartererBankAccount?.account_no }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">Account Name</th>
+                    <td>{{ opsChartererBankAccount?.account_name }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">Swift Code</th>
+                    <td>{{ opsChartererBankAccount?.swift_code }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">Routing No</th>
+                    <td>{{ opsChartererBankAccount?.routing_no }}</td>
+                </tr>
+                <tr>
+                    <th class="w-40">Currency</th>
+                    <td>{{ opsChartererBankAccount?.currency }}</td>
+                </tr>
+            </tbody>
+          </table>
+        </div>
     </div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Billing Email </span>
-            
-            <span class="show-block">{{ chartererProfile.billing_email }}</span>
-          
-        </label>
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Email</span>
-            
-            <span class="show-block">{{ chartererProfile.email }}</span>
-          
-      </label>
-      <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark-disabled:text-gray-300">Website</span>
-          
-          <span class="show-block">{{ chartererProfile.website }}</span>
-        
-      </label>
-      <label class="block w-full mt-2 text-sm"></label>
-    </div>
+  </div>
     
-    <h4 class="text-md font-semibold mt-4">Bank Account Info</h4>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Bank Name</span>
-            
-            <span class="show-block">{{ chartererProfile.opsChartererBankAccounts[0].bank_name }}</span>
-
-      </label>
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Bank Branch </span>
-            <span class="show-block">{{ chartererProfile.opsChartererBankAccounts[0].bank_branch_name }}</span>
-
-            
-        </label>
-      <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark-disabled:text-gray-300">Account No</span>
-          <span class="show-block">{{ chartererProfile.opsChartererBankAccounts[0].account_no }}</span>
-          
-      </label>
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Account Name</span>
-            <span class="show-block">{{ chartererProfile.opsChartererBankAccounts[0].account_name }}</span>
-
-            
-        </label>
-        
-    </div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Swift Code</span>
-            <span class="show-block">{{ chartererProfile.opsChartererBankAccounts[0].swift_code }}</span>
-
-            
-      </label>
-      <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark-disabled:text-gray-300">Routing No</span>
-          <span class="show-block">{{ chartererProfile.opsChartererBankAccounts[0].routing_no }}</span>
-
-          
-      </label>
-      <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Currency</span>
-            <span class="show-block">{{ chartererProfile.opsChartererBankAccounts[0].currency }}</span>
-              
-      </label>
-      <label class="block w-full mt-2 text-sm"></label>
-    </div>
 </template>
+<style lang="postcss" scoped>
+    th, td, tr {
+      @apply text-left border-gray-500
+    }
+    
+    tfoot td{
+      @apply text-center
+    }
+  
+</style>
 <script setup>
 import { ref, watchEffect, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
