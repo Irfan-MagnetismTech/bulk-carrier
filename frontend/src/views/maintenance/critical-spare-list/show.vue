@@ -81,17 +81,23 @@ onMounted(() => {
 
               <tr>
                 <!-- {{ criticalSpareList }} -->
-                <th class="w-40">Critical Spare Parts</th>
-                <td>
+                <!-- <th class="w-40">Critical Spare Parts</th> -->
+                <td colspan="2">
                   <div class="grid grid-cols-1 overflow-x-auto">
                     <table class="w-full" v-if="criticalSpareList?.mntCriticalSpListLines?.length">
                       <thead>
-                        <th class="text-center"> Spare Parts Name </th>
-                        <th class="text-center"> Minimum ROB </th>
-                        <th class="text-center"> ROB </th>
-                        <th class="text-center"> Remarks </th>
+                        <tr>
+                          <th class="text-center" colspan="4">Critical Spare Parts</th>
+                        </tr>
+                        <tr>
+                          <th class="text-center"> Spare Parts Name </th>
+                          <th class="text-center"> Minimum ROB </th>
+                          <th class="text-center"> ROB </th>
+                          <th class="text-center"> Remarks </th>
+                        </tr>
                       </thead>
                       <tbody>
+                        
                         <template  v-for="(criticalVesselItem, index) in criticalSpareList?.mntCriticalSpListLines" :key="index">
                           <tr  v-if="criticalVesselItem?.mntCriticalItemSps?.length">
                             <td colspan="4" ><strong class="text-left block "><span class="">{{ criticalVesselItem?.mntCriticalItem?.item_name }}</span> <span class="pl-1" v-show="criticalVesselItem?.mntCriticalItem?.specification">({{ criticalVesselItem?.mntCriticalItem?.specification }})</span></strong> </td>
