@@ -2,6 +2,7 @@
 
 namespace Modules\Maintenance\Entities;
 
+use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +14,7 @@ use Modules\Operations\Entities\OpsVessel;
 
 class MntJob extends Model
 {
-    use HasFactory, GlobalSearchTrait;
+    use HasFactory, GlobalSearchTrait, DeletableModel;
 
     protected $fillable = ['ops_vessel_id','mnt_item_id','present_run_hour','business_unit'];
     protected $appends = ['has_work_requisition'];

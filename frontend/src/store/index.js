@@ -6,6 +6,7 @@ import { auth } from './modules/auth';
 import { dropZone } from './modules/dropZone';
 import { sidebar } from './modules/sidebar';
 import * as notification from './modules/notification';
+import {globalSetting} from './modules/globalSetting';
 
 const Store = createStore({
     plugins: [createPersistedState()],
@@ -14,6 +15,7 @@ const Store = createStore({
         sidebar,
         dropZone,
         notification,
+        globalSetting
     },
 });
 
