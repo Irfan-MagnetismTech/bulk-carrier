@@ -50,8 +50,6 @@ Route::middleware(['auth:api'])->prefix('crw')->as('crw.')->group(function ()
     Route::apiResource('crw-agency-contracts', CrwAgencyContractController::class);
     Route::apiResource('crw-agency-bills', CrwAgencyBillController::class);
     Route::apiResource('crw-crew-profiles', CrwCrewProfileController::class);
-    Route::apiResource('crw-crews', CrwCrewController::class);
-    Route::apiResource('crw-crew-ranks', CrwCrewRankController::class);
     Route::apiResource('crw-crew-documents', CrwCrewDocumentController::class);
     Route::apiResource('crw-crew-document-renewals', CrwCrewDocumentRenewalController::class);
     Route::apiResource('crw-crew-assignments', CrwCrewAssignmentController::class);
@@ -64,7 +62,6 @@ Route::middleware(['auth:api'])->prefix('crw')->as('crw.')->group(function ()
     Route::get('crw-crew-document-renew-schedules', [CrwCrewDocumentController::class, 'renewScehdules']);
 
 
-
     //helper apis
     Route::post('get-crew-ranks', [CrwCommonController::class, 'getCrewRanks']);
     Route::post('get-crew-agencies', [CrwCommonController::class, 'getCrewAgencies']);
@@ -74,5 +71,6 @@ Route::middleware(['auth:api'])->prefix('crw')->as('crw.')->group(function ()
     Route::post('get-crew-documents', [CrwCommonController::class, 'getCrewDocuments']);
     Route::post('get-crew-document-renewals', [CrwCommonController::class, 'getCrewDocumentRenewals']);
     Route::post('get-vessel-assigned-crews', [CrwCommonController::class, 'getVesselAssignedCrews']);    
+    Route::post('update-crew-assign-status/{crw_crew_assignment}', [CrwCrewAssignmentController::class, 'updateCrewAssignStatus']);
 
 });

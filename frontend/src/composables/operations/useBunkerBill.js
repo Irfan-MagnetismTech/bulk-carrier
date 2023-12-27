@@ -116,10 +116,12 @@ export default function useBunkerBill() {
 	}
 
 	async function storeBunkerBill(form) {
+		if (!checkUniqueArray(form)) return;
+
 		let showAlert = false;
 		form.opsBunkerBillLines.reduce((acc, billLine) => {
 			return acc + billLine.opsBunkerBillLineItems.reduce((innerAcc, lineItem) => {
-			  if(!(lineItem.amount_bdt > 0)) {
+			  if(!(lineItem.amount_bdt > 0) || !(lineItem.amount_usd > 0)) {
 				
 				showAlert = true;
 			  }
@@ -130,8 +132,7 @@ export default function useBunkerBill() {
 			Swal.fire({
 				icon: "",
 				title: "Correct Please!",
-				html: `BDT Amount Must Be Present. 
-					`,
+				html: `Exchange rate and BDT Amount is required.`,
 				customClass: "swal-width",
 			});
 			return;
@@ -182,6 +183,28 @@ export default function useBunkerBill() {
 	}
 
 	async function updateBunkerBill(form, bunkerBillId) {
+		if (!checkUniqueArray(form)) return;
+
+		let showAlert = false;
+		form.opsBunkerBillLines.reduce((acc, billLine) => {
+			return acc + billLine.opsBunkerBillLineItems.reduce((innerAcc, lineItem) => {
+			  if(!(lineItem.amount_bdt > 0) || !(lineItem.amount_usd > 0)) {
+				
+				showAlert = true;
+			  }
+			}, 0);
+		  }, 0);
+
+		  if (showAlert) {
+			Swal.fire({
+				icon: "",
+				title: "Correct Please!",
+				html: `Exchange rate and BDT Amount is required.`,
+				customClass: "swal-width",
+			});
+			return;
+		  } 
+
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
@@ -270,6 +293,52 @@ export default function useBunkerBill() {
 			isLoading.value = false;
 			//NProgress.done();
 		}
+	}
+
+	function checkUniqueArray(form) {
+		// console.log(form);
+		// return false;
+
+        let isHasError = false;
+        const messages = ref([]);
+        const hasDuplicates = form.opsBunkerBillLines.some((opsBunkerBillLine, index) => {
+
+            if (form.opsBunkerBillLines.filter(val => val.ops_bunker_requisition_id === opsBunkerBillLine.ops_bunker_requisition_id)?.length > 1) {
+                let data = `Duplicate Requisition [requisition data record no: ${index + 1}]`;
+                messages.value.push(data);
+            }
+
+			const hasChildError = form.opsBunkerBillLines[index].opsBunkerBillLineItems.some((bunkerLineItem, lineIndex) => {
+				if (form.opsBunkerBillLines[index].opsBunkerBillLineItems.filter(val => val.requisition_material === bunkerLineItem.requisition_material)?.length > 1) {
+					let data = `Duplicate Requisition Material [requisition data record no: ${index + 1} and bunker record no: ${lineIndex + 1}]`;
+					messages.value.push(data);
+				} 
+			});
+
+
+		});
+
+		if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
+        }
 	}
 
 	return {

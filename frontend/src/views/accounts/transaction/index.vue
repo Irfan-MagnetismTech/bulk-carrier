@@ -388,6 +388,7 @@ onMounted(() => {
                 </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length">
                   <nobr>
+                    <action-button :action="'show'" :to="{ name: 'acc.transactions.show', params: { transactionId: transactionData?.id } }"></action-button>
                     <action-button :action="'edit'" :to="{ name: 'acc.transactions.edit', params: { transactionId: transactionData?.id } }"></action-button>
                     <action-button @click="confirmDelete(transactionData?.id)" :action="'delete'"></action-button>
                   </nobr>

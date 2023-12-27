@@ -26,9 +26,7 @@ class OpsChartererContractRequest extends FormRequest
         // dd($this->charterer_contract);
         return [
             'contract_type'                 => ['required', 'string', 'max:255'],
-
             'contract_name'                 => ['required','string', 'max:255', Rule::unique('ops_charterer_contracts')->where('ops_charterer_profile_id',$this->ops_charterer_profile_id)->ignore($this->route('charterer_contract'), 'id')],
-
             'ops_vessel_id'                 => ['required', 'numeric'],
             'ops_charterer_profile_id'      => ['nullable', 'numeric'],
             'country'                       => ['required', 'string', 'max:255'],
@@ -36,11 +34,11 @@ class OpsChartererContractRequest extends FormRequest
             'billing_address'               => ['required', 'string', 'max:255'],
             'email'                         => ['required', 'email', 'max:255'],
             'contact_no'                    =>  ['required', 'numeric', 'digits_between:10,15'],
-            'bank_branch_id'               => ['nullable', 'numeric'],
-            'bank_branch_name'               => ['nullable', 'string'],
-            // 'attachment'                    => ['nullable', 'mimes:png,jpeg,jpg,pdf,xlsx,docx,doc|max:2048'],
+            'bank_branch_id'                => ['nullable', 'numeric'],
+            'bank_branch_name'              => ['nullable', 'string'],
+            'attachment'                    => 'nullable|mimes:pdf,doc,docx,jpeg,png,gif,xlsx|max:2048',
             'bank_id'                       => ['nullable', 'numeric'],
-            'bank_name'                       => ['nullable', 'string','max:255'],
+            'bank_name'                     => ['nullable', 'string','max:255'],
             'bank_account_name'             => ['nullable', 'string', 'max:255'],
             'bank_account_no'               => ['nullable', 'string', 'max:255'],
             'swift_code'                    => ['nullable', 'string', 'max:255'],
@@ -48,7 +46,6 @@ class OpsChartererContractRequest extends FormRequest
             'currency'                      => ['nullable', 'string', 'max:255'],
             'status'                        => ['nullable', 'string', 'max:255'],
             'business_unit'                 => ['nullable', 'string', 'max:255'],
-
 
         ];
     }
@@ -84,6 +81,7 @@ class OpsChartererContractRequest extends FormRequest
             'routing_no.max' => 'Routing No may not be greater than :max characters.',
             'currency.max' => 'Currency may not be greater than :max characters.',
             'status.max' => 'Status not be greater than :max characters.',
+            'attachment.mimes' => 'Attachment must be a file allowed types are pdf,doc,docx,jpeg,png,gif,xlsx.',
         ];
     }
 

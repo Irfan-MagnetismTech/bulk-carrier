@@ -48,7 +48,7 @@ class MntSurvey extends Model
         $interval = $dueDate->diff($today);
         $daysPassed =(int) $interval->format('%R%a');
 
-        $status = ($daysPassed > 0) ? "Due" : (($daysPassed >= -10) ? "Due Soon" : $status);
+        $status = ($daysPassed > 0) ? "Due" : (($daysPassed >= -30) ? "Due Soon" : $status);
 
         return $status;
     }

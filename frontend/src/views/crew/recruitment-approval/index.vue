@@ -326,6 +326,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
             </td>
             <td>
               <nobr>
+                <action-button :action="'show'" :to="{ name: 'crw.recruitmentApprovals.show', params: { recruitmentApprovalId: rcrApproval?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'crw.recruitmentApprovals.edit', params: { recruitmentApprovalId: rcrApproval?.id } }"></action-button>
                 <action-button @click="confirmDelete(rcrApproval?.id)" :action="'delete'"></action-button>
               </nobr>

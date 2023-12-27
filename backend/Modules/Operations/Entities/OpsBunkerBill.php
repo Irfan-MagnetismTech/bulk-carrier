@@ -24,6 +24,12 @@ class OpsBunkerBill extends Model
         'business_unit',
     ];
 
+    protected $casts = [
+        'sub_total_bdt' => 'float',
+        'discount_bdt' => 'float',
+        'grand_total_bdt' => 'float',
+    ];
+
     public function scmVendor()
     {
         return $this->belongsTo(ScmVendor::class, 'scm_vendor_id' , 'id');

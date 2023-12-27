@@ -59,7 +59,7 @@ class OpsVesselExpenseHeadController extends Controller
             DB::beginTransaction();
 
             $ops_vessel_id = $request->ops_vessel_id;
-            $isExist = OpsVesselExpenseHead::where('ops_vessel_id', $ops_vessel_id)->get();
+            $isExist = OpsVesselExpenseHead::where('ops_vessel_id', $ops_vessel_id)->first();
 
             if($isExist){
                 $error= [

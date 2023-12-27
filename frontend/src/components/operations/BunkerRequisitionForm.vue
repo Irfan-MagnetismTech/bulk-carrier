@@ -28,7 +28,7 @@
         </label>
         <label class="block w-1/2 mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Requisition No. <span class="text-red-500">*</span></span>
-              <input type="text" v-model.trim="form.requisition_no" placeholder="Requisition No." class="form-input" autocomplete="off" required/>
+              <input type="text" maxlength="50" v-model.trim="form.requisition_no" placeholder="Requisition No." class="form-input" autocomplete="off" required/>
         </label>
     </div>
     <div>
@@ -61,7 +61,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
+                  <input type="number" step="0.001" min="0" v-model.trim="form.opsBunkers[index].quantity" placeholder="Quantity" class="form-input text-right" autocomplete="off" />
                 </label>
               </td>
             </tr>
@@ -193,5 +193,19 @@ onMounted(() => {
 }
 .form-input {
   @apply block mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
+}
+
+/* Hide the default number input arrows */
+input[type=number] {
+  -moz-appearance: textfield; /* Firefox */
+  -webkit-appearance: textfield; /* Chrome, Safari, Edge */
+  appearance: textfield; /* Standard syntax */
+}
+
+/* Hide the spin buttons in Chrome */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 </style>
