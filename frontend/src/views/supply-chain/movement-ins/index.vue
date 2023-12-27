@@ -60,7 +60,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "PO No",
+      "label": "From Warehouse",
       "filter_type": "input" 
     },
     {
@@ -70,7 +70,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "PR No",
+      "label": "To Warehouse",
       "filter_type": "input" 
     },
     {
@@ -80,7 +80,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Warehouse",
+      "label": "Transfer Date",
       "filter_type": "input"
     },
   ]
@@ -209,7 +209,6 @@ function confirmDelete(id) {
               <td>{{ movementIn?.fromWarehouse?.name?? '' }}</td>
               <td>{{ movementIn?.toWarehouse?.name?? '' }}</td>
               <td>{{ movementIn?.date }}</td>
-              <td>{{ movementIn?.required_date }}</td>
               <td>
                 <span :class="movementIn?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ movementIn?.business_unit }}</span>
               </td>

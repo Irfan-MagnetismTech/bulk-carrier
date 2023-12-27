@@ -40,7 +40,9 @@ class ScmMiController extends Controller
                 'fromWarehouse',
                 'toWarehouse',
                 'createdBy',
-            )->latest()->paginate(10);
+            )
+                ->globalSearch(request()->all());
+
 
             return response()->success('Data list', $movementOuts, 200);
         } catch (\Exception $e) {
