@@ -172,13 +172,19 @@ class ScmMiController extends Controller
 
             $movementIn->scmMiLines()->delete();
             $movementIn->stockable()->delete();
-            $movementIn->scmMiShortage->scmMiShortageLines()->delete();
 
             $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMiLines, $movementIn->id, 'scm_material_id', 'mi');
 
             $movementIn->scmMiLines()->createMany($linesData);
 
+            (new StockLedgerData)->insert($movementIn, $request->scmMiLines);
+
+
             if ($request->scmMiShortage['shortage_type'] != "") {
+                if ($movementIn->scmMiShortage() != '') {
+                    $movementIn->scmMiShortage->scmMiShortageLines()->delete();
+                }
+                // $movementIn->scmMiShortage->scmMiShortageLines()->delete();
 
                 $movementIn->scmMiShortage()->update([
                     'scm_mi_id' => $movementIn->id,
@@ -189,8 +195,6 @@ class ScmMiController extends Controller
                 ]);
 
                 $this->shortageLinesData($request, $movementIn);
-
-                (new StockLedgerData)->insert($movementIn, $request->scmMiLines);
 
                 $stockInFromShortage = [];
 
