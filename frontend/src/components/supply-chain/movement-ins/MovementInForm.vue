@@ -6,8 +6,8 @@
   </div>
   <div class="input-group !w-1/4">
       <label class="label-group">
-          <span class="label-item-title">MI Ref<span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
+          <span class="label-item-title">MI Ref</span>
+          <input type="text" readonly v-model="form.ref_no" class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
           <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
       </label>
   </div>
@@ -27,13 +27,13 @@
          <Error v-if="errors?.unit" :errors="errors.unit" />
       </label>
       <label class="label-group">
-        <span class="label-item-title">From Warehouse <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.from_warehouse_name" required class="form-input" name="from_warehouse_name" :id="'delivery_date'" />
+        <span class="label-item-title">From Warehouse</span>
+        <input type="text" v-model="form.from_warehouse_name" readonly class="form-input vms-readonly-input" name="from_warehouse_name" :id="'delivery_date'" />
          <Error v-if="errors?.from_warehouse_name" :errors="errors.from_warehouse_name" />
       </label>
       <label class="label-group">
-        <span class="label-item-title">To Warehouse <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.to_warehouse_name" required class="form-input" name="to_warehouse_name" :id="'to_warehouse_name'" />
+        <span class="label-item-title">To Warehouse</span>
+        <input type="text" v-model="form.to_warehouse_name" readonly class="form-input vms-readonly-input" name="to_warehouse_name" :id="'to_warehouse_name'" />
           <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" />
       </label>
       <label class="label-group">
