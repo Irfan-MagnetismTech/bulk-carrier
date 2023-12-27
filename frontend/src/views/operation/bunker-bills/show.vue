@@ -72,8 +72,8 @@
                           <th>PR No.</th>
                           <th>Currency</th>
                           <th>Exchange Rate (To USD)</th>
-                          <th>Exchange Rate (USD to BDT)</th>                          
-                        </tr>                        
+                          <th>Exchange Rate (USD to BDT)</th>
+                        </tr>
                         <tr>
                           <td>{{ bunkerBill?.opsBunkerBillLines[index]?.opsBunkerRequisition?.requisition_no }}</td>
                           <td>{{ bunkerBill?.opsBunkerBillLines[index]?.currency }}</td>
