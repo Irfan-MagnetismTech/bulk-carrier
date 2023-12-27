@@ -374,10 +374,9 @@ watch(() => props.form.scmWarehouse, (value) => {
                   <tr class="w-full" v-if="itemIndex==0">
                     <th class="py-3 align-center">Material Details <br/> <span class="!text-[8px]"></span></th>
                     <th class="py-3 align-center">Required Date</th>
+                    <th class="py-3 align-center">PR Qty</th>
                     <th class="py-3 align-center">Remaining Qty</th>
-                    <th class="py-3 align-center">Tolerance</th>
-                    <th class="py-3 align-center">Qty</th>
-                    <th class="py-3 align-center">Rate</th>
+                    <th class="py-3 align-center">Order Details</th>
                     <th class="py-3 align-cente">Total Price</th>
                     <th>
                       <button type="button" @click="addMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -404,6 +403,7 @@ watch(() => props.form.scmWarehouse, (value) => {
                               </template>
                           </v-select>
                           </td>
+                          
                         </tr>
                         <tr>
                           <td>Unit</td>
@@ -432,13 +432,23 @@ watch(() => props.form.scmWarehouse, (value) => {
                       <input type="text" readonly :value="form.scmPoLines[index]?.scmPoMaterial[itemIndex].max_quantity" min=1 class="form-input">
                     </td>
                     <td>
-                      <input type="text" readonly :value="form.scmPoLines[index]?.scmPoMaterial[itemIndex].tolerence" min=1 class="form-input">
+                      <input type="text" readonly :value="form.scmPoLines[index]?.scmPoMaterial[itemIndex].max_quantity" min=1 class="form-input">  
                     </td>
                     <td>
-                      <input type="number" required v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].quantity" min=1 class="form-input" :max="form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity" :class="{'border-2': form.scmPoLines[index].scmPoMaterial[itemIndex].quantity > form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].scmPoMaterial[itemIndex].quantity > form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity}">
-                    </td>
-                    <td>
-                      <input type="number" required v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].rate" min=1 class="form-input">
+                      <table>
+                        <tr>
+                          <td>Qty</td>
+                          <td>
+                             <input type="number" required v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].quantity" min=1 class="form-input" :max="form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity" :class="{'border-2': form.scmPoLines[index].scmPoMaterial[itemIndex].quantity > form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].scmPoMaterial[itemIndex].quantity > form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity}">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Rate</td>
+                          <td>
+                            <input type="number" required v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].rate" min=1 class="form-input">
+                          </td>
+                        </tr>
+                      </table>
                     </td>
                     <td>
                       <input type="number" readonly v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].total_price" class="form-input vms-readonly-input">
