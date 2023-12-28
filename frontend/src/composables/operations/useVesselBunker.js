@@ -22,6 +22,7 @@ export default function useVesselBunker() {
 		ops_voyage_id: null,
         type: '',
         usage_type: '',
+		reconciliation_type: '',
 		currency: '',
 		exchange_rate_usd: '',
 		exchange_rate_bdt: '',
