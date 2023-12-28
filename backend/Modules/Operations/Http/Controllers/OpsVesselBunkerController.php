@@ -8,7 +8,9 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\SupplyChain\Entities\ScmWarehouse;
 use Modules\Operations\Entities\OpsVesselBunker;
+use Modules\SupplyChain\Services\StockLedgerData;
 use Modules\Operations\Http\Requests\OpsVesselBunkerRequest;
 
 class OpsVesselBunkerController extends Controller
@@ -62,12 +64,25 @@ class OpsVesselBunkerController extends Controller
                 '_token',
                 'opsBunkers.scmMaterial',
             );
+            
+            // $vessel_bunker = OpsVesselBunker::create($vessel_bunkerInfo);
+            // $vessel_bunker->opsBunkers()->createMany($request->opsBunkers);
+            
+            $warehouse= ScmWarehouse::where('ops_vessel_id', $request->ops_vessel_id)->first();
 
-            $vessel_bunker = OpsVesselBunker::create($vessel_bunkerInfo);
-            $vessel_bunker->opsBunkers()->createMany($request->opsBunkers);
+            $bunkers= collect($request->opsBunkers)->map(function($bunker) use ($warehouse){
+                $bunker['scm_warehouse_id']= $warehouse->id;
+                return $bunker;
+            })->values();
+
+
+
+            dd($bunkers);
+
+            // (new StockLedgerData)->insert($vessel_bunker, $bunkers);
             DB::commit();
 
-            return response()->success('Data added successfully.', $vessel_bunker, 201);
+            // return response()->success('Data added successfully.', $vessel_bunker, 201);
         }
         catch (QueryException $e)
         {
