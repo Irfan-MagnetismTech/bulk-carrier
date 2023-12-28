@@ -667,5 +667,32 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/voyage-expenditures/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+
+	/* Vessel Bunkers*/
+	{
+		path: `/${BASE}/vessel-bunkers`,
+		name: `${BASE}.vessel-bunkers.index`,
+		component: () => import(`../views/${ViEWBASE}/vessel-bunkers/index.vue`),
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/vessel-bunkers/create`,
+		name: `${BASE}.vessel-bunkers.create`,
+		component: () => import (`../views/${ViEWBASE}/vessel-bunkers/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/vessel-bunkers/:vesselBunker/edit`,
+		name: `${BASE}.vessel-bunkers.edit`,
+		component: () => import (`../views/${ViEWBASE}/vessel-bunkers/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/vessel-bunkers/:vesselBunker/show`,
+		name: `${BASE}.vessel-bunkers.show`,
+		component: () => import (`../views/${ViEWBASE}/vessel-bunkers/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 	
 ];
