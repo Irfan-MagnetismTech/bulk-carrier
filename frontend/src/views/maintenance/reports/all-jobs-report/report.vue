@@ -4,6 +4,7 @@ import useAllJobsReport from "../../../../composables/maintenance/useAllJobsRepo
 import Title from "../../../../services/title";
 import useHeroIcon from "../../../../assets/heroIcon";
 import DefaultButton from '../../../../components/buttons/DefaultButton.vue';
+import { formatDate } from "../../../../utils/helper";
 const icons = useHeroIcon();
 const { formParams, allJobs, allJobsReport, downloadAllJobsReport, isLoading, showReport, errors } = useAllJobsReport();
 
@@ -67,8 +68,10 @@ setTitle('All Jobs Report');
                                                 <td v-if="jobLineIndex == 0" :rowspan="job.mntJobLines.length ?? 1">{{ job.present_run_hour }} {{ job.present_run_hour!=null ? 'Hrs.' : '' }}</td>
                                                 <td class="text-left">{{ jobLine.job_description }}</td>
                                                 <td>{{ jobLine.cycle }} {{ jobLine.cycle_unit == "Hours" ? 'Hrs.' : jobLine.cycle_unit }}</td>
-                                                <td>{{ jobLine.next_due }} {{ jobLine.cycle_unit == "Hours" ? 'Hrs.' : '' }}</td>
-                                                <td>{{ jobLine.last_done }}</td>
+                                                <!-- <td>{{ jobLine.next_due }} {{ jobLine.cycle_unit == "Hours" ? 'Hrs.' : '' }}</td>
+                                                <td>{{ jobLine.last_done }}</td> -->
+                                                <td>{{ jobLine.cycle_unit == "Hours" ? jobLine.next_due + " Hrs." : formatDate(jobLine.next_due) }}</td>
+                                                <td>{{ formatDate(jobLine.last_done) }}</td>
                                             </tr>
                                             
                                         </template>
