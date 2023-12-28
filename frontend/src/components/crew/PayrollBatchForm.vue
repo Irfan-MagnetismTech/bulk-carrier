@@ -162,15 +162,18 @@ function addAdditionHead(){
     });
   }
   else if(props.form.payrollBatchHeads.filter(item => item.type === 'addition').length > 1) {
-    props.form.payrollBatchHeadLines.forEach((batchHeadLine,batchHeadLineIndex) => {
-      props.form.payrollBatchHeadLines[batchHeadLineIndex].batch_heads.push({
+
+    let additions = props.form.payrollBatchHeadLines.filter(item => item.type === 'addition')
+
+    for(let addition of additions) {
+      addition.batch_heads.push({
         amount:"",
         head_name:"",
         particular:"",
         id: objHead.id,
         type:"addition"
       });
-    });
+    }
   }
 };
 
@@ -220,15 +223,17 @@ function addDeductionHead(){
     });
   }
   else if(props.form.payrollBatchHeads.filter(item => item.type === 'deduction').length > 1) {
-    props.form.payrollBatchHeadLines.forEach((batchHeadLine,batchHeadLineIndex) => {
-      props.form.payrollBatchHeadLines[batchHeadLineIndex].batch_heads.push({
+    let deductions = props.form.payrollBatchHeadLines.filter(item => item.type === 'deduction')
+
+    for(let deduction of deductions) {
+      deduction.batch_heads.push({
         amount:"",
         head_name:"",
         particular:"",
         id: objHead.id,
         type:"deduction"
       });
-    });
+    }
   }
 };
 
