@@ -75,6 +75,54 @@ class ScmMiController extends Controller
             }
             (new StockLedgerData)->insert($scmMi, $request->scmMiLines);
 
+
+            //wip data
+            if ($request->scmMiShortage['shortage_type'] != "") {
+                if ($movementIn->scmMiShortage) {
+                    $movementIn->scmMiShortage->scmMiShortageLines()->delete();
+                }
+
+                $movementIn->scmMiShortage()->update([
+                    'scm_mi_id' => $movementIn->id,
+                    'shortage_type' => $request->scmMiShortage['shortage_type'],
+                    'scm_warehouse_id' => $request->scmMiShortage['scm_warehouse_id'],
+                    'acc_cost_center_id' => $request->scmMiShortage['scm_cost_center_id'] ?? null,
+                    'business_unit' => $request->business_unit
+                ]);
+
+                $this->shortageLinesData($request, $movementIn);
+
+                $stockInFromShortage = [];
+
+                foreach ($request->scmMiShortage['scmMiShortageLines'] as $key => $value) {
+
+                    $stockInFromShortage = [
+                        'scm_material_id' => $value['scm_material_id'],
+                        'scm_warehouse_id' => $request->scmMiShortage['scm_warehouse_id'],
+                        'scm_cost_center_id' => $request->scmMiShortage['scm_cost_center_id'],
+                        'quantity' => $value['quantity'],
+                        'business_unit' => $request->business_unit
+                    ];
+
+                    $miStockable = $movementIn->stockable()->create($stockInFromShortage);
+
+                    $stockInFromShortage = [
+                        'scm_material_id' => $value['scm_material_id'],
+                        'recievable_type`' => ScmMi::class,
+                        'recievable_id' => $movementIn->scmMiShortage->scmMiShortageLines[$key]->id,
+                        'scm_warehouse_id' => $request->scmMiShortage['scm_warehouse_id'],
+                        'scm_cost_center_id' => $request->scmMiShortage['scm_cost_center_id'],
+                        'quantity' => $value['quantity'] * -1,
+                        'parent_id' => $miStockable->id,
+                        'business_unit' => $request->business_unit
+                    ];
+
+                    $movementIn->scmMiShortage->stockable()->create($stockInFromShortage);
+                }
+            }
+
+            ///end wip data
+
             DB::commit();
 
             return response()->success('Data created succesfully', $scmMi, 201);
@@ -181,10 +229,9 @@ class ScmMiController extends Controller
 
 
             if ($request->scmMiShortage['shortage_type'] != "") {
-                if ($movementIn->scmMiShortage() != '') {
+                if ($movementIn->scmMiShortage) {
                     $movementIn->scmMiShortage->scmMiShortageLines()->delete();
                 }
-                // $movementIn->scmMiShortage->scmMiShortageLines()->delete();
 
                 $movementIn->scmMiShortage()->update([
                     'scm_mi_id' => $movementIn->id,
@@ -244,6 +291,7 @@ class ScmMiController extends Controller
     {
         try {
             $movementIn->scmMiLines()->delete();
+            $movementIn->stockable()->delete();
             $movementIn->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);
