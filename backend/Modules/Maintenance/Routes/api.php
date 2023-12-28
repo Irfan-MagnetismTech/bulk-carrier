@@ -91,6 +91,8 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
     Route::get('get-critical-items', [MntCriticalItemController::class, 'getCriticalItems']);
     // getCriticalVesselItems
     Route::get('get-critical-vessel-items', [MntCriticalVesselItemController::class, 'getCriticalVesselItems']);
+    // getCriticalVesselFunctions
+    Route::get('get-critical-vessel-functions', [MntCriticalVesselItemController::class, 'getCriticalVesselFunctions']);
     // getSurveyItems 
     Route::get('get-survey-items', [MntSurveyItemController::class, 'mntSurveyItems']);
     // getSurveyTypes
@@ -100,4 +102,5 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
     Route::get('report-all-jobs', [MntReportController::class, 'reportAllJobs']);
     Route::get('report-upcoming-jobs', [MntReportController::class, 'reportUpcomingJobs']);
     Route::get('report-overdue-jobs', [MntReportController::class, 'reportOverdueJobs']);
+
 });

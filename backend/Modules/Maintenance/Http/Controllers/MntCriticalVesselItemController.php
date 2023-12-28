@@ -7,6 +7,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\Maintenance\Entities\MntCriticalFunction;
 use Modules\Maintenance\Entities\MntCriticalVesselItem;
 use Modules\Maintenance\Http\Requests\MntCriticalVesselItemRequest;
 
@@ -164,7 +165,8 @@ class MntCriticalVesselItemController extends Controller
     }
 
 
-    public function getCriticalVesselItems() {
+    public function getCriticalVesselItems() 
+    {
         try {
 
             $criticalVesselItems = MntCriticalVesselItem::with(['mntCriticalItem','mntCriticalItemSps'])            
@@ -181,5 +183,24 @@ class MntCriticalVesselItemController extends Controller
         {
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+    public function getCriticalVesselFunctions() 
+    {
+        $opsVesselId = request()->opsVesselId;
+        try {
+            $criticalVesselFunctions = MntCriticalFunction::with(['mntCriticalItemCats.mntCriticalItems.mntCriticalVesselItems' => function ($query) use ($opsVesselId){
+                                            $query->where('ops_vessel_id', $opsVesselId);
+                                        }])  
+                                        ->get();
+
+            return response()->success('Critical vessel functions are retrieved successfully', $criticalVesselFunctions, 200);
+            
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+
     }
 }
