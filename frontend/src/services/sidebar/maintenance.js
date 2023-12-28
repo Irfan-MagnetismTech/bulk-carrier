@@ -305,6 +305,20 @@ export default [
                         subSubMenu: [],
                     },
 
+                    
+                    {
+                        route: 'mnt.reports.critical-vessel-functions',
+                        label: 'Cri. Vessel Functions',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+
+
+
 
 
 

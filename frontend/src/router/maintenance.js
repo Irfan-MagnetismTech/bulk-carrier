@@ -509,6 +509,15 @@ export default [
 	/* Overdue Jobs */
 
 
+	
+	/* Critical Items */
+	{
+		path: `/${BASE}/reports/critical-vessel-functions`,
+		name: `${BASE}.reports.critical-vessel-functions`,
+		component: () => import(`../views/${VIEWBASE}/reports/critical-vessel-functions-report/report.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-vessel-functions-report' },
+	},
+	/* Critical Items */
 
 	/* Report End */
 
