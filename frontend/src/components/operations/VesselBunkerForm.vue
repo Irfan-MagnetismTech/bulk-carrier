@@ -169,7 +169,13 @@ const calculateInCurrency = (item) => {
 }
 
 function addHead() {
-  props.form.opsBunkers.push({});
+  
+  let lastItem = props.form.opsBunkers[props.form.opsBunkers.length - 1];
+
+  props.form.opsBunkers.push({
+    particular: lastItem?.particular
+  });
+  
 }
 
 function removeHead(index){
@@ -287,9 +293,10 @@ onMounted(() => {
       <table class="w-full" id="table">
         <thead>
         <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+          <th v-if="form.type == 'Stock Out'"><nobr>Particular <span class="text-red-500">*</span></nobr></th>
           <th class="w-1/6"><nobr>Bunker</nobr></th>
-          <th><nobr>Quantity</nobr></th>
-          <th v-if="form.type == 'Stock In'"><nobr>Rate</nobr></th>
+          <th><nobr>Quantity <span class="text-red-500">*</span></nobr></th>
+          <th v-if="form.type == 'Stock In'"><nobr>Rate <span class="text-red-500">*</span></nobr></th>
           <th v-if="isOtherCurrency && form.type == 'Stock In'">Amount </th>
           <th v-if="form.type == 'Stock In'">Amount USD</th>
           <th v-if="form.type == 'Stock In'">Amount BDT</th>
@@ -305,6 +312,10 @@ onMounted(() => {
         <tbody>
           <template v-for="(bunker, index) in form.opsBunkers" :key="index">
             <tr>
+              <td v-if="form.type == 'Stock Out'">
+                <input type="text" required v-model="form.opsBunkers[index].particular" placeholder="Particular" class="form-input" autocomplete="off" />
+              </td>
+
               <td>
                 <!-- <<select v-model="form.opsBunkers[index].name" class="form-input">
                   option v-for="(bunkerItem, itemIndex) in form.bunkerItems" :key="itemIndex">{{ bunkerItem.name }}</option>
@@ -323,10 +334,10 @@ onMounted(() => {
                 </v-select>
               </td>
               <td>
-                  <input type="number" step="0.0001" @input="calculateHeadAmounts()" required v-model="form.opsBunkers[index].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
+                  <input type="number" step="0.0001" min="0" @input="calculateHeadAmounts()" required v-model="form.opsBunkers[index].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
               </td>
               <td v-if="form.type == 'Stock In'">
-                <input type="number" step="0.0001" @input="calculateHeadAmounts()" required v-model="form.opsBunkers[index].rate" placeholder="Rate" class="form-input" autocomplete="off" />
+                <input type="number" step="0.0001" min="0" @input="calculateHeadAmounts()" required v-model="form.opsBunkers[index].rate" placeholder="Rate" class="form-input" autocomplete="off" />
               </td>
               <td v-if="isOtherCurrency && form.type == 'Stock In'">
                 <input type="number" step="0.0001" @input="calculateHeadAmounts()" v-model="form.opsBunkers[index].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />

@@ -43,18 +43,18 @@ let filterOptions = ref({
   "isFilter": false,
   "filter_options": [
     {
-      "relation_name": null,
-      "field_name": "title",
+      "relation_name": "opsVessel",
+      "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Title",
+      "label": "Vessel",
       "filter_type": "input"
     },
     {
       "relation_name": "opsVoyage",
-      "field_name": "voyage_sequence",
+      "field_name": "voyage_no",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -64,35 +64,15 @@ let filterOptions = ref({
     },
     {
       "relation_name": null,
-      "field_name": null,
+      "field_name": 'type',
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Effective From",
-      "filter_type": null
+      "label": "Type",
+      "filter_type": "input"
     },
-    {
-      "relation_name": null,
-      "field_name": null,
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Effective Till",
-      "filter_type": null
-    },
-    {
-      "relation_name": null,
-      "field_name": null,
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Total (BDT)",
-      "filter_type": null
-    },
-   
+  
   ]
 });
 
@@ -169,15 +149,13 @@ onMounted(() => {
                   <td>{{ vesselBunker?.title }}</td>
                   <td>{{ vesselBunker?.opsVoyage?.voyage_sequence }}</td>
                   <td>
-                    <nobr>{{ vesselBunker?.effective_from ? moment(vesselBunker?.effective_from).format('DD-MM-YYYY') : null }}</nobr>
+                    <nobr></nobr>
                   </td>
                   <td>
-                    <nobr>{{ vesselBunker?.effective_till ? moment(vesselBunker?.effective_till).format('DD-MM-YYYY') : null }}</nobr>
+                    <nobr></nobr>
                   </td>
                   <td class="!text-right">
-                    {{ numberFormat((vesselBunker?.opsVesselBunkerEntries.reduce((accumulator, currentObject) => {
-  return accumulator + (currentObject.amount_bdt ? parseFloat(currentObject.amount_bdt) : 0);
-}, 0)) || 0) }}
+                    
                   </td>
                   <td>
                     <span :class="vesselBunker?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ vesselBunker?.business_unit }}</span>
