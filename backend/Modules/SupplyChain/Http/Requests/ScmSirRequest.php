@@ -29,7 +29,8 @@ class ScmSirRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'date' => 'required|date',
+            'scmSirLines.*.quantity' => 'required|numeric',
         ];
     }
 
@@ -41,7 +42,10 @@ class ScmSirRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'date.required' => 'Date is required',
+            'date.date' => 'Date must be a valid date',
+            'scmSirLines.*.quantity.required' => 'In row no :position Quantity is required',
+            'scmSirLines.*.quantity.numeric' => 'In row no :position Quantity must be numeric',
         ];
     }
 

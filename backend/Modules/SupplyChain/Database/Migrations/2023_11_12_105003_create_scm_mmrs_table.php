@@ -22,7 +22,7 @@ return new class extends Migration
             $table->foreignId('to_warehouse_id')->constrained('scm_warehouses');
             $table->string('requested_by')->nullable();
             $table->string('requested_for')->nullable();
-            $table->string('remarks')->nullable();
+            $table->text('remarks')->nullable();
             $table->string('business_unit')->comment('TSLL,PSML')->nullable();
             $table->bigInteger('created_by')->comment('user_id')->nullable();
             $table->timestamps();

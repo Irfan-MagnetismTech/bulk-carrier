@@ -28,8 +28,8 @@ class OpsChartererInvoiceRequest extends FormRequest
             'total_days'                    => ['nullable', 'numeric'],
             'total_amount'                  => ['required', 'numeric'],
             'per_day_charge'                => ['nullable', 'numeric'],
-            'others_billable_amount'        => ['required', 'numeric'],
-            'service_fee_deduction_amount'  => ['required', 'numeric'],
+            'others_billable_amount'        => ['nullable', 'numeric'],
+            'service_fee_deduction_amount'  => ['nullable', 'numeric'],
             // 'discount_unit'                 => ['required', 'string'],
             'discounted_amount'             => ['nullable', 'numeric'],
             'grand_total'                   => ['required', 'numeric'],
@@ -50,7 +50,7 @@ class OpsChartererInvoiceRequest extends FormRequest
             'ops_charterer_contract_id.required' => 'Charterer owner code is required',
             'contract_type.required' => 'Contract type is required',
             'bill_from.required' => 'Contract type is required',
-            'opsChartererInvoiceVoyages.*.ops_voyage_id.required' => 'Voyage is required for row is :position.',
+            'opsChartererInvoiceVoyages.*.ops_voyage_id.required_if' => 'Voyage is required for row :position.',
         ];
     }
 

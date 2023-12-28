@@ -3,6 +3,7 @@
 namespace Modules\Crew\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CrwRankRequest extends FormRequest
 {
@@ -12,8 +13,10 @@ class CrwRankRequest extends FormRequest
      * @return array
      */
     public function rules(): array {
+        $id = $this->route('crw_rank');
+
         return [
-            'name'          => ['required', 'string', 'max:255'],
+            'name'          => ['required', 'string', 'max:255', Rule::unique('crw_ranks')->where('business_unit', $this->business_unit)->ignore($id)],
             'short_name'    => ['required', 'string', 'max:6'],
             'business_unit' => ['required', 'string', 'max:255'],
         ];
@@ -26,9 +29,9 @@ class CrwRankRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            'name.max'      => 'The rank name field cannot exceed 255 characters.',
-            'name.required' => 'The rank name field is required.',
-
+            'name.max'            => 'The rank name field cannot exceed 255 characters.',
+            'name.required'       => 'The rank name field is required.',
+            'name.unique'         => 'The rank name field is exists within this business unit.',
             'short_name.max'      => 'The short name field cannot exceed 6 characters.',
             'short_name.required' => 'The short name field is required.',
         ];

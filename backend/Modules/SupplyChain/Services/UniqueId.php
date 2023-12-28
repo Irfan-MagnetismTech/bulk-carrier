@@ -5,24 +5,22 @@ namespace Modules\SupplyChain\Services;
 class UniqueId
 {
     /**
-     * this function is used to generate unique id for any model
-     * 
-     * @param model $model
-     * @param string $prefix
-     * @return string - unique id
-     * 
+     * Generates a unique ID for any model.
+     *
+     * @param Model $model The model to generate the ID for.
+     * @param string $prefix The prefix to prepend to the ID.
+     * @return string The unique ID.
      */
-    public function generate($model, $prefix): string
+    public function generate($model, string $prefix): string
     {
-        $lastIndentData = $model::latest()->first();
-        if ($lastIndentData) {
-            if (now()->format('Y') != date('Y', strtotime($lastIndentData->created_at))) {
-                return strtoupper($prefix) . '-' . now()->format('Y') . '-' . 1;
-            } else {
-                return strtoupper($prefix) . '-' . now()->format('Y') . '-' . $lastIndentData->id + 1;
-            }
-        } else {
-            return strtoupper($prefix) . '-' . now()->format('Y') . '-' . 1;
-        }
+        $currentYear = now()->format('Y');
+        $latestModel = $model::latest()->first();
+
+        $lastYear = $latestModel ? date('Y', strtotime($latestModel->created_at)) : null;
+        $lastId = $latestModel ? $latestModel->id : 0;
+
+        $newId = ($currentYear != $lastYear) ? 1 : ($lastId + 1);
+
+        return strtoupper($prefix) . '-' . $currentYear . '-' . $newId;
     }
 }

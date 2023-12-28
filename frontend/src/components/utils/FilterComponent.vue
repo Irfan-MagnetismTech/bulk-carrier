@@ -17,7 +17,8 @@ const props = defineProps({
 
 })
 const { filterOptions } = toRefs(props);
-const {showFilter,  swapFilter, setSortingState, clearFilter } = useGlobalFilter()
+const { showFilter, swapFilter, setSortingState, clearFilter } = useGlobalFilter();
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const icons = useHeroIcon();
 const itemsPerPage = [
   { label: '15', value: 15 },
@@ -28,6 +29,7 @@ const itemsPerPage = [
 
 onMounted(() => {
   filterOptions.value.filter_options.forEach((option, index) => {
+  if ('filter_type' in filterOptions.value.filter_options[index] ? filterOptions.value.filter_options[index].filter_type != 'date' : true)
     filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
   });
 
@@ -55,25 +57,26 @@ function setSortState(index, order) {
                 </div>
               </th>
               <th v-for="(option, key) in filterOptions.filter_options" :key="key" :class="option?.class">
-                <nobr>
+                <div :class="{ 'no-wrap': !option.nobr_tag }">
                   <div class="flex justify-center items-center">
-                  <span class="mr-2">{{ option.label }}</span>
-                  <div class="flex flex-col cursor-pointer" v-if="option.filter_type">
-                    <div
-                      v-html="icons.descIcon"
-                      @click="setSortState(key, 'asc')"
-                      :class="{ 'text-gray-800': option.order_by === 'asc', 'text-gray-300': option.order_by !== 'asc' }"
-                      class="font-semibold"
-                    ></div>
-                    <div
-                      v-html="icons.ascIcon"
-                      @click="setSortState(key, 'desc')"
-                      :class="{ 'text-gray-800': option.order_by === 'desc', 'text-gray-300': option.order_by !== 'desc' }"
-                      class="font-semibold"
-                    ></div>
+                    <span class="mr-2">{{ option.label }}</span>
+                    <div class="flex flex-col cursor-pointer" v-if="option.filter_type">
+                      <div
+                          v-html="icons.descIcon"
+                          @click="setSortState(key, 'asc')"
+                          :class="{ 'text-gray-800': option.order_by === 'asc', 'text-gray-300': option.order_by !== 'asc' }"
+                          class="font-semibold"
+                      ></div>
+                      <div
+                          v-html="icons.ascIcon"
+                          @click="setSortState(key, 'desc')"
+                          :class="{ 'text-gray-800': option.order_by === 'desc', 'text-gray-300': option.order_by !== 'desc' }"
+                          class="font-semibold"
+                      ></div>
+                    </div>
                   </div>
                 </div>
-                </nobr>
+
               </th>
               <th v-if="filterOptions.business_unit"><nobr>Business Unit</nobr></th>
               <th class=""><nobr>Action</nobr></th>
@@ -92,7 +95,8 @@ function setSortState(index, order) {
                   <input v-model="option.search_param" type="text" placeholder="" class="filter_input" autocomplete="off" />
                 </template>
                 <template v-else-if="option.filter_type === 'date'">
-                  <input v-model="option.search_param" type="date" placeholder="" class="filter_input" autocomplete="off" />
+                  <!-- <input v-model="option.search_param" type="date" placeholder="" class="filter_input" autocomplete="off" /> -->
+                  <VueDatePicker  v-model="option.search_param" class="filter_input min-w-[100px] text-center" auto-apply hide-input-icon  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" :clearable="false"></VueDatePicker>
                 </template>
                 <template v-else-if="option.filter_type === 'dropdown'">
                   <select v-model="option.search_param" class="filter_input" autocomplete="off">
@@ -116,5 +120,14 @@ function setSortState(index, order) {
           </thead>
 </template>
 <style lang="postcss" scoped>
-
+>>> {
+  --dp-input-padding: 3px 5px ;
+  --dp-border-color: #4b5563;
+  --dp-border-color-hover: #4b5563;
+  --dp-icon-color: #4b5563;
+  --dp-font-size: 12px;
+}
+.no-wrap {
+  white-space: nowrap;
+}
 </style>

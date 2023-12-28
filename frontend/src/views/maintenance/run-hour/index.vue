@@ -14,6 +14,7 @@ import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import moment from "moment";
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 const icons = useHeroIcon();
@@ -27,7 +28,7 @@ const props = defineProps({
 
 const { runHours, getRunHours, deleteRunHour, isLoading, isTableLoading, errors  } = useRunHour();
 const { setTitle } = Title();
-setTitle('Runnig Hour List');
+setTitle('Running Hour List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -191,7 +192,7 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Runnig Hour List</h2>
+    <h2 class="text-2xl font-semibold text-gray-700">Running Hour List</h2>
     <!-- <default-button :title="'Create'" :to="{ name: 'mnt.run-hours.create' }"></default-button> -->
     <default-button :title="'Create'" :to="{ name: 'mnt.run-hours.create' }" :icon="icons.AddIcon"></default-button>
   </div>
@@ -257,7 +258,7 @@ onMounted(() => {
               </th>
             <th class="w-2/12 ">
               <div class="flex justify-center items-center">
-                  <span class="mr-1">Present Runnig Hour</span>
+                  <span class="mr-1">Present Running Hour</span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(3,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(3,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[3].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[3].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -311,6 +312,7 @@ onMounted(() => {
             
             <td>
               <nobr>
+                <action-button :action="'show'" :to="{ name: 'mnt.run-hours.show', params: { runHourId: runHour?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'mnt.run-hours.edit', params: { runHourId: runHour?.id } }"></action-button>
                 <!-- <action-button @click="confirmDelete(runHour?.id)" :action="'delete'"></action-button> -->
               </nobr>

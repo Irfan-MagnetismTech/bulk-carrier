@@ -16,13 +16,17 @@ return new class extends Migration
         Schema::create('crw_salary_structures', function (Blueprint $table) {
             $table->id();
 			$table->unsignedBigInteger('crw_crew_id');
-			$table->integer('increment_sequence');
-			$table->date('effective_date');
 			$table->unsignedBigInteger('promotion_id')->nullable();
+			$table->integer('increment_sequence')->nullable();
+			$table->date('effective_date');
 			$table->string('currency');
-			$table->date('gross_salary');
+			$table->decimal('gross_salary', 16, 2);
+			$table->decimal('addition', 16, 2)->default(0);
+			$table->decimal('deduction', 16, 2)->default(0);
+			$table->decimal('net_amount', 16, 2);
 			$table->tinyInteger('is_active');
 			$table->enum('business_unit', ['PSML', 'TSLL']);
+            $table->text('remarks')->nullable();
             $table->timestamps();
         });
     }

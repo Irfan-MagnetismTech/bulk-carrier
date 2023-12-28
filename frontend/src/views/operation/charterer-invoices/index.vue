@@ -12,8 +12,10 @@ import Store from "../../../store";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import useHelper from "../../../composables/useHelper";
 
 const { chartererInvoices, getChartererInvoices, deleteChartererInvoice, isLoading,isTableLoading ,errors } = useChartererInvoice();
+const { numberFormat } = useHelper();
 const icons = useHeroIcon();
 const props = defineProps({
   page: {
@@ -30,7 +32,7 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 let filterOptions = ref({
-  "business_unit": businessUnit.value,
+  // "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
   "isFilter": false,
@@ -72,7 +74,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Cantract Type",
+      "label": "Contract Type",
       "filter_type": "input",
     },
     {
@@ -162,10 +164,10 @@ onMounted(() => {
                   <td>{{ chartererInvoice?.opsChartererContract?.contract_name }}</td>
                   <td>{{ chartererInvoice?.opsChartererContract?.opsVessel?.name }}</td>
                   <td>{{ chartererInvoice?.contract_type }}</td>
-                  <td>{{ chartererInvoice?.grand_total }}</td>
-                  <td>
+                  <td>{{ numberFormat(chartererInvoice?.grand_total) }}</td>
+                  <!-- <td>
                     <span :class="chartererInvoice?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chartererInvoice?.business_unit }}</span>
-                  </td>
+                  </td> -->
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <action-button :action="'show'" :to="{ name: 'ops.charterer-invoices.show', params: { chartererInvoiceId: chartererInvoice.id } }"></action-button>
@@ -181,12 +183,12 @@ onMounted(() => {
             <tr v-if="isLoading">
             </tr>
             <tr v-else-if="isTableLoading">
-                <td colspan="7">
+                <td colspan="8">
                   <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
                 </td>
             </tr>
             <tr v-else-if="!chartererInvoices?.data?.length">
-              <td colspan="7">No Data found.</td>
+              <td colspan="8">No Data found.</td>
             </tr>
         </tfoot>
       </table>

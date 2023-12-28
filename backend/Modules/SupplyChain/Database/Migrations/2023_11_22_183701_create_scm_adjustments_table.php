@@ -15,7 +15,14 @@ return new class extends Migration
     {
         Schema::create('scm_adjustments', function (Blueprint $table) {
             $table->id();
-            
+            $table->string('ref_no')->nullable();
+            $table->unsignedBigInteger('scm_warehouse_id')->nullable();
+            $table->unsignedBigInteger('acc_cost_center_id')->nullable();
+            $table->date('date')->nullable();
+            $table->string('remarks')->nullable();
+            $table->string('business_unit')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->string('type')->nullable();
             $table->timestamps();
         });
     }

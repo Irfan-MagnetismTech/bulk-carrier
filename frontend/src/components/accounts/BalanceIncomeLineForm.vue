@@ -39,10 +39,10 @@ onMounted(() => {
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <business-unit-input :page="page" v-model.trim="form.business_unit"></business-unit-input>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark-disabled:text-gray-300">Parent Line <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 dark-disabled:text-gray-300">Parent Line </span>
     <v-select :options="balanceIncomeLineLists" :loading="isLoading" placeholder="--Choose an option--" v-model="form.parent_id_name" label="line_text"  class="block w-full rounded form-input">
       <template #search="{attributes, events}">
-        <input class="vs__search w-full" style="width: 50%" :required="!form.parent_id_name" v-bind="attributes" v-on="events"/>
+        <input class="vs__search w-full" style="width: 50%" v-bind="attributes" v-on="events"/>
       </template>
     </v-select>
     </label>

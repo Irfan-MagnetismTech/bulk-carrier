@@ -193,18 +193,6 @@ export default [
                         subSubMenu: [],
                     },
                     
-                    // {
-                    //     route: 'mnt.critical-vessel-items.index',
-                    //     label: 'Vessel Items',
-                    //     preIcon: icons.User,
-                    //     postIcon: icons.DownArrow,
-                    //     is_active: false,
-                    //     is_open: false,
-                    //     permissionKey: '',
-                    //     subSubMenu: [],
-                    // },
-
-                    
                     {
                         route: 'mnt.critical-vessel-items.index',
                         label: 'Vessel Items',

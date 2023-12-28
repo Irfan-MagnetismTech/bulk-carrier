@@ -3,27 +3,38 @@
 namespace Modules\Crew\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CrwBankAccountRequest extends FormRequest
 {
+
+    protected function prepareForValidation()
+    {
+        $data       = request('data');
+        $dataArray  = json_decode($data, true);
+        $attachment = is_object(request('attachment')) ? request('attachment') : null;
+        $mergeData  = array_merge($dataArray, ['attachment' => $attachment]);
+
+        $this->replace($mergeData);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
      * @return array
      */
     public function rules(): array {
-
         return [
-            // 'bank_name'       => ['required', 'string', 'max:255'],
-            // 'branch_name'     => ['required', 'string', 'max:255'],
-            // 'account_type'    => ['required', 'string', 'max:255'],
-            // 'account_name'    => ['required', 'string', 'max:255'],
-            // 'account_number'  => ['required', 'string', 'max:255'],
-            // 'routing_number'  => ['required', 'string', 'max:255'],
-            // 'contact_number'  => ['required', 'string', 'max:255'],
-            // 'opening_date'    => ['required'],
-            // 'opening_balance' => ['required', 'numeric', 'max:9999999999.99'],
-
+            'crw_crew_id'      => ['required', 'integer', 
+                                    $this->is_active == 1 ? Rule::unique('crw_bank_accounts')->where('is_active', true)->ignore($this->id) : null],
+            'bank_name'        => 'required|string|max:255',
+            'branch_name'      => 'required|string|max:255',
+            'routing_number'   => 'string|max:255',
+            'account_name'     => 'required|string|max:255',
+            'account_number'   => 'required|string|max:255',
+            'benificiary_name' => 'required|string|max:255',
+            'attachment'       => 'nullable|mimes:pdf,doc,docx,jpeg,png,gif,xlsx|max:2048',
+            'business_unit'    => 'required|in:PSML,TSLL',
         ];
     }
 
@@ -34,7 +45,7 @@ class CrwBankAccountRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            //
+            'crw_crew_id.unique' => 'The Crew already has an active account. Please deactivate that account first.',
         ];
     }
 

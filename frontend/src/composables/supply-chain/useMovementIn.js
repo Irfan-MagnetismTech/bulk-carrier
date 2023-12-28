@@ -7,6 +7,7 @@ import Store from '../../store/index.js';
 // import useFileDownload from 'vue-composable/dist/vue-composable.esm';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 
 export default function useMovementIn() {
@@ -18,10 +19,11 @@ export default function useMovementIn() {
     const filteredToWarehouses = ref([]);
     const filteredFromWarehouses = ref([]);
     const filteredMovementRequisitionLines = ref([]);
+    const filteredMoLines = ref([]);
     const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const movementIn = ref( {
         ref_no: '',
@@ -220,6 +222,23 @@ console.log(movementIn.value);
         }
     }
 
+    async function getMoWiseMiLines(moId) {
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-mo-wise-mi-data`,{
+                params: {
+                    mo_id: moId,
+                },
+            });
+            filteredMoLines.value = data.value.scmMiLines;
+            console.log(filteredMoLines.value);
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            //NProgress.done();
+        }
+    }
+    
+
  
 
     return {
@@ -236,6 +255,8 @@ console.log(movementIn.value);
         getMmrWiseMi,
         materialObject,
         isTableLoading,
+        getMoWiseMiLines,
+        filteredMoLines,
         isLoading,
         errors,
     };

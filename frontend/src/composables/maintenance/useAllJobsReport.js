@@ -27,10 +27,12 @@ export default function useAllJobsReport() {
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const showReport = ref(false);
     
     async function allJobsReport(form) {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+        showReport.value = true;
         try {
             const { data, status } = await Api.get('/mnt/report-all-jobs', { params: form });
             allJobs.value = data.value;
@@ -86,6 +88,7 @@ export default function useAllJobsReport() {
         allJobsReport,
         downloadAllJobsReport,
         isLoading,
+        showReport,
         errors,
     };
 }

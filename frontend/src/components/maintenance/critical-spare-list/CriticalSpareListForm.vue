@@ -19,7 +19,8 @@
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Record Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model="form.record_date" placeholder="Record date" class="form-input" required/>
+        <!-- <input type="date" v-model="form.record_date" placeholder="Record date" class="form-input" required/> -->
+        <VueDatePicker v-model="form.record_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
         <Error v-if="errors?.record_date" :errors="errors.record_date" />
       </label>
       
@@ -34,11 +35,11 @@
       <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Critical Spare Parts <span class="text-red-500">*</span></legend>
       <table class="w-full whitespace-no-wrap" id="table" v-if="form.mntCriticalSpListLines?.length">
         <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="w-4/12 px-4 py-3 align-bottom">Spare Parts Name</th>
             <th class="w-2/12 px-4 py-3 align-bottom">Unit</th>
-            <th class="w-2/12 px-4 py-3 align-bottom">Minimum Rob</th>
-            <th class="w-2/12 px-4 py-3 align-bottom"> Rob <span class="text-red-500">*</span></th>
+            <th class="w-2/12 px-4 py-3 align-bottom">Minimum ROB</th>
+            <th class="w-2/12 px-4 py-3 align-bottom"> ROB <span class="text-red-500">*</span></th>
             <th class="w-2/12 px-4 py-3 align-bottom"> Remarks </th>
           </tr>
         </thead>
@@ -52,7 +53,7 @@
                 <td>{{ mntCriticalItemSp?.sp_name }}</td>
                 <td>{{ mntCriticalItemSp?.unit }}</td>
                 <td>{{ mntCriticalItemSp?.min_rob }}</td>
-                <td><input type="number" v-model="mntCriticalItemSp.rob" placeholder="Rob" class="form-input" required/></td>
+                <td><input type="number" v-model="mntCriticalItemSp.rob" placeholder="ROB" class="form-input" required/></td>
                 <td><input type="text" v-model.trim="mntCriticalItemSp.remarks" placeholder="Remarks" class="form-input"/></td>
                 
               </tr>
@@ -85,6 +86,7 @@ import useVessel from "../../../composables/operations/useVessel";
 import LoaderComponent from "../../utils/LoaderComponent.vue";
 import ErrorComponent from "../../utils/ErrorComponent.vue";
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date)
 
 const props = defineProps({
   form: {
@@ -176,5 +178,9 @@ onMounted(() => {
 
   --vs-dropdown-option--active-bg: #664cc3;
   --vs-dropdown-option--active-color: #eeeeee;
+  
+  --dp-border-color: #4b5563;
+  --dp-border-color-hover: #4b5563;
+  --dp-icon-color: #4b5563;
 }
 </style>

@@ -62,7 +62,7 @@ class CrwAgencyBillController extends Controller
     public function show(CrwAgencyBill $crwAgencyBill)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwAgencyBill->load('crwAgencyBillLines'), 200);
+            return response()->success('Retrieved succesfully', $crwAgencyBill->load('crwAgencyBillLines','crwAgency','crwAgencyContract'), 200);
         }
         catch (QueryException $e)
         {

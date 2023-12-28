@@ -31,6 +31,7 @@ export default function useVoyage() {
 	const portScheduleObject = {
 		ops_voyage_id: '',
         port_code: '',
+		operation_type: "",
         eta: '',
         etb: '',
         etd: '',
@@ -273,7 +274,7 @@ export default function useVoyage() {
 		//NProgress.start();
 		isVoyageLoading.value = true;
 		try {
-			const { data, status } = await Api.get(`/ops/get-search-voyages?voyage_no=${searchParam}&business_unit=${businessUnit}&vessel_id=${vesselId}`);
+			const { data, status } = await Api.get(`/ops/get-search-voyages?voyage_no=${searchParam}&business_unit=${businessUnit}&ops_vessel_id=${vesselId}`);
 			voyages.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
@@ -322,6 +323,28 @@ export default function useVoyage() {
 			//NProgress.done();
 		}
 	}
+
+	
+	async function getVoyageByCustomer(businessUnit, opsCustomerId) {
+		//NProgress.start();
+
+		try {
+			const { data, status } = await Api.get(`/ops/get-voyage-by-customer?business_unit=${businessUnit}&ops_customer_id=${opsCustomerId}`);
+
+			voyages.value = data?.value;
+
+			notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			notification.showError(status);
+			console.log(error)
+		} finally {
+			// loading(false)
+			//NProgress.done();
+		}
+	}
+
+
 
 	function checkValidation(openTab, tabNumber, props, requiredFields) {
         for (const field of requiredFields) {
@@ -383,6 +406,7 @@ export default function useVoyage() {
 		voyageVoyages,
 		getVoyagesByVoyage,
 		getVoyagesWithoutPaginate,
+		getVoyageByCustomer,
 		checkValidation,
 		isLoading,
 		isVoyageLoading,

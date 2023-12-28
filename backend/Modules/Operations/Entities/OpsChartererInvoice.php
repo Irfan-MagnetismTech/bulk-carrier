@@ -54,4 +54,9 @@ class OpsChartererInvoice extends Model
     {
         return $this->hasMany(OpsChartererInvoiceLine::class, 'ops_charterer_invoice_id', 'id')->where('charge_or_deduct','deduct');
     }
+
+    public function opsVoyage()
+    {
+        return $this->belongsTo(OpsVoyage::class, 'ops_voyage_id' , 'id');
+    }
 }

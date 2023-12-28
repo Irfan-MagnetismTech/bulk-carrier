@@ -7,6 +7,8 @@ import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import {onMounted, ref, watchEffect} from "vue";
 import env from '../../config/env';
 import Store from "../../store";
+import useHeroIcon from "../../assets/heroIcon";
+const icons = useHeroIcon();
 
 const props = defineProps({
   form: {
@@ -26,6 +28,7 @@ function addItem() {
     email: '',
     position: '',
     purpose: '',
+    isContactNoDuplicate: false
   };
   props.form.crwAgencyContactPersons.push(obj);
 }
@@ -133,7 +136,24 @@ onMounted(() => {
           <input type="text" v-model.trim="form.crwAgencyContactPersons[index].position" placeholder="Position" class="form-input" autocomplete="off" required />
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model.trim="form.crwAgencyContactPersons[index].contact_no" placeholder="Contact No" class="form-input" autocomplete="off" required />
+          <div style="position: relative;">
+            <input
+                type="text"
+                v-model.trim="form.crwAgencyContactPersons[index].contact_no"
+                placeholder="Contact No"
+                class="form-input"
+                autocomplete="off"
+                required
+            />
+            <span
+                v-show="crewAgencyContact.isContactNoDuplicate"
+                class="text-yellow-600 pl-1"
+                title="Duplicate Contact No"
+                v-html="icons.ExclamationTriangle"
+                style="position: absolute; top: 50%; transform: translateY(-50%); right: 5px;"
+            ></span>
+          </div>
+<!--          <input type="text" v-model.trim="form.crwAgencyContactPersons[index].contact_no" placeholder="Contact No" class="form-input" autocomplete="off" required />-->
         </td>
         <td class="px-1 py-1">
           <input type="email" v-model.trim="form.crwAgencyContactPersons[index].email" placeholder="Email" class="form-input" autocomplete="off" />

@@ -16,9 +16,9 @@
             class="form-input vms-readonly-input"
             name="ref_no"
             :id="'ref_no'" />
-         <Error
+         <!-- <Error
             v-if="errors?.ref_no"
-            :errors="errors.ref_no" />
+            :errors="errors.ref_no" /> -->
       </label>
   </div>
   <div class="input-group">
@@ -31,17 +31,16 @@
           class="form-input"
           name="date"
           :id="'date'" />
-        <Error
+        <!-- <Error
           v-if="errors?.date"
-          :errors="errors.date" />
+          :errors="errors.date" /> -->
     </label>
       <label class="label-group">
           <span class="label-item-title">SI Ref<span class="text-red-500">*</span></span>
             <v-select
                 :options="filteredStoreIssues"
                 placeholder="--Choose an option--"
-                @search="fetchStoreIssue"
-                @change="setStoreIssueOtherData(form.scmSi)"
+                @option:selected="setStoreIssueOtherData(form.scmSi)"
                 v-model="form.scmSi"
                 label="ref_no"
                 class="block form-input">
@@ -54,59 +53,52 @@
                           />
                   </template>
               </v-select>
-          <Error
+          <!-- <Error
             v-if="errors?.scm_si_id"
-            :errors="errors.scm_si_id" />
+            :errors="errors.scm_si_id" /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
           <input
             type="text"
             readonly
-            v-model="form.scm_warehouse_name"
+            :value="form?.scmWarehouse?.name"
             required
             class="form-input vms-readonly-input"
             name="scmwarehouse_name"
             :id="'scm_warehouse_id'" />
-          <Error
-            v-if="errors?.scm_warehouse_id"
-            :errors="errors.scm_warehouse_id" />
+         
       </label>
       <label class="label-group">
-        <span class="label-item-title">Issue To <span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.scm_department_id" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
-          <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" />
+        <span class="label-item-title">Return From <span class="text-red-500">*</span></span>
+          <input type="text" readonly :value="DEPARTMENTS[form.department_id]" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
+          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
       </label>
      
   </div>
   
 
+ 
   <div class="input-group !w-3/4">
     <label class="label-group">
-          <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
-          <textarea
-            v-model="form.remarks"
-            class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
-          <Error
-            v-if="errors?.remarks"
-            :errors="errors.remarks" />
+       <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
     </label>
   </div>
 
 
-  <div id="">
+  <div id="" v-if="form.scmSirLines.length">
 
     <div id="">
     <div class="table-responsive min-w-screen">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
-        <table class="whitespace-no-wrap">
+        <table class="whitespace-no-wrap w-full">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="py-3 align-center">Material Name </th>
             <th class="py-3 align-center">Unit</th>
+            <th class="py-3 align-center">SI Qty</th>
             <th class="py-3 align-center">Qty</th>
-            <th class="py-3 align-center">Note</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>
           </thead>
@@ -118,13 +110,12 @@
             :key="index">
             <td class="!w-72">
               <v-select
-                :options="materials"
+                :options="siWiseMaterials"
                 placeholder="--Choose an option--"
-                @search="fetchMaterials"
                 v-model="form.scmSirLines[index].scmMaterial"
                 label="material_name_and_code"
                 class="block form-input"
-                @change="setMaterialOtherData(form.scmSirLines[index].scmMaterial,index)">
+                @option:selected="setMaterialOtherData(form.scmSirLines[index].scmMaterial,index)">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -147,17 +138,23 @@
             <td>
               <label class="block w-full mt-2 text-sm">
                  <input
-                   type="text"
-                   v-model="form.scmSirLines[index].quantity"
-                   class="form-input">
+                   type="number"
+                   :value="form.scmSirLines[index].si_quantity"
+                    readonly
+                    class="vms-readonly-input form-input"
+                   >
               </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
                  <input
-                   type="text"
-                   v-model="form.scmSirLines[index].notes"
-                   class="form-input">
+                   type="number"
+                   v-model="form.scmSirLines[index].quantity"
+                   :max="form.scmSirLines[index].max_quantity"
+                    min="1"
+                   class="form-input"
+                   :class="{'border-2': form.scmSirLines[index].quantity > form.scmSirLines[index].max_quantity,'border-red-500 bg-red-100': form.scmSirLines[index].quantity > form.scmSirLines[index].max_quantity}"
+                   >
               </label>
             </td>
             <td class="px-1 py-1 text-center">
@@ -188,7 +185,7 @@
     </div>
   </div>
 
-
+  <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 
 
@@ -206,12 +203,13 @@
     import cloneDeep from 'lodash/cloneDeep';
     import useStoreIssue from '../../../composables/supply-chain/useStoreIssue';
     import useStoreIssueReturn from '../../../composables/supply-chain/useStoreIssueReturn';
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
+    import RemarksComponet from '../../utils/RemarksComponent.vue';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
-    const { filteredStoreIssues, searchStoreIssue } = useStoreIssue();
+    const { filteredStoreIssues, searchStoreIssue , fetchSiWiseMaterials, siWiseMaterials} = useStoreIssue();
     const { getSiWiseSir, filteredStoreIssueReturnLines } = useStoreIssueReturn();
-    
     const props = defineProps({
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
@@ -239,11 +237,11 @@
 
 
 
-function fetchStoreIssue(search, loading) {
-    if (search.length > 0) {
-      loading(true);
-      searchStoreIssue(search, loading, props.form.business_unit);
-    }
+function fetchStoreIssue(search, loading = false) {
+    // if (search.length > 0) {
+    //   loading(true);
+      searchStoreIssue(search, /*loading,*/ props.form.business_unit);
+    // }
   }
 
 function setStoreIssueOtherData(datas) {
@@ -252,10 +250,9 @@ function setStoreIssueOtherData(datas) {
       props.form.acc_cost_center_id = datas.acc_cost_center_id;
       props.form.scm_warehouse_id = datas.scm_warehouse_id;
       props.form.scmWarehouse = datas.scmWarehouse;
-      props.form.scm_department_id = datas.scm_department_id;
-      filteredStoreIssues.value = []; 
-      console.log(datas);
-      getSiWiseSir(datas.id);    
+      props.form.scm_warehouse_name = datas.scmWarehouse.name;
+      props.form.department_id = datas.department_id;
+      getSiWiseSir(datas.id);   
 }
 
 
@@ -270,12 +267,18 @@ function setStoreIssueOtherData(datas) {
 //       filteredStoreIssues.value = []; 
 //       getSiWiseSir(newVal?.id);    
 // });
+// watch(() => props.form.scmDepartment, (value) => {
+//   if (value) {
+//     props.form.scm_department_id = value?.id;
+//   }
+// });
 
-watch(() => props.form.scmWarehouse, (value) => {
-  if (value) {
-    props.form.scm_warehouse_name = value?.scmWarehouse?.name;
-  }
-});
+
+// watch(() => props.form.scmWarehouse, (value) => {
+//   if (value) {
+//     props.form.scm_warehouse_name = value?.scmWarehouse?.name;
+//   }
+// });
 
 
 
@@ -296,34 +299,49 @@ watch(() => filteredStoreIssueReturnLines.value, (newVal, oldVal) => {
 function setMaterialOtherData(datas, index) {
       props.form.scmSirLines[index].unit = datas.unit;
       props.form.scmSirLines[index].scm_material_id = datas.id;
+      props.form.scmSirLines[index].max_quantity = datas.max_quantity;
+      props.form.scmSirLines[index].si_quantity = datas.si_quantity;
+      props.form.scmSirLines[index].si_composite_key = datas.si_composite_key;
+      props.form.scmSirLines[index].sr_composite_key = datas.sr_composite_key;
+          
 }
 
 // const previousLines = ref(cloneDeep(props.form.scmSrLines));
 
-// watch(() => props.form.scmSirLines, (newLines) => {
-//   newLines.forEach((line, index) => {
-//     // const previousLine = previousLines.value[index];
-
-//     if (line.scmMaterial) {
-//       const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
-//       if (selectedMaterial) {
-//         if ( line.scm_material_id !== selectedMaterial.id
-//         ) {
-//           props.form.scmSirLines[index].unit = selectedMaterial.unit;
-//           props.form.scmSirLines[index].scm_material_id = selectedMaterial.id;
-//         }
-//       }
-//     }
-//   });
-//   // previousLines.value = cloneDeep(newLines);
-// }, { deep: true });
+watch(() => props.form.scmSirLines, (newLines) => {
+  const materialArray = [];
+   if (newLines && newLines.length) {
+    newLines.forEach((line, index) => {
+        let material_key = line.scm_material_id;
+        if (materialArray.indexOf(material_key) === -1) {
+          materialArray.push(material_key);
+        } else {
+          alert("Duplicate Material Found");
+          props.form.scmSirLines.splice(index, 1);
+        } 
+   });
+  }
+}, { deep: true });
 
 
-    function fetchMaterials(search, loading) {
-    loading(true);
-    searchMaterial(search, loading)
+  //   function fetchMaterials(search, loading) {
+  //   loading(true);
+  //   searchMaterial(search, loading)
+  // }
+
+
+    function fetchMaterials(search, loading = false) {
+      // loading(true);
+      if (props.formType == 'edit') {
+        fetchSiWiseMaterials(props.form.scm_si_id,props.form.id);
+      } else {
+        fetchSiWiseMaterials(props.form.scm_si_id);
+      }
   }
 
+watch(() => props.form.scmSi, (newVal, oldVal) => {
+    fetchMaterials(newVal?.id)
+  });
 
   watch(() => props.form.business_unit, (newValue, oldValue) => {
    if(newValue !== oldValue && oldValue != ''){
@@ -334,10 +352,11 @@ function setMaterialOtherData(datas, index) {
     props.form.scm_si_id = null;
     props.form.si_no = null,
     props.form.scmDepartment= null,
-    props.form.scm_department_id = null,
+    props.form.department_id = null,
     props.form.scmSirLines = [];
     filteredStoreIssues.value = [];
-  }
+   } 
+     fetchStoreIssue('');
 });
 
 function tableWidth() {
@@ -355,6 +374,8 @@ function tableWidth() {
 onMounted(() => {
   tableWidth();
 });
+
+const DEPARTMENTS = ['N/A','Store Department', 'Engine Department', 'Provision Department'];
 </script>
 
 

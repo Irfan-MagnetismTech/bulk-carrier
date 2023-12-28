@@ -17,7 +17,7 @@
         <Error v-if="errors?.mnt_critical_function_id" :errors="errors.mnt_critical_function_id" />
       </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Catrgory Name <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Category Name <span class="text-red-500">*</span></span>
             <v-select placeholder="Select Critical Item Category" :loading="isCriticalItemCategoryLoading"  :options="form.mntItemCategories" @search="" v-model="form.mnt_critical_item_cat_name" label="category_name" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input

@@ -25,7 +25,7 @@ class MntItemController extends Controller
             ->globalSearch($request->all());
 
             return response()->success('Items retrieved successfully', $item, 200);
-            
+
         }
         catch (\Exception $e)
         {
@@ -52,12 +52,14 @@ class MntItemController extends Controller
         try {
             $input = $request->all();
 
-            $input['description'] = json_encode($input['description']);
-            
+            $input['description'] = json_encode(collect($input['description'])->whereNotNull('key')->values()->all());
+
+            return $input['description'];
+
             $item = MntItem::create($input);
-            
+
             return response()->success('Item created successfully', $item, 201);
-            
+
         }
         catch (\Exception $e)
         {
@@ -73,13 +75,13 @@ class MntItemController extends Controller
     public function show($id)
     {
         try {
-            
+
             $item = MntItem::with(['mntItemGroup.mntShipDepartment.mntItemGroups','mntJobs'])->find($id);
 
             $item['description'] = json_decode($item['description']);
-            
+
             return response()->success('Item found successfully', $item, 200);
-            
+
         }
         catch (\Exception $e)
         {
@@ -108,12 +110,12 @@ class MntItemController extends Controller
         try {
             $input = $request->all();
             $input['description'] = json_encode($input['description']);
-            
+
             $item = MntItem::findorfail($id);
             $item->update($input);
-            
+
             return response()->success('Item updated successfully', $item, 202);
-            
+
         }
         catch (\Exception $e)
         {
@@ -128,36 +130,36 @@ class MntItemController extends Controller
      */
     public function destroy($id)
     {
-        try {          
+        try {
             $jobs = MntJob::where('mnt_item_id', $id)->count();
             if ($jobs > 0) {
                 $error = array(
                     "message" => "Data could not be deleted!",
                     "errors" => [
-                        "id"=>["This data could not be deleted as it has reference to other table"]
+                        "id"=>["This data could not be deleted as it is in use."]
                     ]
                 );
                 return response()->json($error, 422);
             }
             $item = MntItem::findorfail($id);
             $item->delete();
-            
+
             return response()->success('Item deleted successfully', $item, 204);
-            
+
         }
         catch (\Exception $e)
         {
             return response()->error($e->getMessage(), 500);
         }
     }
-    
+
     /**
      * Get the item code.
-     * 
+     *
      */
     public function getMntItemCode($mntItemGroupId)
     {
-        
+
         try {
             $itemGroup = MntItemGroup::where('id', $mntItemGroupId)->first();
             $lastItem = MntItem::where('mnt_item_group_id', $mntItemGroupId)->latest()->first();
@@ -169,7 +171,7 @@ class MntItemController extends Controller
                 $itemCode = $itemGroup->short_code.'-'.str_pad($lastItemCodeSplit[1]+1, 3, '0', STR_PAD_LEFT);
             }
             return response()->success('Item code retrieved successfully', $itemCode, 200);
-            
+
         }
         catch (\Exception $e)
         {
@@ -179,7 +181,7 @@ class MntItemController extends Controller
 
     public function getMntShipDepartmentWiseItems($mntShipDepartmentId)
     {
-        
+
         try {
 
             $items = MntItem::select('id','name','item_code')
@@ -190,7 +192,7 @@ class MntItemController extends Controller
                     })
                     ->get();
             return response()->success('Items retrieved successfully', $items, 200);
-            
+
         }
         catch (\Exception $e)
         {
@@ -204,12 +206,12 @@ class MntItemController extends Controller
      */
     public function getMntItemGroupWiseItems($mntItemGroupId)
     {
-        
+
         try {
 
             $items = MntItem::where(['mnt_item_group_id'=>$mntItemGroupId])->get();
             return response()->success('Items retrieved successfully', $items, 200);
-            
+
         }
         catch (\Exception $e)
         {
@@ -223,12 +225,12 @@ class MntItemController extends Controller
      */
     public function getMntItemGroupWiseHourlyItems($mntItemGroupId)
     {
-        
+
         try {
 
             $items = MntItem::select('id','name','item_code')->where(['mnt_item_group_id'=>$mntItemGroupId, 'has_run_hour'=>true])->get();
             return response()->success('Items retrieved successfully', $items, 200);
-            
+
         }
         catch (\Exception $e)
         {

@@ -2,8 +2,9 @@
   <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2 ">
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Requisition Date <span class="text-red-500">*</span></span>
-            <input type="date" v-model="form.requisition_date" placeholder="Requisition Date" class="form-input" required  />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Requisition Date<span class="text-red-500">*</span></span>
+            <!-- <input type="date" v-model="form.requisition_date" placeholder="Requisition Date" class="form-input" required  /> -->
+            <VueDatePicker v-model="form.requisition_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" @update:model-value="requisitionDateChange"></VueDatePicker>
           <Error v-if="errors?.requisition_date" :errors="errors.requisition_date" />
         </label>
         <label class="block w-full mt-2 text-sm">
@@ -101,8 +102,8 @@
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
         </label>
         <label class="block w-full mt-2 text-sm" v-show="form.mnt_item_name?.has_run_hour">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Present Runnig Hour </span>
-            <input type="text" v-model.trim="form.present_run_hour" placeholder="Present Runnig Hour" class="form-input vms-readonly-input" readonly />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Present Running Hour </span>
+            <input type="text" v-model.trim="form.present_run_hour" placeholder="Present Running Hour" class="form-input vms-readonly-input" readonly />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
 
@@ -111,14 +112,16 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Est. Start Date <span class="text-red-500">*</span></span>
-            <input type="date" :min="form.requisition_date"  v-model="form.est_start_date" placeholder="Est. Start Date" class="form-input" required  />
+            <!-- <input type="date" :min="form.requisition_date"  v-model="form.est_start_date" placeholder="Est. Start Date" class="form-input" required  /> -->
+            <VueDatePicker v-model="form.est_start_date" :min-date="form.requisition_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" @update:model-value="estStartDateChange"></VueDatePicker>
           <Error v-if="errors?.est_start_date" :errors="errors.est_start_date" />
         </label>
 
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Est. Completion Date <span class="text-red-500">*</span></span>
-            <input type="date" :min="form.est_start_date ? form.est_start_date : form.requisition_date"  v-model="form.est_completion_date" placeholder="Est. completion Date" class="form-input" required  />
+            <!-- <input type="date" :min="form.est_start_date ? form.est_start_date : form.requisition_date"  v-model="form.est_completion_date" placeholder="Est. completion Date" class="form-input" required  /> -->
+            <VueDatePicker v-model="form.est_completion_date" :min-date="form.est_start_date ? form.est_start_date : form.requisition_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
           <Error v-if="errors?.est_completion_date" :errors="errors.est_completion_date" />
         </label>
 
@@ -221,12 +224,33 @@
     </div>
 
     <div class="mt-3">
-      <ul class="flex flex-wrap gap-1 text-gray-700 dark-disabled:text-gray-300">
-        <li><button type="button" class="px-3 py-1 md:rounded-l-sm bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'all_jobs' }" @click="currentTab('all_jobs')">All Jobs</button></li>
-        <li><button type="button" class="px-3 py-1 bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'overdue_jobs' }" @click="currentTab('overdue_jobs')">Overdue Jobs</button></li>
-        <li><button type="button" class="px-3 py-1 bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'upcoming_jobs' }" @click="currentTab('upcoming_jobs')">Upcoming Jobs</button></li>
-        <li><button type="button" class="px-3 py-1 md:rounded-r-sm bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'added_jobs' }" @click="currentTab('added_jobs')">Added Jobs</button></li>
-      </ul>
+      <div class="flex justify-between items-center gap-1">
+        <ul class="flex flex-wrap gap-1 text-gray-700 dark-disabled:text-gray-300">
+          <li><button type="button" class="px-3 py-1 md:rounded-l-sm bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'all_jobs' }" @click="currentTab('all_jobs')">All Jobs</button></li>
+          <li><button type="button" class="px-3 py-1 bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'overdue_jobs' }" @click="currentTab('overdue_jobs')">Overdue Jobs</button></li>
+          <li><button type="button" class="px-3 py-1 bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'upcoming_jobs' }" @click="currentTab('upcoming_jobs')">Upcoming Jobs</button></li>
+          <li><button type="button" class="px-3 py-1 md:rounded-r-sm bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : tab === 'added_jobs' }" @click="currentTab('added_jobs')">Added Jobs</button></li>
+        </ul>
+        <div class="flex flex-col border-2 p-2 text-xs">
+          <div class="inline-flex items-center">
+            <span class="w-2 h-2 inline-block bg-yellow-700 rounded-full mr-2"></span>
+            <span class="text-gray-600 dark:text-gray-400">Pending</span>
+          </div>
+          
+          <div class="inline-flex items-center">
+            <span class="w-2 h-2 inline-block bg-blue-700 rounded-full mr-2"></span>
+            <span class="text-gray-600 dark:text-gray-400">Work in progress</span>
+          </div>
+
+          <div class="inline-flex items-center">
+            <span class="w-2 h-2 inline-block bg-green-700 rounded-full mr-2"></span>
+            <span class="text-gray-600 dark:text-gray-400">Done / Not assigned</span>
+          </div>
+
+
+
+        </div>
+      </div>
       <div class="mt-1">
         <div v-if="itemWiseJobLines[tab]?.length || (tab === 'added_jobs' && form.added_job_lines?.length)">
           <table class="w-full whitespace-no-wrap" id="table">
@@ -239,7 +263,7 @@
 
                 <th class="w-2/12 px-4 py-3 align-bottom" >Last Done</th>
 
-                <th class="px-4 py-3 align-bottom" :class="{ 'w-2/12': form.mnt_item_name?.has_run_hour}" v-show="form.mnt_item_name?.has_run_hour">Prev. Run Hrs.</th>
+                <th class="px-4 py-3 align-bottom" :class="{ 'w-2/12': form.mnt_item_name?.has_run_hour}" v-show="form.mnt_item_name?.has_run_hour">Prev. Running Hrs.</th>
 
                 <th class="w-2/12 px-4 py-3 align-bottom" >Next Due</th>
 
@@ -250,14 +274,14 @@
               <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(jobLine, index) in (tab === 'added_jobs' ?  form.added_job_lines : itemWiseJobLines[tab])" :key="index">
                   <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.job_description" readonly /></td>
                   <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.cycle + ' ' + jobLine.cycle_unit" readonly /></td>
-                  <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.last_done ? moment(jobLine.last_done).format('MM/DD/YYYY') : null" readonly /></td>
+                  <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.last_done ? moment(jobLine.last_done).format('DD/MM/YYYY') : null" readonly /></td>
                   <td v-show="form.mnt_item_name?.has_run_hour"><input type="text"  class="form-input vms-readonly-input"   :value="jobLine.previous_run_hour" readonly /></td>
-                  <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.cycle_unit == 'Hours' ? jobLine.next_due : (jobLine.next_due ? moment(jobLine.next_due).format('MM/DD/YYYY') : null)" readonly /></td>
+                  <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.cycle_unit == 'Hours' ? jobLine.next_due : (jobLine.next_due ? moment(jobLine.next_due).format('DD/MM/YYYY') : null)" readonly /></td>
                   <td>
                     <button type="button" :class="{
-                      'bg-yellow-600': jobLine.mnt_work_requisition_status == 0,
-                      'bg-blue-600': jobLine.mnt_work_requisition_status == 1,
-                      'bg-green-600': jobLine.mnt_work_requisition_status == 2 || jobLine.mnt_work_requisition_status == null,
+                      'bg-yellow-700': jobLine.mnt_work_requisition_status == 0,
+                      'bg-blue-700': jobLine.mnt_work_requisition_status == 1,
+                      'bg-green-700': jobLine.mnt_work_requisition_status == 2 || jobLine.mnt_work_requisition_status == null,
                   }" class="text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findAddedJobLine(jobLine)) == -1"  @click="addJobLine(jobLine)">Add</button>
                     <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-show="form.added_job_lines.indexOf(findAddedJobLine(jobLine)) > -1" @click="removeJobLine(jobLine)" >Remove</button>
                   </td>
@@ -306,6 +330,7 @@ const { presentRunHour, getItemPresentRunHour, isRunHourLoading } = useRunHour()
 const { crews, getCrews, isCommonCrewLoading } = useCrewCommonApiRequest();
 const { maintenanceTypes, workRequisitionStatus, assignTo  } = useMaintenanceHelper();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const tab = ref('all_jobs');
 const currentTab = (tabValue) => {
   tab.value = tabValue;
@@ -448,6 +473,17 @@ function findAddedJobLine(jobLine){
 
 // const { shipDepartments, getShipDepartments } = useShipDepartment();
 
+function requisitionDateChange() {
+  if (props.form.est_start_date < props.form.requisition_date) {
+    props.form.est_start_date = '';
+    estStartDateChange();
+  }
+}
+function estStartDateChange() {
+  if ((props.form.est_completion_date < props.form.est_start_date) || (props.form.est_completion_date < props.form.requisition_date)) 
+    props.form.est_completion_date = '';
+}
+
 
 onMounted(() => {
   watchEffect(() => {
@@ -502,5 +538,9 @@ onMounted(() => {
 
   --vs-dropdown-option--active-bg: #664cc3;
   --vs-dropdown-option--active-color: #eeeeee;
+
+  --dp-border-color: #4b5563;
+  --dp-border-color-hover: #4b5563;
+  --dp-icon-color: #4b5563;
 }
 </style>

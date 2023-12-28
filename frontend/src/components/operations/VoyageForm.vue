@@ -54,8 +54,8 @@
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-            <v-select :options="vessels" placeholder="--Choose an option--" :loading="isVesselLoading"  v-model="form.ops_vessel_name" label="name" class="block form-input" >
-                <template #search="{attributes, events}" @option:selected="bunkerInfo">
+            <v-select :options="vessels" placeholder="--Choose an option--" :loading="isVesselLoading"  v-model="form.ops_vessel_name" label="name" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
+                <template #search="{attributes, events}">
                     <input
                         class="vs__search"
                         :required="!form.ops_vessel_id"
@@ -72,7 +72,7 @@
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-1/2 mt-2 text-sm">
                 <span class="text-gray-700 dark-disabled:text-gray-300">Voyage No <span class="text-red-500">*</span></span>
-                <input type="text" v-model.trim="form.voyage_no" placeholder="Voyage No" class="form-input" required autocomplete="off" />
+                <input type="text" v-model.trim="form.voyage_no" placeholder="Voyage No" class="form-input" required autocomplete="off" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" />
             </label>
             <label class="block w-1/2 mt-2 text-sm">
                 <span class="text-gray-700 dark-disabled:text-gray-300">Voyage Sequence <span class="text-red-500">*</span></span>
@@ -118,7 +118,7 @@
         </div>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
 
-          <RemarksComponent v-model="form.remarks" :maxlength="250" :fieldLabel="'Remarks'"></RemarksComponent>
+          <RemarksComponent v-model="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
         </div>
       </div>
     </div>
@@ -145,7 +145,7 @@
                 {{ index+1 }}
               </td>
               <td>
-                <v-select :options="ports" placeholder="--Choose an option--" :loading="isPortLoading"  v-model="form.opsVoyageSectors[index].loading_point" label="name" class="block form-input" :reduce="port=>port.code">
+                <v-select :options="ports" placeholder="--Choose an option--" :loading="isPortLoading"  v-model="form.opsVoyageSectors[index].loading_point" label="code_name" class="block form-input" :reduce="port=>port.code">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -157,7 +157,7 @@
               </v-select>
               </td>
               <td>
-                <v-select :options="ports" placeholder="--Choose an option--" :loading="isPortLoading"  v-model="form.opsVoyageSectors[index].unloading_point" label="name" class="block form-input" :reduce="port=>port.code">
+                <v-select :options="ports" placeholder="--Choose an option--" :loading="isPortLoading"  v-model="form.opsVoyageSectors[index].unloading_point" label="code_name" class="block form-input" :reduce="port=>port.code">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -221,7 +221,7 @@
                             />
                     </template>
                 </v-select> -->
-                <span class="show-block bg-gray-100">{{ form.opsBunkers[index].name }}</span>
+                <span class="show-block !bg-gray-100">{{ form.opsBunkers[index].name }}</span>
 
               </td>
               <td>
@@ -234,7 +234,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" v-model.trim="form.opsBunkers[index].quantity" placeholder="Stock In" class="form-input text-right" autocomplete="off" :disabled="formType=='edit'"/>
+                  <input type="number" v-model.trim="form.opsBunkers[index].quantity" placeholder="Stock In" class="form-input text-right" :class="{ '!bg-gray-100' : formType=='edit' }" autocomplete="off" :disabled="formType=='edit'"/>
                 </label>
               </td>
             </tr>
@@ -247,12 +247,12 @@
       <div class="">
         <h4 class="text-md font-semibold uppercase mb-2">Voyage Port Schedule</h4>
         
-        <div v-for="(certificate, index) in form.opsVoyagePortSchedules" class="w-full mx-auto p-2 border rounded-mdborder-gray-400 mb-5 bg-gray-100 shadow-md">
+        <div v-for="(certificate, index) in form.opsVoyagePortSchedules" class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
           <label class="block w-1/2 mt-2 text-sm">
 
 <span class="text-gray-700 dark-disabled:text-gray-300">Port Code <span class="text-red-500">*</span></span>
 
-<v-select :options="ports" placeholder="Search Port" :loading="isPortLoading"  v-model="form.opsVoyagePortSchedules[index].port_code" label="name" class="block form-input" :reduce="port=>port.code">
+<v-select :options="ports" placeholder="Search Port" :loading="isPortLoading"  v-model="form.opsVoyagePortSchedules[index].port_code" label="code_name" class="block form-input" :reduce="port=>port.code">
   <template #search="{attributes, events}">
       <input
           class="vs__search"
@@ -269,7 +269,7 @@
             <span class="text-gray-700 dark-disabled:text-gray-300">Operation Type <span class="text-red-500">*</span></span>
 
             <select v-model="form.opsVoyagePortSchedules[index].operation_type" class="form-input" required>
-              <option value="">Select Type</option>
+              <option value="" selected disabled>Select Type</option>
               <option value="Loading">Loading</option>
               <option value="Discharge">Discharge</option>
             </select>
@@ -452,87 +452,77 @@ watch(() => props.form.business_unit, (value) => {
   if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')){
     props.form.ops_customer_name = null;
     props.form.ops_vessel_name = null;
+
+    props.form.opsVoyageSectors = [];
+    props.form.opsVoyageSectors.push({... props.voyageSectorObject });
   }
+
+  fetchPorts("", false);
+
 })
 
 const bunkerReset = ref([]);
 
-// watch(() => props.form.ops_vessel_id, (value) => {
+watch(() => props.form.ops_vessel_id, (newValue, oldValue) => {
  
 // }, { deep: true })
 
 
-function bunkerInfo(){
-  let value = props.form.ops_vessel_id;
-  if(value) {
-    showVessel(value)
+// function bunkerInfo(){
+//   let value = props.form.ops_vessel_id;
+  props.form.ops_vessel_id = newValue;
+  if(newValue !== oldValue && oldValue != '' && newValue != undefined){
+    showVessel(newValue)
     .then(() => {
-      bunkerReset.value = vessel?.value?.opsBunkers?.map(obj => {
-    // Assuming you want to reset the resettableValue property to some default value
-    return {
-      ...obj,
-      exchange_rate_bdt: null,
-      exchange_rate_usd: null,
-      rate: null,
-      amount_usd: null,
-      amount_bdt: null,
-      quantity: null
-    };
-  });
+        bunkerReset.value = vessel?.value?.opsBunkers?.map(obj => {
+      // Assuming you want to reset the resettableValue property to some default value
+      return {
+        ...obj,
+        exchange_rate_bdt: null,
+        exchange_rate_usd: null,
+        rate: null,
+        amount_usd: null,
+        amount_bdt: null,
+        quantity: null
+      };
+    });
 
-  props.form.opsBunkers = bunkerReset.value
-      // if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
-       
-      // } else {
-      //   bunkerReset.value;
-      //   editInitiated.value = true
+      if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')) {
+          props.form.opsBunkers = bunkerReset.value
       // }
+      } else {
+      //   bunkerReset.value;
+        editInitiated.value = true
+      }
     })
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
   }
-  }
+});
 
-watch(() => vessel, (value) => {
-  if(value) {
-  //   bunkerReset.value = vessel?.value?.opsBunkers?.map(obj => {
-  //   // Assuming you want to reset the resettableValue property to some default value
-  //   return {
-  //     ...obj,
-  //     exchange_rate_bdt: null,
-  //     exchange_rate_usd: null,
-  //     rate: null,
-  //     amount_usd: null,
-  //     amount_bdt: null,
-  //     quantity: null
-  //   };
-  // });
-
-// if(props?.formType == 'edit' && editInitiated.value == true) {
-
-//       props.form.opsBunkers = bunkerReset.value
-// }
-  }
-}, { deep: true })
 
 watch(() => props.form, (value) => {
 
-if(props?.formType == 'edit' && editInitiated.value != true) {
+  if(props?.formType == 'edit' && editInitiated.value != true) {
 
-  // customers.value = [props?.form?.opsCustomer]
-  // vessels.value = [props?.form?.opsVessel]
-  // cargoTypes.value = [props?.form?.opsCargoType]
-  props.form.ops_customer_name = value?.opsCustomer;
-  props.form.ops_vessel_name = value?.opsVessel;
-  props.form.ops_cargo_type_name = value?.opsCargoType;
+    // customers.value = [props?.form?.opsCustomer]
+    // vessels.value = [props?.form?.opsVessel]
+    // cargoTypes.value = [props?.form?.opsCargoType]
+    props.form.ops_customer_name = value?.opsCustomer;
+    props.form.ops_vessel_name = value?.opsVessel;
+    props.form.ops_cargo_type_name = value?.opsCargoType;
 
-  // if(vessels.value.length > 0) {
-  //     console.log("Changing editInitatedValue ")
-  //     editInitiated.value = true
-  //   }
-  }
-});
+    if(props.form.opsVoyageSectors?.length < 1) {
+      props.form.opsVoyageSectors.push({... props.voyageSectorObject });
+    }
+
+    if(props.form.opsVoyagePortSchedules?.length < 1) {
+      props.form.opsVoyagePortSchedules.push({... props.portScheduleObject })
+    }
+
+    }
+  });
 
 // watch(() => props.form.ops_vessel_id, (value) => {
 // if(value) {
@@ -567,12 +557,11 @@ function fetchBunker(search, loading) {
 
 function fetchPorts(search, loading) {
       // loading(true);
-      searchPorts(search, loading)
+      searchPorts(search, props.form.business_unit, loading)
 }
 
 onMounted(() => {
   fetchCargoTypes("", false);
-  fetchPorts("", false);
     watchEffect(() => {
       if(props.form.business_unit && props.form.business_unit != 'ALL'){
         fetchCustomers("", false);
@@ -596,5 +585,19 @@ onMounted(() => {
 }
 .form-input {
   @apply block mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
+}
+
+/* Hide the default number input arrows */
+input[type=number] {
+  -moz-appearance: textfield; /* Firefox */
+  -webkit-appearance: textfield; /* Chrome, Safari, Edge */
+  appearance: textfield; /* Standard syntax */
+}
+
+/* Hide the spin buttons in Chrome */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 </style>

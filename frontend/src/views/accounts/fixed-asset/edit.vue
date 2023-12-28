@@ -24,7 +24,8 @@ watch(fixedAsset, (value) => {
   if(value) {
     fixedAsset.value.acc_cost_center_name = fixedAsset.value.costCenter;
     fixedAsset.value.scm_mrr_name = fixedAsset.value.scmMrr;
-    fixedAsset.value.scm_material_name = fixedAsset.value.scmMaterial
+    fixedAsset.value.scm_material_name = fixedAsset.value.scmMaterial;
+    fixedAsset.value.account_name = fixedAsset.value.scmMaterial.account.account_name;
     fixedAsset.value.acc_parent_account_name = fixedAsset.value.fixedAssetCategory;
   }
 });

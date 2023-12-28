@@ -76,7 +76,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Cri. Function",
+      "label": "Critical Function",
       "filter_type": "input"
     },
     
@@ -88,7 +88,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Cri. Category",
+      "label": "Category",
       "filter_type": "input"
     },
     
@@ -100,7 +100,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Cri. Item",
+      "label": "Item",
       "filter_type": "input"
     },
 
@@ -202,9 +202,9 @@ onMounted(() => {
           <tr class="w-full">
             <th class="w-1/12">#</th>
             <th class="w-2/12">Vessel</th>
-            <th class="w-2/12">Cri. Function</th>
-            <th class="w-2/12">Cri. Category</th>
-            <th class="w-2/12">Cri. Item</th>
+            <th class="w-2/12">Critical Function</th>
+            <th class="w-2/12">Critical Category</th>
+            <th class="w-2/12">Critical Item</th>
             <th class="w-2/12">Business Unit</th>
             <th class="w-1/12">Action</th>
           </tr>
@@ -220,6 +220,7 @@ onMounted(() => {
             <td><span :class="criticalVesselItem?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ criticalVesselItem?.business_unit }}</span></td>
             <td>
               <nobr>
+                <action-button :action="'show'" :to="{ name: 'mnt.critical-vessel-items.show', params: { criticalVesselItemId: criticalVesselItem?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'mnt.critical-vessel-items.edit', params: { criticalVesselItemId: criticalVesselItem?.id } }"></action-button>
                 <action-button @click="confirmDelete(criticalVesselItem?.id)" :action="'delete'"></action-button>
               </nobr>

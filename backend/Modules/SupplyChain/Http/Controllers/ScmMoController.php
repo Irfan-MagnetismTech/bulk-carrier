@@ -35,7 +35,8 @@ class ScmMoController extends Controller
                 'fromWarehouse',
                 'toWarehouse',
                 'createdBy',
-            )->latest()->paginate(10);
+            )
+            ->globalSearch(request()->all());
 
             return response()->success('Data list', $movementOuts, 200);
         } catch (\Exception $e) {
@@ -56,27 +57,27 @@ class ScmMoController extends Controller
         try {
             DB::beginTransaction();
 
-            $ScmMo = ScmMo::create($requestData);
+            $scmMo = ScmMo::create($requestData);
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMoLines, $ScmMo->id, 'scm_material_id', 'mo');
-            
+            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMoLines, $scmMo->id, 'scm_material_id', 'mo');
 
-            $ScmMo->scmMoLines()->createMany($linesData);
+
+            $scmMo->scmMoLines()->createMany($linesData);
 
             //loop through each line and update current stock
             $dataForStock = [];
 
             foreach ($request->scmMoLines as $scmMoLine) {
-                $dataForStock[] = (new StockLedgerData)->out($scmMoLine['scm_material_id'], $ScmMo->scm_warehouse_id, $scmMoLine['quantity']);
+                $dataForStock[] = (new StockLedgerData)->out($scmMoLine['scm_material_id'], $scmMo->from_warehouse_id, $scmMoLine['quantity']);
             }
 
             $dataForStockLedger = array_merge(...$dataForStock);
 
-            $ScmMo->stockable()->createMany($dataForStockLedger);
+            $scmMo->stockable()->createMany($dataForStockLedger);
 
             DB::commit();
 
-            return response()->success('Data created succesfully', $ScmMo, 201);
+            return response()->success('Data created succesfully', $scmMo, 201);
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -100,17 +101,31 @@ class ScmMoController extends Controller
                 'scmMmr',
             );
 
+            // 'scmMaterial' => $item->scmMaterial,
+            //                 'scm_material_id' => $item->scmMaterial->id,
+            //                 'unit' => $item->scmMaterial->unit,
+            //                 'quantity' => $item->quantity,
+            //                 'mmr_quantity' => $item->quantity,
+            //                 'mmr_composite_key' => $item->mmr_composite_key,
+            //                 'current_stock' => (new CurrentStock)->count($item->scm_material_id, $scmMmr->from_warehouse_id),
+            //                 'max_quantity' => $maxQty,
+            //                 'remaining_quantity' => $remainingQty,
             $scmMoLines = $movementOut->scmMoLines->map(function ($scmMoLine) use ($movementOut) {
+                $maxQty =  $scmMoLine->scmMmrLine->quantity + $scmMoLine->quantity - $scmMoLine->scmMmrLine->scmMoLines->sum('quantity');
+                $currentStock = (new CurrentStock)->count($scmMoLine->scm_material_id, $movementOut->from_warehouse_id) + $scmMoLine->quantity;
+                $maxQty = $currentStock > $maxQty ? $maxQty : $currentStock;
                 $lines = [
                     'scm_material_id' => $scmMoLine->scm_material_id,
                     'scmMaterial' => $scmMoLine->scmMaterial,
                     'unit' => $scmMoLine->unit,
                     'quantity' => $scmMoLine->quantity,
                     'mmr_quantity' => $scmMoLine->scmMmrLine->quantity,
-                    'max_quantity' => $scmMoLine->scmMmrLine->scmMoLines->sum('quantity') - $scmMoLine->quantity,
+                    'max_quantity' => $maxQty,
+                    'current_stock' => (new CurrentStock)->count($scmMoLine->scm_material_id, $movementOut->from_warehouse_id),
+                    'remaining_quantity' => $scmMoLine->scmMmrLine->quantity - $scmMoLine->scmMmrLine->scmMoLines->sum('quantity'),
                     'mo_composite_key' => $scmMoLine->mo_composite_key ?? null,
                     'mmr_composite_key' => $scmMoLine->mmr_composite_key ?? null,
-                    
+
                 ];
 
                 return $lines;
@@ -164,6 +179,41 @@ class ScmMoController extends Controller
             $movementOut->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+
+      /**
+     * Searches for MMR records based on the given request parameters.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function searchMo(Request $request): JsonResponse
+    {
+        try {
+            if ($request->business_unit != 'ALL') {
+                $movementRequisitions = ScmMo::query()
+                    ->with('scmMoLines', 'fromWarehouse', 'toWarehouse', 'createdBy')
+                    ->whereBusinessUnit($request->business_unit)
+                    ->when($request->searchParam, function ($query) {
+                        return $query->where('ref_no', 'LIKE', "%".request()->searchParam."%");
+                    })
+                    ->when($request->mmr_id, function ($query) {
+                        return $query->where('scm_mmr_id', request()->mmr_id);
+                    })
+                    // ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                    ->orderByDesc('ref_no')
+                    // ->limit(10)
+                    ->get();
+            } else {
+                $movementRequisitions = [];
+            }
+
+            return response()->success('Search result', $movementRequisitions, 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);

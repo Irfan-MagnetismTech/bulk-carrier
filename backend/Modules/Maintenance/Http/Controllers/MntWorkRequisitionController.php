@@ -241,11 +241,12 @@ class MntWorkRequisitionController extends Controller
                                         'mnt_item_id'=>$workRequisitionItem['mnt_item_id']
                                     ])
                                     ->first();
-            
+            // Check the modified present run hour is within the limit.
             $itemPresentRunHour = $workRequisitionItem['present_run_hour'];
-            if ($itemPresentRunHour > $mntJob['present_run_hour']) {
+            $minPresentRunHour = $input['min_present_run_hour'];
+            if ($itemPresentRunHour > $mntJob['present_run_hour'] || $itemPresentRunHour < $minPresentRunHour) {
                 $error = array(
-                        "message" => "Present running hour should not over Item running hour",
+                        "message" => "Present running hour should be between $minPresentRunHour and ".$mntJob['present_run_hour'],
                         "errors" => [
                             "present_run_hour" => ["Present running hour should not over Item running hour"]
                         ]
@@ -253,6 +254,7 @@ class MntWorkRequisitionController extends Controller
                     DB::rollBack();
                     return response()->json($error, 422);
             }
+
             $wrItemUpdate = $workRequisition->mntWorkRequisitionItem()->update(['present_run_hour'=>$itemPresentRunHour]);
             
             // update work_requisition_lines

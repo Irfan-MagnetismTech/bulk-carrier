@@ -199,7 +199,7 @@ import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 
 const { getCurrencies, currencies } = useBusinessInfo();
-const { ports, getPortList } = usePort();
+const { ports, searchPorts } = usePort();
 const { vessels, getVesselList } = useVessel();
 const { cargoTypes, getCargoTypeList } = useCargoType();
 
@@ -223,6 +223,8 @@ const editInitiated = ref(false);
 watch(() => props.form.business_unit, (value) => {
   if(value) {
     getVesselList(props.form.business_unit);
+    searchPorts("", props.form.business_unit);
+
     // searchVessels(null, props.form.business_unit, false);
   }
 })
@@ -283,7 +285,6 @@ watch(() => props.form, (value) => {
   }, {deep: true});
 
 onMounted(() => {
-  getPortList();
   getCurrencies();
   getCargoTypeList();
   getVesselList(props.form.business_unit);
@@ -315,7 +316,17 @@ input::-webkit-inner-spin-button {
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
 
+/* Hide the default number input arrows */
 input[type=number] {
-    -moz-appearance:textfield; /* Firefox */
+  -moz-appearance: textfield; /* Firefox */
+  -webkit-appearance: textfield; /* Chrome, Safari, Edge */
+  appearance: textfield; /* Standard syntax */
+}
+
+/* Hide the spin buttons in Chrome */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 </style>

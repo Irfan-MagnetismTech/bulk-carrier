@@ -161,7 +161,7 @@ class ScmMrrController extends Controller
     {
         if ($request->has('searchParam')) {
             $materialReceiptReport = ScmMrr::query()
-                ->with('scmMrrLines.scmMaterial')
+                ->with('scmMrrLines.scmMaterial.account')
                 ->where(function ($query) use ($request) {
                     $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
                         ->where('business_unit', $request->business_unit)
@@ -310,7 +310,6 @@ class ScmMrrController extends Controller
                     $data['model'] = $item->model;
                     $data['unit'] = $item->unit;
                     $data['quantity'] = $item->quantity;
-                    $data['max_quantity'] = $item->quantity;
                     $data['pr_qty'] = $item->quantity;
                     $data['po_qty'] = 0;
                     $data['rate'] = 0;
@@ -318,7 +317,13 @@ class ScmMrrController extends Controller
                     $data['pr_composite_key'] = $item->pr_composite_key;
                     $data['po_composite_key'] = null;
                     $data['current_stock'] = (new CurrentStock)->count($item->scmMaterial->id, request()->scm_warehouse_id);
-                    // $data['max_quantity'] = $item->quantity - $item->scmMrrLines->sum('quantity');//some edit needed
+                    if (request()->scm_mrr_id) {
+                        $data['mrr_quantity'] = $item->scmMrrLines->where('scm_mrr_id', request()->scm_mrr_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
+                    } else {
+                        $data['mrr_quantity'] = 0;
+                    }
+                    $data['max_quantity'] = $item->quantity - $item->scmMrrLines->sum('quantity') + $data['mrr_quantity'];
+
                     return $data;
                 });
             return response()->success('data list', $prMaterials, 200);
@@ -335,7 +340,12 @@ class ScmMrrController extends Controller
                     $data['model'] = $item->model;
                     $data['unit'] = $item->unit;
                     $data['quantity'] = $item->quantity;
-                    $data['max_quantity'] = $item->quantity;
+                    if (request()->scm_mrr_id) {
+                        $data['mrr_quantity'] = $item->scmMrrLines->where('scm_mrr_id', request()->scm_mrr_id)->where('po_composite_key', $item->po_composite_key)->quantity;
+                    } else {
+                        $data['mrr_quantity'] = 0;
+                    }
+                    $data['max_quantity'] = $item->quantity - $item->scmMrrLines->sum('quantity') + $data['mrr_quantity'];
                     $data['po_qty'] = $item->quantity;
                     $data['pr_qty'] = $item->scmPrLine->quantity;
                     $data['rate'] = $item->rate;

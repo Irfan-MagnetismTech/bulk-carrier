@@ -78,7 +78,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Due Period",
+      "label": "Due Period (Month)",
       "filter_type": "input"
     },
     
@@ -90,7 +90,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Window Period",
+      "label": "Window Period (Month)",
       "filter_type": "input"
     },
     

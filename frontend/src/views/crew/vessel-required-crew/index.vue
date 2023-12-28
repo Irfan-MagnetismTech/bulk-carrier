@@ -80,6 +80,14 @@ let filterOptions = ref( {
     },
     {
       "relation_name": null,
+      "field_name": "effective_date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null
+    },
+    {
+      "relation_name": null,
       "field_name": "total_crew",
       "search_param": "",
       "action": null,
@@ -184,10 +192,19 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <span><nobr>Total Crew</nobr></span>
+                  <span><nobr>Effective Date</nobr></span>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(3,'asc',filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(3,'desc',filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span><nobr>Total Crew</nobr></span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(4,'asc',filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(4,'desc',filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'desc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'desc' }" class=" font-semibold"></div>
                   </div>
                 </div>
               </th>
@@ -211,7 +228,7 @@ onMounted(() => {
               <th><input v-model="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              
+              <th><input v-model="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
@@ -224,12 +241,14 @@ onMounted(() => {
             <td class="text-left">{{ requiredCrew?.opsVessel?.name }}</td>
             <td>{{ requiredCrew?.opsVessel?.short_code }}</td>
             <td>{{ requiredCrew?.opsVessel?.vessel_type }}</td>
+            <td>{{ requiredCrew?.effective_date }}</td>
             <td>{{ requiredCrew?.total_crew }}</td>
             <td>
               <span :class="requiredCrew?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ requiredCrew?.business_unit }}</span>
             </td>
             <td>
               <nobr>
+                <action-button :action="'show'" :to="{ name: 'crw.vesselRequiredCrews.show', params: { vesselRequiredCrewId: requiredCrew?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'crw.vesselRequiredCrews.edit', params: { vesselRequiredCrewId: requiredCrew?.id } }"></action-button>
                 <action-button @click="confirmDelete(requiredCrew?.id)" :action="'delete'"></action-button>
               </nobr>
@@ -243,7 +262,7 @@ onMounted(() => {
           </tr>
           <tr v-else-if="isTableLoading">
               <td colspan="7">
-                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
               </td>
             </tr>
           <tr v-else-if="!vesselRequiredCrews?.data?.length">

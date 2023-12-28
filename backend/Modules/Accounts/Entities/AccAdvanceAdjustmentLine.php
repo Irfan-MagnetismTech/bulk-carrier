@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AccAdvanceAdjustmentLine extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = ['acc_advance_adjustment_id', 'particular', 'amount', 'attachment', 'remarks'];
 }

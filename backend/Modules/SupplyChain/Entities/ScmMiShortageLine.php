@@ -12,6 +12,7 @@ class ScmMiShortageLine extends Model
     protected $fillable = [
         'scm_mi_shortage_id',
         'scm_material_id',
+        'mi_composite_key',
         'unit',
         'quantity',
         'remarks',

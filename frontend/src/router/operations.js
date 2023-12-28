@@ -460,5 +460,182 @@ export default [
 		name: `${BASE}.contract-assigns.show`,
 		component: () => import (`../views/${ViEWBASE}/contract-assigns/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
-	}
+	},
+
+	/* Expense Heads */
+	{
+		path: `/${BASE}/expense-heads`,
+		name: `${BASE}.expense-heads.index`,
+		component: () => import(`../views/${ViEWBASE}/expense-heads/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/expense-heads/create`,
+		name: `${BASE}.expense-heads.create`,
+		component: () => import (`../views/${ViEWBASE}/expense-heads/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/expense-heads/:expenseHeadId/edit`,
+		name: `${BASE}.expense-heads.edit`,
+		component: () => import (`../views/${ViEWBASE}/expense-heads/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+
+	/* Vessel Expense Heads */
+	{
+		path: `/${BASE}/vessel-expense-heads`,
+		name: `${BASE}.vessel-expense-heads.index`,
+		component: () => import(`../views/${ViEWBASE}/vessel-expense-heads/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/vessel-expense-heads/create`,
+		name: `${BASE}.vessel-expense-heads.create`,
+		component: () => import (`../views/${ViEWBASE}/vessel-expense-heads/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/vessel-expense-heads/:vesselExpenseHeadId/edit`,
+		name: `${BASE}.vessel-expense-heads.edit`,
+		component: () => import (`../views/${ViEWBASE}/vessel-expense-heads/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/vessel-expense-heads/:vesselExpenseHeadId/show`,
+		name: `${BASE}.vessel-expense-heads.show`,
+		component: () => import (`../views/${ViEWBASE}/vessel-expense-heads/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+
+	/* Bunker Requisitons */
+	{
+		path: `/${BASE}/bunker-requisitions`,
+		name: `${BASE}.bunker-requisitions.index`,
+		component: () => import(`../views/${ViEWBASE}/bunker-requisitions/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/bunker-requisitions/create`,
+		name: `${BASE}.bunker-requisitions.create`,
+		component: () => import (`../views/${ViEWBASE}/bunker-requisitions/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/bunker-requisitions/:bunkerRequisitionId/edit`,
+		name: `${BASE}.bunker-requisitions.edit`,
+		component: () => import (`../views/${ViEWBASE}/bunker-requisitions/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/bunker-requisitions/approved/:bunkerRequisitionId`,
+		name: `${BASE}.bunker-requisitions.approved`,
+		component: () => import (`../views/${ViEWBASE}/bunker-requisitions/approved.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+
+	
+	/* Bunker Bills */
+	{
+		path: `/${BASE}/bunker-bills`,
+		name: `${BASE}.bunker-bills.index`,
+		component: () => import(`../views/${ViEWBASE}/bunker-bills/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/bunker-bills/create`,
+		name: `${BASE}.bunker-bills.create`,
+		component: () => import (`../views/${ViEWBASE}/bunker-bills/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/bunker-bills/:bunkerBillId/edit`,
+		name: `${BASE}.bunker-bills.edit`,
+		component: () => import (`../views/${ViEWBASE}/bunker-bills/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	/* Voyage Budgets */
+	{
+		path: `/${BASE}/voyage-budgets`,
+		name: `${BASE}.voyage-budgets.index`,
+		component: () => import(`../views/${ViEWBASE}/voyage-budgets/index.vue`),
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/voyage-budgets/create`,
+		name: `${BASE}.voyage-budgets.create`,
+		component: () => import (`../views/${ViEWBASE}/voyage-budgets/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/voyage-budgets/:voyageBudgetId/edit`,
+		name: `${BASE}.voyage-budgets.edit`,
+		component: () => import (`../views/${ViEWBASE}/voyage-budgets/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/voyage-budgets/:voyageBudgetId/show`,
+		name: `${BASE}.voyage-budgets.show`,
+		component: () => import (`../views/${ViEWBASE}/voyage-budgets/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	/* Customer Invoice */
+	{
+		path: `/${BASE}/customer-invoices`,
+		name: `${BASE}.customer-invoices.index`,
+		component: () => import(`../views/${ViEWBASE}/customer-invoices/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: '' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/customer-invoices/create`,
+		name: `${BASE}.customer-invoices.create`,
+		component: () => import (`../views/${ViEWBASE}/customer-invoices/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/customer-invoices/:customerInvoiceId/edit`,
+		name: `${BASE}.customer-invoices.edit`,
+		component: () => import (`../views/${ViEWBASE}/customer-invoices/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/customer-invoices/:customerInvoiceId/show`,
+		name: `${BASE}.customer-invoices.show`,
+		component: () => import (`../views/${ViEWBASE}/customer-invoices/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+
+	/* Voyage Expenditures*/
+	{
+		path: `/${BASE}/voyage-expenditures`,
+		name: `${BASE}.voyage-expenditures.index`,
+		component: () => import(`../views/${ViEWBASE}/voyage-expenditures/index.vue`),
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/voyage-expenditures/create`,
+		name: `${BASE}.voyage-expenditures.create`,
+		component: () => import (`../views/${ViEWBASE}/voyage-expenditures/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/voyage-expenditures/:voyageExpenditureId/edit`,
+		name: `${BASE}.voyage-expenditures.edit`,
+		component: () => import (`../views/${ViEWBASE}/voyage-expenditures/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/voyage-expenditures/:voyageExpenditureId/show`,
+		name: `${BASE}.voyage-expenditures.show`,
+		component: () => import (`../views/${ViEWBASE}/voyage-expenditures/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	
 ];

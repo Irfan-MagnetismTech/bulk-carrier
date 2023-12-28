@@ -76,24 +76,25 @@
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
           </div>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Previous Runnig Hour </span>
-            <input type="text" v-model.trim="form.previous_run_hour" placeholder="Previous Runnig Hour" class="form-input vms-readonly-input" readonly />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Previous Running Hour </span>
+            <input type="text" v-model.trim="form.previous_run_hour" placeholder="Previous Running Hour" class="form-input vms-readonly-input" readonly />
           <Error v-if="errors?.previous_run_hour" :errors="errors.previous_run_hour" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Running Hour (Since Last Update) <span v-show="!(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" class="text-red-500">*</span></span>
-            <input type="number" v-model="form.running_hour" placeholder="Running Hour" class="form-input" :required="!(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" :class="{ 'vms-readonly-input' : page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0  }"  :readonly="page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0" />
+            <input type="number" min="1" v-model="form.running_hour" placeholder="Running Hour" class="form-input" :required="!(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" :class="{ 'vms-readonly-input' : page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0  }"  :readonly="page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0" />
           <Error v-if="errors?.running_hour" :errors="errors.running_hour" />
         </label>
 
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Present Runnig Hour <span v-show="(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" class="text-red-500">*</span></span>
-            <input type="number" v-model="computedPresentRunHour" placeholder="Present Runnig Hour" class="form-input" :required="(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" :class="{ 'vms-readonly-input': !(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)  }" :readonly="!(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Present Running Hour <span v-show="(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" class="text-red-500">*</span></span>
+            <input type="number" v-model="computedPresentRunHour" placeholder="Present Running Hour" class="form-input" :required="(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" :class="{ 'vms-readonly-input': !(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)  }" :readonly="!(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" />
         </label>
 
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Updated On <span class="text-red-500">*</span></span>
-            <input type="date" v-model="form.updated_on" placeholder="Updated on" class="form-input" required  />
+            <!-- <input type="date" v-model="form.updated_on" placeholder="Updated on" class="form-input" required  /> -->
+            <VueDatePicker v-model="form.updated_on" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
           <Error v-if="errors?.updated_on" :errors="errors.updated_on" />
         </label>
         
@@ -132,6 +133,7 @@ const { itemGroupWiseHourlyItems, getItemGroupWiseHourlyItems, isItemLoading } =
 const { presentRunHour, getItemPresentRunHour, isRunHourLoading } = useRunHour();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const defaultBusinessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const computedPresentRunHour = computed({
       get: () => {
@@ -275,5 +277,9 @@ onMounted(() => {
 
   --vs-dropdown-option--active-bg: #664cc3;
   --vs-dropdown-option--active-color: #eeeeee;
+
+  --dp-border-color: #4b5563;
+  --dp-border-color-hover: #4b5563;
+  --dp-icon-color: #4b5563;
 }
 </style>

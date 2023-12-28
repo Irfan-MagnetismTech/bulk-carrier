@@ -94,19 +94,6 @@ let filterOptions = ref( {
     
     {
       "rel_type": null,
-      "relation_name": "opsCargoTariff",
-      "field_name": "cargo_tarrif",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Cargo tarrif",
-      "filter_type": "input"
-    },
-
-    
-    {
-      "rel_type": null,
       "relation_name": "opsCustomer",
       "field_name": "name",
       "search_param": "",
@@ -222,7 +209,6 @@ onMounted(() => {
                   <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ contractAssign?.opsVessel?.name }}</td>
                   <td>{{ contractAssign?.opsVoyage?.voyage_sequence }}</td>
-                  <td>{{ contractAssign?.opsCargoTariff?.cargo_tarrif }}</td>
                   <td>{{ contractAssign?.opsCustomer?.name }}</td>
                   <td>{{ contractAssign?.opsChartererProfile?.name }}</td>
                   <td>{{ contractAssign?.opsChartererContract?.contract_name }}</td>

@@ -3,7 +3,8 @@
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Requisition Date </span>
-            <input type="date" :value="form.requisition_date" placeholder="Requisition Date" class="form-input vms-readonly-input" readonly  />
+            <!-- <input type="date" :value="form.requisition_date" placeholder="Requisition Date" class="form-input vms-readonly-input" readonly  /> -->
+            <input type="text" :value="moment(form.requisition_date).format('DD/MM/YYYY')" placeholder="Requisition Date" class="form-input vms-readonly-input" readonly  />
           <Error v-if="errors?.requisition_date" :errors="errors.requisition_date" />
         </label>
         <label class="block w-full mt-2 text-sm">
@@ -39,8 +40,8 @@
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Present Runnig Hour </span>
-            <input type="text" :value="form.mntWorkRequisitionItem?.present_run_hour" placeholder="Present Runnig Hour" class="form-input vms-readonly-input" readonly />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Present Running Hour </span>
+            <input type="text" :value="form.mntWorkRequisitionItem?.present_run_hour" placeholder="Present Running Hour" class="form-input vms-readonly-input" readonly />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
 
@@ -49,14 +50,16 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Act. Start Date </span>
-            <input type="date" :value="form.act_start_date" placeholder="Act. Start Date" class="form-input vms-readonly-input"  readonly/>
+            <!-- <input type="date" :value="form.act_start_date" placeholder="Act. Start Date" class="form-input vms-readonly-input"  readonly/> -->
+            <input type="text" :value="moment(form.act_start_date).format('DD/MM/YYYY')" placeholder="Act. Start Date" class="form-input vms-readonly-input"  readonly/>
           <Error v-if="errors?.act_start_date" :errors="errors.act_start_date" />
         </label>
 
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Act. Completion Date </span>
-            <input type="date" :value="form.act_completion_date" placeholder="Act. completion Date" class="form-input vms-readonly-input"  readonly/>
+            <!-- <input type="date" :value="form.act_completion_date" placeholder="Act. completion Date" class="form-input vms-readonly-input"  readonly/> -->
+            <input type="text" :value="moment(form.act_completion_date).format('DD/MM/YYYY')" placeholder="Act. completion Date" class="form-input vms-readonly-input"  readonly/>
           <Error v-if="errors?.act_completion_date" :errors="errors.act_completion_date" />
         </label>
 
@@ -85,8 +88,8 @@
         <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="px-4 py-3 align-bottom" :class="{ 'w-3/12': businessUnit !== 'PSML', 'w-4/12': businessUnit === 'PSML'  }">Description</th>
-            <th class="w-1/12 px-4 py-3 align-bottom">Start Date</th>
-            <th class="w-1/12 px-4 py-3 align-bottom">Completion Date</th>
+            <th class="w-1/12 px-4 py-3 align-bottom min-w-[170px]">Start Date</th>
+            <th class="w-1/12 px-4 py-3 align-bottom min-w-[170px]">Completion Date</th>
             <th class="w-1/12 px-4 py-3 align-bottom" v-show="businessUnit !== 'PSML'" >Checking</th>
             <th class="w-1/12 px-4 py-3 align-bottom" v-show="businessUnit !== 'PSML'" >Replace</th>
             <th class="w-1/12 px-4 py-3 align-bottom" v-show="businessUnit !== 'PSML'" >Cleaning</th>
@@ -99,10 +102,16 @@
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(mntWorkRequisitionLine, index) in form.mntWorkRequisitionLines" :key="index">
             <td class="px-1 py-1"> <input type="text" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.job_description" placeholder="Description" readonly /> </td>
             <td class="px-1 py-1"> 
-              <input type="date" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" readonly/> 
+              <!-- <input type="date" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" readonly/>  -->
+              <input type="text" class="form-input vms-readonly-input"  :value="moment(mntWorkRequisitionLine.start_date).format('DD/MM/YYYY')" placeholder="Start Date" readonly/> 
               <Error class="pb-1" v-if="mntWorkRequisitionLine?.start_date_error" :errors="mntWorkRequisitionLine?.start_date_error" />
             </td>
-            <td class="px-1 py-1"> <input type="date" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date" readonly /> </td>
+            <td class="px-1 py-1"> 
+              <!-- <input type="date" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date" readonly />  -->
+              
+              <input type="text" class="form-input vms-readonly-input" :value="moment(mntWorkRequisitionLine.completion_date).format('DD/MM/YYYY')" placeholder="Completion Date" readonly /> 
+
+            </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.checking" readonly/> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.replace" readonly/> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.cleaning" readonly/> </td>

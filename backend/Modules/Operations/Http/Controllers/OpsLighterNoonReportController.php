@@ -57,6 +57,15 @@ class OpsLighterNoonReportController extends Controller
                 '_token',
                 'opsBunkers',
             );
+            
+            // if($request->last_port == $request->next_port){
+            //     $error= [
+            //         'message'=>'Last Port and Next Port can not be same.',
+            //         'errors'=>[
+            //             'next_port'=>['Last Port and Next Port can not be same.',
+            //     ]]];
+            //     return response()->json($error, 422);
+            // }
 
             $lighter_noon_report = OpsLighterNoonReport::create($lighterNoonReportInfo);
             $lighter_noon_report->opsBunkers()->createMany($request->opsBunkers);
@@ -112,6 +121,15 @@ class OpsLighterNoonReportController extends Controller
                 '_token',
                 'opsBunkers',
             );
+
+            // if($request->last_port == $request->next_port){
+            //     $error= [
+            //             'message'=>'Last Port and Next Port can not be same.',
+            //             'errors'=>[
+            //                 'next_port'=>['Last Port and Next Port can not be same.',
+            //     ]]];
+            //     return response()->json($error, 422);
+            // }
         
             $lighter_noon_report->update($lighterNoonReportInfo);            
             $lighter_noon_report->opsBunkers()->delete();

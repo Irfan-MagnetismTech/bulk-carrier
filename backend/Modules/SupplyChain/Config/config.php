@@ -1,5 +1,6 @@
 <?php
 
 return [
-    'name' => 'SupplyChain'
+    'name' => 'SupplyChain',
+    'category_max_layer' => 20
 ];

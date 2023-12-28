@@ -16,8 +16,8 @@ setTitle('AIS Report - Income Statement');
 
 const searchParams = ref({
   account_id: null,
-  from_date: '',
-  till_date: '',
+  from_date: '2022-01-01',
+  till_date: '2022-12-31',
 });
 
 function toggleBalanceLineTrID(event) {
@@ -263,7 +263,7 @@ function fetchAccounts(search, loading) {
       <table class="w-full">
         <tfoot>
         <tr style="background-color: #E3E3E3">
-          <td class="text-sm font-bold text-right" colspan="2">Total Expenses</td>
+          <td class="text-sm font-bold text-right" colspan="2">Total Expense</td>
           <td class="text-sm font-bold text-right">{{ incomeStatements?.grand_total_expense?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
         </tr>
         </tfoot>

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('scm_sir_id')->constrained('scm_sirs');
             $table->string('unit');
             $table->bigInteger('quantity');
-            $table->string('notes');
+            $table->string('notes')->nullable();
             $table->string('si_composite_key');
             $table->string('sr_composite_key');
             $table->timestamps();

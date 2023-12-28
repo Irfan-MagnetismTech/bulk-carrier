@@ -14,6 +14,7 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import moment from "moment";
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 const icons = useHeroIcon();
@@ -190,11 +191,13 @@ onMounted(() => {
           <tr v-for="(criticalSpareList,index) in criticalSpareLists?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
             <td>{{ criticalSpareList?.opsVessel?.name }}</td>
-            <td><nobr>{{ criticalSpareList?.record_date }}</nobr></td>
+            <!-- <td><nobr>{{ criticalSpareList?.record_date }}</nobr></td> -->
+            <td><nobr>{{  moment(criticalSpareList?.record_date).format('DD/MM/YYYY') }}</nobr></td>
             <td>{{ criticalSpareList?.reference_no }}</td>
             <td><span :class="criticalSpareList?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ criticalSpareList?.business_unit }}</span></td>
             <td>
               <nobr>
+                <action-button :action="'show'" :to="{ name: 'mnt.critical-spare-lists.show', params: { criticalSpareListId: criticalSpareList?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'mnt.critical-spare-lists.edit', params: { criticalSpareListId: criticalSpareList?.id } }"></action-button>
                 <action-button @click="confirmDelete(criticalSpareList?.id)" :action="'delete'"></action-button>
               </nobr>

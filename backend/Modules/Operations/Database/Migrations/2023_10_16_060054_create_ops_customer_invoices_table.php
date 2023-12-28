@@ -16,9 +16,13 @@ return new class extends Migration
         Schema::create('ops_customer_invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('ops_customer_id')->constrained('ops_customers')->onDelete('cascade');
-            $table->float('sub_total')->nullable();
-            $table->float('discount')->nullable();
-            $table->float('grand_total')->nullable();
+            $table->date('date');
+            $table->float('sub_total_amount', 20, 2)->nullable();
+            $table->float('total_amount_bdt', 20, 2)->nullable();
+            $table->float('discounted_amount', 20, 2)->nullable();
+            $table->float('others_billable_amount', 20, 2)->nullable();
+            $table->float('service_fee_deduction_amount', 20, 2)->nullable();
+            $table->float('grand_total', 20, 2)->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL', 'ALL']);
             $table->timestamps();
         });

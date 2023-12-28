@@ -14,11 +14,11 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Department <span class="text-red-500">*</span></span>
-          <span class="show-block">{{ form.department_id }}</span>
+          <span class="show-block">{{ DEPARTMENTS[form.department_id] }}</span>
       </label>
       <label class="label-group">
           <span class="label-item-title">Date<span class="text-red-500">*</span></span>
-          <span class="show-block">{{ form.date }}</span>
+          <span class="show-block">{{ form.date ? moment(form.date).format('DD-MM-YYYY') : null }}</span>
       </label>
   </div>
 
@@ -96,7 +96,8 @@
     import {useStore} from "vuex";
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
-    
+    import moment from 'moment';
+        
     const { materials, searchMaterial,isLoading: materialLoading } = useMaterial();
     const { warehouses, searchWarehouse,isLoading } = useWarehouse();
    
@@ -111,20 +112,7 @@
 
     });
 
-const DEPARTMENTS = [
-  {
-    'id': 1,
-    'name': 'Store Department'
-  },
-  {
-    'id': 2,
-    'name': 'Engine Department'
-  },
-  {
-    'id': 3,
-    'name': 'Provision Department'
-  }
-]
+    const DEPARTMENTS = ['N/A','Store Department', 'Engine Department', 'Provision Department'];
     function addMaterial() {
       const clonedObj = cloneDeep(props.materialObject);
       props.form.scmSrLines.push(clonedObj);

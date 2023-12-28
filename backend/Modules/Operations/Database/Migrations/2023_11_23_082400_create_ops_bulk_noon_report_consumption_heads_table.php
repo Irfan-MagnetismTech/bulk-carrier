@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('ops_bulk_noon_report_id');
             $table->unsignedBigInteger('ops_bulk_noon_report_consumption_id');
             $table->string('type')->nullable();
-            $table->float('amount')->nullable();
+            $table->float('amount', 20, 2)->nullable();
             $table->timestamps();
         });
     }

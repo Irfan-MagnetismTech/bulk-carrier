@@ -44,3 +44,12 @@ input[type='search'] {
 }
 
 /*.error-message-text{font-size: 13px !important;}*/
+
+.dp__today {
+    border: 1px solid #664cc3 !important;
+}
+
+.dp__range_end, .dp__range_start, .dp__active_date{
+	background: #664cc3 !important;
+}
+

@@ -130,10 +130,7 @@ export default function useAgencyContract() {
         formData.append('_method', 'PUT');
 
         try {
-            const { data, status } = await Api.post(
-                `/crw/crw-agency-contracts/${agencyContractId}`,
-                formData
-            );
+            const { data, status } = await Api.post(`/crw/crw-agency-contracts/${agencyContractId}`, formData);
             agencyContract.value = data.value;
             notification.showSuccess(status);
             await router.push({ name: "crw.agencyContracts.index" });
