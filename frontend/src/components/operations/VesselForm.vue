@@ -13,7 +13,7 @@
             <select name="" id="" class="form-input" v-model="form.vessel_type">
               <option value="" disabled>Select Type</option>
               <option value="Lighter">Lighter</option>
-              <option value="Bulk">Bulk</option>
+              <option value="Bulk Carrier">Bulk Carrier</option>
             </select>
       </label>
       <label class="block w-full mt-2 text-sm">
