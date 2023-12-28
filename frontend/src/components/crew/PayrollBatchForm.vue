@@ -144,58 +144,58 @@ function addAdditionHead(){
         head_name: '',
         particular: '',
         amount: '',
-        type: 'addition',
+        head_type: 'addition',
         id: Math.random().toString()
       };
-  props.form.payrollBatchHeads.push(objHead);
+  props.form.crwPayrollBatchHeads.push(objHead);
 
-  if(props.form.payrollBatchHeads.filter(item => item.type === 'addition').length === 1){
-    props.form.payrollBatchLines.forEach((batchLine,batchLineIndex) => {
+  if(props.form.crwPayrollBatchHeads.filter(item => item.head_type === 'addition').length === 1){
+    props.form.crwPayrollBatchLines.forEach((batchLine,batchLineIndex) => {
       let batchLineObj = {
         crew_id: batchLine?.crw_crew_id,
         crew_name: batchLine?.crw_full_name,
         amount: '',
-        type: 'addition',
-        batch_heads: cloneDeep(props.form.payrollBatchHeads.filter(item => item.type === 'addition'))
+        head_type: 'addition',
+        crew_batch_heads: cloneDeep(props.form.crwPayrollBatchHeads.filter(item => item.head_type === 'addition'))
       }
-      props.form.payrollBatchHeadLines.push(batchLineObj);
+      props.form.crwPayrollBatchHeadLines.push(batchLineObj);
     });
   }
-  else if(props.form.payrollBatchHeads.filter(item => item.type === 'addition').length > 1) {
+  else if(props.form.crwPayrollBatchHeads.filter(item => item.head_type === 'addition').length > 1) {
 
-    let additions = props.form.payrollBatchHeadLines.filter(item => item.type === 'addition')
+    let additions = props.form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'addition')
 
     for(let addition of additions) {
-      addition.batch_heads.push({
+      addition.crew_batch_heads.push({
         amount:"",
         head_name:"",
         particular:"",
         id: objHead.id,
-        type:"addition"
+        head_type:"addition"
       });
     }
   }
 };
 
-function removeAdditionItem(itemId){
+function removeAdditionItem(itemId) {
+  const batchHeadIndex = props.form.crwPayrollBatchHeads.findIndex(item => item.id === itemId);
 
-  const batchHeadIndex = props.form.payrollBatchHeads.findIndex(item => item.id === itemId);
   if (batchHeadIndex !== -1) {
-    props.form.payrollBatchHeads.splice(batchHeadIndex, 1);
+    props.form.crwPayrollBatchHeads.splice(batchHeadIndex, 1);
   }
 
-  props.form.payrollBatchHeadLines.forEach((value, batchHeadLineIndex) => {
-    if (batchHeadLineIndex !== -1) {
-      const lineBatchHeadIndex = props.form.payrollBatchHeadLines[batchHeadLineIndex].batch_heads.findIndex(item => item.id === itemId);
-      props.form.payrollBatchHeadLines[batchHeadLineIndex].batch_heads.splice(lineBatchHeadIndex, 1);
+  props.form.crwPayrollBatchHeadLines.forEach((value, batchHeadLineIndex) => {
+    const lineBatchHeadIndex = value.crew_batch_heads.findIndex(item => item.id === itemId);
+
+    if (lineBatchHeadIndex !== -1) {
+      value.crew_batch_heads.splice(lineBatchHeadIndex, 1);
     }
   });
 
-  if (!props.form.payrollBatchHeads.filter(item => item.type === 'addition').length) {
-    props.form.payrollBatchHeadLines = props.form.payrollBatchHeadLines.filter(item => item.type !== 'addition');
+  if (!props.form.crwPayrollBatchHeads.some(item => item.head_type === 'addition')) {
+    props.form.crwPayrollBatchHeadLines = props.form.crwPayrollBatchHeadLines.filter(item => item.head_type !== 'addition');
     hasAdditionBatchHead.value = false;
   }
-
 }
 
 function addDeductionHead(){
@@ -205,33 +205,33 @@ function addDeductionHead(){
         head_name: '',
         particular: '',
         amount: '',
-        type: 'deduction',
+        head_type: 'deduction',
         id: Math.random().toString()
       };
-  props.form.payrollBatchHeads.push(objHead);
+  props.form.crwPayrollBatchHeads.push(objHead);
 
-  if(props.form.payrollBatchHeads.filter(item => item.type === 'deduction').length === 1){
-    props.form.payrollBatchLines.forEach((batchLine,batchLineIndex) => {
+  if(props.form.crwPayrollBatchHeads.filter(item => item.head_type === 'deduction').length === 1){
+    props.form.crwPayrollBatchLines.forEach((batchLine,batchLineIndex) => {
       let batchLineObj = {
         crew_id: batchLine?.crw_crew_id,
         crew_name: batchLine?.crw_full_name,
         amount: '',
-        type: 'deduction',
-        batch_heads: cloneDeep(props.form.payrollBatchHeads.filter(item => item.type === 'deduction'))
+        head_type: 'deduction',
+        crew_batch_heads: cloneDeep(props.form.crwPayrollBatchHeads.filter(item => item.head_type === 'deduction'))
       }
-      props.form.payrollBatchHeadLines.push(batchLineObj);
+      props.form.crwPayrollBatchHeadLines.push(batchLineObj);
     });
   }
-  else if(props.form.payrollBatchHeads.filter(item => item.type === 'deduction').length > 1) {
-    let deductions = props.form.payrollBatchHeadLines.filter(item => item.type === 'deduction')
+  else if(props.form.crwPayrollBatchHeads.filter(item => item.head_type === 'deduction').length > 1) {
+    let deductions = props.form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'deduction')
 
     for(let deduction of deductions) {
-      deduction.batch_heads.push({
+      deduction.crew_batch_heads.push({
         amount:"",
         head_name:"",
         particular:"",
         id: objHead.id,
-        type:"deduction"
+        head_type:"deduction"
       });
     }
   }
@@ -239,20 +239,22 @@ function addDeductionHead(){
 
 function removeDeductionItem(itemId){
 
-  const batchHeadIndex = props.form.payrollBatchHeads.findIndex(item => item.id === itemId);
+  const batchHeadIndex = props.form.crwPayrollBatchHeads.findIndex(item => item.id === itemId);
+
   if (batchHeadIndex !== -1) {
-    props.form.payrollBatchHeads.splice(batchHeadIndex, 1);
+    props.form.crwPayrollBatchHeads.splice(batchHeadIndex, 1);
   }
 
-  props.form.payrollBatchHeadLines.forEach((value, batchHeadLineIndex) => {
-    if (batchHeadLineIndex !== -1) {
-      const lineBatchHeadIndex = props.form.payrollBatchHeadLines[batchHeadLineIndex].batch_heads.findIndex(item => item.id === itemId);
-      props.form.payrollBatchHeadLines[batchHeadLineIndex].batch_heads.splice(lineBatchHeadIndex, 1);
+  props.form.crwPayrollBatchHeadLines.forEach((value, batchHeadLineIndex) => {
+    const lineBatchHeadIndex = value.crew_batch_heads.findIndex(item => item.id === itemId);
+
+    if (lineBatchHeadIndex !== -1) {
+      value.crew_batch_heads.splice(lineBatchHeadIndex, 1);
     }
   });
 
-  if (!props.form.payrollBatchHeads.filter(item => item.type === 'deduction').length) {
-    props.form.payrollBatchHeadLines = props.form.payrollBatchHeadLines.filter(item => item.type !== 'deduction');
+  if (!props.form.crwPayrollBatchHeads.some(item => item.head_type === 'deduction')) {
+    props.form.crwPayrollBatchHeadLines = props.form.crwPayrollBatchHeadLines.filter(item => item.head_type !== 'deduction');
     hasDeductionBatchHead.value = false;
   }
 
@@ -260,7 +262,7 @@ function removeDeductionItem(itemId){
 
 watch(() => monthlyAttendance.value, (value) => {
   if(value){
-    props.form.payrollBatchLines = value?.crwAttendanceLines;
+    props.form.crwPayrollBatchLines = value?.crwAttendanceLines;
   }
 }, {deep: true});
 
@@ -274,6 +276,50 @@ function getAssignedCrewList(){
   } else {
     alert("please select");
   }
+}
+
+function additionChangeHead(e,itemId){
+  let additions = props.form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'addition')
+  for(let addition of additions) {
+    addition.crew_batch_heads.find(item => item.id === itemId).particular = e.target.value;
+  }
+}
+
+function additionAmountSet(e,itemId){
+  let additions = props.form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'addition')
+  for(let addition of additions) {
+    addition.crew_batch_heads.find(item => item.id === itemId).amount = e.target.value;
+
+    let totalAmount = addition.crew_batch_heads.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+    addition.amount = totalAmount.toFixed(2);
+  }
+}
+
+function deductionChangeHead(e,itemId){
+  let deductions = props.form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'deduction')
+  for(let deduction of deductions) {
+    deduction.crew_batch_heads.find(item => item.id === itemId).particular = e.target.value;
+  }
+}
+
+function deductionAmountSet(e,itemId){
+  let deductions = props.form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'deduction')
+  for(let deduction of deductions) {
+    deduction.crew_batch_heads.find(item => item.id === itemId).amount = e.target.value;
+
+    let totalAmount = deduction.crew_batch_heads.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+    deduction.amount = totalAmount.toFixed(2);
+  }
+}
+
+function setAdditionBatchHeadAmount(payrollBatchHeadLineIndex){
+  //props.form.payrollBatchHeadLines[payrollBatchHeadLineIndex].batch_heads
+
+  const batchHeads = props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads;
+
+  const totalAmount = batchHeads.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+
+  props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount = totalAmount.toFixed(2);
 }
 
 onMounted(() => {
@@ -365,32 +411,32 @@ onMounted(() => {
           </thead>
 
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-          <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(batchLine, index) in form.payrollBatchLines" :key="batchLine.crw_crew_id">
+          <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(batchLine, index) in form.crwPayrollBatchLines" :key="batchLine.crw_crew_id">
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.payrollBatchLines[index].crw_crew_id" placeholder="Crew ID" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].crw_crew_id" placeholder="Crew ID" class="form-input vms-readonly-input" autocomplete="off" readonly />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.payrollBatchLines[index].crw_crew_name" placeholder="Crew name" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].crw_crew_name" placeholder="Crew name" class="form-input vms-readonly-input" autocomplete="off" readonly />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.payrollBatchLines[index].crw_crew_rank" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].crw_crew_rank" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" readonly />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.payrollBatchLines[index].gross_salary" placeholder="Gross salary" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].gross_salary" placeholder="Gross salary" class="form-input vms-readonly-input" autocomplete="off" readonly />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.payrollBatchLines[index].contact" placeholder="Contact" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].contact" placeholder="Contact" class="form-input vms-readonly-input" autocomplete="off" readonly />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.payrollBatchLines[index].present_days" placeholder="Present days" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].present_days" placeholder="Present days" class="form-input vms-readonly-input" autocomplete="off" readonly />
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!form.payrollBatchLines?.length">
+          <tfoot v-if="!form.crwPayrollBatchLines?.length">
           <tr v-if="isLoading">
             <td colspan="8">Loading</td>
           </tr>
-          <tr v-else-if="!form.payrollBatchLines?.length">
+          <tr v-else-if="!form.crwPayrollBatchLines?.length">
             <td colspan="8">No data found.</td>
           </tr>
           </tfoot>
@@ -418,16 +464,16 @@ onMounted(() => {
           </tr>
           </thead>
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-          <template v-for="(batchHead, index) in form.payrollBatchHeads">
-            <tr v-if="batchHead?.type === 'addition'" class="text-gray-700 dark-disabled:text-gray-400" :key="batchHead.key">
+          <template v-for="(batchHead, index) in form.crwPayrollBatchHeads">
+            <tr v-if="batchHead?.head_type === 'addition'" class="text-gray-700 dark-disabled:text-gray-400" :key="batchHead.key">
               <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.payrollBatchHeads[index].head_name" placeholder="Head name" class="form-input" autocomplete="off" required />
+                <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].head_name" @input="additionChangeHead($event,batchHead.id)" placeholder="Head name" class="form-input" autocomplete="off" required />
               </td>
               <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.payrollBatchHeads[index].amount" placeholder="Amount" class="form-input" autocomplete="off" required />
+                <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].amount" @input="additionAmountSet($event,batchHead.id)" placeholder="Amount" class="form-input" autocomplete="off" required />
               </td>
               <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.payrollBatchHeads[index].type" placeholder="Crew rank" class="form-input" autocomplete="off" required />
+                <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].head_type" placeholder="Crew rank" class="form-input" autocomplete="off" required />
               </td>
               <td class="px-1 py-1">
                 <button type="button" @click="removeAdditionItem(batchHead.id)" class="px-2 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -455,28 +501,28 @@ onMounted(() => {
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="px-4 py-3 align-bottom"><nobr>Crew ID</nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Crew Name</nobr></th>
-            <template v-for="(batchHead, index) in form.payrollBatchHeads">
-              <th class="px-4 py-3 align-bottom" v-if="batchHead?.type==='addition'"><nobr>{{ batchHead?.head_name }}</nobr></th>
+            <template v-for="(batchHead, index) in form.crwPayrollBatchHeads">
+              <th class="px-4 py-3 align-bottom" v-if="batchHead?.head_type==='addition'"><nobr>{{ batchHead?.head_name }}</nobr></th>
             </template>
             <th class="px-4 py-3 align-bottom"><nobr>Amount</nobr></th>
           </tr>
           </thead>
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-          <template v-for="(batchHeadLine, payrollBatchHeadLineIndex) in form.payrollBatchHeadLines">
-            <tr v-if="batchHeadLine?.type==='addition'" class="text-gray-700 dark-disabled:text-gray-400" :key="batchHeadLine.crw_crew_id">
+          <template v-for="(batchHeadLine, payrollBatchHeadLineIndex) in form.crwPayrollBatchHeadLines">
+            <tr v-if="batchHeadLine?.head_type==='addition'" class="text-gray-700 dark-disabled:text-gray-400" :key="batchHeadLine.crw_crew_id">
               <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.payrollBatchHeadLines[payrollBatchHeadLineIndex].crew_id" placeholder="Crew ID" class="form-input vms-readonly-input" autocomplete="off" readonly />
+                <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_id" placeholder="Crew ID" class="form-input vms-readonly-input" autocomplete="off" readonly />
               </td>
               <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.payrollBatchHeadLines[payrollBatchHeadLineIndex].crew_name" placeholder="Crew name" class="form-input vms-readonly-input" autocomplete="off" readonly />
+                <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_name" placeholder="Crew name" class="form-input vms-readonly-input" autocomplete="off" readonly />
               </td>
-              <template v-for="(lineBatchHead, lineBatchHeadIndex) in form.payrollBatchHeadLines[payrollBatchHeadLineIndex].batch_heads">
-                <td v-if="lineBatchHead?.type==='addition'" class="px-1 py-1">
-                  <input type="text" v-model.trim="form.payrollBatchHeadLines[payrollBatchHeadLineIndex].batch_heads[lineBatchHeadIndex].amount" placeholder="Amount" class="form-input" autocomplete="off" required />
+              <template v-for="(lineBatchHead, lineBatchHeadIndex) in form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads">
+                <td v-if="lineBatchHead?.head_type==='addition'" class="px-1 py-1">
+                  <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads[lineBatchHeadIndex].amount" @input="setAdditionBatchHeadAmount(payrollBatchHeadLineIndex)" placeholder="Amount" class="form-input" autocomplete="off" required />
                 </td>
               </template>
               <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.payrollBatchHeadLines[payrollBatchHeadLineIndex].amount" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" readonly />
+                <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" readonly />
               </td>
             </tr>
           </template>
@@ -510,16 +556,16 @@ onMounted(() => {
           </tr>
           </thead>
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-          <template v-for="(batchHead, index) in form.payrollBatchHeads">
-            <tr v-if="batchHead?.type === 'deduction'" class="text-gray-700 dark-disabled:text-gray-400" :key="batchHead.key">
+          <template v-for="(batchHead, index) in form.crwPayrollBatchHeads">
+            <tr v-if="batchHead?.head_type === 'deduction'" class="text-gray-700 dark-disabled:text-gray-400" :key="batchHead.key">
               <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.payrollBatchHeads[index].head_name" placeholder="Head name" class="form-input" autocomplete="off" required />
+                <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].head_name" @input="deductionChangeHead($event,batchHead.id)" placeholder="Head name" class="form-input" autocomplete="off" required />
               </td>
               <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.payrollBatchHeads[index].amount" placeholder="Amount" class="form-input" autocomplete="off" required />
+                <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].amount" @input="deductionAmountSet($event,batchHead.id)" placeholder="Amount" class="form-input" autocomplete="off" required />
               </td>
               <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.payrollBatchHeads[index].type" placeholder="Crew rank" class="form-input" autocomplete="off" required />
+                <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].head_type" placeholder="Crew rank" class="form-input" autocomplete="off" required />
               </td>
               <td class="px-1 py-1">
                 <button type="button" @click="removeDeductionItem(batchHead.id)" class="px-2 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -547,24 +593,24 @@ onMounted(() => {
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="px-4 py-3 align-bottom"><nobr>Crew ID</nobr></th>
             <th class="px-4 py-3 align-bottom"><nobr>Crew Name</nobr></th>
-            <template v-for="(batchHead, index) in form.payrollBatchHeads">
-              <th class="px-4 py-3 align-bottom" v-if="batchHead?.type==='deduction'"><nobr>{{ batchHead?.head_name }}</nobr></th>
+            <template v-for="(batchHead, index) in form.crwPayrollBatchHeads">
+              <th class="px-4 py-3 align-bottom" v-if="batchHead?.head_type==='deduction'"><nobr>{{ batchHead?.head_name }}</nobr></th>
             </template>
             <th class="px-4 py-3 align-bottom"><nobr>Amount</nobr></th>
           </tr>
           </thead>
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-          <template v-for="(batchHeadLine, index) in form.payrollBatchHeadLines">
-            <tr v-if="batchHeadLine?.type==='deduction'" class="text-gray-700 dark-disabled:text-gray-400" :key="batchHeadLine.crw_crew_id">
+          <template v-for="(batchHeadLine, payrollBatchHeadLineIndex) in form.crwPayrollBatchHeadLines">
+            <tr v-if="batchHeadLine?.head_type==='deduction'" class="text-gray-700 dark-disabled:text-gray-400" :key="batchHeadLine.crw_crew_id">
               <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.payrollBatchHeadLines[index].crw_crew_id" placeholder="Crew ID" class="form-input vms-readonly-input" autocomplete="off" readonly />
+                <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_id" placeholder="Crew ID" class="form-input vms-readonly-input" autocomplete="off" readonly />
               </td>
               <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.payrollBatchHeadLines[index].crw_crew_name" placeholder="Crew name" class="form-input vms-readonly-input" autocomplete="off" readonly />
+                <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_name" placeholder="Crew name" class="form-input vms-readonly-input" autocomplete="off" readonly />
               </td>
-              <template v-for="(lineBatchHead, lineBatchHeadIndex) in form.payrollBatchHeadLines[index].batch_heads">
-                <td v-if="lineBatchHead?.type==='deduction'" class="px-1 py-1">
-                  <input type="text" placeholder="Amount" class="form-input" autocomplete="off" required />
+              <template v-for="(lineBatchHead, lineBatchHeadIndex) in form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads">
+                <td v-if="lineBatchHead?.head_type==='deduction'" class="px-1 py-1">
+                  <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads[lineBatchHeadIndex].amount" placeholder="Amount" class="form-input" autocomplete="off" required />
                 </td>
               </template>
 <!--              <template v-for="(batchHead, index) in form.payrollBatchHeads">-->
@@ -573,7 +619,7 @@ onMounted(() => {
 <!--                </td>-->
 <!--              </template>-->
               <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.payrollBatchHeadLines[index].amount" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" readonly />
+                <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" readonly />
               </td>
             </tr>
           </template>
@@ -606,38 +652,38 @@ onMounted(() => {
           </thead>
 
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-          <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(batchLine, index) in form.payrollBatchLines" :key="batchLine.crw_crew_id">
+          <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(batchLine, index) in form.crwPayrollBatchLines" :key="batchLine.crw_crew_id">
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.payrollBatchLines[index].crw_crew_id" placeholder="Crew ID" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].crw_crew_id" placeholder="Crew ID" class="form-input vms-readonly-input" autocomplete="off" readonly />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.payrollBatchLines[index].crw_crew_name" placeholder="Crew name" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].crw_crew_name" placeholder="Crew name" class="form-input vms-readonly-input" autocomplete="off" readonly />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.payrollBatchLines[index].crw_crew_rank" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].crw_crew_rank" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" readonly />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.payrollBatchLines[index].gross_salary" placeholder="Gross salary" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].gross_salary" placeholder="Gross salary" class="form-input vms-readonly-input" autocomplete="off" readonly />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.payrollBatchLines[index].contact" placeholder="Contact" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].contact" placeholder="Contact" class="form-input vms-readonly-input" autocomplete="off" readonly />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.payrollBatchLines[index].present_days" placeholder="Present days" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].present_days" placeholder="Present days" class="form-input vms-readonly-input" autocomplete="off" readonly />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.payrollBatchLines[index].absent_days" placeholder="Absent days" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].absent_days" placeholder="Absent days" class="form-input vms-readonly-input" autocomplete="off" readonly />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.payrollBatchLines[index].payable_days" placeholder="Payable days" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].payable_days" placeholder="Payable days" class="form-input vms-readonly-input" autocomplete="off" readonly />
             </td>
           </tr>
           </tbody>
-          <tfoot v-if="!form.payrollBatchLines?.length">
+          <tfoot v-if="!form.crwPayrollBatchLines?.length">
           <tr v-if="isLoading">
             <td colspan="9">Loading</td>
           </tr>
-          <tr v-else-if="!form.payrollBatchLines?.length">
+          <tr v-else-if="!form.crwPayrollBatchLines?.length">
             <td colspan="9">No data found.</td>
           </tr>
           </tfoot>

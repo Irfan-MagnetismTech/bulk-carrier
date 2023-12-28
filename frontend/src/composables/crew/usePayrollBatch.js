@@ -18,9 +18,9 @@ export default function usePayrollBatch() {
         ops_vessel_name: '',
         year_month: '',
         working_days: '',
-        payrollBatchLines: [],
-        payrollBatchHeads: [],
-        payrollBatchHeadLines: [],
+        crwPayrollBatchLines: [],
+        crwPayrollBatchHeads: [],
+        crwPayrollBatchHeadLines: [],
     });
 
     const filterParams = ref(null);
