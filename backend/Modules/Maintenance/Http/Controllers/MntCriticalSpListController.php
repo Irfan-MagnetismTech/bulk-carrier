@@ -3,6 +3,7 @@
 namespace Modules\Maintenance\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -167,24 +168,24 @@ class MntCriticalSpListController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(MntCriticalSpList $criticalSpareList)
     {
         try {
             DB::beginTransaction();
-            $mntCriticalSp = MntCriticalSpList::findorfail($id);
-            // Delete critical item spare parts
-            $mntCriticalSp->mntCriticalSpListLines()->delete();
-            // Delete critical item
-            $mntCriticalSp->delete();
+            // Delete critical item spare parts ROB
+            $criticalSpareList->mntCriticalSpListLines()->delete();
+            // Delete critical items list 
+            $criticalSpareList->delete();
 
             DB::commit();
-            return response()->success('Critical spare parts list deleted successfully', $mntCriticalSp, 204);
+            return response()->success('Critical spare parts list deleted successfully', $criticalSpareList, 204);
 
         }
-        catch (\Exception $e)
+        catch (QueryException $e)
         {
             DB::rollBack();
-            return response()->error($e->getMessage(), 500);
+            return response()->json($criticalSpareList->preventDeletionIfRelated(), 422);
+
         }
     }
 

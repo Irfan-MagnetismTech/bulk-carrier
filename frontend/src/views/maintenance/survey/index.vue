@@ -14,6 +14,7 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import moment from "moment";
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 
@@ -226,10 +227,14 @@ onMounted(() => {
             <!-- <td>{{ survey?.mntSurveyType?.survey_type_name }}</td> -->
             <!-- <td>{{ survey?.short_code }}</td> -->
             <td>{{ survey?.survey_name }}</td>
-            <td><nobr>{{ survey?.range_date_from }}</nobr></td>
-            <td><nobr>{{ survey?.range_date_to }}</nobr></td>
-            <td><nobr>{{ survey?.assigned_date }}</nobr></td>
-            <td><nobr>{{ survey?.due_date }}</nobr></td>
+            <!-- <td><nobr>{{ survey?.range_date_from }}</nobr></td> -->
+            <td><nobr>{{  moment(survey?.range_date_from).format('DD/MM/YYYY') }}</nobr></td>
+            <!-- <td><nobr>{{ survey?.range_date_to }}</nobr></td> -->
+            <td><nobr>{{  moment(survey?.range_date_to).format('DD/MM/YYYY') }}</nobr></td>
+            <!-- <td><nobr>{{ survey?.assigned_date }}</nobr></td> -->
+            <td><nobr>{{  moment(survey?.assigned_date).format('DD/MM/YYYY') }}</nobr></td>
+            <!-- <td><nobr>{{ survey?.due_date }}</nobr></td> -->
+            <td><nobr>{{  moment(survey?.due_date).format('DD/MM/YYYY') }}</nobr></td>
   
             <td><span :class="survey?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ survey?.business_unit }}</span></td>
             <td>
