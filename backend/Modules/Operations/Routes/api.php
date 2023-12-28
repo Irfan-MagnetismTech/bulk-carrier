@@ -11,6 +11,7 @@ use Modules\Operations\Http\Controllers\OpsCargoTypeController;
 use Modules\Operations\Http\Controllers\OpsBunkerBillController;
 use Modules\Operations\Http\Controllers\OpsCargoTariffController;
 use Modules\Operations\Http\Controllers\OpsExpenseHeadController;
+use Modules\Operations\Http\Controllers\OpsVesselBunkerController;
 use Modules\Operations\Http\Controllers\OpsVoyageBudgetController;
 use Modules\Operations\Http\Controllers\OpsBulkNoonReportController;
 use Modules\Operations\Http\Controllers\OpsContractAssignController;
@@ -67,6 +68,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'bunker-requisitions' => OpsBunkerRequisitionController::class,
         'bunker-bills' => OpsBunkerBillController::class,
         'voyage-budgets' => OpsVoyageBudgetController::class,
+        'vessel-bunkers' => OpsVesselBunkerController::class,
     ]);
 
     //start for without pagination
