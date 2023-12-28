@@ -27,6 +27,7 @@ export default function useVesselBunker() {
 		exchange_rate_bdt: '',
 		opsBunkers: [
 		],
+		bunkerItems: []
     });
     const errors = ref('');
     const isLoading = ref(false);
@@ -207,13 +208,13 @@ export default function useVesselBunker() {
 
         let isHasError = false;
         const messages = ref([]);
-        const hasDuplicates = form.opsVesselBunkerEntries.some((opsVoyageExpenseHead, index) => {
-            if (form.opsVesselBunkerEntries.filter(val => val.ops_expense_head_id === opsVoyageExpenseHead.ops_expense_head_id)?.length > 1) {
+        const hasDuplicates = form.opsBunkers.some((opsVoyageExpenseHead, index) => {
+            if (form.opsBunkers.filter(val => val.scm_material_id === opsVoyageExpenseHead.scm_material_id)?.length > 1) {
                 let data = `Duplicate Expense [Expense Data line no: ${index + 1}]`;
                 messages.value.push(data);
-                form.opsVesselBunkerEntries[index].isExpenseHeadDuplicate = true;
+                form.opsBunkers[index].isExpenseHeadDuplicate = true;
             } else {
-                form.opsVesselBunkerEntries[index].isExpenseHeadDuplicate = false;
+                form.opsBunkers[index].isExpenseHeadDuplicate = false;
             }
 		});
 
