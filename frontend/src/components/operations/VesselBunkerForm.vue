@@ -133,9 +133,7 @@ watch(() => props.form.exchange_rate_bdt, (value) => {
 
 watch(() => props.form.opsBunkers, (newValue, oldValue) => {
 
-  newValue.forEach((line, index) => {
-    props.form.opsBunkers[index].ops_expense_head_id = props.form.opsBunkers[index]?.opsExpenseHead?.id
-  });
+  // props.form.opsBunkers[index].scm_material_id = props.form.opsBunkers[index]?.scm_material_id
 
 }, { deep: true })
 
@@ -204,7 +202,15 @@ onMounted(() => {
           <option value="Voyage Wise">Voyage Wise</option>
         </select>
       </label>
-      <label class="block w-full mt-2 text-sm"></label>
+      <label class="block w-full mt-2 text-sm" v-if="form.type=='Reconciliation'">
+        <span class="text-gray-700">Type <span class="text-red-500">*</span></span>
+        <select v-model="form.reconciliation_type" class="form-input" required>
+          <option disabled selected value="">Select Option</option>
+          <option value="Addition">Addition</option>
+          <option value="Deletion">Deletion</option>
+        </select>
+      </label>
+      <label v-else class="block w-full mt-2 text-sm"></label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
@@ -224,7 +230,7 @@ onMounted(() => {
     <label class="block w-full mt-2 text-sm"></label>
 
   </div>
-  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+  <div class="flex w-full md:flex-row md:gap-2">
     <label class="block w-1/2 mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
               <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
@@ -239,7 +245,7 @@ onMounted(() => {
               </v-select>
               <input type="hidden" v-model="form.ops_vessel_id" />
     </label> 
-    <label class="block w-1/2 mt-2 text-sm">
+    <label class="block w-1/2 mt-2 text-sm" v-if="form.usage_type=='Voyage Wise'">
               <span class="text-gray-700 dark-disabled:text-gray-300">Voyage <span class="text-red-500">*</span></span>
               <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
@@ -300,9 +306,21 @@ onMounted(() => {
           <template v-for="(bunker, index) in form.opsBunkers" :key="index">
             <tr>
               <td>
-                <select v-model="form.opsBunkers[index].scm_material_id" class="form-input">
-                  <option v-for="(bunkerItem, itemIndex) in form.bunkerItems" :key="itemIndex">{{ bunkerItem.name }}</option>
-                </select>
+                <!-- <<select v-model="form.opsBunkers[index].name" class="form-input">
+                  option v-for="(bunkerItem, itemIndex) in form.bunkerItems" :key="itemIndex">{{ bunkerItem.name }}</option>
+                </select> -->
+
+                <v-select :options="form.bunkerItems" placeholder="--Choose an option--" :reduce="id" v-model="form.opsBunkers[index]" label="name" class="block form-input">
+                    <template #search="{attributes, events}">
+                        <input
+                            class="vs__search"
+                            :required="!form.opsBunkers[index]"
+                            v-bind="attributes"
+                            v-on="events"
+                            :reaonly="true"
+                            />
+                    </template>
+                </v-select>
               </td>
               <td>
                   <input type="number" step="0.0001" @input="calculateHeadAmounts()" required v-model="form.opsBunkers[index].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
