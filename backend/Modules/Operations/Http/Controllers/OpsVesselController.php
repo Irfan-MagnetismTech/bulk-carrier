@@ -13,6 +13,7 @@ use Modules\Operations\Entities\OpsVessel;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Accounts\Entities\AccCostCenter;
 use Modules\SupplyChain\Entities\ScmWarehouse;
+use Modules\SupplyChain\Services\StockLedgerData;
 use Modules\Operations\Http\Requests\OpsVesselRequest;
 
 class OpsVesselController extends Controller
@@ -102,7 +103,17 @@ class OpsVesselController extends Controller
                 'name'=>$request->manager,
                 'assign_date'=>today(),
             ];
+
             $ware_house=ScmWarehouse::create($wareHouse);
+            $vessel['scm_warehouse_id']= $ware_house->id;
+
+            $bunkers=$vessel->opsBunkers->map(function($bunker) {
+                $bunker['quantity'] = $bunker->opening_balance;
+                return $bunker;
+            });
+
+            (new StockLedgerData)->insert($vessel, $bunkers);
+            
             $ware_house->scmWarehouseContactPersons()->create($wareHouseContact);
 
             DB::commit();

@@ -25,10 +25,10 @@ class OpsVesselBunkerRequest extends FormRequest
             'date'                          => ['required', 'date'],
             'from_date'                     => ['nullable', 'date'],
             'till_date'                     => ['nullable', 'date'],
-            'opsBunkers.*.scm_material_id'  => ['nullable', 'numeric', 'max:255'],
-            'opsBunkers.*.unit'             => ['nullable', 'string', 'max:255'],
-            'opsBunkers.*.quantity'         => ['nullable', 'numeric'],
-            'opsBunkers.*.rate'             => ['nullable', 'numeric'],
+            // 'opsBunkers.*.scm_material_id'  => ['nullable', 'numeric', 'max:255'],
+            // 'opsBunkers.*.unit'             => ['nullable', 'string', 'max:255'],
+            // 'opsBunkers.*.quantity'         => ['nullable', 'numeric'],
+            // 'opsBunkers.*.rate'             => ['nullable', 'numeric'],
         ];
     }
 

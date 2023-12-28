@@ -5,13 +5,14 @@ namespace Modules\Operations\Entities;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Operations\Entities\OpsPort;
+use Modules\SupplyChain\Traits\StockLedger;
 use Modules\SupplyChain\Entities\ScmWarehouse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Maintenance\Entities\MntCriticalVesselItem;
 
 class OpsVessel extends Model
 {
-    use HasFactory, GlobalSearchTrait;
+    use HasFactory, GlobalSearchTrait, StockLedger;
     /**
      * The attributes that are mass assignable.
      *

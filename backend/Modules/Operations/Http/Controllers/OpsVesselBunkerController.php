@@ -65,24 +65,34 @@ class OpsVesselBunkerController extends Controller
                 'opsBunkers.scmMaterial',
             );
             
-            // $vessel_bunker = OpsVesselBunker::create($vessel_bunkerInfo);
-            // $vessel_bunker->opsBunkers()->createMany($request->opsBunkers);
+            // dd($request->all());
+            $vessel_bunker = OpsVesselBunker::create($vessel_bunkerInfo);
             
             $warehouse= ScmWarehouse::where('ops_vessel_id', $request->ops_vessel_id)->first();
-
+            $vessel_bunker['scm_warehouse_id']= $warehouse->id;
             $bunkers= collect($request->opsBunkers)->map(function($bunker) use ($warehouse){
-                $bunker['scm_warehouse_id']= $warehouse->id;
+                $bunker['scm_material_id']= 2;
                 return $bunker;
-            })->values();
+            })->values()->all();
+            
 
 
+            $vessel_bunker->opsBunkers()->createMany($bunkers);
+            
+            if($request->type=="Stock In"){
+                (new StockLedgerData)->insert($vessel_bunker, $bunkers);
+            }else if($request->type=="Stock Out"){
+                $dataForStock = [];
+                foreach ($bunkers as $key => $value) {
+                    $dataForStock[] =(new StockLedgerData)->out($value['scm_material_id'], $warehouse->id, $value['quantity']);
+                }
+                $dataForStockLedger = array_merge(...$dataForStock);
+                $vessel_bunker->stockable()->createMany($dataForStockLedger);
+            }
 
-            dd($bunkers);
-
-            // (new StockLedgerData)->insert($vessel_bunker, $bunkers);
             DB::commit();
 
-            // return response()->success('Data added successfully.', $vessel_bunker, 201);
+            return response()->success('Data added successfully.', $vessel_bunker, 201);
         }
         catch (QueryException $e)
         {

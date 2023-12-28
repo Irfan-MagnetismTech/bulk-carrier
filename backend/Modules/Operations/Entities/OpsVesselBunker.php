@@ -5,10 +5,11 @@ namespace Modules\Operations\Entities;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\SupplyChain\Traits\StockLedger;
 
 class OpsVesselBunker extends Model
 {
-    use HasFactory, GlobalSearchTrait;
+    use HasFactory, GlobalSearchTrait, StockLedger;
 
     protected $fillable = [
         'ops_vessel_id',
