@@ -4,6 +4,7 @@ import useUpcomingJobsReport from "../../../../composables/maintenance/useUpcomi
 import Title from "../../../../services/title";
 import useHeroIcon from "../../../../assets/heroIcon";
 import DefaultButton from '../../../../components/buttons/DefaultButton.vue';
+import { formatDate } from "../../../../utils/helper";
 const icons = useHeroIcon();
 const { formParams, upcomingJobs, upcomingJobsReport, downloadUpcomingJobsReport, isLoading, errors } = useUpcomingJobsReport();
 
@@ -45,12 +46,12 @@ setTitle('Upcoming Jobs Report');
                 <template v-for="(itemGroup, index) in upcomingJobs" :key="index">
                     <div class="my-2">
                         <h3 class="mb-1 font-bold mt-2" >{{ itemGroup.name  }}</h3>
-                        <table class="w-full whitespace-no-wrap">
+                        <table id="table" class="w-full whitespace-no-wrap">
                             <thead>
                                 <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 border-b dark:border-gray-700 bg-gray-50 dark:text-gray-200 dark:bg-gray-700">
                                     <th class="w-1/12"> Item Code </th>
                                     <th class="w-2/12"> Item </th>
-                                    <th class="w-1/12"> Item Run Hrs.</th>
+                                    <th class="w-1/12"> Item Running Hrs.</th>
                                     <th class="w-3/12"> Description </th>
                                     <th class="w-1/12"> Cycle </th>
                                     <th class="w-2/12"> Next Due </th>
@@ -62,12 +63,13 @@ setTitle('Upcoming Jobs Report');
                                     <template v-for="(job, jobIndex) in item.mntJobs" :key="jobIndex">
                                         <tr v-for="(jobLine, jobLineIndex) in job.mntJobLines" :key="jobLineIndex">
                                             <td v-if="jobLineIndex == 0" :rowspan="job.mntJobLines.length ?? 1">{{ item.item_code }}</td>
-                                            <td v-if="jobLineIndex == 0" :rowspan="job.mntJobLines.length ?? 1">{{ item.name }}</td>
+                                            <td class="text-left" v-if="jobLineIndex == 0" :rowspan="job.mntJobLines.length ?? 1">{{ item.name }}</td>
                                             <td v-if="jobLineIndex == 0" :rowspan="job.mntJobLines.length ?? 1">{{ job.present_run_hour }} {{ job.present_run_hour!=null ? 'Hrs.' : '' }}</td>
-                                            <td>{{ jobLine.job_description }}</td>
+                                            <td class="text-left">{{ jobLine.job_description }}</td>
                                             <td>{{ jobLine.cycle }} {{ jobLine.cycle_unit == "Hours" ? 'Hrs.' : jobLine.cycle_unit }}</td>
-                                            <td>{{ jobLine.next_due }} {{ jobLine.cycle_unit == "Hours" ? 'Hrs.' : '' }}</td>
-                                            <td>{{ jobLine.last_done }}</td>
+                                            <!-- <td>{{ jobLine.next_due }} {{ jobLine.cycle_unit == "Hours" ? 'Hrs.' : '' }}</td> -->
+                                            <td>{{ jobLine.cycle_unit == "Hours" ? jobLine.next_due + " Hrs." : formatDate(jobLine.next_due) }}</td>
+                                            <td>{{ formatDate(jobLine.last_done) }}</td>
                                         </tr>
                                         
                                     </template>
@@ -90,3 +92,14 @@ setTitle('Upcoming Jobs Report');
       </div>
     </template>
 </template>
+
+<style lang="postcss" scoped>
+#table, #table th, #table td{
+  @apply border border-collapse border-gray-400 text-center text-gray-700 px-1
+}
+
+#table, #table th.text-left, #table td.text-left{
+  @apply border border-collapse border-gray-400 text-left text-gray-700 px-1
+}
+
+</style>
