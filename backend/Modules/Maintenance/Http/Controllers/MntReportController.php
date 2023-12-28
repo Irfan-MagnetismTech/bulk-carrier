@@ -94,7 +94,7 @@ class MntReportController extends Controller
                         });
                         
                         if(count($mntJobLines) > 0) { // check if there any jobLines left
-                            $mntJobs[$k]['mntJobLines'] = $mntJobLines; // if any, reset the job array
+                            $mntJobs[$k]['mntJobLines'] = array_values($mntJobLines); // if any, reset the job array
                         } else {
                             unset($mntJobs[$k]); // otherwise remove the node
                         }
@@ -164,7 +164,7 @@ class MntReportController extends Controller
                         });
                         
                         if(count($mntJobLines) > 0) { // check if there any jobLines left
-                            $mntJobs[$k]['mntJobLines'] = $mntJobLines; // if any, reset the job array
+                            $mntJobs[$k]['mntJobLines'] = array_values($mntJobLines); // if any, reset the job array
                         } else {
                             unset($mntJobs[$k]); // otherwise remove the node
                         }
