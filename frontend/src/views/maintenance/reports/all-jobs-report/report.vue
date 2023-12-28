@@ -51,7 +51,7 @@ setTitle('All Jobs Report');
                                     <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-200 dark-disabled:bg-gray-700">
                                         <th class="w-1/12"> Item Code </th>
                                         <th class="w-2/12"> Item </th>
-                                        <th class="w-1/12"> Item Run Hrs.</th>
+                                        <th class="w-1/12"> Item Running Hrs.</th>
                                         <th class="w-3/12"> Description </th>
                                         <th class="w-1/12"> Cycle </th>
                                         <th class="w-2/12"> Next Due </th>

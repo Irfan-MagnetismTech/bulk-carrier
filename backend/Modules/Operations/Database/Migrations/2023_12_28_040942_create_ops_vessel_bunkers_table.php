@@ -23,7 +23,7 @@ return new class extends Migration
             $table->enum('type', ['Stock In','Stock Out'])->nullable();
             $table->enum('usage_type', ['Idle', 'Voyage Wise'])->nullable();
             $table->string('currency')->nullable();
-            $table->float('exchange_rate_bdt', 20, 2)->nullable();
+            $table->float('exchange_rate_bdt', 20, 2)->nullaSSble();
             $table->float('exchange_rate_usd', 20, 2)->nullable();
             $table->float('total_amount_bdt', 20, 2)->nullable();
             $table->float('total_amount_usd', 20, 2)->nullable();
