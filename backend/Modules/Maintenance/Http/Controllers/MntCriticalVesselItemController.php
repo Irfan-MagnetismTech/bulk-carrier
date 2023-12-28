@@ -187,7 +187,7 @@ class MntCriticalVesselItemController extends Controller
 
     public function getCriticalVesselFunctions() 
     {
-        $opsVesselId = request()->opsVesselId;
+        $opsVesselId = request()->ops_vessel_id;
         try {
             $criticalVesselFunctions = MntCriticalFunction::with(['mntCriticalItemCats.mntCriticalItems.mntCriticalVesselItems' => function ($query) use ($opsVesselId){
                                             $query->where('ops_vessel_id', $opsVesselId);
