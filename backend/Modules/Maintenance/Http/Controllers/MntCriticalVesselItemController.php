@@ -191,7 +191,10 @@ class MntCriticalVesselItemController extends Controller
         try {
             $criticalVesselFunctions = MntCriticalFunction::with(['mntCriticalItemCats.mntCriticalItems.mntCriticalVesselItems' => function ($query) use ($opsVesselId){
                                             $query->where('ops_vessel_id', $opsVesselId);
-                                        }])  
+                                        }])
+                                        ->whereHas('mntCriticalItemCats.mntCriticalItems', function($q){
+                                            $q->select('item_name', DB::raw('count(item_name) as total_items'))->groupBy('item_name')->havingRaw('count(item_name) > ?', [0]);
+                                        })
                                         ->get();
 
             return response()->success('Critical vessel functions are retrieved successfully', $criticalVesselFunctions, 200);
