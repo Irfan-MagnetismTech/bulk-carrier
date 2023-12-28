@@ -27,6 +27,7 @@ export default function useVesselBunker() {
 		exchange_rate_bdt: '',
 		opsBunkers: [
 		],
+		bunkerItems: []
     });
     const errors = ref('');
     const isLoading = ref(false);
@@ -205,17 +206,18 @@ export default function useVesselBunker() {
 	// 	// console.log(form);
 	// 	// return false;
 
-    //     let isHasError = false;
-    //     const messages = ref([]);
-    //     const hasDuplicates = form.opsVesselBunkerEntries.some((opsVoyageExpenseHead, index) => {
-    //         if (form.opsVesselBunkerEntries.filter(val => val.ops_expense_head_id === opsVoyageExpenseHead.ops_expense_head_id)?.length > 1) {
-    //             let data = `Duplicate Expense [Expense Data line no: ${index + 1}]`;
-    //             messages.value.push(data);
-    //             form.opsVesselBunkerEntries[index].isExpenseHeadDuplicate = true;
-    //         } else {
-    //             form.opsVesselBunkerEntries[index].isExpenseHeadDuplicate = false;
-    //         }
-	// 	});
+        // let isHasError = false;
+        // const messages = ref([]);
+        // const hasDuplicates = form.opsBunkers.some((opsVoyageExpenseHead, index) => {
+        //     if (form.opsBunkers.filter(val => val.scm_material_id === opsVoyageExpenseHead.scm_material_id)?.length > 1) {
+        //         let data = `Duplicate Expense [Expense Data line no: ${index + 1}]`;
+        //         messages.value.push(data);
+        //         form.opsBunkers[index].isExpenseHeadDuplicate = true;
+        //     } else {
+        //         form.opsBunkers[index].isExpenseHeadDuplicate = false;
+        //     }
+		// });
+
 
 	// 	if (messages.value.length > 0) {
     //         let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;

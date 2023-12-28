@@ -32,7 +32,7 @@ function fetchVesselDetails(ops_vessel_id, loading) {
   showVessel(ops_vessel_id, loading).then(() => {
      editInitiated.value = 1
       if(props.formType == 'create') {
-        props.form.opsBunkers = vessel.value.opsBunkers
+        props.form.bunkerItems = vessel.value.opsBunkers
       }
 
 
@@ -55,6 +55,7 @@ watch(() => props.form.opsVessel, (newValue, oldValue) => {
 
     props.form.ops_vessel_id = null;
     props.form.opsBunkers = [];
+    props.form.bunkerItems = []
     // props.form.ops_vessel_id = newValue?.id;
     if(editInitiated.value == 1 || props.formType == 'create') {
       voyages.value = []
@@ -80,6 +81,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
     props.form.opsVessel = null;
     vessels.value = []
     props.form.opsBunkers = []
+    props.form.bunkerItems = []
   }
 
   vessels.value = []
@@ -166,6 +168,14 @@ const calculateInCurrency = (item) => {
   }
 
   return {amount : (item.amount > 0) ? item.amount : 0, amount_usd: (item.amount_usd > 0) ? item.amount_usd : 0, amount_bdt:( item.amount_bdt > 0) ?  item.amount_bdt : 0};
+}
+
+function addHead() {
+  props.form.opsBunkers.push({});
+}
+
+function removeHead(index){
+    props.form.opsBunkers.splice(index, 1);
 }
 
 
@@ -264,7 +274,7 @@ onMounted(() => {
 
   </div>
 
-  <div class="relative my-3" v-if="form.type!='' && form.opsBunkers.length">
+  <div class="relative my-3" v-if="form.type!='' && form.bunkerItems.length">
 
     <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
       <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">{{ form.type }}</legend>
@@ -277,15 +287,22 @@ onMounted(() => {
           <th v-if="isOtherCurrency && form.type == 'Stock In'">Amount </th>
           <th v-if="form.type == 'Stock In'">Amount USD</th>
           <th v-if="form.type == 'Stock In'">Amount BDT</th>
+          <th>
+            <button type="button" @click="addHead()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </th>
         </tr>
         </thead>
         <tbody>
           <template v-for="(bunker, index) in form.opsBunkers" :key="index">
             <tr>
               <td>
-                <strong>
-                  {{ bunker.name }}
-                </strong>
+                <select v-model="form.opsBunkers[index].scm_material_id" class="form-input">
+                  <option v-for="(bunkerItem, itemIndex) in form.bunkerItems" :key="itemIndex">{{ bunkerItem.name }}</option>
+                </select>
               </td>
               <td>
                   <input type="number" step="0.0001" @input="calculateHeadAmounts()" required v-model="form.opsBunkers[index].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
@@ -301,6 +318,13 @@ onMounted(() => {
               </td>
               <td v-if="form.type == 'Stock In'">
                   <input type="number" step="0.0001" v-model="form.opsBunkers[index].amount_bdt" placeholder="BDT Amount" readonly class="form-input" autocomplete="off" />
+              </td>
+              <td>
+                <button type="button" @click="removeHead(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                  </svg>
+                </button>
               </td>
             </tr>
           </template>
