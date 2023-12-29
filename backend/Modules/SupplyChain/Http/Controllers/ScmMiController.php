@@ -167,7 +167,7 @@ class ScmMiController extends Controller
             $movementIn->load(
                 'scmMiLines.scmMaterial',
                 'scmMiShortage.scmWarehouse',
-                'scmMiShortage.scmMiShortageLines',
+                'scmMiShortage.scmMiShortageLines.scmMaterial',
                 'fromWarehouse',
                 'toWarehouse',
                 'createdBy',

@@ -72,7 +72,6 @@
               <th class="py-3 align-center">MR Quantity</th>
               <th class="py-3 align-center">MO Quantity</th>
               <th class="py-3 align-center">Qty</th>
-              <th class="py-3 align-center">Remarks</th>
               <th class="py-3 text-center align-center">Action</th>
             </tr>
             </thead>
@@ -110,12 +109,6 @@
                 <label class="block w-full mt-2 text-sm">
                   <input type="text" v-model="form.scmMiLines[index].quantity" class="form-input">
                 </label>
-              </td>
-              <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmMiLines[index].remarks" class="form-input">
-                </label>
-                
               </td>
               <td class="px-1 py-1 text-center">
                 <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -171,7 +164,6 @@
               <th class="py-3 align-center">Material Name </th>
               <th class="py-3 align-center">Unit</th>
               <th class="py-3 align-center">Qty</th>
-              <th class="py-3 align-center">Remarks</th>
             </tr>
             </thead>
 
@@ -200,12 +192,6 @@
                 <label class="block w-full mt-2 text-sm">
                   <input type="text" readonly v-model="form.scmMiShortage.scmMiShortageLines[index].quantity" class="vms-readonly-input form-input">
                 </label>
-              </td>
-              <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmMiShortage.scmMiShortageLines[index].remarks" class="form-input">
-                </label>
-                
               </td>
             </tr>
             </tbody>
