@@ -14,7 +14,12 @@ class SurveyEntryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'ops_vessel_id'  => 'required',
+            'mnt_survey_id'  => 'required',
+            'range_date_from' => 'required',
+            'range_date_to' => 'required',
+            'assigned_date' => 'required',
+            'due_date' => 'required',
         ];
     }
 
