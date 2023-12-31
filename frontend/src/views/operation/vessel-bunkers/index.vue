@@ -43,18 +43,18 @@ let filterOptions = ref({
   "isFilter": false,
   "filter_options": [
     {
-      "relation_name": null,
-      "field_name": "title",
+      "relation_name": "opsVessel",
+      "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Title",
+      "label": "Vessel",
       "filter_type": "input"
     },
     {
       "relation_name": "opsVoyage",
-      "field_name": "voyage_sequence",
+      "field_name": "voyage_no",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -64,35 +64,15 @@ let filterOptions = ref({
     },
     {
       "relation_name": null,
-      "field_name": null,
+      "field_name": 'type',
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Effective From",
-      "filter_type": null
+      "label": "Type",
+      "filter_type": "input"
     },
-    {
-      "relation_name": null,
-      "field_name": null,
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Effective Till",
-      "filter_type": null
-    },
-    {
-      "relation_name": null,
-      "field_name": null,
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Total (BDT)",
-      "filter_type": null
-    },
-   
+  
   ]
 });
 
@@ -166,27 +146,19 @@ onMounted(() => {
           <tbody v-if="vesselBunkers?.data?.length" class="relative">
               <tr v-for="(vesselBunker, index) in vesselBunkers.data" :key="vesselBunker?.id">
                   <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-                  <td>{{ vesselBunker?.title }}</td>
+                  <td>{{ vesselBunker?.opsVessel?.name }}</td>
                   <td>{{ vesselBunker?.opsVoyage?.voyage_sequence }}</td>
                   <td>
-                    <nobr>{{ vesselBunker?.effective_from ? moment(vesselBunker?.effective_from).format('DD-MM-YYYY') : null }}</nobr>
+                    <nobr>{{ vesselBunker?.type }}</nobr>
                   </td>
                   <td>
-                    <nobr>{{ vesselBunker?.effective_till ? moment(vesselBunker?.effective_till).format('DD-MM-YYYY') : null }}</nobr>
-                  </td>
-                  <td class="!text-right">
-                    {{ numberFormat((vesselBunker?.opsVesselBunkerEntries.reduce((accumulator, currentObject) => {
-  return accumulator + (currentObject.amount_bdt ? parseFloat(currentObject.amount_bdt) : 0);
-}, 0)) || 0) }}
-                  </td>
-                  <td>
-                    <span :class="vesselBunker?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ vesselBunker?.business_unit }}</span>
+                    <span :class="vesselBunker?.opsVessel?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ vesselBunker?.opsVessel?.business_unit }}</span>
                   </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <action-button :action="'show'" :to="{ name: 'ops.vessel-bunkers.show', params: { vesselBunkerId: vesselBunker.id } }"></action-button>
-                      <action-button :action="'edit'" :to="{ name: 'ops.vessel-bunkers.edit', params: { vesselBunkerId: vesselBunker.id } }"></action-button>
-                      <action-button @click="confirmDelete(vesselBunker.id)" :action="'delete'"></action-button>
+                      <!-- <action-button :action="'edit'" :to="{ name: 'ops.vessel-bunkers.edit', params: { vesselBunkerId: vesselBunker.id } }"></action-button> -->
+                      <!-- <action-button @click="confirmDelete(vesselBunker.id)" :action="'delete'"></action-button> -->
                     </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
                   </td>

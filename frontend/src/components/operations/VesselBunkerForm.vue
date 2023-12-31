@@ -8,11 +8,13 @@ import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import useVoyage from "../../composables/operations/useVoyage";
 import useBusinessInfo from "../../composables/useBusinessInfo";
 import useHeroIcon from "../../assets/heroIcon";
-
+import RemarksComponet from '../../components/utils/RemarksComponent.vue';
+import useVendor from "../../composables/supply-chain/useVendor.js";
 
 const { vessel, vessels, getVesselList, showVessel } = useVessel();
 const { voyages, searchVoyages } = useVoyage();
 const { currencies, getCurrencies } = useBusinessInfo();
+const {vendor, vendors, showVendor, searchVendor, isLoading: vendorLoader } = useVendor();
 
 const icons = useHeroIcon();
 
@@ -28,11 +30,18 @@ const props = defineProps({
 
 const editInitiated = ref(0)
 
+function fetchVendors(searchParam, loading) {
+  searchVendor(searchParam, props.form.business_unit, loading)
+}
+
 function fetchVesselDetails(ops_vessel_id, loading) {
   showVessel(ops_vessel_id, loading).then(() => {
      editInitiated.value = 1
       if(props.formType == 'create') {
-        props.form.bunkerItems = vessel.value.opsBunkers
+        props.form.bunkerItems = vessel.value.opsBunkers.map(function (bunker) {
+          delete bunker.particular;
+          return bunker;
+        })
       }
 
 
@@ -88,6 +97,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
 
   if (newValue) {    
     getVesselList(props.form.business_unit);
+    fetchVendors("", false);
   }
   
 }, {deep: true});
@@ -131,12 +141,6 @@ watch(() => props.form.exchange_rate_bdt, (value) => {
   calculateHeadAmounts()
 }, { deep: true })
 
-watch(() => props.form.opsBunkers, (newValue, oldValue) => {
-
-  // props.form.opsBunkers[index].scm_material_id = props.form.opsBunkers[index]?.scm_material_id
-
-}, { deep: true })
-
 const calculateHeadAmounts = () => {
     props.form.opsBunkers.forEach((line, index) => {
 
@@ -169,13 +173,24 @@ const calculateInCurrency = (item) => {
 }
 
 function addHead() {
-  props.form.opsBunkers.push({});
+  
+  let lastItem = props.form.opsBunkers[props.form.opsBunkers.length - 1];
+
+  props.form.opsBunkers.push({
+    particular: lastItem?.particular,
+    opsBunkerInfo: {}
+  });
+  
 }
 
 function removeHead(index){
     props.form.opsBunkers.splice(index, 1);
 }
 
+function setScmMaterial(index) {
+  props.form.opsBunkers[index].scm_material_id = props.form.opsBunkers[index].opsBunkerInfo.scm_material_id
+  props.form.opsBunkers[index].unit = props.form.opsBunkers[index].opsBunkerInfo.unit
+}
 
 onMounted(() => {
   getCurrencies();
@@ -194,7 +209,7 @@ onMounted(() => {
           <option value="Reconciliation">Reconciliation</option>
         </select>
       </label>
-      <label class="block w-full mt-2 text-sm">
+      <label v-if="form.type != 'Stock In' && form.type != ''" class="block w-full mt-2 text-sm">
         <span class="text-gray-700">Consumption Type <span class="text-red-500">*</span></span>
         <select v-model="form.usage_type" class="form-input" required>
           <option disabled selected value="">Select Option</option>
@@ -202,6 +217,7 @@ onMounted(() => {
           <option value="Voyage Wise">Voyage Wise</option>
         </select>
       </label>
+      <label v-else class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm" v-if="form.type=='Reconciliation'">
         <span class="text-gray-700">Type <span class="text-red-500">*</span></span>
         <select v-model="form.reconciliation_type" class="form-input" required>
@@ -262,6 +278,20 @@ onMounted(() => {
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.type=='Stock In'">
     <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Vendor <span class="text-red-500">*</span></span>
+        <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.scmVendor" label="name" class="block form-input" >
+            <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.scmVendor"
+                    v-bind="attributes"
+                    v-on="events"
+                    />
+            </template>
+        </v-select>
+        <input type="hidden" v-model="form.scm_vendor_id" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700">Currency <span class="text-red-500">*</span></span>
         <select v-model.trim="form.currency" class="form-input" required>
           <option selected value="" disabled>Select Currency</option>
@@ -276,7 +306,6 @@ onMounted(() => {
       <span class="text-gray-700">Exchange Rate (USD to BDT) </span>
       <input type="number" step="0.0001" v-model="form.exchange_rate_bdt" placeholder="Exchange Rate (USD to BDT)" class="form-input" :readonly="isBDTCurrency" />
     </label>
-    <label class="block w-full mt-2 text-sm"></label>
 
   </div>
 
@@ -287,9 +316,10 @@ onMounted(() => {
       <table class="w-full" id="table">
         <thead>
         <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-          <th class="w-1/6"><nobr>Bunker</nobr></th>
-          <th><nobr>Quantity</nobr></th>
-          <th v-if="form.type == 'Stock In'"><nobr>Rate</nobr></th>
+          <th v-if="form.type == 'Stock Out' && form.usage_type=='Voyage Wise'"><nobr>Particular <span class="text-red-500">*</span></nobr></th>
+          <th class="w-44">Bunker <span class="text-red-500">*</span></th>
+          <th><nobr>Quantity <span class="text-red-500">*</span></nobr></th>
+          <th v-if="form.type == 'Stock In'"><nobr>Rate <span class="text-red-500">*</span></nobr></th>
           <th v-if="isOtherCurrency && form.type == 'Stock In'">Amount </th>
           <th v-if="form.type == 'Stock In'">Amount USD</th>
           <th v-if="form.type == 'Stock In'">Amount BDT</th>
@@ -305,16 +335,17 @@ onMounted(() => {
         <tbody>
           <template v-for="(bunker, index) in form.opsBunkers" :key="index">
             <tr>
-              <td>
-                <!-- <<select v-model="form.opsBunkers[index].name" class="form-input">
-                  option v-for="(bunkerItem, itemIndex) in form.bunkerItems" :key="itemIndex">{{ bunkerItem.name }}</option>
-                </select> -->
+              <td v-if="form.type == 'Stock Out' && form.usage_type=='Voyage Wise'">
+                <input type="text" required v-model="form.opsBunkers[index].particular" placeholder="Particular" class="form-input" autocomplete="off" />
+              </td>
 
-                <v-select :options="form.bunkerItems" placeholder="--Choose an option--" :reduce="id" v-model="form.opsBunkers[index]" label="name" class="block form-input">
+              <td>
+
+                <v-select :options="form.bunkerItems" placeholder="Select Bunker" :reduce="id" v-model="form.opsBunkers[index].opsBunkerInfo" label="name" class="block form-input" @update:modelValue="setScmMaterial(index)">
                     <template #search="{attributes, events}">
                         <input
                             class="vs__search"
-                            :required="!form.opsBunkers[index]"
+                            :required="!form.opsBunkers[index].opsBunkerInfo"
                             v-bind="attributes"
                             v-on="events"
                             :reaonly="true"
@@ -323,10 +354,10 @@ onMounted(() => {
                 </v-select>
               </td>
               <td>
-                  <input type="number" step="0.0001" @input="calculateHeadAmounts()" required v-model="form.opsBunkers[index].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
+                  <input type="number" step="0.0001" min="0" @input="calculateHeadAmounts()" required v-model="form.opsBunkers[index].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
               </td>
               <td v-if="form.type == 'Stock In'">
-                <input type="number" step="0.0001" @input="calculateHeadAmounts()" required v-model="form.opsBunkers[index].rate" placeholder="Rate" class="form-input" autocomplete="off" />
+                <input type="number" step="0.0001" min="0" @input="calculateHeadAmounts()" required v-model="form.opsBunkers[index].rate" placeholder="Rate" class="form-input" autocomplete="off" />
               </td>
               <td v-if="isOtherCurrency && form.type == 'Stock In'">
                 <input type="number" step="0.0001" @input="calculateHeadAmounts()" v-model="form.opsBunkers[index].amount" placeholder="Amount" readonly class="form-input" autocomplete="off" />
@@ -349,6 +380,8 @@ onMounted(() => {
         </tbody>
       </table>
     </fieldset>
+
+    <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
 
   </div>
 

@@ -71,7 +71,6 @@ class OpsVesselBunkerController extends Controller
             $warehouse= ScmWarehouse::where('ops_vessel_id', $request->ops_vessel_id)->first();
             $vessel_bunker['scm_warehouse_id']= $warehouse->id;
             $bunkers= collect($request->opsBunkers)->map(function($bunker) use ($warehouse){
-                $bunker['scm_material_id']= 2;
                 return $bunker;
             })->values()->all();
             
@@ -113,6 +112,7 @@ class OpsVesselBunkerController extends Controller
             'opsVessel',
             'opsVoyage',
             'opsBunkers.scmMaterial',
+            'opsBunkers.scmVendor',
         ]);
 
         $vessel_bunker->opsBunkers->map(function($bunker) {
@@ -143,6 +143,7 @@ class OpsVesselBunkerController extends Controller
     public function update(OpsVesselBunkerRequest $request, OpsVesselBunker $vessel_bunker): JsonResponse
     {
         // dd($request);
+        // Update is disabled. Enabling it requires checking and update chained stock data.
         try
         {
             DB::beginTransaction();
