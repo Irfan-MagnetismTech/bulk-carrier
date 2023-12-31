@@ -20,7 +20,6 @@ class MntSurvey extends Model
         'survey_name',
     ];
 
-    protected $appends = ["status"];
 
     public function mntSurveyItem() : BelongsTo {
         return $this->belongsTo(MntSurveyItem::class);

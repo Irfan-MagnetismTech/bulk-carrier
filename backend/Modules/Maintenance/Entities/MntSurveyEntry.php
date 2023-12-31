@@ -21,6 +21,8 @@ class MntSurveyEntry extends Model
         'due_date',
         'business_unit',
     ];
+    
+    protected $appends = ["status"];
 
     public function opsVessel() : BelongsTo {
         return $this->belongsTo(OpsVessel::class);
