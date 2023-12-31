@@ -8,6 +8,7 @@ use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Operations\Entities\OpsVessel;
 
 class MntSurvey extends Model
@@ -28,6 +29,10 @@ class MntSurvey extends Model
 
     public function mntSurveyType() : BelongsTo {
         return $this->belongsTo(MntSurveyType::class);
+    }
+
+    public function mntSurveyEntries() : HasMany {
+        return $this->hasMany(MntSurveyEntry::class);
     }
 
     protected static function boot()
