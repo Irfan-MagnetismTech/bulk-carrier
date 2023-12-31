@@ -45,28 +45,30 @@ setTitle('Survey Report');
                 <!-- <h1 class="py-1 font-bold text-center text-white bg-green-500 text-capitalize"> Critical Items </h1> -->
                 <div class="w-full">
                     
-                    <template v-for="(surveyEntry, index) in surveyEntries" :key="index">
+                    <template v-for="(mntSurveyItem, index) in surveyEntries" :key="index">
                         <div class="my-2">
-                            <h3 class="mb-1 font-bold mt-2" >{{ criticalVesselFunction.function_name  }}</h3>
+                            <h3 class="mb-1 font-bold mt-2" >{{ mntSurveyItem.item_name  }}</h3>
                             <table id="table" class="w-full whitespace-no-wrap">
                                 <thead>
                                     <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-200 dark-disabled:bg-gray-700">
-                                        <th class="w-3/12"> Category </th>
-                                        <th class="w-3/12"> Item </th>
-                                        <th class="w-3/12"> Critical</th>
-                                        <th class="w-3/12"> Remarks </th>
+                                        <th class="w-3/12"> Survey Details </th>
+                                        <th class="w-3/12"> Range Dates </th>
+                                        <th class="w-2/12"> Status</th>
+                                        <th class="w-2/12"> Assigned Date </th>
+                                        <th class="w-2/12"> Due Date </th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-                                    <!-- <template  v-for="(mntCriticalItemCat, catIndex) in criticalVesselFunction.mntCriticalItemCats" :key="catIndex">
-                                        <tr v-for="(mntCriticalItem, itemIndex) in mntCriticalItemCat.mntCriticalItems" :key="itemIndex">
-                                            <td class="p-1" v-if="itemIndex == 0" :rowspan="mntCriticalItemCat?.mntCriticalItems?.length??1">{{ mntCriticalItemCat?.category_name }}</td>
-                                            <td class="p-1">{{ mntCriticalItem?.item_name }}</td>
-                                            <td class="p-1"><input type="checkbox" :checked="mntCriticalItem?.mntCriticalVesselItems[0]?.is_critical ?? false" disabled /></td>
-                                            <td>{{ mntCriticalItem?.mntCriticalVesselItems[0]?.notes }}</td>
-                                        </tr>
+                                    <tr  v-for="(mntSurvey, surveyIndex) in mntSurveyItem.mntSurveys" :key="surveyIndex">
+                                        <!-- <tr v-for="(mntCriticalItem, itemIndex) in mntSurveyEntry.mntCriticalItems" :key="itemIndex"> -->
+                                            <td class="p-1">{{ mntSurvey?.survey_name }}</td>
+                                            <td class="p-1">{{ formatDate(mntSurvey?.mntSurveyEntries[0]?.range_date_from) }} - {{ formatDate(mntSurvey?.mntSurveyEntries[0]?.range_date_to)  }}</td>
+                                            <td class="p-1">{{ mntSurvey?.mntSurveyEntries[0]?.status }}</td>
+                                            <td class="p-1">{{ formatDate(mntSurvey?.mntSurveyEntries[0]?.assigned_date) }}</td>
+                                            <td class="p-1">{{ formatDate(mntSurvey?.mntSurveyEntries[0]?.due_date) }}</td>
+                                        <!-- </tr> -->
                                         
-                                    </template> -->
+                                    </tr>
                                     
                                     
                                 </tbody>

@@ -158,6 +158,8 @@
   
   function surveyItemChange() {
       props.form.mnt_survey_item_id = props.form.mnt_survey_item?.id;
+
+      surveyTypeChange();
   }
   
   function surveyTypeChange() {
@@ -166,7 +168,8 @@
     props.form.mnt_survey = null;
     props.form.mnt_survey_id = null;
     surveys.value = [];
-    getSurveysWithoutPagination(props.form.mnt_survey_type_id);
+    if(props.form.mnt_survey_item_id && props.form.mnt_survey_type_id)
+      getSurveysWithoutPagination( props.form.mnt_survey_item_id, props.form.mnt_survey_type_id );
     setRangeDateTo();
     setDueDate();
   }

@@ -155,7 +155,7 @@ export default function useSurvey() {
         }
     }
 
-    async function getSurveysWithoutPagination(mntSurveyTypeId) {
+    async function getSurveysWithoutPagination(mntSurveyItemId, mntSurveyTypeId) {
         //NProgress.start();
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -163,7 +163,8 @@ export default function useSurvey() {
         try {
             const { data, status } = await Api.get('/mnt/get-surveys', {
                 params: {
-                    mnt_survey_type_id: mntSurveyTypeId
+                    mnt_survey_type_id: mntSurveyTypeId,
+                    mnt_survey_item_id: mntSurveyItemId,
                 },
             });
             surveys.value = data.value;
