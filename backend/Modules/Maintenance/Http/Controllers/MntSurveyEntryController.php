@@ -66,7 +66,17 @@ class MntSurveyEntryController extends Controller
      */
     public function show($id)
     {
-        return view('maintenance::show');
+        try {
+
+            $survey = MntSurveyEntry::with(["opsVessel","mntSurvey"])->find($id);
+
+            return response()->success('Survey entry type found successfully', $survey, 200);
+
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**

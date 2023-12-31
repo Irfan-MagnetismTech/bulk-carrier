@@ -92,7 +92,7 @@ class MntSurveyController extends Controller
     {
         try {
 
-            $survey = MntSurvey::with(["opsVessel","mntSurveyItem", "mntSurveyType"])->find($id);
+            $survey = MntSurvey::with(["mntSurveyItem", "mntSurveyType"])->find($id);
             $survey->applySurveyNameModification = true;
             $survey->survey_name = $survey->survey_name;
 
