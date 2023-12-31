@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmMi;
 use Modules\SupplyChain\Entities\ScmMo;
 use Modules\SupplyChain\Services\UniqueId;
-use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
 use Modules\SupplyChain\Entities\ScmMiShortage;
@@ -20,7 +19,7 @@ use Modules\SupplyChain\Http\Requests\ScmMiRequest;
 class ScmMiController extends Controller
 {
 
-    function __construct(private CompositeKey $compositeKey)
+    function __construct()
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -65,7 +64,7 @@ class ScmMiController extends Controller
 
             $scmMi = ScmMi::create($requestData);
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMiLines, $scmMi->id, 'scm_material_id', 'mi');
+            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmMiLines, $scmMi->id, 'scm_material_id', 'mi');
             $scmMi->scmMiLines()->createMany($linesData);
 
             if ($request->scmMiShortage['shortage_type'] != "") {
@@ -224,7 +223,7 @@ class ScmMiController extends Controller
             $movementIn->scmMiLines()->delete();
             $movementIn->stockable()->delete();
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMiLines, $movementIn->id, 'scm_material_id', 'mi');
+            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmMiLines, $movementIn->id, 'scm_material_id', 'mi');
 
             $movementIn->scmMiLines()->createMany($linesData);
 

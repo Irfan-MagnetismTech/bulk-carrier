@@ -17,7 +17,7 @@ use Modules\SupplyChain\Http\Requests\ScmAdjustmentRequest;
 
 class ScmAdjustmentController extends Controller
 {
-    function __construct(private CompositeKey $compositeKey)
+    function __construct()
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -62,7 +62,7 @@ class ScmAdjustmentController extends Controller
 
             $adjustment = ScmAdjustment::create($requestData);
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
+            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
             $adjustment->scmAdjustmentLines()->createMany($linesData);
 
             if ($request->type === 'Addition') {
@@ -121,7 +121,7 @@ class ScmAdjustmentController extends Controller
 
             $adjustment->stockable()->delete();
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
+            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
 
             $adjustment->scmAdjustmentLines()->createMany($linesData);
 

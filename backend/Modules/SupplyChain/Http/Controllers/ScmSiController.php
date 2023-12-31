@@ -20,7 +20,7 @@ use Modules\SupplyChain\Entities\ScmStockLedger;
 
 class ScmSiController extends Controller
 {
-    function __construct(private CompositeKey $compositeKey)
+    function __construct()
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -60,7 +60,7 @@ class ScmSiController extends Controller
 
             $scmSi = ScmSi::create($requestData);
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSiLines, $scmSi->id, 'scm_material_id', 'si');
+            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmSiLines, $scmSi->id, 'scm_material_id', 'si');
 
             $scmSi->scmSiLines()->createMany($linesData);
 
@@ -154,7 +154,7 @@ class ScmSiController extends Controller
             $storeIssue->scmSiLines()->delete();
             $storeIssue->stockable()->delete();
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSiLines, $storeIssue->id, 'scm_material_id', 'si');
+            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmSiLines, $storeIssue->id, 'scm_material_id', 'si');
 
             $storeIssue->scmSiLines()->createMany($linesData);
 

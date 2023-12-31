@@ -15,7 +15,7 @@ use Modules\SupplyChain\Http\Requests\ScmMoRequest;
 
 class ScmMoController extends Controller
 {
-    function __construct(private CompositeKey $compositeKey)
+    function __construct()
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -59,7 +59,7 @@ class ScmMoController extends Controller
 
             $scmMo = ScmMo::create($requestData);
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMoLines, $scmMo->id, 'scm_material_id', 'mo');
+            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmMoLines, $scmMo->id, 'scm_material_id', 'mo');
 
 
             $scmMo->scmMoLines()->createMany($linesData);
@@ -156,7 +156,7 @@ class ScmMoController extends Controller
 
             $movementOut->scmMoLines()->delete();
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMoLines, $movementOut->id, 'scm_material_id', 'mo');
+            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmMoLines, $movementOut->id, 'scm_material_id', 'mo');
 
             $movementOut->scmMoLines()->createMany($linesData);
 

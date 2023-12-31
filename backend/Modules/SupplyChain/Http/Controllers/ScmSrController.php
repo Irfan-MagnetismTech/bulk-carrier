@@ -15,7 +15,7 @@ use Modules\SupplyChain\Services\CurrentStock;
 
 class ScmSrController extends Controller
 {
-    function __construct(private CompositeKey $compositeKey)
+    function __construct()
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -54,7 +54,7 @@ class ScmSrController extends Controller
             DB::beginTransaction();
 
             $scmSr = ScmSr::create($requestData);
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSrLines, $scmSr->id, 'scm_material_id', 'sr');
+            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmSrLines, $scmSr->id, 'scm_material_id', 'sr');
             $scmSr->scmSrLines()->createMany($linesData);
 
             DB::commit();
@@ -97,7 +97,7 @@ class ScmSrController extends Controller
 
             $storeRequisition->scmSrLines()->delete();
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSrLines, $storeRequisition->id, 'scm_material_id', 'sr');
+            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmSrLines, $storeRequisition->id, 'scm_material_id', 'sr');
 
             $storeRequisition->scmSrLines()->createMany($linesData);
 
