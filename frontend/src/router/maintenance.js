@@ -552,6 +552,18 @@ export default [
 	/* Critical Items */
 
 	
+	/* Survey Start */
+	{
+		path: `/${BASE}/reports/surveys`,
+		name: `${BASE}.reports.surveys`,
+		component: () => import(`../views/${VIEWBASE}/reports/survey-entries-report/report.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-entries-report' },
+	},
+	/* Survey End */
+
+
+
+	
 
 	/* Report End */
 

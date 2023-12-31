@@ -331,6 +331,20 @@ export default [
                         subSubMenu: [],
                     },
 
+                    
+                    {
+                        route: 'mnt.reports.surveys',
+                        label: 'Survey Report',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+
+
+
 
 
 
