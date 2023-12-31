@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Response;
 use App\Support\Macros\CreateUpdateOrDelete;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Mail;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -54,5 +55,10 @@ class AppServiceProvider extends ServiceProvider
 
             return (new CreateUpdateOrDelete($hasMany, $records))();
         });
+
+        if (! app()->environment('production')) {
+            Mail::alwaysTo('sumon@magnetismtech.com');
+        }        
+
     }
 }

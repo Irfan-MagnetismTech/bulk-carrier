@@ -13,7 +13,7 @@ class CrwPayrollBatch extends Model
     /**
      * @var array
      */
-    protected $fillable = ['ops_vessel_id', 'month_no', 'year', 'compensation_type', 'start_date', 'end_date', 'process_date', 'net_payment', 'currency', 'working_days', 'business_unit'];
+    protected $fillable = ['ops_vessel_id', 'year_month', 'compensation_type', 'process_date', 'net_payment', 'currency', 'working_days', 'business_unit'];
 
     public function opsVessel()
     {
@@ -22,16 +22,16 @@ class CrwPayrollBatch extends Model
 
     public function crwPayrollBatchLines()
     {
-        return $this->belongsTo(CrwPayrollBatchLine::class);
+        return $this->hasMany(CrwPayrollBatchLine::class);
     }
 
     public function crwPayrollBatchHeads()
     {
-        return $this->belongsTo(CrwPayrollBatchHead::class);
+        return $this->hasMany(CrwPayrollBatchHead::class);
     }
 
     public function crwPayrollBatchHeadLines()
     {
-        return $this->belongsTo(CrwPayrollBatchHeadLine::class);
+        return $this->hasMany(CrwPayrollBatchHeadLine::class);
     }
 }

@@ -7,9 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwPayrollBatch;
+use Modules\Crew\Entities\CrwPayrollBatchHead;
+use Modules\Crew\Entities\CrwPayrollBatchHeadLine;
 
 class CrwPayrollBatchController extends Controller
 {
+    /**
+     * @param Request $request
+     */
     public function index(Request $request)
     {
         try {
@@ -28,14 +33,33 @@ class CrwPayrollBatchController extends Controller
      */
     public function store(Request $request)
     {
+
         try {
             DB::transaction(function () use ($request)
             {
-                $crwPayrollBatchData = $request->only('ops_vessel_id', 'month_no', 'year', 'compensation_type', 'start_date', 'end_date', 'process_date', 'net_payment', 'currency', 'working_days', 'business_unit');
+                $crwPayrollBatchData = $request->only('ops_vessel_id', 'year_month', 'compensation_type', 'process_date', 'net_payment', 'currency', 'working_days', 'business_unit');
                 $crwPayrollBatch     = CrwPayrollBatch::create($crwPayrollBatchData);
                 $crwPayrollBatch->crwPayrollBatchLines()->createMany($request->crwPayrollBatchLines);
-                $crwPayrollBatch->crwPayrollBatchHeads()->createMany($request->crwPayrollBatchHeads);
-                $crwPayrollBatch->crwPayrollBatchHeadLines()->createMany($request->crwPayrollBatchHeadLines);
+
+                foreach ($request->crwPayrollBatchHeads as $crwPayrollBatchHead)
+                {                    
+                    $batchHead = CrwPayrollBatchHead::create([
+                        'crw_payroll_batch_id' => $crwPayrollBatch->id,
+                        'head_type'            => $crwPayrollBatchHead['head_type'],
+                        'head_name'            => $crwPayrollBatchHead['head_name'],
+                        'amount'               => $crwPayrollBatchHead['amount'],
+                    ]);
+
+                    foreach ($crwPayrollBatchHead['crwPayrollBatchHeadLines'] as $crwBatchHead)
+                    {
+                        CrwPayrollBatchHeadLine::create([
+                            'crw_payroll_batch_id'      => $crwPayrollBatch->id,
+                            'crw_payroll_batch_head_id' => $batchHead->id,
+                            'crw_crew_id'               => $crwBatchHead['crew_id'],
+                            'amount'                    => $crwBatchHead['amount'],
+                        ]);
+                    }
+                }
 
                 return response()->success('Created Succesfully', $crwPayrollBatch, 201);
             });
@@ -69,7 +93,7 @@ class CrwPayrollBatchController extends Controller
         try {
             DB::transaction(function () use ($request, $crwPayrollBatch)
             {
-                $crwPayrollBatchData = $request->only('ops_vessel_id', 'month_no', 'year', 'compensation_type', 'start_date', 'end_date', 'process_date', 'net_payment', 'currency', 'working_days', 'business_unit');
+                $crwPayrollBatchData = $request->only('ops_vessel_id', 'year_month', 'compensation_type', 'process_date', 'net_payment', 'currency', 'working_days', 'business_unit');
                 $crwPayrollBatch->update($crwPayrollBatchData);
                 $crwPayrollBatch->crwPayrollBatchLines()->delete();
                 $crwPayrollBatch->crwPayrollBatchHeads()->delete();

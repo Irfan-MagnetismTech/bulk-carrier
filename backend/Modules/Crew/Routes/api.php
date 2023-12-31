@@ -17,6 +17,7 @@ use Modules\Crew\Http\Controllers\CrwCrewProfileController;
 use Modules\Crew\Http\Controllers\CrwCrewRankController;
 use Modules\Crew\Http\Controllers\CrwCrewRequisitionController;
 use Modules\Crew\Http\Controllers\CrwIncidentController;
+use Modules\Crew\Http\Controllers\CrwPayrollBatchController;
 use Modules\Crew\Http\Controllers\CrwPolicyController;
 use Modules\Crew\Http\Controllers\CrwRankController;
 use Modules\Crew\Http\Controllers\CrwRecruitmentApprovalController;
@@ -57,6 +58,7 @@ Route::middleware(['auth:api'])->prefix('crw')->as('crw.')->group(function ()
     Route::apiResource('crw-incidents', CrwIncidentController::class);
     Route::apiResource('crw-salary-structures', CrwSalaryStructureController::class);
     Route::apiResource('crw-bank-accounts', CrwBankAccountController::class);
+    Route::apiResource('crw-payroll-batches', CrwPayrollBatchController::class);
 
     //Additional Routes
     Route::get('crw-crew-document-renew-schedules', [CrwCrewDocumentController::class, 'renewScehdules']);

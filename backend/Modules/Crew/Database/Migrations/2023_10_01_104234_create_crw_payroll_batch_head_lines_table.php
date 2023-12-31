@@ -15,11 +15,12 @@ return new class extends Migration
     {
         Schema::create('crw_payroll_batch_head_lines', function (Blueprint $table) {
             $table->id();            
-            $table->unsignedBigInteger('payroll_batch_line_id');
-            $table->unsignedBigInteger('payroll_batch_head_id');
-            $table->unsignedBigInteger('crew_id');
-            $table->string('particular');
-            $table->string('amount');            
+            $table->unsignedBigInteger('crw_payroll_batch_id');
+            $table->unsignedBigInteger('crw_payroll_batch_head_id');
+            $table->unsignedBigInteger('crw_crew_id');
+            // $table->string('head_type');
+            // $table->string('particular');
+            $table->string('amount', 16, 2);            
             $table->timestamps();
         });
     }
