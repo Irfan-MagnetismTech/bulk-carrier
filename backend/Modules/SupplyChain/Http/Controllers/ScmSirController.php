@@ -19,7 +19,7 @@ use Modules\SupplyChain\Http\Requests\ScmSirRequest;
 
 class ScmSirController extends Controller
 {
-    function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    function __construct(private CompositeKey $compositeKey)
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -51,7 +51,7 @@ class ScmSirController extends Controller
     {
         $requestData = $request->except('ref_no', 'sr_composite_key');
 
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmSir::class, 'SIR');
+        $requestData['ref_no'] = UniqueId::generate(ScmSir::class, 'SIR');
 
         $dataForStockLedger = [];
 

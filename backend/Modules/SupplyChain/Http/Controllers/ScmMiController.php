@@ -20,7 +20,7 @@ use Modules\SupplyChain\Http\Requests\ScmMiRequest;
 class ScmMiController extends Controller
 {
 
-    function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    function __construct(private CompositeKey $compositeKey)
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -58,7 +58,7 @@ class ScmMiController extends Controller
     {
         $requestData = $request->except('ref_no', 'mi_composite_key');
 
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmMi::class, 'MI');
+        $requestData['ref_no'] = UniqueId::generate(ScmMi::class, 'MI');
 
         try {
             DB::beginTransaction();
@@ -75,6 +75,8 @@ class ScmMiController extends Controller
             }
 
             (new StockLedgerData)->insert($scmMi, $request->scmMiLines);
+            (new StockLedgerData)->insert($scmMi, $request->scmMiShortage['scmMiShortageLines']);
+
 
 
             //wip data
@@ -155,8 +157,6 @@ class ScmMiController extends Controller
         }
 
         $scmMi->scmMiShortage->scmMiShortageLines()->createMany($shortageLines);
-
-        (new StockLedgerData)->insert($scmMi, $shortageLines);
     }
 
     /**
@@ -168,7 +168,7 @@ class ScmMiController extends Controller
     {
         try {
             $movementIn->load(
-                'scmMiShortage.scmMiShortageLines',
+                'scmMiShortage.scmMiShortageLines.scmMaterial',
                 'scmMiShortage.scmWarehouse',
                 'scmMiLines.scmMaterial',
                 'fromWarehouse',
@@ -293,13 +293,21 @@ class ScmMiController extends Controller
     public function destroy(ScmMi $movementIn): JsonResponse
     {
         try {
-            $movementIn->scmMiLines()->delete();
+            DB::beginTransaction();
             $movementIn->stockable()->delete();
+            $movementIn->scmMiLines()->delete();
+
+            if ($movementIn->scmMiShortage) {
+                $movementIn->scmMiShortage->stockable()->delete();
+                $movementIn->scmMiShortage->scmMiShortageLines()->delete();
+                $movementIn->scmMiShortage()->delete();
+            }
             $movementIn->delete();
 
+            DB::commit();
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (\Exception $e) {
-
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }

@@ -15,7 +15,7 @@ use Modules\SupplyChain\Http\Requests\ScmMoRequest;
 
 class ScmMoController extends Controller
 {
-    function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    function __construct(private CompositeKey $compositeKey)
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -52,7 +52,7 @@ class ScmMoController extends Controller
     {
         $requestData = $request->except('ref_no', 'mo_composite_key');
 
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmMo::class, 'MO');
+        $requestData['ref_no'] = UniqueId::generate(ScmMo::class, 'MO');
 
         try {
             DB::beginTransaction();

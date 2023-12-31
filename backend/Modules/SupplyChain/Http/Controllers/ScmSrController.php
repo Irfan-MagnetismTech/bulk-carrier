@@ -15,7 +15,7 @@ use Modules\SupplyChain\Services\CurrentStock;
 
 class ScmSrController extends Controller
 {
-    function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    function __construct(private CompositeKey $compositeKey)
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -48,7 +48,7 @@ class ScmSrController extends Controller
     {
         $requestData = $request->except('ref_no', 'sr_composite_key');
 
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmSr::class, 'SR');
+        $requestData['ref_no'] = UniqueId::generate(ScmSr::class, 'SR');
 
         try {
             DB::beginTransaction();

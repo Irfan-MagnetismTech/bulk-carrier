@@ -20,7 +20,7 @@ use Modules\SupplyChain\Entities\ScmStockLedger;
 
 class ScmSiController extends Controller
 {
-    function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    function __construct(private CompositeKey $compositeKey)
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -53,7 +53,7 @@ class ScmSiController extends Controller
     {
         $requestData = $request->except('ref_no', 'sr_composite_key');
 
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmSi::class, 'SI');
+        $requestData['ref_no'] = UniqueId::generate(ScmSi::class, 'SI');
 
         try {
             DB::beginTransaction();

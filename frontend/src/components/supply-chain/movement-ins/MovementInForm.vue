@@ -72,7 +72,6 @@
               <th class="py-3 align-center">MR Quantity</th>
               <th class="py-3 align-center">MO Quantity</th>
               <th class="py-3 align-center">Qty</th>
-              <th class="py-3 align-center">Remarks</th>
               <th class="py-3 text-center align-center">Action</th>
             </tr>
             </thead>
@@ -110,12 +109,6 @@
                 <label class="block w-full mt-2 text-sm">
                   <input type="text" v-model="form.scmMiLines[index].quantity" class="form-input">
                 </label>
-              </td>
-              <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmMiLines[index].remarks" class="form-input">
-                </label>
-                
               </td>
               <td class="px-1 py-1 text-center">
                 <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -171,7 +164,6 @@
               <th class="py-3 align-center">Material Name </th>
               <th class="py-3 align-center">Unit</th>
               <th class="py-3 align-center">Qty</th>
-              <th class="py-3 align-center">Remarks</th>
             </tr>
             </thead>
 
@@ -200,12 +192,6 @@
                 <label class="block w-full mt-2 text-sm">
                   <input type="text" readonly v-model="form.scmMiShortage.scmMiShortageLines[index].quantity" class="vms-readonly-input form-input">
                 </label>
-              </td>
-              <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmMiShortage.scmMiShortageLines[index].remarks" class="form-input">
-                </label>
-                
               </td>
             </tr>
             </tbody>
@@ -380,55 +366,82 @@ function setMaterialOtherData(datas, index) {
 
 
 
+// watch(() => props.form.scmMiLines, (newLines) => {
+
+//   if (props.formType == 'create') {
+//     editIntitiated.value = true;
+//   }
+
+//   if (props.form.scmMiShortage && editIntitiated.value) {
+//     props.form.scmMiShortage.scmMiShortageLines = [];
+//   }
+
+//   if (!props.form.scmMiShortage && props.formType == 'edit') {
+//         props.form.scmMiShortage = {
+//           shortage_type: '',
+//           scmWarehouse: null,
+//           scm_warehouse_id: '',
+//           acc_cost_center_id: '',
+//           scmMiShortageLines: [],
+//         };
+//       }
+
+//   if (editIntitiated.value) {
+//       newLines.forEach((line, index) => {
+//       // const previousLine = previousLines.value[index];
+//       if (Number(line.quantity) < Number(line.mo_quantity)) {
+//         props.form.scmMiShortage.scmMiShortageLines.push({
+//           scm_material_id: line.scm_material_id,
+//           scmMaterial: line.scmMaterial,
+//           unit: line.unit,
+//           quantity: line.mo_quantity - line.quantity,
+//         });
+//       }
+//       if (line.scmMaterial) {
+//         const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
+//         if (selectedMaterial) {
+//           if ( line.scm_material_id !== selectedMaterial.id
+//           ) {
+//             props.form.scmMiLines[index].unit = selectedMaterial.unit;
+//             props.form.scmMiLines[index].scm_material_id = selectedMaterial.id;
+//           }
+//         }
+//       }
+//     });
+//   }
+//   if (props.formType == 'edit') {
+//       editIntitiated.value = true;
+//   }
+//   // previousLines.value = cloneDeep(newLines);
+// }, { deep: true });
+
+
 watch(() => props.form.scmMiLines, (newLines) => {
-
-  if (props.formType == 'create') {
-    editIntitiated.value = true;
-  }
-
-  if (props.form.scmMiShortage && editIntitiated.value) {
-    props.form.scmMiShortage.scmMiShortageLines = [];
-  }
-
-  if (!props.form.scmMiShortage && props.formType == 'edit') {
-        props.form.scmMiShortage = {
-          shortage_type: '',
-          scmWarehouse: null,
-          scm_warehouse_id: '',
-          acc_cost_center_id: '',
-          scmMiShortageLines: [],
-        };
-      }
-
-  if (editIntitiated.value) {
-      newLines.forEach((line, index) => {
-      // const previousLine = previousLines.value[index];
-      if (Number(line.quantity) < Number(line.mo_quantity)) {
-        props.form.scmMiShortage.scmMiShortageLines.push({
-          scm_material_id: line.scm_material_id,
-          scmMaterial: line.scmMaterial,
-          unit: line.unit,
-          quantity: line.mo_quantity - line.quantity,
-        });
-      }
-      if (line.scmMaterial) {
-        const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
-        if (selectedMaterial) {
-          if ( line.scm_material_id !== selectedMaterial.id
-          ) {
-            props.form.scmMiLines[index].unit = selectedMaterial.unit;
-            props.form.scmMiLines[index].scm_material_id = selectedMaterial.id;
-          }
+  props.form.scmMiShortage.scmMiShortageLines = [];
+  newLines.forEach((line, index) => {
+    // const previousLine = previousLines.value[index];
+    if (Number(line.quantity) < Number(line.mo_quantity)) {
+      props.form.scmMiShortage.scmMiShortageLines.push({
+        scm_material_id: line.scm_material_id,
+        scmMaterial: line.scmMaterial,
+        unit: line.unit,
+        quantity: line.mo_quantity - line.quantity,
+      
+      });
+    }
+    if (line.scmMaterial) {
+      const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
+      if (selectedMaterial) {
+        if ( line.scm_material_id !== selectedMaterial.id
+        ) {
+          props.form.scmMiLines[index].unit = selectedMaterial.unit;
+          props.form.scmMiLines[index].scm_material_id = selectedMaterial.id;
         }
       }
-    });
-  }
-  if (props.formType == 'edit') {
-      editIntitiated.value = true;
-  }
+    }
+  });
   // previousLines.value = cloneDeep(newLines);
 }, { deep: true });
-
 
 function fetchMaterials(search, loading) {
   if (search.length > 0) {

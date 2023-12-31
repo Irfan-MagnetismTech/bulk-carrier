@@ -22,7 +22,7 @@ use Maatwebsite\Excel\Validators\ValidationException;
 
 class ScmPrController extends Controller
 {
-    function __construct(private FileUploadService $fileUpload, private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    function __construct(private FileUploadService $fileUpload, private CompositeKey $compositeKey)
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -64,7 +64,7 @@ class ScmPrController extends Controller
         $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs');
         $requestData['attachment'] = $attachment;
         $requestData['created_by'] = auth()->user()->id;
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmPr::class, 'PR');
+        $requestData['ref_no'] = UniqueId::generate(ScmPr::class, 'PR');
 
         try {
             DB::beginTransaction();
