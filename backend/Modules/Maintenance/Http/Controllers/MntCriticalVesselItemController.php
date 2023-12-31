@@ -189,11 +189,23 @@ class MntCriticalVesselItemController extends Controller
     {
         $opsVesselId = request()->ops_vessel_id;
         try {
-            $criticalVesselFunctions = MntCriticalFunction::with(['mntCriticalItemCats.mntCriticalItems.mntCriticalVesselItems' => function ($query) use ($opsVesselId){
-                                            $query->where('ops_vessel_id', $opsVesselId);
-                                        }])
+            $criticalVesselFunctions = MntCriticalFunction::with([
+                                        'mntCriticalItemCats.mntCriticalItems' => function ($qry) use ($opsVesselId) {
+                                            // Checking if the item is assigned to the vessel
+                                            $qry->whereHas('mntCriticalVesselItems', function ($q) use ($opsVesselId) {
+                                                $q->select('mnt_critical_item_id', DB::raw('count(mnt_critical_item_id) as total_items'))
+                                                ->where('ops_vessel_id', $opsVesselId)
+                                                ->groupBy('mnt_critical_item_id')
+                                                ->havingRaw('count(mnt_critical_item_id) > ?', [0]);
+                                            });
+                                        },
+                                        'mntCriticalItemCats.mntCriticalItems.mntCriticalVesselItems'
+                                        ])
                                         ->whereHas('mntCriticalItemCats.mntCriticalItems', function($q){
-                                            $q->select('item_name', DB::raw('count(item_name) as total_items'))->groupBy('item_name')->havingRaw('count(item_name) > ?', [0]);
+                                            // Check if the function has items
+                                            $q->select('item_name', DB::raw('count(item_name) as total_items'))
+                                                ->groupBy('item_name')
+                                                ->havingRaw('count(item_name) > ?', [0]);
                                         })
                                         ->get();
 
