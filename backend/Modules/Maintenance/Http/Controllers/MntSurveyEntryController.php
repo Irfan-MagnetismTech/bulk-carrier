@@ -70,7 +70,7 @@ class MntSurveyEntryController extends Controller
     {
         try {
 
-            $survey = MntSurveyEntry::with(["opsVessel","mntSurvey"])->find($id);
+            $survey = MntSurveyEntry::with(["opsVessel","mntSurvey.mntSurveyItem","mntSurvey.mntSurveyType"])->find($id);
 
             return response()->success('Survey entry type found successfully', $survey, 200);
 
