@@ -9,10 +9,12 @@ import useVoyage from "../../composables/operations/useVoyage";
 import useBusinessInfo from "../../composables/useBusinessInfo";
 import useHeroIcon from "../../assets/heroIcon";
 import RemarksComponet from '../../components/utils/RemarksComponent.vue';
+import useVendor from "../../composables/supply-chain/useVendor.js";
 
 const { vessel, vessels, getVesselList, showVessel } = useVessel();
 const { voyages, searchVoyages } = useVoyage();
 const { currencies, getCurrencies } = useBusinessInfo();
+const {vendor, vendors, showVendor, searchVendor, isLoading: vendorLoader } = useVendor();
 
 const icons = useHeroIcon();
 
@@ -27,6 +29,10 @@ const props = defineProps({
 });
 
 const editInitiated = ref(0)
+
+function fetchVendors(searchParam, loading) {
+  searchVendor(searchParam, props.form.business_unit, loading)
+}
 
 function fetchVesselDetails(ops_vessel_id, loading) {
   showVessel(ops_vessel_id, loading).then(() => {
@@ -91,6 +97,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
 
   if (newValue) {    
     getVesselList(props.form.business_unit);
+    fetchVendors("", false);
   }
   
 }, {deep: true});
@@ -202,7 +209,7 @@ onMounted(() => {
           <option value="Reconciliation">Reconciliation</option>
         </select>
       </label>
-      <label class="block w-full mt-2 text-sm">
+      <label v-if="form.type != 'Stock In' && form.type != ''" class="block w-full mt-2 text-sm">
         <span class="text-gray-700">Consumption Type <span class="text-red-500">*</span></span>
         <select v-model="form.usage_type" class="form-input" required>
           <option disabled selected value="">Select Option</option>
@@ -210,6 +217,7 @@ onMounted(() => {
           <option value="Voyage Wise">Voyage Wise</option>
         </select>
       </label>
+      <label v-else class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm" v-if="form.type=='Reconciliation'">
         <span class="text-gray-700">Type <span class="text-red-500">*</span></span>
         <select v-model="form.reconciliation_type" class="form-input" required>
@@ -270,6 +278,20 @@ onMounted(() => {
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.type=='Stock In'">
     <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Vendor <span class="text-red-500">*</span></span>
+        <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.scmVendor" label="name" class="block form-input" >
+            <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.scmVendor"
+                    v-bind="attributes"
+                    v-on="events"
+                    />
+            </template>
+        </v-select>
+        <input type="hidden" v-model="form.scm_vendor_id" />
+    </label>
+    <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700">Currency <span class="text-red-500">*</span></span>
         <select v-model.trim="form.currency" class="form-input" required>
           <option selected value="" disabled>Select Currency</option>
@@ -284,7 +306,6 @@ onMounted(() => {
       <span class="text-gray-700">Exchange Rate (USD to BDT) </span>
       <input type="number" step="0.0001" v-model="form.exchange_rate_bdt" placeholder="Exchange Rate (USD to BDT)" class="form-input" :readonly="isBDTCurrency" />
     </label>
-    <label class="block w-full mt-2 text-sm"></label>
 
   </div>
 

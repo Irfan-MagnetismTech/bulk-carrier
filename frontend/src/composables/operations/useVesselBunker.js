@@ -86,6 +86,11 @@ export default function useVesselBunker() {
 			return;
 		}
 
+		form.opsBunkers.map((bunker) => {
+			bunker.scm_vendor_id = form.scmVendor.id;
+			return bunker;
+		});
+
 		// if (!checkUniqueArray(form)) return;
 
 		//NProgress.start();

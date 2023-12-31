@@ -214,8 +214,6 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
         fetchVendors("", false)
         fetchBunkerRequisition("", false)
 
-
-
         if(props.formType != 'edit') {
           props.form.scmVendor = null;
           props.form.opsBunkerBillLines = [];
