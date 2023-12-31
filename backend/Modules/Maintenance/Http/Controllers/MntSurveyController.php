@@ -18,7 +18,7 @@ class MntSurveyController extends Controller
     {
         try {
 
-            $surveys = MntSurvey::with(["opsVessel","mntSurveyItem", "mntSurveyType"])
+            $surveys = MntSurvey::with(["mntSurveyItem", "mntSurveyType"])
                                 ->globalSearch($request->all());
 
             return response()->success('Surveys are retrieved successfully', $surveys, 200);
@@ -34,11 +34,11 @@ class MntSurveyController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function MntSurveyTypes()
+    public function MntSurveys()
     {
         try {
 
-            $surveys = MntSurvey::with(["opsVessel","mntSurveyItem", "mntSurveyType"])->get();
+            $surveys = MntSurvey::with(["mntSurveyItem", "mntSurveyType"])->get();
 
             return response()->success('Surveys are retrieved successfully', $surveys, 200);
 

@@ -5,16 +5,28 @@ namespace Modules\Maintenance\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Maintenance\Entities\MntSurveyEntry;
 
-class SurveyEntryController extends Controller
+class MntSurveyEntryController extends Controller
 {
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('maintenance::index');
+        try {
+
+            $surveyEntries = MntSurveyEntry::with(["opsVessel","mntSurvey"])
+                                ->globalSearch($request->all());
+
+            return response()->success('Survey entries are retrieved successfully', $surveyEntries, 200);
+
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -33,7 +45,18 @@ class SurveyEntryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $input = $request->all();
+
+            $surveyEntry = MntSurveyEntry::create($input);
+
+            return response()->success('Survey entry created successfully', $surveyEntry, 201);
+
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
