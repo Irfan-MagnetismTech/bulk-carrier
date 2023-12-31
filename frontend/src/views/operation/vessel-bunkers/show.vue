@@ -20,6 +20,11 @@
                     
                     <tr>
                         <th class="w-40">Vessel</th>
+                        <td>{{ vesselBunker.opsVessel?.name }}</td>
+                    </tr>
+
+                    <tr>
+                        <th class="w-40">Voyage</th>
                         <td>{{ vesselBunker.opsVoyage?.voyage_sequence }}</td>
                     </tr>
 
@@ -29,17 +34,33 @@
                     </tr>
 
                     <tr>
-                        <th class="w-40">Currency </th>
-                        <td>{{ vesselBunker?.currency }}</td>
+                        <th class="w-40">Date</th>
+                        <td>{{ (vesselBunker.date) ? moment(vesselBunker.date).format('D/M/Y') : '' }}</td>
                     </tr>
+
                     <tr>
-                        <th class="w-40">Exchange Rate (To USD) </th>
-                        <td>{{ vesselBunker.exchange_rate_usd }}</td>
+                        <th class="w-40">From Date</th>
+                        <td>{{ (vesselBunker.from_date) ? moment(vesselBunker.from_date).format('D/M/Y') : '' }}</td>
                     </tr>
+
                     <tr>
-                        <th class="w-40">Exchange Rate (To BDT) </th>
-                        <td>{{ vesselBunker.exchange_rate_bdt }}</td>
+                        <th class="w-40">Till Date</th>
+                        <td>{{ (vesselBunker.till_date) ? moment(vesselBunker.till_date).format('D/M/Y') : '' }}</td>
                     </tr>
+                    <template v-if="vesselBunker.type == 'Stock In'">
+                      <tr>
+                          <th class="w-40">Currency </th>
+                          <td>{{ vesselBunker?.currency }}</td>
+                      </tr>
+                      <tr>
+                          <th class="w-40">Exchange Rate (To USD) </th>
+                          <td>{{ vesselBunker.exchange_rate_usd }}</td>
+                      </tr>
+                      <tr>
+                          <th class="w-40">Exchange Rate (To BDT) </th>
+                          <td>{{ vesselBunker.exchange_rate_bdt }}</td>
+                      </tr>
+                    </template>
                 </tbody>
             </table>
         </div>
@@ -56,10 +77,12 @@
               <tr class="w-full">
                 <th class="w-40 !text-center">Material</th>
                 <th class="!text-center">Quantity </th>
-                <th class="!text-center">Rate</th>
-                <th class="!text-center">Amount</th>
-                <th class="!text-center">Amount <small>(USD)</small></th>
-                <th class="!text-center">Amount <small>(BDT)</small></th>
+                <template v-if="vesselBunker.type == 'Stock In'">
+                  <th class="!text-center">Rate</th>
+                  <th class="!text-center">Amount</th>
+                  <th class="!text-center">Amount <small>(USD)</small></th>
+                  <th class="!text-center">Amount <small>(BDT)</small></th>
+                </template>
               </tr>
             </thead>
             <tbody>
@@ -70,18 +93,20 @@
                 <td class="!text-right">
                   {{ numberFormat(vesselBunker.opsBunkers[index]?.quantity) }}
                 </td>
-                <td class="!text-right">
-                  {{ numberFormat(vesselBunker.opsBunkers[index]?.rate) }}
-                </td>
-                <td class="!text-right">
-                  {{ numberFormat(vesselBunker.opsBunkers[index]?.amount) }}
-                </td>
-                <td class="!text-right">
-                  {{ numberFormat(vesselBunker.opsBunkers[index]?.amount_usd) }}
-                </td>
-                <td class="!text-right">
-                  {{ numberFormat(vesselBunker.opsBunkers[index]?.amount_bdt) }}
-                </td>
+                <template v-if="vesselBunker.type == 'Stock In'">
+                  <td class="!text-right">
+                    {{ numberFormat(vesselBunker.opsBunkers[index]?.rate) }}
+                  </td>
+                  <td class="!text-right">
+                    {{ numberFormat(vesselBunker.opsBunkers[index]?.amount) }}
+                  </td>
+                  <td class="!text-right">
+                    {{ numberFormat(vesselBunker.opsBunkers[index]?.amount_usd) }}
+                  </td>
+                  <td class="!text-right">
+                    {{ numberFormat(vesselBunker.opsBunkers[index]?.amount_bdt) }}
+                  </td>
+                </template>
                 
               </tr>
             </tbody>
