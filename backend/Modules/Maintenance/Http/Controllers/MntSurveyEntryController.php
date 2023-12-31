@@ -19,7 +19,7 @@ class MntSurveyEntryController extends Controller
     {
         try {
 
-            $surveyEntries = MntSurveyEntry::with(["opsVessel","mntSurvey"])
+            $surveyEntries = MntSurveyEntry::with(["opsVessel","mntSurvey.mntSurveyItem","mntSurvey.mntSurveyType"])
                                 ->globalSearch($request->all());
 
             return response()->success('Survey entries are retrieved successfully', $surveyEntries, 200);
