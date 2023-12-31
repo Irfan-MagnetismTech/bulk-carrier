@@ -73,53 +73,54 @@ class ScmMiController extends Controller
 
                 $this->shortageLinesData($request, $scmMi);
             }
+
             (new StockLedgerData)->insert($scmMi, $request->scmMiLines);
 
 
             //wip data
-            if ($request->scmMiShortage['shortage_type'] != "") {
-                if ($movementIn->scmMiShortage) {
-                    $movementIn->scmMiShortage->scmMiShortageLines()->delete();
-                }
+            // if ($request->scmMiShortage['shortage_type'] != "") {
+            //     if ($movementIn->scmMiShortage) {
+            //         $movementIn->scmMiShortage->scmMiShortageLines()->delete();
+            //     }
 
-                $movementIn->scmMiShortage()->update([
-                    'scm_mi_id' => $movementIn->id,
-                    'shortage_type' => $request->scmMiShortage['shortage_type'],
-                    'scm_warehouse_id' => $request->scmMiShortage['scm_warehouse_id'],
-                    'acc_cost_center_id' => $request->scmMiShortage['scm_cost_center_id'] ?? null,
-                    'business_unit' => $request->business_unit
-                ]);
+            //     $movementIn->scmMiShortage()->update([
+            //         'scm_mi_id' => $movementIn->id,
+            //         'shortage_type' => $request->scmMiShortage['shortage_type'],
+            //         'scm_warehouse_id' => $request->scmMiShortage['scm_warehouse_id'],
+            //         'acc_cost_center_id' => $request->scmMiShortage['scm_cost_center_id'] ?? null,
+            //         'business_unit' => $request->business_unit
+            //     ]);
 
-                $this->shortageLinesData($request, $movementIn);
+            //     $this->shortageLinesData($request, $movementIn);
 
-                $stockInFromShortage = [];
+            //     $stockInFromShortage = [];
 
-                foreach ($request->scmMiShortage['scmMiShortageLines'] as $key => $value) {
+            //     foreach ($request->scmMiShortage['scmMiShortageLines'] as $key => $value) {
 
-                    $stockInFromShortage = [
-                        'scm_material_id' => $value['scm_material_id'],
-                        'scm_warehouse_id' => $request->scmMiShortage['scm_warehouse_id'],
-                        'scm_cost_center_id' => $request->scmMiShortage['scm_cost_center_id'],
-                        'quantity' => $value['quantity'],
-                        'business_unit' => $request->business_unit
-                    ];
+            //         $stockInFromShortage = [
+            //             'scm_material_id' => $value['scm_material_id'],
+            //             'scm_warehouse_id' => $request->scmMiShortage['scm_warehouse_id'],
+            //             'scm_cost_center_id' => $request->scmMiShortage['scm_cost_center_id'],
+            //             'quantity' => $value['quantity'],
+            //             'business_unit' => $request->business_unit
+            //         ];
 
-                    $miStockable = $movementIn->stockable()->create($stockInFromShortage);
+            //         $miStockable = $movementIn->stockable()->create($stockInFromShortage);
 
-                    $stockInFromShortage = [
-                        'scm_material_id' => $value['scm_material_id'],
-                        'recievable_type`' => ScmMi::class,
-                        'recievable_id' => $movementIn->scmMiShortage->scmMiShortageLines[$key]->id,
-                        'scm_warehouse_id' => $request->scmMiShortage['scm_warehouse_id'],
-                        'scm_cost_center_id' => $request->scmMiShortage['scm_cost_center_id'],
-                        'quantity' => $value['quantity'] * -1,
-                        'parent_id' => $miStockable->id,
-                        'business_unit' => $request->business_unit
-                    ];
+            //         $stockInFromShortage = [
+            //             'scm_material_id' => $value['scm_material_id'],
+            //             'recievable_type`' => ScmMi::class,
+            //             'recievable_id' => $movementIn->scmMiShortage->scmMiShortageLines[$key]->id,
+            //             'scm_warehouse_id' => $request->scmMiShortage['scm_warehouse_id'],
+            //             'scm_cost_center_id' => $request->scmMiShortage['scm_cost_center_id'],
+            //             'quantity' => $value['quantity'] * -1,
+            //             'parent_id' => $miStockable->id,
+            //             'business_unit' => $request->business_unit
+            //         ];
 
-                    $movementIn->scmMiShortage->stockable()->create($stockInFromShortage);
-                }
-            }
+            //         $movementIn->scmMiShortage->stockable()->create($stockInFromShortage);
+            //     }
+            // }
 
             ///end wip data
 
@@ -154,6 +155,8 @@ class ScmMiController extends Controller
         }
 
         $scmMi->scmMiShortage->scmMiShortageLines()->createMany($shortageLines);
+
+        (new StockLedgerData)->insert($scmMi, $shortageLines);
     }
 
     /**
@@ -165,9 +168,9 @@ class ScmMiController extends Controller
     {
         try {
             $movementIn->load(
-                'scmMiLines.scmMaterial',
-                'scmMiShortage.scmWarehouse',
                 'scmMiShortage.scmMiShortageLines',
+                'scmMiShortage.scmWarehouse',
+                'scmMiLines.scmMaterial',
                 'fromWarehouse',
                 'toWarehouse',
                 'createdBy',
