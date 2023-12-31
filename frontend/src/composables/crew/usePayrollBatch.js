@@ -17,7 +17,11 @@ export default function usePayrollBatch() {
         ops_vessel_id: '',
         ops_vessel_name: '',
         year_month: '',
-        working_days: '',
+        compensation_type: 'salary',
+        process_date: '',
+        net_payment: 0,
+        currency: 'BDT',
+        working_days: 0,
         crwPayrollBatchLines: [],
         crwPayrollBatchHeads: [],
         crwPayrollBatchHeadLines: [],
@@ -72,29 +76,58 @@ export default function usePayrollBatch() {
 
         console.log("DATA: "  ,form);
 
-        // const isUnique = checkUniqueArray(form);
-        //
-        // if(isUnique){
-        //     const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        //     isLoading.value = true;
-        //
-        //     let formData = new FormData();
-        //     formData.append('attachment', form.attachment);
-        //     formData.append('data', JSON.stringify(form));
-        //
-        //     try {
-        //         const { data, status } = await Api.post('/crw/crw-incidents', formData);
-        //         payrollBatch.value = data.value;
-        //         notification.showSuccess(status);
-        //         await router.push({ name: "crw.incidentRecords.index" });
-        //     } catch (error) {
-        //         const { data, status } = error.response;
-        //         errors.value = notification.showError(status, data);
-        //     } finally {
-        //         loader.hide();
-        //         isLoading.value = false;
-        //     }
-        // }
+        //for addition
+        let additionBatchHeadLines = form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'addition');
+
+        if(additionBatchHeadLines){
+            form.crwPayrollBatchHeads.filter(item => item.head_type === 'addition').forEach((batchHead,batchHeadIndex) => {
+                batchHead.crwPayrollBatchHeadLines = [];
+                additionBatchHeadLines.filter(item => item.head_type === 'addition').forEach((batchHeadLine,batchHeadLineIndex) => {
+
+                    let obj = {
+                        crew_id: batchHeadLine?.crew_id,
+                        head_type: batchHeadLine?.head_type,
+                        amount: batchHeadLine.crew_batch_heads[batchHeadIndex].amount,
+                        particular: batchHead?.head_name,
+                    };
+                    batchHead.crwPayrollBatchHeadLines.push(obj);
+                });
+            });
+        }
+
+        //for deduction
+        let deductionBatchHeadLines = form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'deduction');
+
+        if(deductionBatchHeadLines){
+            form.crwPayrollBatchHeads.filter(item => item.head_type === 'deduction').forEach((batchHead,batchHeadIndex) => {
+                batchHead.crwPayrollBatchHeadLines = [];
+                deductionBatchHeadLines.filter(item => item.head_type === 'deduction').forEach((batchHeadLine,batchHeadLineIndex) => {
+                    let obj = {
+                        crew_id: batchHeadLine?.crew_id,
+                        head_type: batchHeadLine?.head_type,
+                        amount: batchHeadLine.crew_batch_heads[batchHeadIndex].amount,
+                        particular: batchHead?.head_name,
+                    };
+                    batchHead.crwPayrollBatchHeadLines.push(obj);
+                });
+            });
+        }
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.post('/crw/crw-payroll-batches', form);
+            payrollBatch.value = data.value;
+            notification.showSuccess(status);
+            //await router.push({ name: "crw.crewPayrollBatches.index" });
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
     }
 
     async function showPayrollBatch(crewPayrollBatchId) {
@@ -204,7 +237,7 @@ export default function usePayrollBatch() {
 
     async function getMonthlyAttendance(form) {
 
-        //const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
         try {
             const { data, status } = await Api.post('/crw/get-crw-monthly-attendances', form);
@@ -213,7 +246,7 @@ export default function usePayrollBatch() {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
         } finally {
-           // loader.hide();
+            loader.hide();
             isLoading.value = false;
         }
     }
