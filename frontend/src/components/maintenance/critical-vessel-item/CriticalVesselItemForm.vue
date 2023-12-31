@@ -208,6 +208,9 @@ watch(() => criticalItemCategoryWiseItems.value, (val) => {
 });
 watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
+
+  props.form.ops_vessel = null;
+  vesselChange();
 });
 
 // watch(() => props.form.is_critical, (newValue, oldValue) => {

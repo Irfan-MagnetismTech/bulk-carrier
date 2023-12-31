@@ -196,6 +196,9 @@
   
   watch(() => props.form.business_unit, (newValue, oldValue) => {
     businessUnit.value = newValue;
+
+    props.form.ops_vessel = null;
+    vesselChange();
   });
   
   
