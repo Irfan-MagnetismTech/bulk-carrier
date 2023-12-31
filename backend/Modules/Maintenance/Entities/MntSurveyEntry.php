@@ -2,6 +2,8 @@
 
 namespace Modules\Maintenance\Entities;
 
+use App\Traits\DeletableModel;
+use App\Traits\GlobalSearchTrait;
 use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +12,7 @@ use Modules\Operations\Entities\OpsVessel;
 
 class MntSurveyEntry extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait, DeletableModel;
 
     protected $fillable = [
         'ops_vessel_id',
@@ -21,7 +23,7 @@ class MntSurveyEntry extends Model
         'due_date',
         'business_unit',
     ];
-    
+
     protected $appends = ["status"];
 
     public function opsVessel() : BelongsTo {
