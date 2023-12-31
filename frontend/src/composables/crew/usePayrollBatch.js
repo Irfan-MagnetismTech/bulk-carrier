@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 export default function usePayrollBatch() {
     const router = useRouter();
     const payrollBatches = ref([]);
+    const monthlyAttendance = ref({});
     const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
@@ -15,35 +16,15 @@ export default function usePayrollBatch() {
         business_unit: '',
         ops_vessel_id: '',
         ops_vessel_name: '',
-        month: '',
-        year: '',
-        working_days: '',
-        payrollBatchLines: [
-            {
-                crw_crew_id: '1',
-                crw_crew_name: 'Mr. A',
-                crw_crew_rank: 'Master',
-                gross_salary: '50000',
-                contact: '0155555555',
-                present_days: '30',
-                absent_days: '5',
-                payable_days: '25',
-                isCrewNameDuplicate: false,
-            },
-            {
-                crw_crew_id: '2',
-                crw_crew_name: 'Mr. B',
-                crw_crew_rank: 'Sukani',
-                gross_salary: '15000',
-                contact: '01015520002',
-                present_days: '30',
-                absent_days: '2',
-                payable_days: '28',
-                isCrewNameDuplicate: false,
-            },
-        ],
-        payrollBatchHeads: [],
-        payrollBatchHeadLines: [],
+        year_month: '',
+        compensation_type: 'salary',
+        process_date: '',
+        net_payment: 0,
+        currency: 'BDT',
+        working_days: 0,
+        crwPayrollBatchLines: [],
+        crwPayrollBatchHeads: [],
+        crwPayrollBatchHeadLines: [],
     });
 
     const filterParams = ref(null);
@@ -93,28 +74,59 @@ export default function usePayrollBatch() {
 
     async function storePayrollBatch(form) {
 
-        const isUnique = checkUniqueArray(form);
+        console.log("DATA: "  ,form);
 
-        if(isUnique){
-            const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-            isLoading.value = true;
+        //for addition
+        let additionBatchHeadLines = form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'addition');
 
-            let formData = new FormData();
-            formData.append('attachment', form.attachment);
-            formData.append('data', JSON.stringify(form));
+        if(additionBatchHeadLines){
+            form.crwPayrollBatchHeads.filter(item => item.head_type === 'addition').forEach((batchHead,batchHeadIndex) => {
+                batchHead.crwPayrollBatchHeadLines = [];
+                additionBatchHeadLines.filter(item => item.head_type === 'addition').forEach((batchHeadLine,batchHeadLineIndex) => {
 
-            try {
-                const { data, status } = await Api.post('/crw/crw-incidents', formData);
-                payrollBatch.value = data.value;
-                notification.showSuccess(status);
-                await router.push({ name: "crw.incidentRecords.index" });
-            } catch (error) {
-                const { data, status } = error.response;
-                errors.value = notification.showError(status, data);
-            } finally {
-                loader.hide();
-                isLoading.value = false;
-            }
+                    let obj = {
+                        crew_id: batchHeadLine?.crew_id,
+                        head_type: batchHeadLine?.head_type,
+                        amount: batchHeadLine.crew_batch_heads[batchHeadIndex].amount,
+                        particular: batchHead?.head_name,
+                    };
+                    batchHead.crwPayrollBatchHeadLines.push(obj);
+                });
+            });
+        }
+
+        //for deduction
+        let deductionBatchHeadLines = form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'deduction');
+
+        if(deductionBatchHeadLines){
+            form.crwPayrollBatchHeads.filter(item => item.head_type === 'deduction').forEach((batchHead,batchHeadIndex) => {
+                batchHead.crwPayrollBatchHeadLines = [];
+                deductionBatchHeadLines.filter(item => item.head_type === 'deduction').forEach((batchHeadLine,batchHeadLineIndex) => {
+                    let obj = {
+                        crew_id: batchHeadLine?.crew_id,
+                        head_type: batchHeadLine?.head_type,
+                        amount: batchHeadLine.crew_batch_heads[batchHeadIndex].amount,
+                        particular: batchHead?.head_name,
+                    };
+                    batchHead.crwPayrollBatchHeadLines.push(obj);
+                });
+            });
+        }
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.post('/crw/crw-payroll-batches', form);
+            payrollBatch.value = data.value;
+            notification.showSuccess(status);
+            //await router.push({ name: "crw.crewPayrollBatches.index" });
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
         }
     }
 
@@ -223,6 +235,22 @@ export default function usePayrollBatch() {
         }
     }
 
+    async function getMonthlyAttendance(form) {
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+        try {
+            const { data, status } = await Api.post('/crw/get-crw-monthly-attendances', form);
+            monthlyAttendance.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
+    }
+
     return {
         payrollBatches,
         payrollBatch,
@@ -232,6 +260,8 @@ export default function usePayrollBatch() {
         updatePayrollBatch,
         deletePayrollBatch,
         checkUniqueArray,
+        getMonthlyAttendance,
+        monthlyAttendance,
         isTableLoading,
         isLoading,
         errors,
