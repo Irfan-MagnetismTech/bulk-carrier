@@ -260,6 +260,20 @@ export default [
                         permissionKey: '',
                         subSubMenu: [],
                     },
+
+                    
+                    {
+                        route: 'mnt.survey-entries.index',
+                        label: 'Survey Entries',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+
+
                 ]
             },
             
