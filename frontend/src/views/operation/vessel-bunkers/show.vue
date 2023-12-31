@@ -15,30 +15,19 @@
                 <tbody>
                     <tr>
                         <th class="w-40">Business Unit</th>
-                        <td><span :class="vesselBunker?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ vesselBunker?.business_unit }}</span></td>
+                        <td><span :class="vesselBunker?.opsVessel?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ vesselBunker?.opsVessel?.business_unit }}</span></td>
                     </tr>
-                    <tr>
-                        <th class="w-40">Title</th>
-                        <td>{{ vesselBunker.title }}</td>
-                    </tr>
-                    <tr>
-                        <th class="w-40">Effective From </th>
-                        <td><span>
-                          <nobr>{{ vesselBunker?.effective_from ? moment(vesselBunker?.effective_from).format('DD-MM-YYYY') : null }}</nobr>
-                          </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="w-40">Effective To </th>
-                        <td><span>
-                          <nobr>{{ vesselBunker?.effective_till ? moment(vesselBunker?.effective_till).format('DD-MM-YYYY') : null }}</nobr>
-                          </span>
-                        </td>
-                    </tr>
+                    
                     <tr>
                         <th class="w-40">Vessel</th>
                         <td>{{ vesselBunker.opsVoyage?.voyage_sequence }}</td>
                     </tr>
+
+                    <tr>
+                        <th class="w-40">Type</th>
+                        <td>{{ vesselBunker.type }}</td>
+                    </tr>
+
                     <tr>
                         <th class="w-40">Currency </th>
                         <td>{{ vesselBunker?.currency }}</td>
@@ -55,7 +44,7 @@
             </table>
         </div>
     </div>
-    <div class="flex md:gap-4 mt-1 md:mt-2" v-if="vesselBunker.opsVesselBunkerEntries?.length">
+    <div class="flex md:gap-4 mt-1 md:mt-2" v-if="vesselBunker.opsBunkers?.length">
         <div class="w-full">
           <table class="w-full">
             <thead>
@@ -65,29 +54,33 @@
             </thead>
             <thead v-once>
               <tr class="w-full">
-                <th class="w-40">Expesne Head</th>
-                <th>Quantity </th>
-                <th>Rate</th>
-                <th>Amount <small>(USD)</small></th>
-                <th>Amount <small>(BDT)</small></th>
+                <th class="w-40 !text-center">Material</th>
+                <th class="!text-center">Quantity </th>
+                <th class="!text-center">Rate</th>
+                <th class="!text-center">Amount</th>
+                <th class="!text-center">Amount <small>(USD)</small></th>
+                <th class="!text-center">Amount <small>(BDT)</small></th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(budget, index) in vesselBunker.opsVesselBunkerEntries">
+              <tr v-for="(budget, index) in vesselBunker.opsBunkers" :key="index">
                 <td>
-                  <span v-if="vesselBunker.opsVesselBunkerEntries[index]?.opsExpenseHead?.name">{{ vesselBunker.opsVesselBunkerEntries[index]?.opsExpenseHead?.name }}</span>
+                  {{ vesselBunker.opsBunkers[index]?.scmMaterial?.name }}
                 </td>
-                <td>
-                  {{ vesselBunker.opsVesselBunkerEntries[index]?.quantity }}
+                <td class="!text-right">
+                  {{ numberFormat(vesselBunker.opsBunkers[index]?.quantity) }}
                 </td>
-                <td>
-                  {{ vesselBunker.opsVesselBunkerEntries[index]?.rate }}
+                <td class="!text-right">
+                  {{ numberFormat(vesselBunker.opsBunkers[index]?.rate) }}
                 </td>
-                <td>
-                  {{ numberFormat(vesselBunker.opsVesselBunkerEntries[index]?.amount_usd) }}
+                <td class="!text-right">
+                  {{ numberFormat(vesselBunker.opsBunkers[index]?.amount) }}
                 </td>
-                <td>
-                  {{ numberFormat(vesselBunker.opsVesselBunkerEntries[index]?.amount_bdt) }}
+                <td class="!text-right">
+                  {{ numberFormat(vesselBunker.opsBunkers[index]?.amount_usd) }}
+                </td>
+                <td class="!text-right">
+                  {{ numberFormat(vesselBunker.opsBunkers[index]?.amount_bdt) }}
                 </td>
                 
               </tr>
