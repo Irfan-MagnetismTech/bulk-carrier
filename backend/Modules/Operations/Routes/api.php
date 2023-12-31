@@ -29,6 +29,7 @@ use Modules\Operations\Http\Controllers\OpsVesselCertificateController;
 use Modules\Operations\Http\Controllers\OpsVesselExpenseHeadController;
 use Modules\Operations\Http\Controllers\OpsVoyageExpenditureController;
 use Modules\Operations\Http\Controllers\OpsMaritimeCertificationController;
+use Modules\Operations\Http\Controllers\OpsVoyageReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -139,6 +140,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     // report routes
     Route::get('export-particular-report', [OpsVesselParticularController::class, 'exportVesselParticularReport']);
     Route::get('particular-charterer-download', [OpsVesselParticularController::class, 'vesselParticularAttachmentDownload']);
+    Route::get('voyage-report', [OpsVoyageReportController::class, 'voyageReport']);
     
 
     //Business Info Apis
