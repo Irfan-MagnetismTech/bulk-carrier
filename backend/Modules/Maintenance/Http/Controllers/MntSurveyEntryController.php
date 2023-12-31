@@ -97,7 +97,19 @@ class MntSurveyEntryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $input = $request->all();
+
+            $survey = MntSurveyEntry::findorfail($id);
+            $survey->update($input);
+
+            return response()->success('Survey entry updated successfully', $survey, 202);
+
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
