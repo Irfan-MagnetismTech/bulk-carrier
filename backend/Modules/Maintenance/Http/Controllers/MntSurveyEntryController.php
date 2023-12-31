@@ -158,16 +158,24 @@ class MntSurveyEntryController extends Controller
                                             ->havingRaw('count(mnt_survey_id) > ?', [0]);   
                                         });
                                     }, "mntSurveys.mntSurveyEntries"])
-                                    // ->whereHas('mntSurveys', function($q) {
-                                    //     $q->select('survey_name', DB::raw('count(survey_name) as total_items'))
-                                    //         ->groupBy('survey_name')
-                                    //         ->havingRaw('count(survey_name) > ?', [0]);
-                                    // })
-                                    ->whereExists(function ($query) {
-                                        $query->select(DB::raw(1))
-                                              ->from('mnt_surveys')
-                                              ->whereColumn('mnt_surveys.mnt_survey_item_id', 'mnt_survey_items.id');
+                                    ->whereHas('mntSurveys', function($q) use ($opsVesselId) {
+                                        $q->whereHas('mntSurveyEntries', function($q) use ($opsVesselId) {
+                                            $q->where('ops_vessel_id', $opsVesselId)
+                                                // ->whereIn('id',function ($query) {
+                                                //     $query->from('mnt_survey_entries')
+                                                //         ->select(DB::raw("MAX(id)"))
+                                                //         ->groupBy(['ops_vessel_id','mnt_survey_id']);
+                                                // })
+                                                ->select('mnt_survey_id', DB::raw('count(mnt_survey_id) as total_items'))
+                                                ->groupBy('mnt_survey_id')
+                                                ->havingRaw('count(mnt_survey_id) > ?', [0]);   
+                                            });
                                     })
+                                    // ->whereExists(function ($query) {
+                                    //     $query->select(DB::raw(1))
+                                    //           ->from('mnt_surveys')
+                                    //           ->whereColumn('mnt_surveys.mnt_survey_item_id', 'mnt_survey_items.id');
+                                    // })
                                     ->get();
 
             return response()->success('Survey item entries are retrieved successfully', $surveyItems, 200);
