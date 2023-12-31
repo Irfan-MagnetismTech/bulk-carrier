@@ -33,6 +33,11 @@
                         <td>{{ vesselBunker.type }}</td>
                     </tr>
 
+                    <tr v-if="vesselBunker.type == 'Reconciliation'">
+                        <th class="w-40">Reconciliation Type</th>
+                        <td>{{ vesselBunker.reconciliation_type }}</td>
+                    </tr>
+
                     <tr>
                         <th class="w-40">Date</th>
                         <td>{{ (vesselBunker.date) ? moment(vesselBunker.date).format('D/M/Y') : '' }}</td>
@@ -48,6 +53,10 @@
                         <td>{{ (vesselBunker.till_date) ? moment(vesselBunker.till_date).format('D/M/Y') : '' }}</td>
                     </tr>
                     <template v-if="vesselBunker.type == 'Stock In'">
+                      <tr>
+                          <th class="w-40">Vendor </th>
+                          <td>{{ vesselBunker?.opsBunkers[0]?.scmVendor?.name }}</td>
+                      </tr>
                       <tr>
                           <th class="w-40">Currency </th>
                           <td>{{ vesselBunker?.currency }}</td>

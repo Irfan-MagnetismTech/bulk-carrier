@@ -112,6 +112,7 @@ class OpsVesselBunkerController extends Controller
             'opsVessel',
             'opsVoyage',
             'opsBunkers.scmMaterial',
+            'opsBunkers.scmVendor',
         ]);
 
         $vessel_bunker->opsBunkers->map(function($bunker) {
@@ -142,6 +143,7 @@ class OpsVesselBunkerController extends Controller
     public function update(OpsVesselBunkerRequest $request, OpsVesselBunker $vessel_bunker): JsonResponse
     {
         // dd($request);
+        // Update is disabled. Enabling it requires checking and update chained stock data.
         try
         {
             DB::beginTransaction();
