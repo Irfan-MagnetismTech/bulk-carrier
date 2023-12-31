@@ -148,16 +148,17 @@ class MntSurveyEntryController extends Controller
             $surveyItems = MntSurveyItem::with(["mntSurveys" => function($query) use ($opsVesselId) {
                                     $query->whereHas('mntSurveyEntries', function($q) use ($opsVesselId) {
                                         $q->where('ops_vessel_id', $opsVesselId)
-                                            // ->whereIn('id',function ($query) {
-                                            //     $query->from('mnt_survey_entries')
-                                            //         ->select(DB::raw("MAX(id)"))
-                                            //         ->groupBy(['ops_vessel_id','mnt_survey_id']);
-                                            // })
                                             ->select('mnt_survey_id', DB::raw('count(mnt_survey_id) as total_items'))
                                             ->groupBy('mnt_survey_id')
                                             ->havingRaw('count(mnt_survey_id) > ?', [0]);   
                                         });
-                                    }, "mntSurveys.mntSurveyEntries"])
+                                    }, "mntSurveys.mntSurveyEntries" => function ($q) {
+                                            $q->whereIn('id',function ($query) {
+                                                $query->from('mnt_survey_entries')
+                                                    ->select(DB::raw("MAX(id)"))
+                                                    ->groupBy(['ops_vessel_id','mnt_survey_id']);
+                                            });
+                                    }])
                                     ->whereHas('mntSurveys', function($q) use ($opsVesselId) {
                                         $q->whereHas('mntSurveyEntries', function($q) use ($opsVesselId) {
                                             $q->where('ops_vessel_id', $opsVesselId)
