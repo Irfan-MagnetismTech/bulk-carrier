@@ -70,7 +70,7 @@ class MntSurveyEntryController extends Controller
     {
         try {
 
-            $survey = MntSurveyEntry::with(["opsVessel","mntSurvey.mntSurveyItem","mntSurvey.mntSurveyType.mntSurveyItems"])->find($id);
+            $survey = MntSurveyEntry::with(["opsVessel","mntSurvey.mntSurveyItem","mntSurvey.mntSurveyType.mntSurveys"])->find($id);
 
             return response()->success('Survey entry type found successfully', $survey, 200);
 
@@ -133,6 +133,22 @@ class MntSurveyEntryController extends Controller
             DB::rollBack();
             return response()->json($surveyEntry->preventDeletionIfRelated(), 422);
 
+        }
+    }
+
+    public function getSurveyEntries()
+    {
+        try {
+
+            $surveyEntries = MntSurveyEntry::with(["opsVessel","mntSurvey.mntSurveyItem","mntSurvey.mntSurveyType"])
+                                ->get();
+
+            return response()->success('Survey entries are retrieved successfully', $surveyEntries, 200);
+
+        }
+        catch (\Exception $e)
+        {
+            return response()->error($e->getMessage(), 500);
         }
     }
 }
