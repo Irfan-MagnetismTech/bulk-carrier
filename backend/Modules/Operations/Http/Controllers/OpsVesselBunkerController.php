@@ -71,7 +71,6 @@ class OpsVesselBunkerController extends Controller
             $warehouse= ScmWarehouse::where('ops_vessel_id', $request->ops_vessel_id)->first();
             $vessel_bunker['scm_warehouse_id']= $warehouse->id;
             $bunkers= collect($request->opsBunkers)->map(function($bunker) use ($warehouse){
-                $bunker['scm_material_id']= 2;
                 return $bunker;
             })->values()->all();
             

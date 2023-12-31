@@ -683,13 +683,13 @@ export default [
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	{
-		path: `/${BASE}/vessel-bunkers/:vesselBunker/edit`,
+		path: `/${BASE}/vessel-bunkers/:vesselBunkerId/edit`,
 		name: `${BASE}.vessel-bunkers.edit`,
 		component: () => import (`../views/${ViEWBASE}/vessel-bunkers/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	{
-		path: `/${BASE}/vessel-bunkers/:vesselBunker/show`,
+		path: `/${BASE}/vessel-bunkers/:vesselBunkerId/show`,
 		name: `${BASE}.vessel-bunkers.show`,
 		component: () => import (`../views/${ViEWBASE}/vessel-bunkers/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
