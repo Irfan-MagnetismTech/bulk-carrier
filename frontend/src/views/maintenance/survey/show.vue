@@ -39,7 +39,7 @@ onMounted(() => {
             </tr>
             </thead> -->
             <tbody>
-              <tr>
+              <!-- <tr>
                 <th class="w-40">Business Unit</th>
                 <td>{{ survey?.business_unit }}</td>
               </tr>
@@ -48,7 +48,7 @@ onMounted(() => {
               <tr>
                 <th class="w-40">Vessel</th>
                 <td>{{ survey?.opsVessel?.name }}</td>
-              </tr>
+              </tr> -->
 
               
               <tr>
@@ -75,7 +75,7 @@ onMounted(() => {
               </tr>
 
               
-              <tr>
+              <!-- <tr>
                 <th class="w-40">Range Date</th>
                 <td>{{ formatDate(survey?.range_date_from) }} - {{ formatDate(survey?.range_date_to) }}</td>
               </tr>
@@ -90,7 +90,7 @@ onMounted(() => {
               <tr>
                 <th class="w-40">Due Date</th>
                 <td>{{ formatDate(survey?.due_date) }}</td>
-              </tr>
+              </tr> -->
               
             </tbody>
           </table>

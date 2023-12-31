@@ -53,22 +53,22 @@ function confirmDelete(id) {
 }
 
 let filterOptions = ref( {
-  "business_unit": businessUnit.value,
+  "business_unit": null,
   "items_per_page": 15,
   "page": props.page,
   "isFilter": false,
   "filter_options": [
-    {
-      "rel_type": null,
-      "relation_name": "opsVessel",
-      "field_name": "name",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Vessel",
-      "filter_type": "input"
-    },  
+    // {
+    //   "rel_type": null,
+    //   "relation_name": "opsVessel",
+    //   "field_name": "name",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Vessel",
+    //   "filter_type": "input"
+    // },  
      
     {
       "rel_type": null,
@@ -80,7 +80,22 @@ let filterOptions = ref( {
       "date_from": null,
       "label": "Survey Item",
       "filter_type": "input"
-    },  
+    },
+
+    
+    {
+      "rel_type": null,
+      "relation_name": "mntSurveyType", 
+      "field_name": "survey_type_name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Survey Type",
+      "filter_type": "input"
+    },
+
+    
 
     // {
     //   "rel_type": null,
@@ -106,56 +121,56 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     
-    {
-      "rel_type": null,
-      "relation_name": null,
-      "field_name": "range_date_from",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Range Date (From)",
-      "filter_type": "date"
-    },
+    // {
+    //   "rel_type": null,
+    //   "relation_name": null,
+    //   "field_name": "range_date_from",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Range Date (From)",
+    //   "filter_type": "date"
+    // },
 
     
-    {
-      "rel_type": null,
-      "relation_name": null,
-      "field_name": "range_date_to",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Range Date (To)",
-      "filter_type": "date"
-    },
+    // {
+    //   "rel_type": null,
+    //   "relation_name": null,
+    //   "field_name": "range_date_to",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Range Date (To)",
+    //   "filter_type": "date"
+    // },
 
     
-    {
-      "rel_type": null,
-      "relation_name": null,
-      "field_name": "assigned_date",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Assigned Date",
-      "filter_type": "date"
-    },
+    // {
+    //   "rel_type": null,
+    //   "relation_name": null,
+    //   "field_name": "assigned_date",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Assigned Date",
+    //   "filter_type": "date"
+    // },
 
     
-    {
-      "rel_type": null,
-      "relation_name": null,
-      "field_name": "due_date",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Due Date",
-      "filter_type": "date"
-    },
+    // {
+    //   "rel_type": null,
+    //   "relation_name": null,
+    //   "field_name": "due_date",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Due Date",
+    //   "filter_type": "date"
+    // },
 
     
   ]
@@ -222,21 +237,22 @@ onMounted(() => {
           <tbody class="relative">
           <tr v-for="(survey,index) in surveys?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-            <td>{{ survey?.opsVessel?.name }}</td>
+            <!-- <td>{{ survey?.opsVessel?.name }}</td> -->
             <td>{{ survey?.mntSurveyItem?.item_name }}</td>
+            <td>{{ survey?.mntSurveyType?.survey_type_name }}</td>
             <!-- <td>{{ survey?.mntSurveyType?.survey_type_name }}</td> -->
             <!-- <td>{{ survey?.short_code }}</td> -->
             <td>{{ survey?.survey_name }}</td>
             <!-- <td><nobr>{{ survey?.range_date_from }}</nobr></td> -->
-            <td><nobr>{{  moment(survey?.range_date_from).format('DD/MM/YYYY') }}</nobr></td>
+            <!-- <td><nobr>{{  moment(survey?.range_date_from).format('DD/MM/YYYY') }}</nobr></td> -->
             <!-- <td><nobr>{{ survey?.range_date_to }}</nobr></td> -->
-            <td><nobr>{{  moment(survey?.range_date_to).format('DD/MM/YYYY') }}</nobr></td>
+            <!-- <td><nobr>{{  moment(survey?.range_date_to).format('DD/MM/YYYY') }}</nobr></td> -->
             <!-- <td><nobr>{{ survey?.assigned_date }}</nobr></td> -->
-            <td><nobr>{{  moment(survey?.assigned_date).format('DD/MM/YYYY') }}</nobr></td>
+            <!-- <td><nobr>{{  moment(survey?.assigned_date).format('DD/MM/YYYY') }}</nobr></td> -->
             <!-- <td><nobr>{{ survey?.due_date }}</nobr></td> -->
-            <td><nobr>{{  moment(survey?.due_date).format('DD/MM/YYYY') }}</nobr></td>
+            <!-- <td><nobr>{{  moment(survey?.due_date).format('DD/MM/YYYY') }}</nobr></td> -->
   
-            <td><span :class="survey?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ survey?.business_unit }}</span></td>
+            <!-- <td><span :class="survey?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ survey?.business_unit }}</span></td> -->
             <td>
               <nobr>
                 <action-button :action="'show'" :to="{ name: 'mnt.surveys.show', params: { surveyId: survey?.id } }"></action-button>
@@ -249,15 +265,15 @@ onMounted(() => {
           </tbody>
           <tfoot v-if="!surveys?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="7">Loading...</td>
+            <td colspan="5">Loading...</td>
           </tr>
           <tr v-else-if="isTableLoading">
-              <td colspan="7">
+              <td colspan="5">
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
             </tr>
           <tr v-else-if="!surveys?.data?.length">
-            <td colspan="7">No survey found.</td>
+            <td colspan="5">No survey found.</td>
           </tr>
           </tfoot>
       </table>
