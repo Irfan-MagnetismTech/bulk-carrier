@@ -38,7 +38,11 @@ class MntSurveyController extends Controller
     {
         try {
 
-            $surveys = MntSurvey::with(["mntSurveyItem", "mntSurveyType"])->get();
+            $surveys = MntSurvey::with(["mntSurveyItem", "mntSurveyType"])
+                        ->when(request()->has('mnt_survey_type_id'), function($qJobs){
+                            $qJobs->where('mnt_survey_type_id', request()->mnt_survey_type_id);  
+                        })   
+                        ->get();
 
             return response()->success('Surveys are retrieved successfully', $surveys, 200);
 

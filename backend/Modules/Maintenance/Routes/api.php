@@ -97,6 +97,8 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
     Route::get('get-survey-items', [MntSurveyItemController::class, 'mntSurveyItems']);
     // getSurveyTypes
     Route::get('get-survey-types', [MntSurveyTypeController::class, 'mntSurveyTypes']);
+    // getSurveys
+    Route::get('get-survey-types', [MntSurveyController::class, 'mntSurveys']);
 
     // report all jobs
     Route::get('report-all-jobs', [MntReportController::class, 'reportAllJobs']);
