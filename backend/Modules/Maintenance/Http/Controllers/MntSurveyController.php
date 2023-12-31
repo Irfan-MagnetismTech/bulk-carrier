@@ -3,8 +3,10 @@
 namespace Modules\Maintenance\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Maintenance\Entities\MntSurvey;
 use Modules\Maintenance\Http\Requests\MntSurveyRequest;
 
@@ -143,18 +145,20 @@ class MntSurveyController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(MntSurvey $survey)
     {
-        try {
-            $survey = MntSurvey::findorfail($id);
+        try {            
+            DB::beginTransaction();
             $survey->delete();
-
+            DB::commit();
             return response()->success('Survey deleted successfully', $survey, 204);
-
+            
         }
-        catch (\Exception $e)
+        catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($survey->preventDeletionIfRelated(), 422);
+
         }
     }
 }

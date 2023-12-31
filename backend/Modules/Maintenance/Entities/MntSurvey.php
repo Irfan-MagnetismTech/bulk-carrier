@@ -2,6 +2,7 @@
 
 namespace Modules\Maintenance\Entities;
 
+use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
 use DateTime;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ use Modules\Operations\Entities\OpsVessel;
 
 class MntSurvey extends Model
 {
-    use HasFactory, GlobalSearchTrait;
+    use HasFactory, GlobalSearchTrait, DeletableModel;
 
     protected $fillable = [
         'mnt_survey_item_id',
