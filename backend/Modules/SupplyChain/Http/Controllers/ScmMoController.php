@@ -197,7 +197,13 @@ class ScmMoController extends Controller
         try {
             if ($request->business_unit != 'ALL') {
                 $movementRequisitions = ScmMo::query()
-                    ->whereDoesntHave('scmMi')
+                    ->when(!$request->isEdit, function ($query) {
+                        return $query->whereDoesntHave('scmMi');
+                    }, function ($query) use ($request){
+                        $query->whereDoesntHave('scmMi', function ($q) use ($request) {
+                            $q->whereNot('scm_mo_id', $request->mo_id);
+                        });
+                    })
                     ->with('scmMoLines', 'fromWarehouse', 'toWarehouse', 'createdBy')
                     ->whereBusinessUnit($request->business_unit)
                     ->when($request->searchParam, function ($query) {

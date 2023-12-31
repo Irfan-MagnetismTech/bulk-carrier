@@ -12,6 +12,7 @@ const icons = useHeroIcon();
 
 const { getMovementIn, movementIn, excelExportData, getStoreCategoryWiseExcel, storeMovementIn,materialObject, errors, isLoading } = useMovementIn();
 const page = ref('create');
+const formType = 'create';
 const { setTitle } = Title();
 
 setTitle('Create Movement In');
@@ -24,7 +25,7 @@ setTitle('Create Movement In');
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
         <form @submit.prevent="storeMovementIn(movementIn)">
-          <movement-in-form v-model:form="movementIn" v-model:excelExportData="excelExportData" :downloadExcel="getStoreCategoryWiseExcel" :errors="errors" :materialObject="materialObject" :page="page"></movement-in-form>
+          <movement-in-form v-model:form="movementIn" :errors="errors" :materialObject="materialObject" :page="page" :formType="formType"></movement-in-form>
             <!-- Submit button -->
             <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
         </form>

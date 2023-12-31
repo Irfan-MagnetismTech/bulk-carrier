@@ -306,8 +306,12 @@
 
     function setMovementRequisitionData(mmr) {
       if (mmr) {
-       
-        getMmrWiseMo(props.form.business_unit, mmr.id);
+        if (props.formType == 'create') {
+          getMmrWiseMo(props.form.business_unit, mmr.id);
+        } else {
+          getMmrWiseMo(props.form.business_unit, mmr.id,props.form.scm_mo_id,true);
+        }
+        
         props.form.scm_mmr_id = mmr?.id;
         props.form.fromWarehouse = mmr.fromWarehouse;
         props.form.toWarehouse = mmr.toWarehouse;
@@ -417,9 +421,13 @@ function setMaterialOtherData(datas, index) {
 
 
 watch(() => props.form.scmMiLines, (newLines) => {
-  props.form.scmMiShortage.scmMiShortageLines = [];
-  newLines.forEach((line, index) => {
-    // const previousLine = previousLines.value[index];
+  if (props.formType == 'create') {
+    editIntitiated.value = true;
+  }
+  if (editIntitiated.value) {
+    props.form.scmMiShortage.scmMiShortageLines = [];
+    newLines.forEach((line, index) => {
+    
     if (Number(line.quantity) < Number(line.mo_quantity)) {
       props.form.scmMiShortage.scmMiShortageLines.push({
         scm_material_id: line.scm_material_id,
@@ -440,6 +448,12 @@ watch(() => props.form.scmMiLines, (newLines) => {
       }
     }
   });
+  }
+
+  if (props.formType == 'edit') {
+    editIntitiated.value = true;
+  }
+ 
   // previousLines.value = cloneDeep(newLines);
 }, { deep: true });
 
@@ -481,6 +495,13 @@ function tableWidth() {
 //after mount
 onMounted(() => {
   tableWidth();
+  if(props.formType == 'edit'){
+    const unwatch = watch(() => props.form.scm_mmr_id, (newLines) => {
+    getMmrWiseMo(props.form.business_unit, props.form.scm_mmr_id,props.form.scm_mo_id,true);
+    unwatch();
+  });
+  }
+  
 });
 </script>
 
