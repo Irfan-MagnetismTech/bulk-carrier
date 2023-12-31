@@ -10,6 +10,7 @@ class OpsVoyageExpenditureEntry extends Model
     use HasFactory;
 
     protected $fillable = [
+        'ops_voyage_id',
         'ops_voyage_expenditure_id',
         'ops_expense_head_id',
         'particular',
