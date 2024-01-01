@@ -6,7 +6,7 @@
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
       <div class="flex md:gap-4">
         <div class="w-1/2">
-          <h2 class="bg-indigo-400 text-white text-md font-semibold uppercase mb-2 text-center py-2">Basic Information</h2>
+          <h2 class="!text-center font-bold bg-green-600 uppercase text-white py-1">Basic Information</h2>
           <table class="w-full">
             <tbody>
               <tr>
@@ -105,7 +105,7 @@
           </table>
         </div>
         <div class="w-1/2">
-          <h2 class="bg-indigo-400 text-white text-md font-semibold uppercase mb-2 text-center py-2">Other Information</h2>
+          <h2 class="!text-center font-bold bg-green-600 uppercase text-white py-1">Other Information</h2>
           <table class="w-full">
             <tbody>
               <tr>

@@ -155,6 +155,7 @@ onMounted(() => {
                   </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
+                      <action-button :action="'show'" :to="{ name: 'ops.expense-heads.show', params: { expenseHeadId: expenseHead.id } }"></action-button>
                       <action-button :action="'edit'" :to="{ name: 'ops.expense-heads.edit', params: { expenseHeadId: expenseHead.id } }"></action-button>
                       <action-button @click="confirmDelete(expenseHead.id)" :action="'delete'"></action-button>
                       <!-- <action-button v-if="!expenseHead?.is_readonly" @click="confirmDelete(expenseHead.id)" :action="'delete'"></action-button> -->

@@ -97,7 +97,7 @@ class OpsContractAssignController extends Controller
      */
     public function show(OpsContractAssign $contract_assign): JsonResponse
     {
-        $contract_assign->load('opsVessel','opsVoyage.opsContractTariffs.opsCargoTariff.opsCargoTariffLines','opsVoyage.opsVoyageSectors.cargoTariffs.opsCargoTariffLines','opsCargoTariff', 'opsCustomer', 'opsChartererProfile','opsChartererContract');
+        $contract_assign->load('opsContractTariffs.opsCargoTariff','opsVessel','opsVoyage.opsContractTariffs.opsCargoTariff.opsCargoTariffLines','opsVoyage.opsVoyageSectors.cargoTariffs.opsCargoTariffLines','opsCargoTariff', 'opsCustomer', 'opsChartererProfile','opsChartererContract');
        
         $contract_assign->opsVoyage->opsVoyageSectors->map(function ($sector) {
 
