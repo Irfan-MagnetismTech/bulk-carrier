@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Maintenance\Entities\MntSurveyEntry;
 use Modules\Maintenance\Entities\MntSurveyItem;
+use Modules\Maintenance\Http\Requests\MntSurveyEntryRequest;
 
 class MntSurveyEntryController extends Controller
 {
@@ -46,7 +47,7 @@ class MntSurveyEntryController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(MntSurveyEntryRequest $request)
     {
         try {
             $input = $request->all();
@@ -98,7 +99,7 @@ class MntSurveyEntryController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(MntSurveyEntryRequest $request, $id)
     {
         try {
             $input = $request->all();
@@ -146,17 +147,18 @@ class MntSurveyEntryController extends Controller
                                 ->get();
 
             $surveyItems = MntSurveyItem::with(["mntSurveys" => function($query) use ($opsVesselId) {
-                                    // Filter mntSurveys which have atleast one mnt survey entry
+                                    // Filter mntSurveys which have atleast one mnt survey entry for the given vessel
                                     $query->whereHas('mntSurveyEntries', function($q) use ($opsVesselId) {
                                         $q->where('ops_vessel_id', $opsVesselId)
                                             ->select('mnt_survey_id', DB::raw('count(mnt_survey_id) as total_items'))
                                             ->groupBy('mnt_survey_id')
                                             ->havingRaw('count(mnt_survey_id) > ?', [0]);   
                                         });
-                                    }, "mntSurveys.mntSurveyEntries" => function ($q) {
-                                        // Select only the latest entry
-                                            $q->whereIn('id',function ($query) {
+                                    }, "mntSurveys.mntSurveyEntries" => function ($q) use ($opsVesselId) {
+                                        // Select only the latest entry for the given vessel
+                                            $q->whereIn('id',function ($query) use ($opsVesselId) {
                                                 $query->from('mnt_survey_entries')
+                                                    ->where('ops_vessel_id', $opsVesselId)
                                                     ->select(DB::raw("MAX(id)"))
                                                     ->groupBy(['ops_vessel_id','mnt_survey_id']);
                                             });

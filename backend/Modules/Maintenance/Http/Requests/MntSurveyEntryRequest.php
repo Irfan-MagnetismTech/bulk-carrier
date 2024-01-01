@@ -4,7 +4,7 @@ namespace Modules\Maintenance\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SurveyEntryRequest extends FormRequest
+class MntSurveyEntryRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
