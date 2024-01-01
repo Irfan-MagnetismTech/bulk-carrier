@@ -264,6 +264,17 @@ export default [
             //     permissionKey: '',
             //     subSubMenu: [],
             // },
+
+            {
+                route: 'crw.appraisal-forms.index',
+                label: 'Appraisal Forms',
+                preIcon: '',
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: [],
+            },
         ]
     },
 ];

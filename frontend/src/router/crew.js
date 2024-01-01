@@ -475,5 +475,33 @@ export default [
         path: `/${BASE}/crew-payroll-batches/:crewPayrollBatchId/show`,
         name: `${BASE}.crewPayrollBatches.show`,
         component: () => import(`../views/crew/crew-payroll-batch/show.vue`),
-    }
+    },
+
+    /* Appraisal Form Start */
+    {
+		path: `/${BASE}/appraisal-forms`,
+		name: `${BASE}.appraisal-forms.index`,
+		component: () => import(`../views/crew/appraisal-form/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'appraisal-form-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/appraisal-forms/create`,
+		name: `${BASE}.appraisal-forms.create`,
+		component: () => import(`../views/crew/appraisal-form/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'appraisal-form-create' },
+	},
+	{
+		path: `/${BASE}/appraisal-forms/:appraisalFormId/edit`,
+		name: `${BASE}.appraisal-forms.edit`,
+		component: () => import(`../views/crew/appraisal-form/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'appraisal-form-edit' },
+	},
+	{
+		path: `/${BASE}/appraisal-forms/:appraisalFormId`,
+		name: `${BASE}.appraisal-forms.show`,
+		component: () => import(`../views/crew/appraisal-form/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'appraisal-form-show'  },
+	},
+    /* Appraisal Form End */
 ];
