@@ -22,6 +22,7 @@ return new class extends Migration
 			$table->decimal('net_payment', 16, 2);
 			$table->string('currency');
 			$table->integer('working_days');
+			$table->integer('total_crew');
 			$table->enum('business_unit', ['PSML', 'TSLL']);            
             $table->timestamps();
         });

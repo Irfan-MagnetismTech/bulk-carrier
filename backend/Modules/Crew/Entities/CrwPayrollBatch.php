@@ -2,18 +2,19 @@
 
 namespace Modules\Crew\Entities;
 
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Operations\Entities\OpsVessel;
 
 class CrwPayrollBatch extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     /**
      * @var array
      */
-    protected $fillable = ['ops_vessel_id', 'year_month', 'compensation_type', 'process_date', 'net_payment', 'currency', 'working_days', 'business_unit'];
+    protected $fillable = ['ops_vessel_id', 'year_month', 'compensation_type', 'process_date', 'net_payment', 'currency', 'working_days',  'total_crew', 'business_unit'];
 
     public function opsVessel()
     {
