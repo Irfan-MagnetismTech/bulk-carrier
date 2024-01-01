@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('ops_voyage_id')->constrained('ops_voyages')->cascadeOnDelete();
             $table->foreignId('ops_voyage_expenditure_id')->constrained('ops_voyage_expenditures')->cascadeOnDelete();
             $table->foreignId('ops_expense_head_id')->constrained('ops_expense_heads')->cascadeOnDelete();
+            $table->string('port_code')->nullable();
             $table->string('particular')->nullable();
             $table->string('type')->default('expense')->comment('expense')->nullable();
             $table->string('invoice_date')->nullable();
