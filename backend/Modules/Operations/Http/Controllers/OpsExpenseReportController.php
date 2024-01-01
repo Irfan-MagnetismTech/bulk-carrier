@@ -82,7 +82,7 @@ class OpsExpenseReportController extends Controller
         //
     }
 
-    public function expenditureReport(Request $request)
+    public function portWiseExpenditureReport(Request $request)
     {
         $start = date($request->start);
         $end = date($request->end);

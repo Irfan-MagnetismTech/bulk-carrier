@@ -694,5 +694,12 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/vessel-bunkers/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
-	
+
+	/* Reports */
+	{
+		path: `/${BASE}/reports/port-wise-expense-report`,
+		name: `${BASE}.reports.port-wise-expense-report`,
+		component: () => import (`../views/${ViEWBASE}/reports/port-wise-expense-report.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];
