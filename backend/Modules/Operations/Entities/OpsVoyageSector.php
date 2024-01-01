@@ -52,8 +52,8 @@ class OpsVoyageSector extends Model
     // public function unloadingPointTariff() {
     //     return $this->belongsTo(OpsCargoTariff::class, 'unloading_point', 'unloading_point');
     // }
-    public function opsContractTariffs() {
-        return $this->hasMany(OpsContractTariff::class, 'ops_voyage_sector_id', 'id');
+    public function opsContractTariff() {
+        return $this->hasOne(OpsContractTariff::class, 'ops_voyage_sector_id', 'id');
     }
 
 
