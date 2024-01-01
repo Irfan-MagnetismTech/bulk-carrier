@@ -3,6 +3,8 @@
 namespace Modules\Operations\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\Operations\Entities\OpsVoyage;
+use Modules\Operations\Entities\OpsExpenseHead;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsVoyageExpenditureEntry extends Model
@@ -13,6 +15,7 @@ class OpsVoyageExpenditureEntry extends Model
         'ops_voyage_id',
         'ops_voyage_expenditure_id',
         'ops_expense_head_id',
+        'port_code',
         'particular',
         'type',
         'invoice_date',
@@ -29,5 +32,8 @@ class OpsVoyageExpenditureEntry extends Model
         return $this->belongsTo(OpsExpenseHead::class);
     }
 
+    public function opsVoyage() {
+        return $this->belongsTo(OpsVoyage::class);
+    }
 
 }

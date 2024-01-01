@@ -67,6 +67,7 @@ class OpsVoyageExpenditureController extends Controller
 
             $voyageExpenditureEntries = collect($request->opsVoyageExpenditureEntries)->map(function($item) use($request) {
                 $item['ops_voyage_id'] = $request->ops_voyage_id;
+                $item['port_code'] = $request->port_code;
                 return $item;
             })->toArray();
 
@@ -131,6 +132,7 @@ class OpsVoyageExpenditureController extends Controller
 
             $voyageExpenditureEntries = collect($request->opsVoyageExpenditureEntries)->map(function($item) use($request) {
                 $item['ops_voyage_id'] = $request->ops_voyage_id;
+                $item['port_code'] = $request->port_code;
                 return $item;
             })->toArray();
             

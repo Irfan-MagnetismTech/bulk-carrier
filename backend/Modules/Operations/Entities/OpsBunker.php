@@ -62,11 +62,6 @@ class OpsBunker extends Model
     {
         return $this->belongsTo(ScmMaterial::class, 'scm_material_id' , 'id');
     }
-
-    public function scmSupplier()
-    {
-        return $this->belongsTo(ScmSupplier::class, 'scm_supplier_id' , 'id');
-    }
     
     public function bunkerable()
     {
