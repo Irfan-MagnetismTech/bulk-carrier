@@ -12,6 +12,7 @@ use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
 use Modules\SupplyChain\Entities\ScmMiShortage;
+use Modules\SupplyChain\Entities\ScmMiShortageLine;
 use Modules\SupplyChain\Entities\ScmStockLedger;
 use Modules\SupplyChain\Services\StockLedgerData;
 use Modules\SupplyChain\Http\Requests\ScmMiRequest;
@@ -70,7 +71,7 @@ class ScmMiController extends Controller
             if ($request->scmMiShortage['shortage_type'] != "") {
                 $scmMi->scmMiShortage()->create($request->scmMiShortage);
 
-                $this->shortageLinesData($request, $scmMi);
+                $this->shortageLinesData($request, null, $scmMi);
             }
 
             (new StockLedgerData)->insert($scmMi, $request->scmMiLines);
@@ -142,22 +143,22 @@ class ScmMiController extends Controller
      * @param mixed $scmMi.
      * @return void
      */
-    private function shortageLinesData($request, $scmMi)
+    private function shortageLinesData($request, $miStorageData = null, $scmMi)
     {
-         return response()->json([$request->scmMiShortage], 422);
         $shortageLines = $request->scmMiShortage['scmMiShortageLines'];
 
         foreach ($shortageLines as $key => $shortageLine) {
             $materialId = $shortageLine['scm_material_id'];
+            // return '$scmMi->scmMiLines()';
             $miLine = $scmMi->scmMiLines()->where('scm_material_id', $materialId)->first();
+
 
             if ($miLine && $miLine->mi_composite_key) {
                 $shortageLines[$key]['mi_composite_key'] = $miLine->mi_composite_key;
             }
         }
-       
 
-        $scmMi->scmMiShortage->scmMiShortageLines()->createMany($shortageLines);
+        $miStorageData->scmMiShortageLines->createMany($shortageLines);
     }
 
     /**
@@ -213,7 +214,7 @@ class ScmMiController extends Controller
      * @param ScmMi $movementIn
      * @return JsonResponse
      */
-    public function update(ScmMIRequest $request, ScmMi $movementIn): JsonResponse
+    public function update(ScmMIRequest $request, ScmMi $movementIn)
     {
         $requestData = $request->except('ref_no', 'mi_composite_key');
 
@@ -231,11 +232,18 @@ class ScmMiController extends Controller
 
             (new StockLedgerData)->insert($movementIn, $request->scmMiLines);
 
+            if ($request->scmMiShortage['shortage_type'] == "") {
 
-            if ($request->scmMiShortage['shortage_type'] != "") {
                 if ($movementIn->scmMiShortage) {
                     $movementIn->scmMiShortage->scmMiShortageLines()->delete();
                     $movementIn->scmMiShortage->stockable()->delete();
+                    $movementIn->scmMiShortage->delete();
+                }
+            }
+
+            if ($request->scmMiShortage['shortage_type'] != "") {
+                if ($movementIn->scmMiShortage) {
+
 
                     $movementIn->scmMiShortage()->update([
                         'scm_mi_id' => $movementIn->id,
@@ -245,10 +253,33 @@ class ScmMiController extends Controller
                         'business_unit' => $request->business_unit
                     ]);
                 } else {
-                    $movementIn->scmMiShortage()->create($request->scmMiShortage);
+
+                    $scmMiShortage = $movementIn->scmMiShortage()->create($request->scmMiShortage);
+                    // return $miStorageData;
                 }
 
-                $this->shortageLinesData($request, $movementIn);
+
+                // return response()->json($miStorageData->scmMiShortageLines()->createMany([['scm_material_id' => 1, 'quantity' => 1], ['scm_material_id' => 2, 'quantity' => 2]]), 422);
+
+                // $this->shortageLinesData($request, $miStorageData, $movementIn);
+                // return response()->json($this->shortageLinesData($request, $miStorageData, $movementIn), 422);
+
+                $shortageLines = $request->scmMiShortage['scmMiShortageLines'];
+
+                foreach ($shortageLines as $key => $shortageLine) {
+                    $materialId = $shortageLine['scm_material_id'];
+                    $shortageLine['scm_mi_shortage_id'] = $scmMiShortage->id ? $scmMiShortage->id : $movementIn->scmMiShortage->id;
+
+                    $miLine = $movementIn->scmMiLines()->where('scm_material_id', $materialId)->first();
+
+                    if ($miLine && $miLine->mi_composite_key) {
+                        $shortageLine['mi_composite_key'] = $miLine->mi_composite_key;
+                    }
+                    // return response()->json($shortageLine, 422);
+                    ScmMiShortageLine::create($shortageLine);
+                }
+
+                // $ScmMiShortage->scmMiShortageLines()->insert($shortageLines);
 
                 $stockInFromShortage = [];
                 $stockOutFromShortage = [];
@@ -268,7 +299,7 @@ class ScmMiController extends Controller
                     $stockOutFromShortage = [
                         'scm_material_id' => $value['scm_material_id'],
                         'recievable_type`' => ScmMi::class,
-                        'recievable_id' => $movementIn->scmMiShortage->scmMiShortageLines[$key]->id,
+                        'recievable_id' => $scmMiShortage->scmMiShortageLines[$key]->id ? $scmMiShortage->scmMiShortageLines[$key]->id : $movementIn->scmMiShortage->scmMiShortageLines[$key]->id,
                         'scm_warehouse_id' => $request->scmMiShortage['scm_warehouse_id'],
                         'acc_cost_center_id' => $request->scmMiShortage['acc_cost_center_id'],
                         'quantity' => $value['quantity'] * -1,
@@ -276,7 +307,7 @@ class ScmMiController extends Controller
                         'business_unit' => $request->business_unit
                     ];
 
-                    $movementIn->scmMiShortage->stockable()->create($stockOutFromShortage);
+                    $scmMiShortage->stockable()->create($stockOutFromShortage);
                 }
             }
 
