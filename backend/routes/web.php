@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Administration\Http\Controllers\UserController;
-use Modules\Operations\Http\Controllers\OpsExpenseReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,4 +16,3 @@ use Modules\Operations\Http\Controllers\OpsExpenseReportController;
 // Route::get('/test', fn()=> 'hi');
 Route::get('/', fn() => 'BG Torony - Magnetism Tech Limited');
 
-Route::get('/port-wise-expense', [OpsExpenseReportController::class, 'expenditureReport']);
