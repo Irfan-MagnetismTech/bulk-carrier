@@ -25,8 +25,8 @@ return new class extends Migration
             $table->foreignId('to_warehouse_id')->constrained('scm_warehouses');
             // $table->unsignedBigInteger('scm_warehouse_id')->nullable();
             // // $table->foreign('scm_warehouse_id')->references('id')->on('scm_warehouses')->onDelete('cascade');
-            // $table->unsignedBigInteger('scm_cost_center_id')->nullable();
-            // $table->foreign('scm_cost_center_id')->references('id')->on('scm_cost_centers')->onDelete('cascade');
+            // $table->unsignedBigInteger('acc_cost_center_id')->nullable();
+            // $table->foreign('acc_cost_center_id')->references('id')->on('scm_cost_centers')->onDelete('cascade');
             $table->string('business_unit')->nullable();
             $table->timestamps();
         });
