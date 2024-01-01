@@ -21,7 +21,7 @@ class OpsVoyageReportController extends Controller
     public function voyageReport(Request $request)
     {
         try {
-            $voyages = OpsVoyage::with('opsVessel','opsCargoType','opsVoyageSectors.opsContractTariffs.opsCargoTariff.opsCargoTariffLines','opsContractTariffs.opsCargoTariff.opsCargoTariffLines','opsVoyageExpenditureEntries.opsExpenseHead')
+            $voyages = OpsVoyage::with('opsVessel','opsCargoType','opsVoyageSectors.opsContractTariff.opsCargoTariff.opsCargoTariffLines','opsContractTariffs.opsCargoTariff.opsCargoTariffLines','opsVoyageExpenditureEntries.opsExpenseHead')
             ->whereHas('opsVoyageExpenditureEntries.opsExpenseHead', function ($query) {
                 $query->where('is_visible_in_voyage_report',1)->groupBy('name');
             })
@@ -77,7 +77,7 @@ class OpsVoyageReportController extends Controller
                 'voyages'=>$voyages,
                 'opsContractTitle'=>$opsCargoTitle,
                 'opsExpenditureHeadTitle'=>$opsExpenditureHeadTitle,
-
+                'companyName' => 'TOGGI SHIPPING & LOGISTIC',
             ];
             return view('operations::reports.voyage',compact('data'));
             return response()->success('Data retrieved successfully.', $data, 200);
