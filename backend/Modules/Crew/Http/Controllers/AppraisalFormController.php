@@ -19,8 +19,6 @@ class AppraisalFormController extends Controller
      */
     public function index(Request $request)
     {
-        return AppraisalForm::all(); 
-
         try {
             $appraisalForms = AppraisalForm::with('appraisalFormLines')->globalSearch($request->all());
 

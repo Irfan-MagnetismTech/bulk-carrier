@@ -76,7 +76,16 @@ class CrwPayrollBatchController extends Controller
     public function show(CrwPayrollBatch $crwPayrollBatch)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwPayrollBatch->load('crwPayrollBatchLines', 'crwPayrollBatchHeads', 'crwPayrollBatchHeadLines'), 200);
+            return response()->success('Retrieved succesfully', 
+            $crwPayrollBatch->load('opsVessel', 
+            'crwPayrollBatchHeads', 
+            'crwPayrollBatchHeadLines.crwCrew:id,full_name,pre_mobile_no',
+            'crwPayrollBatchLines.crwCrew:id,full_name,pre_mobile_no', 
+            'crwPayrollBatchLines.crwSalaryStructure:id,net_amount', 
+            'crwPayrollBatchLines.crwAttendanceLine:id,present_days,absent_days,payable_days',        
+        ), 
+            
+            200);
         }
         catch (QueryException $e)
         {

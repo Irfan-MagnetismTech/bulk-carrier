@@ -16,4 +16,14 @@ class CrwPayrollBatchLine extends Model
     {
         return $this->belongsTo(CrwCrewProfile::class);
     }
+
+    public function crwSalaryStructure()
+    {
+        return $this->belongsTo(CrwSalaryStructure::class);
+    }
+
+    public function crwAttendanceLine()
+    {
+        return $this->belongsTo(CrwAttendanceLine::class);
+    }
 }
