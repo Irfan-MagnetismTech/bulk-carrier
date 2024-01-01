@@ -3,6 +3,7 @@
 namespace Modules\Maintenance\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class MntSurveyRequest extends FormRequest
 {
@@ -15,9 +16,10 @@ class MntSurveyRequest extends FormRequest
     {
         return [
             'mnt_survey_item_id' => 'required',
-            'mnt_survey_type_id' => 'required',
-            'short_code' => 'required',
-            'survey_name' => 'required'
+            'mnt_survey_type_id' => ['required', Rule::unique('mnt_surveys')->where('mnt_survey_item_id', $this->mnt_survey_item_id)->ignore($this->route('survey'), 'id')],
+            // 'mnt_survey_type_id' => 'required',
+            'short_code' => ['required', Rule::unique('mnt_surveys')->ignore($this->route('survey'), 'id')],
+            'survey_name' => ['required', Rule::unique('mnt_surveys')->ignore($this->route('survey'), 'id')]
         ];
     }
 
@@ -29,7 +31,7 @@ class MntSurveyRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'mnt_survey_type_id.unique' => 'Survey for selected items on selected type already exists.',
         ];
     }
 

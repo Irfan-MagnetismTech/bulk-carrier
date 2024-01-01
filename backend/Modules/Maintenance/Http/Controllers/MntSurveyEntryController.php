@@ -146,6 +146,7 @@ class MntSurveyEntryController extends Controller
                                 ->get();
 
             $surveyItems = MntSurveyItem::with(["mntSurveys" => function($query) use ($opsVesselId) {
+                                    // Filter mntSurveys which have atleast one mnt survey entry
                                     $query->whereHas('mntSurveyEntries', function($q) use ($opsVesselId) {
                                         $q->where('ops_vessel_id', $opsVesselId)
                                             ->select('mnt_survey_id', DB::raw('count(mnt_survey_id) as total_items'))
@@ -153,6 +154,7 @@ class MntSurveyEntryController extends Controller
                                             ->havingRaw('count(mnt_survey_id) > ?', [0]);   
                                         });
                                     }, "mntSurveys.mntSurveyEntries" => function ($q) {
+                                        // Select only the latest entry
                                             $q->whereIn('id',function ($query) {
                                                 $query->from('mnt_survey_entries')
                                                     ->select(DB::raw("MAX(id)"))
@@ -160,23 +162,14 @@ class MntSurveyEntryController extends Controller
                                             });
                                     }])
                                     ->whereHas('mntSurveys', function($q) use ($opsVesselId) {
+                                        // Filter items which have surveys which have at least one mnt survey entry
                                         $q->whereHas('mntSurveyEntries', function($q) use ($opsVesselId) {
                                             $q->where('ops_vessel_id', $opsVesselId)
-                                                // ->whereIn('id',function ($query) {
-                                                //     $query->from('mnt_survey_entries')
-                                                //         ->select(DB::raw("MAX(id)"))
-                                                //         ->groupBy(['ops_vessel_id','mnt_survey_id']);
-                                                // })
                                                 ->select('mnt_survey_id', DB::raw('count(mnt_survey_id) as total_items'))
                                                 ->groupBy('mnt_survey_id')
                                                 ->havingRaw('count(mnt_survey_id) > ?', [0]);   
                                             });
                                     })
-                                    // ->whereExists(function ($query) {
-                                    //     $query->select(DB::raw(1))
-                                    //           ->from('mnt_surveys')
-                                    //           ->whereColumn('mnt_surveys.mnt_survey_item_id', 'mnt_survey_items.id');
-                                    // })
                                     ->get();
 
             return response()->success('Survey item entries are retrieved successfully', $surveyItems, 200);
