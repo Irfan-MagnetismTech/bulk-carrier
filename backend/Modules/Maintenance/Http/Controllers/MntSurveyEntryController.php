@@ -143,9 +143,6 @@ class MntSurveyEntryController extends Controller
         try {
             $opsVesselId = request()->ops_vessel_id;
 
-            $surveyEntries = MntSurveyEntry::with(["opsVessel","mntSurvey.mntSurveyItem","mntSurvey.mntSurveyType"])
-                                ->get();
-
             $surveyItems = MntSurveyItem::with(["mntSurveys" => function($query) use ($opsVesselId) {
                                     // Filter mntSurveys which have atleast one mnt survey entry for the given vessel
                                     $query->whereHas('mntSurveyEntries', function($q) use ($opsVesselId) {
