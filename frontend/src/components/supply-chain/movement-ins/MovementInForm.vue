@@ -39,8 +39,8 @@
       <label class="label-group">
         <span class="label-item-title">MO No<span class="text-red-500">*</span></span>
         <!-- <input type="text" v-model="form.mo_no" required class="form-input" name="mo_no" :id="'mo_no'" /> -->
-        <v-select :options="filteredMovementOuts" placeholder="-- Search Here --" @option:selected="setMoData(form.scmMo)" v-model="form.scmMo" label="ref_no" class="block form-input">
-          <template #search="{attributes, events}">
+        <v-select :options="filteredMovementOuts" placeholder="-- Search Here --" v-model="form.scmMo" label="ref_no" class="block form-input" @update:modelValue="setMoData(form.scmMo)">
+          <template #search="{attributes , events}">
               <input
                   class="vs__search"
                   :required="!form.scmMo"
@@ -72,14 +72,13 @@
               <th class="py-3 align-center">MR Quantity</th>
               <th class="py-3 align-center">MO Quantity</th>
               <th class="py-3 align-center">Qty</th>
-              <th class="py-3 text-center align-center">Action</th>
             </tr>
             </thead>
 
             <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
             <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmMoLine, index) in form.scmMiLines" :key="index">
               <td class="!w-72">
-                <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmMiLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmMiLines[index].scmMaterial,index)">
+                <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmMiLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmMiLines[index].scmMaterial,index)" :disabled="true">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -97,30 +96,18 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmMiLines[index].mmr_quantity" class="form-input">
+                  <input type="text" v-model="form.scmMiLines[index].mmr_quantity" class="vms-readonly-input form-input" readonly>
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmMiLines[index].mo_quantity" class="form-input">
+                  <input type="text" v-model="form.scmMiLines[index].mo_quantity" class="vms-readonly-input form-input" readonly>
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
                   <input type="text" v-model="form.scmMiLines[index].quantity" class="form-input">
                 </label>
-              </td>
-              <td class="px-1 py-1 text-center">
-                <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                  </svg>
-                </button>
-                <button v-else type="button" @click="addMaterial()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                  </svg>
-                </button>
               </td>
             </tr>
             </tbody>
@@ -142,7 +129,7 @@
         <label class="label-group">
           <span class="label-item-title">Assigned To<span class="text-red-500">*</span></span>
           <!-- <input type="text" v-model="form.scmMiShortage.scmWarehouse" required class="form-input" name="mo_no" :id="'mo_no'" /> -->
-           <v-select :options="warehouses" placeholder="-- Search Here --" @option:selected="setWarehouseData(form.scmMiShortage.scmWarehouse)" v-model="form.scmMiShortage.scmWarehouse" label="name" class="block form-input">
+           <v-select :options="assgnWarehouseList" placeholder="-- Search Here --" v-model="form.scmMiShortage.scmWarehouse" label="name" class="block form-input" @update:modelValue="setWarehouseData(form.scmMiShortage.scmWarehouse)">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -245,7 +232,7 @@
 
     const mmrKey = ref(0);
     const editIntitiated = ref(false);
-
+    const assgnWarehouseList = ref([]);
     // const USER = Store.getters.getCurrentUser;
     // const ROLE = USER?.role ?? null;
     // const PERMISSIONS = USER?.permissions ?? [];
@@ -289,9 +276,6 @@
 //       }
 // }
 
-    function fetchWarehouse(search) {
-        searchWarehouse(search, props.form.business_unit);
-    }
 
     function setWarehouseData() {
       if (props.form.scmMiShortage.scmWarehouse) {
@@ -316,6 +300,10 @@
         props.form.scm_mmr_id = mmr?.id;
         props.form.fromWarehouse = mmr.fromWarehouse;
         props.form.toWarehouse = mmr.toWarehouse;
+        
+        assgnWarehouseList.value = [];
+        assgnWarehouseList.value.push(mmr.fromWarehouse);
+        assgnWarehouseList.value.push(mmr.toWarehouse);
       }
 }
 
@@ -497,7 +485,7 @@ function fetchMaterials(search, loading) {
      props.form.scm_mmr_id = '';
     }
     fetchMovementRequisitions('');
-    fetchWarehouse('');
+    
 });
 
 function tableWidth() {
