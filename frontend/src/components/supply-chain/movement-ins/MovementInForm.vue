@@ -424,6 +424,15 @@ watch(() => props.form.scmMiLines, (newLines) => {
   if (props.formType == 'create') {
     editIntitiated.value = true;
   }
+  if (props.formType == 'edit' && editIntitiated.value == false && props.form.scmMiShortage == null) {
+    props.form.scmMiShortage = {
+      shortage_type: '',
+      scmWarehouse: null,
+      scm_warehouse_id: '',
+      acc_cost_center_id: '',
+      scmMiShortageLines: [],
+    };
+  }
   if (editIntitiated.value) {
     props.form.scmMiShortage.scmMiShortageLines = [];
     newLines.forEach((line, index) => {
