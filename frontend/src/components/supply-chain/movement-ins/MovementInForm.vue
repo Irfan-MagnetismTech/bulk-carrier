@@ -296,7 +296,8 @@
     function setWarehouseData() {
       if (props.form.scmMiShortage.scmWarehouse) {
         props.form.scmMiShortage.scm_warehouse_id = props.form.scmMiShortage.scmWarehouse.id;
-        props.form.scmMiShortage.acc_cost_center_id = props.form.scmMiShortage.scmWarehouse.acc_cost_center_id;
+        props.form.scmMiShortage.acc_cost_center_id = props.form.scmMiShortage.scmWarehouse.
+          cost_center_id;
       }
     }
 
@@ -456,7 +457,16 @@ watch(() => props.form.scmMiLines, (newLines) => {
         }
       }
     }
-  });
+    });
+    if (props.form.scmMiShortage.scmMiShortageLines.length == 0) {
+      props.form.scmMiShortage = {
+      shortage_type: '',
+      scmWarehouse: null,
+      scm_warehouse_id: '',
+      acc_cost_center_id: null,
+      scmMiShortageLines: [],
+    };
+    }
   }
 
   if (props.formType == 'edit') {
