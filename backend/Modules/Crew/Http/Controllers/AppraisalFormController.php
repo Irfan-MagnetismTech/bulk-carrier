@@ -2,12 +2,13 @@
 
 namespace Modules\Crew\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\AppraisalForm;
+use Modules\Crew\Entities\AppraisalFormLine;
+use Modules\Crew\Entities\AppraisalFormLineItem;
 use Modules\Crew\Http\Requests\AppraisalFormRequest;
 
 class AppraisalFormController extends Controller
@@ -36,14 +37,34 @@ class AppraisalFormController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(AppraisalFormRequest $request)
+    public function store(Request $request)
     {
+        // dd($request->appraisalFormLines);
+
         try {
             DB::transaction(function () use ($request)
             {
                 $appraisalFormData = $request->only('form_no', 'form_name', 'version', 'description', 'business_unit');
                 $appraisalForm     = AppraisalForm::create($appraisalFormData);
-                $appraisalForm->appraisalFormLines()->createMany($request->appraisalFormLines);
+
+                foreach ($request->appraisalFormLines as $appraisalFormLineData)
+                {
+                    $appraisalFormLine = AppraisalFormLine::create([
+                        'appraisal_form_id' => $appraisalForm->id,
+                        'section_no'        => $appraisalFormLineData['section_no'] ?? null,
+                        'section_name'      => $appraisalFormLineData['section_name'] ?? null,
+                    ]);
+
+                    foreach ($appraisalFormLineData['aspects'] as $aspect)
+                    {
+                        AppraisalFormLineItem::create([
+                            'appraisal_form_line_id' => $appraisalFormLine->id,
+                            'aspect'                 => $aspect['aspect'],
+                            'description'            => $aspect['description'],
+                            'answer_type'            => $aspect['answer_type'],
+                        ]);
+                    }
+                }
             });
 
             return response()->success('Created Succesfully', [], 201);
@@ -63,7 +84,21 @@ class AppraisalFormController extends Controller
     public function show(AppraisalForm $appraisalForm)
     {
         try {
-            return response()->success('Retrieved succesfully', $appraisalForm->load('appraisalFormLines'), 200);
+
+            $appraisalForm['new_lines'] = $appraisalForm->appraisalFormLines->groupBy('section_name')->map(function ($q, $key)
+            {
+                return [
+                    'section_name' => $key,
+                    'aspects'      => $q,
+                ];
+            });
+
+            // $forget = $appraisalForm->appraisalFormLines = '';
+            // dd($appraisalForm);
+
+            // $appraisalForm->push('appraisalFormLines');
+
+            return response()->success('Retrieved succesfully', $appraisalForm, 200);
         }
         catch (QueryException $e)
         {
