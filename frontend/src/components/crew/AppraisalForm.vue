@@ -28,9 +28,17 @@
             <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Aspects</legend>
             <fieldset class="px-2 py-2 mt-3 border border-gray-300 rounded dark-disabled:border-gray-400" v-for="(appraisalFormLine, index) in form?.appraisalFormLines" :key="index">
                 <div class="flex items-center gap-3 mb-2">
-                  <div class="block w-full text-sm">
-                      <input type="text" v-model.trim="appraisalFormLine.section_name" placeholder="Section Name" class="form-input section-name-input" required />
-                      <Error v-if="errors?.section_name" :errors="errors.section_name" />
+                  <div class="text-sm">
+                    <span class="text-gray-700 dark-disabled:text-gray-300">Section No</span>
+                    <input type="text" :value="printToLetter(index+1)"  placeholder="Section No" class="form-input section-name-input vms-readonly-input"  readonly />
+                  </div>
+                  <div class="block w-full text-sm relative">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Section Name <span class="text-red-500">*</span></span>
+                      <div class="relative">
+                        <input type="text" v-model.trim="appraisalFormLine.section_name" placeholder="Section Name" class="form-input section-name-input" required />
+                        <span v-show="appraisalFormLine.isSectionDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-1" title="Duplicate Section" v-html="icons.ExclamationTriangle"></span>
+                        <Error v-if="errors?.section_name" :errors="errors.section_name" />
+                      </div>
                   </div>
 
                   <!-- <div>
@@ -48,9 +56,9 @@
                 <table class="w-full whitespace-no-wrap" id="table">
                 <thead>
                     <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-                        <th class="px-4 py-3 align-bottom">Aspect</th>
+                        <th class="px-4 py-3 align-bottom">Aspect <span class="text-red-500">*</span></th>
                         <th class="px-4 py-3 align-bottom">Description</th>
-                        <th class="px-4 py-3 align-bottom">Answer Type</th>
+                        <th class="px-4 py-3 align-bottom">Answer Type <span class="text-red-500">*</span></th>
                         <th class="px-4 py-3 align-bottom text-center">Action</th>
                     </tr>
                 </thead>
@@ -58,13 +66,13 @@
                     <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(aspect, aspectIndex) in appraisalFormLine.aspects" :key="aspectIndex">
                         <td class="px-1 py-1">
                           <div class="relative">
-                            <input type="text" class="form-input"  v-model.trim="aspect.aspect" placeholder="Aspect" />
-                            <!-- <span v-show="aspect.isKeyDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-1" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span> -->
+                            <input type="text" class="form-input"  v-model.trim="aspect.aspect" placeholder="Aspect" required />
+                            <span v-show="aspect.isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-1" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
                           </div>
                         </td>
                         <td class="px-1 py-1"><input type="text" class="form-input"  v-model.trim="aspect.description" placeholder="Description" /></td>
                         <td class="px-1 py-1">
-                          <select v-model.trim="aspect.answer_type" class="form-input">
+                          <select v-model.trim="aspect.answer_type" class="form-input" required>
                             <option value="" disabled selected>Select</option>
                             <option value="Number">Number</option>
                             <option value="Boolean">Boolean</option>
@@ -193,6 +201,20 @@
 
   function removeAspect(parentIndex, childIndex) {
     props.form.appraisalFormLines[parentIndex].aspects.splice(childIndex, 1);
+  }
+
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+  function printToLetter(number) {
+      let result = "";
+      
+      while (number > 0) {
+          const remainder = (number - 1) % alphabet.length;
+          result = alphabet.charAt(remainder) + result;
+          number = Math.floor((number - 1) / alphabet.length);
+      }
+      
+      return result || alphabet[0];
   }
   
   
