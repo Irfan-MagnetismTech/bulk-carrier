@@ -53,6 +53,7 @@ class MntCriticalVesselItemController extends Controller
             $vesselItem['ops_vessel_id'] = $request->get('ops_vessel_id');
             $vesselItem['mnt_critical_item_id'] = $request->get('mnt_critical_item_id');
             $vesselItem['is_critical'] = $request->get('is_critical') ?? '';
+            $vesselItem['specification'] = $request->get('specification');
             $vesselItem['notes'] = $request->get('notes');
             $vesselItem['business_unit'] = $request->get('business_unit');
 
@@ -115,6 +116,7 @@ class MntCriticalVesselItemController extends Controller
             $vesselItem['ops_vessel_id'] = $request->get('ops_vessel_id');
             $vesselItem['mnt_critical_item_id'] = $request->get('mnt_critical_item_id');
             $vesselItem['is_critical'] = $request->get('is_critical') ?? '';
+            $vesselItem['specification'] = $request->get('specification');
             $vesselItem['notes'] = $request->get('notes');
             $vesselItem['business_unit'] = $request->get('business_unit');
 
