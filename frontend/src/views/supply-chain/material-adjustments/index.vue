@@ -16,7 +16,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 
 
-const { getMaterialAdjustments, materialAdjustments, deleteMaterialAdjustment, isLoading } = useMaterialAdjustment();
+const { getMaterialAdjustments, materialAdjustments, deleteMaterialAdjustment, isLoading, isTableLoading } = useMaterialAdjustment();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -92,7 +92,6 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Adjusted By",
-      "filter_type": "input"
     },
   ]
 });
@@ -130,33 +129,6 @@ onMounted(() => {
 });
 
 });
-// Code for global search end here
-
-// const navigateToPOCreate = (materialAdjustmentId) => {
-//   const pr_id = materialAdjustmentId; 
-//   const cs_id = null;
-//   const routeOptions = {
-//     name: 'scm.store-orders.create',
-//     query: {
-//       pr_id: pr_id,
-//       cs_id: cs_id
-//     }
-//   };
-//   router.push(routeOptions);
-// };  
-
-// const navigateToMRRCreate = (materialAdjustmentId) => {
-//   const pr_id = materialAdjustmentId; 
-//   const po_id = null;
-//   const routeOptions = {
-//     name: 'scm.material-receipt-reports.create',
-//     query: {
-//       pr_id: pr_id,
-//       po_id: po_id
-//     }
-//   };
-//   router.push(routeOptions);
-// };
 
 
 function confirmDelete(id) {
@@ -175,16 +147,6 @@ function confirmDelete(id) {
         })
       }
 
-      const navigateToSICreate = (SrId) => {
-        const sr_id = SrId;
-        const routeOptions = {
-          name: 'scm.store-issues.create',
-          query: {
-            sr_id: sr_id,
-          }
-        };
-        router.push(routeOptions);
-      };
 </script>
 
 <template>
@@ -216,7 +178,7 @@ function confirmDelete(id) {
 
                   <action-button :action="'edit'" :to="{ name: 'scm.material-adjustments.edit', params: { materialAdjustmentId: materialAdjustment.id } }"></action-button>
                   <action-button @click="confirmDelete(materialAdjustment.id)" :action="'delete'"></action-button>
-                  
+
                 </div>
               </td>
             </tr>
