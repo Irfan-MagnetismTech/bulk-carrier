@@ -1,7 +1,7 @@
 <script setup>
 import {onMounted, ref, watchEffect, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
-import useIncidentRecord from "../../../composables/crew/useIncidentRecord";
+import usePayrollBatch from "../../../composables/crew/usePayrollBatch";
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import Paginate from '../../../components/utils/paginate.vue';
@@ -24,10 +24,10 @@ const props = defineProps({
   },
 });
 
-const { incidentRecords, getIncidentRecords, deleteIncidentRecord, isLoading, isTableLoading } = useIncidentRecord();
+const { payrollBatches, getPayrollBatches, deletePayrollBatch, isLoading, isTableLoading } = usePayrollBatch();
 const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
-setTitle('Incident Records');
+setTitle('Salary Lists');
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 let filterOptions = ref( {
@@ -48,53 +48,43 @@ let filterOptions = ref( {
     },
     {
       "relation_name": null,
-      "field_name": "date_time",
+      "field_name": "year_month",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Incident Date & Time",
+      "label": "Year - Month",
       "filter_type": "input"
     },
     {
       "relation_name": null,
-      "field_name": "type",
+      "field_name": "total_crew",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Incident Type",
+      "label": "Total Crew",
       "filter_type": "input"
     },
     {
       "relation_name": null,
-      "field_name": "location",
+      "field_name": "working_days",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Location",
+      "label": "Working Days",
       "filter_type": "input"
     },
     {
       "relation_name": null,
-      "field_name": "reported_by",
+      "field_name": "net_payment",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Reported Person",
+      "label": "Net Amount",
       "filter_type": "input"
-    },
-    {
-      "relation_name": null,
-      "field_name": "attachment",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Attachment",
-      "filter_type": null
     },
   ]
 });
@@ -117,7 +107,7 @@ function confirmDelete(id) {
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-      deleteIncidentRecord(id);
+      deletePayrollBatch(id);
     }
   })
 }
@@ -126,7 +116,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      router.push({ name: 'crw.incidentRecords.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'crw.crewPayrollBatches.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -134,7 +124,7 @@ onMounted(() => {
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
-    getIncidentRecords(filterOptions.value)
+    getPayrollBatches(filterOptions.value)
         .then(() => {
           const customDataTable = document.getElementById("customDataTable");
           paginatedPage.value = filterOptions.value.page;
@@ -156,56 +146,48 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3">
-    <h2 class="text-2xl font-semibold text-gray-700">Incident Record List</h2>
-    <default-button :title="'Create Item'" :to="{ name: 'crw.incidentRecords.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">List of Salary Sheet</h2>
+    <default-button :title="'Create Salary'" :to="{ name: 'crw.crewPayrollBatches.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody class="relative">
-          <tr v-for="(crwIncidentRecord,index) in incidentRecords?.data" :key="index">
-            <td>{{ index + 1 }}</td>
-            <td class="text-left">{{ crwIncidentRecord?.opsVessel?.name }}</td>
-            <td>{{ crwIncidentRecord?.date_time }}</td>
-            <td>{{ crwIncidentRecord?.type }}</td>
-            <td>{{ crwIncidentRecord?.location }}</td>
-            <td>{{ crwIncidentRecord?.reported_by }}</td>
+          <tr v-for="(payrollBatchData,index) in payrollBatches?.data" :key="index">
+            <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+            <td class="text-left">{{ payrollBatchData?.opsVessel?.name }}</td>
+            <td>{{ payrollBatchData?.year_month }}</td>
+            <td>{{ payrollBatchData?.total_crew }}</td>
+            <td>{{ payrollBatchData?.working_days }}</td>
+            <td>{{ payrollBatchData?.net_payment }}</td>
             <td>
-              <a type="button" v-if="typeof crwIncidentRecord?.attachment === 'string'" class="text-green-800" target="_blank" :href="env.BASE_API_URL+'/'+crwIncidentRecord?.attachment">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" data-slot="icon" class="w-4 h-4">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
-                </svg>
-              </a>
-              <a v-else>---</a>
-            </td>
-            <td>
-              <span :class="crwIncidentRecord?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwIncidentRecord?.business_unit }}</span>
+              <span :class="payrollBatchData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ payrollBatchData?.business_unit }}</span>
             </td>
             <td>
               <nobr>
-                <action-button :action="'edit'" :to="{ name: 'crw.incidentRecords.edit', params: { incidentRecordId: crwIncidentRecord?.id } }"></action-button>
-                <action-button @click="confirmDelete(crwIncidentRecord?.id)" :action="'delete'"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'crw.crewPayrollBatches.edit', params: { crewPayrollBatchId: payrollBatchData?.id } }"></action-button>
+                <action-button @click="confirmDelete(payrollBatchData?.id)" :action="'delete'"></action-button>
               </nobr>
             </td>
           </tr>
-          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && incidentRecords?.data?.length"></LoaderComponent>
+          <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && payrollBatches?.data?.length"></LoaderComponent>
           </tbody>
-        <tfoot v-if="!incidentRecords?.data?.length" class="relative h-[250px]">
+        <tfoot v-if="!payrollBatches?.data?.length" class="relative h-[250px]">
         <tr v-if="isLoading">
-          <td colspan="9"></td>
+          <td colspan="8"></td>
         </tr>
         <tr v-else-if="isTableLoading">
-          <td colspan="9">
+          <td colspan="8">
             <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
           </td>
         </tr>
-        <tr v-else-if="!incidentRecords?.data?.length">
-          <td colspan="9">No data found.</td>
+        <tr v-else-if="!payrollBatches?.data?.length">
+          <td colspan="8">No data found.</td>
         </tr>
         </tfoot>
       </table>
     </div>
-    <Paginate :data="incidentRecords" to="crw.incidentRecords.index" :page="page"></Paginate>
+    <Paginate :data="payrollBatches" to="crw.crewPayrollBatches.index" :page="page"></Paginate>
   </div>
 </template>

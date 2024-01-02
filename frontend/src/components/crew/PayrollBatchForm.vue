@@ -206,6 +206,7 @@ watch(() => monthlyAttendance.value, (value) => {
   if(value){
     props.form.crwPayrollBatchLines = value?.crwAttendanceLines;
     props.form.working_days = value?.working_days;
+    props.form.total_crew = value?.crwAttendanceLines?.length;
   }
 }, {deep: true});
 
@@ -233,12 +234,13 @@ function additionAmountSet(e,itemId){
   for(let addition of additions) {
     addition.crew_batch_heads.find(item => item.id === itemId).amount = e.target.value;
 
-    let totalAmount = addition.crew_batch_heads.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
-    addition.amount = totalAmount.toFixed(2);
-    props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === addition.crew_id).total_earnings = totalAmount.toFixed(2);
+    let totalAddition = addition.crew_batch_heads.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+    addition.amount = totalAddition.toFixed(2);
+    props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === addition.crew_id).total_earnings = totalAddition.toFixed(2);
 
     let totalDeductions = parseFloat(props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === addition.crew_id).total_deductions);
-    props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === addition.crew_id).net_payable_amount = (totalAmount+totalDeductions).toFixed(2);
+    let payableAmount = parseFloat(props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === addition.crew_id).payable_amount);
+    props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === addition.crew_id).net_payable_amount = (payableAmount+totalAddition-totalDeductions).toFixed(2);
   }
 }
 
@@ -254,13 +256,14 @@ function deductionAmountSet(e,itemId){
   for(let deduction of deductions) {
     deduction.crew_batch_heads.find(item => item.id === itemId).amount = e.target.value;
 
-    let totalAmount = deduction.crew_batch_heads.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
-    deduction.amount = totalAmount.toFixed(2);
+    let totalDeduction = deduction.crew_batch_heads.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+    deduction.amount = totalDeduction.toFixed(2);
 
-    props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === deduction.crew_id).total_deductions = totalAmount.toFixed(2);
+    props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === deduction.crew_id).total_deductions = totalDeduction.toFixed(2);
 
     let totalEarnings = parseFloat(props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === deduction.crew_id).total_earnings);
-    props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === deduction.crew_id).net_payable_amount = (totalAmount+totalEarnings).toFixed(2);
+    let payableAmount = parseFloat(props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === deduction.crew_id).payable_amount);
+    props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === deduction.crew_id).net_payable_amount = (payableAmount+totalEarnings-totalDeduction).toFixed(2);
   }
 }
 
@@ -269,14 +272,15 @@ function setAdditionBatchHeadAmount(payrollBatchHeadLineIndex){
 
   const batchHeads = props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads;
 
-  const totalAmount = batchHeads.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+  const additionAmount = batchHeads.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
 
-  props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount = totalAmount.toFixed(2);
+  props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount = additionAmount.toFixed(2);
 
-  props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_id).total_earnings = totalAmount.toFixed(2);
+  props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_id).total_earnings = additionAmount.toFixed(2);
 
   let totalDeductions = parseFloat(props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_id).total_deductions);
-  props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_id).net_payable_amount = (totalAmount+totalDeductions).toFixed(2);
+  let payableAmount = parseFloat(props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_id).payable_amount);
+  props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_id).net_payable_amount = (payableAmount + additionAmount - totalDeductions).toFixed(2);
 
 }
 
@@ -285,14 +289,15 @@ function setDeductionBatchHeadAmount(payrollBatchHeadLineIndex){
 
   const batchHeads = props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads;
 
-  const totalAmount = batchHeads.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+  const deductionAmount = batchHeads.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
 
-  props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount = totalAmount.toFixed(2);
+  props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount = deductionAmount.toFixed(2);
 
-  props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_id).total_deductions = totalAmount.toFixed(2);
+  props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_id).total_deductions = deductionAmount.toFixed(2);
 
   let totalEarnings = parseFloat(props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_id).total_earnings);
-  props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_id).net_payable_amount = (totalAmount+totalEarnings).toFixed(2);
+  let payableAmount = parseFloat(props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_id).payable_amount);
+  props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_id).net_payable_amount = (payableAmount+totalEarnings-deductionAmount).toFixed(2);
 }
 
 onMounted(() => {
@@ -304,12 +309,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-    <business-unit-input v-model.trim="form.business_unit"></business-unit-input>
-    <label class="block w-full mt-2 text-sm"></label>
-    <label class="block w-full mt-2 text-sm"></label>
-  </div>
+  <template v-if="page==='create'">
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+      <business-unit-input v-model.trim="form.business_unit"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
         <v-select :options="vessels" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="form.ops_vessel_name" @update:modelValue="changeVessel" label="name" class="block form-input">
@@ -327,25 +329,65 @@ onMounted(() => {
         <span class="text-gray-700 dark-disabled:text-gray-300">Month Year <span class="text-red-500">*</span></span>
         <input type="month" v-model.trim="form.year_month" class="form-input" autocomplete="off" required />
       </label>
+    </div>
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Process Date <span class="text-red-500">*</span></span>
         <input type="date" v-model.trim="form.process_date" class="form-input" autocomplete="off" required />
+      </label>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Currency <span class="text-red-500">*</span></span>
+        <select class="form-input" v-model.trim="form.currency" required>
+          <option value="BDT">BDT</option>
+          <option value="USD">USD</option>
+        </select>
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Working Days</span>
         <input type="text" v-model.trim="form.working_days" placeholder="Ex: 30" class="form-input vms-readonly-input" autocomplete="off" readonly />
       </label>
     </div>
-  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-    <label class="block w-full mt-2 text-sm">
-      <button type="button" @click="getAssignedCrewList" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-        Process
-      </button>
-      <button class="px-3 py-1 ml-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-700 border border-transparent rounded-md active:bg-gray-600 hover:bg-gray-600 focus:outline-none focus:shadow-outline-purple">
-        Reset
-      </button>
-    </label>
-  </div>
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+      <label class="block w-full mt-2 text-sm">
+        <button type="button" @click="getAssignedCrewList" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+          Process
+        </button>
+        <button class="px-3 py-1 ml-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-700 border border-transparent rounded-md active:bg-gray-600 hover:bg-gray-600 focus:outline-none focus:shadow-outline-purple">
+          Reset
+        </button>
+      </label>
+    </div>
+  </template>
+  <template v-else>
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Business Unit <span class="text-red-500">*</span></span>
+        <input type="text" v-model.trim="form.business_unit" class="form-input vms-readonly-input" autocomplete="off" readonly />
+      </label>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
+        <input type="text" v-model.trim="form.ops_vessel_name.name" class="form-input vms-readonly-input" autocomplete="off" readonly />
+      </label>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Month Year<span class="text-red-500">*</span></span>
+        <input type="month" v-model.trim="form.year_month" class="form-input vms-readonly-input" autocomplete="off" readonly />
+      </label>
+    </div>
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Process Date <span class="text-red-500">*</span></span>
+        <input type="date" v-model.trim="form.process_date" class="form-input vms-readonly-input" autocomplete="off" readonly />
+      </label>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Currency <span class="text-red-500">*</span></span>
+        <input type="text" v-model.trim="form.currency" class="form-input vms-readonly-input" autocomplete="off" readonly />
+      </label>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Working Days <span class="text-red-500">*</span></span>
+        <input type="text" v-model.trim="form.working_days" class="form-input vms-readonly-input" autocomplete="off" readonly />
+      </label>
+    </div>
+  </template>
   <div class="border-b-2 border-purple-700 mt-3"></div>
   <div class="dark-disabled:border-gray-700">
     <ul class="flex flex-wrap -mb-px border-b">
@@ -467,7 +509,7 @@ onMounted(() => {
           </template>
           </tbody>
           <tfoot>
-          <tr v-if="!hasAdditionBatchHead">
+          <tr v-if="!form.crwPayrollBatchHeads.filter(item => item.head_type === 'addition').length">
             <td colspan="4">No data found</td>
           </tr>
           </tfoot>
@@ -509,7 +551,7 @@ onMounted(() => {
           </template>
           </tbody>
           <tfoot>
-          <tr v-if="!hasAdditionBatchHead">
+          <tr v-if="!form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'addition').length">
             <td colspan="4">No data found</td>
           </tr>
           </tfoot>
@@ -559,7 +601,7 @@ onMounted(() => {
           </template>
           </tbody>
           <tfoot>
-          <tr v-if="!hasDeductionBatchHead">
+          <tr v-if="!form.crwPayrollBatchHeads.filter(item => item.head_type === 'deduction').length">
             <td colspan="4">No data found</td>
           </tr>
           </tfoot>
@@ -606,7 +648,7 @@ onMounted(() => {
           </template>
           </tbody>
           <tfoot>
-          <tr v-if="!hasDeductionBatchHead">
+          <tr v-if="!form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'deduction').length">
             <td colspan="4">No data found</td>
           </tr>
           </tfoot>
