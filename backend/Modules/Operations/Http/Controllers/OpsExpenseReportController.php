@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Modules\Operations\Entities\OpsVoyage;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsExpenseHead;
+use Modules\Operations\Entities\OpsVessel;
 use Modules\Operations\Entities\OpsVesselExpenseHead;
 use Modules\Operations\Entities\OpsVoyageExpenditureEntry;
 
@@ -82,8 +83,7 @@ class OpsExpenseReportController extends Controller
         //
     }
 
-    public function portWiseExpenditureReport(Request $request)
-    {
+    public function portWiseExpenditureReport(Request $request) {
         $start = date($request->start);
         $end = date($request->end);
         $port = $request->port;
@@ -165,5 +165,38 @@ class OpsExpenseReportController extends Controller
         ], 200);
 
         // return Excel::download(new VoyageExpenditure($heads, $filteredVoyage), 'voyage_expenditure_report.xlsx');
+    }
+
+    public function singleVesselWiseBunkerReport(Request $request) {
+
+        $business_unit = $request->business_unit;
+        $ops_vessel_id = $request->ops_vessel_id;
+        $start = date($request->start);
+        $end = date($request->end);
+
+        $voyages = OpsVoyage::query()
+        // ->whereBetween('transit_date', [$start, $end])
+        ->whereBetween('transit_date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
+        ->where('ops_vessel_id', $ops_vessel_id)
+        ->where('business_unit', $business_unit)
+        ->with('opsVesselBunkers.stockable')
+        ->get();
+
+        $voyages = $voyages->map(function($voyage) {
+            return $voyage->opsVesselBunkers->groupBy('type');
+        });
+
+        $vesselBunkers = OpsVessel::with('opsBunkers.scmMaterial')->where('id', $ops_vessel_id)->first();
+
+        $voyageIds = $voyages->pluck('id');
+
+        $view = view('operations::reports.single-vessel-bunker-report')->with([
+            'vesselBunkers' => $vesselBunkers,
+            'voyages' => $voyages
+        ])->render();
+
+        return response()->json([
+            'value' => $view
+        ], 200);
     }
 }
