@@ -302,8 +302,8 @@
         props.form.toWarehouse = mmr.toWarehouse;
         
         assgnWarehouseList.value = [];
-        assgnWarehouseList.value.push(mmr.fromWarehouse);
-        assgnWarehouseList.value.push(mmr.toWarehouse);
+      
+        
       }
 }
 
@@ -342,12 +342,14 @@
       props.form.from_warehouse_id = value?.id;
       props.form.from_cost_center_id = value?.acc_cost_center_id;
       props.form.from_warehouse_name = value?.name;
+      assgnWarehouseList.value.push(value);
     });
 
   watch(() => props.form.toWarehouse, (value) => {
     props.form.to_warehouse_id = value?.id;
     props.form.to_cost_center_id = value?.acc_cost_center_id;
     props.form.to_warehouse_name = value?.name;
+    assgnWarehouseList.value.push(value);
   });
     
  
