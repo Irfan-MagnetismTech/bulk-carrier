@@ -124,8 +124,10 @@ function vesselChange() {
 watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
 
-  props.form.ops_vessel = null;
-  vesselChange();
+  if (props.page != 'edit') {
+    props.form.ops_vessel = null;
+    vesselChange();
+  }
 });
 watch(() => criticalVesselItems.value, (value) => {
   props.form.mntCriticalSpListLines = value;

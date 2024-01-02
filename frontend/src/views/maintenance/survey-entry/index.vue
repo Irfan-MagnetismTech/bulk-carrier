@@ -224,7 +224,7 @@ onMounted(() => {
             <td>
               <nobr>
                 <action-button :action="'show'" :to="{ name: 'mnt.survey-entries.show', params: { surveyEntryId: surveyEntry?.id } }"></action-button>
-                <action-button :action="'edit'" :to="{ name: 'mnt.survey-entries.edit', params: { surveyEntryId: surveyEntry?.id } }"></action-button>
+                <action-button v-show="surveyEntry?.entry_status == 'latest'" :action="'edit'" :to="{ name: 'mnt.survey-entries.edit', params: { surveyEntryId: surveyEntry?.id } }"></action-button>
                 <action-button @click="confirmDelete(surveyEntry?.id)" :action="'delete'"></action-button>
               </nobr>
             </td>

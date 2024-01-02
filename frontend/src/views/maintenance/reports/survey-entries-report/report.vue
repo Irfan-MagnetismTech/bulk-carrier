@@ -10,13 +10,13 @@ const icons = useHeroIcon();
 const { formParams, surveyEntries, surveyEntriesReport, downloadSurveyEntriesReport, isLoading, showReport, errors } = useSurveyEntriesReport();
 
 const { setTitle } = Title();
-setTitle('Survey Report');
+setTitle('Survey Status');
 
 </script>
 <template>
     <!-- Heading -->
     <div class="flex flex-col items-center justify-between w-full my-3 sm:flex-row" v-once>
-        <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Survey Report</h2>
+        <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Survey Status</h2>
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="surveyEntriesReport(formParams)">

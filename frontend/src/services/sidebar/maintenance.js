@@ -334,7 +334,7 @@ export default [
                     
                     {
                         route: 'mnt.reports.surveys',
-                        label: 'Survey Report',
+                        label: 'Survey Status',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,
                         is_active: false,
