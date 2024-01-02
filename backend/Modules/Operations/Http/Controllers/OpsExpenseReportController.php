@@ -103,7 +103,14 @@ class OpsExpenseReportController extends Controller
 
         $vesselExpenseHeads = OpsVesselExpenseHead::whereIn('ops_vessel_id', $vesselIds)->get()->pluck('ops_expense_head_id')->unique()->toArray();
 
-        $heads = OpsExpenseHead::whereIn('id', $vesselExpenseHeads)->where('head_id', null)->with('opsSubHeads')->get();
+        $findingHeads = OpsExpenseHead::whereIn('id', $vesselExpenseHeads)->with('opsSubHeads')
+                        ->get()
+                        ->pluck('head_id')
+                        ->filter()
+                        ->unique()
+                        ->values()->toArray();
+
+        $heads = OpsExpenseHead::whereIn('id', $findingHeads)->where('head_id', null)->with('opsSubHeads')->get();
 
         $heads->map(function ($item) use($vesselExpenseHeads) {
                                     $subheads = $item->opsSubHeads->map(function($subhead) use($vesselExpenseHeads) {
@@ -138,12 +145,12 @@ class OpsExpenseReportController extends Controller
 
         // dd($entryGroups);
 
-        return view('operations::reports.expense-report')->with([
+        $view = view('operations::reports.expense-report')->with([
             'entryGroups' => $entryGroups,
             'port' => $port,
             'heads' => $heads,
             'voyages' => $voyages
-        ]);
+        ])->render();
 
         // $view = view('reports.expense-report')->with([
         //     'portWiseHeads' => collect($portWiseHeads),
@@ -153,9 +160,9 @@ class OpsExpenseReportController extends Controller
         //     'entryGroupWithoutPort' => $entryGroupWithoutPort
         // ])->render();
 
-        // return response()->json([
-        //     'view' => $view
-        // ], 200);
+        return response()->json([
+            'value' => $view
+        ], 200);
 
         // return Excel::download(new VoyageExpenditure($heads, $filteredVoyage), 'voyage_expenditure_report.xlsx');
     }

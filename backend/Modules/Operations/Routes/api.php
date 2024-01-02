@@ -153,6 +153,6 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
 
 
     // Reports
-    Route::get('/port-wise-expense-report', [OpsExpenseReportController::class, 'portWiseExpenditureReport']);
+    Route::post('/port-wise-expense-report', [OpsExpenseReportController::class, 'portWiseExpenditureReport']);
     // start=2023-12-01&end=2023-12-31&business_unit=TSLL&port=DAOUTKANDI
 });

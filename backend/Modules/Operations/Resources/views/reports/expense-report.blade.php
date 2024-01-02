@@ -20,16 +20,14 @@
     </style>
 </head>
 <body>
-
-    
-    <h2 style="text-align: center; font-weight: 600; font-size: 24px; margin: 20px 0;">{{ $port }}</h2>
+    {{-- <h2 style="text-align: center; font-weight: 600; font-size: 24px; margin: 20px 0;">{{ $port }}</h2> --}}
     <table>
         <thead>
 			<tr>
-                <th>Vessel</th>
-                <th>Voyage</th>
-                <th>Sailing Date</th>
-                <th>Transit Date</th>
+                <th rowspan="2">Vessel</th>
+                <th rowspan="2">Voyage</th>
+                <th rowspan="2">Sailing Date</th>
+                <th rowspan="2">Transit Date</th>
                 @foreach ($heads as $head)
                     <th colspan="{{ (!empty($head['opsSubHeads'])) ? count($head['opsSubHeads']) : 0 }}">
                         <center align="center">{{ $head['name'] }}</center>
@@ -37,10 +35,6 @@
                 @endforeach
             </tr>
             <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
                 @foreach ($heads as $head)
                     @if(count($head['opsSubHeads'])>0)
                         @foreach ($head['opsSubHeads'] as $sub_head)
@@ -60,19 +54,19 @@
             @if(isset($entryGroups))
                 @foreach($entryGroups as $expense_head_id => $entries)
                 <tr>
-                    <td>{{ $entries->first()->vessel }}</td>
-                    <td>{{ $entries->first()->voyage }}</td>
-                    <td>{{ ($entries->first()->sail_date) ? \Carbon\Carbon::parse($entries->first()->sail_date)->format('d/m/Y \a\t h:i A') : '' }}</td>
-                    <td>{{ ($entries->first()->transit_date) ? \Carbon\Carbon::parse($entries->first()->transit_date)->format('d/m/Y \a\t h:i A') : ''}}</td>
+                    <td><nobr>{{ $entries->first()->vessel }}</nobr></td>
+                    <td><nobr>{{ $entries->first()->voyage }}</nobr></td>
+                    <td><nobr>{{ ($entries->first()->sail_date) ? \Carbon\Carbon::parse($entries->first()->sail_date)->format('d/m/Y \a\t h:i A') : '' }}</nobr></td>
+                    <td><nobr>{{ ($entries->first()->transit_date) ? \Carbon\Carbon::parse($entries->first()->transit_date)->format('d/m/Y \a\t h:i A') : ''}}</nobr></td>
 
                     @foreach ($heads as $head)
                         @if(count($head['opsSubHeads']) <= 0)
-                            <td>
+                            <td style="text-align: right !important;">
                                 {{ (collect($entries)->where('ops_expense_head_id', $head['id'])->sum('amount_bdt') > 0) ? number_format(collect($entries)->where('ops_expense_head_id', $head['id'])->sum('amount_bdt'), 2) : null }}
                             </td>
                         @else
                             @foreach ($head['opsSubHeads'] as $sub_head)
-                                <td>
+                                <td style="text-align: right !important;">
                                     {{ (collect($entries)->where('ops_expense_head_id', $sub_head->id)->sum('amount_bdt') > 0) ? number_format(collect($entries)->where('ops_expense_head_id', $sub_head->id)->sum('amount_bdt'), 2) : null }}
                                 </td>
                             @endforeach
