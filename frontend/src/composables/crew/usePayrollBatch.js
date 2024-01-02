@@ -152,79 +152,66 @@ export default function usePayrollBatch() {
                 batchLine.payable_days = batchLine?.crwAttendanceLine?.payable_days;
             });
 
-            let additionItems = data.value.crwPayrollBatchHeads.filter(item => item.head_type !== 'deduction');
-            let deductionItems = data.value.crwPayrollBatchHeads.filter(item => item.head_type !== 'addition');
+            let previousHeadLines = data.value.crwPayrollBatchHeadLines;
 
-            // data.value.crwPayrollBatchHeads.filter(item => item.head_type === 'addition').forEach((batchHeadLine,batchHeadLineIndex) => {
-            //     batchHeadLine.crew_name = batchHeadLine?.crwCrew?.full_name;
-            //     batchHeadLine.crw_contact_no = batchHeadLine?.crwCrew?.pre_mobile_no;
-            //     if(batchHeadLine.head_type === 'addition'){
-            //         batchHeadLine.crew_batch_heads = additionItems;
-            //     } else {
-            //         batchHeadLine.crew_batch_heads = deductionItems;
-            //     }
-            // });
-
-
-            data.value.crwPayrollBatchLines.forEach((batchLine,batchLineIndex) => {
-                let additionItems = data.value.crwPayrollBatchHeadLines.filter(item => item.head_type === 'addition' && item.crw_crew_id === batchLine.crw_crew_id);
-                let deductionItems = data.value.crwPayrollBatchHeadLines.filter(item => item.head_type === 'deduction' && item.crw_crew_id === batchLine.crw_crew_id);
-
-                console.log("ADDITITON", additionItems, "DEDUCTION", deductionItems);
-                if(additionItems){
-                    let batchLineObj1 = {
+            data.value.crwPayrollBatchHeadLines = [];
+            if(data.value.crwPayrollBatchHeads.filter(item => item.head_type === 'addition').length){
+                data.value.crwPayrollBatchLines.forEach((batchLine,batchLineIndex) => {
+                    let batchLineObj = {
                         crew_id: batchLine?.crw_crew_id,
                         crew_name: batchLine?.crw_full_name,
                         crw_contact_no: batchLine?.crw_contact_no,
                         amount: '',
                         head_type: 'addition',
-                        crew_batch_heads: additionItems
+                        crew_batch_heads: cloneDeep(data.value.crwPayrollBatchHeads.filter(item => item.head_type === 'addition'))
                     }
-                    alert("dd")
-                    data.value.crwPayrollBatchHeadLines.push(batchLineObj1);
-                }
-                if(deductionItems){
-                    let batchLineObj2 = {
+                    data.value.crwPayrollBatchHeadLines.push(batchLineObj);
+                });
+            }
+
+            if(data.value.crwPayrollBatchHeads.filter(item => item.head_type === 'deduction').length){
+                data.value.crwPayrollBatchLines.forEach((batchLine,batchLineIndex) => {
+                    let batchLineObj = {
                         crew_id: batchLine?.crw_crew_id,
                         crew_name: batchLine?.crw_full_name,
                         crw_contact_no: batchLine?.crw_contact_no,
                         amount: '',
                         head_type: 'deduction',
-                        crew_batch_heads: deductionItems
+                        crew_batch_heads: cloneDeep(data.value.crwPayrollBatchHeads.filter(item => item.head_type === 'deduction'))
                     }
-                    alert("ee")
-                    data.value.crwPayrollBatchHeadLines.push(batchLineObj2);
+                    data.value.crwPayrollBatchHeadLines.push(batchLineObj);
+                });
+            }
+
+            // for addition
+            // data.value.crwPayrollBatchHeadLines.filter(item => item.head_type === 'addition').forEach((additionItem,additionItemIndex) => {
+            //     previousHeadLines.filter(item => item.head_type === 'addition' && item.crw_crew_id === additionItem.crew_id)
+            // });
+            let grouped = {};
+
+            previousHeadLines.forEach(item => {
+                const key = `${item.head_type}_${item.crw_crew_id}`;
+                if (!grouped[key]) {
+                    grouped[key] = [];
                 }
-                // let batchLineObj = {
-                //     crew_id: batchLine?.crw_crew_id,
-                //     crew_name: batchLine?.crw_full_name,
-                //     crw_contact_no: batchLine?.crw_contact_no,
-                //     amount: '',
-                //     head_type: 'addition',
-                //     crew_batch_heads: cloneDeep(data.value.crwPayrollBatchHeads.filter(item => item.head_type !== 'deduction'))
-                // }
-                // data.value.crwPayrollBatchHeadLines.push(batchLineObj);
+                grouped[key].push(item);
             });
 
-            // data.value.crwPayrollBatchHeads.filter(item => item.head_type !== 'deduction').forEach((batchHeadLine,batchHeadLineIndex) => {
-            //     batchHeadLine.crew_name = batchHeadLine?.crwCrew?.full_name;
-            //     batchHeadLine.crw_contact_no = batchHeadLine?.crwCrew?.pre_mobile_no;
-            //     if(batchHeadLine.head_type === 'addition'){
-            //         batchHeadLine.crew_batch_heads = additionItems;
-            //     } else {
-            //         batchHeadLine.crew_batch_heads = deductionItems;
-            //     }
-            // });
+            grouped = Object.keys(grouped).map(key => ({
+                items: grouped[key]
+            }));
 
-            // data.value.crwPayrollBatchHeadLines.forEach((batchHeadLine,batchHeadLineIndex) => {
-            //     batchHeadLine.crew_name = batchHeadLine?.crwCrew?.full_name;
-            //     batchHeadLine.crw_contact_no = batchHeadLine?.crwCrew?.pre_mobile_no;
-            //     if(batchHeadLine.head_type === 'addition'){
-            //         batchHeadLine.crew_batch_heads = additionItems;
-            //     } else {
-            //         batchHeadLine.crew_batch_heads = deductionItems;
-            //     }
-            // });
+            //console.log("data.value.crwPayrollBatchHeadLines", data.value.crwPayrollBatchHeadLines);
+
+            data.value.crwPayrollBatchHeadLines.forEach((batchHeadLine,batchHeadLineIndex) => {
+                console.log("DATAA", grouped[batchHeadLineIndex]['items']);
+                batchHeadLine.crew_batch_heads.forEach((crwItem,crwItemIndex) => {
+                    crwItem.amount = grouped[batchHeadLineIndex]['items'][crwItemIndex].amount;
+                });
+                batchHeadLine.amount = batchHeadLine.crew_batch_heads.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+                //batchHeadLine.crew_batch_heads = grouped[batchHeadLineIndex]['items'];
+            });
+
 
             //prepare data
 
