@@ -106,7 +106,8 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmMiLines[index].quantity" class="form-input">
+                  <input type="text" v-model="form.scmMiLines[index].quantity" class="form-input" :max="form.scmMiLines[index].mo_quantity"
+                 :class="{'border-2': form.scmMiLines[index].quantity > form.scmMiLines[index].mo_quantity,'border-red-500 bg-red-100': form.scmMiLines[index].quantity > form.scmMiLines[index].mo_quantity}" min="1">
                 </label>
               </td>
             </tr>
@@ -177,7 +178,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" readonly v-model="form.scmMiShortage.scmMiShortageLines[index].quantity" class="vms-readonly-input form-input">
+                  <input type="text" readonly v-model="form.scmMiShortage.scmMiShortageLines[index].quantity" class="vms-readonly-input form-input" min="0">
                 </label>
               </td>
             </tr>
@@ -296,14 +297,10 @@
         } else {
           getMmrWiseMo(props.form.business_unit, mmr.id,props.form.scm_mo_id,true);
         }
-        
         props.form.scm_mmr_id = mmr?.id;
         props.form.fromWarehouse = mmr.fromWarehouse;
         props.form.toWarehouse = mmr.toWarehouse;
-        
         assgnWarehouseList.value = [];
-      
-        
       }
 }
 
