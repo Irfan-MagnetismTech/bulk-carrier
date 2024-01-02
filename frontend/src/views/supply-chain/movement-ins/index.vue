@@ -14,6 +14,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import moment from 'moment';
 
 const { getMovementIns, movementIns, deleteMovementIn, isLoading,isTableLoading } = useMovementIn();
 const { numberFormat } = useHelper();
@@ -121,33 +122,6 @@ onMounted(() => {
 });
 
 });
-// Code for global search end here
-
-// const navigateToPOCreate = (movementInId) => {
-//   const pr_id = movementInId; 
-//   const cs_id = null;
-//   const routeOptions = {
-//     name: 'scm.store-orders.create',
-//     query: {
-//       pr_id: pr_id,
-//       cs_id: cs_id
-//     }
-//   };
-//   router.push(routeOptions);
-// };  
-
-// const navigateToMRRCreate = (movementInId) => {
-//   const pr_id = movementInId; 
-//   const po_id = null;
-//   const routeOptions = {
-//     name: 'scm.material-receipt-reports.create',
-//     query: {
-//       pr_id: pr_id,
-//       po_id: po_id
-//     }
-//   };
-//   router.push(routeOptions);
-// };
 
 
 function confirmDelete(id) {
@@ -189,26 +163,16 @@ function confirmDelete(id) {
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
-          <!-- <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>Ref No</th>
-            <th>From Warehouse</th>
-            <th>To Warehouse</th>
-            <th>Date</th>
-            <th>Required Date</th>
-            <th>Business Unit</th>
-            <th>Action</th>
-          </tr>
-          </thead> -->
+
           <FilterComponent :filterOptions = "filterOptions"/>
+
           <tbody>
             <tr v-for="(movementIn,index) in (movementIns?.data ? movementIns?.data : movementIns)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ movementIn?.ref_no }}</td>
               <td>{{ movementIn?.fromWarehouse?.name?? '' }}</td>
               <td>{{ movementIn?.toWarehouse?.name?? '' }}</td>
-              <td>{{ movementIn?.date }}</td>
+              <td><nobr>{{  moment(movementIn?.date).format('DD-MM-YYYY') }}</nobr></td>
               <td>
                 <span :class="movementIn?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ movementIn?.business_unit }}</span>
               </td>

@@ -7,7 +7,7 @@
   <div class="input-group !w-1/4">
       <label class="label-group">
           <span class="label-item-title">MI Ref</span>
-          <input type="text" readonly v-model="form.ref_no" class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
+          <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
           <!-- <Error v-if="errors?.ref_no" :errors="errors.ref_no"  /> -->
       </label>
   </div>
@@ -189,7 +189,7 @@
     </fieldset>
   </div>
 
-<ErrorComponent :errors="errors"></ErrorComponent> 
+<ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 
 
@@ -204,9 +204,9 @@
     import DropZoneV2 from '../../DropZoneV2.vue';
     import {useStore} from "vuex";
     import env from '../../../config/env';
-    import ErrorComponent from "../../utils/ErrorComponent.vue";
     import cloneDeep from 'lodash/cloneDeep';
-    // import Store from "../../store";
+    
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
     import useStockLedger from '../../../composables/supply-chain/useStockLedger';
     import useMovementRequisition from '../../../composables/supply-chain/useMovementRequisition';
     import useMovementIn from '../../../composables/supply-chain/useMovementIn';

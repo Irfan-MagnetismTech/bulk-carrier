@@ -33,6 +33,7 @@ class OpsBunker extends Model
         'fuel_con_voyage',
         'currency',
         'status',
+        'particular'
     ];
 
     //     /**
@@ -60,11 +61,6 @@ class OpsBunker extends Model
     public function scmMaterial()
     {
         return $this->belongsTo(ScmMaterial::class, 'scm_material_id' , 'id');
-    }
-
-    public function scmSupplier()
-    {
-        return $this->belongsTo(ScmSupplier::class, 'scm_supplier_id' , 'id');
     }
     
     public function bunkerable()

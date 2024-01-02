@@ -64,7 +64,7 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Raised Date",
-      "filter_type": "input" 
+      "filter_type": "date" 
     },
     {
       "relation_name": "scmWarehouse",
@@ -141,33 +141,7 @@ onMounted(() => {
       });
   });
 });
-// Code for global search end here
 
-// const navigateToPOCreate = (storeRequisitionId) => {
-//   const pr_id = storeRequisitionId; 
-//   const cs_id = null;
-//   const routeOptions = {
-//     name: 'scm.store-orders.create',
-//     query: {
-//       pr_id: pr_id,
-//       cs_id: cs_id
-//     }
-//   };
-//   router.push(routeOptions);
-// };  
-
-// const navigateToMRRCreate = (storeRequisitionId) => {
-//   const pr_id = storeRequisitionId; 
-//   const po_id = null;
-//   const routeOptions = {
-//     name: 'scm.material-receipt-reports.create',
-//     query: {
-//       pr_id: pr_id,
-//       po_id: po_id
-//     }
-//   };
-//   router.push(routeOptions);
-// };
 
 
 function confirmDelete(id) {
@@ -210,23 +184,12 @@ function confirmDelete(id) {
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
-          <!-- <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>Ref No</th>
-            <th>Date</th>
-            <th>Warehouse</th>
-            <th>Department</th>
-            <th>Business Unit</th>
-            <th>Action</th>
-          </tr>
-          </thead> -->
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
             <tr v-for="(storeRequisition,index) in (storeRequisitions?.data ? storeRequisitions?.data : storeRequisitions)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ storeRequisition?.ref_no }}</td>
-              <td>{{ storeRequisition?.date ? moment(storeRequisition?.date).format('DD-MM-YYYY') : null }}</td>
+              <td><no-br>{{ storeRequisition?.date ? moment(storeRequisition?.date).format('DD-MM-YYYY') : null }}</no-br></td>
               <td>{{ storeRequisition?.scmWarehouse?.name?? '' }}</td>
               <td>{{ DEPARTMENTS[storeRequisition.department_id] ?? '' }}</td>
               <td>
@@ -235,7 +198,7 @@ function confirmDelete(id) {
               <td>
                 <nobr>
                 <div class="grid grid-flow-col-dense gap-x-2">
-                  <!-- <button @click="navigateToSICreate(storeRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create SI</button> -->
+                  <button @click="navigateToSICreate(storeRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create SI</button>
                   <!-- <button @click="navigateToPOCreate(storeRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
                   <button @click="navigateToMRRCreate(storeRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
                   <action-button :action="'show'" :to="{ name: 'scm.store-requisitions.show', params: { storeRequisitionId: storeRequisition.id } }"></action-button>

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Operations\Http\Controllers\OpsVoyageReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +21,4 @@ Route::prefix('operations')->group(function() {
 // Route::resources([
 //     'ports' => OpsPortController::class,
 // ]);
+Route::get('voyage-report', [OpsVoyageReportController::class, 'voyageReport']);

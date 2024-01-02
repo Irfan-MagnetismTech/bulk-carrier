@@ -14,7 +14,21 @@ class OpsVesselBunkerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'ops_vessel_id'                 => ['required'],
+            'type'                          => ['nullable', 'string', 'max:255'],
+            'usage_type'                    => ['nullable', 'string', 'max:255'],
+            'currency'                      => ['nullable', 'string', 'max:255'],
+            'exchange_rate_bdt'             => ['nullable', 'numeric'],
+            'exchange_rate_usd'             => ['nullable', 'numeric'],
+            'total_amount_bdt'              => ['nullable', 'numeric'],
+            'total_amount_usd'              => ['nullable', 'numeric'],
+            'date'                          => ['required', 'date'],
+            'from_date'                     => ['nullable', 'date'],
+            'till_date'                     => ['nullable', 'date'],
+            // 'opsBunkers.*.scm_material_id'  => ['nullable', 'numeric', 'max:255'],
+            // 'opsBunkers.*.unit'             => ['nullable', 'string', 'max:255'],
+            // 'opsBunkers.*.quantity'         => ['nullable', 'numeric'],
+            // 'opsBunkers.*.rate'             => ['nullable', 'numeric'],
         ];
     }
 
