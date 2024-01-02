@@ -204,19 +204,26 @@ class CrwCommonController extends Controller
                 'year_month'         => $attendance->year_month,
                 'working_days'       => $attendance->working_days,
                 'total_crews'        => $attendance->total_crews,
-                'crwAttendanceLines' => $attendance->crwAttendanceLines->map(function ($attendanceLine)
+                'crwAttendanceLines' => $attendance->crwAttendanceLines->map(function ($attendanceLine) use ($attendance)
                 {
+                    $perDaySalary    = ($attendanceLine->crwSalaryStructure->net_amount / $attendance->working_days); 
+                    $payableAmount = number_format((float)$attendanceLine->payable_days * $perDaySalary, 2, '.', '');
+
                     $attendanceLine = [
+                        'id'                        => $attendanceLine->id,
+                        'crw_attendance_line_id'    => $attendanceLine->id,
+                        'crw_salary_structure_id'   => $attendanceLine->crwSalaryStructure->id,
                         'crw_crew_id'               => $attendanceLine->crwCrew->id,
                         'crw_full_name'             => $attendanceLine->crwCrew->full_name,
                         'crw_contact_no'            => $attendanceLine->crwCrew->pre_mobile_no,
-                        'crw_salary_structure_id'   => $attendanceLine->crwSalaryStructure->id,
                         'net_salary'                => $attendanceLine->crwSalaryStructure->net_amount,
-                        'id'                        => $attendanceLine->id,
                         'present_days'              => $attendanceLine->present_days,
                         'absent_days'               => $attendanceLine->absent_days,
                         'payable_days'              => $attendanceLine->payable_days,
-                        'attendance_line_composite' => $attendanceLine->attendance_line_composite,
+                        'payable_amount'            => $payableAmount,
+                        'total_earnings'            => 0.00,
+                        'total_deductions'          => 0.00,
+                        'net_payable_amount'        => $payableAmount,
                     ];
 
                     return $attendanceLine;

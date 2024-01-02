@@ -10,5 +10,5 @@ class CrwPayrollBatchHead extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['payroll_batch_id', 'head_type', 'head_name', 'unit', 'based_on', 'amount'];
+    protected $fillable = ['crw_payroll_batch_id', 'head_type', 'head_name', 'unit', 'based_on', 'amount'];
 }
