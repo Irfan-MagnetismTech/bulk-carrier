@@ -7,7 +7,7 @@
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
  
     <label class="label-group">
-          <span class="label-item-title">SIR Ref<span class="text-red-500">*</span></span>
+          <span class="label-item-title">SIR Ref</span>
           <input
             type="text"
             readonly

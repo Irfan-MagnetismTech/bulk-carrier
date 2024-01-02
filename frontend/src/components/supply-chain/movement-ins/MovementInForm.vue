@@ -6,9 +6,9 @@
   </div>
   <div class="input-group !w-1/4">
       <label class="label-group">
-          <span class="label-item-title">MI Ref<span class="text-red-500">*</span></span>
+          <span class="label-item-title">MI Ref</span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
-          <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
+          <!-- <Error v-if="errors?.ref_no" :errors="errors.ref_no"  /> -->
       </label>
   </div>
   <div class="input-group">
@@ -24,17 +24,17 @@
               />
           </template>
           </v-select>
-         <Error v-if="errors?.unit" :errors="errors.unit" />
+         <!-- <Error v-if="errors?.unit" :errors="errors.unit" /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">From Warehouse <span class="text-red-500">*</span></span>
         <input type="text" v-model="form.from_warehouse_name" required class="form-input" name="from_warehouse_name" :id="'delivery_date'" />
-         <Error v-if="errors?.from_warehouse_name" :errors="errors.from_warehouse_name" />
+         <!-- <Error v-if="errors?.from_warehouse_name" :errors="errors.from_warehouse_name" /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">To Warehouse <span class="text-red-500">*</span></span>
         <input type="text" v-model="form.to_warehouse_name" required class="form-input" name="to_warehouse_name" :id="'to_warehouse_name'" />
-          <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" />
+          <!-- <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">MO No<span class="text-red-500">*</span></span>
@@ -49,14 +49,14 @@
               />
           </template>
           </v-select>
-          <Error v-if="errors?.mo_no" :errors="errors.mo_no" />
+          <!-- <Error v-if="errors?.mo_no" :errors="errors.mo_no" /> -->
       </label>
   </div>
   <div class="input-group !w-1/4">
     <label class="label-group">
           <span class="label-item-title">Transfer Date<span class="text-red-500">*</span></span>
           <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+          <!-- <Error v-if="errors?.date" :errors="errors.date"  /> -->
       </label>
   </div>
 
@@ -144,7 +144,7 @@
         <label class="label-group">
           <span class="label-item-title">Shortage Type<span class="text-red-500">*</span></span>
           <input type="text" v-model="form.scmMiShortage.shortage_type" required class="form-input" name="to_warehouse_name" :id="'to_warehouse_name'" />
-            <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" />
+            <!-- <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" /> -->
         </label>
         <label class="label-group">
           <span class="label-item-title">Assigned To<span class="text-red-500">*</span></span>
@@ -215,7 +215,7 @@
     </fieldset>
   </div>
 
-
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 
 
@@ -231,7 +231,8 @@
     import {useStore} from "vuex";
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
-    // import Store from "../../store";
+    
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
     import useStockLedger from '../../../composables/supply-chain/useStockLedger';
     import useMovementRequisition from '../../../composables/supply-chain/useMovementRequisition';
     import useMovementIn from '../../../composables/supply-chain/useMovementIn';
