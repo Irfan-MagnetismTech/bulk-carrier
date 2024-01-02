@@ -37,7 +37,8 @@ class ScmAdjustmentController extends Controller
                 'scmWarehouse',
                 'createdBy',
                 'scmAdjustmentLines.scmMaterial',
-            )->latest()->paginate(10);
+            )->globalSearch(request()->all());
+
 
             return response()->success('Data list', $datas, 200);
         } catch (\Exception $e) {
@@ -56,13 +57,14 @@ class ScmAdjustmentController extends Controller
         $requestData = $request->except('ref_no', 'adjustment_composite_key');
 
         $requestData['ref_no'] = UniqueId::generate(ScmAdjustment::class, 'AJT');
+        $requestData['created_by'] = auth()->user()->id;
 
         try {
             DB::beginTransaction();
 
             $adjustment = ScmAdjustment::create($requestData);
 
-            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
+            $linesData = CompositeKey::generateArray($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
             $adjustment->scmAdjustmentLines()->createMany($linesData);
 
             if ($request->type === 'Addition') {
@@ -121,7 +123,7 @@ class ScmAdjustmentController extends Controller
 
             $adjustment->stockable()->delete();
 
-            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
+            $linesData = CompositeKey::generateArray($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
 
             $adjustment->scmAdjustmentLines()->createMany($linesData);
 

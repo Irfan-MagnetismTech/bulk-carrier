@@ -117,7 +117,7 @@ class ScmSirController extends Controller
             DB::beginTransaction();
 
             $scmSir = ScmSir::create($requestData);
-            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmSirLines, $scmSir->id, 'scm_material_id', 'sir');
+            $linesData = CompositeKey::generateArray($request->scmSirLines, $scmSir->id, 'scm_material_id', 'sir');
             $scmSir->scmSirLines()->createMany($linesData);
             $scmSir->stockable()->createMany($dataForStockLedger);
 
@@ -186,7 +186,7 @@ class ScmSirController extends Controller
 
             $storeIssueReturn->scmSirLines()->delete();
 
-            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmSirLines, $storeIssueReturn->id, 'scm_material_id', 'sir');
+            $linesData = CompositeKey::generateArray($request->scmSirLines, $storeIssueReturn->id, 'scm_material_id', 'sir');
 
             $storeIssueReturn->scmSirLines()->createMany($linesData);
 

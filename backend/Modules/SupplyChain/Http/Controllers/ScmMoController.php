@@ -59,7 +59,7 @@ class ScmMoController extends Controller
 
             $scmMo = ScmMo::create($requestData);
 
-            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmMoLines, $scmMo->id, 'scm_material_id', 'mo');
+            $linesData = CompositeKey::generateArray($request->scmMoLines, $scmMo->id, 'scm_material_id', 'mo');
 
 
             $scmMo->scmMoLines()->createMany($linesData);
@@ -156,7 +156,7 @@ class ScmMoController extends Controller
 
             $movementOut->scmMoLines()->delete();
 
-            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmMoLines, $movementOut->id, 'scm_material_id', 'mo');
+            $linesData = CompositeKey::generateArray($request->scmMoLines, $movementOut->id, 'scm_material_id', 'mo');
 
             $movementOut->scmMoLines()->createMany($linesData);
 

@@ -58,7 +58,7 @@ class ScmPoController extends Controller
         try {
             DB::beginTransaction();
             $scmPo = ScmPo::create($requestData);
-            // $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmPoLines, $scmPo->id, 'scm_material_id', 'po');
+            // $linesData = CompositeKey::generateArray($request->scmPoLines, $scmPo->id, 'scm_material_id', 'po');
             $data = $this->addNetRateToRequestData($request, $scmPo->id);
             $scmPo->scmPoLines()->createUpdateOrDelete($data->scmPoLines);
             $scmPo->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);

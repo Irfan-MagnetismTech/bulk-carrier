@@ -60,7 +60,7 @@ class ScmSiController extends Controller
 
             $scmSi = ScmSi::create($requestData);
 
-            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmSiLines, $scmSi->id, 'scm_material_id', 'si');
+            $linesData = CompositeKey::generateArray($request->scmSiLines, $scmSi->id, 'scm_material_id', 'si');
 
             $scmSi->scmSiLines()->createMany($linesData);
 
@@ -154,7 +154,7 @@ class ScmSiController extends Controller
             $storeIssue->scmSiLines()->delete();
             $storeIssue->stockable()->delete();
 
-            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmSiLines, $storeIssue->id, 'scm_material_id', 'si');
+            $linesData = CompositeKey::generateArray($request->scmSiLines, $storeIssue->id, 'scm_material_id', 'si');
 
             $storeIssue->scmSiLines()->createMany($linesData);
 

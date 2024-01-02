@@ -26,7 +26,7 @@ class CompositeKey
      * @param string $infix
      * @return array
      */
-    public static function generateArrayWithCompositeKey(array $lines, int $parentModelId, string $columnName, string $infix)
+    public static function generateArray(array $lines, int $parentModelId, string $columnName, string $infix)
     {
         foreach ($lines as $index => &$line) {
             if (isset($line[$columnName])) {

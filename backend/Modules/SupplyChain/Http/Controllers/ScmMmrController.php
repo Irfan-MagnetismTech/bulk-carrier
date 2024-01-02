@@ -64,7 +64,7 @@ class ScmMmrController extends Controller
 
             $movementRequisition = ScmMmr::create($requestData);
 
-            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmMmrLines, $movementRequisition->id, 'scm_material_id', 'mmr');
+            $linesData = CompositeKey::generateArray($request->scmMmrLines, $movementRequisition->id, 'scm_material_id', 'mmr');
 
             $movementRequisition->scmMmrLines()->createMany($linesData);
 
@@ -127,7 +127,7 @@ class ScmMmrController extends Controller
 
             $movementRequisition->scmMmrLines()->delete();
 
-            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmMmrLines, $movementRequisition->id, 'scm_material_id', 'mmr');
+            $linesData = CompositeKey::generateArray($request->scmMmrLines, $movementRequisition->id, 'scm_material_id', 'mmr');
 
             $movementRequisition->scmMmrLines()->createMany($linesData);
 
