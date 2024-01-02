@@ -84,21 +84,8 @@ class AppraisalFormController extends Controller
     public function show(AppraisalForm $appraisalForm)
     {
         try {
-
-            $appraisalForm['new_lines'] = $appraisalForm->appraisalFormLines->groupBy('section_name')->map(function ($q, $key)
-            {
-                return [
-                    'section_name' => $key,
-                    'aspects'      => $q,
-                ];
-            });
-
-            // $forget = $appraisalForm->appraisalFormLines = '';
-            // dd($appraisalForm);
-
-            // $appraisalForm->push('appraisalFormLines');
-
-            return response()->success('Retrieved succesfully', $appraisalForm, 200);
+            
+            return response()->success('Retrieved succesfully', $appraisalForm->load('appraisalFormLines.appraisalFormLineItems'), 200);
         }
         catch (QueryException $e)
         {
