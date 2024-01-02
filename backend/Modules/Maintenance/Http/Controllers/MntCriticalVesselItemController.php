@@ -199,7 +199,9 @@ class MntCriticalVesselItemController extends Controller
                                                 ->havingRaw('count(mnt_critical_item_id) > ?', [0]);
                                             });
                                         },
-                                        'mntCriticalItemCats.mntCriticalItems.mntCriticalVesselItems'
+                                        'mntCriticalItemCats.mntCriticalItems.mntCriticalVesselItems' => function($query) use ($opsVesselId) {
+                                            $query->where('ops_vessel_id', $opsVesselId);
+                                        }
                                         ])
                                         ->whereHas('mntCriticalItemCats.mntCriticalItems', function($q){
                                             // Check if the function has items
