@@ -47,7 +47,7 @@
           
           <template  v-for="(criticalVesselItem, index) in form.mntCriticalSpListLines" :key="index">
               <tr class="text-gray-700 dark-disabled:text-gray-400" v-if="criticalVesselItem?.mntCriticalItemSps?.length">
-                <td colspan="4" ><strong class="text-left block "><span class="text-base">{{ criticalVesselItem?.mntCriticalItem?.item_name }}</span> <span class="pl-1" v-show="criticalVesselItem?.mntCriticalItem?.specification">({{ criticalVesselItem?.mntCriticalItem?.specification }})</span></strong> </td>
+                <td colspan="4" ><strong class="text-left block "><span class="text-base">{{ criticalVesselItem?.mntCriticalItem?.item_name }}</span> <span class="pl-1" v-show="criticalVesselItem?.specification">({{ criticalVesselItem?.specification }})</span></strong> </td>
               </tr>
               <tr class="text-gray-700 dark-disabled:text-gray-400"  v-for="(mntCriticalItemSp, mntCriticalItemSpIndex) in criticalVesselItem?.mntCriticalItemSps" :key="mntCriticalItemSpIndex">
                 <td>{{ mntCriticalItemSp?.sp_name }}</td>

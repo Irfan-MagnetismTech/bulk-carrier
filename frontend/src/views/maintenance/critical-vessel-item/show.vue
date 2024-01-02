@@ -67,6 +67,10 @@ onMounted(() => {
                 <td>{{ criticalVesselItem?.mntCriticalItem?.item_name }}</td>
               </tr>
 
+              <tr>
+                <th class="w-40">Specification</th>
+                <td>{{ criticalVesselItem?.specification }}</td>
+              </tr>
               
               <tr>
                 <th class="w-40">Notes </th>

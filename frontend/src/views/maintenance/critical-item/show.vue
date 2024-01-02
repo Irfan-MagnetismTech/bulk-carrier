@@ -55,10 +55,10 @@ onMounted(() => {
               </tr>
 
               
-              <tr>
+              <!-- <tr>
                 <th class="w-40">Specification</th>
                 <td>{{ criticalItem.specification }}</td>
-              </tr>
+              </tr> -->
 
               
               <tr>
