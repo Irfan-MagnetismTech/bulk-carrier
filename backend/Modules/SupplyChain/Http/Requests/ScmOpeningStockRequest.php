@@ -15,7 +15,7 @@ class ScmOpeningStockRequest extends FormRequest
     {
         return [
             'date' => 'required|date',
-            'scm_warehouse_id' => 'required|exists:scm_warehouses,id|integer',
+            'scm_warehouse_id' => 'required|exists:scm_warehouses,id|integer|unique:scm_opening_stocks,scm_warehouse_id,' . $this->id,
             'scmOpeningStockLines.*.scm_material_id' => 'required|exists:scm_materials,id|integer',
             'scmOpeningStockLines.*.unit' => 'required|max:255|exists:scm_units,name|string',
             'scmOpeningStockLines.*.rate' => 'required|numeric',
@@ -31,6 +31,11 @@ class ScmOpeningStockRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'scm_warehouse_id.required' => 'Warehouse is required',
+            'scm_warehouse_id.exists' => 'Warehouse is not found',
+            'scm_warehouse_id.integer' => 'Warehouse must be an integer',
+            'scm_warehouse_id.unique' => 'Opening stock is already been inputted',
+
             'scmOpeningStockLines.*.quantity.min' => 'In row no :position you have given :input but minimum amount is :min',
             'scmOpeningStockLines.*.quantity.required' => 'In row no :position quantity is required',
             'scmOpeningStockLines.*.scm_material_id.required' => 'In row no :position material is required',
