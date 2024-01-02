@@ -122,17 +122,7 @@ class MntCriticalItemController extends Controller
      */
     public function destroy(MntCriticalItem $criticalItem)
     {
-        try {            
-            // $criticalItem = MntCriticalItem::findorfail($id);
-            // if ($criticalItem->mntCriticalVesselItems()->count() > 0) {
-            //     $error = array(
-            //         "message" => "Data could not be deleted!",
-            //         "errors" => [
-            //             "id"=>["This data could not be deleted as it is in use."]
-            //         ]
-            //     );
-            //     return response()->json($error, 422);
-            // }
+        try {
             DB::beginTransaction();
             $criticalItem->delete();
             DB::commit();
