@@ -65,8 +65,14 @@ class OpsVoyageExpenditureController extends Controller
                 $voyage_expenditure_info['attachment'] = $attachment;
             }
 
+            $voyageExpenditureEntries = collect($request->opsVoyageExpenditureEntries)->map(function($item) use($request) {
+                $item['ops_voyage_id'] = $request->ops_voyage_id;
+                $item['port_code'] = $request->port_code;
+                return $item;
+            })->toArray();
+
             $voyage_expenditure = OpsVoyageExpenditure::create($voyage_expenditure_info);
-            $voyage_expenditure->opsVoyageExpenditureEntries()->createMany($request->opsVoyageExpenditureEntries);
+            $voyage_expenditure->opsVoyageExpenditureEntries()->createMany($voyageExpenditureEntries);
             DB::commit();
             return response()->success('Voyage expenditure added successfully.', $voyage_expenditure, 201);
         }
@@ -107,6 +113,9 @@ class OpsVoyageExpenditureController extends Controller
     */
     public function update(OpsVoyageExpenditureRequest $request, OpsVoyageExpenditure $voyage_expenditure): JsonResponse
     {
+
+        
+
         try {
             DB::beginTransaction();
             $voyage_expenditure_info = $request->except(
@@ -120,9 +129,15 @@ class OpsVoyageExpenditureController extends Controller
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'ops/voyage_expenditures');
                 $voyage_expenditure_info['attachment'] = $attachment;
             }
+
+            $voyageExpenditureEntries = collect($request->opsVoyageExpenditureEntries)->map(function($item) use($request) {
+                $item['ops_voyage_id'] = $request->ops_voyage_id;
+                $item['port_code'] = $request->port_code;
+                return $item;
+            })->toArray();
             
             $voyage_expenditure->update($voyage_expenditure_info);
-            $voyage_expenditure->opsVoyageExpenditureEntries()->createUpdateOrDelete($request->opsVoyageExpenditureEntries);
+            $voyage_expenditure->opsVoyageExpenditureEntries()->createUpdateOrDelete($voyageExpenditureEntries);
             DB::commit();
             return response()->success('Data updated successfully.', $voyage_expenditure, 202);
         }

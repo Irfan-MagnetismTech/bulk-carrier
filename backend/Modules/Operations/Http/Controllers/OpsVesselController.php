@@ -11,6 +11,9 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Modules\Operations\Entities\OpsVessel;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Accounts\Entities\AccCostCenter;
+use Modules\SupplyChain\Entities\ScmWarehouse;
+use Modules\SupplyChain\Services\StockLedgerData;
 use Modules\Operations\Http\Requests\OpsVesselRequest;
 
 class OpsVesselController extends Controller
@@ -42,7 +45,9 @@ class OpsVesselController extends Controller
                             ->groupBy('ops_maritime_certification_id');
                     })->latest();
                 },
-                'opsBunkers'
+                'opsBunkers',             
+                'scmWareHouse.scmWarehouseContactPersons',
+                'scmWareHouse.accCostCenter'
             ])
             ->globalSearch($request->all());
 
@@ -73,6 +78,44 @@ class OpsVesselController extends Controller
             $vessel = OpsVessel::create($vesselInfo);
             $vessel->opsVesselCertificates()->createMany($request->opsVesselCertificates);
             $vessel->opsBunkers()->createMany($request->opsBunkers);
+
+            // create cost center
+            $costCenter= [
+                'name'=>$request->name,
+                'short_name'=>$request->short_code,
+                'type'=>$request->vessel_type,
+                'business_unit'=>$request->business_unit,
+            ];
+            
+            $cost_center=AccCostCenter::create($costCenter);
+
+            // create ware house
+            $wareHouse= [
+                'ops_vessel_id'=>$vessel->id,
+                'cost_center_id'=>$cost_center->id,
+                'name'=>$request->name,
+                'short_code'=>$request->short_code,
+                'address'=>$request->name,
+                'business_unit'=>$request->business_unit,
+            ];
+            
+            $wareHouseContact= [
+                'name'=>$request->manager,
+                'assign_date'=>today(),
+            ];
+
+            $ware_house=ScmWarehouse::create($wareHouse);
+            $vessel['scm_warehouse_id']= $ware_house->id;
+
+            $bunkers=$vessel->opsBunkers->map(function($bunker) {
+                $bunker['quantity'] = $bunker->opening_balance;
+                return $bunker;
+            });
+
+            (new StockLedgerData)->insert($vessel, $bunkers);
+            
+            $ware_house->scmWarehouseContactPersons()->create($wareHouseContact);
+
             DB::commit();
 
             return response()->success('Data added successfully.', $vessel, 201);
@@ -101,7 +144,9 @@ class OpsVesselController extends Controller
                 })->latest();
             },
             'opsBunkers.scmMaterial',
-            'portOfRegistry'
+            'portOfRegistry',
+            'scmWareHouse.scmWarehouseContactPersons',
+            'scmWareHouse.accCostCenter'
         ]);
 
         $vessel->opsVesselCertificates->map(function($certificate) {
