@@ -8,7 +8,7 @@
       <label class="label-group">
           <span class="label-item-title">MI Ref</span>
           <input type="text" readonly v-model="form.ref_no" class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
-          <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
+          <!-- <Error v-if="errors?.ref_no" :errors="errors.ref_no"  /> -->
       </label>
   </div>
   <div class="input-group">
@@ -24,17 +24,17 @@
               />
           </template>
           </v-select>
-         <Error v-if="errors?.unit" :errors="errors.unit" />
+         <!-- <Error v-if="errors?.unit" :errors="errors.unit" /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">From Warehouse</span>
         <input type="text" v-model="form.from_warehouse_name" readonly class="form-input vms-readonly-input" name="from_warehouse_name" :id="'delivery_date'" />
-         <Error v-if="errors?.from_warehouse_name" :errors="errors.from_warehouse_name" />
+         <!-- <Error v-if="errors?.from_warehouse_name" :errors="errors.from_warehouse_name" /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">To Warehouse</span>
         <input type="text" v-model="form.to_warehouse_name" readonly class="form-input vms-readonly-input" name="to_warehouse_name" :id="'to_warehouse_name'" />
-          <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" />
+          <!-- <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">MO No<span class="text-red-500">*</span></span>
@@ -49,14 +49,14 @@
               />
           </template>
           </v-select>
-          <Error v-if="errors?.mo_no" :errors="errors.mo_no" />
+          <!-- <Error v-if="errors?.mo_no" :errors="errors.mo_no" /> -->
       </label>
   </div>
   <div class="input-group !w-1/4">
     <label class="label-group">
           <span class="label-item-title">Transfer Date<span class="text-red-500">*</span></span>
           <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+          <!-- <Error v-if="errors?.date" :errors="errors.date"  /> -->
       </label>
   </div>
 
@@ -106,7 +106,8 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmMiLines[index].quantity" class="form-input">
+                  <input type="text" v-model="form.scmMiLines[index].quantity" class="form-input" :max="form.scmMiLines[index].mo_quantity"
+                 :class="{'border-2': form.scmMiLines[index].quantity > form.scmMiLines[index].mo_quantity,'border-red-500 bg-red-100': form.scmMiLines[index].quantity > form.scmMiLines[index].mo_quantity}" min="1">
                 </label>
               </td>
             </tr>
@@ -124,7 +125,7 @@
         <label class="label-group">
           <span class="label-item-title">Shortage Type<span class="text-red-500">*</span></span>
           <input type="text" v-model="form.scmMiShortage.shortage_type" required class="form-input" name="to_warehouse_name" :id="'to_warehouse_name'" />
-            <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" />
+            <!-- <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" /> -->
         </label>
         <label class="label-group">
           <span class="label-item-title">Assigned To<span class="text-red-500">*</span></span>
@@ -177,7 +178,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" readonly v-model="form.scmMiShortage.scmMiShortageLines[index].quantity" class="vms-readonly-input form-input">
+                  <input type="text" readonly v-model="form.scmMiShortage.scmMiShortageLines[index].quantity" class="vms-readonly-input form-input" min="0">
                 </label>
               </td>
             </tr>
@@ -188,7 +189,7 @@
     </fieldset>
   </div>
 
-
+<ErrorComponent :errors="errors"></ErrorComponent> 
 </template>
 
 
@@ -203,6 +204,7 @@
     import DropZoneV2 from '../../DropZoneV2.vue';
     import {useStore} from "vuex";
     import env from '../../../config/env';
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
     import cloneDeep from 'lodash/cloneDeep';
     // import Store from "../../store";
     import useStockLedger from '../../../composables/supply-chain/useStockLedger';
@@ -296,14 +298,10 @@
         } else {
           getMmrWiseMo(props.form.business_unit, mmr.id,props.form.scm_mo_id,true);
         }
-        
         props.form.scm_mmr_id = mmr?.id;
         props.form.fromWarehouse = mmr.fromWarehouse;
         props.form.toWarehouse = mmr.toWarehouse;
-        
         assgnWarehouseList.value = [];
-      
-        
       }
 }
 

@@ -54,8 +54,8 @@ let filterOptions = ref({
       "filter_type": "input" 
     },
     {
-      "relation_name": "scmPo",
-      "field_name": "ref_no",
+      "relation_name": "fromWarehouse",
+      "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -64,8 +64,8 @@ let filterOptions = ref({
       "filter_type": "input" 
     },
     {
-      "relation_name": "scmPr",
-      "field_name": "ref_no",
+      "relation_name": "toWarehouse",
+      "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -74,14 +74,14 @@ let filterOptions = ref({
       "filter_type": "input" 
     },
     {
-      "relation_name": "scmWarehouse",
-      "field_name": "name",
+      "relation_name": null,
+      "field_name": "date",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
       "label": "Transfer Date",
-      "filter_type": "input"
+      "filter_type": "date"
     },
   ]
 });
