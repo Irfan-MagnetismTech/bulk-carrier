@@ -65,7 +65,8 @@ class ScmMiController extends Controller
 
             $scmMi = ScmMi::create($requestData);
 
-            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmMiLines, $scmMi->id, 'scm_material_id', 'mi');
+            $linesData = CompositeKey::generateArray($request->scmMiLines, $scmMi->id, 'scm_material_id', 'mi');
+
             $scmMi->scmMiLines()->createMany($linesData);
 
             if ($request->scmMiShortage['shortage_type'] != "") {
@@ -73,7 +74,34 @@ class ScmMiController extends Controller
 
                 $this->shortageLinesData($request, $scmMi);
 
-                (new StockLedgerData)->insert($scmMi, $request->scmMiShortage['scmMiShortageLines']);
+                $stockInFromShortage = [];
+                $stockOutFromShortage = [];
+
+                foreach ($request->scmMiShortage['scmMiShortageLines'] as $key => $value) {
+
+                    $stockInFromShortage = [
+                        'scm_material_id' => $value['scm_material_id'],
+                        'scm_warehouse_id' => $request->scmMiShortage['scm_warehouse_id'],
+                        'acc_cost_center_id' => $request->scmMiShortage['acc_cost_center_id'],
+                        'quantity' => $value['quantity'],
+                        'business_unit' => $request->business_unit
+                    ];
+
+                    $miStockable = $scmMi->stockable()->create($stockInFromShortage);
+
+                    $stockOutFromShortage = [
+                        'scm_material_id' => $value['scm_material_id'],
+                        'recievable_type`' => ScmMi::class,
+                        'recievable_id' =>  $scmMi->scmMiShortage->scmMiShortageLines[$key]->id,
+                        'scm_warehouse_id' => $request->scmMiShortage['scm_warehouse_id'],
+                        'acc_cost_center_id' => $request->scmMiShortage['acc_cost_center_id'],
+                        'quantity' => $value['quantity'] * -1,
+                        'parent_id' => $miStockable->id,
+                        'business_unit' => $request->business_unit
+                    ];
+
+                    $scmMi->scmMiShortage->stockable()->create($stockOutFromShortage);
+                }
             }
 
             (new StockLedgerData)->insert($scmMi, $request->scmMiLines);
@@ -177,7 +205,7 @@ class ScmMiController extends Controller
             $movementIn->scmMiLines()->delete();
             $movementIn->stockable()->delete();
 
-            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmMiLines, $movementIn->id, 'scm_material_id', 'mi');
+            $linesData = CompositeKey::generateArray($request->scmMiLines, $movementIn->id, 'scm_material_id', 'mi');
 
             $movementIn->scmMiLines()->createMany($linesData);
 
@@ -214,7 +242,7 @@ class ScmMiController extends Controller
                 foreach ($shortageLines as $key => $shortageLine) {
                     $materialId = $shortageLine['scm_material_id'];
                     $shortageLine['scm_mi_shortage_id'] = isset($scmMiShortage) ? $scmMiShortage->id : $movementIn->scmMiShortage->id;
-                    
+
                     $miLine = $movementIn->scmMiLines()->where('scm_material_id', $materialId)->first();
 
                     if ($miLine && $miLine->mi_composite_key) {

@@ -54,7 +54,7 @@ class ScmSrController extends Controller
             DB::beginTransaction();
 
             $scmSr = ScmSr::create($requestData);
-            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmSrLines, $scmSr->id, 'scm_material_id', 'sr');
+            $linesData = CompositeKey::generateArray($request->scmSrLines, $scmSr->id, 'scm_material_id', 'sr');
             $scmSr->scmSrLines()->createMany($linesData);
 
             DB::commit();
@@ -97,7 +97,7 @@ class ScmSrController extends Controller
 
             $storeRequisition->scmSrLines()->delete();
 
-            $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmSrLines, $storeRequisition->id, 'scm_material_id', 'sr');
+            $linesData = CompositeKey::generateArray($request->scmSrLines, $storeRequisition->id, 'scm_material_id', 'sr');
 
             $storeRequisition->scmSrLines()->createMany($linesData);
 

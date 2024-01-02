@@ -71,7 +71,7 @@ class ScmPrController extends Controller
 
             $purchase_requisition = ScmPr::create($requestData);
             if ($request->entry_type === '0') {
-                $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
+                $linesData = CompositeKey::generateArray($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
                 $purchase_requisition->scmPrLines()->createMany($linesData);
             } else {
                 $import = new ScmMaterialsImport();
@@ -81,7 +81,7 @@ class ScmPrController extends Controller
                 if ($import->invalid) {
                     return response()->json($import->invalid, 422);
                 } else {
-                    $linesData = CompositeKey::generateArrayWithCompositeKey($import->uniqueRows, $purchase_requisition->id, 'scm_material_id', 'pr');
+                    $linesData = CompositeKey::generateArray($import->uniqueRows, $purchase_requisition->id, 'scm_material_id', 'pr');
                     $purchase_requisition->scmPrLines()->createUpdateOrDelete($linesData);
                 }
             }
@@ -172,7 +172,7 @@ class ScmPrController extends Controller
     {
         $requestData = $request->except('ref_no', 'pr_composite_key');
 
-        $linesData = CompositeKey::generateArrayWithCompositeKey($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
+        $linesData = CompositeKey::generateArray($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
 
         try {
             DB::beginTransaction();
