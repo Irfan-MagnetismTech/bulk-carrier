@@ -21,7 +21,8 @@ class OpsVoyageReportController extends Controller
     public function voyageReport(Request $request)
     {
         try {
-            $voyages = OpsVoyage::with('opsVessel','opsCargoType','opsVoyageSectors.opsContractTariff.opsCargoTariff.opsCargoTariffLines','opsContractTariffs.opsCargoTariff.opsCargoTariffLines','opsVoyageExpenditureEntries.opsExpenseHead')
+            $voyages = OpsVoyage::with('opsVessel','opsVesselBunkers.opsBunkers.scmMaterial','opsCargoType','opsVoyageSectors.opsContractTariff.opsCargoTariff.opsCargoTariffLines','opsContractTariffs.opsCargoTariff.opsCargoTariffLines','opsVoyageExpenditureEntries.opsExpenseHead')
+
             ->whereHas('opsVoyageExpenditureEntries.opsExpenseHead', function ($query) {
                 $query->where('is_visible_in_voyage_report',1)->groupBy('name');
             })
@@ -33,9 +34,29 @@ class OpsVoyageReportController extends Controller
             })
             ->get();
             
+            $bunkerMaterialTitle=[];
+            foreach($voyages as $voyage){                
+                foreach($voyage->opsVesselBunkers as $vesselBunker){
+                    foreach($vesselBunker->opsBunkers as $bunker){
+                        $bunkerMaterialTitle[]=$bunker->scmMaterial->name;
+                    }
+                }
+            }
+            $opsVesselBunkerTitle = $voyages->flatMap(function ($voyage){
+                return $voyage->opsVesselBunkers?->flatMap(function ($opsVesselBunker){
+                    return collect($opsVesselBunker?->opsBunkers->whereNotNull('particular'))->map(function ($bunker){                                             
+                            return [
+                                'particular' => $bunker['particular'],
+                            ];
+                        // dd($bunker['particular']);
+                    });
+                });
+            })->unique('particular');
+
             $opsCargoTitle = $voyages->flatMap(function ($voyage) {
                 return $voyage->opsContractTariffs->flatMap(function ($opsContractTariff) use ($voyage) {
                     return collect($opsContractTariff->opsCargoTariff->opsCargoTariffLines)->map(function ($tariffLine) use ($opsContractTariff, $voyage) {
+                        
                         return [
                             'particular' => $tariffLine['particular'],                            
                         ];
@@ -77,6 +98,8 @@ class OpsVoyageReportController extends Controller
                 'voyages'=>$voyages,
                 'opsContractTitle'=>$opsCargoTitle,
                 'opsExpenditureHeadTitle'=>$opsExpenditureHeadTitle,
+                'opsVesselBunkerTitle'=>$opsVesselBunkerTitle,
+                'bunkerMaterialTitle'=>array_unique($bunkerMaterialTitle),
                 'companyName' => 'TOGGI SHIPPING & LOGISTIC',
             ];
             return view('operations::reports.voyage',compact('data'));
