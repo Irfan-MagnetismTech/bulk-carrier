@@ -2,12 +2,13 @@
 
 namespace Modules\Operations\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Routing\Controller;
+use Modules\Operations\Entities\OpsVoyage;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsExpenseHead;
 use Modules\Operations\Entities\OpsVesselExpenseHead;
-use Modules\Operations\Entities\OpsVoyage;
 use Modules\Operations\Entities\OpsVoyageExpenditureEntry;
 
 class OpsExpenseReportController extends Controller
@@ -81,25 +82,37 @@ class OpsExpenseReportController extends Controller
         //
     }
 
-    public function expenditureReport(Request $request)
+    public function portWiseExpenditureReport(Request $request)
     {
         $start = date($request->start);
         $end = date($request->end);
         $port = $request->port;
         $business_unit = $request->business_unit;
 
-        $voyages = OpsVoyage::whereBetween('sail_date', [$start, $end])
+        $voyages = OpsVoyage::query()
+                            // ->whereBetween('transit_date', [$start, $end])
+                            ->whereBetween('transit_date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
+
                             ->where('business_unit', $business_unit)
                             ->get();
 
         $voyageIds = $voyages->pluck('id');
         $vesselIds = $voyages->pluck('ops_vessel_id')->unique()->values()->toArray();
 
+        // dd($voyageIds);
+
         $vesselExpenseHeads = OpsVesselExpenseHead::whereIn('ops_vessel_id', $vesselIds)->get()->pluck('ops_expense_head_id')->unique()->toArray();
 
-        $elements = OpsExpenseHead::whereIn('id', $vesselExpenseHeads)->where('head_id', null)->with('opsSubHeads')->get();
+        $findingHeads = OpsExpenseHead::whereIn('id', $vesselExpenseHeads)->with('opsSubHeads')
+                        ->get()
+                        ->pluck('head_id')
+                        ->filter()
+                        ->unique()
+                        ->values()->toArray();
 
-        $gettingRealChild = $elements->map(function ($item) use($vesselExpenseHeads) {
+        $heads = OpsExpenseHead::whereIn('id', $findingHeads)->where('head_id', null)->with('opsSubHeads')->get();
+
+        $heads->map(function ($item) use($vesselExpenseHeads) {
                                     $subheads = $item->opsSubHeads->map(function($subhead) use($vesselExpenseHeads) {
                                         if(in_array($subhead['id'],$vesselExpenseHeads)) {
                                             return $subhead;
@@ -114,27 +127,30 @@ class OpsExpenseReportController extends Controller
                                         
                                 });
 
-        $headInfo = [];
-        $headIds = [];
         
         $entries = OpsVoyageExpenditureEntry::with('opsExpenseHead.opsSubHeads')
                     ->where('port_code', $port)
                     ->whereIn('ops_voyage_id', $voyageIds)->get();
 
-        $entryGroup = $entries->map(function($item) {
-                $item['type'] = (!empty($item['head']['head_id'])) ? 'subhead' : 'head';
-                $item['port'] = $item['invoice']['port'];
+        // dd($entries);
+
+        $entryGroups = $entries->map(function($item) {
+                $item['type'] = (!empty($item['opsExpenseHead']['head_id'])) ? 'subhead' : 'head';
                 $item['voyage'] = $item->opsVoyage->voyage_sequence;
                 $item['vessel'] = $item->opsVoyage->opsVessel->name;
-                $item['arrival'] = $item->opsVoyage->opsVoyagePortSchedules->first()->sail_date;
-                $item['sailing'] = $item->opsVoyage->opsVoyagePortSchedules->first()->transit_date;
+                $item['sail_date'] = $item->opsVoyage->sailing_date;
+                $item['transit_date'] = $item->opsVoyage->transit_date;
                 return $item;
-        });
+        })->groupBy('ops_voyage_id','ops_expense_head_id');
 
-        return view('reports.expense-report')->with([
-            'realSubheads' => $gettingRealChild,
-            'entryMultiGroup' => $entryGroup,
-        ]);
+        // dd($entryGroups);
+
+        $view = view('operations::reports.expense-report')->with([
+            'entryGroups' => $entryGroups,
+            'port' => $port,
+            'heads' => $heads,
+            'voyages' => $voyages
+        ])->render();
 
         // $view = view('reports.expense-report')->with([
         //     'portWiseHeads' => collect($portWiseHeads),
@@ -144,9 +160,9 @@ class OpsExpenseReportController extends Controller
         //     'entryGroupWithoutPort' => $entryGroupWithoutPort
         // ])->render();
 
-        // return response()->json([
-        //     'view' => $view
-        // ], 200);
+        return response()->json([
+            'value' => $view
+        ], 200);
 
         // return Excel::download(new VoyageExpenditure($heads, $filteredVoyage), 'voyage_expenditure_report.xlsx');
     }

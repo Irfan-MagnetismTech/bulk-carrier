@@ -20,105 +20,29 @@
     </style>
 </head>
 <body>
-    @foreach ($portWiseHeads as $port => $heads)
-    <h2 style="text-align: center; font-weight: 600; font-size: 24px; margin: 20px 0;">{{ $port }}</h2>
+    {{-- <h2 style="text-align: center; font-weight: 600; font-size: 24px; margin: 20px 0;">{{ $port }}</h2> --}}
     <table>
         <thead>
 			<tr>
-                <th>Vessel</th>
-                <th>Voyage</th>
-                <th>Arrival Date</th>
-                <th>Sailing Date</th>
+                <th rowspan="2">Vessel</th>
+                <th rowspan="2">Voyage</th>
+                <th rowspan="2">Sailing Date</th>
+                <th rowspan="2">Transit Date</th>
                 @foreach ($heads as $head)
-                    <th colspan="{{ (!empty($head['head']['subheads'])) ? (count($realSubheads[$port][$head['head']['id']]) - 1) : 0 }}">
-                        <center align="center">{{ $head['head']['name'] }}</center>
-                    </th>
-                @endforeach
-            </tr>
-            <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                @foreach ($heads as $head)
-                    @if(count($head['head']['subheads'])>0)
-                        @foreach ($head['head']['subheads'] as $sub_head)
-
-                            @if(in_array($sub_head->id, $portWiseHeadIds[$port]->toArray()))
-                            <th>
-                                {{ $sub_head->name }}
-                            </th>
-                            @endif
-
-                        @endforeach
-                    @else
-                        <th></th>
-                    @endif
-                @endforeach
-            </tr>
-        </thead>
-        <tbody>
-            <!-- portWiseHeadIds -->
-            @if(isset($entryMultiGroup[$port]))
-            @foreach($entryMultiGroup[$port] as $voyPairId => $entries)
-            <tr>
-                <td>{{ $entries->first()->vessel }}</td>
-                <td>{{ $entries->first()->voyage }}</td>
-                <td>{{ \Carbon\Carbon::parse($entries->first()->arrival)->format('d/m/Y \a\t Hi') }}</td>
-                <td>{{ \Carbon\Carbon::parse($entries->first()->sailing)->format('d/m/Y \a\t Hi') }}</td>
-                @foreach ($heads as $head)
-                    @if(count($head['head']['subheads']) <= 0)
-                        <td>
-                            <!-- Real Head -->
-                            <!-- {{ $head['head']['id'] }} -->
-                            {{ (collect($entries)->where('particular_id', $head['head']['id'])->sum('amount_bdt') > 0) ? number_format(collect($entries)->where('particular_id', $head['head']['id'])->sum('amount_bdt'), 2) : null }}
-                        </td>
-                    @else
-                        @foreach ($head['head']['subheads'] as $sub_head)
-                            @if(in_array($sub_head->id, $portWiseHeadIds[$port]->toArray()))
-                            <td>
-                                <!-- Sub Head -->
-                                <!-- {{ $sub_head->id }}  -->
-                                {{ (collect($entries)->where('particular_id', $sub_head->id)->sum('amount_bdt') > 0) ? number_format(collect($entries)->where('particular_id', $sub_head->id)->sum('amount_bdt'), 2) : null }}
-                            </td>
-                            @endif
-                        @endforeach
-                    @endif
-                @endforeach
-            </tr>
-            @endforeach
-            @endif
-        </tbody>
-    </table>
-    @endforeach
-
-
-    <h2 style="text-align: center; font-weight: 600; font-size: 24px; margin: 20px 0;">Other Expenses</h2>
-    <table>
-        <thead>
-			<tr>
-                <th>Vessel</th>
-                <th>Voyage</th>
-                <th>Arrival Date</th>
-                <th>Sailing Date</th>
-                @foreach ($globalHeadEntries as $head)
-
-                    <th colspan="{{ (!empty($head['subheads'])) ? (count($head['subheads'])) : 0 }}">
+                    <th colspan="{{ (!empty($head['opsSubHeads'])) ? count($head['opsSubHeads']) : 0 }}">
                         <center align="center">{{ $head['name'] }}</center>
                     </th>
                 @endforeach
             </tr>
             <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                @foreach ($globalHeadEntries as $head)
-                    @if(count($head['subheads'])>0)
-                        @foreach ($head['subheads'] as $sub_head)
+                @foreach ($heads as $head)
+                    @if(count($head['opsSubHeads'])>0)
+                        @foreach ($head['opsSubHeads'] as $sub_head)
+
                             <th>
                                 {{ $sub_head->name }}
                             </th>
+
                         @endforeach
                     @else
                         <th></th>
@@ -127,33 +51,34 @@
             </tr>
         </thead>
         <tbody>
-            <!-- portWiseHeadIds -->
-            @foreach($entryGroupWithoutPort as $entries)
-            <tr>
-                <td>{{ $entries->first()->vessel }}</td>
-                <td>{{ $entries->first()->voyage }}</td>
-                <td>{{ \Carbon\Carbon::parse($entries->first()->arrival)->format('d/m/Y \a\t Hi') }}</td>
-                <td>{{ \Carbon\Carbon::parse($entries->first()->sailing)->format('d/m/Y \a\t Hi') }}</td>
-                @foreach ($globalHeadEntries as $head)
-                    @if(count($head['subheads']) <= 0)
-                        <td>
-                            <!-- Real Head -->
-                            <!-- {{ $head['id'] }} -->
-                            {{ (collect($entries)->where('particular_id', $head['id'])->sum('amount_bdt') > 0) ? number_format(collect($entries)->where('particular_id', $head['id'])->sum('amount_bdt'), 2) : null }}
-                        </td>
-                    @else
-                        @foreach ($head['subheads'] as $sub_head)
-                            <td>
-                                <!-- Sub Head -->
-                                <!-- {{ $sub_head->id }}  -->
-                                {{ (collect($entries)->where('particular_id', $sub_head->id)->sum('amount_bdt') > 0) ? number_format(collect($entries)->where('particular_id', $sub_head->id)->sum('amount_bdt'), 2) : null }}
+            @if(isset($entryGroups))
+                @foreach($entryGroups as $expense_head_id => $entries)
+                <tr>
+                    <td><nobr>{{ $entries->first()->vessel }}</nobr></td>
+                    <td><nobr>{{ $entries->first()->voyage }}</nobr></td>
+                    <td><nobr>{{ ($entries->first()->sail_date) ? \Carbon\Carbon::parse($entries->first()->sail_date)->format('d/m/Y \a\t h:i A') : '' }}</nobr></td>
+                    <td><nobr>{{ ($entries->first()->transit_date) ? \Carbon\Carbon::parse($entries->first()->transit_date)->format('d/m/Y \a\t h:i A') : ''}}</nobr></td>
+
+                    @foreach ($heads as $head)
+                        @if(count($head['opsSubHeads']) <= 0)
+                            <td style="text-align: right !important;">
+                                {{ (collect($entries)->where('ops_expense_head_id', $head['id'])->sum('amount_bdt') > 0) ? number_format(collect($entries)->where('ops_expense_head_id', $head['id'])->sum('amount_bdt'), 2) : null }}
                             </td>
-                        @endforeach
-                    @endif
+                        @else
+                            @foreach ($head['opsSubHeads'] as $sub_head)
+                                <td style="text-align: right !important;">
+                                    {{ (collect($entries)->where('ops_expense_head_id', $sub_head->id)->sum('amount_bdt') > 0) ? number_format(collect($entries)->where('ops_expense_head_id', $sub_head->id)->sum('amount_bdt'), 2) : null }}
+                                </td>
+                            @endforeach
+                        @endif
+                    @endforeach
+
+
+                </tr>
                 @endforeach
-            </tr>
-            @endforeach
+            @endif
         </tbody>
     </table>
+
 </body>
 </html>

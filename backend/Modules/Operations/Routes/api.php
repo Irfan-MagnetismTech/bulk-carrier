@@ -13,6 +13,8 @@ use Modules\Operations\Http\Controllers\OpsCargoTariffController;
 use Modules\Operations\Http\Controllers\OpsExpenseHeadController;
 use Modules\Operations\Http\Controllers\OpsVesselBunkerController;
 use Modules\Operations\Http\Controllers\OpsVoyageBudgetController;
+use Modules\Operations\Http\Controllers\OpsVoyageReportController;
+use Modules\Operations\Http\Controllers\OpsExpenseReportController;
 use Modules\Operations\Http\Controllers\OpsBulkNoonReportController;
 use Modules\Operations\Http\Controllers\OpsContractAssignController;
 use Modules\Operations\Http\Controllers\OpsVoyageBoatNoteController;
@@ -29,7 +31,6 @@ use Modules\Operations\Http\Controllers\OpsVesselCertificateController;
 use Modules\Operations\Http\Controllers\OpsVesselExpenseHeadController;
 use Modules\Operations\Http\Controllers\OpsVoyageExpenditureController;
 use Modules\Operations\Http\Controllers\OpsMaritimeCertificationController;
-use Modules\Operations\Http\Controllers\OpsVoyageReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -148,4 +149,10 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('engine-temparature-types', fn () => config('businessinfo.engine_temparature_types'));
 
     Route::post('vessel-search', [OpsVesselController::class, 'search']);
+
+
+
+    // Reports
+    Route::post('/port-wise-expense-report', [OpsExpenseReportController::class, 'portWiseExpenditureReport']);
+    // start=2023-12-01&end=2023-12-31&business_unit=TSLL&port=DAOUTKANDI
 });
