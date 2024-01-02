@@ -9,5 +9,9 @@ class AppraisalFormLine extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['appraisal_form_id', 'section_name', 'aspect', 'description', 'answer_type'];
+    protected $fillable = ['appraisal_form_id', 'section_no', 'section_name'];
+
+	public function appraisalFormLineItems(){
+		return $this->hasMany(AppraisalFormLineItem::class);
+	}    
 }

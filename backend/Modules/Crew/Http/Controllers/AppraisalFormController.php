@@ -2,12 +2,13 @@
 
 namespace Modules\Crew\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\AppraisalForm;
+use Modules\Crew\Entities\AppraisalFormLine;
+use Modules\Crew\Entities\AppraisalFormLineItem;
 use Modules\Crew\Http\Requests\AppraisalFormRequest;
 
 class AppraisalFormController extends Controller
@@ -36,14 +37,20 @@ class AppraisalFormController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(AppraisalFormRequest $request)
+    public function store(Request $request)
     {
         try {
             DB::transaction(function () use ($request)
             {
                 $appraisalFormData = $request->only('form_no', 'form_name', 'version', 'description', 'business_unit');
                 $appraisalForm     = AppraisalForm::create($appraisalFormData);
-                $appraisalForm->appraisalFormLines()->createMany($request->appraisalFormLines);
+
+                $appraisalForm->appraisalFormLines()->createMany($request->appraisalFormLines)->map(function ($appraisalFormLine, $key) use ($request)
+                {
+                    $lineItems = $request->appraisalFormLines[$key]['appraisalFormLineItems'];
+                    $appraisalFormLine->appraisalFormLineItems()->createMany($lineItems);
+                });
+
             });
 
             return response()->success('Created Succesfully', [], 201);
@@ -63,7 +70,8 @@ class AppraisalFormController extends Controller
     public function show(AppraisalForm $appraisalForm)
     {
         try {
-            return response()->success('Retrieved succesfully', $appraisalForm->load('appraisalFormLines'), 200);
+
+            return response()->success('Retrieved succesfully', $appraisalForm->load('appraisalFormLines.appraisalFormLineItems'), 200);
         }
         catch (QueryException $e)
         {
@@ -78,18 +86,24 @@ class AppraisalFormController extends Controller
      * @param  \App\Models\AppraisalForm  $appraisalForm
      * @return \Illuminate\Http\Response
      */
-    public function update(AppraisalFormRequest $request, AppraisalForm $appraisalForm)
+    public function update(Request $request, AppraisalForm $appraisalForm)
     {
         try {
             DB::transaction(function () use ($request, $appraisalForm)
             {
                 $appraisalFormData = $request->only('form_no', 'form_name', 'version', 'description', 'business_unit');
                 $appraisalForm->update($appraisalFormData);
-                $appraisalForm->appraisalFormLines()->delete();
-                $appraisalForm->appraisalFormLines()->createMany($request->appraisalFormLines);
+                $appraisalForm->appraisalFormLines()->delete(); 
 
-                return response()->success('Updated succesfully', $appraisalForm, 202);
+                $appraisalForm->appraisalFormLines()->createMany($request->appraisalFormLines)->map(function ($appraisalFormLine, $key) use ($request)
+                {
+                    $lineItems = $request->appraisalFormLines[$key]['appraisalFormLineItems'];
+                    $appraisalFormLine->appraisalFormLineItems()->createMany($lineItems);
+                });
+
             });
+
+            return response()->success('Updated Succesfully', [], 201);
         }
         catch (QueryException $e)
         {

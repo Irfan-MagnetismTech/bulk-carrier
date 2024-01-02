@@ -16,7 +16,8 @@ export default function useAppraisalForm() {
 
     const appraisalFormLineObject ={
                             section_name: '',
-                            aspects: [
+                            section_no: '',
+                            appraisalFormLineItems: [
                                 {
                                     aspect: '',
                                     description: '',
@@ -88,7 +89,7 @@ export default function useAppraisalForm() {
 
     async function storeAppraisalForm(form) {
 
-        // if (!checkUniqueArray(form)) return;
+        if (!checkUniqueArray(form)) return;
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -127,7 +128,7 @@ export default function useAppraisalForm() {
     }
 
     async function updateAppraisalForm(form, appraisalFormId) {
-        // if (!checkUniqueArray(form)) return;
+        if (!checkUniqueArray(form)) return;
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -139,7 +140,7 @@ export default function useAppraisalForm() {
             );
             appraisalForm.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.appraisals.index" });
+            await router.push({ name: "crw.appraisal-forms.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -169,17 +170,27 @@ export default function useAppraisalForm() {
         }
     } 
 
-    function checkUniqueArray(form){
+    function checkUniqueArray(form) {
         let isHasError = false;
         const messages = ref([]);
-        const hasDuplicates = form.description.some((des, index) => {
-            if (form.description.filter(val => val.key === des.key)?.length > 1) {
-                let data = `Duplicate Key [line no: ${index + 1}]`;
+        const hasDuplicates = form.appraisalFormLines.some((appraisalFormLine, index) => {
+            if (form.appraisalFormLines.filter(val => val.section_name === appraisalFormLine.section_name)?.length > 1) {
+                let data = `Duplicate Section Name [Section no: ${index + 1}]`;
                 messages.value.push(data);
-                form.description[index].isKeyDuplicate = true;
+                form.appraisalFormLines[index].isSectionDuplicate = true;
             } else {
-                form.description[index].isKeyDuplicate = false;
+                form.appraisalFormLines[index].isSectionDuplicate = false;
             }
+
+            appraisalFormLine.appraisalFormLineItems.some((appraisalFormLineItem, appraisalFormLineItemIndex) => {
+                if (appraisalFormLine.appraisalFormLineItems.filter(val => val.aspect === appraisalFormLineItem.aspect)?.length > 1) {
+                    let data = `Duplicate Aspect Name [Section no: ${index + 1} , Aspect no: ${appraisalFormLineItemIndex+1}]`;
+                    messages.value.push(data);
+                    appraisalFormLine.appraisalFormLineItems[appraisalFormLineItemIndex].isAspectDuplicate = true;
+                } else {
+                    appraisalFormLine.appraisalFormLineItems[appraisalFormLineItemIndex].isAspectDuplicate = false;
+                }
+            });
         });
 
         if (messages.value.length > 0) {

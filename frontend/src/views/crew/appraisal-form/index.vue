@@ -185,6 +185,7 @@ onMounted(() => {
            
             <td>
               <nobr>
+                <action-button :action="'show'" :to="{ name: 'crw.appraisal-forms.show', params: { appraisalFormId: appraisalForm?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'crw.appraisal-forms.edit', params: { appraisalFormId: appraisalForm?.id } }"></action-button>
                 <action-button @click="confirmDelete(appraisalForm?.id)" :action="'delete'"></action-button>
               </nobr>

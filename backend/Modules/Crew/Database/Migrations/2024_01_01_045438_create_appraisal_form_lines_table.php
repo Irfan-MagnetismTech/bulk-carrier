@@ -16,10 +16,9 @@ return new class extends Migration
         Schema::create('appraisal_form_lines', function (Blueprint $table) {
             $table->id();
 			$table->foreignId('appraisal_form_id')->constrained('appraisal_forms', 'id')->cascadeOnDelete();
+            $table->string('section_no');
             $table->string('section_name');
-            $table->string('aspect');
-            $table->text('description')->nullable();
-            $table->enum('answer_type', ['Number', 'Boolean', 'Grade']);            
+
             $table->timestamps();
         });
     }
