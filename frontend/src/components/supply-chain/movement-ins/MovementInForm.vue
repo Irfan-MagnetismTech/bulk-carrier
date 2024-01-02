@@ -204,7 +204,6 @@
     import DropZoneV2 from '../../DropZoneV2.vue';
     import {useStore} from "vuex";
     import env from '../../../config/env';
-    import ErrorComponent from "../../utils/ErrorComponent.vue";
     import cloneDeep from 'lodash/cloneDeep';
     
     import ErrorComponent from "../../utils/ErrorComponent.vue";
