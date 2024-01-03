@@ -116,33 +116,34 @@ class ScmMaterialCategoryController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     * @param ScmMaterialCategory $material_category
+     * @param ScmMaterialCategory $materialCategory
      * @return JsonResponse
      */
-    public function destroy(ScmMaterialCategory $material_category): JsonResponse
+    public function destroy(ScmMaterialCategory $materialCategory): JsonResponse
     {
         try {
-            // if (count($material_category->children) > 0) {
+            // if (count($materialCategory->children) > 0) {
             //     return response()->error('Category has Children', 500);
             // }
             //if id is 1 then return error
-            if ($material_category->id === 1) {
+            if ($materialCategory->id === 1) {
 
                 return response()->error('Category cannot be deleted', 501);
             }
-            $material_category->delete();
+            $materialCategory->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (QueryException $e) {
 
-            return response()->error($e->getMessage(), 500);
+            return response()->json($materialCategory->preventDeletionIfRelated(), 422);
         }
     }
 
     public function searchMaterialCategory(): JsonResponse
     {
         $materialCategory = ScmMaterialCategory::query()
-            ->with('parent')
+            // ->with('parent')
+            ->leafNodes()
             ->when(request()->has('self_id'), function ($query) {
                 $query->where('id', '!=', request()->self_id);
             })

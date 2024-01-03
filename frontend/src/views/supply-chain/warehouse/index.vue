@@ -222,8 +222,8 @@ onMounted(() => {
           <tr v-for="(warehouse, index) in warehouses?.data" :key="warehouse.id">  
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td class="px-4 py-3 text-sm">{{ warehouse.name }}</td>
-              <td class="px-4 py-3 text-sm">{{ warehouse.scmWarehouseContactPerson.name }}</td>
-              <td class="px-4 py-3 text-sm">{{ warehouse.scmWarehouseContactPerson.phone }}</td>
+              <td class="px-4 py-3 text-sm">{{ warehouse.scmWarehouseContactPerson?.name }}</td>
+              <td class="px-4 py-3 text-sm">{{ warehouse.scmWarehouseContactPerson?.phone }}</td>
             <td>
               <span :class="warehouse?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ warehouse?.business_unit }}</span>
             </td>

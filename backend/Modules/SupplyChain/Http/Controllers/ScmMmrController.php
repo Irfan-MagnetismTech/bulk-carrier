@@ -16,7 +16,7 @@ use Modules\SupplyChain\Http\Requests\ScmMmrRequest;
 
 class ScmMmrController extends Controller
 {
-    function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    function __construct()
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -57,14 +57,14 @@ class ScmMmrController extends Controller
     {
         $requestData = $request->except('ref_no', 'mmr_composite_key');
 
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmMmr::class, 'MMR');
+        $requestData['ref_no'] = UniqueId::generate(ScmMmr::class, 'MMR');
 
         try {
             DB::beginTransaction();
 
             $movementRequisition = ScmMmr::create($requestData);
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMmrLines, $movementRequisition->id, 'scm_material_id', 'mmr');
+            $linesData = CompositeKey::generateArray($request->scmMmrLines, $movementRequisition->id, 'scm_material_id', 'mmr');
 
             $movementRequisition->scmMmrLines()->createMany($linesData);
 
@@ -94,8 +94,8 @@ class ScmMmrController extends Controller
                     'scm_material_id' => $scmMmrLine->scm_material_id,
                     'scmMaterial' => $scmMmrLine->scmMaterial,
                     'unit' => $scmMmrLine->unit,
-                    'present_stock' => (new CurrentStock)->count($scmMmrLine->scm_material_id, $movementRequisition->to_warehouse_id),
-                    'available_stock' => (new CurrentStock)->count($scmMmrLine->scm_material_id, $movementRequisition->from_warehouse_id),
+                    'present_stock' => CurrentStock::count($scmMmrLine->scm_material_id, $movementRequisition->to_warehouse_id),
+                    'available_stock' => CurrentStock::count($scmMmrLine->scm_material_id, $movementRequisition->from_warehouse_id),
                     'quantity' => $scmMmrLine->quantity,
                     'mmr_composite_key' => $scmMmrLine->mmr_composite_key,
                 ];
@@ -127,7 +127,7 @@ class ScmMmrController extends Controller
 
             $movementRequisition->scmMmrLines()->delete();
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMmrLines, $movementRequisition->id, 'scm_material_id', 'mmr');
+            $linesData = CompositeKey::generateArray($request->scmMmrLines, $movementRequisition->id, 'scm_material_id', 'mmr');
 
             $movementRequisition->scmMmrLines()->createMany($linesData);
 
@@ -165,8 +165,8 @@ class ScmMmrController extends Controller
     public function getCurrentStockByWarehouse(): JsonResponse
     {
         $stockData = [
-            'from_warehouse_stock' => (new CurrentStock)->count(request()->scm_material_id, request()->from_warehouse_id),
-            'to_warehouse_stock' => (new CurrentStock)->count(request()->scm_material_id, request()->to_warehouse_id)
+            'from_warehouse_stock' => CurrentStock::count(request()->scm_material_id, request()->from_warehouse_id),
+            'to_warehouse_stock' => CurrentStock::count(request()->scm_material_id, request()->to_warehouse_id)
         ];
 
         return response()->success('Search result', $stockData, 200);
@@ -211,7 +211,7 @@ class ScmMmrController extends Controller
 
                 $data = [
                     'scmMmrLines' => $scmMmr->scmMmrLines->map(function ($item) use ($scmMmr) {
-                        $currentStock = (new CurrentStock)->count($item->scm_material_id, $scmMmr->from_warehouse_id);
+                        $currentStock = CurrentStock::count($item->scm_material_id, $scmMmr->from_warehouse_id);
                         $remainingQty = $item->quantity - $item->scmMoLines->sum('quantity');
                         $maxQty = $currentStock > $remainingQty ? $remainingQty : $currentStock;
 
@@ -222,7 +222,7 @@ class ScmMmrController extends Controller
                             'quantity' => $item->quantity,
                             'mmr_quantity' => $item->quantity,
                             'mmr_composite_key' => $item->mmr_composite_key,
-                            'current_stock' => (new CurrentStock)->count($item->scm_material_id, $scmMmr->from_warehouse_id),
+                            'current_stock' => CurrentStock::count($item->scm_material_id, $scmMmr->from_warehouse_id),
                             'max_quantity' => $maxQty,
                             'remaining_quantity' => $remainingQty,
                             // 'rate' => $item->rate,
@@ -252,7 +252,7 @@ class ScmMmrController extends Controller
                 ->where('scm_mmr_id', request()->mmr_id)
                 ->get()
                 ->map(function ($item) {
-                    $currentStock = (new CurrentStock)->count($item->scm_material_id, $item->scmMmr->from_warehouse_id);
+                    $currentStock = CurrentStock::count($item->scm_material_id, $item->scmMmr->from_warehouse_id);
                     $remainingQty = $item->quantity - $item->scmMoLines->sum('quantity');
                     if (request()->mo_id) {
                         $mmrQty = $remainingQty + $item->scmMoLines->where('scm_mo_id', request()->mo_id)->where('mmr_composite_key', $item->mmr_composite_key)->first()->quantity;

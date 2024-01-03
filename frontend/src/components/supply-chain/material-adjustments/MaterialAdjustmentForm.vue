@@ -6,7 +6,7 @@
   </div>
   <div class="input-group !w-1/4">
       <label class="label-group">
-          <span class="label-item-title">Ref No<span class="text-red-500">*</span></span>
+          <span class="label-item-title">Ref No</span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
           <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
       </label>
@@ -44,7 +44,7 @@
   </div> 
   <div class="input-group !w-3/4">
     <label class="label-group">
-          <span class="label-item-title">Remarks <span class="text-red-500">*</span></span>
+          <span class="label-item-title">Remarks</span>
           <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
           <Error v-if="errors?.remarks" :errors="errors.remarks" />
     </label>
@@ -89,12 +89,12 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmAdjustmentLines[index].rate" class="form-input">
+                 <input type="text" v-model="form.scmAdjustmentLines[index].rate" min="1" class="form-input">
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmAdjustmentLines[index].quantity" class="form-input">
+                 <input type="text" v-model="form.scmAdjustmentLines[index].quantity" min="1" class="form-input">
               </label>
             </td>
             <td class="px-1 py-1 text-center">

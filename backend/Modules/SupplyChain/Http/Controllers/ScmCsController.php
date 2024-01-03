@@ -2,24 +2,25 @@
 
 namespace Modules\SupplyChain\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmCs;
-use Modules\SupplyChain\Entities\ScmCsMaterial;
-use Modules\SupplyChain\Entities\ScmCsMaterialVendor;
+use Modules\SupplyChain\Services\UniqueId;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmCsVendor;
+use Modules\SupplyChain\Services\CompositeKey;
+use Modules\SupplyChain\Entities\ScmCsMaterial;
 use Modules\SupplyChain\Http\Requests\ScmCsRequest;
+use Modules\SupplyChain\Entities\ScmCsMaterialVendor;
 use Modules\SupplyChain\Http\Requests\ScmQuotationRequest;
 use Modules\SupplyChain\Http\Requests\SupplierSelectionRequest;
-use Modules\SupplyChain\Services\CompositeKey;
-use Modules\SupplyChain\Services\UniqueId;
 
 class ScmCsController extends Controller
 {
-    function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    function __construct(private CompositeKey $compositeKey)
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -33,7 +34,7 @@ class ScmCsController extends Controller
     public function index()
     {
         try {
-           
+
             $scmCs = ScmCs::query()
                 ->with('scmPr', 'scmWarehouse')
                 ->globalSearch(request()->all());
@@ -52,7 +53,7 @@ class ScmCsController extends Controller
     public function store(ScmCsRequest $request)
     {
         $requestData = $request->except('ref_no');
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmCs::class, 'CS');
+        $requestData['ref_no'] = UniqueId::generate(ScmCs::class, 'CS');
         try {
             DB::beginTransaction();
             $scmMi = ScmCs::create($requestData);
@@ -85,7 +86,7 @@ class ScmCsController extends Controller
     {
         $materialCs = ScmCs::find($id);
         // $materialCs->load('scmPr', 'scmWarehouse');
-        $materialCs->load('scmCsMaterials.scmMaterial','scmPr', 'scmWarehouse');
+        $materialCs->load('scmCsMaterials.scmMaterial', 'scmPr', 'scmWarehouse');
         try {
             return response()->success('Detail data', $materialCs, 200);
         } catch (\Exception $e) {
@@ -141,9 +142,10 @@ class ScmCsController extends Controller
             $materialCs->delete();
             DB::commit();
             return response()->success('Data deleted succesfully', null, 203);
-        } catch (\Exception $e) {
+        } catch (QueryException $e) {
             DB::rollBack();
-            return response()->error($e->getMessage(), 500);
+
+            return response()->json($materialCs->preventDeletionIfRelated(), 422);
         }
     }
 
@@ -195,7 +197,8 @@ class ScmCsController extends Controller
             $scmCsVendor = ScmCsVendor::create($requestData);
 
             foreach ($request->scmCsMaterialVendors as $key => $value) {
-                $csMaterial = ScmCsMaterial::where(['scm_cs_id' => $scmCs->id,
+                $csMaterial = ScmCsMaterial::where([
+                    'scm_cs_id' => $scmCs->id,
                     'scm_material_id' => $value['scm_material_id']
                 ])->first();
 
@@ -273,7 +276,7 @@ class ScmCsController extends Controller
             $scmCsVendor->scmCsMaterialVendors->each(function ($item) {
                 $item->delete();
             });
-           
+
             foreach ($request->scmCsMaterialVendors as $key => $value) {
                 $csMaterial = ScmCsMaterial::where([
                     'scm_cs_id' => $scmCsVendor->scm_cs_id,
@@ -297,8 +300,8 @@ class ScmCsController extends Controller
                     'negotiated_price' => $request->scmCsMaterialVendors[$key]['negotiated_price'] ?? null,
                 ]);
 
-///need to add selected supplier later
-}
+                ///need to add selected supplier later
+            }
             DB::commit();
             return response()->success('Data updated succesfully', $scmCsVendor, 202);
         } catch (\Exception $e) {
@@ -312,10 +315,10 @@ class ScmCsController extends Controller
         $scmCs = ScmCs::with('scmCsMaterials.scmMaterial', 'scmPr', 'scmWarehouse')->find($csId);
         $CsVendor = ScmCsVendor::with('scmVendor')->where('scm_cs_id', $csId)->get()->groupBy('scm_vendor_id');
         $scmCs['scmCsVendor'] = $CsVendor;
-        $csVendorMaterial = ScmCsMaterialVendor::with('scmCsMaterial.scmMaterial')->where('scm_cs_id', $csId)->get()->groupBy(['scm_material_id','scm_vendor_id']); 
-        $scmCs['scmCsMaterialVendor'] = $csVendorMaterial; 
+        $csVendorMaterial = ScmCsMaterialVendor::with('scmCsMaterial.scmMaterial')->where('scm_cs_id', $csId)->get()->groupBy(['scm_material_id', 'scm_vendor_id']);
+        $scmCs['scmCsMaterialVendor'] = $csVendorMaterial;
         $csMaterial = ScmCsMaterial::with('scmMaterial')->where('scm_cs_id', $csId)->get()->groupBy('scm_material_id');
-        $scmCs['scmCsMaterial'] = $csMaterial; 
+        $scmCs['scmCsMaterial'] = $csMaterial;
 
         try {
             return response()->success('Detail data', $scmCs, 200);
@@ -326,23 +329,23 @@ class ScmCsController extends Controller
 
     public function selectedSupplierstore(SupplierSelectionRequest $request)
     {
-       
-        $data = $request->only('id', 'selection_ground','auditor_remarks_date','auditor_remarks','scmCsVendor');
-       
+
+        $data = $request->only('id', 'selection_ground', 'auditor_remarks_date', 'auditor_remarks', 'scmCsVendor');
+
         try {
             $cs = ScmCs::find($data['id']);
-                $cs->update(
-                    [
+            $cs->update(
+                [
                     'selection_ground' => $data['selection_ground'],
                     'auditor_remarks_date' => $data['auditor_remarks_date'],
                     'auditor_remarks' => $data['auditor_remarks'],
-                    ]
-                );
-                foreach ($data['scmCsVendor'] as $key => $value) {
-                    $csVendor = ScmCsVendor::find($value[0]['id']);
-                    $csVendor->update(['is_selected' => $value[0]['is_selected']]);
-                }
-       
+                ]
+            );
+            foreach ($data['scmCsVendor'] as $key => $value) {
+                $csVendor = ScmCsVendor::find($value[0]['id']);
+                $csVendor->update(['is_selected' => $value[0]['is_selected']]);
+            }
+
             DB::commit();
             return response()->success('Data updated succesfully', $cs, 202);
         } catch (\Exception $e) {
