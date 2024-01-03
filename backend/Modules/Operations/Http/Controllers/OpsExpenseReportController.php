@@ -186,14 +186,14 @@ class OpsExpenseReportController extends Controller
             return $voyage->opsVesselBunkers->groupBy('type');
         });
 
-        $vesselBunkers = OpsVessel::with('opsBunkers.scmMaterial')->where('id', $ops_vessel_id)->first();
+        $allBunkers = OpsVessel::with('opsBunkers.scmMaterial')->where('id', $ops_vessel_id)->first();
 
         $voyageIds = $voyages->pluck('id');
 
-        $view = view('operations::reports.single-vessel-bunker-report')->with([
-            'vesselBunkers' => $vesselBunkers,
+        return view('operations::reports.single-vessel-bunker-report')->with([
+            'allBunkers' => $allBunkers,
             'voyages' => $voyages
-        ])->render();
+        ]);
 
         return response()->json([
             'value' => $view
