@@ -4,10 +4,10 @@
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
     <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
   </div>
-  <div class="input-group !w-1/4">
+  <div class="input-group !w-1/4" v-if="formType == 'edit'">
       <label class="label-group">
           <span class="label-item-title">MO Ref<span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
+          <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'"/>
       </label>
   </div>
   <div class="input-group">
@@ -34,7 +34,7 @@
       </label>
       <label class="label-group">
           <span class="label-item-title">Transfer Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
+          <VueDatePicker v-model="form.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
       </label>
   </div>
 
@@ -122,7 +122,7 @@
     </div>
   </div>
 
-
+<ErrorComponent :errors="errors"></ErrorComponent> 
 </template>
 
 
@@ -137,6 +137,7 @@
     import DropZoneV2 from '../../DropZoneV2.vue';
     import {useStore} from "vuex";
     import env from '../../../config/env';
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
     import cloneDeep from 'lodash/cloneDeep';
     import useStockLedger from '../../../composables/supply-chain/useStockLedger';
     import useMovementRequisition from '../../../composables/supply-chain/useMovementRequisition';

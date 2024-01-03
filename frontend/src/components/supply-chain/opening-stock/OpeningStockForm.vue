@@ -109,7 +109,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
   <div class="input-group !w-1/2">
       <label class="label-group">
           <span class="label-item-title">Date<span class="text-red-500">*</span></span>
-          <input type="date" required v-model="form.date" class="form-input" name="date" :id="'date'" />
+          <VueDatePicker v-model="form.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
           <!-- <Error v-if="errors?.date" :errors="errors.date"  /> -->
       </label>
       <label class="label-group">

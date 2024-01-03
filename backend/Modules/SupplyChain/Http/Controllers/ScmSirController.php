@@ -2,7 +2,6 @@
 
 namespace Modules\SupplyChain\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
@@ -19,7 +18,7 @@ use Modules\SupplyChain\Http\Requests\ScmSirRequest;
 
 class ScmSirController extends Controller
 {
-    function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    function __construct()
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -35,7 +34,7 @@ class ScmSirController extends Controller
     {
         try {
             $storeIssuereturns = ScmSir::with('scmSirLines.scmMaterial', 'scmWarehouse', 'createdBy')
-            ->globalSearch(request()->all());
+                ->globalSearch(request()->all());
             return response()->success('Data list', $storeIssuereturns, 200);
         } catch (\Exception $e) {
 
@@ -51,7 +50,7 @@ class ScmSirController extends Controller
     {
         $requestData = $request->except('ref_no', 'sr_composite_key');
 
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmSir::class, 'SIR');
+        $requestData['ref_no'] = UniqueId::generate(ScmSir::class, 'SIR');
 
         $dataForStockLedger = [];
 
@@ -118,7 +117,7 @@ class ScmSirController extends Controller
             DB::beginTransaction();
 
             $scmSir = ScmSir::create($requestData);
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSirLines, $scmSir->id, 'scm_material_id', 'sir');
+            $linesData = CompositeKey::generateArray($request->scmSirLines, $scmSir->id, 'scm_material_id', 'sir');
             $scmSir->scmSirLines()->createMany($linesData);
             $scmSir->stockable()->createMany($dataForStockLedger);
 
@@ -153,7 +152,7 @@ class ScmSirController extends Controller
                     'si_quantity' => $scmSirLine->scmSiLine->quantity ?? null,
                     'max_quantity' => $maxQuantity,
                     // 'sr_quantity' => $scmSirLine->scmSrLine->quantity,
-                    // 'current_stock' => (new CurrentStock)->count($scmSirLine->scm_material_id, $storeIssue->scm_warehouse_id),
+                    // 'current_stock' => CurrentStock::count($scmSirLine->scm_material_id, $storeIssue->scm_warehouse_id),
                     'sr_composite_key' => $scmSirLine->sr_composite_key ?? null,
                     'si_composite_key' => $scmSirLine->si_composite_key ?? null,
                 ];
@@ -187,7 +186,7 @@ class ScmSirController extends Controller
 
             $storeIssueReturn->scmSirLines()->delete();
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSirLines, $storeIssueReturn->id, 'scm_material_id', 'sir');
+            $linesData = CompositeKey::generateArray($request->scmSirLines, $storeIssueReturn->id, 'scm_material_id', 'sir');
 
             $storeIssueReturn->scmSirLines()->createMany($linesData);
 

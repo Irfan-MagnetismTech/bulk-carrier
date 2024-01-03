@@ -42,24 +42,13 @@ export default function useMovementIn() {
         scm_mo_id: null,
         business_unit: '',
         scmMiLines: [
-            {
-                scmMaterial: '',
-                scm_material_id: '',
-                unit: '',
-                remarks: '',
-                mi_composite_key: '',
-                mmr_quantity: 0.00,
-                mo_quantity: 0.00,
-                quantity: 0.00
-            }
         ],
         scmMiShortage: {
             shortage_type: '',
             scmWarehouse: '',
             scm_warehouse_id: null,
             acc_cost_center_id: null,
-            scmMiShortageLines: [
-            ]
+            scmMiShortageLines: []
         },
     });
     const materialObject = {
@@ -143,7 +132,6 @@ export default function useMovementIn() {
         try {
             const { data, status } = await Api.get(`/${BASE}/movement-ins/${movementInId}`);
             movementIn.value = data.value;
-console.log(movementIn.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

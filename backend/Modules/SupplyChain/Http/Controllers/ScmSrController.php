@@ -15,7 +15,7 @@ use Modules\SupplyChain\Services\CurrentStock;
 
 class ScmSrController extends Controller
 {
-    function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    function __construct()
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -48,13 +48,13 @@ class ScmSrController extends Controller
     {
         $requestData = $request->except('ref_no', 'sr_composite_key');
 
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmSr::class, 'SR');
+        $requestData['ref_no'] = UniqueId::generate(ScmSr::class, 'SR');
 
         try {
             DB::beginTransaction();
 
             $scmSr = ScmSr::create($requestData);
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSrLines, $scmSr->id, 'scm_material_id', 'sr');
+            $linesData = CompositeKey::generateArray($request->scmSrLines, $scmSr->id, 'scm_material_id', 'sr');
             $scmSr->scmSrLines()->createMany($linesData);
 
             DB::commit();
@@ -97,7 +97,7 @@ class ScmSrController extends Controller
 
             $storeRequisition->scmSrLines()->delete();
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmSrLines, $storeRequisition->id, 'scm_material_id', 'sr');
+            $linesData = CompositeKey::generateArray($request->scmSrLines, $storeRequisition->id, 'scm_material_id', 'sr');
 
             $storeRequisition->scmSrLines()->createMany($linesData);
 
@@ -162,7 +162,7 @@ class ScmSrController extends Controller
             ->where('scm_sr_id', request()->sr_id)
             ->get()
             ->map(function ($item) {
-                $currentStock = (new CurrentStock)->count($item->scm_material_id, $item->scmSr->scm_warehouse_id);
+                $currentStock = CurrentStock::count($item->scm_material_id, $item->scmSr->scm_warehouse_id);
                 $srQty = $item->quantity - $item->scmSiLines->sum('quantity');
                 if (request()->si_id) {
                     $data1 = $item->scmSiLines->where('scm_si_id', request()->si_id)->where('sr_composite_key', $item->sr_composite_key)->first()->quantity ?? 0;

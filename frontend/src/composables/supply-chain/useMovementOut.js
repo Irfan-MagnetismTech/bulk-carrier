@@ -200,12 +200,14 @@ console.log(movementOut.value);
         }
     }
 
-    async function getMmrWiseMo(business_unit,mmrId) {
+    async function getMmrWiseMo(business_unit,mmrId,mo_id = false ,isEdit = false) {
         try {
             const {data, status} = await Api.get(`/${BASE}/search-mo`,{
                 params: {
                     mmr_id: mmrId,
                     business_unit: business_unit,
+                    isEdit: isEdit,
+                    mo_id: mo_id,
                 },
             });
             filteredMovementOuts.value = data.value;
