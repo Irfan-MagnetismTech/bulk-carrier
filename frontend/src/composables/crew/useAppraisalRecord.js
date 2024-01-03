@@ -24,6 +24,7 @@ export default function useAppraisalRecord() {
         appraisal_form: '', 
         completed_assignment: '',
         completed_assignment_id: '',
+        appraisal_date: '',
         appraisalRecordLines: [],
     });
 

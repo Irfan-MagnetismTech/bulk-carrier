@@ -113,6 +113,13 @@
             <input type="text" v-model="form.total_marks" placeholder="Total Marks" class="form-input vms-readonly-input" readonly />
             <Error v-if="errors?.total_marks" :errors="errors.total_marks" />
         </label>
+        
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Appraisal Date</span>
+            <VueDatePicker v-model="form.appraisal_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+            <Error v-if="errors?.appraisal_date" :errors="errors.appraisal_date" />
+        </label>
+
       </div>
 
       <!-- <div class="grid grid-cols-1">
@@ -211,6 +218,8 @@
   // const { getItemCodeByGroupId } = useItem();
   // const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups, isItemGroupLoading } = useItemGroup();
   const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+  const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
+
   const icons = useHeroIcon();
   
   const props = defineProps({
