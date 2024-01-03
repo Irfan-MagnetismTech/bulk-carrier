@@ -100,13 +100,9 @@ class OpsBunkerReportController extends Controller
             return $voyage->opsVesselBunkers->groupBy('type');
         });
 
-        $allBunkers = OpsVessel::with('opsBunkers.scmMaterial')->where('id', $ops_vessel_id)->first();
+        $allBunkers = OpsVesselBunkerService::getBunkers($ops_vessel_id, null);
 
-        $allBunkers = OpsVesselBunkerService::getBunkers(2, null);
-
-        dd($allBunkers);
-
-        $voyageIds = $voyages->pluck('id');
+        
 
         return view('operations::reports.single-vessel-bunker-report')->with([
             'allBunkers' => $allBunkers,

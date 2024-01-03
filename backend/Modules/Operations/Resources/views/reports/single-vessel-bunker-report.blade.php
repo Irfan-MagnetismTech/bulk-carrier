@@ -26,24 +26,16 @@
 			<tr>
                 <th rowspan="2">Vessel</th>
                 <th rowspan="2">Voyage</th>
-                <th rowspan="2">Bunker Used</th>
-                <th rowspan="2">Bunker Purchased</th>
-                <th rowspan="2">Final Stock</th>
+                <th colspan="{{ count($allBunkers) }}">Bunker Used</th>
+                <th colspan="{{ count($allBunkers) }}">Bunker Purchased</th>
+                <th colspan="{{ count($allBunkers) }}">Final Stock</th>
             </tr>
             <tr>
-                {{-- @foreach ($heads as $head)
-                    @if(count($head['opsSubHeads'])>0)
-                        @foreach ($head['opsSubHeads'] as $sub_head)
-
-                            <th>
-                                {{ $sub_head->name }}
-                            </th>
-
-                        @endforeach
-                    @else
-                        <th></th>
-                    @endif
-                @endforeach --}}
+                @for ($i = 1; $i < 4; $i++)
+                    @foreach($allBunkers as $bunker)
+                    <th> {{ $bunker['name'] }} </th>
+                    @endforeach
+                @endfor
             </tr>
         </thead>
         <tbody>
