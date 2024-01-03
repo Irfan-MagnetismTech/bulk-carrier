@@ -40,11 +40,12 @@ class CrwCrewAssignmentController extends Controller
     public function store(CrwCrewAssignmentRequest $request)
     {
         try {
-            $crwCrewAssignmentData = $request->only('ops_vessel_id', 'crw_crew_id', 'position_onboard', 'joining_date', 'joining_port_code', 'duration', 'remarks', 'business_unit');
-            $crwCrewAssignmentData['assignment_code'] = UniqueId::generate(CrwCrewAssignment::class, 'ASGMNT');
+            $crwCrewAssignmentData = $request->only('ops_vessel_id', 'assignment_code', 'crw_crew_id', 'position_onboard', 'joining_date', 'joining_port_code', 'duration', 'remarks', 'business_unit');
             $crwCrewAssignment     = CrwCrewAssignment::create($crwCrewAssignmentData);
+            $assignmentCode = 'ASGMNT-'.date('Y').'-'.$crwCrewAssignment->id;
+            $crwCrewAssignment->update(['assignment_code' => $assignmentCode]);
 
-            return response()->success('Created Succesfully', $crwCrewAssignment, 201);
+            return response()->success('Created Successfully', $crwCrewAssignment, 201);
         }
         catch (QueryException $e)
         {
@@ -82,7 +83,7 @@ class CrwCrewAssignmentController extends Controller
             $crwCrewAssignmentData = $request->only('ops_vessel_id', 'crw_crew_id', 'position_onboard', 'joining_date', 'joining_port_code', 'duration', 'remarks', 'business_unit');
             $crwCrewAssignment->update($crwCrewAssignmentData);
 
-            return response()->success('Updated succesfully', $crwCrewAssignment, 202);
+            return response()->success('Updated successfully', $crwCrewAssignment, 202);
         }
         catch (QueryException $e)
         {

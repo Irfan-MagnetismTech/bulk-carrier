@@ -11,6 +11,7 @@ export default function usePayrollBatch() {
     const payrollBatches = ref([]);
     const monthlyAttendance = ref({});
     const isTableLoading = ref(false);
+    const isAttendanceCrewAvailable = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
     const payrollBatch = ref( {
@@ -75,8 +76,6 @@ export default function usePayrollBatch() {
     }
 
     async function storePayrollBatch(form) {
-
-        console.log("DATA: "  ,form);
 
         //for addition
         let additionBatchHeadLines = form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'addition');
@@ -183,10 +182,6 @@ export default function usePayrollBatch() {
                 });
             }
 
-            // for addition
-            // data.value.crwPayrollBatchHeadLines.filter(item => item.head_type === 'addition').forEach((additionItem,additionItemIndex) => {
-            //     previousHeadLines.filter(item => item.head_type === 'addition' && item.crw_crew_id === additionItem.crew_id)
-            // });
             let grouped = {};
 
             previousHeadLines.forEach(item => {
@@ -201,20 +196,13 @@ export default function usePayrollBatch() {
                 items: grouped[key]
             }));
 
-            //console.log("data.value.crwPayrollBatchHeadLines", data.value.crwPayrollBatchHeadLines);
-
             data.value.crwPayrollBatchHeadLines.forEach((batchHeadLine,batchHeadLineIndex) => {
-                console.log("DATAA", grouped[batchHeadLineIndex]['items']);
                 batchHeadLine.crew_batch_heads.forEach((crwItem,crwItemIndex) => {
                     crwItem.amount = grouped[batchHeadLineIndex]['items'][crwItemIndex].amount;
                 });
                 batchHeadLine.amount = batchHeadLine.crew_batch_heads.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
-                //batchHeadLine.crew_batch_heads = grouped[batchHeadLineIndex]['items'];
             });
-
-
             //prepare data
-
 
             payrollBatch.value = data.value;
             notification.showSuccess(status);
@@ -229,11 +217,49 @@ export default function usePayrollBatch() {
 
     async function updatePayrollBatch(form, crewPayrollBatchId) {
 
+        let additionBatchHeadLines = form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'addition');
+
+        if(additionBatchHeadLines){
+            form.crwPayrollBatchHeads.filter(item => item.head_type === 'addition').forEach((batchHead,batchHeadIndex) => {
+                batchHead.crwPayrollBatchHeadLines = [];
+                additionBatchHeadLines.filter(item => item.head_type === 'addition').forEach((batchHeadLine,batchHeadLineIndex) => {
+
+                    let obj = {
+                        crew_id: batchHeadLine?.crew_id,
+                        head_type: batchHeadLine?.head_type,
+                        amount: batchHeadLine.crew_batch_heads[batchHeadIndex].amount,
+                        particular: batchHead?.head_name,
+                    };
+                    batchHead.crwPayrollBatchHeadLines.push(obj);
+                });
+            });
+        }
+
+        //for deduction
+        let deductionBatchHeadLines = form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'deduction');
+
+        if(deductionBatchHeadLines){
+            form.crwPayrollBatchHeads.filter(item => item.head_type === 'deduction').forEach((batchHead,batchHeadIndex) => {
+                batchHead.crwPayrollBatchHeadLines = [];
+                deductionBatchHeadLines.filter(item => item.head_type === 'deduction').forEach((batchHeadLine,batchHeadLineIndex) => {
+                    let obj = {
+                        crew_id: batchHeadLine?.crew_id,
+                        head_type: batchHeadLine?.head_type,
+                        amount: batchHeadLine.crew_batch_heads[batchHeadIndex].amount,
+                        particular: batchHead?.head_name,
+                    };
+                    batchHead.crwPayrollBatchHeadLines.push(obj);
+                });
+            });
+        }
+
+        form.net_payment = form.crwPayrollBatchLines.reduce((sum, item) => sum + parseFloat(item.net_payable_amount || 0), 0);
+
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post(
+            const { data, status } = await Api.put(
                 `/crw/crw-payroll-batches/${crewPayrollBatchId}`,
                 form
             );
@@ -312,6 +338,9 @@ export default function usePayrollBatch() {
         try {
             const { data, status } = await Api.post('/crw/get-crw-monthly-attendances', form);
             monthlyAttendance.value = data.value;
+            if(monthlyAttendance){
+                isAttendanceCrewAvailable.value = true;
+            }
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -324,6 +353,7 @@ export default function usePayrollBatch() {
     return {
         payrollBatches,
         payrollBatch,
+        isAttendanceCrewAvailable,
         getPayrollBatches,
         storePayrollBatch,
         showPayrollBatch,

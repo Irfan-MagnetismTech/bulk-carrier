@@ -8,11 +8,12 @@ import {onMounted, ref, watch, watchEffect} from "vue";
 import Store from "../../store";
 import useVessel from "../../composables/operations/useVessel";
 const { vessels, getVesselsWithoutPaginate, isLoading } = useVessel();
-const { monthlyAttendance, getMonthlyAttendance } = usePayrollBatch();
+const { payrollBatch, monthlyAttendance, getMonthlyAttendance, isAttendanceCrewAvailable } = usePayrollBatch();
 const { crews, getCrews } = useCrewCommonApiRequest();
 import ErrorComponent from '../utils/ErrorComponent.vue';
 import RemarksComponent from "../utils/RemarksComponent.vue";
 import useHeroIcon from "../../assets/heroIcon";
+import Swal from "sweetalert2";
 const icons = useHeroIcon();
 
 const props = defineProps({
@@ -89,7 +90,7 @@ function addAdditionHead(){
       };
   props.form.crwPayrollBatchHeads.push(objHead);
 
-  if(props.form.crwPayrollBatchHeads.filter(item => item.head_type === 'addition').length === 1){
+  if(props.form.crwPayrollBatchHeads?.filter(item => item.head_type === 'addition').length === 1){
     props.form.crwPayrollBatchLines.forEach((batchLine,batchLineIndex) => {
       let batchLineObj = {
         crew_id: batchLine?.crw_crew_id,
@@ -97,14 +98,14 @@ function addAdditionHead(){
         crw_contact_no: batchLine?.crw_contact_no,
         amount: '',
         head_type: 'addition',
-        crew_batch_heads: cloneDeep(props.form.crwPayrollBatchHeads.filter(item => item.head_type === 'addition'))
+        crew_batch_heads: cloneDeep(props.form.crwPayrollBatchHeads?.filter(item => item.head_type === 'addition'))
       }
       props.form.crwPayrollBatchHeadLines.push(batchLineObj);
     });
   }
-  else if(props.form.crwPayrollBatchHeads.filter(item => item.head_type === 'addition').length > 1) {
+  else if(props.form.crwPayrollBatchHeads?.filter(item => item.head_type === 'addition').length > 1) {
 
-    let additions = props.form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'addition')
+    let additions = props.form.crwPayrollBatchHeadLines?.filter(item => item.head_type === 'addition')
 
     for(let addition of additions) {
       addition.crew_batch_heads.push({
@@ -134,7 +135,7 @@ function removeAdditionItem(itemId) {
   });
 
   if (!props.form.crwPayrollBatchHeads.some(item => item.head_type === 'addition')) {
-    props.form.crwPayrollBatchHeadLines = props.form.crwPayrollBatchHeadLines.filter(item => item.head_type !== 'addition');
+    props.form.crwPayrollBatchHeadLines = props.form.crwPayrollBatchHeadLines?.filter(item => item.head_type !== 'addition');
     hasAdditionBatchHead.value = false;
   }
 }
@@ -151,7 +152,7 @@ function addDeductionHead(){
       };
   props.form.crwPayrollBatchHeads.push(objHead);
 
-  if(props.form.crwPayrollBatchHeads.filter(item => item.head_type === 'deduction').length === 1){
+  if(props.form.crwPayrollBatchHeads?.filter(item => item.head_type === 'deduction').length === 1){
     props.form.crwPayrollBatchLines.forEach((batchLine,batchLineIndex) => {
       let batchLineObj = {
         crew_id: batchLine?.crw_crew_id,
@@ -159,13 +160,13 @@ function addDeductionHead(){
         crw_contact_no: batchLine?.crw_contact_no,
         amount: '',
         head_type: 'deduction',
-        crew_batch_heads: cloneDeep(props.form.crwPayrollBatchHeads.filter(item => item.head_type === 'deduction'))
+        crew_batch_heads: cloneDeep(props.form.crwPayrollBatchHeads?.filter(item => item.head_type === 'deduction'))
       }
       props.form.crwPayrollBatchHeadLines.push(batchLineObj);
     });
   }
-  else if(props.form.crwPayrollBatchHeads.filter(item => item.head_type === 'deduction').length > 1) {
-    let deductions = props.form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'deduction')
+  else if(props.form.crwPayrollBatchHeads?.filter(item => item.head_type === 'deduction').length > 1) {
+    let deductions = props.form.crwPayrollBatchHeadLines?.filter(item => item.head_type === 'deduction')
 
     for(let deduction of deductions) {
       deduction.crew_batch_heads.push({
@@ -196,7 +197,7 @@ function removeDeductionItem(itemId){
   });
 
   if (!props.form.crwPayrollBatchHeads.some(item => item.head_type === 'deduction')) {
-    props.form.crwPayrollBatchHeadLines = props.form.crwPayrollBatchHeadLines.filter(item => item.head_type !== 'deduction');
+    props.form.crwPayrollBatchHeadLines = props.form.crwPayrollBatchHeadLines?.filter(item => item.head_type !== 'deduction');
     hasDeductionBatchHead.value = false;
   }
 
@@ -211,26 +212,31 @@ watch(() => monthlyAttendance.value, (value) => {
 }, {deep: true});
 
 function getAssignedCrewList(){
-  if(props.form.ops_vessel_id !== null && props.form.year_month !== null){
+  if(props.form.business_unit && props.form.ops_vessel_id && props.form.year_month && props.form.process_date && props.form.currency){
     let formData = {
       ops_vessel_id: props.form.ops_vessel_id,
       year_month: props.form.year_month
     }
     getMonthlyAttendance(formData);
   } else {
-    alert("Please fill up all required field");
+    Swal.fire({
+      icon: "",
+      title: "Correct Please!",
+      html: "Please select all required field.",
+      customClass: "swal-width",
+    });
   }
 }
 
 function additionChangeHead(e,itemId){
-  let additions = props.form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'addition')
+  let additions = props.form.crwPayrollBatchHeadLines?.filter(item => item.head_type === 'addition')
   for(let addition of additions) {
     addition.crew_batch_heads.find(item => item.id === itemId).particular = e.target.value;
   }
 }
 
 function additionAmountSet(e,itemId){
-  let additions = props.form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'addition')
+  let additions = props.form.crwPayrollBatchHeadLines?.filter(item => item.head_type === 'addition')
   for(let addition of additions) {
     addition.crew_batch_heads.find(item => item.id === itemId).amount = e.target.value;
 
@@ -245,14 +251,14 @@ function additionAmountSet(e,itemId){
 }
 
 function deductionChangeHead(e,itemId){
-  let deductions = props.form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'deduction')
+  let deductions = props.form.crwPayrollBatchHeadLines?.filter(item => item.head_type === 'deduction')
   for(let deduction of deductions) {
     deduction.crew_batch_heads.find(item => item.id === itemId).particular = e.target.value;
   }
 }
 
 function deductionAmountSet(e,itemId){
-  let deductions = props.form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'deduction')
+  let deductions = props.form.crwPayrollBatchHeadLines?.filter(item => item.head_type === 'deduction')
   for(let deduction of deductions) {
     deduction.crew_batch_heads.find(item => item.id === itemId).amount = e.target.value;
 
@@ -298,6 +304,11 @@ function setDeductionBatchHeadAmount(payrollBatchHeadLineIndex){
   let totalEarnings = parseFloat(props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_id).total_earnings);
   let payableAmount = parseFloat(props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_id).payable_amount);
   props.form.crwPayrollBatchLines.find(line => line.crw_crew_id === props.form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_id).net_payable_amount = (payableAmount+totalEarnings-deductionAmount).toFixed(2);
+}
+
+function resetFormData(){
+  console.log("PayrollBatch", payrollBatch);
+  props.form = payrollBatch.value;
 }
 
 onMounted(() => {
@@ -349,12 +360,10 @@ onMounted(() => {
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <button type="button" @click="getAssignedCrewList" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-          Process
-        </button>
-        <button class="px-3 py-1 ml-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-700 border border-transparent rounded-md active:bg-gray-600 hover:bg-gray-600 focus:outline-none focus:shadow-outline-purple">
-          Reset
-        </button>
+        <button type="button" v-if="!isAttendanceCrewAvailable" @click="getAssignedCrewList" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Process</button>
+        <button type="button" v-if="isAttendanceCrewAvailable" :class="{'cursor-not-allowed opacity-50': isAttendanceCrewAvailable, '': !isAttendanceCrewAvailable}" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Process</button>
+        <button type="button" v-if="!isAttendanceCrewAvailable" :class="{'cursor-not-allowed opacity-50': !isAttendanceCrewAvailable, '': isAttendanceCrewAvailable}" class="px-3 py-1 ml-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-700 border border-transparent rounded-md active:bg-gray-600 hover:bg-gray-600 focus:outline-none focus:shadow-outline-purple">Reset</button>
+        <button type="button" v-if="isAttendanceCrewAvailable" @click="resetFormData" class="px-3 py-1 ml-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-700 border border-transparent rounded-md active:bg-gray-600 hover:bg-gray-600 focus:outline-none focus:shadow-outline-purple">Reset</button>
       </label>
     </div>
   </template>
@@ -509,7 +518,7 @@ onMounted(() => {
           </template>
           </tbody>
           <tfoot>
-          <tr v-if="!form.crwPayrollBatchHeads.filter(item => item.head_type === 'addition').length">
+          <tr v-if="!form.crwPayrollBatchHeads?.filter(item => item.head_type === 'addition').length">
             <td colspan="4">No data found</td>
           </tr>
           </tfoot>
@@ -551,7 +560,7 @@ onMounted(() => {
           </template>
           </tbody>
           <tfoot>
-          <tr v-if="!form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'addition').length">
+          <tr v-if="!form.crwPayrollBatchHeadLines?.filter(item => item.head_type === 'addition').length">
             <td colspan="4">No data found</td>
           </tr>
           </tfoot>
@@ -601,7 +610,7 @@ onMounted(() => {
           </template>
           </tbody>
           <tfoot>
-          <tr v-if="!form.crwPayrollBatchHeads.filter(item => item.head_type === 'deduction').length">
+          <tr v-if="!form.crwPayrollBatchHeads?.filter(item => item.head_type === 'deduction').length">
             <td colspan="4">No data found</td>
           </tr>
           </tfoot>
@@ -636,11 +645,6 @@ onMounted(() => {
                   <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads[lineBatchHeadIndex].amount" @input="setDeductionBatchHeadAmount(payrollBatchHeadLineIndex)" placeholder="Amount" class="form-input" autocomplete="off" required />
                 </td>
               </template>
-<!--              <template v-for="(batchHead, index) in form.payrollBatchHeads">-->
-<!--                <td v-if="batchHead?.type==='deduction'" class="px-1 py-1">-->
-<!--                  <input type="text" placeholder="Amount" class="form-input" autocomplete="off" required />-->
-<!--                </td>-->
-<!--              </template>-->
               <td class="px-1 py-1">
                 <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" readonly />
               </td>
@@ -648,7 +652,7 @@ onMounted(() => {
           </template>
           </tbody>
           <tfoot>
-          <tr v-if="!form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'deduction').length">
+          <tr v-if="!form.crwPayrollBatchHeadLines?.filter(item => item.head_type === 'deduction').length">
             <td colspan="4">No data found</td>
           </tr>
           </tfoot>
