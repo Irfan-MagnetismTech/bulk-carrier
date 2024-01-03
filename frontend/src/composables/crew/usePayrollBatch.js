@@ -18,7 +18,7 @@ export default function usePayrollBatch() {
         business_unit: '',
         ops_vessel_id: '',
         ops_vessel_name: '',
-        year_month: '',
+        crw_attendance_id: '',
         compensation_type: 'salary',
         process_date: '',
         net_payment: 0,

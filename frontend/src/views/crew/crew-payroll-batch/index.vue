@@ -27,7 +27,7 @@ const props = defineProps({
 const { payrollBatches, getPayrollBatches, deletePayrollBatch, isLoading, isTableLoading } = usePayrollBatch();
 const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
-setTitle('Salary Lists');
+setTitle('Payroll Batch Lists');
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 let filterOptions = ref( {
@@ -47,13 +47,13 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     {
-      "relation_name": null,
+      "relation_name": "crwAttendance",
       "field_name": "year_month",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Year - Month",
+      "label": "Month - Year",
       "filter_type": "input"
     },
     {
@@ -147,7 +147,7 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3">
     <h2 class="text-2xl font-semibold text-gray-700">List of Payroll Batch</h2>
-    <default-button :title="'Create Salary'" :to="{ name: 'crw.crewPayrollBatches.create' }" :icon="icons.AddIcon"></default-button>
+    <default-button :title="'Create Payroll Batch'" :to="{ name: 'crw.crewPayrollBatches.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
@@ -157,7 +157,7 @@ onMounted(() => {
           <tr v-for="(payrollBatchData,index) in payrollBatches?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
             <td class="text-left">{{ payrollBatchData?.opsVessel?.name }}</td>
-            <td>{{ payrollBatchData?.year_month }}</td>
+            <td>{{ payrollBatchData?.crwAttendance?.month_year_name }}</td>
             <td>{{ payrollBatchData?.total_crew }}</td>
             <td>{{ payrollBatchData?.working_days }}</td>
             <td>{{ payrollBatchData?.net_payment }}</td>

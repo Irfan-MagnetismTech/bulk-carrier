@@ -9,6 +9,7 @@ import Store from "../../store";
 import useVessel from "../../composables/operations/useVessel";
 const { vessels, getVesselsWithoutPaginate, isLoading } = useVessel();
 const { payrollBatch, monthlyAttendance, getMonthlyAttendance, isAttendanceCrewAvailable } = usePayrollBatch();
+const { vesselWiseMonthlyAttendances, getVesselMonthlyAttendances } = useCrewCommonApiRequest();
 const { crews, getCrews } = useCrewCommonApiRequest();
 import useNotification from '../../composables/useNotification.js';
 import ErrorComponent from '../utils/ErrorComponent.vue';
@@ -220,10 +221,10 @@ watch(() => monthlyAttendance.value, (value) => {
 }, {deep: true});
 
 function getAssignedCrewList(){
-  if(props.form.business_unit && props.form.ops_vessel_id && props.form.year_month && props.form.process_date && props.form.currency){
+  if(props.form.business_unit && props.form.ops_vessel_id && props.form.crw_attendance_id && props.form.process_date && props.form.currency){
     let formData = {
       ops_vessel_id: props.form.ops_vessel_id,
-      year_month: props.form.year_month
+      crw_attendance_id: props.form.crw_attendance_id
     }
     getMonthlyAttendance(formData);
   } else {
@@ -327,7 +328,7 @@ function resetFormData(){
     if (result.isConfirmed) {
       props.form.ops_vessel_id =  '',
       props.form.ops_vessel_name=  '',
-      props.form.year_month =  '',
+      props.form.crw_attendance_id =  '',
       props.form.compensation_type = 'salary',
       props.form.process_date = '',
       props.form.net_payment = 0,
@@ -345,6 +346,7 @@ function resetFormData(){
 onMounted(() => {
   watchEffect(() => {
     getVesselsWithoutPaginate(props.form.business_unit);
+    getVesselMonthlyAttendances(props.form.ops_vessel_id);
   });
 });
 
@@ -369,7 +371,10 @@ onMounted(() => {
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Attendance Month <span class="text-red-500">*</span></span>
-        <input type="month" v-model.trim="form.year_month" class="form-input" autocomplete="off" required />
+        <select v-model.trim="form.crw_attendance_id" class="form-input" autocomplete="off" required>
+          <option value="">Select</option>
+          <option :value="vesselMonthAttendance?.id" v-for="(vesselMonthAttendance,index) in vesselWiseMonthlyAttendances">{{ vesselMonthAttendance?.month_year_name }}</option>
+        </select>
       </label>
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -401,8 +406,8 @@ onMounted(() => {
         <input type="text" v-model.trim="form.ops_vessel_name.name" class="form-input vms-readonly-input" autocomplete="off" readonly />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Month Year<span class="text-red-500">*</span></span>
-        <input type="month" v-model.trim="form.year_month" class="form-input vms-readonly-input" autocomplete="off" readonly />
+        <span class="text-gray-700 dark-disabled:text-gray-300">Attendance Month<span class="text-red-500">*</span></span>
+        <input type="text" :value="form?.crwAttendance?.month_year_name" class="form-input vms-readonly-input" autocomplete="off" readonly />
       </label>
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">

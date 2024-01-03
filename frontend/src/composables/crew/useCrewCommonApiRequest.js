@@ -14,6 +14,7 @@ export default function useCrewCommonApiRequest() {
     const crewDocuments = ref([]);
     const crewDocumentRenewals = ref([]);
     const vesselAssignedCrews = ref([]);
+    const vesselWiseMonthlyAttendances = ref([]);
     const isCrewDocumentRenewModalOpen = ref(0);
     const $loading = useLoading();
     const notification = useNotification();
@@ -191,6 +192,27 @@ export default function useCrewCommonApiRequest() {
         }
     }
 
+    async function getVesselMonthlyAttendances(opsVesselId) {
+
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        let form = {
+            'ops_vessel_id': opsVesselId,
+        }
+
+        try {
+            const { data, status } = await Api.post('/crw/get-vessel-monthly-attendances', form);
+            vesselWiseMonthlyAttendances.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            //loader.hide();
+            isLoading.value = false;
+        }
+    }
+
 
 
     return {
@@ -203,6 +225,7 @@ export default function useCrewCommonApiRequest() {
         crewDocumentRenewals,
         isCrewDocumentRenewModalOpen,
         vesselAssignedCrews,
+        vesselWiseMonthlyAttendances,
         getCrewRankLists,
         getCrewAgencyLists,
         getCrewAgencyContracts,
@@ -211,6 +234,7 @@ export default function useCrewCommonApiRequest() {
         getCrewDocuments,
         getCrewDocumentRenewals,
         getVesselAssignedCrews,
+        getVesselMonthlyAttendances,
         isLoading,
         isCommonCrewLoading,
         errors,
