@@ -168,38 +168,8 @@ class OpsExpenseReportController extends Controller
         // return Excel::download(new VoyageExpenditure($heads, $filteredVoyage), 'voyage_expenditure_report.xlsx');
     }
 
-    public function singleVesselWiseBunkerReport(Request $request) {
 
-        $business_unit = $request->business_unit;
-        $ops_vessel_id = $request->ops_vessel_id;
-        $start = date($request->start);
-        $end = date($request->end);
-
-        $voyages = OpsVoyage::query()
-        // ->whereBetween('transit_date', [$start, $end])
-        ->whereBetween('transit_date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
-        ->where('ops_vessel_id', $ops_vessel_id)
-        ->where('business_unit', $business_unit)
-        ->with('opsVesselBunkers.stockable')
-        ->get();
-
-        $voyages = $voyages->map(function($voyage) {
-            return $voyage->opsVesselBunkers->groupBy('type');
-        });
-
-        $allBunkers = OpsVessel::with('opsBunkers.scmMaterial')->where('id', $ops_vessel_id)->first();
-
-        $voyageIds = $voyages->pluck('id');
-
-        return view('operations::reports.single-vessel-bunker-report')->with([
-            'allBunkers' => $allBunkers,
-            'voyages' => $voyages
-        ]);
-
-        return response()->json([
-            'value' => $view
-        ], 200);
-    }
+        
 
     public function businessUnitWiseBunkerReport(Request $request) {
 
@@ -234,8 +204,5 @@ class OpsExpenseReportController extends Controller
             'voyages' => $voyages
         ]);
 
-        return response()->json([
-            'value' => $view
-        ], 200);
     }
 }
