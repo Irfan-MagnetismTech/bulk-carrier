@@ -61,6 +61,7 @@ Route::middleware(['auth:api'])->prefix('crw')->as('crw.')->group(function ()
     Route::apiResource('crw-bank-accounts', CrwBankAccountController::class);
     Route::apiResource('crw-payroll-batches', CrwPayrollBatchController::class);
     Route::apiResource('appraisal-forms', AppraisalFormController::class);
+    Route::apiResource('appraisal-records', AppraisalFormController::class);
 
     //Additional Routes
     Route::get('crw-crew-document-renew-schedules', [CrwCrewDocumentController::class, 'renewScehdules']);
@@ -75,7 +76,7 @@ Route::middleware(['auth:api'])->prefix('crw')->as('crw.')->group(function ()
     Route::post('get-crew-documents', [CrwCommonController::class, 'getCrewDocuments']);
     Route::post('get-crew-document-renewals', [CrwCommonController::class, 'getCrewDocumentRenewals']);
     Route::post('get-vessel-assigned-crews', [CrwCommonController::class, 'getVesselAssignedCrews']);    
-    Route::post('get-crw-monthly-attendances', [CrwCommonController::class, 'getCrewMonthlyAttendances']);    
+    Route::post('get-crw-monthly-attendances', [CrwCommonController::class, 'getCrewMonthlyAttendances']);
 
     Route::post('update-crew-assign-status/{crw_crew_assignment}', [CrwCrewAssignmentController::class, 'updateCrewAssignStatus']);
 
