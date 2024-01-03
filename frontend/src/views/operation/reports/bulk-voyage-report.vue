@@ -5,10 +5,11 @@ import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 import useHeroIcon from "../../../assets/heroIcon";
 import useOperationsReport from '../../../composables/operations/useOperationsReport';
 
-const { lighterVoyageReport, isLoading, getLighterVoyageReport } = useOperationsReport();
+const { bulkVoyageReport, isLoading, getLighterVoyageReport } = useOperationsReport();
 const icons = useHeroIcon();
 
 const form = ref({
+  type: '',
   start: '',
   end: ''
 })
@@ -16,7 +17,7 @@ const form = ref({
 
 watch(() => form.value.port, (value) => {
 
-  lighterVoyageReport.value = '';
+  bulkVoyageReport.value = '';
 
 }, { deep: true })
 
@@ -27,11 +28,19 @@ function getReport() {
 </script>
 <template>
   <!-- Basic information -->
-  <h2 class="my-5 text-2xl text-center font-semibold">Voyage Report (Lighter)</h2>
+  <h2 class="my-5 text-2xl text-center font-semibold">Voyage Report (Bulk)</h2>
   <form @submit.prevent="getReport()">
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 ">Report Type <span class="text-red-500">*</span></span>
+        <select v-model="form.type" class="form-input" required :class="{ 'bg-gray-100 text-gray-900': formType === 'edit' }" :disabled="formType=='edit'" >
+          <option value="" disabled selected>Select Option</option>
+          <option value="Noon Report">Noon Report</option>
+          <option value="Arrival Report">Arrival Report</option>
+          <option value="Departure Report">Departure Report</option>
+        </select>
+      </label>
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700">From Date <span class="text-red-500">*</span></span>
           <input type="date" v-model="form.start" required placeholder="From" class="form-input" autocomplete="off" />
@@ -47,11 +56,11 @@ function getReport() {
     </div>
   </form>
 
-  <div v-if="lighterVoyageReport != ''" class="mb-5">
+  <div v-if="bulkVoyageReport != ''" class="mb-5">
     <h4 class="text-center text-xl font-semibold my-4">
       Report for {{ form.port }}
     </h4>
-    <div v-html="lighterVoyageReport"></div>
+    <div v-html="bulkVoyageReport"></div>
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

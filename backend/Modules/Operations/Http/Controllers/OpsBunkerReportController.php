@@ -102,7 +102,6 @@ class OpsBunkerReportController extends Controller
 
         $allBunkers = OpsVesselBunkerService::getBunkers($ops_vessel_id, null);
 
-        
 
         return view('operations::reports.single-vessel-bunker-report')->with([
             'allBunkers' => $allBunkers,

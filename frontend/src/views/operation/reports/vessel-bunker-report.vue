@@ -1,35 +1,73 @@
 <script setup>
 import Error from "../../../components/Error.vue";
 import { watch, ref, onMounted, watchEffect } from 'vue';
+import BusinessUnitInput from "../../../components/input/BusinessUnitInput.vue";
 import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 import useHeroIcon from "../../../assets/heroIcon";
+import useVessel from '../../../composables/operations/useVessel';
 import useOperationsReport from '../../../composables/operations/useOperationsReport';
 
-const { lighterVoyageReport, isLoading, getLighterVoyageReport } = useOperationsReport();
+
+const { vessels, searchVessels, isVesselLoading } = useVessel();
+const { vesselBunkerReport, isLoading, getVesselBunkerReport } = useOperationsReport();
 const icons = useHeroIcon();
 
 const form = ref({
+  business_unit: '',
+  port: '',
   start: '',
   end: ''
 })
 
+watch(() => form.value.business_unit, (value) => {
 
-watch(() => form.value.port, (value) => {
+  fetchVessels("", false);
 
-  lighterVoyageReport.value = '';
+}, { deep: true })
+
+function fetchVessels(search, loading) {
+      // loading(true);
+      searchVessels(search, form.value.business_unit, loading);
+}
+
+watch(() => form.value.ops_vessel_id, (value) => {
+
+  vesselBunkerReport.value = '';
+
+}, { deep: true })
+
+watch(() => form.value.business_unit, (value) => {
+
+  vesselBunkerReport.value = '';
 
 }, { deep: true })
 
 
 function getReport() {
-  getLighterVoyageReport(form.value)
+  getVesselBunkerReport(form.value)
 }
 </script>
 <template>
   <!-- Basic information -->
-  <h2 class="my-5 text-2xl text-center font-semibold">Voyage Report (Lighter)</h2>
+  <h2 class="my-5 text-2xl text-center font-semibold">Vessel Bunker Report</h2>
   <form @submit.prevent="getReport()">
 
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
+        <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700">Vessel <span class="text-red-500">*</span></span>
+            <v-select :options="vessels" placeholder="--Choose an option--" :loading="isVesselLoading"  v-model="form.ops_vessel_id" label="name" class="block form-input" :reduce="vessel=>vessel.id">
+                <template #search="{attributes, events}">
+                    <input
+                        class="vs__search"
+                        :required="!form.ops_vessel_id"
+                        v-bind="attributes"
+                        v-on="events"
+                        />
+                </template>
+            </v-select>
+        </label>
+    </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       
       <label class="block w-full mt-2 text-sm">
@@ -47,11 +85,11 @@ function getReport() {
     </div>
   </form>
 
-  <div v-if="lighterVoyageReport != ''" class="mb-5">
+  <div v-if="vesselBunkerReport != ''" class="mb-5">
     <h4 class="text-center text-xl font-semibold my-4">
       Report for {{ form.port }}
     </h4>
-    <div v-html="lighterVoyageReport"></div>
+    <div v-html="vesselBunkerReport"></div>
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
