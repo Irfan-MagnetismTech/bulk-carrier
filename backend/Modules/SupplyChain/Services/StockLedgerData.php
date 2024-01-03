@@ -48,7 +48,7 @@ class StockLedgerData
      */
     public function out(int $materialId, int $warehouseId, int $qty, string $method = 'fifo')
     {
-        if ((new CurrentStock)->count($materialId, $warehouseId) < $qty) {
+        if (CurrentStock::count($materialId, $warehouseId) < $qty) {
             return response()->json(['message' => 'Insufficient stock'], 422);
         }
 

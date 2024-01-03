@@ -93,7 +93,7 @@ class ScmMrrController extends Controller
                 'net_rate' => $scmMrrLine->net_rate,
                 'po_qty' => $scmMrrLine?->scmPoLine?->quantity ?? 0,
                 'pr_qty' => $scmMrrLine?->scmPrLine?->quantity ?? 0,
-                'current_stock' => (new CurrentStock)->count($scmMrrLine->scm_material_id, $scmMrr->scm_warehouse_id),
+                'current_stock' => CurrentStock::count($scmMrrLine->scm_material_id, $scmMrr->scm_warehouse_id),
                 'po_composite_key' => $scmMrrLine->po_composite_key ?? null,
                 'pr_composite_key' => $scmMrrLine->pr_composite_key ?? null,
                 'max_quantity' => ($scmMrrLine->po_composite_key != null && $scmMrrLine->po_composite_key != '') ? ($scmMrrLine->scmPoLine->quantity - $scmMrrLine->scmPoLine->scmMrrLines->sum('quantity') + $scmMrrLine->quantity) : ($scmMrrLine->scmPrLine->quantity - $scmMrrLine->scmPrLine->scmMrrLines->sum('quantity') + $scmMrrLine->quantity),
@@ -225,7 +225,7 @@ class ScmMrrController extends Controller
                     'scmMrrLines' => $scmPr->scmPrLines->map(function ($item) use ($scmPr) {
                         return [
                             'scmMaterial' => $item->scmMaterial,
-                            'current_stock' => (new CurrentStock)->count($item->scmMaterial->id, $scmPr->scm_warehouse_id),
+                            'current_stock' => CurrentStock::count($item->scmMaterial->id, $scmPr->scm_warehouse_id),
                             'scm_material_id' => $item->scmMaterial->id,
                             'unit' => $item->scmMaterial->unit,
                             'brand' => $item->brand,
@@ -268,7 +268,7 @@ class ScmMrrController extends Controller
                         return [
                             'scmMaterial' => $item->scmMaterial,
                             'scm_material_id' => $item->scmMaterial->id,
-                            'current_stock' => (new CurrentStock)->count($item->scmMaterial->id, $scmPo->scm_warehouse_id),
+                            'current_stock' => CurrentStock::count($item->scmMaterial->id, $scmPo->scm_warehouse_id),
                             'unit' => $item->scmMaterial->unit,
                             'brand' => $item->brand,
                             'model' => $item->model,
@@ -316,7 +316,7 @@ class ScmMrrController extends Controller
                     $data['net_rate'] = 0;
                     $data['pr_composite_key'] = $item->pr_composite_key;
                     $data['po_composite_key'] = null;
-                    $data['current_stock'] = (new CurrentStock)->count($item->scmMaterial->id, request()->scm_warehouse_id);
+                    $data['current_stock'] = CurrentStock::count($item->scmMaterial->id, request()->scm_warehouse_id);
                     if (request()->scm_mrr_id) {
                         $data['mrr_quantity'] = $item->scmMrrLines->where('scm_mrr_id', request()->scm_mrr_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
                     } else {
@@ -352,7 +352,7 @@ class ScmMrrController extends Controller
                     $data['net_rate'] = $item->net_rate;
                     $data['pr_composite_key'] = $item->pr_composite_key;
                     $data['po_composite_key'] = $item->po_composite_key;
-                    $data['current_stock'] = (new CurrentStock)->count($item->scmMaterial->id, request()->scm_warehouse_id);
+                    $data['current_stock'] = CurrentStock::count($item->scmMaterial->id, request()->scm_warehouse_id);
                     // $data['max_quantity'] = $item->quantity - $item->scmMrrLines->sum('quantity');//some edit needed
                     return $data;
                 });

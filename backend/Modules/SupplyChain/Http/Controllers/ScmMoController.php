@@ -107,12 +107,12 @@ class ScmMoController extends Controller
             //                 'quantity' => $item->quantity,
             //                 'mmr_quantity' => $item->quantity,
             //                 'mmr_composite_key' => $item->mmr_composite_key,
-            //                 'current_stock' => (new CurrentStock)->count($item->scm_material_id, $scmMmr->from_warehouse_id),
+            //                 'current_stock' => CurrentStock::count($item->scm_material_id, $scmMmr->from_warehouse_id),
             //                 'max_quantity' => $maxQty,
             //                 'remaining_quantity' => $remainingQty,
             $scmMoLines = $movementOut->scmMoLines->map(function ($scmMoLine) use ($movementOut) {
                 $maxQty =  $scmMoLine->scmMmrLine->quantity + $scmMoLine->quantity - $scmMoLine->scmMmrLine->scmMoLines->sum('quantity');
-                $currentStock = (new CurrentStock)->count($scmMoLine->scm_material_id, $movementOut->from_warehouse_id) + $scmMoLine->quantity;
+                $currentStock = CurrentStock::count($scmMoLine->scm_material_id, $movementOut->from_warehouse_id) + $scmMoLine->quantity;
                 $maxQty = $currentStock > $maxQty ? $maxQty : $currentStock;
                 $lines = [
                     'scm_material_id' => $scmMoLine->scm_material_id,
@@ -121,7 +121,7 @@ class ScmMoController extends Controller
                     'quantity' => $scmMoLine->quantity,
                     'mmr_quantity' => $scmMoLine->scmMmrLine->quantity,
                     'max_quantity' => $maxQty,
-                    'current_stock' => (new CurrentStock)->count($scmMoLine->scm_material_id, $movementOut->from_warehouse_id),
+                    'current_stock' => CurrentStock::count($scmMoLine->scm_material_id, $movementOut->from_warehouse_id),
                     'remaining_quantity' => $scmMoLine->scmMmrLine->quantity - $scmMoLine->scmMmrLine->scmMoLines->sum('quantity'),
                     'mo_composite_key' => $scmMoLine->mo_composite_key ?? null,
                     'mmr_composite_key' => $scmMoLine->mmr_composite_key ?? null,
