@@ -45,7 +45,7 @@ setTitle('Create Material CS');
         <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Create Quotation</h2>
         <default-button :title="'Quotations List'" :to="{ name: 'scm.quotations.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="storeQuotations(quotation,CSID)">
           <!-- <material-cs-form v-model:form="quotation" :errors="errors" :page="page"></material-cs-form> -->
             <!-- Submit button -->

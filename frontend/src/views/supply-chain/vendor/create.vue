@@ -21,7 +21,7 @@ setTitle('Create Vendor');
         <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Create Vendor</h2>
         <default-button :title="'Unit List'" :to="{ name: 'scm.vendor.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="storeVendor(vendor)">
             <vendor-form v-model:form="vendor" :errors="errors"></vendor-form>
             <!-- Submit button -->

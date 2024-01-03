@@ -40,7 +40,7 @@ onMounted(() => {
         <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Update Material Category</h2>
         <default-button :title="'Material Category List'" :to="{ name: 'scm.material-category.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="updateMaterialCategory(materialCategory, materialCategoryId)">
             <material-category-form v-model:form="materialCategory" :errors="errors" :formType="formType" :selfId="materialCategoryId"></material-category-form>
             <!-- Submit button -->

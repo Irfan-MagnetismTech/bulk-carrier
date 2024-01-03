@@ -30,7 +30,7 @@ onMounted(() => {
         <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Store Issue Show</h2>
         <default-button :title="'Store Issue List'" :to="{ name: 'scm.store-issues.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
             <store-issue-show :form="storeIssue"></store-issue-show>
     </div>
 </template>
