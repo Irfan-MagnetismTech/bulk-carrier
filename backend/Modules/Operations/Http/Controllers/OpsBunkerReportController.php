@@ -102,7 +102,7 @@ class OpsBunkerReportController extends Controller
 
         $allBunkers = OpsVessel::with('opsBunkers.scmMaterial')->where('id', $ops_vessel_id)->first();
 
-        $allBunkers = OpsVesselBunkerService::getBunkers($ops_vessel_id);
+        $allBunkers = OpsVesselBunkerService::getBunkers(2, null);
 
         dd($allBunkers);
 
