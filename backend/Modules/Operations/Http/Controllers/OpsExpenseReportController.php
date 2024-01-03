@@ -12,6 +12,9 @@ use Modules\Operations\Entities\OpsExpenseHead;
 use Modules\Operations\Entities\OpsVessel;
 use Modules\Operations\Entities\OpsVesselExpenseHead;
 use Modules\Operations\Entities\OpsVoyageExpenditureEntry;
+use Modules\Operations\Services\OpsVesselBunkerService;
+use Modules\SupplyChain\Services\CurrentStock;
+use Modules\SupplyChain\Services\StockLedgerData;
 
 class OpsExpenseReportController extends Controller
 {
@@ -184,23 +187,37 @@ class OpsExpenseReportController extends Controller
         // ->whereBetween('transit_date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
         ->where('business_unit', $business_unit)
         ->groupBy('ops_vessel_id')
-        ->with(['opsVessel','opsVesselBunkers.stockable'])
+        ->with(['opsVessel.scmWareHouse','opsVesselBunkers.stockable'])
         ->get();
 
         // dd($voyages);
 
-        // $voyages = $voyages->map(function($voyage) {
-        //     return $voyage->opsVesselBunkers->groupBy('type');
-        // });
+        $allBunkers = OpsVesselBunkerService::getBunkers(null, $business_unit);
+        // dd($allBunkers);
 
-        $allBunkers = OpsVessel::with('opsBunkers.scmMaterial')
-                                ->whereIn('id', $ops_vessel_ids)->get();
-        $vesselBunkers = $allBunkers->pluck('opsBunkers.*.scmMaterial.name')->flatten()->unique();
-        // dd($vesselBunkers);
-        $voyageIds = $voyages->pluck('id');
+        $voyages = $voyages->map(function($voyage) use ($allBunkers) {
+            $voyagesWithBunkers = [
+                'vessel_name' => $voyage->opsVessel->name,
+                'voyage_count' => $voyage->voyage_count
+            ];
+            foreach ($allBunkers as $bunker) {
+                $voyagesWithBunkers['current_stock'][$bunker['scm_material_id']] = CurrentStock::count($bunker['scm_material_id'], $voyage->opsVessel->scmWareHouse?->id);
+                $voyagesWithBunkers['stock_in'][$bunker['scm_material_id']] = CurrentStock::countStockIn($bunker['scm_material_id'], $voyage->opsVessel->scmWareHouse?->id);
+                $voyagesWithBunkers['stock_out'][$bunker['scm_material_id']] = CurrentStock::countStockOut($bunker['scm_material_id'], $voyage->opsVessel->scmWareHouse?->id);
+            }
+
+            return $voyagesWithBunkers;
+        });
+
+        // dd($voyages);
+
+        // $allBunkers = OpsVessel::with('opsBunkers.scmMaterial')
+        //                         ->whereIn('id', $ops_vessel_ids)->get();
+        // $vesselBunkers = $allBunkers->pluck('opsBunkers.*.scmMaterial.name')->flatten()->unique();
+        
 
         return view('operations::reports.business-unit-bunker-report')->with([
-            'vesselBunkers' => $vesselBunkers,
+            'allBunkers' => $allBunkers,
             'voyages' => $voyages
         ]);
 

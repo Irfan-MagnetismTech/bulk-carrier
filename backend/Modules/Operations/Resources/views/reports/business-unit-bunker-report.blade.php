@@ -26,14 +26,14 @@
 			<tr>
                 <th rowspan="2">Vessel</th>
                 <th rowspan="2">Voyages</th>
-                <th colspan="{{ count($vesselBunkers) }}">Bunker Used</th>
-                <th colspan="{{ count($vesselBunkers) }}">Bunker Purchased</th>
-                <th colspan="{{ count($vesselBunkers) }}">Final Stock</th>
+                <th colspan="{{ count($allBunkers) }}">Bunker Used</th>
+                <th colspan="{{ count($allBunkers) }}">Bunker Purchased</th>
+                <th colspan="{{ count($allBunkers) }}">Final Stock</th>
             </tr>
             <tr>
                 @for ($i = 0; $i < 3; $i++)
-                    @foreach ($vesselBunkers as $bunker)
-                        <th><nobr>{{ $bunker }}</nobr></th>
+                    @foreach ($allBunkers as $bunker)
+                        <th><nobr>{{ $bunker['name'] }}</nobr></th>
                     @endforeach
                 @endfor
             </tr>
@@ -42,17 +42,53 @@
             @if(isset($voyages))
                 @foreach($voyages as $voyage)
                 <tr>
-                    <td><nobr>{{ $voyage->opsVessel->name }}</nobr></td>
-                    <td><nobr>{{ $voyage->voyage_count }}</nobr></td>
-                    @for ($i = 0; $i < 3; $i++)
-                        @foreach ($vesselBunkers as $bunker)
-                            <td><nobr></nobr></td>
-                        @endforeach
-                    @endfor
+                    <td><nobr>{{ $voyage['vessel_name'] }}</nobr></td>
+                    <td><nobr>{{ $voyage['voyage_count'] }}</nobr></td>
+                    @foreach ($allBunkers as $bunker)
+                        <td><nobr>{{ $voyage['stock_out'][$bunker['scm_material_id']]*-1 }}</nobr></td>
+                    @endforeach
+
+                    @foreach ($allBunkers as $bunker)
+                        <td><nobr>{{ $voyage['stock_in'][$bunker['scm_material_id']] }}</nobr></td>
+                    @endforeach
+
+                    @foreach ($allBunkers as $bunker)
+                        <td><nobr>{{ $voyage['current_stock'][$bunker['scm_material_id']] }}</nobr></td>
+                    @endforeach
                 </tr>
                 @endforeach
             @endif
         </tbody>
+        <tfoot>
+            <tr>
+                <td>
+                    Summary
+                </td>
+                <td>
+                    {{ $voyages->sum('voyage_count') }}
+                </td>
+                    @foreach ($allBunkers as $bunker)
+                        @php
+                            $material_id = $bunker['scm_material_id'];
+                        @endphp
+                        <td><nobr>{{ $voyages->pluck("stock_out.$material_id")->sum() * -1 }}</nobr></td>
+                    @endforeach
+
+                    @foreach ($allBunkers as $bunker)
+                        @php
+                            $material_id = $bunker['scm_material_id'];
+                        @endphp
+                        <td><nobr>{{ $voyages->pluck("stock_in.$material_id")->sum() }}</nobr></td>
+                    @endforeach
+
+                    @foreach ($allBunkers as $bunker)
+                        @php
+                            $material_id = $bunker['scm_material_id'];
+                        @endphp
+                        <td><nobr>{{ $voyages->pluck("current_stock.$material_id")->sum() }}</nobr></td>
+                    @endforeach
+            </tr>
+        </tfoot>
     </table>
 
 </body>
