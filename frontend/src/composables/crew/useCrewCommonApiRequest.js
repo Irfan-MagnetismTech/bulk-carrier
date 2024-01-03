@@ -13,6 +13,8 @@ export default function useCrewCommonApiRequest() {
     const recruitmentApprovals = ref([]);
     const crewDocuments = ref([]);
     const crewDocumentRenewals = ref([]);
+    const appraisalUndoneAssignments = ref([]);
+    
     const vesselAssignedCrews = ref([]);
     const isCrewDocumentRenewModalOpen = ref(0);
     const $loading = useLoading();
@@ -20,6 +22,7 @@ export default function useCrewCommonApiRequest() {
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isAppraisalUndoneAssignmentLoading = ref(false);
     const isCommonCrewLoading = ref(false);
 
     async function getCrewRankLists(businessUnit) {
@@ -191,6 +194,27 @@ export default function useCrewCommonApiRequest() {
         }
     }
 
+    async function getAppraisalUndoneAssignments(crwCrewProfileId) {
+
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isAppraisalUndoneAssignmentLoading.value = true;
+
+        let form = {
+            'crw_crew_profile_id': crwCrewProfileId,
+        }
+
+        try {
+            const { data, status } = await Api.post('/crw/get-appraisal-undone-assignments', form);
+            appraisalUndoneAssignments.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            // loader.hide();
+            isAppraisalUndoneAssignmentLoading.value = false;
+        }
+    }
+
 
 
     return {
@@ -203,6 +227,7 @@ export default function useCrewCommonApiRequest() {
         crewDocumentRenewals,
         isCrewDocumentRenewModalOpen,
         vesselAssignedCrews,
+        appraisalUndoneAssignments,
         getCrewRankLists,
         getCrewAgencyLists,
         getCrewAgencyContracts,
@@ -211,7 +236,9 @@ export default function useCrewCommonApiRequest() {
         getCrewDocuments,
         getCrewDocumentRenewals,
         getVesselAssignedCrews,
+        getAppraisalUndoneAssignments,
         isLoading,
+        isAppraisalUndoneAssignmentLoading,
         isCommonCrewLoading,
         errors,
     };

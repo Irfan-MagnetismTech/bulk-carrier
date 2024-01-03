@@ -504,4 +504,35 @@ export default [
 		meta: { requiresAuth: true, role: ROLE, permission: 'appraisal-form-show'  },
 	},
     /* Appraisal Form End */
+
+    
+    /* Appraisal Record Start */
+    {
+		path: `/${BASE}/appraisal-records`,
+		name: `${BASE}.appraisal-records.index`,
+		component: () => import(`../views/crew/appraisal-record/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'appraisal-record-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/appraisal-records/create`,
+		name: `${BASE}.appraisal-records.create`,
+		component: () => import(`../views/crew/appraisal-record/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'appraisal-record-create' },
+	},
+	{
+		path: `/${BASE}/appraisal-records/:appraisalRecordId/edit`,
+		name: `${BASE}.appraisal-records.edit`,
+		component: () => import(`../views/crew/appraisal-record/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'appraisal-record-edit' },
+	},
+	{
+		path: `/${BASE}/appraisal-records/:appraisalRecordId`,
+		name: `${BASE}.appraisal-records.show`,
+		component: () => import(`../views/crew/appraisal-record/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'appraisal-record-show'  },
+	},
+    /* Appraisal Record End */
+
+
 ];
