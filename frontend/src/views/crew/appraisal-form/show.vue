@@ -78,10 +78,7 @@ onMounted(() => {
 
 
                           <template v-for="(appraisalFormLine, index) in appraisalForm?.appraisalFormLines" :key="index">
-                            <!-- <tr>
-                              <td class="font-bold">{{ appraisalFormLine?.section_no }}</td>
-                              <td colspan="3" class="text-center font-bold">{{ appraisalFormLine?.section_name }}</td>
-                            </tr> -->
+                            
                             <tr v-for="(appraisalFormLineItem, appraisalFormLineItemIndex) in appraisalFormLine?.appraisalFormLineItems" :key="appraisalFormLineItemIndex">
                               <td v-if="appraisalFormLineItemIndex == 0" :rowspan="appraisalFormLine?.appraisalFormLineItems?.length ?? 1">{{ appraisalFormLine?.section_no }}</td>
                               <td v-if="appraisalFormLineItemIndex == 0" :rowspan="appraisalFormLine?.appraisalFormLineItems?.length ?? 1">{{ appraisalFormLine?.section_name }}</td>
@@ -89,6 +86,13 @@ onMounted(() => {
                               <td>{{ appraisalFormLineItem?.description }}</td>
                               <td>{{ appraisalFormLineItem?.answer_type }}</td>
 
+                            </tr>
+                            <tr v-if="appraisalFormLine?.appraisalFormLineItems?.length == 0">
+                              <td>{{ appraisalFormLine?.section_no }}</td>
+                              <td>{{ appraisalFormLine?.section_name }}</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
                             </tr>
                             
                           </template>
