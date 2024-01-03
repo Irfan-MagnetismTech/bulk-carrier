@@ -428,338 +428,340 @@ onMounted(() => {
       <button type="button" v-if="isAttendanceCrewAvailable" @click="resetFormData" class="px-3 py-1 ml-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-700 border border-transparent rounded-md active:bg-gray-600 hover:bg-gray-600 focus:outline-none focus:shadow-outline-purple">Reset</button>
     </label>
   </div>
-  <div class="border-b-2 border-purple-700 mt-3"></div>
-  <div class="dark-disabled:border-gray-700">
-    <ul class="flex flex-wrap -mb-px border-b">
-      <li class="mr-2">
-        <a href="#" @click="changeTab(1)" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 1, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 1}">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Attendance
-        </a>
-      </li>
-      <li class="mr-2">
-        <a href="#" @click="changeTab(2)" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 2, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 2}">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Addition
-        </a>
-      </li>
-      <li class="mr-2">
-        <a href="#" @click="changeTab(3)" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 3, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 3}">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Deduction
-        </a>
-      </li>
-      <li class="mr-2">
-        <a href="#" @click="changeTab(4)" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 4, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 4}">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Review
-        </a>
-      </li>
-    </ul>
-    <div @click="changeTab(1)" v-bind:class="{'hidden': openTab !== 1, 'block': openTab === 1}">
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="flex items-center px-2 text-gray-700 dark-disabled:text-gray-300">
-          <span class="mr-2">Assigned Crew List</span>
-        </legend>
-        <table class="w-full mt-2 whitespace-no-wrap" id="table">
-          <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-            <th class="px-4 py-3 align-bottom"><nobr>Crew Name</nobr></th>
-            <th class="px-4 py-3 align-bottom"><nobr>Contact</nobr></th>
-            <th class="px-4 py-3 align-bottom"><nobr>Net Salary</nobr></th>
-            <th class="px-4 py-3 align-bottom"><nobr>Present Days</nobr></th>
-            <th class="px-4 py-3 align-bottom"><nobr>Absent Days</nobr></th>
-            <th class="px-4 py-3 align-bottom"><nobr>Payable Days</nobr></th>
-            <th class="px-4 py-3 align-bottom"><nobr>Payable Amount</nobr></th>
-          </tr>
-          </thead>
+  <template v-if="form?.crwPayrollBatchLines?.length">
+    <div class="border-b-2 border-purple-700 mt-3"></div>
+    <div class="dark-disabled:border-gray-700">
+      <ul class="flex flex-wrap -mb-px border-b">
+        <li class="mr-2">
+          <a href="#" @click="changeTab(1)" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 1, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 1}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Attendance
+          </a>
+        </li>
+        <li class="mr-2">
+          <a href="#" @click="changeTab(2)" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 2, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 2}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Addition
+          </a>
+        </li>
+        <li class="mr-2">
+          <a href="#" @click="changeTab(3)" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 3, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 3}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Deduction
+          </a>
+        </li>
+        <li class="mr-2">
+          <a href="#" @click="changeTab(4)" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-bind:class="{'text-purple-600 bg-white': openTab !== 4, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 active-tab': openTab === 4}">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Review
+          </a>
+        </li>
+      </ul>
+      <div @click="changeTab(1)" v-bind:class="{'hidden': openTab !== 1, 'block': openTab === 1}">
+        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+          <legend class="flex items-center px-2 text-gray-700 dark-disabled:text-gray-300">
+            <span class="mr-2">Assigned Crew List</span>
+          </legend>
+          <table class="w-full mt-2 whitespace-no-wrap" id="table">
+            <thead>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              <th class="px-4 py-3 align-bottom"><nobr>Crew Name</nobr></th>
+              <th class="px-4 py-3 align-bottom"><nobr>Contact</nobr></th>
+              <th class="px-4 py-3 align-bottom"><nobr>Net Salary</nobr></th>
+              <th class="px-4 py-3 align-bottom"><nobr>Present Days</nobr></th>
+              <th class="px-4 py-3 align-bottom"><nobr>Absent Days</nobr></th>
+              <th class="px-4 py-3 align-bottom"><nobr>Payable Days</nobr></th>
+              <th class="px-4 py-3 align-bottom"><nobr>Payable Amount</nobr></th>
+            </tr>
+            </thead>
 
-          <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-          <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(batchLine, index) in form.crwPayrollBatchLines" :key="batchLine.crw_crew_id">
-            <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].crw_full_name" placeholder="Crew name" class="form-input vms-readonly-input" autocomplete="off" readonly />
-            </td>
-            <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].crw_contact_no" placeholder="Crew contact no" class="form-input vms-readonly-input" autocomplete="off" readonly />
-            </td>
-            <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].net_salary" placeholder="Net salary" class="form-input vms-readonly-input" autocomplete="off" readonly />
-            </td>
-            <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].present_days" placeholder="Present days" class="form-input vms-readonly-input" autocomplete="off" readonly />
-            </td>
-            <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].absent_days" placeholder="Absent days" class="form-input vms-readonly-input" autocomplete="off" readonly />
-            </td>
-            <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].payable_days" placeholder="Payable days" class="form-input vms-readonly-input" autocomplete="off" readonly />
-            </td>
-            <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].payable_amount" placeholder="Payable amount" class="form-input vms-readonly-input" autocomplete="off" readonly />
-            </td>
-          </tr>
-          </tbody>
-          <tfoot v-if="!form.crwPayrollBatchLines?.length">
-          <tr v-if="isLoading">
-            <td colspan="8">Loading</td>
-          </tr>
-          <tr v-else-if="!form.crwPayrollBatchLines?.length">
-            <td colspan="8">No data found.</td>
-          </tr>
-          </tfoot>
-        </table>
-      </fieldset>
-    </div>
-    <div @click="changeTab(2)" v-bind:class="{'hidden': openTab !== 2, 'block': openTab === 2}">
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="flex items-center px-2 text-gray-700 dark-disabled:text-gray-300">
-          <span class="mr-2">Addition Head List</span>
-        </legend>
-        <table class="w-full mt-2 whitespace-no-wrap" id="table">
-          <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-            <th><nobr>Addition Head</nobr></th>
-            <th><nobr>Amount</nobr></th>
-<!--            <th><nobr>Based On</nobr></th>-->
-            <th>
-              <button type="button" @click="addAdditionHead" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg>
-              </button>
-            </th>
-          </tr>
-          </thead>
-          <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-          <template v-for="(batchHead, index) in form.crwPayrollBatchHeads">
-            <tr v-if="batchHead?.head_type === 'addition'" class="text-gray-700 dark-disabled:text-gray-400" :key="batchHead.key">
+            <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+            <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(batchLine, index) in form.crwPayrollBatchLines" :key="batchLine.crw_crew_id">
               <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].head_name" @input="additionChangeHead($event,batchHead.id)" placeholder="Head name" class="form-input" autocomplete="off" required />
+                <input type="text" v-model.trim="form.crwPayrollBatchLines[index].crw_full_name" placeholder="Crew name" class="form-input vms-readonly-input" autocomplete="off" readonly />
               </td>
               <td class="px-1 py-1">
-                <input type="number" step=".01" v-model.trim="form.crwPayrollBatchHeads[index].amount" @input="additionAmountSet($event,batchHead.id)" placeholder="Amount" class="form-input" autocomplete="off" required />
+                <input type="text" v-model.trim="form.crwPayrollBatchLines[index].crw_contact_no" placeholder="Crew contact no" class="form-input vms-readonly-input" autocomplete="off" readonly />
               </td>
-<!--              <td class="px-1 py-1">-->
-<!--                <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].head_type" placeholder="Crew rank" class="form-input" autocomplete="off" required />-->
-<!--              </td>-->
               <td class="px-1 py-1">
-                <button type="button" @click="removeAdditionItem(batchHead.id)" class="px-2 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                <input type="text" v-model.trim="form.crwPayrollBatchLines[index].net_salary" placeholder="Net salary" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              </td>
+              <td class="px-1 py-1">
+                <input type="text" v-model.trim="form.crwPayrollBatchLines[index].present_days" placeholder="Present days" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              </td>
+              <td class="px-1 py-1">
+                <input type="text" v-model.trim="form.crwPayrollBatchLines[index].absent_days" placeholder="Absent days" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              </td>
+              <td class="px-1 py-1">
+                <input type="text" v-model.trim="form.crwPayrollBatchLines[index].payable_days" placeholder="Payable days" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              </td>
+              <td class="px-1 py-1">
+                <input type="text" v-model.trim="form.crwPayrollBatchLines[index].payable_amount" placeholder="Payable amount" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              </td>
+            </tr>
+            </tbody>
+            <tfoot v-if="!form.crwPayrollBatchLines?.length">
+            <tr v-if="isLoading">
+              <td colspan="8">Loading</td>
+            </tr>
+            <tr v-else-if="!form.crwPayrollBatchLines?.length">
+              <td colspan="8">No data found.</td>
+            </tr>
+            </tfoot>
+          </table>
+        </fieldset>
+      </div>
+      <div @click="changeTab(2)" v-bind:class="{'hidden': openTab !== 2, 'block': openTab === 2}">
+        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+          <legend class="flex items-center px-2 text-gray-700 dark-disabled:text-gray-300">
+            <span class="mr-2">Addition Head List</span>
+          </legend>
+          <table class="w-full mt-2 whitespace-no-wrap" id="table">
+            <thead>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              <th><nobr>Addition Head</nobr></th>
+              <th><nobr>Amount</nobr></th>
+              <!--            <th><nobr>Based On</nobr></th>-->
+              <th>
+                <button type="button" @click="addAdditionHead" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                   </svg>
                 </button>
-              </td>
+              </th>
             </tr>
-          </template>
-          </tbody>
-          <tfoot>
-          <tr v-if="!form.crwPayrollBatchHeads?.filter(item => item.head_type === 'addition').length">
-            <td colspan="4">No data found</td>
-          </tr>
-          </tfoot>
-        </table>
-      </fieldset>
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="flex items-center px-2 text-gray-700 dark-disabled:text-gray-300">
-          <span class="mr-2">Assigned Crew List</span>
-        </legend>
-        <table class="w-full mt-2 whitespace-no-wrap" id="table">
-          <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-            <th class="px-4 py-3 align-bottom"><nobr>Crew Name</nobr></th>
-            <th class="px-4 py-3 align-bottom"><nobr>Crew Contact</nobr></th>
+            </thead>
+            <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
             <template v-for="(batchHead, index) in form.crwPayrollBatchHeads">
-              <th class="px-4 py-3 align-bottom" v-if="batchHead?.head_type==='addition'"><nobr>{{ batchHead?.head_name }}</nobr></th>
-            </template>
-            <th class="px-4 py-3 align-bottom"><nobr>Addition Amount</nobr></th>
-          </tr>
-          </thead>
-          <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-          <template v-for="(batchHeadLine, payrollBatchHeadLineIndex) in form.crwPayrollBatchHeadLines">
-            <tr v-if="batchHeadLine?.head_type==='addition'" class="text-gray-700 dark-disabled:text-gray-400" :key="batchHeadLine.crw_crew_id">
-              <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_name" placeholder="Crew name" class="form-input vms-readonly-input" autocomplete="off" readonly />
-              </td>
-              <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crw_contact_no" placeholder="Crew contact no" class="form-input vms-readonly-input" autocomplete="off" readonly />
-              </td>
-              <template v-for="(lineBatchHead, lineBatchHeadIndex) in form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads">
-                <td v-if="lineBatchHead?.head_type==='addition'" class="px-1 py-1">
-                  <input type="number" step=".01" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads[lineBatchHeadIndex].amount" @input="setAdditionBatchHeadAmount(payrollBatchHeadLineIndex)" placeholder="Amount" class="form-input" autocomplete="off" required />
+              <tr v-if="batchHead?.head_type === 'addition'" class="text-gray-700 dark-disabled:text-gray-400" :key="batchHead.key">
+                <td class="px-1 py-1">
+                  <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].head_name" @input="additionChangeHead($event,batchHead.id)" placeholder="Head name" class="form-input" autocomplete="off" required />
                 </td>
-              </template>
-              <td class="px-1 py-1">
-                <input type="number" step=".01" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount" placeholder="Amount" class="form-input vms-readonly-input" autocomplete="off" readonly />
-              </td>
+                <td class="px-1 py-1">
+                  <input type="number" step=".01" v-model.trim="form.crwPayrollBatchHeads[index].amount" @input="additionAmountSet($event,batchHead.id)" placeholder="Amount" class="form-input" autocomplete="off" required />
+                </td>
+                <!--              <td class="px-1 py-1">-->
+                <!--                <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].head_type" placeholder="Crew rank" class="form-input" autocomplete="off" required />-->
+                <!--              </td>-->
+                <td class="px-1 py-1">
+                  <button type="button" @click="removeAdditionItem(batchHead.id)" class="px-2 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            </template>
+            </tbody>
+            <tfoot>
+            <tr v-if="!form.crwPayrollBatchHeads?.filter(item => item.head_type === 'addition').length">
+              <td colspan="4">No data found</td>
             </tr>
-          </template>
-          </tbody>
-          <tfoot>
-          <tr v-if="!form.crwPayrollBatchHeadLines?.filter(item => item.head_type === 'addition').length">
-            <td colspan="4">No data found</td>
-          </tr>
-          </tfoot>
-        </table>
-      </fieldset>
-    </div>
-    <div @click="changeTab(3)" v-bind:class="{'hidden': openTab !== 3, 'block': openTab === 3}">
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="flex items-center px-2 text-gray-700 dark-disabled:text-gray-300">
-          <span class="mr-2">Deduction Head List</span>
-        </legend>
-        <table class="w-full mt-2 whitespace-no-wrap" id="table">
-          <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-            <th><nobr>Deduction Head</nobr></th>
-            <th><nobr>Amount</nobr></th>
-<!--            <th><nobr>Based On</nobr></th>-->
-            <th>
-              <button type="button" @click="addDeductionHead" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg>
-              </button>
-            </th>
-          </tr>
-          </thead>
-          <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-          <template v-for="(batchHead, index) in form.crwPayrollBatchHeads">
-            <tr v-if="batchHead?.head_type === 'deduction'" class="text-gray-700 dark-disabled:text-gray-400" :key="batchHead.key">
-              <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].head_name" @input="deductionChangeHead($event,batchHead.id)" placeholder="Head name" class="form-input" autocomplete="off" required />
-              </td>
-              <td class="px-1 py-1">
-                <input type="number" step=".01" v-model.trim="form.crwPayrollBatchHeads[index].amount" @input="deductionAmountSet($event,batchHead.id)" placeholder="Amount" class="form-input" autocomplete="off" required />
-              </td>
-<!--              <td class="px-1 py-1">-->
-<!--                <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].head_type" placeholder="Crew rank" class="form-input" autocomplete="off" required />-->
-<!--              </td>-->
-              <td class="px-1 py-1">
-                <button type="button" @click="removeDeductionItem(batchHead.id)" class="px-2 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+            </tfoot>
+          </table>
+        </fieldset>
+        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+          <legend class="flex items-center px-2 text-gray-700 dark-disabled:text-gray-300">
+            <span class="mr-2">Assigned Crew List</span>
+          </legend>
+          <table class="w-full mt-2 whitespace-no-wrap" id="table">
+            <thead>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              <th class="px-4 py-3 align-bottom"><nobr>Crew Name</nobr></th>
+              <th class="px-4 py-3 align-bottom"><nobr>Crew Contact</nobr></th>
+              <template v-for="(batchHead, index) in form.crwPayrollBatchHeads">
+                <th class="px-4 py-3 align-bottom" v-if="batchHead?.head_type==='addition'"><nobr>{{ batchHead?.head_name }}</nobr></th>
+              </template>
+              <th class="px-4 py-3 align-bottom"><nobr>Addition Amount</nobr></th>
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+            <template v-for="(batchHeadLine, payrollBatchHeadLineIndex) in form.crwPayrollBatchHeadLines">
+              <tr v-if="batchHeadLine?.head_type==='addition'" class="text-gray-700 dark-disabled:text-gray-400" :key="batchHeadLine.crw_crew_id">
+                <td class="px-1 py-1">
+                  <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_name" placeholder="Crew name" class="form-input vms-readonly-input" autocomplete="off" readonly />
+                </td>
+                <td class="px-1 py-1">
+                  <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crw_contact_no" placeholder="Crew contact no" class="form-input vms-readonly-input" autocomplete="off" readonly />
+                </td>
+                <template v-for="(lineBatchHead, lineBatchHeadIndex) in form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads">
+                  <td v-if="lineBatchHead?.head_type==='addition'" class="px-1 py-1">
+                    <input type="number" step=".01" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads[lineBatchHeadIndex].amount" @input="setAdditionBatchHeadAmount(payrollBatchHeadLineIndex)" placeholder="Amount" class="form-input" autocomplete="off" required />
+                  </td>
+                </template>
+                <td class="px-1 py-1">
+                  <input type="number" step=".01" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount" placeholder="Amount" class="form-input vms-readonly-input" autocomplete="off" readonly />
+                </td>
+              </tr>
+            </template>
+            </tbody>
+            <tfoot>
+            <tr v-if="!form.crwPayrollBatchHeadLines?.filter(item => item.head_type === 'addition').length">
+              <td colspan="4">No data found</td>
+            </tr>
+            </tfoot>
+          </table>
+        </fieldset>
+      </div>
+      <div @click="changeTab(3)" v-bind:class="{'hidden': openTab !== 3, 'block': openTab === 3}">
+        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+          <legend class="flex items-center px-2 text-gray-700 dark-disabled:text-gray-300">
+            <span class="mr-2">Deduction Head List</span>
+          </legend>
+          <table class="w-full mt-2 whitespace-no-wrap" id="table">
+            <thead>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              <th><nobr>Deduction Head</nobr></th>
+              <th><nobr>Amount</nobr></th>
+              <!--            <th><nobr>Based On</nobr></th>-->
+              <th>
+                <button type="button" @click="addDeductionHead" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                   </svg>
                 </button>
-              </td>
+              </th>
             </tr>
-          </template>
-          </tbody>
-          <tfoot>
-          <tr v-if="!form.crwPayrollBatchHeads?.filter(item => item.head_type === 'deduction').length">
-            <td colspan="4">No data found</td>
-          </tr>
-          </tfoot>
-        </table>
-      </fieldset>
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="flex items-center px-2 text-gray-700 dark-disabled:text-gray-300">
-          <span class="mr-2">Assigned Crew List</span>
-        </legend>
-        <table class="w-full mt-2 whitespace-no-wrap" id="table">
-          <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-            <th class="px-4 py-3 align-bottom"><nobr>Crew Name</nobr></th>
-            <th class="px-4 py-3 align-bottom"><nobr>Crew Contact</nobr></th>
+            </thead>
+            <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
             <template v-for="(batchHead, index) in form.crwPayrollBatchHeads">
-              <th class="px-4 py-3 align-bottom" v-if="batchHead?.head_type==='deduction'"><nobr>{{ batchHead?.head_name }}</nobr></th>
-            </template>
-            <th class="px-4 py-3 align-bottom"><nobr>Deduction Amount</nobr></th>
-          </tr>
-          </thead>
-          <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-          <template v-for="(batchHeadLine, payrollBatchHeadLineIndex) in form.crwPayrollBatchHeadLines">
-            <tr v-if="batchHeadLine?.head_type==='deduction'" class="text-gray-700 dark-disabled:text-gray-400" :key="batchHeadLine.crw_crew_id">
-              <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_name" placeholder="Crew name" class="form-input vms-readonly-input" autocomplete="off" readonly />
-              </td>
-              <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crw_contact_no" placeholder="Crew contact no" class="form-input vms-readonly-input" autocomplete="off" readonly />
-              </td>
-              <template v-for="(lineBatchHead, lineBatchHeadIndex) in form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads">
-                <td v-if="lineBatchHead?.head_type==='deduction'" class="px-1 py-1">
-                  <input type="number" step=".01" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads[lineBatchHeadIndex].amount" @input="setDeductionBatchHeadAmount(payrollBatchHeadLineIndex)" placeholder="Amount" class="form-input" autocomplete="off" required />
+              <tr v-if="batchHead?.head_type === 'deduction'" class="text-gray-700 dark-disabled:text-gray-400" :key="batchHead.key">
+                <td class="px-1 py-1">
+                  <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].head_name" @input="deductionChangeHead($event,batchHead.id)" placeholder="Head name" class="form-input" autocomplete="off" required />
                 </td>
+                <td class="px-1 py-1">
+                  <input type="number" step=".01" v-model.trim="form.crwPayrollBatchHeads[index].amount" @input="deductionAmountSet($event,batchHead.id)" placeholder="Amount" class="form-input" autocomplete="off" required />
+                </td>
+                <!--              <td class="px-1 py-1">-->
+                <!--                <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].head_type" placeholder="Crew rank" class="form-input" autocomplete="off" required />-->
+                <!--              </td>-->
+                <td class="px-1 py-1">
+                  <button type="button" @click="removeDeductionItem(batchHead.id)" class="px-2 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            </template>
+            </tbody>
+            <tfoot>
+            <tr v-if="!form.crwPayrollBatchHeads?.filter(item => item.head_type === 'deduction').length">
+              <td colspan="4">No data found</td>
+            </tr>
+            </tfoot>
+          </table>
+        </fieldset>
+        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+          <legend class="flex items-center px-2 text-gray-700 dark-disabled:text-gray-300">
+            <span class="mr-2">Assigned Crew List</span>
+          </legend>
+          <table class="w-full mt-2 whitespace-no-wrap" id="table">
+            <thead>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              <th class="px-4 py-3 align-bottom"><nobr>Crew Name</nobr></th>
+              <th class="px-4 py-3 align-bottom"><nobr>Crew Contact</nobr></th>
+              <template v-for="(batchHead, index) in form.crwPayrollBatchHeads">
+                <th class="px-4 py-3 align-bottom" v-if="batchHead?.head_type==='deduction'"><nobr>{{ batchHead?.head_name }}</nobr></th>
               </template>
+              <th class="px-4 py-3 align-bottom"><nobr>Deduction Amount</nobr></th>
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+            <template v-for="(batchHeadLine, payrollBatchHeadLineIndex) in form.crwPayrollBatchHeadLines">
+              <tr v-if="batchHeadLine?.head_type==='deduction'" class="text-gray-700 dark-disabled:text-gray-400" :key="batchHeadLine.crw_crew_id">
+                <td class="px-1 py-1">
+                  <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_name" placeholder="Crew name" class="form-input vms-readonly-input" autocomplete="off" readonly />
+                </td>
+                <td class="px-1 py-1">
+                  <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crw_contact_no" placeholder="Crew contact no" class="form-input vms-readonly-input" autocomplete="off" readonly />
+                </td>
+                <template v-for="(lineBatchHead, lineBatchHeadIndex) in form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads">
+                  <td v-if="lineBatchHead?.head_type==='deduction'" class="px-1 py-1">
+                    <input type="number" step=".01" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads[lineBatchHeadIndex].amount" @input="setDeductionBatchHeadAmount(payrollBatchHeadLineIndex)" placeholder="Amount" class="form-input" autocomplete="off" required />
+                  </td>
+                </template>
+                <td class="px-1 py-1">
+                  <input type="number" step=".01" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" readonly />
+                </td>
+              </tr>
+            </template>
+            </tbody>
+            <tfoot>
+            <tr v-if="!form.crwPayrollBatchHeadLines?.filter(item => item.head_type === 'deduction').length">
+              <td colspan="4">No data found</td>
+            </tr>
+            </tfoot>
+          </table>
+        </fieldset>
+      </div>
+      <div @click="changeTab(4)" v-bind:class="{'hidden': openTab !== 4, 'block': openTab === 4}">
+        <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+          <legend class="flex items-center px-2 text-gray-700 dark-disabled:text-gray-300">
+            <span class="mr-2">Assigned Crew List</span>
+          </legend>
+          <table class="w-full mt-2 whitespace-no-wrap" id="table">
+            <thead>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              <th class="px-4 py-3 align-bottom"><nobr>Crew Name</nobr></th>
+              <th class="px-4 py-3 align-bottom"><nobr>Crew Contact</nobr></th>
+              <th class="px-4 py-3 align-bottom"><nobr>Payable Days</nobr></th>
+              <th class="px-4 py-3 align-bottom"><nobr>Payable Amount</nobr></th>
+              <th class="px-4 py-3 align-bottom"><nobr>Addition Amount</nobr></th>
+              <th class="px-4 py-3 align-bottom"><nobr>Deduction Amount</nobr></th>
+              <th class="px-4 py-3 align-bottom"><nobr>Net Payable Amount</nobr></th>
+            </tr>
+            </thead>
+
+            <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+            <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(batchLine, index) in form.crwPayrollBatchLines" :key="batchLine.crw_crew_id">
               <td class="px-1 py-1">
-                <input type="number" step=".01" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" readonly />
+                <input type="text" v-model.trim="form.crwPayrollBatchLines[index].crw_full_name" placeholder="Crew name" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              </td>
+              <td class="px-1 py-1">
+                <input type="text" v-model.trim="form.crwPayrollBatchLines[index].crw_contact_no" placeholder="Crew ID" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              </td>
+              <td class="px-1 py-1">
+                <input type="text" v-model.trim="form.crwPayrollBatchLines[index].payable_days" placeholder="Payable days" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              </td>
+              <td class="px-1 py-1">
+                <input type="text" v-model.trim="form.crwPayrollBatchLines[index].payable_amount" placeholder="Payable amount" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              </td>
+              <td class="px-1 py-1">
+                <input type="text" v-model.trim="form.crwPayrollBatchLines[index].total_earnings" placeholder="Total earnings" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              </td>
+              <td class="px-1 py-1">
+                <input type="text" v-model.trim="form.crwPayrollBatchLines[index].total_deductions" placeholder="Total deductions" class="form-input vms-readonly-input" autocomplete="off" readonly />
+              </td>
+              <td class="px-1 py-1">
+                <input type="text" v-model.trim="form.crwPayrollBatchLines[index].net_payable_amount" placeholder="Net payable amount" class="form-input vms-readonly-input" autocomplete="off" readonly />
               </td>
             </tr>
-          </template>
-          </tbody>
-          <tfoot>
-          <tr v-if="!form.crwPayrollBatchHeadLines?.filter(item => item.head_type === 'deduction').length">
-            <td colspan="4">No data found</td>
-          </tr>
-          </tfoot>
-        </table>
-      </fieldset>
+            </tbody>
+            <tfoot v-if="!form.crwPayrollBatchLines?.length">
+            <tr v-if="isLoading">
+              <td colspan="7">Loading</td>
+            </tr>
+            <tr v-else-if="!form.crwPayrollBatchLines?.length">
+              <td colspan="7">No data found.</td>
+            </tr>
+            </tfoot>
+          </table>
+        </fieldset>
+      </div>
     </div>
-    <div @click="changeTab(4)" v-bind:class="{'hidden': openTab !== 4, 'block': openTab === 4}">
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="flex items-center px-2 text-gray-700 dark-disabled:text-gray-300">
-          <span class="mr-2">Assigned Crew List</span>
-        </legend>
-        <table class="w-full mt-2 whitespace-no-wrap" id="table">
-          <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-            <th class="px-4 py-3 align-bottom"><nobr>Crew Name</nobr></th>
-            <th class="px-4 py-3 align-bottom"><nobr>Crew Contact</nobr></th>
-            <th class="px-4 py-3 align-bottom"><nobr>Payable Days</nobr></th>
-            <th class="px-4 py-3 align-bottom"><nobr>Payable Amount</nobr></th>
-            <th class="px-4 py-3 align-bottom"><nobr>Addition Amount</nobr></th>
-            <th class="px-4 py-3 align-bottom"><nobr>Deduction Amount</nobr></th>
-            <th class="px-4 py-3 align-bottom"><nobr>Net Payable Amount</nobr></th>
-          </tr>
-          </thead>
-
-          <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-          <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(batchLine, index) in form.crwPayrollBatchLines" :key="batchLine.crw_crew_id">
-            <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].crw_full_name" placeholder="Crew name" class="form-input vms-readonly-input" autocomplete="off" readonly />
-            </td>
-            <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].crw_contact_no" placeholder="Crew ID" class="form-input vms-readonly-input" autocomplete="off" readonly />
-            </td>
-            <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].payable_days" placeholder="Payable days" class="form-input vms-readonly-input" autocomplete="off" readonly />
-            </td>
-            <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].payable_amount" placeholder="Payable amount" class="form-input vms-readonly-input" autocomplete="off" readonly />
-            </td>
-            <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].total_earnings" placeholder="Total earnings" class="form-input vms-readonly-input" autocomplete="off" readonly />
-            </td>
-            <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].total_deductions" placeholder="Total deductions" class="form-input vms-readonly-input" autocomplete="off" readonly />
-            </td>
-            <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.crwPayrollBatchLines[index].net_payable_amount" placeholder="Net payable amount" class="form-input vms-readonly-input" autocomplete="off" readonly />
-            </td>
-          </tr>
-          </tbody>
-          <tfoot v-if="!form.crwPayrollBatchLines?.length">
-          <tr v-if="isLoading">
-            <td colspan="7">Loading</td>
-          </tr>
-          <tr v-else-if="!form.crwPayrollBatchLines?.length">
-            <td colspan="7">No data found.</td>
-          </tr>
-          </tfoot>
-        </table>
-      </fieldset>
-    </div>
-  </div>
-  <button v-if="openTab===4" type="submit" :disabled="isLoading" class="flex items-center justify-between float-right px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-    <span>Submit</span>
-  </button>
-  <button type="button" v-else @click="changeTab(openTab + 1,'next')" :disabled="isLoading" class="flex items-center justify-between float-right px-4 py-2 mt-4 text-sm leading-5 text-white uppercase transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Next
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-      <path fill-rule="evenodd" d="M10.293 15.707a1 1 0 010-1.414L14.586 10l-4.293-4.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-      <path fill-rule="evenodd" d="M4.293 15.707a1 1 0 010-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-    </svg>
-  </button>
-  <button type="button" v-if="openTab!==1" @click="changeTab(openTab - 1, 'back')" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white uppercase transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-      <path fill-rule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
-    </svg>
-    Back
-  </button>
+    <button v-if="openTab===4" type="submit" :disabled="isLoading" class="flex items-center justify-between float-right px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+      <span>Submit</span>
+    </button>
+    <button type="button" v-else @click="changeTab(openTab + 1,'next')" :disabled="isLoading" class="flex items-center justify-between float-right px-4 py-2 mt-4 text-sm leading-5 text-white uppercase transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Next
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10.293 15.707a1 1 0 010-1.414L14.586 10l-4.293-4.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+        <path fill-rule="evenodd" d="M4.293 15.707a1 1 0 010-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+      </svg>
+    </button>
+    <button type="button" v-if="openTab!==1" @click="changeTab(openTab - 1, 'back')" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white uppercase transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414zm-6 0a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 011.414 1.414L5.414 10l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+      </svg>
+      Back
+    </button>
+  </template>
   <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped>
