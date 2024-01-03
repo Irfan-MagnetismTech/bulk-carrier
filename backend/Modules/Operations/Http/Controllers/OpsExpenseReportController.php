@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Modules\Operations\Entities\OpsVoyage;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsExpenseHead;
+use Modules\Operations\Entities\OpsVessel;
 use Modules\Operations\Entities\OpsVesselExpenseHead;
 use Modules\Operations\Entities\OpsVoyageExpenditureEntry;
 
@@ -82,8 +83,7 @@ class OpsExpenseReportController extends Controller
         //
     }
 
-    public function portWiseExpenditureReport(Request $request)
-    {
+    public function portWiseExpenditureReport(Request $request) {
         $start = date($request->start);
         $end = date($request->end);
         $port = $request->port;
@@ -166,4 +166,6 @@ class OpsExpenseReportController extends Controller
 
         // return Excel::download(new VoyageExpenditure($heads, $filteredVoyage), 'voyage_expenditure_report.xlsx');
     }
+
+
 }
