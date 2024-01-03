@@ -2,6 +2,11 @@
 
 namespace Modules\SupplyChain\Services;
 
+/**
+ * Class CompositeKey
+ * @package Modules\SupplyChain\Services
+ * This class is used to generate unique id for any model
+ */
 class CompositeKey
 {
     /**

@@ -68,7 +68,7 @@ class ScmMoController extends Controller
             $dataForStock = [];
 
             foreach ($request->scmMoLines as $scmMoLine) {
-                $dataForStock[] = (new StockLedgerData)->out($scmMoLine['scm_material_id'], $scmMo->from_warehouse_id, $scmMoLine['quantity']);
+                $dataForStock[] = StockLedgerData::out($scmMoLine['scm_material_id'], $scmMo->from_warehouse_id, $scmMoLine['quantity']);
             }
 
             $dataForStockLedger = array_merge(...$dataForStock);

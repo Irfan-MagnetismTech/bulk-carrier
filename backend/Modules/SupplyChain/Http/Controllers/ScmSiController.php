@@ -67,7 +67,7 @@ class ScmSiController extends Controller
             //loop through each line and update current stock
             $dataForStock = [];
             //    collect($request->scmSiLines)->map(function ($scmSiLine) use ($scmSi, &$dataForStock) {
-            //        $dataForStock[] = (new StockLedgerData)->out($scmSiLine->scm_material_id, $scmSi->scm_warehouse_id, $scmSiLine->quantity);
+            //        $dataForStock[] = StockLedgerData::out($scmSiLine->scm_material_id, $scmSi->scm_warehouse_id, $scmSiLine->quantity);
             //     });
 
             foreach ($request->scmSiLines as $scmSiLine) {
@@ -81,7 +81,7 @@ class ScmSiController extends Controller
                     );
                     return response()->json($error, 422);
                 }
-                $dataForStock[] = (new StockLedgerData)->out($scmSiLine['scm_material_id'], $scmSi->scm_warehouse_id, $scmSiLine['quantity']);
+                $dataForStock[] = StockLedgerData::out($scmSiLine['scm_material_id'], $scmSi->scm_warehouse_id, $scmSiLine['quantity']);
             }
 
             $dataForStockLedger = array_merge(...$dataForStock);
@@ -169,7 +169,7 @@ class ScmSiController extends Controller
                     );
                     return response()->json($error, 422);
                 }
-                $dataForStock[] = (new StockLedgerData)->out($scmSiLine['scm_material_id'], $storeIssue->scm_warehouse_id, $scmSiLine['quantity']);
+                $dataForStock[] = StockLedgerData::out($scmSiLine['scm_material_id'], $storeIssue->scm_warehouse_id, $scmSiLine['quantity']);
             }
 
             $dataForStockLedger = array_merge(...$dataForStock);

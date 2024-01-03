@@ -4,6 +4,9 @@ namespace Modules\SupplyChain\Services;
 
 use Modules\SupplyChain\Entities\ScmStockLedger;
 
+/**
+ * @type Service
+ */
 class StockLedgerData
 {
     /**
@@ -13,9 +16,9 @@ class StockLedgerData
      * @param array $lines
      * @param bool $os (opening stock)
      *
-     * @return void
+     * @return array
      */
-    public function insert(object $parentModel, array $lines, bool $os = false)
+    public static function insert(object $parentModel, array $lines, bool $os = false): array
     {
         $stock_ledger_data = [];
         collect($lines)->map(function ($line) use ($parentModel, &$stock_ledger_data, $os) {
@@ -44,9 +47,9 @@ class StockLedgerData
      * @param int $qty
      * @param string $method (Optional)
      * 
-     * @return array Returns an array of stock outflow records.
+     * @return array
      */
-    public function out(int $materialId, int $warehouseId, int $qty, string $method = 'fifo')
+    public static function out(int $materialId, int $warehouseId, int $qty, string $method = 'fifo'): array
     {
         if (CurrentStock::count($materialId, $warehouseId) < $qty) {
             return response()->json(['message' => 'Insufficient stock'], 422);

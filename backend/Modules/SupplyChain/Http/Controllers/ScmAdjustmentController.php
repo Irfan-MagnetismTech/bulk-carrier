@@ -69,11 +69,11 @@ class ScmAdjustmentController extends Controller
             $adjustment->scmAdjustmentLines()->createMany($linesData);
 
             if ($request->type === 'Addition') {
-                (new StockLedgerData)->insert($adjustment, $linesData);
+                StockLedgerData::insert($adjustment, $linesData);
             } else {
                 $dataForStock = [];
                 foreach ($request->scmAdjustmentLines as $key => $value) {
-                    $dataForStock[] = (new StockLedgerData)->out($value['scm_material_id'], $requestData['scm_warehouse_id'], $value['quantity'], 'lifo');
+                    $dataForStock[] = StockLedgerData::out($value['scm_material_id'], $requestData['scm_warehouse_id'], $value['quantity'], 'lifo');
                 }
                 $dataForStockLedger = array_merge(...$dataForStock);
 
@@ -129,11 +129,11 @@ class ScmAdjustmentController extends Controller
             $adjustment->scmAdjustmentLines()->createMany($linesData);
 
             if ($request->type === 'Addition') {
-                (new StockLedgerData)->insert($adjustment, $linesData);
+                StockLedgerData::insert($adjustment, $linesData);
             } else {
                 $dataForStock = [];
                 foreach ($request->scmAdjustmentLines as $key => $value) {
-                    $dataForStock[] = (new StockLedgerData)->out($value['scm_material_id'], $request->scm_warehouse_id, $value['quantity'], 'lifo');
+                    $dataForStock[] = StockLedgerData::out($value['scm_material_id'], $request->scm_warehouse_id, $value['quantity'], 'lifo');
                 }
                 $dataForStockLedger = array_merge(...$dataForStock);
 

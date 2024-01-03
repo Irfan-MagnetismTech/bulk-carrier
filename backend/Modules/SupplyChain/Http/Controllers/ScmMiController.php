@@ -104,7 +104,7 @@ class ScmMiController extends Controller
                 }
             }
 
-            (new StockLedgerData)->insert($scmMi, $request->scmMiLines);
+            StockLedgerData::insert($scmMi, $request->scmMiLines);
 
             DB::commit();
 
@@ -209,7 +209,7 @@ class ScmMiController extends Controller
 
             $movementIn->scmMiLines()->createMany($linesData);
 
-            (new StockLedgerData)->insert($movementIn, $request->scmMiLines);
+            StockLedgerData::insert($movementIn, $request->scmMiLines);
 
             if ($request->scmMiShortage['shortage_type'] == "") {
 

@@ -58,7 +58,7 @@ class ScmMrrController extends Controller
 
             $scmMrr = ScmMrr::create($requestData);
             $scmMrr->scmMrrLines()->createUpdateOrDelete($request->scmMrrLines);
-            (new StockLedgerData)->insert($scmMrr, $request->scmMrrLines);
+            StockLedgerData::insert($scmMrr, $request->scmMrrLines);
 
             DB::commit();
 
@@ -127,7 +127,7 @@ class ScmMrrController extends Controller
             $materialReceiptReport->scmMrrLines()->createUpdateOrDelete($request->scmMrrLines);
 
             $materialReceiptReport->stockable()->delete();
-            (new StockLedgerData)->insert($materialReceiptReport, $request->scmMrrLines);
+            StockLedgerData::insert($materialReceiptReport, $request->scmMrrLines);
 
             DB::commit();
 
