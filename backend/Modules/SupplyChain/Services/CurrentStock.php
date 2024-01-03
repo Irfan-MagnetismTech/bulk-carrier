@@ -4,6 +4,11 @@ namespace Modules\SupplyChain\Services;
 
 use Modules\SupplyChain\Entities\ScmStockLedger;
 
+/**
+ * @package Modules\SupplyChain\Services
+ * 
+ * @class-type Service
+ */
 class CurrentStock
 {
     /**
@@ -26,6 +31,6 @@ class CurrentStock
             })
             ->sum('quantity');
 
-        return $currentStock;
+        return (int) $currentStock;
     }
 }
