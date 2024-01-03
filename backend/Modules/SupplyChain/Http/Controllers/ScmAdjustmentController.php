@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
@@ -159,9 +160,9 @@ class ScmAdjustmentController extends Controller
             $adjustment->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);
-        } catch (\Exception $e) {
+        } catch (QueryException $e) {
 
-            return response()->error($e->getMessage(), 500);
+            return response()->json($adjustment->preventDeletionIfRelated(), 422);
         }
     }
 }
