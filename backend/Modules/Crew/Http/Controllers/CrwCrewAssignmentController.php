@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Crew\Entities\CrwCrewAssignment;
 use Modules\Crew\Http\Requests\CrwCrewAssignmentRequest;
+use Modules\SupplyChain\Services\UniqueId;
 
 class CrwCrewAssignmentController extends Controller
 {
@@ -40,6 +41,7 @@ class CrwCrewAssignmentController extends Controller
     {
         try {
             $crwCrewAssignmentData = $request->only('ops_vessel_id', 'crw_crew_id', 'position_onboard', 'joining_date', 'joining_port_code', 'duration', 'remarks', 'business_unit');
+            $crwCrewAssignmentData['assignment_code'] = UniqueId::generate(CrwCrewAssignment::class, 'ASGMNT');
             $crwCrewAssignment     = CrwCrewAssignment::create($crwCrewAssignmentData);
 
             return response()->success('Created Succesfully', $crwCrewAssignment, 201);
