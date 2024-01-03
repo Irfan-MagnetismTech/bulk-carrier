@@ -16,7 +16,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 
 
-const { getMaterialAdjustments, materialAdjustments, deleteMaterialAdjustment, isLoading } = useMaterialAdjustment();
+const { getMaterialAdjustments, materialAdjustments, deleteMaterialAdjustment, isLoading, isTableLoading } = useMaterialAdjustment();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -57,7 +57,7 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Date",
-      "filter_type": "input" 
+      "filter_type": "date" 
     },
     {
       "relation_name": null,
@@ -67,7 +67,12 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Adjustment Type",
-      "filter_type": "input"
+      "filter_type": "dropdown",
+      "select_options": [
+          { value: "", label: "All" ,defaultSelected: true},
+          { value: "Addition", label: "Addition" ,defaultSelected: false},
+          { value: "Deduction", label: "Deduction",defaultSelected: false},
+        ]
     },
     {
       "relation_name": "scmWarehouse",
@@ -87,7 +92,6 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Adjusted By",
-      "filter_type": "input"
     },
   ]
 });
@@ -125,33 +129,6 @@ onMounted(() => {
 });
 
 });
-// Code for global search end here
-
-// const navigateToPOCreate = (materialAdjustmentId) => {
-//   const pr_id = materialAdjustmentId; 
-//   const cs_id = null;
-//   const routeOptions = {
-//     name: 'scm.store-orders.create',
-//     query: {
-//       pr_id: pr_id,
-//       cs_id: cs_id
-//     }
-//   };
-//   router.push(routeOptions);
-// };  
-
-// const navigateToMRRCreate = (materialAdjustmentId) => {
-//   const pr_id = materialAdjustmentId; 
-//   const po_id = null;
-//   const routeOptions = {
-//     name: 'scm.material-receipt-reports.create',
-//     query: {
-//       pr_id: pr_id,
-//       po_id: po_id
-//     }
-//   };
-//   router.push(routeOptions);
-// };
 
 
 function confirmDelete(id) {
@@ -170,16 +147,6 @@ function confirmDelete(id) {
         })
       }
 
-      const navigateToSICreate = (SrId) => {
-        const sr_id = SrId;
-        const routeOptions = {
-          name: 'scm.store-issues.create',
-          query: {
-            sr_id: sr_id,
-          }
-        };
-        router.push(routeOptions);
-      };
 </script>
 
 <template>
@@ -193,35 +160,25 @@ function confirmDelete(id) {
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
-          <!-- <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>Ref No</th>
-            <th>From Warehouse</th>
-            <th>To Warehouse</th>
-            <th>Date</th>
-            <th>Required Date</th>
-            <th>Business Unit</th>
-            <th>Action</th>
-          </tr>
-          </thead> -->
+
           <FilterComponent :filterOptions = "filterOptions"/>
+
           <tbody>
             <tr v-for="(materialAdjustment,index) in (materialAdjustments?.data ? materialAdjustments?.data : materialAdjustments)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ materialAdjustment?.date }}</td>
               <td>{{ materialAdjustment?.type ?? '' }}</td>
               <td>{{ materialAdjustment?.scmWarehouse?.name?? '' }}</td>
+              <td>{{ materialAdjustment?.scmWarehouse?.name?? '' }}</td>
               <td>
                 <span :class="materialAdjustment?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialAdjustment?.business_unit }}</span>
               </td>
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">
-                  <!-- <button @click="navigateToSICreate(materialAdjustment.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create SI</button> -->
-                  <!-- <button @click="navigateToPOCreate(materialAdjustment.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
-                  <button @click="navigateToMRRCreate(materialAdjustment.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
+
                   <action-button :action="'edit'" :to="{ name: 'scm.material-adjustments.edit', params: { materialAdjustmentId: materialAdjustment.id } }"></action-button>
                   <action-button @click="confirmDelete(materialAdjustment.id)" :action="'delete'"></action-button>
+
                 </div>
               </td>
             </tr>

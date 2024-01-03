@@ -7,7 +7,7 @@ import Store from '../../store/index.js';
 // import useFileDownload from 'vue-composable/dist/vue-composable.esm';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
-
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 export default function useMaterialAdjustment() {
     const BASE = 'scm' 
@@ -20,7 +20,7 @@ export default function useMaterialAdjustment() {
     const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const materialAdjustment = ref( {
         ref_no: '',
@@ -84,9 +84,14 @@ export default function useMaterialAdjustment() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
-            isLoading.value = false;
-            //NProgress.done();
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
         }
     }
     async function storeMaterialAdjustment(form) {

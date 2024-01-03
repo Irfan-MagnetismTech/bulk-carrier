@@ -84,4 +84,9 @@ class OpsVoyage extends Model
     // public function opsChartererInvoiceVoyage() {
     //     return $this->hasMany(OpsChartererInvoiceVoyage::class, 'ops_voyage_id','id');
     // }
+
+    public function opsVoyageExpenditureEntries() {
+        return $this->hasMany(OpsVoyageExpenditureEntry::class, 'ops_voyage_id','id');
+    }
+
 }

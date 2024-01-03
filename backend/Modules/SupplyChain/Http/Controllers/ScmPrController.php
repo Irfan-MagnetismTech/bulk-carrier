@@ -22,7 +22,7 @@ use Maatwebsite\Excel\Validators\ValidationException;
 
 class ScmPrController extends Controller
 {
-    function __construct(private FileUploadService $fileUpload, private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    function __construct(private FileUploadService $fileUpload)
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -64,14 +64,14 @@ class ScmPrController extends Controller
         $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs');
         $requestData['attachment'] = $attachment;
         $requestData['created_by'] = auth()->user()->id;
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmPr::class, 'PR');
+        $requestData['ref_no'] = UniqueId::generate(ScmPr::class, 'PR');
 
         try {
             DB::beginTransaction();
 
             $purchase_requisition = ScmPr::create($requestData);
             if ($request->entry_type === '0') {
-                $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
+                $linesData = CompositeKey::generateArray($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
                 $purchase_requisition->scmPrLines()->createMany($linesData);
             } else {
                 $import = new ScmMaterialsImport();
@@ -81,7 +81,7 @@ class ScmPrController extends Controller
                 if ($import->invalid) {
                     return response()->json($import->invalid, 422);
                 } else {
-                    $linesData = $this->compositeKey->generateArrayWithCompositeKey($import->uniqueRows, $purchase_requisition->id, 'scm_material_id', 'pr');
+                    $linesData = CompositeKey::generateArray($import->uniqueRows, $purchase_requisition->id, 'scm_material_id', 'pr');
                     $purchase_requisition->scmPrLines()->createUpdateOrDelete($linesData);
                 }
             }
@@ -172,7 +172,7 @@ class ScmPrController extends Controller
     {
         $requestData = $request->except('ref_no', 'pr_composite_key');
 
-        $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
+        $linesData = CompositeKey::generateArray($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
 
         try {
             DB::beginTransaction();

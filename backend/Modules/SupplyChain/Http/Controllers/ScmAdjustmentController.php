@@ -17,7 +17,7 @@ use Modules\SupplyChain\Http\Requests\ScmAdjustmentRequest;
 
 class ScmAdjustmentController extends Controller
 {
-    function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    function __construct()
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -37,7 +37,8 @@ class ScmAdjustmentController extends Controller
                 'scmWarehouse',
                 'createdBy',
                 'scmAdjustmentLines.scmMaterial',
-            )->latest()->paginate(10);
+            )->globalSearch(request()->all());
+
 
             return response()->success('Data list', $datas, 200);
         } catch (\Exception $e) {
@@ -55,14 +56,15 @@ class ScmAdjustmentController extends Controller
     {
         $requestData = $request->except('ref_no', 'adjustment_composite_key');
 
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmAdjustment::class, 'AJT');
+        $requestData['ref_no'] = UniqueId::generate(ScmAdjustment::class, 'AJT');
+        $requestData['created_by'] = auth()->user()->id;
 
         try {
             DB::beginTransaction();
 
             $adjustment = ScmAdjustment::create($requestData);
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
+            $linesData = CompositeKey::generateArray($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
             $adjustment->scmAdjustmentLines()->createMany($linesData);
 
             if ($request->type === 'Addition') {
@@ -121,7 +123,7 @@ class ScmAdjustmentController extends Controller
 
             $adjustment->stockable()->delete();
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
+            $linesData = CompositeKey::generateArray($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
 
             $adjustment->scmAdjustmentLines()->createMany($linesData);
 

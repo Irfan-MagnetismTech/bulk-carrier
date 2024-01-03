@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmMi;
 use Modules\SupplyChain\Entities\ScmMo;
 use Modules\SupplyChain\Services\UniqueId;
-use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
 use Modules\SupplyChain\Entities\ScmMiShortage;
+use Modules\SupplyChain\Entities\ScmMiShortageLine;
 use Modules\SupplyChain\Entities\ScmStockLedger;
 use Modules\SupplyChain\Services\StockLedgerData;
 use Modules\SupplyChain\Http\Requests\ScmMiRequest;
@@ -20,7 +20,7 @@ use Modules\SupplyChain\Http\Requests\ScmMiRequest;
 class ScmMiController extends Controller
 {
 
-    function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    function __construct()
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -40,7 +40,9 @@ class ScmMiController extends Controller
                 'fromWarehouse',
                 'toWarehouse',
                 'createdBy',
-            )->latest()->paginate(10);
+            )
+                ->globalSearch(request()->all());
+
 
             return response()->success('Data list', $movementOuts, 200);
         } catch (\Exception $e) {
@@ -56,21 +58,52 @@ class ScmMiController extends Controller
     {
         $requestData = $request->except('ref_no', 'mi_composite_key');
 
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmMi::class, 'MI');
+        $requestData['ref_no'] = UniqueId::generate(ScmMi::class, 'MI');
 
         try {
             DB::beginTransaction();
 
             $scmMi = ScmMi::create($requestData);
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMiLines, $scmMi->id, 'scm_material_id', 'mi');
+            $linesData = CompositeKey::generateArray($request->scmMiLines, $scmMi->id, 'scm_material_id', 'mi');
+
             $scmMi->scmMiLines()->createMany($linesData);
 
             if ($request->scmMiShortage['shortage_type'] != "") {
                 $scmMi->scmMiShortage()->create($request->scmMiShortage);
 
                 $this->shortageLinesData($request, $scmMi);
+
+                $stockInFromShortage = [];
+                $stockOutFromShortage = [];
+
+                foreach ($request->scmMiShortage['scmMiShortageLines'] as $key => $value) {
+
+                    $stockInFromShortage = [
+                        'scm_material_id' => $value['scm_material_id'],
+                        'scm_warehouse_id' => $request->scmMiShortage['scm_warehouse_id'],
+                        'acc_cost_center_id' => $request->scmMiShortage['acc_cost_center_id'],
+                        'quantity' => $value['quantity'],
+                        'business_unit' => $request->business_unit
+                    ];
+
+                    $miStockable = $scmMi->stockable()->create($stockInFromShortage);
+
+                    $stockOutFromShortage = [
+                        'scm_material_id' => $value['scm_material_id'],
+                        'recievable_type`' => ScmMi::class,
+                        'recievable_id' =>  $scmMi->scmMiShortage->scmMiShortageLines[$key]->id,
+                        'scm_warehouse_id' => $request->scmMiShortage['scm_warehouse_id'],
+                        'acc_cost_center_id' => $request->scmMiShortage['acc_cost_center_id'],
+                        'quantity' => $value['quantity'] * -1,
+                        'parent_id' => $miStockable->id,
+                        'business_unit' => $request->business_unit
+                    ];
+
+                    $scmMi->scmMiShortage->stockable()->create($stockOutFromShortage);
+                }
             }
+
             (new StockLedgerData)->insert($scmMi, $request->scmMiLines);
 
             DB::commit();
@@ -90,7 +123,7 @@ class ScmMiController extends Controller
      * @param mixed $scmMi.
      * @return void
      */
-    private function shortageLinesData($request, $scmMi): void
+    private function shortageLinesData($request, $scmMi)
     {
         $shortageLines = $request->scmMiShortage['scmMiShortageLines'];
 
@@ -115,9 +148,9 @@ class ScmMiController extends Controller
     {
         try {
             $movementIn->load(
-                'scmMiLines.scmMaterial',
+                'scmMiShortage.scmMiShortageLines.scmMaterial',
                 'scmMiShortage.scmWarehouse',
-                'scmMiShortage.scmMiShortageLines',
+                'scmMiLines.scmMaterial',
                 'fromWarehouse',
                 'toWarehouse',
                 'createdBy',
@@ -127,6 +160,7 @@ class ScmMiController extends Controller
 
             $scmMiLines = $movementIn->scmMiLines->map(function ($scmMiLine) use ($movementIn) {
                 $lines = [
+                    'id' => $scmMiLine->id,
                     'scm_material_id' => $scmMiLine->scm_material_id,
                     'scmMaterial' => $scmMiLine->scmMaterial,
                     'unit' => $scmMiLine->unit,
@@ -159,7 +193,7 @@ class ScmMiController extends Controller
      * @param ScmMi $movementIn
      * @return JsonResponse
      */
-    public function update(ScmMIRequest $request, ScmMi $movementIn): JsonResponse
+    public function update(ScmMIRequest $request, ScmMi $movementIn)
     {
         $requestData = $request->except('ref_no', 'mi_composite_key');
 
@@ -170,52 +204,80 @@ class ScmMiController extends Controller
 
             $movementIn->scmMiLines()->delete();
             $movementIn->stockable()->delete();
-            $movementIn->scmMiShortage->scmMiShortageLines()->delete();
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMiLines, $movementIn->id, 'scm_material_id', 'mi');
+            $linesData = CompositeKey::generateArray($request->scmMiLines, $movementIn->id, 'scm_material_id', 'mi');
 
             $movementIn->scmMiLines()->createMany($linesData);
 
+            (new StockLedgerData)->insert($movementIn, $request->scmMiLines);
+
+            if ($request->scmMiShortage['shortage_type'] == "") {
+
+                if ($movementIn->scmMiShortage) {
+                    $movementIn->scmMiShortage->scmMiShortageLines()->delete();
+                    $movementIn->scmMiShortage->stockable()->delete();
+                    $movementIn->scmMiShortage->delete();
+                }
+            }
+
             if ($request->scmMiShortage['shortage_type'] != "") {
 
-                $movementIn->scmMiShortage()->update([
-                    'scm_mi_id' => $movementIn->id,
-                    'shortage_type' => $request->scmMiShortage['shortage_type'],
-                    'scm_warehouse_id' => $request->scmMiShortage['scm_warehouse_id'],
-                    'acc_cost_center_id' => $request->scmMiShortage['scm_cost_center_id'] ?? null,
-                    'business_unit' => $request->business_unit
-                ]);
+                if ($movementIn->scmMiShortage) {
+                    $movementIn->scmMiShortage->scmMiShortageLines()->delete();
+                    $movementIn->scmMiShortage->stockable()->delete();
 
-                $this->shortageLinesData($request, $movementIn);
+                    $movementIn->scmMiShortage()->update([
+                        'scm_mi_id' => $movementIn->id,
+                        'shortage_type' => $request->scmMiShortage['shortage_type'],
+                        'scm_warehouse_id' => $request->scmMiShortage['scm_warehouse_id'],
+                        'acc_cost_center_id' => $request->scmMiShortage['acc_cost_center_id'] ?? null,
+                        'business_unit' => $request->business_unit
+                    ]);
+                } else {
+                    $scmMiShortage = $movementIn->scmMiShortage()->create($request->scmMiShortage);
+                }
 
-                (new StockLedgerData)->insert($movementIn, $request->scmMiLines);
+                $shortageLines = $request->scmMiShortage['scmMiShortageLines'];
+
+                foreach ($shortageLines as $key => $shortageLine) {
+                    $materialId = $shortageLine['scm_material_id'];
+                    $shortageLine['scm_mi_shortage_id'] = isset($scmMiShortage) ? $scmMiShortage->id : $movementIn->scmMiShortage->id;
+
+                    $miLine = $movementIn->scmMiLines()->where('scm_material_id', $materialId)->first();
+
+                    if ($miLine && $miLine->mi_composite_key) {
+                        $shortageLine['mi_composite_key'] = $miLine->mi_composite_key;
+                    }
+                    ScmMiShortageLine::create($shortageLine);
+                }
 
                 $stockInFromShortage = [];
+                $stockOutFromShortage = [];
 
                 foreach ($request->scmMiShortage['scmMiShortageLines'] as $key => $value) {
 
                     $stockInFromShortage = [
                         'scm_material_id' => $value['scm_material_id'],
                         'scm_warehouse_id' => $request->scmMiShortage['scm_warehouse_id'],
-                        'scm_cost_center_id' => $request->scmMiShortage['scm_cost_center_id'],
+                        'acc_cost_center_id' => $request->scmMiShortage['acc_cost_center_id'],
                         'quantity' => $value['quantity'],
                         'business_unit' => $request->business_unit
                     ];
 
                     $miStockable = $movementIn->stockable()->create($stockInFromShortage);
 
-                    $stockInFromShortage = [
+                    $stockOutFromShortage = [
                         'scm_material_id' => $value['scm_material_id'],
                         'recievable_type`' => ScmMi::class,
-                        'recievable_id' => $movementIn->scmMiShortage->scmMiShortageLines[$key]->id,
+                        'recievable_id' => isset($scmMiShortage) ? $scmMiShortage->scmMiShortageLines[$key]->id : $movementIn->scmMiShortage->scmMiShortageLines[$key]->id,
                         'scm_warehouse_id' => $request->scmMiShortage['scm_warehouse_id'],
-                        'scm_cost_center_id' => $request->scmMiShortage['scm_cost_center_id'],
+                        'acc_cost_center_id' => $request->scmMiShortage['acc_cost_center_id'],
                         'quantity' => $value['quantity'] * -1,
                         'parent_id' => $miStockable->id,
                         'business_unit' => $request->business_unit
                     ];
 
-                    $movementIn->scmMiShortage->stockable()->create($stockInFromShortage);
+                    isset($scmMiShortage) ? $scmMiShortage->stockable()->create($stockOutFromShortage) : $movementIn->scmMiShortage->stockable()->create($stockOutFromShortage);
                 }
             }
 
@@ -237,12 +299,21 @@ class ScmMiController extends Controller
     public function destroy(ScmMi $movementIn): JsonResponse
     {
         try {
+            DB::beginTransaction();
+            $movementIn->stockable()->delete();
             $movementIn->scmMiLines()->delete();
+
+            if ($movementIn->scmMiShortage) {
+                $movementIn->scmMiShortage->stockable()->delete();
+                $movementIn->scmMiShortage->scmMiShortageLines()->delete();
+                $movementIn->scmMiShortage()->delete();
+            }
             $movementIn->delete();
 
+            DB::commit();
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (\Exception $e) {
-
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }

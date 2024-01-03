@@ -19,7 +19,7 @@ use Modules\SupplyChain\Http\Requests\ScmMrrRequest;
 
 class ScmMrrController extends Controller
 {
-    function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    function __construct(private CompositeKey $compositeKey)
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -51,7 +51,7 @@ class ScmMrrController extends Controller
     public function store(ScmMrrRequest $request): JsonResponse
     {
         $requestData = $request->except('ref_no');
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmMrr::class, 'MRR');
+        $requestData['ref_no'] = UniqueId::generate(ScmMrr::class, 'MRR');
 
         try {
             DB::beginTransaction();

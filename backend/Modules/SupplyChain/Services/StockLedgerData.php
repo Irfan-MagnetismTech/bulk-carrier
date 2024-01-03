@@ -9,13 +9,13 @@ class StockLedgerData
     /**
      * Inserts stock ledger data related to a parent model.
      *
-     * @param mixed $parentModel
+     * @param object $parentModel
      * @param array $lines
      * @param bool $os (opening stock)
      *
      * @return void
      */
-    public function insert($parentModel, $lines, $os = false)
+    public function insert(object $parentModel, array $lines, bool $os = false)
     {
         $stock_ledger_data = [];
         collect($lines)->map(function ($line) use ($parentModel, &$stock_ledger_data, $os) {
@@ -46,7 +46,7 @@ class StockLedgerData
      * 
      * @return array Returns an array of stock outflow records.
      */
-    public function out($materialId, $warehouseId, $qty, $method = 'fifo')
+    public function out(int $materialId, int $warehouseId, int $qty, string $method = 'fifo')
     {
         if ((new CurrentStock)->count($materialId, $warehouseId) < $qty) {
             return response()->json(['message' => 'Insufficient stock'], 422);

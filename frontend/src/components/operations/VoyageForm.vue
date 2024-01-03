@@ -102,8 +102,8 @@
               <input type="hidden" v-model="form.ops_cargo_type_id">
           </label>
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Load Port Distance (NM) <span class="text-red-500">*</span></span>
-              <input type="number" v-model.trim="form.load_port_distance" placeholder="Load Port Distance (NM)" class="form-input" required autocomplete="off" />
+              <span class="text-gray-700 dark-disabled:text-gray-300">Load Port Distance (NM) <span v-if="form.business_unit=='PSML'" class="text-red-500">*</span></span>
+              <input type="number" v-model.trim="form.load_port_distance" placeholder="Load Port Distance (NM)" class="form-input" :required="form.business_unit=='PSML'" autocomplete="off" />
             </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Sail Date <span class="text-red-500">*</span></span>
@@ -388,8 +388,18 @@ const openTab = ref(1);
 const toggleTabs = (tabNumber) => {
   console.log("object "+ tabNumber);
   if (openTab.value === 1) {
-    let tab1RequiredFields = ['business_unit', 'ops_customer_id', 'mother_vessel', 'ops_vessel_id', 'voyage_no', 'voyage_sequence', 'route', 'ops_cargo_type_id', 'load_port_distance',
+    let tab1RequiredFields = ['business_unit', 'ops_customer_id', 'mother_vessel', 'ops_vessel_id', 'voyage_no', 'voyage_sequence', 'route', 'ops_cargo_type_id',
       'sail_date', 'transit_date'];
+
+      if (props.form.business_unit === 'PSML' && !tab1RequiredFields.includes('load_port_distance')) {
+        tab1RequiredFields.push('load_port_distance');
+      } else {
+        const index = tab1RequiredFields.indexOf('load_port_distance');
+        if (index !== -1) {
+          tab1RequiredFields.splice(index, 1);
+        }
+      }
+
     if (!checkValidation(openTab, tabNumber, props, tab1RequiredFields)) {
       return;
     }

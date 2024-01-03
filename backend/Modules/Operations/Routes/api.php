@@ -11,7 +11,10 @@ use Modules\Operations\Http\Controllers\OpsCargoTypeController;
 use Modules\Operations\Http\Controllers\OpsBunkerBillController;
 use Modules\Operations\Http\Controllers\OpsCargoTariffController;
 use Modules\Operations\Http\Controllers\OpsExpenseHeadController;
+use Modules\Operations\Http\Controllers\OpsVesselBunkerController;
 use Modules\Operations\Http\Controllers\OpsVoyageBudgetController;
+use Modules\Operations\Http\Controllers\OpsVoyageReportController;
+use Modules\Operations\Http\Controllers\OpsExpenseReportController;
 use Modules\Operations\Http\Controllers\OpsBulkNoonReportController;
 use Modules\Operations\Http\Controllers\OpsContractAssignController;
 use Modules\Operations\Http\Controllers\OpsVoyageBoatNoteController;
@@ -67,6 +70,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
         'bunker-requisitions' => OpsBunkerRequisitionController::class,
         'bunker-bills' => OpsBunkerBillController::class,
         'voyage-budgets' => OpsVoyageBudgetController::class,
+        'vessel-bunkers' => OpsVesselBunkerController::class,
     ]);
 
     //start for without pagination
@@ -137,6 +141,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     // report routes
     Route::get('export-particular-report', [OpsVesselParticularController::class, 'exportVesselParticularReport']);
     Route::get('particular-charterer-download', [OpsVesselParticularController::class, 'vesselParticularAttachmentDownload']);
+    Route::get('voyage-report', [OpsVoyageReportController::class, 'voyageReport']);
     
 
     //Business Info Apis
@@ -144,4 +149,10 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::get('engine-temparature-types', fn () => config('businessinfo.engine_temparature_types'));
 
     Route::post('vessel-search', [OpsVesselController::class, 'search']);
+
+
+
+    // Reports
+    Route::post('/port-wise-expense-report', [OpsExpenseReportController::class, 'portWiseExpenditureReport']);
+    // start=2023-12-01&end=2023-12-31&business_unit=TSLL&port=DAOUTKANDI
 });

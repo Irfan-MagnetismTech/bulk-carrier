@@ -4,85 +4,47 @@
     <default-button :title="'Customer Invoice List'" :to="{ name: 'ops.customer-invoices.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Business Unit</span>
-
-        <span class="show-block">
-          {{ customerInvoice.business_unit }}
-        </span>
-      </label>
-      <label class="block w-full mt-2 text-sm"></label>
-      <label class="block w-full mt-2 text-sm"></label>
-
-    </div>
-
-    <h4 class="text-md font-semibold mt-3">Basic Info</h4>
-
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Customer Owner</span>
-              <span class="show-block">
-                {{ customerInvoice.opsCustomerProfile?.name_and_code }}
-              </span>
-        </label>
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Contract</span>
-              <span class="show-block">
-                {{ customerInvoice.opsCustomerContract?.contract_name }}
-              </span>
-        </label>
-    </div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel</span>
-              <input type="text" readonly :value="customerInvoice.opsCustomerContract?.opsVessel?.name" class="form-input bg-gray-100" autocomplete="off" />
-        </label>
-    </div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="customerInvoice.contract_type == 'Day Wise'">
-          <label class="block w-full mt-2 text-sm">
-                <span class="text-gray-700 dark-disabled:text-gray-300">Bill From</span>
-                <input type="date" v-model.trim="customerInvoice.bill_from" class="form-input" autocomplete="off" />
-          </label>
-          <label class="block w-full mt-2 text-sm">
-                <span class="text-gray-700 dark-disabled:text-gray-300">Bill Till</span>
-                <input type="date" v-model.trim="customerInvoice.bill_till" class="form-input" autocomplete="off" />
-          </label>
-          <label class="block w-full mt-2 text-sm">
-                <span class="text-gray-700 dark-disabled:text-gray-300">Total Days</span>
-                <span class="show-block !justify-center">
-                    {{ customerInvoice?.total_days }}
-                </span>
-          </label>
-          <label class="block w-full mt-2 text-sm">
-                <span class="text-gray-700 dark-disabled:text-gray-300">Charge Per Day</span>
-                <span class="show-block !justify-end">
-                    {{ numberFormat(customerInvoice?.per_day_charge) }}
-                </span>
-          </label>
-          <label class="block w-full mt-2 text-sm">
-                <span class="text-gray-700 dark-disabled:text-gray-300">Total Amount</span>
-                <span class="show-block !justify-end">
-                    {{ numberFormat(customerInvoice?.total_amount) }}
-                </span>
-          </label>
-    </div>
-
-    <div id="sectors" class="mt-5" v-if="customerInvoice.contract_type == 'Voyage Wise'">
-        <h4 class="text-md font-semibold my-3">Voyage Data</h4>
-
-        <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
+    <div class="flex md:gap-4">
+          <div class="w-full">
+              <table class="w-full">
+                  <thead>
+                      <tr>
+                          <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="2">Basic Info</td>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <th class="w-40">Business Unit</th>
+                          <td><span :class="customerInvoice?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ customerInvoice?.business_unit }}</span></td>
+                      </tr>                      
+                      <tr>
+                          <th class="w-40">Invoice Date</th>
+                          <td>{{ customerInvoice?.date ? moment(customerInvoice?.date).format('DD-MM-YYYY') : null }}</td>
+                      </tr>
+                      <tr>
+                          <th class="w-40">Customer Name</th>
+                          <td>{{ customerInvoice.opsCustomer?.name_code }}</td>
+                      </tr>                      
+                  </tbody>
+              </table>
+          </div>
+    </div>    
+    <div class="flex md:gap-4 mt-1 md:mt-2" v-if="customerInvoice.opsCustomerInvoiceVoyages?.length">
+        <div class="w-full">
+          <table class="w-full">
+            <thead>
+                <tr>
+                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="5">Voyage Data</td>
+                </tr>
+            </thead>
+            <thead v-once>
               <tr class="w-full">
                 <th class="">Voyage</th>
                 <th class="">
+                  <nobr>Vessel</nobr>
+                </th>
+                <th class="">
                   <nobr>Cargo Type</nobr>
-                </th>
-                <th class="">
-                  <nobr>Cargo Quantity</nobr>
-                </th>
-                <th class="">
-                  <nobr>Rate Per MT</nobr>
                 </th>
                 <th>
                   <nobr>Total Amount</nobr>
@@ -90,282 +52,149 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(sector, index) in customerInvoice.opsCustomerInvoiceVoyages" :key="index">
+              <tr v-for="(voyage, index) in customerInvoice.opsCustomerInvoiceVoyages" :key="index">
                 <td class="!w-1/4">
-                  <label class="block w-full mt-2 text-sm">
-                  
-                    <span class="show-block">
-                      {{ customerInvoice.opsCustomerInvoiceVoyages[index].opsVoyage?.voyage_sequence }}
-                    </span>
-                  </label>
+                  {{ customerInvoice.opsCustomerInvoiceVoyages[index].opsVoyage?.voyage_sequence }}
                 </td>
                 <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="show-block">
-                        {{ customerInvoice.opsCustomerInvoiceVoyages[index].opsVoyage?.opsCargoType?.cargo_type }}
-                      </span>
-                  
-                  </label>
+                    {{ customerInvoice.opsCustomerInvoiceVoyages[index].opsVessel?.name }}                  
                 </td>
                 <td>
-                    <label class="block w-full mt-2 text-sm">
-                    <input type="number" step="0.001" v-model.trim="customerInvoice.opsCustomerInvoiceVoyages[index].cargo_quantity" readonly class="form-input text-right" autocomplete="off" />
-                  </label>
+                    {{ customerInvoice.opsCustomerInvoiceVoyages[index].opsCargoType?.cargo_type }}                  
                 </td>
                 <td>
-                  <label class="block w-full mt-2 text-sm">
-                    <input type="number" step="0.001" v-model.trim="customerInvoice.opsCustomerInvoiceVoyages[index].rate_per_mt" readonly class="form-input text-right" autocomplete="off" />
-                  
-                  </label>
-                </td>
-                <td>
-                  <label class="block w-full mt-2 text-sm">
-                    <input type="text" v-model.trim="customerInvoice.opsCustomerInvoiceVoyages[index].total_amount" readonly class="form-input text-right" autocomplete="off" />
-                  </label>
+                  {{ customerInvoice.opsCustomerInvoiceVoyages[index].total_amount_bdt }}
                 </td>
               </tr>
             </tbody>
-            
-          </table>     
-        
+          </table>
+        </div>
     </div>
-
-    
-    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Other</legend>
-        <div id="sectors" class="mt-5">
-          <table class="w-full whitespace-no-wrap" >
-            <thead v-once>
-                <tr class="w-full">
-                  <th class="">Particulars</th>
-                  <th class="">Currency</th>
-                  <th class="">Unit</th>
-                  <th>Quantity</th>
-                  <th>Rate</th>
-                  <th>Exchange Rate (To USD)</th>
-                  <th>Exchange Rate (To BDT)</th>
-                  <th>Amount USD</th>
-                  <th>Amount BDT</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(sector, index) in customerInvoice.opsCustomerInvoiceOthers" :key="index">
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="show-block">
-                        {{ customerInvoice.opsCustomerInvoiceOthers[index].particular }}
-                      </span>
-                    </label>
-                  </td>
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="show-block">
-                        {{ customerInvoice.opsCustomerInvoiceOthers[index].currency }}
-                      </span>
-                    </label>
-                  </td>
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="show-block">
-                        {{ customerInvoice.opsCustomerInvoiceOthers[index].cost_unit }}
-                      </span>
-                      
-                    </label>
-                  </td>
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="show-block">
-                        {{ customerInvoice.opsCustomerInvoiceOthers[index].quantity }}
-                      </span>
-                      
-                    </label>
-                  </td>
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="show-block !justify-end">
-                        {{ numberFormat(customerInvoice.opsCustomerInvoiceOthers[index].rate) }}
-                      </span>
-                      
-                    </label>
-                  </td>
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="show-block !justify-end">
-                        {{ numberFormat(customerInvoice.opsCustomerInvoiceOthers[index].exchange_rate_usd) }}
-                      </span>
-                      
-                    </label>
-                  </td>
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="show-block !justify-end">
-                        {{ numberFormat(customerInvoice.opsCustomerInvoiceOthers[index].exchange_rate_bdt) }}
-                      </span>
-                      
-                    </label>
-                  </td>
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="show-block !justify-end">
-                        {{ numberFormat(customerInvoice.opsCustomerInvoiceOthers[index].amount_usd) }}
-                      </span>
-                      
-                    </label>
-                  </td>
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="show-block !justify-end">
-                        {{ numberFormat(customerInvoice.opsCustomerInvoiceOthers[index].amount_bdt) }}
-                      </span>
-                      
-                    </label>
-                  </td>
-                </tr>
-              </tbody>
-              
-            </table>     
-          
-        </div>
-    </fieldset>
-      
-    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-          <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Services Taken From Customer</legend>
-        <div id="sectors" class="mt-5">
-
-          <table class="w-full whitespace-no-wrap" >
-              <thead v-once>
-                <tr class="w-full">
-                  <th>Particulars</th>
-                  <th>Currency</th>
-                  <th>Unit</th>
-                  <th>Quantity</th>
-                  <th>Rate</th>
-                  <th>Exchange Rate (To USD)</th>
-                  <th>Exchange Rate (USD To BDT)</th>
-                  <th>Amount USD</th>
-                  <th>Amount BDT</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(item, index) in customerInvoice.opsCustomerInvoiceServices" :key="index">
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="show-block">
-                        {{ customerInvoice.opsCustomerInvoiceServices[index].particular }}
-                      </span>
-                      
-                    </label>
-                  </td>
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="show-block">
-                        {{ customerInvoice.opsCustomerInvoiceServices[index].currency }}
-                      </span>
-                     
-                    </label>
-                  </td>
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="show-block">
-                        {{ customerInvoice.opsCustomerInvoiceServices[index].particular }}
-                      </span>
-                      
-                    </label>
-                  </td>
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="show-block !justify-end">
-                        {{ numberFormat(customerInvoice.opsCustomerInvoiceServices[index].quantity) }}
-                      </span>
-                      
-                    </label>
-                  </td>
-
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="show-block !justify-end">
-                        {{ numberFormat(customerInvoice.opsCustomerInvoiceServices[index].rate) }}
-                      </span>
-                      
-                    </label>
-                  </td>
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="show-block !justify-end">
-                        {{ numberFormat(customerInvoice.opsCustomerInvoiceServices[index].exchange_rate_usd) }}
-                      </span>
-                      
-                    </label>
-                  </td>
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="show-block !justify-end">
-                        {{ numberFormat(customerInvoice.opsCustomerInvoiceServices[index].exchange_rate_bdt) }}
-                      </span>
-                      
-                    </label>
-                  </td>
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="show-block !justify-end">
-                        {{ numberFormat(customerInvoice.opsCustomerInvoiceServices[index].amount_usd) }}
-                      </span>
-                      
-                    </label>
-                  </td>
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <span class="show-block !justify-end">
-                        {{ numberFormat(customerInvoice.opsCustomerInvoiceServices[index].amount_bdt) }}
-                      </span>
-                     
-                    </label>
-                  </td>
-                </tr>
-              </tbody>
-            </table>     
-          
-        </div>
-      </fieldset>
-
-      <div id="sectors" class="mt-5">
-        <table class="w-full whitespace-no-wrap" >
+    <div class="flex md:gap-4 mt-1 md:mt-2" v-if="customerInvoice.opsCustomerInvoiceOthers?.length">
+      <div class="w-full">
+        <table class="w-full">
+          <thead>
+              <tr>
+                  <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="9">Others Billable</td>
+              </tr>
+          </thead>
           <thead v-once>
-                <tr class="w-full">
-                  <th>Subtotal</th>
-                  <th>Total Service Fee (Deduction)</th>
-                  <th>Discount (Deduction)</th>
-                  <th>Grand Total</th>
-                </tr>
-              </thead>
+            <tr class="w-full">
+              <th class="">Particulars</th>
+              <th class="">Unit</th>
+              <th>Quantity</th>
+              <th>Rate</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
           <tbody>
-                <tr>
-                  <td>
-                    <span class="show-block !justify-end">
-                      {{ numberFormat(customerInvoice.sub_total_amount) }}
-                    </span>
-                  </td>
-                  <td>
-                    <span class="show-block !justify-end">
-                      {{ numberFormat(customerInvoice.service_fee_deduction_amount) }}
-                    </span>
-                  </td>
-                  <td>
-                    <span class="show-block !justify-end">
-                      {{ numberFormat(customerInvoice.discounted_amount) }}
-                    </span>
-                  </td>
-                  <td>
-                    <span class="show-block !justify-end">
-                      {{ numberFormat(customerInvoice.grand_total) }}
-                    </span>
-                  </td>
-                </tr>
-            </tbody>
+            <tr v-for="(sector, index) in customerInvoice.opsCustomerInvoiceOthers">
+                <td>
+                  {{ customerInvoice.opsCustomerInvoiceOthers[index].particular }}
+                </td>
+                <td>
+                  {{ customerInvoice.opsCustomerInvoiceOthers[index].cost_unit }}
+                </td>
+                <td>
+                  {{ customerInvoice.opsCustomerInvoiceOthers[index].quantity }}
+                </td>
+                <td>
+                  {{ numberFormat(customerInvoice.opsCustomerInvoiceOthers[index].rate) }}
+                </td>
+                <td>
+                  {{ numberFormat(customerInvoice.opsCustomerInvoiceOthers[index].amount) }}
+                </td>
+            </tr>
+          </tbody>
         </table>
       </div>
+    </div>
+    <div class="flex md:gap-4 mt-1 md:mt-2"  v-if="customerInvoice.opsCustomerInvoiceServices?.length">
+      <div class="w-full">
+        <table class="w-full">
+          <thead>
+              <tr>
+                  <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="9">Services Taken From Charterer</td>
+              </tr>
+          </thead>
+          <thead v-once>
+            <tr class="w-full">
+              <th class="">Particulars</th>
+              <th class="">Unit</th>
+              <th>Quantity</th>
+              <th>Rate</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(sector, index) in customerInvoice.opsCustomerInvoiceServices">
+                <td>
+                  {{ customerInvoice.opsCustomerInvoiceServices[index].particular }}
+                </td>
+                <td>
+                  {{ customerInvoice.opsCustomerInvoiceServices[index].cost_unit }}
+                </td>
+                <td>
+                  {{ customerInvoice.opsCustomerInvoiceServices[index].quantity }}
+                </td>
+                <td>
+                  {{ numberFormat(customerInvoiceIdustomerInvoice.opsCustomerInvoiceServices[index].rate) }}
+                </td>
+                <td>
+                  {{ numberFormat(customerInvoice.opsCustomerInvoiceServices[index].amount) }}
+                </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="flex md:gap-4 mt-1 md:mt-2">
+      <div class="w-full">
+        <table class="w-full whitespace-no-wrap" >
+          <thead>
+              <tr>
+                  <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="4">Summary</td>
+              </tr>
+          </thead>
+          <thead v-once>
+            <tr class="w-full">
+              <th>Subtotal</th>
+              <th>Total Service Fee (Deduction)</th>
+              <th>Discount (Deduction)</th>
+              <th>Grand Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                {{ numberFormat(customerInvoice.sub_total_amount) }}
+              </td>
+              <td>
+                {{ numberFormat(customerInvoice.service_fee_deduction_amount) }}
+              </td>
+              <td>
+                {{ numberFormat(customerInvoice.discounted_amount) }}
+              </td>
+              <td>
+                {{ numberFormat(customerInvoice.grand_total) }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </template>
+<style lang="postcss" scoped>
+  th, td, tr {
+    @apply text-left border-gray-500
+  }
+  
+  tfoot td{
+    @apply text-center
+  }
+   
+</style>
 <script setup>
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
@@ -375,6 +204,7 @@ import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHeroIcon from "../../../assets/heroIcon";
 import useHelper from '../../../composables/useHelper';
+import moment from 'moment';
 
 const icons = useHeroIcon();
 

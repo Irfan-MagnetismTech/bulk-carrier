@@ -54,34 +54,34 @@ let filterOptions = ref({
       "filter_type": "input" 
     },
     {
-      "relation_name": "scmPo",
-      "field_name": "ref_no",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "PO No",
-      "filter_type": "input" 
-    },
-    {
-      "relation_name": "scmPr",
-      "field_name": "ref_no",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "PR No",
-      "filter_type": "input" 
-    },
-    {
-      "relation_name": "scmWarehouse",
+      "relation_name": "fromWarehouse",
       "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Warehouse",
-      "filter_type": "input"
+      "label": "From Warehouse",
+      "filter_type": "input" 
+    },
+    {
+      "relation_name": "toWarehouse",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "To Warehouse",
+      "filter_type": "input" 
+    },
+    {
+      "relation_name": null,
+      "field_name": "date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Transfer Date",
+      "filter_type": "date"
     },
   ]
 });
@@ -209,7 +209,6 @@ function confirmDelete(id) {
               <td>{{ movementIn?.fromWarehouse?.name?? '' }}</td>
               <td>{{ movementIn?.toWarehouse?.name?? '' }}</td>
               <td>{{ movementIn?.date }}</td>
-              <td>{{ movementIn?.required_date }}</td>
               <td>
                 <span :class="movementIn?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ movementIn?.business_unit }}</span>
               </td>

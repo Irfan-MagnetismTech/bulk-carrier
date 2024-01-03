@@ -171,7 +171,7 @@ onMounted(() => {
                   <td class="items-center justify-center space-x-1 text-gray-600">
                       <nobr>
                         <!-- <action-button :action="'copy'" :to="{ name: 'ops.bulk-noon-reports.copy', params: { bulkNoonReportId: bulkNoonReport.id } }"></action-button> -->
-                        <!-- <action-button :action="'show'" :to="{ name: 'ops.bulk-noon-reports.show', params: { bulkNoonReportId: bulkNoonReport.id } }"></action-button> -->
+                        <action-button :action="'show'" :to="{ name: 'ops.bulk-noon-reports.show', params: { bulkNoonReportId: bulkNoonReport.id } }"></action-button>
                         <action-button :action="'edit'" :to="{ name: 'ops.bulk-noon-reports.edit', params: { bulkNoonReportId: bulkNoonReport.id } }"></action-button>
                         <action-button @click="confirmDelete(bulkNoonReport.id)" :action="'delete'"></action-button>
                       </nobr>

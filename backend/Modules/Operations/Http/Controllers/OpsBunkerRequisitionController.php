@@ -96,13 +96,13 @@ class OpsBunkerRequisitionController extends Controller
     */
     public function show(OpsBunkerRequisition $bunker_requisition): JsonResponse
     {
-        $bunker_requisition->load('opsBunkers.scmMaterial','opsVoyage');
+        $bunker_requisition->load('opsBunkers.scmMaterial','opsVoyage','opsVessel');
 
         $bunker_requisition->opsBunkers->map(function($bunker){
             $bunker->id = $bunker->scmMaterial->id;
             $bunker['name_quantity'] = $bunker->scmMaterial['name'] . '-' . $bunker->quantity;
             $bunker->name = $bunker->scmMaterial->name;
-            $bunker->is_readonly = true;                
+            $bunker->is_readonly = true;
             return $bunker;
         });
 
