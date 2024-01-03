@@ -13,7 +13,7 @@ class CrwCrewAssignment extends Model
 {
     use HasFactory, GlobalSearchTrait;
 
-	protected $fillable = ['ops_vessel_id', 'crw_crew_id', 'position_onboard', 'joining_date', 'joining_port_code', 'duration', 'status', 'completion_date', 'completion_remarks', 'remarks', 'business_unit'];
+	protected $fillable = ['ops_vessel_id', 'assignment_code', 'crw_crew_id', 'position_onboard', 'joining_date', 'joining_port_code', 'duration', 'status', 'completion_date', 'completion_remarks', 'remarks', 'business_unit'];
 
 	public function opsVessel()
     {
