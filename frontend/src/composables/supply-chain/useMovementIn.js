@@ -58,8 +58,7 @@ export default function useMovementIn() {
             scmWarehouse: '',
             scm_warehouse_id: null,
             acc_cost_center_id: null,
-            scmMiShortageLines: [
-            ]
+            scmMiShortageLines: []
         },
     });
     const materialObject = {
@@ -143,7 +142,6 @@ export default function useMovementIn() {
         try {
             const { data, status } = await Api.get(`/${BASE}/movement-ins/${movementInId}`);
             movementIn.value = data.value;
-console.log(movementIn.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);

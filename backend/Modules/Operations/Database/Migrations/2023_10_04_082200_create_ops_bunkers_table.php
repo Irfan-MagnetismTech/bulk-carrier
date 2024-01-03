@@ -35,6 +35,7 @@ return new class extends Migration
             $table->float('fuel_con_voyage', 20, 2)->nullable();
             $table->string('currency')->nullable();
             $table->string('status')->nullable();
+            $table->string('particular')->nullable();
             $table->timestamps();
         });
     }

@@ -6,7 +6,7 @@
   </div>
   <div class="input-group !w-1/4">
       <label class="label-group">
-          <span class="label-item-title">MR Ref<span class="text-red-500">*</span></span>
+          <span class="label-item-title">MR Ref</span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
          
       </label>

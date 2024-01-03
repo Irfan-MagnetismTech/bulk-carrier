@@ -15,7 +15,7 @@ use Modules\SupplyChain\Http\Requests\ScmMoRequest;
 
 class ScmMoController extends Controller
 {
-    function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    function __construct()
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -52,14 +52,14 @@ class ScmMoController extends Controller
     {
         $requestData = $request->except('ref_no', 'mo_composite_key');
 
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmMo::class, 'MO');
+        $requestData['ref_no'] = UniqueId::generate(ScmMo::class, 'MO');
 
         try {
             DB::beginTransaction();
 
             $scmMo = ScmMo::create($requestData);
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMoLines, $scmMo->id, 'scm_material_id', 'mo');
+            $linesData = CompositeKey::generateArray($request->scmMoLines, $scmMo->id, 'scm_material_id', 'mo');
 
 
             $scmMo->scmMoLines()->createMany($linesData);
@@ -156,7 +156,7 @@ class ScmMoController extends Controller
 
             $movementOut->scmMoLines()->delete();
 
-            $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmMoLines, $movementOut->id, 'scm_material_id', 'mo');
+            $linesData = CompositeKey::generateArray($request->scmMoLines, $movementOut->id, 'scm_material_id', 'mo');
 
             $movementOut->scmMoLines()->createMany($linesData);
 
@@ -197,6 +197,13 @@ class ScmMoController extends Controller
         try {
             if ($request->business_unit != 'ALL') {
                 $movementRequisitions = ScmMo::query()
+                    ->when(!$request->isEdit, function ($query) {
+                        return $query->whereDoesntHave('scmMi');
+                    }, function ($query) use ($request){
+                        $query->whereDoesntHave('scmMi', function ($q) use ($request) {
+                            $q->whereNot('scm_mo_id', $request->mo_id);
+                        });
+                    })
                     ->with('scmMoLines', 'fromWarehouse', 'toWarehouse', 'createdBy')
                     ->whereBusinessUnit($request->business_unit)
                     ->when($request->searchParam, function ($query) {

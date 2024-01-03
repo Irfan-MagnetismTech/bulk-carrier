@@ -10,7 +10,7 @@ import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 
 const icons = useHeroIcon();
 
-const { getMovementOut, movementOut, excelExportData, getStoreCategoryWiseExcel, storeMovementOut,materialObject, errors, isLoading } = useMovementOut();
+const { getMovementOut, movementOut, storeMovementOut,materialObject, errors, isLoading } = useMovementOut();
 const page = ref('create');
 const { setTitle } = Title();
 

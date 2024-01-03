@@ -102,8 +102,8 @@
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
         </label>
         <label class="block w-full mt-2 text-sm" v-show="form.mnt_item_name?.has_run_hour">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Present Runnig Hour </span>
-            <input type="text" v-model.trim="form.present_run_hour" placeholder="Present Runnig Hour" class="form-input vms-readonly-input" readonly />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Present Running Hour </span>
+            <input type="text" v-model.trim="form.present_run_hour" placeholder="Present Running Hour" class="form-input vms-readonly-input" readonly />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
 
@@ -263,7 +263,7 @@
 
                 <th class="w-2/12 px-4 py-3 align-bottom" >Last Done</th>
 
-                <th class="px-4 py-3 align-bottom" :class="{ 'w-2/12': form.mnt_item_name?.has_run_hour}" v-show="form.mnt_item_name?.has_run_hour">Prev. Run Hrs.</th>
+                <th class="px-4 py-3 align-bottom" :class="{ 'w-2/12': form.mnt_item_name?.has_run_hour}" v-show="form.mnt_item_name?.has_run_hour">Prev. Running Hrs.</th>
 
                 <th class="w-2/12 px-4 py-3 align-bottom" >Next Due</th>
 

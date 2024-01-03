@@ -6,7 +6,7 @@ use Modules\SupplyChain\Entities\ScmStockLedger;
 
 class CurrentStock
 {
-    public function count($scm_material_id, $scm_warehouse_id)
+    public static function count($scm_material_id, $scm_warehouse_id)
     {
         $currentStock = ScmStockLedger::query()
             ->where([

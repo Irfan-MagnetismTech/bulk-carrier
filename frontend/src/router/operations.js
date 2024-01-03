@@ -25,6 +25,12 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/port/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	{
+		path: `/${BASE}/ports/:portId`,
+		name: `${BASE}.configurations.ports.show`,
+		component: () => import (`../views/${ViEWBASE}/port/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 	/* Cargo Types */
 	{
 		path: `/${BASE}/cargo-types`,
@@ -43,6 +49,12 @@ export default [
 		path: `/${BASE}/cargo-types/:cargoTypeId/edit`,
 		name: `${BASE}.configurations.cargo-types.edit`,
 		component: () => import (`../views/${ViEWBASE}/cargo-types/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/cargo-types/:cargoTypeId/show`,
+		name: `${BASE}.configurations.cargo-types.show`,
+		component: () => import (`../views/${ViEWBASE}/cargo-types/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	/* Customer */
@@ -482,6 +494,12 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/expense-heads/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	{
+		path: `/${BASE}/expense-heads/:expenseHeadId/show`,
+		name: `${BASE}.expense-heads.show`,
+		component: () => import (`../views/${ViEWBASE}/expense-heads/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 
 	/* Vessel Expense Heads */
 	{
@@ -531,6 +549,12 @@ export default [
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	{
+		path: `/${BASE}/bunker-requisitions/:bunkerRequisitionId/show`,
+		name: `${BASE}.bunker-requisitions.show`,
+		component: () => import (`../views/${ViEWBASE}/bunker-requisitions/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
 		path: `/${BASE}/bunker-requisitions/approved/:bunkerRequisitionId`,
 		name: `${BASE}.bunker-requisitions.approved`,
 		component: () => import (`../views/${ViEWBASE}/bunker-requisitions/approved.vue`),
@@ -556,6 +580,12 @@ export default [
 		path: `/${BASE}/bunker-bills/:bunkerBillId/edit`,
 		name: `${BASE}.bunker-bills.edit`,
 		component: () => import (`../views/${ViEWBASE}/bunker-bills/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/bunker-bills/:bunkerBillId/show`,
+		name: `${BASE}.bunker-bills.show`,
+		component: () => import (`../views/${ViEWBASE}/bunker-bills/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	/* Voyage Budgets */
@@ -637,5 +667,39 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/voyage-expenditures/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
-	
+
+	/* Vessel Bunkers*/
+	{
+		path: `/${BASE}/vessel-bunkers`,
+		name: `${BASE}.vessel-bunkers.index`,
+		component: () => import(`../views/${ViEWBASE}/vessel-bunkers/index.vue`),
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/vessel-bunkers/create`,
+		name: `${BASE}.vessel-bunkers.create`,
+		component: () => import (`../views/${ViEWBASE}/vessel-bunkers/create.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/vessel-bunkers/:vesselBunkerId/edit`,
+		name: `${BASE}.vessel-bunkers.edit`,
+		component: () => import (`../views/${ViEWBASE}/vessel-bunkers/edit.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/vessel-bunkers/:vesselBunkerId/show`,
+		name: `${BASE}.vessel-bunkers.show`,
+		component: () => import (`../views/${ViEWBASE}/vessel-bunkers/show.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+
+	/* Reports */
+	{
+		path: `/${BASE}/reports/port-wise-expense-report`,
+		name: `${BASE}.reports.port-wise-expense-report`,
+		component: () => import (`../views/${ViEWBASE}/reports/port-wise-expense-report.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];

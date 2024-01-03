@@ -21,7 +21,7 @@ use Modules\SupplyChain\Http\Requests\ScmPoRequest;
 
 class ScmPoController extends Controller
 {
-    function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    function __construct()
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -53,12 +53,12 @@ class ScmPoController extends Controller
     public function store(ScmPoRequest $request): JsonResponse
     {
         $requestData = $request->except('ref_no');
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmPo::class, 'PO');
+        $requestData['ref_no'] = UniqueId::generate(ScmPo::class, 'PO');
 
         try {
             DB::beginTransaction();
             $scmPo = ScmPo::create($requestData);
-            // $linesData = $this->compositeKey->generateArrayWithCompositeKey($request->scmPoLines, $scmPo->id, 'scm_material_id', 'po');
+            // $linesData = CompositeKey::generateArray($request->scmPoLines, $scmPo->id, 'scm_material_id', 'po');
             $data = $this->addNetRateToRequestData($request, $scmPo->id);
             $scmPo->scmPoLines()->createUpdateOrDelete($data->scmPoLines);
             $scmPo->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
@@ -246,7 +246,7 @@ class ScmPoController extends Controller
         $scmPoLines = $request['scmPoLines'];
         foreach ($scmPoLines as $key => $value) {
             $scmPoLines[$key]['net_rate'] = $value['total_price'] / $sub_total * $net_amount / $value['quantity'];
-            $scmPoLines[$key]['po_composite_key'] = $this->compositeKey->generate($key, $po_id, 'po', $value['scm_material_id']);
+            $scmPoLines[$key]['po_composite_key'] = CompositeKey::generate($key, $po_id, 'po', $value['scm_material_id']);
         }
         $request['scmPoLines'] = $scmPoLines;
 

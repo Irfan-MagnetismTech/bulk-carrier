@@ -19,7 +19,7 @@ use Modules\SupplyChain\Services\UniqueId;
 
 class ScmCsController extends Controller
 {
-    function __construct(private UniqueId $uniqueId, private CompositeKey $compositeKey)
+    function __construct(private CompositeKey $compositeKey)
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -52,7 +52,7 @@ class ScmCsController extends Controller
     public function store(ScmCsRequest $request)
     {
         $requestData = $request->except('ref_no');
-        $requestData['ref_no'] = $this->uniqueId->generate(ScmCs::class, 'CS');
+        $requestData['ref_no'] = UniqueId::generate(ScmCs::class, 'CS');
         try {
             DB::beginTransaction();
             $scmMi = ScmCs::create($requestData);

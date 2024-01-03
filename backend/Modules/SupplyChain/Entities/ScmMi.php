@@ -3,6 +3,7 @@
 namespace Modules\SupplyChain\Entities;
 
 use App\Models\User;
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmMmr;
 use Modules\SupplyChain\Entities\ScmMiLine;
@@ -15,7 +16,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmMi extends Model
 {
-    use HasFactory, StockLedger;
+    use HasFactory, StockLedger, GlobalSearchTrait;
     
     protected $fillable = [
         'ref_no', 'scm_mmr_id','scm_mo_id', 'from_warehouse_id', 'to_warehouse_id', 'date', 'business_unit', 'created_by',
