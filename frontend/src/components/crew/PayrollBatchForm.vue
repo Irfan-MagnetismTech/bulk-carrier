@@ -368,7 +368,7 @@ onMounted(() => {
         </v-select>
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Month Year <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Attendance Month <span class="text-red-500">*</span></span>
         <input type="month" v-model.trim="form.year_month" class="form-input" autocomplete="off" required />
       </label>
     </div>

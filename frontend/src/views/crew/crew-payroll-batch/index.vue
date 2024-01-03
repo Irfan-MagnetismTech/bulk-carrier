@@ -146,7 +146,7 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3">
-    <h2 class="text-2xl font-semibold text-gray-700">List of Salary Sheet</h2>
+    <h2 class="text-2xl font-semibold text-gray-700">List of Payroll Batch</h2>
     <default-button :title="'Create Salary'" :to="{ name: 'crw.crewPayrollBatches.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div id="customDataTable">
