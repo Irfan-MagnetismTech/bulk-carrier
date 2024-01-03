@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('appraisal_records', function (Blueprint $table) {
             $table->id();
+			$table->foreignId('crw_crew_assignment_id')->constrained('crw_crew_assignments', 'id')->cascadeOnDelete();
             
             $table->timestamps();
         });

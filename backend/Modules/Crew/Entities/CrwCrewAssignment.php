@@ -29,4 +29,10 @@ class CrwCrewAssignment extends Model
     {
         return $this->hasOne(OpsPort::class,'code','joining_port_code');
     }
+
+    public function appraisalRecord()
+    {
+        return $this->hasOne(AppraisalRecord::class);
+    }
+
 }

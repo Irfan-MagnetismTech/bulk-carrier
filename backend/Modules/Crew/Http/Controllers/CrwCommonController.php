@@ -238,4 +238,24 @@ class CrwCommonController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     */
+    public function getAppraisalUndoneAssignments(Request $request)
+    {
+        try {
+            $appraisalUndoneAssignments = CrwCrewAssignment::with('opsVessel:id,name')
+            ->where('crw_crew_id', $request->crw_crew_profile_id)
+            ->doesntHave('appraisalRecord')
+            ->where('status', 'Complete')
+            ->get();
+
+            return response()->success('Retrieved Successfully', $appraisalUndoneAssignments, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }    
+
 }
