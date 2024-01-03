@@ -142,7 +142,8 @@ class ScmMaterialCategoryController extends Controller
     public function searchMaterialCategory(): JsonResponse
     {
         $materialCategory = ScmMaterialCategory::query()
-            ->with('parent')
+            // ->with('parent')
+            ->leafNodes()
             ->when(request()->has('self_id'), function ($query) {
                 $query->where('id', '!=', request()->self_id);
             })
