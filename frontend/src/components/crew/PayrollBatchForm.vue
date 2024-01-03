@@ -325,7 +325,6 @@ function resetFormData(){
     confirmButtonText: 'Yes'
   }).then((result) => {
     if (result.isConfirmed) {
-      props.form.business_unit =  '',
       props.form.ops_vessel_id =  '',
       props.form.ops_vessel_name=  '',
       props.form.year_month =  '',
@@ -352,7 +351,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <template v-if="page==='create'">
+  <template v-if="page==='create' && !isAttendanceCrewAvailable">
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <business-unit-input v-model.trim="form.business_unit"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
@@ -390,14 +389,6 @@ onMounted(() => {
         <input type="text" v-model.trim="form.working_days" placeholder="Ex: 30" class="form-input vms-readonly-input" autocomplete="off" readonly />
       </label>
     </div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-        <button type="button" v-if="!isAttendanceCrewAvailable" @click="getAssignedCrewList" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Process</button>
-        <button type="button" v-if="isAttendanceCrewAvailable" :class="{'cursor-not-allowed opacity-50': isAttendanceCrewAvailable, '': !isAttendanceCrewAvailable}" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Process</button>
-        <button type="button" v-if="!isAttendanceCrewAvailable" :class="{'cursor-not-allowed opacity-50': !isAttendanceCrewAvailable, '': isAttendanceCrewAvailable}" class="px-3 py-1 ml-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-700 border border-transparent rounded-md active:bg-gray-600 hover:bg-gray-600 focus:outline-none focus:shadow-outline-purple">Reset</button>
-        <button type="button" v-if="isAttendanceCrewAvailable" @click="resetFormData" class="px-3 py-1 ml-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-700 border border-transparent rounded-md active:bg-gray-600 hover:bg-gray-600 focus:outline-none focus:shadow-outline-purple">Reset</button>
-      </label>
-    </div>
   </template>
   <template v-else>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -429,6 +420,14 @@ onMounted(() => {
       </label>
     </div>
   </template>
+  <div v-if="page==='create'" class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+      <button type="button" v-if="!isAttendanceCrewAvailable" @click="getAssignedCrewList" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Process</button>
+      <button type="button" v-if="isAttendanceCrewAvailable" :class="{'cursor-not-allowed opacity-50': isAttendanceCrewAvailable, '': !isAttendanceCrewAvailable}" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Process</button>
+      <button type="button" v-if="!isAttendanceCrewAvailable" :class="{'cursor-not-allowed opacity-50': !isAttendanceCrewAvailable, '': isAttendanceCrewAvailable}" class="px-3 py-1 ml-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-700 border border-transparent rounded-md active:bg-gray-600 hover:bg-gray-600 focus:outline-none focus:shadow-outline-purple">Reset</button>
+      <button type="button" v-if="isAttendanceCrewAvailable" @click="resetFormData" class="px-3 py-1 ml-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-gray-700 border border-transparent rounded-md active:bg-gray-600 hover:bg-gray-600 focus:outline-none focus:shadow-outline-purple">Reset</button>
+    </label>
+  </div>
   <div class="border-b-2 border-purple-700 mt-3"></div>
   <div class="dark-disabled:border-gray-700">
     <ul class="flex flex-wrap -mb-px border-b">
