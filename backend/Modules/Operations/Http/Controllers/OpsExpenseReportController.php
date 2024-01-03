@@ -7,6 +7,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Routing\Controller;
 use Modules\Operations\Entities\OpsVoyage;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Facades\DB;
 use Modules\Operations\Entities\OpsExpenseHead;
 use Modules\Operations\Entities\OpsVessel;
 use Modules\Operations\Entities\OpsVesselExpenseHead;
@@ -192,6 +193,44 @@ class OpsExpenseReportController extends Controller
 
         return view('operations::reports.single-vessel-bunker-report')->with([
             'allBunkers' => $allBunkers,
+            'voyages' => $voyages
+        ]);
+
+        return response()->json([
+            'value' => $view
+        ], 200);
+    }
+
+    public function businessUnitWiseBunkerReport(Request $request) {
+
+        $business_unit = 'TSLL';//$request->business_unit;
+        $ops_vessels = OpsVessel::where('business_unit', $business_unit)->get();
+        $ops_vessel_ids = $ops_vessels->pluck('id');
+        
+        $start = date($request->start);
+        $end = date($request->end);
+
+        $voyages = OpsVoyage::select('ops_vessel_id', DB::raw('count(id) as voyage_count'))
+        // ->whereBetween('transit_date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
+        ->where('business_unit', $business_unit)
+        ->groupBy('ops_vessel_id')
+        ->with(['opsVessel','opsVesselBunkers.stockable'])
+        ->get();
+
+        // dd($voyages);
+
+        // $voyages = $voyages->map(function($voyage) {
+        //     return $voyage->opsVesselBunkers->groupBy('type');
+        // });
+
+        $allBunkers = OpsVessel::with('opsBunkers.scmMaterial')
+                                ->whereIn('id', $ops_vessel_ids)->get();
+        $vesselBunkers = $allBunkers->pluck('opsBunkers.*.scmMaterial.name')->flatten()->unique();
+        // dd($vesselBunkers);
+        $voyageIds = $voyages->pluck('id');
+
+        return view('operations::reports.business-unit-bunker-report')->with([
+            'vesselBunkers' => $vesselBunkers,
             'voyages' => $voyages
         ]);
 

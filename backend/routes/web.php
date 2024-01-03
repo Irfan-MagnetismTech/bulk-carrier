@@ -18,3 +18,4 @@ use Modules\Operations\Http\Controllers\OpsExpenseReportController;
 Route::get('/', fn() => 'BG Torony - Magnetism Tech Limited');
 
 Route::get('/single-vessel-wise-bunker-report', [OpsExpenseReportController::class, 'singleVesselWiseBunkerReport']);
+Route::get('/business-unit-wise-bunker-report', [OpsExpenseReportController::class, 'businessUnitWiseBunkerReport']);
