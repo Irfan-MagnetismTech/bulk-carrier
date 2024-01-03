@@ -32,7 +32,7 @@ onMounted(() => {
         <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Update Warehouse</h2>
         <default-button :title="'Warehouse List'" :to="{ name: 'scm.warehouse.index' }" :icon="icons.DataBase"></default-button>
     </div>
-        <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
+        <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="updateWarehouse(warehouse, warehouseId)">
             <warehouse-form v-model:form="warehouse" :errors="errors"></warehouse-form>
             <!-- Submit button -->
