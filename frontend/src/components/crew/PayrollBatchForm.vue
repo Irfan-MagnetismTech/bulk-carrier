@@ -8,7 +8,7 @@ import {onMounted, ref, watch, watchEffect} from "vue";
 import Store from "../../store";
 import useVessel from "../../composables/operations/useVessel";
 const { vessels, getVesselsWithoutPaginate, isLoading } = useVessel();
-const { monthlyAttendance, getMonthlyAttendance, isAttendanceCrewAvailable } = usePayrollBatch();
+const { payrollBatch, monthlyAttendance, getMonthlyAttendance, isAttendanceCrewAvailable } = usePayrollBatch();
 const { crews, getCrews } = useCrewCommonApiRequest();
 import ErrorComponent from '../utils/ErrorComponent.vue';
 import RemarksComponent from "../utils/RemarksComponent.vue";
@@ -307,7 +307,8 @@ function setDeductionBatchHeadAmount(payrollBatchHeadLineIndex){
 }
 
 function resetFormData(){
-  alert("s")
+  console.log("PayrollBatch", payrollBatch);
+  props.form = payrollBatch.value;
 }
 
 onMounted(() => {
