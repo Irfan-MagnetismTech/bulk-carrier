@@ -18,11 +18,11 @@ export default function useAppraisalForm() {
                             section_name: '',
                             section_no: '',
                             appraisalFormLineItems: [
-                                {
-                                    aspect: '',
-                                    description: '',
-                                    answer_type: '',
-                                }
+                                // {
+                                //     aspect: '',
+                                //     description: '',
+                                //     answer_type: '',
+                                // }
                             ],
                         };
     const appraisalForm = ref( {

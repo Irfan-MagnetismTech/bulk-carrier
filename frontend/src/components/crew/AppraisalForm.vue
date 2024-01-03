@@ -56,14 +56,18 @@
                 <table class="w-full whitespace-no-wrap" id="table">
                 <thead>
                     <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-                        <th class="px-4 py-3 align-bottom">Aspect <span class="text-red-500">*</span></th>
-                        <th class="px-4 py-3 align-bottom">Description</th>
-                        <th class="px-4 py-3 align-bottom">Answer Type <span class="text-red-500">*</span></th>
-                        <th class="px-4 py-3 align-bottom text-center">Action</th>
+                        <th class="w-1/5 px-4 py-2 align-center">Aspect <span class="text-red-500" v-show="appraisalFormLine?.appraisalFormLineItems?.length">*</span></th>
+                        <th class="w-2/5 px-4 py-2 align-center">Description</th>
+                        <th class="w-1/5 px-4 py-2 align-center">Answer Type <span class="text-red-500" v-show="appraisalFormLine?.appraisalFormLineItems?.length">*</span></th>
+                        <th class="w-1/5 px-4 py-2 align-center text-center">
+                          <button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md"  @click="addAppraisalFormLineItem(index)"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                      </svg></button>
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-                    <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(appraisalFormLineItem, appraisalFormLineItemIndex) in appraisalFormLine.appraisalFormLineItems" :key="appraisalFormLineItemIndex">
+                    <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(appraisalFormLineItem, appraisalFormLineItemIndex) in appraisalFormLine?.appraisalFormLineItems" :key="appraisalFormLineItemIndex">
                         <td class="px-1 py-1">
                           <div class="relative">
                             <input type="text" class="form-input"  v-model.trim="appraisalFormLineItem.aspect" placeholder="Aspect" required />
@@ -79,9 +83,7 @@
                             <option value="Grade">Grade</option>
                           </select>
                         </td>
-                        <td class="px-1 py-1"><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-if="appraisalFormLineItemIndex == 0" @click="addAppraisalFormLineItem(index)"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                      </svg></button> <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" v-else @click="removeAppraisalFormLineItem(index, appraisalFormLineItemIndex)" ><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <td class="px-1 py-1"> <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" @click="removeAppraisalFormLineItem(index, appraisalFormLineItemIndex)" ><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                       </svg></button></td>
                     </tr>

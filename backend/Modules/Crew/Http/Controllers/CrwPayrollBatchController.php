@@ -56,13 +56,14 @@ class CrwPayrollBatchController extends Controller
                             'crw_payroll_batch_id'      => $crwPayrollBatch->id,
                             'crw_payroll_batch_head_id' => $batchHead->id,
                             'crw_crew_id'               => $crwBatchHead['crew_id'],
+                            'head_type'                 => $crwBatchHead['head_type'],
                             'amount'                    => $crwBatchHead['amount'],
                         ]);
                     }
                 }
-
-                return response()->success('Created Succesfully', $crwPayrollBatch, 201);
             });
+
+            return response()->success('Created Succesfully', [], 201);
         }
         catch (QueryException $e)
         {
@@ -76,16 +77,18 @@ class CrwPayrollBatchController extends Controller
     public function show(CrwPayrollBatch $crwPayrollBatch)
     {
         try {
-            return response()->success('Retrieved succesfully', 
-            $crwPayrollBatch->load('opsVessel', 
+            $crwPayrollBatchData = $crwPayrollBatch
+            ->load('opsVessel:id,name', 
             'crwPayrollBatchHeads', 
+            // 'crwPayrollBatchHeads.crwPayrollBatchHeadLines.crwCrew:id,full_name,pre_mobile_no', 
             'crwPayrollBatchHeadLines.crwCrew:id,full_name,pre_mobile_no',
             'crwPayrollBatchLines.crwCrew:id,full_name,pre_mobile_no', 
             'crwPayrollBatchLines.crwSalaryStructure:id,net_amount', 
-            'crwPayrollBatchLines.crwAttendanceLine:id,present_days,absent_days,payable_days',        
-        ), 
-            
-            200);
+            'crwPayrollBatchLines.crwAttendanceLine:id,present_days,absent_days,payable_days'
+        ); 
+
+
+            return response()->success('Retrieved succesfully', $crwPayrollBatchData, 200);
         }
         catch (QueryException $e)
         {
@@ -104,15 +107,33 @@ class CrwPayrollBatchController extends Controller
             {
                 $crwPayrollBatchData = $request->only('ops_vessel_id', 'year_month', 'compensation_type', 'process_date', 'net_payment', 'currency', 'working_days', 'total_crew','business_unit');
                 $crwPayrollBatch->update($crwPayrollBatchData);
+
                 $crwPayrollBatch->crwPayrollBatchLines()->delete();
                 $crwPayrollBatch->crwPayrollBatchHeads()->delete();
                 $crwPayrollBatch->crwPayrollBatchHeadLines()->delete();
-
+                
                 $crwPayrollBatch->crwPayrollBatchLines()->createMany($request->crwPayrollBatchLines);
-                $crwPayrollBatch->crwPayrollBatchHeads()->createMany($request->crwPayrollBatchHeads);
-                $crwPayrollBatch->crwPayrollBatchHeadLines()->createMany($request->crwPayrollBatchHeadLines);
 
-                return response()->success('Updated succesfully', $crwPayrollBatch, 202);
+                foreach ($request->crwPayrollBatchHeads as $crwPayrollBatchHead)
+                {                    
+                    $batchHead = CrwPayrollBatchHead::create([
+                        'crw_payroll_batch_id' => $crwPayrollBatch->id,
+                        'head_type'            => $crwPayrollBatchHead['head_type'],
+                        'head_name'            => $crwPayrollBatchHead['head_name'],
+                        'amount'               => $crwPayrollBatchHead['amount'],
+                    ]);
+
+                    foreach ($crwPayrollBatchHead['crwPayrollBatchHeadLines'] as $crwBatchHead)
+                    {
+                        CrwPayrollBatchHeadLine::create([
+                            'crw_payroll_batch_id'      => $crwPayrollBatch->id,
+                            'crw_payroll_batch_head_id' => $batchHead->id,
+                            'crw_crew_id'               => $crwBatchHead['crew_id'],
+                            'head_type'                 => $crwBatchHead['head_type'],
+                            'amount'                    => $crwBatchHead['amount'],
+                        ]);
+                    }
+                }
             });
         }
         catch (QueryException $e)
