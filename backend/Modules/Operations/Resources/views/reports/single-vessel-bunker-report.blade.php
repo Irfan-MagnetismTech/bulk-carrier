@@ -43,6 +43,18 @@
             </tr>
         </thead>
         <tbody>
+
+            <tr>
+                <td colspan="{{ count($allBunkers) * 2 + 2 }}"></td>
+                @foreach($allBunkers as $bunker)
+                    <td>
+                        {{ ($bunker['previous_stock'] != 0) ? abs($bunker['previous_stock']) : null }}
+                    </td>
+                @endforeach
+            </tr>
+
+
+
             @if(isset($stockRecords))
                 @foreach($stockRecords as $vesselBunkerId => $stockRecord)
 
@@ -78,19 +90,10 @@
                         {{ ($output != 0) ? abs($output) : null }}
                     </td>
                     @endforeach
-                    @if($loop->first)
 
                     @foreach($allBunkers as $bunker)
-                        <td>
-                            Previous Stock
-                        </td>
-                        
+                        <td></td>
                     @endforeach
-                    @else
-                        @foreach($allBunkers as $bunker)
-                            <td></td>
-                        @endforeach
-                    @endif
                 </tr>
 
 
@@ -100,6 +103,16 @@
             @endif
         </tbody>
         <tfoot>
+            <tr>
+                <td colspan="{{ count($allBunkers) * 2 + 2 }}" style="background-color: #ccc; text-align: center;">
+                    Final Stock
+                </td>
+                @foreach($allBunkers as $bunker)
+                    <td>
+                        {{ ($bunker['final_stock'] != 0) ? abs($bunker['final_stock']) : null }}
+                    </td>
+                @endforeach
+            </tr>
 
         </tfoot>
     </table>

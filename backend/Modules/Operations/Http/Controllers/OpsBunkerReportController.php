@@ -10,6 +10,7 @@ use Modules\Operations\Entities\OpsVoyage;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsVesselBunker;
 use Modules\Operations\Services\OpsVesselBunkerService;
+use Modules\SupplyChain\Entities\ScmWarehouse;
 use Modules\SupplyChain\Services\CurrentStock;
 
 class OpsBunkerReportController extends Controller
@@ -127,14 +128,6 @@ class OpsBunkerReportController extends Controller
         $start = date($request->start);
         $end = date($request->end);
 
-        $voyages = OpsVoyage::query()
-        // ->whereBetween('transit_date', [$start, $end])
-        ->whereBetween('transit_date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
-        ->where('ops_vessel_id', $ops_vessel_id)
-        ->where('business_unit', $business_unit)
-        // ->with('opsVesselBunkers.stockable', 'opsVessel')
-        ->get();
-
         $vesselBunkers = OpsVesselBunker::where('ops_vessel_id', $ops_vessel_id)
                         ->with('opsVessel', 'opsVoyage', 'stockable')
                         ->whereBetween('date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
@@ -143,11 +136,18 @@ class OpsBunkerReportController extends Controller
         $output = $vesselBunkers->groupBy('ops_voyage_id');
 
         // dd($output[37]->groupBy('type'));
+        $scm_warehouse_id = ScmWarehouse::where('ops_vessel_id', $ops_vessel_id)->first()->id;
 
-        $allBunkers = OpsVesselBunkerService::getBunkers($ops_vessel_id, null);
+        $allBunkers = OpsVesselBunkerService::getBunkers($ops_vessel_id, null)->map(function($material) use($start, $end, $scm_warehouse_id) {
+            $material['previous_stock'] = CurrentStock::count($material['scm_material_id'], $scm_warehouse_id, $start);
+            $material['final_stock'] = CurrentStock::count($material['scm_material_id'], $scm_warehouse_id, $end);
+            $material['scm_warehoust_id'] = $scm_warehouse_id;
+            return $material;
+        });
 
-        $currentStocks = CurrentStock::count();
+        dd($allBunkers, $end);
 
+        // $scm_material_id, $scm_warehouse_id, $toDate = null
 
         return view('operations::reports.single-vessel-bunker-report')->with([
             'allBunkers' => $allBunkers,
