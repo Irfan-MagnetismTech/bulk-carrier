@@ -13,6 +13,8 @@ export default function useCrewCommonApiRequest() {
     const recruitmentApprovals = ref([]);
     const crewDocuments = ref([]);
     const crewDocumentRenewals = ref([]);
+    const appraisalUndoneAssignments = ref([]);
+    
     const vesselAssignedCrews = ref([]);
     const vesselWiseMonthlyAttendances = ref([]);
     const isCrewDocumentRenewModalOpen = ref(0);
@@ -21,6 +23,7 @@ export default function useCrewCommonApiRequest() {
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isAppraisalUndoneAssignmentLoading = ref(false);
     const isCommonCrewLoading = ref(false);
 
     async function getCrewRankLists(businessUnit) {
@@ -208,12 +211,30 @@ export default function useCrewCommonApiRequest() {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
         } finally {
-            //loader.hide();
             isLoading.value = false;
         }
     }
 
+    async function getAppraisalUndoneAssignments(crwCrewProfileId) {
 
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isAppraisalUndoneAssignmentLoading.value = true;
+
+        let form = {
+            'crw_crew_profile_id': crwCrewProfileId,
+        }
+
+        try {
+            const { data, status } = await Api.post('/crw/get-appraisal-undone-assignments', form);
+            appraisalUndoneAssignments.value = data.value;
+
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            isAppraisalUndoneAssignmentLoading.value = false;
+        }
+    }
 
     return {
         crwRankLists,
@@ -226,6 +247,7 @@ export default function useCrewCommonApiRequest() {
         isCrewDocumentRenewModalOpen,
         vesselAssignedCrews,
         vesselWiseMonthlyAttendances,
+        appraisalUndoneAssignments,
         getCrewRankLists,
         getCrewAgencyLists,
         getCrewAgencyContracts,
@@ -235,7 +257,9 @@ export default function useCrewCommonApiRequest() {
         getCrewDocumentRenewals,
         getVesselAssignedCrews,
         getVesselMonthlyAttendances,
+        getAppraisalUndoneAssignments,
         isLoading,
+        isAppraisalUndoneAssignmentLoading,
         isCommonCrewLoading,
         errors,
     };
