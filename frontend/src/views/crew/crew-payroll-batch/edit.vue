@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router';
 import PayrollBatchForm from '../../../components/crew/PayrollBatchForm.vue';
 import usePayrollBatch from '../../../composables/crew/usePayrollBatch';
 import Title from "../../../services/title";
+const page = ref('update');
 
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
@@ -41,9 +42,8 @@ onMounted(() => {
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="updatePayrollBatch(payrollBatch, crewPayrollBatchId)">
             <!-- Booking Form -->
-          <payroll-batch-form v-model:form="payrollBatch" :errors="errors"></payroll-batch-form>
+          <payroll-batch-form v-model:form="payrollBatch" :page="page" :errors="errors"></payroll-batch-form>
             <!-- Submit button -->
-            <button type="submit" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update</button>
         </form>
     </div>
 </template>

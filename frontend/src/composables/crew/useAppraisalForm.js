@@ -16,7 +16,8 @@ export default function useAppraisalForm() {
 
     const appraisalFormLineObject ={
                             section_name: '',
-                            aspects: [
+                            section_no: '',
+                            appraisalFormLineItems: [
                                 {
                                     aspect: '',
                                     description: '',
@@ -139,7 +140,7 @@ export default function useAppraisalForm() {
             );
             appraisalForm.value = data.value;
             notification.showSuccess(status);
-            await router.push({ name: "crw.appraisals.index" });
+            await router.push({ name: "crw.appraisal-forms.index" });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -181,13 +182,13 @@ export default function useAppraisalForm() {
                 form.appraisalFormLines[index].isSectionDuplicate = false;
             }
 
-            appraisalFormLine.aspects.some((aspect, aspectIndex) => {
-                if (appraisalFormLine.aspects.filter(val => val.aspect === aspect.aspect)?.length > 1) {
-                    let data = `Duplicate Aspect Name [Section no: ${index + 1} , Aspect no: ${aspectIndex+1}]`;
+            appraisalFormLine.appraisalFormLineItems.some((appraisalFormLineItem, appraisalFormLineItemIndex) => {
+                if (appraisalFormLine.appraisalFormLineItems.filter(val => val.aspect === appraisalFormLineItem.aspect)?.length > 1) {
+                    let data = `Duplicate Aspect Name [Section no: ${index + 1} , Aspect no: ${appraisalFormLineItemIndex+1}]`;
                     messages.value.push(data);
-                    appraisalFormLine.aspects[aspectIndex].isAspectDuplicate = true;
+                    appraisalFormLine.appraisalFormLineItems[appraisalFormLineItemIndex].isAspectDuplicate = true;
                 } else {
-                    appraisalFormLine.aspects[aspectIndex].isAspectDuplicate = false;
+                    appraisalFormLine.appraisalFormLineItems[appraisalFormLineItemIndex].isAspectDuplicate = false;
                 }
             });
         });
