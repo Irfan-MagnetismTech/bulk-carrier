@@ -10,6 +10,7 @@ import useVessel from "../../composables/operations/useVessel";
 const { vessels, getVesselsWithoutPaginate, isLoading } = useVessel();
 const { payrollBatch, monthlyAttendance, getMonthlyAttendance, isAttendanceCrewAvailable } = usePayrollBatch();
 const { crews, getCrews } = useCrewCommonApiRequest();
+import useNotification from '../../composables/useNotification.js';
 import ErrorComponent from '../utils/ErrorComponent.vue';
 import RemarksComponent from "../utils/RemarksComponent.vue";
 import useHeroIcon from "../../assets/heroIcon";
@@ -28,6 +29,7 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const notification = useNotification();
 
 const selectedFile = (event) => {
   props.form.attachment = event.target.files[0];
@@ -68,6 +70,10 @@ function changeCrew(index){
 const openTab = ref(1);
 
 function changeTab(tabNumber, buttonType = null){
+  if(openTab.value === 1 && !isAttendanceCrewAvailable.value && props.page === 'create'){
+    notification.showError(422, '', 'No assigned crew found');
+    return;
+  }
   if(buttonType === 'back') {
     openTab.value = tabNumber;
   } else {
@@ -86,6 +92,7 @@ function addAdditionHead(){
         particular: '',
         amount: '',
         head_type: 'addition',
+        isHeadNameDuplicate: false,
         id: Math.random().toString()
       };
   props.form.crwPayrollBatchHeads.push(objHead);
@@ -148,6 +155,7 @@ function addDeductionHead(){
         particular: '',
         amount: '',
         head_type: 'deduction',
+        isHeadNameDuplicate: false,
         id: Math.random().toString()
       };
   props.form.crwPayrollBatchHeads.push(objHead);
@@ -307,8 +315,32 @@ function setDeductionBatchHeadAmount(payrollBatchHeadLineIndex){
 }
 
 function resetFormData(){
-  console.log("PayrollBatch", payrollBatch);
-  props.form = payrollBatch.value;
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You want to reset the data !",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      props.form.business_unit =  '',
+      props.form.ops_vessel_id =  '',
+      props.form.ops_vessel_name=  '',
+      props.form.year_month =  '',
+      props.form.compensation_type = 'salary',
+      props.form.process_date = '',
+      props.form.net_payment = 0,
+      props.form.currency = 'BDT',
+      props.form.working_days = 0,
+      props.form.total_crew = 0,
+      props.form.crwPayrollBatchLines = [],
+      props.form.crwPayrollBatchHeads = [],
+      props.form.crwPayrollBatchHeadLines = []
+      isAttendanceCrewAvailable.value = false;
+    }
+  })
 }
 
 onMounted(() => {
@@ -502,7 +534,7 @@ onMounted(() => {
                 <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].head_name" @input="additionChangeHead($event,batchHead.id)" placeholder="Head name" class="form-input" autocomplete="off" required />
               </td>
               <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].amount" @input="additionAmountSet($event,batchHead.id)" placeholder="Amount" class="form-input" autocomplete="off" required />
+                <input type="number" step=".01" v-model.trim="form.crwPayrollBatchHeads[index].amount" @input="additionAmountSet($event,batchHead.id)" placeholder="Amount" class="form-input" autocomplete="off" required />
               </td>
 <!--              <td class="px-1 py-1">-->
 <!--                <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].head_type" placeholder="Crew rank" class="form-input" autocomplete="off" required />-->
@@ -550,11 +582,11 @@ onMounted(() => {
               </td>
               <template v-for="(lineBatchHead, lineBatchHeadIndex) in form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads">
                 <td v-if="lineBatchHead?.head_type==='addition'" class="px-1 py-1">
-                  <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads[lineBatchHeadIndex].amount" @input="setAdditionBatchHeadAmount(payrollBatchHeadLineIndex)" placeholder="Amount" class="form-input" autocomplete="off" required />
+                  <input type="number" step=".01" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads[lineBatchHeadIndex].amount" @input="setAdditionBatchHeadAmount(payrollBatchHeadLineIndex)" placeholder="Amount" class="form-input" autocomplete="off" required />
                 </td>
               </template>
               <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount" placeholder="Amount" class="form-input vms-readonly-input" autocomplete="off" readonly />
+                <input type="number" step=".01" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount" placeholder="Amount" class="form-input vms-readonly-input" autocomplete="off" readonly />
               </td>
             </tr>
           </template>
@@ -594,7 +626,7 @@ onMounted(() => {
                 <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].head_name" @input="deductionChangeHead($event,batchHead.id)" placeholder="Head name" class="form-input" autocomplete="off" required />
               </td>
               <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].amount" @input="deductionAmountSet($event,batchHead.id)" placeholder="Amount" class="form-input" autocomplete="off" required />
+                <input type="number" step=".01" v-model.trim="form.crwPayrollBatchHeads[index].amount" @input="deductionAmountSet($event,batchHead.id)" placeholder="Amount" class="form-input" autocomplete="off" required />
               </td>
 <!--              <td class="px-1 py-1">-->
 <!--                <input type="text" v-model.trim="form.crwPayrollBatchHeads[index].head_type" placeholder="Crew rank" class="form-input" autocomplete="off" required />-->
@@ -642,11 +674,11 @@ onMounted(() => {
               </td>
               <template v-for="(lineBatchHead, lineBatchHeadIndex) in form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads">
                 <td v-if="lineBatchHead?.head_type==='deduction'" class="px-1 py-1">
-                  <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads[lineBatchHeadIndex].amount" @input="setDeductionBatchHeadAmount(payrollBatchHeadLineIndex)" placeholder="Amount" class="form-input" autocomplete="off" required />
+                  <input type="number" step=".01" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads[lineBatchHeadIndex].amount" @input="setDeductionBatchHeadAmount(payrollBatchHeadLineIndex)" placeholder="Amount" class="form-input" autocomplete="off" required />
                 </td>
               </template>
               <td class="px-1 py-1">
-                <input type="text" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" readonly />
+                <input type="number" step=".01" v-model.trim="form.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" readonly />
               </td>
             </tr>
           </template>

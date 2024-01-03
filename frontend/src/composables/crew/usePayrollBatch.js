@@ -77,59 +77,63 @@ export default function usePayrollBatch() {
 
     async function storePayrollBatch(form) {
 
-        //for addition
-        let additionBatchHeadLines = form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'addition');
+        const isUnique = checkUniqueArray(form);
 
-        if(additionBatchHeadLines){
-            form.crwPayrollBatchHeads.filter(item => item.head_type === 'addition').forEach((batchHead,batchHeadIndex) => {
-                batchHead.crwPayrollBatchHeadLines = [];
-                additionBatchHeadLines.filter(item => item.head_type === 'addition').forEach((batchHeadLine,batchHeadLineIndex) => {
+        if(isUnique){
+            //for addition
+            let additionBatchHeadLines = form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'addition');
 
-                    let obj = {
-                        crew_id: batchHeadLine?.crew_id,
-                        head_type: batchHeadLine?.head_type,
-                        amount: batchHeadLine.crew_batch_heads[batchHeadIndex].amount,
-                        particular: batchHead?.head_name,
-                    };
-                    batchHead.crwPayrollBatchHeadLines.push(obj);
+            if(additionBatchHeadLines){
+                form.crwPayrollBatchHeads.filter(item => item.head_type === 'addition').forEach((batchHead,batchHeadIndex) => {
+                    batchHead.crwPayrollBatchHeadLines = [];
+                    additionBatchHeadLines.filter(item => item.head_type === 'addition').forEach((batchHeadLine,batchHeadLineIndex) => {
+
+                        let obj = {
+                            crew_id: batchHeadLine?.crew_id,
+                            head_type: batchHeadLine?.head_type,
+                            amount: batchHeadLine.crew_batch_heads[batchHeadIndex].amount,
+                            particular: batchHead?.head_name,
+                        };
+                        batchHead.crwPayrollBatchHeadLines.push(obj);
+                    });
                 });
-            });
-        }
+            }
 
-        //for deduction
-        let deductionBatchHeadLines = form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'deduction');
+            //for deduction
+            let deductionBatchHeadLines = form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'deduction');
 
-        if(deductionBatchHeadLines){
-            form.crwPayrollBatchHeads.filter(item => item.head_type === 'deduction').forEach((batchHead,batchHeadIndex) => {
-                batchHead.crwPayrollBatchHeadLines = [];
-                deductionBatchHeadLines.filter(item => item.head_type === 'deduction').forEach((batchHeadLine,batchHeadLineIndex) => {
-                    let obj = {
-                        crew_id: batchHeadLine?.crew_id,
-                        head_type: batchHeadLine?.head_type,
-                        amount: batchHeadLine.crew_batch_heads[batchHeadIndex].amount,
-                        particular: batchHead?.head_name,
-                    };
-                    batchHead.crwPayrollBatchHeadLines.push(obj);
+            if(deductionBatchHeadLines){
+                form.crwPayrollBatchHeads.filter(item => item.head_type === 'deduction').forEach((batchHead,batchHeadIndex) => {
+                    batchHead.crwPayrollBatchHeadLines = [];
+                    deductionBatchHeadLines.filter(item => item.head_type === 'deduction').forEach((batchHeadLine,batchHeadLineIndex) => {
+                        let obj = {
+                            crew_id: batchHeadLine?.crew_id,
+                            head_type: batchHeadLine?.head_type,
+                            amount: batchHeadLine.crew_batch_heads[batchHeadIndex].amount,
+                            particular: batchHead?.head_name,
+                        };
+                        batchHead.crwPayrollBatchHeadLines.push(obj);
+                    });
                 });
-            });
-        }
+            }
 
-        form.net_payment = form.crwPayrollBatchLines.reduce((sum, item) => sum + parseFloat(item.net_payable_amount || 0), 0);
+            form.net_payment = form.crwPayrollBatchLines.reduce((sum, item) => sum + parseFloat(item.net_payable_amount || 0), 0);
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+            const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
 
-        try {
-            const { data, status } = await Api.post('/crw/crw-payroll-batches', form);
-            payrollBatch.value = data.value;
-            notification.showSuccess(status);
-            await router.push({ name: "crw.crewPayrollBatches.index" });
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
+            try {
+                const { data, status } = await Api.post('/crw/crw-payroll-batches', form);
+                payrollBatch.value = data.value;
+                notification.showSuccess(status);
+                await router.push({ name: "crw.crewPayrollBatches.index" });
+            } catch (error) {
+                const { data, status } = error.response;
+                errors.value = notification.showError(status, data);
+            } finally {
+                loader.hide();
+                isLoading.value = false;
+            }
         }
     }
 
@@ -217,61 +221,65 @@ export default function usePayrollBatch() {
 
     async function updatePayrollBatch(form, crewPayrollBatchId) {
 
-        let additionBatchHeadLines = form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'addition');
+        const isUnique = checkUniqueArray(form);
 
-        if(additionBatchHeadLines){
-            form.crwPayrollBatchHeads.filter(item => item.head_type === 'addition').forEach((batchHead,batchHeadIndex) => {
-                batchHead.crwPayrollBatchHeadLines = [];
-                additionBatchHeadLines.filter(item => item.head_type === 'addition').forEach((batchHeadLine,batchHeadLineIndex) => {
+        if(isUnique){
+            let additionBatchHeadLines = form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'addition');
 
-                    let obj = {
-                        crew_id: batchHeadLine?.crew_id,
-                        head_type: batchHeadLine?.head_type,
-                        amount: batchHeadLine.crew_batch_heads[batchHeadIndex].amount,
-                        particular: batchHead?.head_name,
-                    };
-                    batchHead.crwPayrollBatchHeadLines.push(obj);
+            if(additionBatchHeadLines){
+                form.crwPayrollBatchHeads.filter(item => item.head_type === 'addition').forEach((batchHead,batchHeadIndex) => {
+                    batchHead.crwPayrollBatchHeadLines = [];
+                    additionBatchHeadLines.filter(item => item.head_type === 'addition').forEach((batchHeadLine,batchHeadLineIndex) => {
+
+                        let obj = {
+                            crew_id: batchHeadLine?.crew_id,
+                            head_type: batchHeadLine?.head_type,
+                            amount: batchHeadLine.crew_batch_heads[batchHeadIndex].amount,
+                            particular: batchHead?.head_name,
+                        };
+                        batchHead.crwPayrollBatchHeadLines.push(obj);
+                    });
                 });
-            });
-        }
+            }
 
-        //for deduction
-        let deductionBatchHeadLines = form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'deduction');
+            //for deduction
+            let deductionBatchHeadLines = form.crwPayrollBatchHeadLines.filter(item => item.head_type === 'deduction');
 
-        if(deductionBatchHeadLines){
-            form.crwPayrollBatchHeads.filter(item => item.head_type === 'deduction').forEach((batchHead,batchHeadIndex) => {
-                batchHead.crwPayrollBatchHeadLines = [];
-                deductionBatchHeadLines.filter(item => item.head_type === 'deduction').forEach((batchHeadLine,batchHeadLineIndex) => {
-                    let obj = {
-                        crew_id: batchHeadLine?.crew_id,
-                        head_type: batchHeadLine?.head_type,
-                        amount: batchHeadLine.crew_batch_heads[batchHeadIndex].amount,
-                        particular: batchHead?.head_name,
-                    };
-                    batchHead.crwPayrollBatchHeadLines.push(obj);
+            if(deductionBatchHeadLines){
+                form.crwPayrollBatchHeads.filter(item => item.head_type === 'deduction').forEach((batchHead,batchHeadIndex) => {
+                    batchHead.crwPayrollBatchHeadLines = [];
+                    deductionBatchHeadLines.filter(item => item.head_type === 'deduction').forEach((batchHeadLine,batchHeadLineIndex) => {
+                        let obj = {
+                            crew_id: batchHeadLine?.crew_id,
+                            head_type: batchHeadLine?.head_type,
+                            amount: batchHeadLine.crew_batch_heads[batchHeadIndex].amount,
+                            particular: batchHead?.head_name,
+                        };
+                        batchHead.crwPayrollBatchHeadLines.push(obj);
+                    });
                 });
-            });
-        }
+            }
 
-        form.net_payment = form.crwPayrollBatchLines.reduce((sum, item) => sum + parseFloat(item.net_payable_amount || 0), 0);
+            form.net_payment = form.crwPayrollBatchLines.reduce((sum, item) => sum + parseFloat(item.net_payable_amount || 0), 0);
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+            const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
 
-        try {
-            const { data, status } = await Api.put(
-                `/crw/crw-payroll-batches/${crewPayrollBatchId}`,
-                form
-            );
-            payrollBatch.value = data.value;
-            notification.showSuccess(status);
-            await router.push({ name: "crw.crewPayrollBatches.index" });
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
+            try {
+                const { data, status } = await Api.put(
+                    `/crw/crw-payroll-batches/${crewPayrollBatchId}`,
+                    form
+                );
+                payrollBatch.value = data.value;
+                notification.showSuccess(status);
+                await router.push({ name: "crw.crewPayrollBatches.index" });
+            } catch (error) {
+                const { data, status } = error.response;
+                errors.value = notification.showError(status, data);
+            } finally {
+                loader.hide();
+                isLoading.value = false;
+            }
         }
     }
 
@@ -294,18 +302,19 @@ export default function usePayrollBatch() {
     }
 
     function checkUniqueArray(form){
+
         const itemNamesSet = new Set();
         let isHasError = false;
         const messages = ref([]);
-        const hasDuplicates = form.crwIncidentParticipants.some((item,index) => {
-            if (itemNamesSet.has(item.crw_crew_name)) {
-                let data = `Duplicate Crew Name [line no: ${index + 1}]`;
+        const hasDuplicates = form.crwPayrollBatchHeads.some((item,index) => {
+            if (itemNamesSet.has(item.head_name)) {
+                let data = `Duplicate Head Name [line no: ${index + 1}]`;
                 messages.value.push(data);
-                form.crwIncidentParticipants[index].isCrewNameDuplicate = true;
+                form.crwPayrollBatchHeads[index].isHeadNameDuplicate = true;
             } else {
-                form.crwIncidentParticipants[index].isCrewNameDuplicate = false;
+                form.crwPayrollBatchHeads[index].isHeadNameDuplicate = false;
             }
-            itemNamesSet.add(item.crw_crew_name);
+            itemNamesSet.add(item.head_name);
         });
 
         if (messages.value.length > 0) {
