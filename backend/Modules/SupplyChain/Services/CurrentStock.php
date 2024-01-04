@@ -23,7 +23,7 @@ class CurrentStock
                 'scm_warehouse_id' => $scm_warehouse_id
             ])
             ->when(!is_null($toDate), function ($query) use ($toDate) {
-                $query->where('date', '<=', $toDate);
+                $query->where('date', '<=', Carbon::parse($toDate)->endOfDay());
             })
             ->sum('quantity');
 
