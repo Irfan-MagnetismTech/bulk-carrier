@@ -87,7 +87,7 @@ class ScmSirController extends Controller
                         'currency' => $stock->currency,
                         'exchange_rate' => $stock->exchange_rate,
                         'business_unit' => $stock->business_unit,
-                        'received_date' => $stock->received_date,
+                        'date' => $stock->received_date,
                     ];
                     break;
                 } else {
@@ -106,7 +106,7 @@ class ScmSirController extends Controller
                         'currency' => $stock->currency,
                         'exchange_rate' => $stock->exchange_rate,
                         'business_unit' => $stock->business_unit,
-                        'received_date' => $stock->received_date,
+                        'date' => $stock->received_date,
                     ];
                     $remainingQty = $remainingQty - $convertMinusToPlus;
                 }

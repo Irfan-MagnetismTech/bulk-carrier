@@ -32,7 +32,7 @@ class StockLedgerData
                 'gross_unit_price' => $line['rate'] ?? null,
                 'net_unit_price' => $os ? $line['rate'] : $line['net_rate'] ?? null,
                 'currency' => $line['currency'] ?? null,
-                'received_date' => now(),
+                'date' => now(),
                 'business_unit' => $parentModel->business_unit,
             ];
         });
@@ -69,9 +69,9 @@ class StockLedgerData
             });
 
         if ($method == 'lifo') {
-            $currentStock = $currentStock->sortByDesc('received_date');
+            $currentStock = $currentStock->sortByDesc('date');
         } else {
-            $currentStock = $currentStock->sortBy('received_date');
+            $currentStock = $currentStock->sortBy('date');
         }
 
         $stockOutArray = [];
@@ -96,7 +96,7 @@ class StockLedgerData
                     'currency'                  => $value->currency,
                     'exchange_rate'             => $value->exchange_rate,
                     'business_unit'             => $value->business_unit,
-                    'received_date'             => $value->received_date,
+                    'date'             => $value->received_date,
                 ];
 
                 break;
@@ -116,7 +116,7 @@ class StockLedgerData
                     'currency'                  => $value->currency,
                     'exchange_rate'             => $value->exchange_rate,
                     'business_unit'             => $value->business_unit,
-                    'received_date'             => $value->received_date,
+                    'date'             => $value->received_date,
                 ];
                 $outQty = $outQty - $currentStock;
             }
