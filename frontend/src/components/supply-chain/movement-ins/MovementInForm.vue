@@ -4,11 +4,11 @@
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
     <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
   </div>
-  <div class="input-group !w-1/4">
+  <div class="input-group !w-1/4" v-if="formType == 'edit'">
       <label class="label-group">
-          <span class="label-item-title">MI Ref<span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
-          <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
+          <span class="label-item-title">MI Ref</span>
+          <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'"/>
+          <!-- <Error v-if="errors?.ref_no" :errors="errors.ref_no"  /> -->
       </label>
   </div>
   <div class="input-group">
@@ -24,23 +24,23 @@
               />
           </template>
           </v-select>
-         <Error v-if="errors?.unit" :errors="errors.unit" />
+         <!-- <Error v-if="errors?.unit" :errors="errors.unit" /> -->
       </label>
       <label class="label-group">
-        <span class="label-item-title">From Warehouse <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.from_warehouse_name" required class="form-input" name="from_warehouse_name" :id="'delivery_date'" />
-         <Error v-if="errors?.from_warehouse_name" :errors="errors.from_warehouse_name" />
+        <span class="label-item-title">From Warehouse</span>
+        <input type="text" v-model="form.from_warehouse_name" readonly class="form-input vms-readonly-input" name="from_warehouse_name" :id="'delivery_date'" />
+         <!-- <Error v-if="errors?.from_warehouse_name" :errors="errors.from_warehouse_name" /> -->
       </label>
       <label class="label-group">
-        <span class="label-item-title">To Warehouse <span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.to_warehouse_name" required class="form-input" name="to_warehouse_name" :id="'to_warehouse_name'" />
-          <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" />
+        <span class="label-item-title">To Warehouse</span>
+        <input type="text" v-model="form.to_warehouse_name" readonly class="form-input vms-readonly-input" name="to_warehouse_name" :id="'to_warehouse_name'" />
+          <!-- <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">MO No<span class="text-red-500">*</span></span>
         <!-- <input type="text" v-model="form.mo_no" required class="form-input" name="mo_no" :id="'mo_no'" /> -->
-        <v-select :options="filteredMovementOuts" placeholder="-- Search Here --" @option:selected="setMoData(form.scmMo)" v-model="form.scmMo" label="ref_no" class="block form-input">
-          <template #search="{attributes, events}">
+        <v-select :options="filteredMovementOuts" placeholder="-- Search Here --" v-model="form.scmMo" label="ref_no" class="block form-input" @update:modelValue="setMoData(form.scmMo)">
+          <template #search="{attributes , events}">
               <input
                   class="vs__search"
                   :required="!form.scmMo"
@@ -49,18 +49,18 @@
               />
           </template>
           </v-select>
-          <Error v-if="errors?.mo_no" :errors="errors.mo_no" />
+          <!-- <Error v-if="errors?.mo_no" :errors="errors.mo_no" /> -->
       </label>
   </div>
   <div class="input-group !w-1/4">
     <label class="label-group">
           <span class="label-item-title">Transfer Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+          <VueDatePicker v-model="form.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+          <!-- <Error v-if="errors?.date" :errors="errors.date"  /> -->
       </label>
   </div>
 
-    <div id="">
+    <div id="" v-if="form.scmMiLines.length">
       <div class="table-responsive min-w-screen">
         <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
           <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
@@ -72,15 +72,13 @@
               <th class="py-3 align-center">MR Quantity</th>
               <th class="py-3 align-center">MO Quantity</th>
               <th class="py-3 align-center">Qty</th>
-              <th class="py-3 align-center">Remarks</th>
-              <th class="py-3 text-center align-center">Action</th>
             </tr>
             </thead>
 
             <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
             <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmMoLine, index) in form.scmMiLines" :key="index">
               <td class="!w-72">
-                <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmMiLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmMiLines[index].scmMaterial,index)">
+                <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmMiLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmMiLines[index].scmMaterial,index)" :disabled="true">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -98,36 +96,19 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmMiLines[index].mmr_quantity" class="form-input">
+                  <input type="text" v-model="form.scmMiLines[index].mmr_quantity" class="vms-readonly-input form-input" readonly>
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmMiLines[index].mo_quantity" class="form-input">
+                  <input type="text" v-model="form.scmMiLines[index].mo_quantity" class="vms-readonly-input form-input" readonly>
                 </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmMiLines[index].quantity" class="form-input">
+                  <input type="text" v-model="form.scmMiLines[index].quantity" class="form-input" :max="form.scmMiLines[index].mo_quantity"
+                 :class="{'border-2': form.scmMiLines[index].quantity > form.scmMiLines[index].mo_quantity,'border-red-500 bg-red-100': form.scmMiLines[index].quantity > form.scmMiLines[index].mo_quantity}" min="1">
                 </label>
-              </td>
-              <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmMiLines[index].remarks" class="form-input">
-                </label>
-                
-              </td>
-              <td class="px-1 py-1 text-center">
-                <button v-if="index!=0" type="button" @click="removeMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                  </svg>
-                </button>
-                <button v-else type="button" @click="addMaterial()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                  </svg>
-                </button>
               </td>
             </tr>
             </tbody>
@@ -144,12 +125,12 @@
         <label class="label-group">
           <span class="label-item-title">Shortage Type<span class="text-red-500">*</span></span>
           <input type="text" v-model="form.scmMiShortage.shortage_type" required class="form-input" name="to_warehouse_name" :id="'to_warehouse_name'" />
-            <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" />
+            <!-- <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" /> -->
         </label>
         <label class="label-group">
           <span class="label-item-title">Assigned To<span class="text-red-500">*</span></span>
           <!-- <input type="text" v-model="form.scmMiShortage.scmWarehouse" required class="form-input" name="mo_no" :id="'mo_no'" /> -->
-           <v-select :options="warehouses" placeholder="-- Search Here --" @option:selected="setWarehouseData(form.scmMiShortage.scmWarehouse)" v-model="form.scmMiShortage.scmWarehouse" label="name" class="block form-input">
+           <v-select :options="assgnWarehouseList" placeholder="-- Search Here --" v-model="form.scmMiShortage.scmWarehouse" label="name" class="block form-input" @update:modelValue="setWarehouseData(form.scmMiShortage.scmWarehouse)">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -171,7 +152,6 @@
               <th class="py-3 align-center">Material Name </th>
               <th class="py-3 align-center">Unit</th>
               <th class="py-3 align-center">Qty</th>
-              <th class="py-3 align-center">Remarks</th>
             </tr>
             </thead>
 
@@ -198,14 +178,8 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="text" readonly v-model="form.scmMiShortage.scmMiShortageLines[index].quantity" class="vms-readonly-input form-input">
+                  <input type="text" readonly v-model="form.scmMiShortage.scmMiShortageLines[index].quantity" class="vms-readonly-input form-input" min="0">
                 </label>
-              </td>
-              <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmMiShortage.scmMiShortageLines[index].remarks" class="form-input">
-                </label>
-                
               </td>
             </tr>
             </tbody>
@@ -215,7 +189,7 @@
     </fieldset>
   </div>
 
-
+<ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 
 
@@ -231,7 +205,8 @@
     import {useStore} from "vuex";
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
-    // import Store from "../../store";
+    
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
     import useStockLedger from '../../../composables/supply-chain/useStockLedger';
     import useMovementRequisition from '../../../composables/supply-chain/useMovementRequisition';
     import useMovementIn from '../../../composables/supply-chain/useMovementIn';
@@ -258,7 +233,8 @@
     });
 
     const mmrKey = ref(0);
-
+    const editIntitiated = ref(false);
+    const assgnWarehouseList = ref([]);
     // const USER = Store.getters.getCurrentUser;
     // const ROLE = USER?.role ?? null;
     // const PERMISSIONS = USER?.permissions ?? [];
@@ -302,14 +278,12 @@
 //       }
 // }
 
-    function fetchWarehouse(search) {
-        searchWarehouse(search, props.form.business_unit);
-    }
 
     function setWarehouseData() {
       if (props.form.scmMiShortage.scmWarehouse) {
         props.form.scmMiShortage.scm_warehouse_id = props.form.scmMiShortage.scmWarehouse.id;
-        props.form.scmMiShortage.acc_cost_center_id = props.form.scmMiShortage.scmWarehouse.acc_cost_center_id;
+        props.form.scmMiShortage.acc_cost_center_id = props.form.scmMiShortage.scmWarehouse.
+          cost_center_id;
       }
     }
 
@@ -319,11 +293,15 @@
 
     function setMovementRequisitionData(mmr) {
       if (mmr) {
-       
-        getMmrWiseMo(props.form.business_unit, mmr.id);
+        if (props.formType == 'create') {
+          getMmrWiseMo(props.form.business_unit, mmr.id);
+        } else {
+          getMmrWiseMo(props.form.business_unit, mmr.id,props.form.scm_mo_id,true);
+        }
         props.form.scm_mmr_id = mmr?.id;
         props.form.fromWarehouse = mmr.fromWarehouse;
         props.form.toWarehouse = mmr.toWarehouse;
+        assgnWarehouseList.value = [];
       }
 }
 
@@ -341,7 +319,7 @@
 
     const refreshData = () => {
       // Use Vue Router to go to the current route, triggering a re-render
-      router.go(-1);
+      // router.go(-1);
     };
 
 
@@ -362,12 +340,14 @@
       props.form.from_warehouse_id = value?.id;
       props.form.from_cost_center_id = value?.acc_cost_center_id;
       props.form.from_warehouse_name = value?.name;
+      assgnWarehouseList.value.push(value);
     });
 
   watch(() => props.form.toWarehouse, (value) => {
     props.form.to_warehouse_id = value?.id;
     props.form.to_cost_center_id = value?.acc_cost_center_id;
     props.form.to_warehouse_name = value?.name;
+    assgnWarehouseList.value.push(value);
   });
     
  
@@ -379,10 +359,73 @@ function setMaterialOtherData(datas, index) {
 
 
 
+// watch(() => props.form.scmMiLines, (newLines) => {
+
+//   if (props.formType == 'create') {
+//     editIntitiated.value = true;
+//   }
+
+//   if (props.form.scmMiShortage && editIntitiated.value) {
+//     props.form.scmMiShortage.scmMiShortageLines = [];
+//   }
+
+//   if (!props.form.scmMiShortage && props.formType == 'edit') {
+//         props.form.scmMiShortage = {
+//           shortage_type: '',
+//           scmWarehouse: null,
+//           scm_warehouse_id: '',
+//           acc_cost_center_id: '',
+//           scmMiShortageLines: [],
+//         };
+//       }
+
+//   if (editIntitiated.value) {
+//       newLines.forEach((line, index) => {
+//       // const previousLine = previousLines.value[index];
+//       if (Number(line.quantity) < Number(line.mo_quantity)) {
+//         props.form.scmMiShortage.scmMiShortageLines.push({
+//           scm_material_id: line.scm_material_id,
+//           scmMaterial: line.scmMaterial,
+//           unit: line.unit,
+//           quantity: line.mo_quantity - line.quantity,
+//         });
+//       }
+//       if (line.scmMaterial) {
+//         const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
+//         if (selectedMaterial) {
+//           if ( line.scm_material_id !== selectedMaterial.id
+//           ) {
+//             props.form.scmMiLines[index].unit = selectedMaterial.unit;
+//             props.form.scmMiLines[index].scm_material_id = selectedMaterial.id;
+//           }
+//         }
+//       }
+//     });
+//   }
+//   if (props.formType == 'edit') {
+//       editIntitiated.value = true;
+//   }
+//   // previousLines.value = cloneDeep(newLines);
+// }, { deep: true });
+
+
 watch(() => props.form.scmMiLines, (newLines) => {
-  props.form.scmMiShortage.scmMiShortageLines = [];
-  newLines.forEach((line, index) => {
-    // const previousLine = previousLines.value[index];
+  if (props.formType == 'create') {
+    editIntitiated.value = true;
+  }
+  if (props.formType == 'edit' && editIntitiated.value == false && props.form.scmMiShortage == null) {
+    props.form.scmMiShortage = {
+      shortage_type: '',
+      scmWarehouse: null,
+      scm_warehouse_id: '',
+      acc_cost_center_id: '',
+      scmMiShortageLines: [],
+    };
+  }
+  if (editIntitiated.value) {
+    props.form.scmMiShortage.scmMiShortageLines = [];
+    newLines.forEach((line, index) => {
+    
     if (Number(line.quantity) < Number(line.mo_quantity)) {
       props.form.scmMiShortage.scmMiShortageLines.push({
         scm_material_id: line.scm_material_id,
@@ -402,10 +445,24 @@ watch(() => props.form.scmMiLines, (newLines) => {
         }
       }
     }
-  });
+    });
+    if (props.form.scmMiShortage.scmMiShortageLines.length == 0) {
+      props.form.scmMiShortage = {
+      shortage_type: '',
+      scmWarehouse: null,
+      scm_warehouse_id: '',
+      acc_cost_center_id: null,
+      scmMiShortageLines: [],
+    };
+    }
+  }
+
+  if (props.formType == 'edit') {
+    editIntitiated.value = true;
+  }
+ 
   // previousLines.value = cloneDeep(newLines);
 }, { deep: true });
-
 
 function fetchMaterials(search, loading) {
   if (search.length > 0) {
@@ -428,7 +485,7 @@ function fetchMaterials(search, loading) {
      props.form.scm_mmr_id = '';
     }
     fetchMovementRequisitions('');
-    fetchWarehouse('');
+    
 });
 
 function tableWidth() {
@@ -445,6 +502,13 @@ function tableWidth() {
 //after mount
 onMounted(() => {
   tableWidth();
+  if(props.formType == 'edit'){
+    const unwatch = watch(() => props.form.scm_mmr_id, (newLines) => {
+    getMmrWiseMo(props.form.business_unit, props.form.scm_mmr_id,props.form.scm_mo_id,true);
+    unwatch();
+  });
+  }
+  
 });
 </script>
 

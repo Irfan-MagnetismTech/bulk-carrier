@@ -2,6 +2,11 @@
 
 namespace Modules\SupplyChain\Services;
 
+/**
+ * @package Modules\SupplyChain\Services
+ * 
+ * @class-type Service
+ */
 class CompositeKey
 {
     /**
@@ -12,9 +17,9 @@ class CompositeKey
      * @param int $column_id
      * @return string
      */
-    public function generate(int $index, int $model_id, string $infix, int $column_id): string
+    public static function generate(int $index, int $model_id, string $infix, int $column_id): string
     {
-        return $index . '-' . $model_id . '-' . strtoupper($infix) . '-' . $column_id;
+        return (string) $index . '-' . $model_id . '-' . strtoupper($infix) . '-' . $column_id;
     }
 
     /**
@@ -26,16 +31,16 @@ class CompositeKey
      * @param string $infix
      * @return array
      */
-    public function generateArrayWithCompositeKey(array $lines, int $parentModelId, string $columnName, string $infix)
+    public static function generateArray(array $lines, int $parentModelId, string $columnName, string $infix): array
     {
         foreach ($lines as $index => &$line) {
             if (isset($line[$columnName])) {
                 $parentModelId = $parentModelId;
                 $infix = $infix;
-                $line[$infix . '_composite_key'] =  $this->generate($index, $parentModelId, $infix, $line[$columnName]);
+                $line[$infix . '_composite_key'] =  self::generate($index, $parentModelId, $infix, $line[$columnName]);
             }
         }
 
-        return $lines;
+        return (array) $lines;
     }
 }

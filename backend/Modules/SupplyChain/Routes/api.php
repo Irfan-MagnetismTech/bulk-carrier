@@ -96,4 +96,8 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('quotations', [ScmCsController::class, "getQuotations"])->name('quotations.index');
     Route::get('quotations/{quotationId}', [ScmCsController::class, "showQuotation"])->name('quotations.show');
     Route::put('quotations/{quotationId}', [ScmCsController::class, "updateQuotation"])->name('quotations.update');
+
+    Route::get('test-stock', function () {
+        return \Modules\SupplyChain\Services\CurrentStock::count(2, 6, '2023-12-31');
+    });
 });

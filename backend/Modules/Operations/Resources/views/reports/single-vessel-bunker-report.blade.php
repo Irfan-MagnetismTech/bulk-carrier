@@ -17,6 +17,10 @@
         table th {
             background-color: #ccc;
         }
+
+        table tbody tr td {
+            text-align: center !important;
+        }
     </style>
 </head>
 <body>
@@ -28,7 +32,7 @@
                 <th rowspan="2">Voyage</th>
                 <th colspan="{{ count($allBunkers) }}">Bunker Used</th>
                 <th colspan="{{ count($allBunkers) }}">Bunker Purchased</th>
-                <th colspan="{{ count($allBunkers) }}">Final Stock</th>
+                <th colspan="{{ count($allBunkers) }}">Previous Stock</th>
             </tr>
             <tr>
                 @for ($i = 1; $i < 4; $i++)
@@ -39,33 +43,78 @@
             </tr>
         </thead>
         <tbody>
-            {{-- @if(isset($entryGroups))
-                @foreach($entryGroups as $expense_head_id => $entries)
-                <tr>
-                    <td><nobr>{{ $entries->first()->vessel }}</nobr></td>
-                    <td><nobr>{{ $entries->first()->voyage }}</nobr></td>
-                    <td><nobr>{{ ($entries->first()->sail_date) ? \Carbon\Carbon::parse($entries->first()->sail_date)->format('d/m/Y \a\t h:i A') : '' }}</nobr></td>
-                    <td><nobr>{{ ($entries->first()->transit_date) ? \Carbon\Carbon::parse($entries->first()->transit_date)->format('d/m/Y \a\t h:i A') : ''}}</nobr></td>
 
-                    @foreach ($heads as $head)
-                        @if(count($head['opsSubHeads']) <= 0)
-                            <td style="text-align: right !important;">
-                                {{ (collect($entries)->where('ops_expense_head_id', $head['id'])->sum('amount_bdt') > 0) ? number_format(collect($entries)->where('ops_expense_head_id', $head['id'])->sum('amount_bdt'), 2) : null }}
-                            </td>
-                        @else
-                            @foreach ($head['opsSubHeads'] as $sub_head)
-                                <td style="text-align: right !important;">
-                                    {{ (collect($entries)->where('ops_expense_head_id', $sub_head->id)->sum('amount_bdt') > 0) ? number_format(collect($entries)->where('ops_expense_head_id', $sub_head->id)->sum('amount_bdt'), 2) : null }}
-                                </td>
-                            @endforeach
-                        @endif
+            <tr>
+                <td colspan="{{ count($allBunkers) * 2 + 2 }}"></td>
+                @foreach($allBunkers as $bunker)
+                    <td>
+                        {{ ($bunker['previous_stock'] != 0) ? abs($bunker['previous_stock']) : null }}
+                    </td>
+                @endforeach
+            </tr>
+
+
+
+            @if(isset($stockRecords))
+                @foreach($stockRecords as $vesselBunkerId => $stockRecord)
+
+
+
+
+
+                <tr>
+                    <td><nobr>{{ $stockRecord->first()?->opsVessel->name }}</nobr></td>
+                    <td><nobr>{{ $stockRecord->first()?->opsVoyage?->voyage_sequence }}</nobr></td>
+                    
+                    @foreach($allBunkers as $bunker)
+                    <td>
+                        @php
+                        $output = 0;
+                        collect($stockRecord->where('type', 'Stock Out'))->map(function($stock) use(&$output, $bunker) {
+                            $output += $stock->stockable->where('scm_material_id', $bunker['scm_material_id'])->sum('quantity');
+                        })
+                        @endphp
+                        {{ ($output != 0) ? abs($output) : null }}
+                    </td>
                     @endforeach
 
 
+                    @foreach($allBunkers as $bunker)
+                    <td>
+                        @php
+                        $output = 0;
+                        collect($stockRecord->where('type', 'Stock In'))->map(function($stock) use(&$output, $bunker) {
+                            $output += $stock->stockable->where('scm_material_id', $bunker['scm_material_id'])->sum('quantity');
+                        })
+                        @endphp
+                        {{ ($output != 0) ? abs($output) : null }}
+                    </td>
+                    @endforeach
+
+                    @foreach($allBunkers as $bunker)
+                        <td></td>
+                    @endforeach
                 </tr>
+
+
+
+
                 @endforeach
-            @endif --}}
+            @endif
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="{{ count($allBunkers) * 2 + 2 }}" style="background-color: #ccc; text-align: center;">
+                    Final Stock
+                </td>
+                @foreach($allBunkers as $bunker)
+                    <td>
+                        {{ ($bunker['final_stock'] != 0) ? abs($bunker['final_stock']) : null }}
+                    </td>
+                @endforeach
+            </tr>
+
+        </tfoot>
     </table>
 
 </body>

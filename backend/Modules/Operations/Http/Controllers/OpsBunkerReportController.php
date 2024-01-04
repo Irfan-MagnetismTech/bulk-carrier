@@ -8,7 +8,10 @@ use Illuminate\Routing\Controller;
 use Modules\Operations\Entities\OpsVessel;
 use Modules\Operations\Entities\OpsVoyage;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Operations\Entities\OpsVesselBunker;
 use Modules\Operations\Services\OpsVesselBunkerService;
+use Modules\SupplyChain\Entities\ScmWarehouse;
+use Modules\SupplyChain\Services\CurrentStock;
 
 class OpsBunkerReportController extends Controller
 {
@@ -81,31 +84,75 @@ class OpsBunkerReportController extends Controller
         //
     }
 
-    public function vesselBunkerReport(Request $request) {
+    // public function vesselBunkerReport(Request $request) {
+
+    //     $business_unit = $request->business_unit;
+    //     $ops_vessel_id = $request->ops_vessel_id;
+    //     $start = date($request->start);
+    //     $end = date($request->end);
+
+    //     $voyages = OpsVoyage::query()
+    //     // ->whereBetween('transit_date', [$start, $end])
+    //     ->whereBetween('transit_date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
+    //     ->where('ops_vessel_id', $ops_vessel_id)
+    //     ->where('business_unit', $business_unit)
+    //     ->with('opsVesselBunkers.stockable', 'opsVessel')
+    //     ->get();
+
+    //     $voyages = $voyages->map(function($voyage) {
+    //         $bunkers = $voyage->opsVesselBunkers->groupBy('type');
+    //         $voyage['bunkers'] = $bunkers;
+    //         return $voyage;
+    //     });
+
+    //     // dd($voyages);
+
+    //     $allBunkers = OpsVesselBunkerService::getBunkers($ops_vessel_id, null);
+
+
+    //     return view('operations::reports.single-vessel-bunker-report')->with([
+    //         'allBunkers' => $allBunkers,
+    //         'voyages' => $voyages
+    //     ]);
+
+    //     return response()->json([
+    //         'value' => $view
+    //     ], 200);
+    // }
+
+
+    public function vesselBunkerReport(Request $request)
+    {
 
         $business_unit = $request->business_unit;
         $ops_vessel_id = $request->ops_vessel_id;
         $start = date($request->start);
         $end = date($request->end);
 
-        $voyages = OpsVoyage::query()
-        // ->whereBetween('transit_date', [$start, $end])
-        ->whereBetween('transit_date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
-        ->where('ops_vessel_id', $ops_vessel_id)
-        ->where('business_unit', $business_unit)
-        ->with('opsVesselBunkers.stockable')
-        ->get();
+        $vesselBunkers = OpsVesselBunker::where('ops_vessel_id', $ops_vessel_id)
+            ->with('opsVessel', 'opsVoyage', 'stockable')
+            ->whereBetween('date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
+            ->get();
 
-        $voyages = $voyages->map(function($voyage) {
-            return $voyage->opsVesselBunkers->groupBy('type');
+        $output = $vesselBunkers->groupBy('ops_voyage_id');
+
+        // dd($output[37]->groupBy('type'));
+        $scm_warehouse_id = ScmWarehouse::where('ops_vessel_id', $ops_vessel_id)->first()->id;
+
+        $allBunkers = OpsVesselBunkerService::getBunkers($ops_vessel_id, null)->map(function ($material) use ($start, $end, $scm_warehouse_id) {
+            $material['previous_stock'] = CurrentStock::count($material['scm_material_id'], $scm_warehouse_id, $start);
+            $material['final_stock'] = CurrentStock::count($material['scm_material_id'], $scm_warehouse_id, $end);
+            $material['scm_warehoust_id'] = $scm_warehouse_id;
+            return $material;
         });
 
-        $allBunkers = OpsVesselBunkerService::getBunkers($ops_vessel_id, null);
-
+        dd($allBunkers, $end, $scm_warehouse_id, $start);
+        dd($output);
+        // $scm_material_id, $scm_warehouse_id, $toDate = null
 
         return view('operations::reports.single-vessel-bunker-report')->with([
             'allBunkers' => $allBunkers,
-            'voyages' => $voyages
+            'stockRecords' => $output
         ]);
 
         return response()->json([

@@ -4,18 +4,23 @@ namespace Modules\SupplyChain\Services;
 
 use Modules\SupplyChain\Entities\ScmStockLedger;
 
+/**
+ * @package Modules\SupplyChain\Services
+ * 
+ * @class-type Service
+ */
 class StockLedgerData
 {
     /**
      * Inserts stock ledger data related to a parent model.
      *
-     * @param mixed $parentModel
+     * @param object $parentModel
      * @param array $lines
      * @param bool $os (opening stock)
      *
-     * @return void
+     * @return array
      */
-    public function insert($parentModel, $lines, $os = false)
+    public static function insert(object $parentModel, array $lines, bool $os = false): array
     {
         $stock_ledger_data = [];
         collect($lines)->map(function ($line) use ($parentModel, &$stock_ledger_data, $os) {
@@ -33,7 +38,7 @@ class StockLedgerData
         });
 
         $parentModel->stockable()->createMany($stock_ledger_data);
-        return $stock_ledger_data;
+        return (array) $stock_ledger_data;
     }
 
     /**
@@ -44,11 +49,11 @@ class StockLedgerData
      * @param int $qty
      * @param string $method (Optional)
      * 
-     * @return array Returns an array of stock outflow records.
+     * @return array
      */
-    public function out($materialId, $warehouseId, $qty, $method = 'fifo')
+    public static function out(int $materialId, int $warehouseId, int $qty, string $method = 'fifo'): array
     {
-        if ((new CurrentStock)->count($materialId, $warehouseId) < $qty) {
+        if (CurrentStock::count($materialId, $warehouseId) < $qty) {
             return response()->json(['message' => 'Insufficient stock'], 422);
         }
 
@@ -117,6 +122,6 @@ class StockLedgerData
             }
         }
 
-        return $stockOutArray;
+        return (array) $stockOutArray;
     }
 }

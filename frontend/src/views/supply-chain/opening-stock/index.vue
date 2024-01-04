@@ -12,6 +12,8 @@ import useDebouncedRef from '../../../composables/useDebouncedRef'
 import FilterWithBusinessUnit from '../../../components/searching/FilterWithBusinessUnit.vue'
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import moment from "moment";
+
 
 import { useRouter } from 'vue-router';
 const router = useRouter();
@@ -152,18 +154,8 @@ function confirmDelete(id) {
     <div id="customDataTable">
         <div
             class="table-responsive max-w-screen"
-            :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }"
-        >
+            :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
             <table class="whitespace-no-wrap w-full">
-                <!-- <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>Date</th>
-            <th>Warehouse</th>
-            <th>Business Unit</th>
-            <th>Action</th>
-          </tr>
-          </thead> -->
                 <thead>
                     <tr class="w-full">
                         <th class="w-16">
@@ -213,7 +205,7 @@ function confirmDelete(id) {
                 <tbody class="relative">
                     <tr v-for="(openingStock, index) in openingStocks?.data ? openingStocks?.data : openingStocks" :key="index">
                         <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-                        <td><nobr>{{ openingStock?.date }}</nobr></td>
+                        <td><nobr>{{  moment(openingStock?.date).format('DD/MM/YYYY') }}</nobr></td>
                         <td>{{ openingStock?.scmWarehouse?.name }}</td>
                         <td><span :class="openingStock?.business_unit === 'PSML'? 'bg-green-100 text-green-700': 'bg-orange-100 text-orange-700'" class="rounded-full px-2 py-1 font-semibold leading-tight">{{ openingStock?.business_unit }}</span></td>
                         <td>
