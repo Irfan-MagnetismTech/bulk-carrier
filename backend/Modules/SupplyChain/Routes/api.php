@@ -98,5 +98,4 @@ Route::prefix('scm')->group(function () {
     Route::get('quotations/{quotationId}', [ScmCsController::class, "showQuotation"])->name('quotations.show');
     Route::put('quotations/{quotationId}', [ScmCsController::class, "updateQuotation"])->name('quotations.update');
 
-    Route::get('test-stock', [ScmAdjustmentController::class, 'testStock']);
 });

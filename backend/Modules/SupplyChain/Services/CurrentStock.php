@@ -83,4 +83,55 @@ class CurrentStock
 
         return $currentStockIn;
     }
+
+    
+    /**
+     * Counts the stock in of a material in a warehouse.
+     *
+     * @param int $scm_material_id
+     * @param int $scm_warehouse_id
+     * @param string|null $fromDate (optional)
+     * @param string|null $toDate (optional)
+     * @return int
+     */
+    // public static function countStockIn($scm_material_id, $scm_warehouse_id, $fromDate = null, $toDate = null): int
+    // {
+    //     $currentStockIn = ScmStockLedger::query()
+    //         ->where([
+    //             'scm_material_id' => $scm_material_id,
+    //             'scm_warehouse_id' => $scm_warehouse_id
+    //         ])
+    //         ->whereNull('recievable_type')
+    //         ->when(!is_null($toDate), function ($query) use ($fromDate, $toDate) {
+    //             $query->whereBetween('date', [Carbon::parse($fromDate)->startOfDay(), Carbon::parse($toDate)->endOfDay()]);
+    //         })
+    //         ->sum('quantity');
+
+    //     return $currentStockIn;
+    // }
+    
+    /**
+     * Counts the stock out of a material from a warehouse.
+     *
+     * @param int $scm_material_id
+     * @param int $scm_warehouse_id
+     * @param string|null $fromDate (optional)
+     * @param string|null $toDate (optional)
+     * @return int
+     */
+    // public static function countStockOut($scm_material_id, $scm_warehouse_id, $fromDate = null, $toDate = null): int
+    // {
+    //     $currentStockOut = ScmStockLedger::query()
+    //         ->where([
+    //             'scm_material_id' => $scm_material_id,
+    //             'scm_warehouse_id' => $scm_warehouse_id
+    //         ])
+    //         ->whereNotNull('recievable_type')
+    //         ->when(!is_null($toDate), function ($query) use ($fromDate, $toDate) {
+    //             $query->whereBetween('date', [Carbon::parse($fromDate)->startOfDay(), Carbon::parse($toDate)->endOfDay()]);
+    //         })
+    //         ->sum('quantity');
+
+    //     return $currentStockOut;
+    // }
 }
