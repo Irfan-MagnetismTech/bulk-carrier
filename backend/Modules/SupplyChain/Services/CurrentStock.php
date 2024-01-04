@@ -50,7 +50,6 @@ class CurrentStock
             ->whereNull('recievable_type')
             ->when(!is_null($toDate), function ($query) use ($fromDate, $toDate) {
                 $query->whereBetween('date', [Carbon::parse($fromDate)->startOfDay(), Carbon::parse($toDate)->endOfDay()]);
-                // ->where('date', '<=', $toDate);
             })
             ->sum('quantity');
 
@@ -76,7 +75,6 @@ class CurrentStock
             ->whereNotNull('recievable_type')
             ->when(!is_null($toDate), function ($query) use ($fromDate, $toDate) {
                 $query->whereBetween('date', [Carbon::parse($fromDate)->startOfDay(), Carbon::parse($toDate)->endOfDay()]);
-                // ->where('date', '<=', $toDate);
             })
             ->sum('quantity');
 
