@@ -145,8 +145,13 @@ class OpsBunkerReportController extends Controller
             return $material;
         });
 
-        dd($allBunkers, $end);
 
+        // Group by ops_voyage_id and maintain the sequence
+$groupedResults = collect($results)->groupBy('ops_voyage_id')->sortKeys()->all();
+
+// Flatten the result to maintain the sequence
+$finalResult = collect($groupedResults)->flatten(1)->all();
+        dd($output);
         // $scm_material_id, $scm_warehouse_id, $toDate = null
 
         return view('operations::reports.single-vessel-bunker-report')->with([
