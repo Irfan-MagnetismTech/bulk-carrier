@@ -66,18 +66,16 @@
 
 
                 <tr>
-                    <td><nobr>{{ $stockRecord->first()?->opsVessel->name }}</nobr></td>
-                    <td><nobr>{{ $stockRecord->first()?->opsVoyage?->voyage_sequence }}</nobr></td>
+                    <td><nobr>{{ $stockRecord->opsVessel->name }}</nobr></td>
+                    <td><nobr>{{ $stockRecord->opsVoyage?->voyage_sequence }}</nobr></td>
                     
                     @foreach($allBunkers as $bunker)
+
                     <td>
                         @php
-                        $output = 0;
-                        collect($stockRecord->where('type', 'Stock Out'))->map(function($stock) use(&$output, $bunker) {
-                            $output += $stock->stockable->where('scm_material_id', $bunker['scm_material_id'])->sum('quantity');
-                        })
+                         $output = ($stockRecord->type == 'Stock Out') ? $stockRecord->stockable->where('scm_material_id', $bunker['scm_material_id'])->sum('quantity') : 0;
                         @endphp
-                        {{ ($output != 0) ? abs($output) : null }}
+                        {{ ($output !=0 ) ? abs($output) : null }}
                     </td>
                     @endforeach
 
@@ -85,12 +83,9 @@
                     @foreach($allBunkers as $bunker)
                     <td>
                         @php
-                        $output = 0;
-                        collect($stockRecord->where('type', 'Stock In'))->map(function($stock) use(&$output, $bunker) {
-                            $output += $stock->stockable->where('scm_material_id', $bunker['scm_material_id'])->sum('quantity');
-                        })
+                         $output = ($stockRecord->type == 'Stock In') ? $stockRecord->stockable->where('scm_material_id', $bunker['scm_material_id'])->sum('quantity') : 0;
                         @endphp
-                        {{ ($output != 0) ? abs($output) : null }}
+                        {{ ($output !=0 ) ? abs($output) : null }}
                     </td>
                     @endforeach
 
