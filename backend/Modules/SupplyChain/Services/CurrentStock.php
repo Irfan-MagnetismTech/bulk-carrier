@@ -2,8 +2,14 @@
 
 namespace Modules\SupplyChain\Services;
 
+use Carbon\Carbon;
 use Modules\SupplyChain\Entities\ScmStockLedger;
 
+/**
+ * @package Modules\SupplyChain\Services
+ * 
+ * @class-type Service
+ */
 class CurrentStock
 {
     /**
@@ -22,11 +28,11 @@ class CurrentStock
                 'scm_warehouse_id' => $scm_warehouse_id
             ])
             ->when(!is_null($toDate), function ($query) use ($toDate) {
-                $query->where('date', '<=', $toDate);
+                $query->whereDate('<=', Carbon::parse($toDate)->endOfDay());
             })
             ->sum('quantity');
 
-        return $currentStock;
+        return (int) $currentStock;
     }
 
     

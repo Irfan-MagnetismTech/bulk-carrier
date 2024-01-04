@@ -5,9 +5,12 @@ namespace Modules\SupplyChain\Services;
 use Modules\Accounts\Entities\AccAccount;
 use Modules\SupplyChain\Entities\ScmMaterialCategory;
 
+/**
+ * @package Modules\SupplyChain\Services
+ */
 class AccountDataCreation
 {
-    public function __invoke()
+    public function __invoke(): void
     {
         $businessUnits = ['PSML', 'TSLL'];
         $data = [];
@@ -19,7 +22,7 @@ class AccountDataCreation
         AccAccount::insert($data);
     }
 
-    private function generateAccountData($businessUnit)
+    private function generateAccountData($businessUnit): array
     {
         return [
             'acc_balance_and_income_line_id' => config('accounts.balance_income_line.inventory'),
@@ -32,7 +35,7 @@ class AccountDataCreation
         ];
     }
 
-    private function generateAccountCode()
+    private function generateAccountCode(): string
     {
         return config('accounts.account_types.Assets') . ' - ' . config('accounts.balance_income_balance_header.current_assets') . ' - ' . config('accounts.balance_income_line.inventory') . ' - ' . 1;
     }

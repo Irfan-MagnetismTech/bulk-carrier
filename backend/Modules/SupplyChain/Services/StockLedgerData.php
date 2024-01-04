@@ -5,7 +5,9 @@ namespace Modules\SupplyChain\Services;
 use Modules\SupplyChain\Entities\ScmStockLedger;
 
 /**
- * @type Service
+ * @package Modules\SupplyChain\Services
+ * 
+ * @class-type Service
  */
 class StockLedgerData
 {
@@ -36,7 +38,7 @@ class StockLedgerData
         });
 
         $parentModel->stockable()->createMany($stock_ledger_data);
-        return $stock_ledger_data;
+        return (array) $stock_ledger_data;
     }
 
     /**
@@ -120,6 +122,6 @@ class StockLedgerData
             }
         }
 
-        return $stockOutArray;
+        return (array) $stockOutArray;
     }
 }

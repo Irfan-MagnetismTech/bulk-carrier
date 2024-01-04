@@ -4,6 +4,11 @@ namespace Modules\SupplyChain\Services;
 
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @package Modules\SupplyChain\Services
+ * 
+ * @class-type Service
+ */
 class UniqueId
 {
     /**
@@ -15,9 +20,9 @@ class UniqueId
      */
     public static function generate(string $model, string $prefix): string
     {
-        $currentYear = now()->format('Y');
-        $latestModel = $model::latest()->first();
-        $lastYear = $latestModel ? $latestModel->created_at->format('Y') : null;
+        // $currentYear = now()->format('Y');
+        // $latestModel = $model::latest()->first();
+        // $lastYear = $latestModel ? $latestModel->created_at->format('Y') : null;
 
         $tableName = (new $model)->getTable();
         DB::statement('SET information_schema_stats_expiry = 0');
@@ -27,8 +32,8 @@ class UniqueId
             ->where('table_schema', DB::raw('DATABASE()'))
             ->value('AUTO_INCREMENT');
 
-        $newId = ($currentYear != $lastYear) ? 1 : $nextId;
+        // $newId = ($currentYear != $lastYear) ? 1 : $nextId;
 
-        return strtoupper($prefix) . '-' . $currentYear . '-' . $newId;
+        return strtoupper($prefix) . '-' . $nextId;
     }
 }
