@@ -5,13 +5,14 @@ namespace Modules\Operations\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Operations\Entities\OpsVessel;
 use Modules\Operations\Entities\OpsVoyage;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\Operations\Entities\OpsVesselBunker;
-use Modules\Operations\Services\OpsVesselBunkerService;
 use Modules\SupplyChain\Entities\ScmWarehouse;
 use Modules\SupplyChain\Services\CurrentStock;
+use Modules\Operations\Entities\OpsVesselBunker;
+use Modules\Operations\Services\OpsVesselBunkerService;
 
 class OpsBunkerReportController extends Controller
 {
@@ -133,8 +134,22 @@ class OpsBunkerReportController extends Controller
             ->with('opsVessel', 'opsVoyage', 'stockable')
             ->whereBetween('date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
             ->get();
+            
+        // $vesselVoyageBunkers = $vesselBunkers->whereNotNull('ops_voyage_id')->groupBy('ops_voyage_id')->map(function($voyage) {
+        //      $voyage->
+        // });
+
+        
+        // $idleBunkers = $vesselBunkers->whereNull('ops_voyage_id')->groupBy('ops_voyage_id')->map(function($item) {
+        //     return [
+        //         'vessel' => $item->opsVessel->name,
+        //         'voyage' => $item->opsVoyage->voyage_sequence,
+        //         // 'stock_in' => $item-
+        //     ];
+        // });
 
 
+        // dd($vesselVoyageBunkers, $idleBunkers);
         
 
         $output = $vesselBunkers->groupBy('ops_voyage_id');
@@ -159,5 +174,47 @@ class OpsBunkerReportController extends Controller
         return response()->json([
             'value' => $view
         ], 200);
+    }
+
+    public function businessUnitWiseBunkerReport(Request $request) {
+
+        $business_unit = $request->business_unit;
+        $ops_vessels = OpsVessel::where('business_unit', $business_unit)->get();
+        
+        $fromDate = $request->start ?? Carbon::parse('2023-01-01');
+        $toDate = $request->end ?? Carbon::now();
+        $prevousDate = Carbon::parse($fromDate)->subDay(1)->endOfDay();
+
+        $voyages = OpsVoyage::select('ops_vessel_id', DB::raw('count(id) as voyage_count'))
+        ->where('business_unit', $business_unit)
+        ->groupBy('ops_vessel_id')
+        ->with(['opsVessel.scmWareHouse','opsVesselBunkers.stockable'])
+        ->get();
+
+        // Get bunkers used in vessels for the business unit
+        $allBunkers = OpsVesselBunkerService::getBunkers(null, $business_unit);
+
+        $voyages = $voyages->map(function($voyage) use ($allBunkers, $prevousDate, $fromDate, $toDate) {
+            $voyagesWithBunkers = [
+                'vessel_name' => $voyage->opsVessel->name,
+                'voyage_count' => $voyage->voyage_count
+            ];
+            $warehouse_id = $voyage->opsVessel->scmWareHouse?->id;
+            foreach ($allBunkers as $bunker) {
+                $bunker_id = $bunker['scm_material_id'];
+                $voyagesWithBunkers['previous_stock'][$bunker_id] = CurrentStock::count($bunker_id, $warehouse_id, $prevousDate);
+                $voyagesWithBunkers['current_stock'][$bunker_id] = CurrentStock::count($bunker_id, $warehouse_id, $toDate);
+                $voyagesWithBunkers['stock_in'][$bunker_id] = CurrentStock::countStockIn($bunker_id, $warehouse_id, $fromDate, $toDate);
+                $voyagesWithBunkers['stock_out'][$bunker_id] = CurrentStock::countStockOut($bunker_id, $warehouse_id, $fromDate, $toDate);
+            }
+
+            return $voyagesWithBunkers;
+        });
+
+        return view('operations::reports.business-unit-bunker-report')->with([
+            'allBunkers' => $allBunkers,
+            'voyages' => $voyages
+        ]);
+
     }
 }

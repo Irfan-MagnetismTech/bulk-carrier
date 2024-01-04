@@ -171,48 +171,5 @@ class OpsExpenseReportController extends Controller
         // return Excel::download(new VoyageExpenditure($heads, $filteredVoyage), 'voyage_expenditure_report.xlsx');
     }
 
-
-        
-
-    public function businessUnitWiseBunkerReport(Request $request) {
-
-        $business_unit = $request->business_unit;
-        $ops_vessels = OpsVessel::where('business_unit', $business_unit)->get();
-        
-        $fromDate = $request->start ?? Carbon::parse('2023-01-01');
-        $toDate = $request->end ?? Carbon::now();
-        $prevousDate = Carbon::parse($fromDate)->subDay(1)->endOfDay();
-
-        $voyages = OpsVoyage::select('ops_vessel_id', DB::raw('count(id) as voyage_count'))
-        ->where('business_unit', $business_unit)
-        ->groupBy('ops_vessel_id')
-        ->with(['opsVessel.scmWareHouse','opsVesselBunkers.stockable'])
-        ->get();
-
-        // Get bunkers used in vessels for the business unit
-        $allBunkers = OpsVesselBunkerService::getBunkers(null, $business_unit);
-
-        $voyages = $voyages->map(function($voyage) use ($allBunkers, $prevousDate, $fromDate, $toDate) {
-            $voyagesWithBunkers = [
-                'vessel_name' => $voyage->opsVessel->name,
-                'voyage_count' => $voyage->voyage_count
-            ];
-            $warehouse_id = $voyage->opsVessel->scmWareHouse?->id;
-            foreach ($allBunkers as $bunker) {
-                $bunker_id = $bunker['scm_material_id'];
-                $voyagesWithBunkers['previous_stock'][$bunker_id] = CurrentStock::count($bunker_id, $warehouse_id, $prevousDate);
-                $voyagesWithBunkers['current_stock'][$bunker_id] = CurrentStock::count($bunker_id, $warehouse_id);
-                $voyagesWithBunkers['stock_in'][$bunker_id] = CurrentStock::countStockIn($bunker_id, $warehouse_id, $fromDate, $toDate);
-                $voyagesWithBunkers['stock_out'][$bunker_id] = CurrentStock::countStockOut($bunker_id, $warehouse_id, $fromDate, $toDate);
-            }
-
-            return $voyagesWithBunkers;
-        });
-
-        return view('operations::reports.business-unit-bunker-report')->with([
-            'allBunkers' => $allBunkers,
-            'voyages' => $voyages
-        ]);
-
-    }
+    
 }
