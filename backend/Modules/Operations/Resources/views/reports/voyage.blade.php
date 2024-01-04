@@ -85,6 +85,7 @@
                     <th colspan="{{count($data['opsExpenditureHeadTitle']) + 1}}" style="height: 15px;">COST</th>
                     <th colspan="{{count($data['opsVesselBunkerTitle'])}}" style="height: 15px;">Stock Out</th>
                     <th colspan="{{count($data['bunkerMaterialTitle'])}}">Stock In</th>
+                    <th colspan="{{count($data['bunkerMaterialTitle'])}}">Stock</th>
                 </tr>
                 <tr>
                     @foreach($data['opsExpenditureHeadTitle'] as $title)
@@ -96,6 +97,7 @@
                     @endforeach
                     
                     <th colspan="{{count($data['bunkerMaterialTitle'])}}">Bunkering</th>
+                    <th colspan="{{count($data['bunkerMaterialTitle'])}}">Current Stock</th>
                 </tr>
                 <tr>
                     @foreach($data['opsVesselBunkerTitle'] as $bunker)
@@ -106,6 +108,10 @@
                     @foreach($data['bunkerMaterialTitle'] as $title)
                         <th>{{ strtoupper($title) }}</th>
                     @endforeach
+                    @foreach($data['bunkerMaterialTitle'] as $title)
+                        <th>{{ strtoupper($title) }}</th>
+                    @endforeach
+                    
         
                 </tr>
             @endif
@@ -152,11 +158,6 @@
                                             $sectorData=$sector->opsContractTariff?->opsCargoTariff?->opsCargoTariffLines->where('particular', $title['particular'])->first();
                                             $month= $sector->opsContractTariff['tariff_month'];
                                            
-                                            $uniqueVoyageIds = array_unique($voyageIds);
-                                            $vesselBunkerOpsVoyageId = (array) $vesselBunker->ops_voyage_id;
-
-                                            $intersection = array_intersect($uniqueVoyageIds, $vesselBunkerOpsVoyageId);
-
                                             if (empty($intersection)) {
                                                 $field = strtolower(str_replace(' ', '', $title['particular']));                                
                                                 $total = $sectorData ? ($sectorData[$month] * $sector['quantity']) : 0;
@@ -178,18 +179,13 @@
                                                 @php
             
                                                     $expField = strtolower(str_replace(' ', '', $title['name']));                        
-                                                   
-                                                    $uniqueVoyageIds = array_unique($voyageIds);
-                                                    $vesselBunkerOpsVoyageId = (array) $vesselBunker->ops_voyage_id;
 
-                                                    $intersection = array_intersect($uniqueVoyageIds, $vesselBunkerOpsVoyageId);
-
+                                                    if($vesselBunker->type=='Stock Out'){
+                                                        $total_cost += $expense->amount_bdt;
+                                                        $grand_total_cost += $total_cost;
+                                                    }
                                                     if (empty($intersection)) {
-                                                        if($vesselBunker->type=='Stock Out'){
-                                                            $total_cost += $expense->amount_bdt;
-                                                            $grand_total_cost += $total_cost;
-                                                            $expenseVariables[$expField] += $expense->amount_bdt;
-                                                        }
+                                                        $expenseVariables[$expField] += $expense->amount_bdt;
                                                     }
                                                    
 
@@ -289,9 +285,21 @@
                                     
                                 @endif
                                     
-                                    
+                                @foreach($data['bunkerMaterialTitle'] as $material)   
+                                    @php
+                                        $getBunker= $data['bunkerStocks']->where('date', $vesselBunker['date'])->where('id', $vesselBunker['id'])->values()
+                                    @endphp
+                                    @foreach($getBunker as $key => $value)
+                                        @php
+                                            $getBunker[$material]=$value['current_stock'][$material];
+                                        @endphp
+                                    @endforeach
+                                    <td rowspan="">{{$getBunker[$material]}}</td>
+                                @endforeach
                             </tr>
-                        @endforeach  
+                        @endforeach 
+                        
+
                         
                         @php
                             $voyageIds[]=$vesselBunker->ops_voyage_id;                            
@@ -342,19 +350,31 @@
                                         <td rowspan=""></td>
                                 @endif
 
-                                
-                                
-                                
+                                @foreach($data['bunkerMaterialTitle'] as $material)   
+                                    @php
+                                        $getBunker= $data['bunkerStocks']->where('date', $vesselBunker['date'])->where('id', $vesselBunker['id'])->values()
+                                    @endphp
+                                    @foreach($getBunker as $key => $value)
+                                        @php
+                                            $getBunker[$material]=$value['current_stock'][$material];
+                                        @endphp
+                                    @endforeach
+                                    <td rowspan="">{{$getBunker[$material]}}</td>
+                                @endforeach
                                 
                         </tr>
                     @endif
 
 
+                    
+
+                    
 
 
-                    @php
-                        $voyage_id=$sector->ops_voyage_id;
-                    @endphp
+
+                    {{-- @php
+                        $voyage_id=($sector?->ops_voyage_id)?$sector?->ops_voyage_id:'';
+                    @endphp --}}
                 @endforeach
                 <tr>
                     <td></td>
