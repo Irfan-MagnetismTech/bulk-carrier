@@ -134,6 +134,9 @@ class OpsBunkerReportController extends Controller
             ->whereBetween('date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
             ->get();
 
+
+        
+
         $output = $vesselBunkers->groupBy('ops_voyage_id');
 
         // dd($output[37]->groupBy('type'));
