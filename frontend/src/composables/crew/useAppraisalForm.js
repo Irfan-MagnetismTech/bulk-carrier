@@ -16,6 +16,7 @@ export default function useAppraisalForm() {
 
     const appraisalFormLineObject ={
                             section_name: '',
+                            is_tabular: 1,
                             section_no: '',
                             appraisalFormLineItems: [
                                 // {
@@ -215,6 +216,28 @@ export default function useAppraisalForm() {
             return true;
         }
     }
+
+    async function getAppraisalFormsWithoutPaginate(businessUnit) {
+
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        let form = {
+            'business_unit': businessUnit,
+        }
+
+        try {
+            const { data, status } = await Api.post('/crw/get-appraisal-forms', form);
+            appraisalForms.value = data.value;
+
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            // loader.hide();
+            isLoading.value = false;
+        }
+    }
     
 
     return {
@@ -226,6 +249,7 @@ export default function useAppraisalForm() {
         showAppraisalForm,
         updateAppraisalForm,
         deleteAppraisalForm,
+        getAppraisalFormsWithoutPaginate,
         isLoading,
         isTableLoading,
         errors,

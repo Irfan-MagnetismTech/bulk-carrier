@@ -28,11 +28,11 @@
             <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Aspects</legend>
             <fieldset class="px-2 py-2 mt-3 border border-gray-300 rounded dark-disabled:border-gray-400" v-for="(appraisalFormLine, index) in form?.appraisalFormLines" :key="index">
                 <div class="flex items-center gap-3 mb-2">
-                  <div class="text-sm">
+                  <div class="w-1/6 text-sm">
                     <span class="text-gray-700 dark-disabled:text-gray-300">Section No</span>
                     <input type="text" :value="appraisalFormLine.section_no = printToLetter(index+1)"  placeholder="Section No" class="form-input section-name-input vms-readonly-input"  readonly />
                   </div>
-                  <div class="block w-full text-sm relative">
+                  <div class="w-3/6 block  text-sm relative">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Section Name <span class="text-red-500">*</span></span>
                       <div class="relative">
                         <input type="text" v-model.trim="appraisalFormLine.section_name" placeholder="Section Name" class="form-input section-name-input" required />
@@ -40,6 +40,16 @@
                         <Error v-if="errors?.section_name" :errors="errors.section_name" />
                       </div>
                   </div>
+                  
+                  <div class="w-2/6 block  text-sm relative">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Section Type <span class="text-red-500">*</span></span>
+                      <select v-model.trim="appraisalFormLine.is_tabular" class="form-input" required>
+                        <option value="" disabled selected>Select Section Type</option>
+                        <option value="1" >Tabular</option>
+                        <option value="0">Non Tabular</option>
+                      </select>
+                  </div>
+
 
                   <!-- <div>
                     <button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-if="index == 0" @click="addAppraisalFormLine"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
@@ -56,10 +66,11 @@
                 <table class="w-full whitespace-no-wrap" id="table">
                 <thead>
                     <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-                        <th class="w-1/5 px-4 py-2 align-center">Aspect <span class="text-red-500" v-show="appraisalFormLine?.appraisalFormLineItems?.length">*</span></th>
-                        <th class="w-2/5 px-4 py-2 align-center">Description</th>
-                        <th class="w-1/5 px-4 py-2 align-center">Answer Type <span class="text-red-500" v-show="appraisalFormLine?.appraisalFormLineItems?.length">*</span></th>
-                        <th class="w-1/5 px-4 py-2 align-center text-center">
+                        <th class="w-1/6 px-4 py-2 align-center">Item No <span class="text-red-500" v-show="appraisalFormLine?.appraisalFormLineItems?.length">*</span></th>
+                        <th class="w-1/6 px-4 py-2 align-center">Aspect <span class="text-red-500" v-show="appraisalFormLine?.appraisalFormLineItems?.length">*</span></th>
+                        <th class="w-2/6 px-4 py-2 align-center">Description</th>
+                        <th class="w-1/6 px-4 py-2 align-center">Answer Type <span class="text-red-500" v-show="appraisalFormLine?.appraisalFormLineItems?.length">*</span></th>
+                        <th class="w-1/6 px-4 py-2 align-center text-center">
                           <button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md"  @click="addAppraisalFormLineItem(index)"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                       </svg></button>
@@ -68,6 +79,9 @@
                 </thead>
                 <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
                     <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(appraisalFormLineItem, appraisalFormLineItemIndex) in appraisalFormLine?.appraisalFormLineItems" :key="appraisalFormLineItemIndex">
+                      <td class="px-1 py-1">
+                        <input type="text" :value="appraisalFormLineItem.item_no = appraisalFormLineItemIndex+1"  placeholder="Item No" class="form-input section-name-input vms-readonly-input"  readonly />
+                      </td>
                         <td class="px-1 py-1">
                           <div class="relative">
                             <input type="text" class="form-input"  v-model.trim="appraisalFormLineItem.aspect" placeholder="Aspect" required />
@@ -81,6 +95,7 @@
                             <option value="Number">Number</option>
                             <option value="Boolean">Boolean</option>
                             <option value="Grade">Grade</option>
+                            <option value="Other">Other</option>
                           </select>
                         </td>
                         <td class="px-1 py-1"> <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" @click="removeAppraisalFormLineItem(index, appraisalFormLineItemIndex)" ><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -161,7 +176,7 @@
   }
 
   function addAppraisalFormLineItem(parentIndex) {
-    props.form.appraisalFormLines[parentIndex].appraisalFormLineItems.push({ aspect: '', description: '', answer_type: ''});
+    props.form.appraisalFormLines[parentIndex].appraisalFormLineItems.push({ aspect: '', description: '', answer_type: '', item_no: '', item_composite: ''});
   }
 
   function removeAppraisalFormLineItem(parentIndex, childIndex) {
