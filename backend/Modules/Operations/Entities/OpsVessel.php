@@ -97,4 +97,8 @@ class OpsVessel extends Model
     {
         return $this->hasOne(ScmWarehouse::class, 'ops_vessel_id' , 'id');
     }
+    
+    public function opsVesselBunkers() {
+        return $this->hasMany(OpsVesselBunker::class, 'ops_vessel_id','id');
+    }
 }
