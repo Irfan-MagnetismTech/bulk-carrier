@@ -11,7 +11,9 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Modules\Operations\Entities\OpsVoyage;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\SupplyChain\Services\CurrentStock;
 use Modules\Operations\Entities\OpsVesselBunker;
+use Modules\Operations\Services\OpsVesselBunkerService;
 
 class OpsVoyageReportController extends Controller
 {
@@ -138,6 +140,7 @@ class OpsVoyageReportController extends Controller
             })
             ->get();
 
+
             $bunkerMaterialTitle=[];
             foreach($vesselBunkers as $vesselBunker){                
                 foreach($vesselBunker->stockable as $bunker){
@@ -203,8 +206,37 @@ class OpsVoyageReportController extends Controller
             $vesselBunkers['stock_out_total']= $vesselBunker?->opsVoyage?->opsVesselBunkers->where('type','Stock Out')->sum('quantity');
 
 
+            // $voyagesWithBunkers=[];
+            $allBunkers = OpsVesselBunkerService::getBunkers(null, $request->business_unit);
+
+            $filteredBunkers = $allBunkers->filter(function($bunker) use ($bunkerMaterialTitle) {
+                return in_array($bunker['name'], $bunkerMaterialTitle);
+            });
+
+
+            // return response()->success('Data retrieved successfully.', $filteredBunkers, 200);
+            $voyagesWithBunkers= $vesselBunkers->map(function($vessel_bunker) use ($request,$filteredBunkers) {
+                $voyagesWithBunkers = [
+                    'date' => $vessel_bunker?->date,
+                    'id' => $vessel_bunker?->id,
+                    'ops_vessel_id' => $vessel_bunker?->ops_vessel_id,
+                    'ops_voyage_id' => $vessel_bunker?->ops_voyage_id
+                ];
+                $warehouse_id = $vessel_bunker?->opsVessel?->scmWareHouse?->id;
+                foreach ($filteredBunkers as $bunker) {
+                    $bunker_id = $bunker['scm_material_id'];
+                    $voyagesWithBunkers['previous_stock'][$bunker['name']] = CurrentStock::count($bunker_id, $warehouse_id, $request->from_date);
+                    $voyagesWithBunkers['current_stock'][$bunker['name']] = CurrentStock::count($bunker_id, $warehouse_id, $vessel_bunker?->date);
+                    $voyagesWithBunkers['stock_in'][$bunker['name']] = CurrentStock::countStockIn($bunker_id, $warehouse_id, $request->from_date, $request->to_date);
+                    $voyagesWithBunkers['stock_out'][$bunker['name']] = CurrentStock::countStockOut($bunker_id, $warehouse_id, $request->from_date, $request->to_date);
+                }
+    
+                return $voyagesWithBunkers;
+            });
+
             $data= [
                 'vesselBunkers'=> $vesselBunkers,
+                'bunkerStocks'=> $voyagesWithBunkers,
                 'opsContractTitle'=> $opsCargoTitle,
                 'opsExpenditureHeadTitle'=> $opsExpenditureHeadTitle,
                 'opsVesselBunkerTitle'=> $opsVesselBunkerTitle,
