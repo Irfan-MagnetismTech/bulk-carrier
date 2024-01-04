@@ -135,25 +135,6 @@ class OpsBunkerReportController extends Controller
             ->whereBetween('date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
             ->get();
             
-        // $vesselVoyageBunkers = $vesselBunkers->whereNotNull('ops_voyage_id')->groupBy('ops_voyage_id')->map(function($voyage) {
-        //      $voyage->
-        // });
-
-        
-        // $idleBunkers = $vesselBunkers->whereNull('ops_voyage_id')->groupBy('ops_voyage_id')->map(function($item) {
-        //     return [
-        //         'vessel' => $item->opsVessel->name,
-        //         'voyage' => $item->opsVoyage->voyage_sequence,
-        //         // 'stock_in' => $item-
-        //     ];
-        // });
-
-
-        // dd($vesselVoyageBunkers, $idleBunkers);
-        
-
-        $output = $vesselBunkers->groupBy('ops_voyage_id');
-
         // dd($output[37]->groupBy('type'));
         $scm_warehouse_id = ScmWarehouse::where('ops_vessel_id', $ops_vessel_id)->first()->id;
 
@@ -164,12 +145,14 @@ class OpsBunkerReportController extends Controller
             return $material;
         });
 
+        // dd($vesselBunkers);
+
         // $scm_material_id, $scm_warehouse_id, $toDate = null
 
-        return view('operations::reports.single-vessel-bunker-report')->with([
+        $view = view('operations::reports.single-vessel-bunker-report')->with([
             'allBunkers' => $allBunkers,
-            'stockRecords' => $output
-        ]);
+            'stockRecords' => $vesselBunkers
+        ])->render();
 
         return response()->json([
             'value' => $view
@@ -211,10 +194,14 @@ class OpsBunkerReportController extends Controller
             return $voyagesWithBunkers;
         });
 
-        return view('operations::reports.business-unit-bunker-report')->with([
+        $view = view('operations::reports.business-unit-bunker-report')->with([
             'allBunkers' => $allBunkers,
             'voyages' => $voyages
-        ]);
+        ])->render();
+
+        return response()->json([
+            'value' => $view
+        ], 200);
 
     }
 }

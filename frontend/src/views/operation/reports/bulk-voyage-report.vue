@@ -4,27 +4,37 @@ import { watch, ref, onMounted, watchEffect } from 'vue';
 import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 import useHeroIcon from "../../../assets/heroIcon";
 import useOperationsReport from '../../../composables/operations/useOperationsReport';
+import useVoyage from "../../../composables/operations/useVoyage";
+import useVessel from "../../../composables/operations/useVessel";
 
-const { bulkVoyageReport, isLoading, getLighterVoyageReport } = useOperationsReport();
+
+const { bulkVoyageReport, isLoading, getBulkVoyageReport } = useOperationsReport();
 const icons = useHeroIcon();
+const { voyage, voyages, showVoyage, getVoyageList,searchVoyages } = useVoyage();
+const { vessel, vessels, getVesselList, showVessel } = useVessel();
 
 const form = ref({
   type: '',
-  start: '',
-  end: ''
+  ops_vessel_id: null,
+  ops_voyage_id: null
 })
 
 
-watch(() => form.value.port, (value) => {
+watch(() => form.value.ops_vessel_id, (value) => {
 
+  getVoyageList('PSML', form.value.ops_vessel_id);
   bulkVoyageReport.value = '';
 
 }, { deep: true })
 
 
 function getReport() {
-  getLighterVoyageReport(form.value)
+  getBulkVoyageReport(form.value)
 }
+
+onMounted(() => {
+  getVesselList('PSML');
+})
 </script>
 <template>
   <!-- Basic information -->
@@ -41,14 +51,38 @@ function getReport() {
           <option value="Departure Report">Departure Report</option>
         </select>
       </label>
+      <label class="block w-full mt-2 text-sm"></label>
+      <label class="block w-full mt-2 text-sm"></label>
+      <label class="block w-full mt-2 text-sm"></label>
+    </div>
+
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700">From Date <span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.start" required placeholder="From" class="form-input" autocomplete="off" />
-        </label>
-        <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700">Till Date <span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.end" required placeholder="Till" class="form-input" autocomplete="off" />
-        </label>
+              <span class="text-gray-700 ">Vessel <span class="text-red-500">*</span></span>
+              <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.ops_vessel_id" label="name" class="block form-input" :reduce="vessel => vessel.id">
+                  <template #search="{attributes, events}">
+                      <input
+                          class="vs__search"
+                          :required="!form.ops_vessel_id"
+                          v-bind="attributes"
+                          v-on="events"
+                          />
+                  </template>
+              </v-select>
+      </label>
+      <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 ">Voyage <span class="text-red-500">*</span></span>
+              <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.ops_voyage_id" label="voyage_sequence" class="block form-input" :reduce="voyage => voyage.id">
+                  <template #search="{attributes, events}">
+                      <input
+                          class="vs__search"
+                          :required="!form.ops_voyage_id"
+                          v-bind="attributes"
+                          v-on="events"
+                          />
+                  </template>
+              </v-select>
+      </label>
     </div>
 
     <div class="flex items-center justify-center">

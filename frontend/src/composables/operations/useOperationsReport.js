@@ -107,7 +107,7 @@ export default function useOperationsReport() {
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.post('/ops/gross-bunker-report', form);
+			const { data, status } = await Api.post('/ops/business-unit-wise-bunker-report', form);
 
 			grossBunkerReport.value = data.value;
 			// notification.showSuccess(status);
