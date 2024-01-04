@@ -121,7 +121,8 @@ class OpsBunkerReportController extends Controller
     // }
 
 
-    public function vesselBunkerReport(Request $request) {
+    public function vesselBunkerReport(Request $request)
+    {
 
         $business_unit = $request->business_unit;
         $ops_vessel_id = $request->ops_vessel_id;
@@ -129,28 +130,23 @@ class OpsBunkerReportController extends Controller
         $end = date($request->end);
 
         $vesselBunkers = OpsVesselBunker::where('ops_vessel_id', $ops_vessel_id)
-                        ->with('opsVessel', 'opsVoyage', 'stockable')
-                        ->whereBetween('date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
-                        ->get();
+            ->with('opsVessel', 'opsVoyage', 'stockable')
+            ->whereBetween('date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
+            ->get();
 
         $output = $vesselBunkers->groupBy('ops_voyage_id');
 
         // dd($output[37]->groupBy('type'));
         $scm_warehouse_id = ScmWarehouse::where('ops_vessel_id', $ops_vessel_id)->first()->id;
 
-        $allBunkers = OpsVesselBunkerService::getBunkers($ops_vessel_id, null)->map(function($material) use($start, $end, $scm_warehouse_id) {
+        $allBunkers = OpsVesselBunkerService::getBunkers($ops_vessel_id, null)->map(function ($material) use ($start, $end, $scm_warehouse_id) {
             $material['previous_stock'] = CurrentStock::count($material['scm_material_id'], $scm_warehouse_id, $start);
             $material['final_stock'] = CurrentStock::count($material['scm_material_id'], $scm_warehouse_id, $end);
             $material['scm_warehoust_id'] = $scm_warehouse_id;
             return $material;
         });
 
-
-        // Group by ops_voyage_id and maintain the sequence
-$groupedResults = collect($results)->groupBy('ops_voyage_id')->sortKeys()->all();
-
-// Flatten the result to maintain the sequence
-$finalResult = collect($groupedResults)->flatten(1)->all();
+        dd($allBunkers, $end, $scm_warehouse_id, $start);
         dd($output);
         // $scm_material_id, $scm_warehouse_id, $toDate = null
 
