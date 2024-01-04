@@ -32,7 +32,7 @@
                 <th rowspan="2">Voyage</th>
                 <th colspan="{{ count($allBunkers) }}">Bunker Used</th>
                 <th colspan="{{ count($allBunkers) }}">Bunker Purchased</th>
-                <th colspan="{{ count($allBunkers) }}">Previous Stock</th>
+                <th colspan="{{ count($allBunkers) }}">Final Stock</th>
             </tr>
             <tr>
                 @for ($i = 1; $i < 4; $i++)
@@ -43,56 +43,48 @@
             </tr>
         </thead>
         <tbody>
-
-            <tr>
-                <td colspan="{{ count($allBunkers) * 2 + 2 }}"></td>
-                @foreach($allBunkers as $bunker)
-                    <td>
-                        {{ ($bunker['previous_stock'] != 0) ? abs($bunker['previous_stock']) : null }}
-                    </td>
-                @endforeach
-            </tr>
-
-
-
-            @if(isset($stockRecords))
-                @foreach($stockRecords as $vesselBunkerId => $stockRecord)
+            @if(isset($voyages))
+                @foreach($voyages as $voyage)
 
 
 
 
 
                 <tr>
-                    <td><nobr>{{ $stockRecord->first()?->opsVessel->name }}</nobr></td>
-                    <td><nobr>{{ $stockRecord->first()?->opsVoyage?->voyage_sequence }}</nobr></td>
+                    <td><nobr>{{ $voyage->opsVessel->name }}</nobr></td>
+                    <td><nobr>{{ $voyage->voyage_sequence }}</nobr></td>
                     
                     @foreach($allBunkers as $bunker)
                     <td>
                         @php
                         $output = 0;
-                        collect($stockRecord->where('type', 'Stock Out'))->map(function($stock) use(&$output, $bunker) {
+                        collect($voyage->bunkers['Stock Out'])->map(function($stock) use(&$output, $bunker) {
                             $output += $stock->stockable->where('scm_material_id', $bunker['scm_material_id'])->sum('quantity');
                         })
                         @endphp
-                        {{ ($output != 0) ? abs($output) : null }}
+                        {{ abs($output) }}
                     </td>
                     @endforeach
-
 
                     @foreach($allBunkers as $bunker)
                     <td>
                         @php
                         $output = 0;
-                        collect($stockRecord->where('type', 'Stock In'))->map(function($stock) use(&$output, $bunker) {
-                            $output += $stock->stockable->where('scm_material_id', $bunker['scm_material_id'])->sum('quantity');
-                        })
+                        if(isset($voyage->bunkers['Stock In'])) {
+                            collect($voyage->bunkers['Stock In'])->map(function($stock) use(&$output, $bunker) {
+                                $output += $stock->stockable->where('scm_material_id', $bunker['scm_material_id'])->sum('quantity');
+                            });
+                        }
+                        
                         @endphp
                         {{ ($output != 0) ? abs($output) : null }}
                     </td>
                     @endforeach
 
                     @foreach($allBunkers as $bunker)
-                        <td></td>
+                    <td>
+                        
+                    </td>
                     @endforeach
                 </tr>
 
@@ -102,19 +94,6 @@
                 @endforeach
             @endif
         </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="{{ count($allBunkers) * 2 + 2 }}" style="background-color: #ccc; text-align: center;">
-                    Final Stock
-                </td>
-                @foreach($allBunkers as $bunker)
-                    <td>
-                        {{ ($bunker['final_stock'] != 0) ? abs($bunker['final_stock']) : null }}
-                    </td>
-                @endforeach
-            </tr>
-
-        </tfoot>
     </table>
 
 </body>
