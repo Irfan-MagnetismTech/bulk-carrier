@@ -13,6 +13,7 @@ use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
 use Modules\SupplyChain\Entities\ScmAdjustment;
 use Modules\SupplyChain\Entities\ScmStockLedger;
+use Modules\SupplyChain\Entities\TestStock;
 use Modules\SupplyChain\Services\StockLedgerData;
 use Modules\SupplyChain\Http\Requests\ScmAdjustmentRequest;
 
@@ -164,5 +165,12 @@ class ScmAdjustmentController extends Controller
 
             return response()->json($adjustment->preventDeletionIfRelated(), 422);
         }
+    }
+
+    public function testStock()
+    {
+        TestStock::create([
+            'ref_no' => UniqueId::generate(TestStock::class, 'TS')
+        ]);
     }
 }
