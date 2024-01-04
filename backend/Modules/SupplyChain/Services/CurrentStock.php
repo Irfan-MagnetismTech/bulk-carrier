@@ -2,6 +2,7 @@
 
 namespace Modules\SupplyChain\Services;
 
+use Carbon\Carbon;
 use Modules\SupplyChain\Entities\ScmStockLedger;
 
 class CurrentStock
@@ -35,10 +36,11 @@ class CurrentStock
      *
      * @param int $scm_material_id
      * @param int $scm_warehouse_id
+     * @param string|null $fromDate (optional)
      * @param string|null $toDate (optional)
      * @return int
      */
-    public static function countStockIn($scm_material_id, $scm_warehouse_id, $toDate = null): int
+    public static function countStockIn($scm_material_id, $scm_warehouse_id, $fromDate = null, $toDate = null): int
     {
         $currentStockIn = ScmStockLedger::query()
             ->where([
@@ -46,8 +48,9 @@ class CurrentStock
                 'scm_warehouse_id' => $scm_warehouse_id
             ])
             ->whereNull('recievable_type')
-            ->when(!is_null($toDate), function ($query) use ($toDate) {
-                $query->where('date', '<=', $toDate);
+            ->when(!is_null($toDate), function ($query) use ($fromDate, $toDate) {
+                $query->whereBetween('date', [Carbon::parse($fromDate)->startOfDay(), Carbon::parse($toDate)->endOfDay()]);
+                // ->where('date', '<=', $toDate);
             })
             ->sum('quantity');
 
@@ -59,10 +62,11 @@ class CurrentStock
      *
      * @param int $scm_material_id
      * @param int $scm_warehouse_id
+     * @param string|null $fromDate (optional)
      * @param string|null $toDate (optional)
      * @return int
      */
-    public static function countStockOut($scm_material_id, $scm_warehouse_id, $toDate = null): int
+    public static function countStockOut($scm_material_id, $scm_warehouse_id, $fromDate = null, $toDate = null): int
     {
         $currentStockIn = ScmStockLedger::query()
             ->where([
@@ -70,8 +74,9 @@ class CurrentStock
                 'scm_warehouse_id' => $scm_warehouse_id
             ])
             ->whereNotNull('recievable_type')
-            ->when(!is_null($toDate), function ($query) use ($toDate) {
-                $query->where('date', '<=', $toDate);
+            ->when(!is_null($toDate), function ($query) use ($fromDate, $toDate) {
+                $query->whereBetween('date', [Carbon::parse($fromDate)->startOfDay(), Carbon::parse($toDate)->endOfDay()]);
+                // ->where('date', '<=', $toDate);
             })
             ->sum('quantity');
 
