@@ -31,6 +31,11 @@ class OpsVesselBunker extends Model
         return $this->morphMany(OpsBunker::class, 'bunkerable');
     }
 
+    // public function opsBunkers()
+    // {
+    //     return $this->morphMany(OpsBunker::class, 'bunkerable');
+    // }
+
     public function opsVessel()
     {
         return $this->belongsTo(OpsVessel::class);
