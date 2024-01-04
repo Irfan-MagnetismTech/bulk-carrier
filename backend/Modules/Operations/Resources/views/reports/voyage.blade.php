@@ -372,9 +372,9 @@
 
 
 
-                    @php
-                        $voyage_id=$sector->ops_voyage_id;
-                    @endphp
+                    {{-- @php
+                        $voyage_id=($sector?->ops_voyage_id)?$sector?->ops_voyage_id:'';
+                    @endphp --}}
                 @endforeach
                 <tr>
                     <td></td>

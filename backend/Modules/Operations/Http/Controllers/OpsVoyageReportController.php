@@ -201,9 +201,9 @@ class OpsVoyageReportController extends Controller
                 // });
                 return $vesselBunker;
             });
+            // $vesselBunkers['stock_in_total']= $vesselBunker?->opsVoyage?->opsVesselBunkers->where('type','Stock In')->sum('quantity');
+            // $vesselBunkers['stock_out_total']= $vesselBunker?->opsVoyage?->opsVesselBunkers->where('type','Stock Out')->sum('quantity');
 
-            $vesselBunkers['stock_in_total']= $vesselBunker?->opsVoyage?->opsVesselBunkers->where('type','Stock In')->sum('quantity');
-            $vesselBunkers['stock_out_total']= $vesselBunker?->opsVoyage?->opsVesselBunkers->where('type','Stock Out')->sum('quantity');
 
 
             // $voyagesWithBunkers=[];
