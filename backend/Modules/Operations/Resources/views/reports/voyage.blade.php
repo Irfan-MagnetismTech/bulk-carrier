@@ -43,6 +43,9 @@
         $materialVariables[strtolower(str_replace(' ', '', ($material.'stock_in')))] = 0;
     }
 
+
+    $voyageIds=[];
+
     $grand_total_cost=0;
     $sub_total_bunkering=0;
 @endphp
@@ -114,10 +117,16 @@
                     $voyage_id=null;
                 @endphp
                 @foreach ($data['vesselBunkers'] as $key => $vesselBunker)
+
                     @if(isset($vesselBunker?->opsVoyage))
-                        @php
-                            $total_cargo+=$vesselBunker?->opsVoyage?->opsVoyageSectors->sum('quantity');
-                            
+                        
+                        @php                            
+                            $uniqueVoyageIds = array_unique($voyageIds);
+                            $vesselBunkerOpsVoyageId = (array) $vesselBunker->ops_voyage_id;
+                            $intersection = array_intersect($uniqueVoyageIds, $vesselBunkerOpsVoyageId);
+                            if (empty($intersection)) {
+                                $total_cargo+=$vesselBunker?->opsVoyage?->opsVoyageSectors->sum('quantity');
+                            }
                         @endphp
 
                         @foreach($vesselBunker?->opsVoyage?->opsVoyageSectors as $key1=>$sector)
@@ -140,13 +149,20 @@
                                 @foreach($data['opsContractTitle'] as $title)                        	
                                     <td>
                                         @php
-                                        $sectorData=$sector->opsContractTariff?->opsCargoTariff?->opsCargoTariffLines->where('particular', $title['particular'])->first();
-                                        $month= $sector->opsContractTariff['tariff_month'];
-        
-                                        $field = strtolower(str_replace(' ', '', $title['particular']));                                
-                                        $total= $sectorData?($sectorData[$month] * $sector['quantity']):0;
-                                        $contractVariables[$field] += $total;
-                                    @endphp
+                                            $sectorData=$sector->opsContractTariff?->opsCargoTariff?->opsCargoTariffLines->where('particular', $title['particular'])->first();
+                                            $month= $sector->opsContractTariff['tariff_month'];
+                                           
+                                            $uniqueVoyageIds = array_unique($voyageIds);
+                                            $vesselBunkerOpsVoyageId = (array) $vesselBunker->ops_voyage_id;
+
+                                            $intersection = array_intersect($uniqueVoyageIds, $vesselBunkerOpsVoyageId);
+
+                                            if (empty($intersection)) {
+                                                $field = strtolower(str_replace(' ', '', $title['particular']));                                
+                                                $total = $sectorData ? ($sectorData[$month] * $sector['quantity']) : 0;
+                                                $contractVariables[$field] += $total;
+                                            }
+                                        @endphp
                                         {{ ($vesselBunker->type=='Stock Out')?($sectorData?($sectorData[$month] * $sector['quantity']):''):'' }}
                                     </td>
                                     
@@ -162,11 +178,21 @@
                                                 @php
             
                                                     $expField = strtolower(str_replace(' ', '', $title['name']));                        
-                                                    if($vesselBunker->type=='Stock Out'){
-                                                        $total_cost += $expense->amount_bdt;
-                                                        $grand_total_cost += $total_cost;
-                                                        $expenseVariables[$expField] += $expense->amount_bdt;
+                                                   
+                                                    $uniqueVoyageIds = array_unique($voyageIds);
+                                                    $vesselBunkerOpsVoyageId = (array) $vesselBunker->ops_voyage_id;
+
+                                                    $intersection = array_intersect($uniqueVoyageIds, $vesselBunkerOpsVoyageId);
+
+                                                    if (empty($intersection)) {
+                                                        if($vesselBunker->type=='Stock Out'){
+                                                            $total_cost += $expense->amount_bdt;
+                                                            $grand_total_cost += $total_cost;
+                                                            $expenseVariables[$expField] += $expense->amount_bdt;
+                                                        }
                                                     }
+                                                   
+
                                                 @endphp
             
                                                 <td rowspan="{{ count($vesselBunker->opsVoyage->opsVoyageSectors) }}">
@@ -191,6 +217,7 @@
                                                                         $total= $sectorData?($sectorData[$month] * $sector['quantity']):0;
                                                                         $materialVariables[$matField] += $bunker->quantity;
                                                                     }
+                                                                    
                                                                 @endphp
                                                                 <td rowspan="{{count($vesselBunker->opsVoyage->opsVoyageSectors)}}">{{  ($vesselBunker->type=='Stock Out')? $bunker->quantity : ''}}</td>
                                                             @else
@@ -203,14 +230,40 @@
                                                 @endif                          
                                             @endif
                                         @endforeach
+
+                                        {{-- @if ($vesselBunker->type =='Stock Out')
+                                                @if (count($vesselBunker->stockable)) 
+                                                    @foreach($vesselBunker?->stockable as $bunker)
+                                                        @if($loop->first)               
+                                                            @foreach($data['bunkerMaterialTitle'] as $material)
+                                                                @if ($material == $bunker->scmMaterial->name)     
+                                                                        @php
+                                                                            if($vesselBunker->type=='Stock Out'){
+                                                                                $matField = strtolower(str_replace(' ', '', ($material.$title['particular'])));
+                                                                                $total= $sectorData?($sectorData[$month] * $sector['quantity']):0;
+                                                                                $materialVariables[$matField] += $bunker->quantity;
+                                                                            }
+                                                                        @endphp
+                                                                        <td rowspan="{{count($vesselBunker->opsVoyage->opsVoyageSectors)}}">{{  ($vesselBunker->type=='Stock Out')? $bunker->quantity : ''}}</td>
+                                                                    @else
+                                                                        <td></td>
+                                                                @endif
+                                                            @endforeach                                               
+                                                        @endif
+                                                    @endforeach                                               
+                                                @endif   
+                                            @else
+                                                    <td rowspan="{{count($vesselBunker->opsVoyage->opsVoyageSectors)}}"></td>
+                                            @endif --}}
+                                        
                                     @endforeach
             
-                                    @foreach($vesselBunker->opsVoyage->opsVesselBunkers as $vessel_bunker)
+                                    {{-- @foreach($vesselBunker->opsVoyage->opsVesselBunkers as $vessel_bunker) --}}
                                         @if ($loop->first)
                                             @if ($vesselBunker->type =='Stock In')
-                                                @if (count($vessel_bunker->opsBunkers))                   
-                                                    @if (count($vessel_bunker->opsBunkers->whereNotNull('quantity')))
-                                                        @foreach($vessel_bunker->opsBunkers->whereNotNull('quantity') as $bunker)
+                                                @if (count($vesselBunker->stockable))                   
+                                                    @if (count($vesselBunker->stockable->whereNotNull('quantity')))
+                                                        @foreach($vesselBunker->stockable->whereNotNull('quantity') as $bunker)
                                                             @foreach($data['bunkerMaterialTitle'] as $material)
                                                                 @if ($material == $bunker->scmMaterial->name)     
                                                                     @php
@@ -231,7 +284,7 @@
                                                     <td rowspan="{{count($vesselBunker->opsVoyage->opsVoyageSectors)}}"></td>
                                             @endif
                                         @endif
-                                    @endforeach
+                                    {{-- @endforeach --}}
             
                                     
                                 @endif
@@ -240,6 +293,9 @@
                             </tr>
                         @endforeach  
                         
+                        @php
+                            $voyageIds[]=$vesselBunker->ops_voyage_id;                            
+                        @endphp
                     @elseif(isset($vesselBunker))                        
                             {{-- @dd($vesselBunker) --}}
                         <tr>
@@ -263,18 +319,18 @@
                                 @foreach($data['opsVesselBunkerTitle'] as $title)
                                     <td></td>
                                 @endforeach
-                                
+
                                 @if ($vesselBunker->type =='Stock In')
-                                    @if (count($vesselBunker->opsBunkers))                   
-                                        @if (count($vesselBunker->opsBunkers->whereNotNull('quantity')))
-                                            @foreach($vesselBunker->opsBunkers->whereNotNull('quantity') as $bunker)
+                                    @if (count($vesselBunker->stockable))                   
+                                        @if (count($vesselBunker->stockable->whereNotNull('quantity')))
+                                            @foreach($vesselBunker->stockable->whereNotNull('quantity') as $bunker)
                                                 @foreach($data['bunkerMaterialTitle'] as $material)
                                                     @if ($material == $bunker->scmMaterial->name)     
                                                         @php
                                                             $matFieldin = strtolower(str_replace(' ', '', ($material.'stock_in')));
-                                                            $materialVariables[$matFieldin] += $bunker->quantity;
+                                                            $materialVariables[$matFieldin] += abs($bunker->quantity);
                                                         @endphp
-                                                        <td rowspan="">{{$bunker->quantity}}</td>
+                                                        <td rowspan="">{{abs($bunker->quantity)}}</td>
                                                     @else
                                                         <td></td>
                                                     @endif

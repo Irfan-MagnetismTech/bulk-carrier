@@ -132,7 +132,7 @@ class OpsVoyageReportController extends Controller
     {
         try {
             
-            $vesselBunkers= OpsVesselBunker::with(['opsVessel','opsBunkers.scmMaterial','opsVoyage.opsCargoType','opsVoyage.opsVoyageSectors.opsContractTariff.opsCargoTariff.opsCargoTariffLines','opsVoyage.opsContractTariffs.opsCargoTariff.opsCargoTariffLines','opsVoyage.opsVoyageExpenditureEntries.opsExpenseHead'])
+            $vesselBunkers= OpsVesselBunker::with(['opsVessel','opsBunkers.scmMaterial','stockable.scmMaterial','opsVoyage.opsCargoType','opsVoyage.opsVoyageSectors.opsContractTariff.opsCargoTariff.opsCargoTariffLines','opsVoyage.opsContractTariffs.opsCargoTariff.opsCargoTariffLines','opsVoyage.opsVoyageExpenditureEntries.opsExpenseHead'])
             ->when(isset(request()->from_date) && isset(request()->to_date), function($query) {
                 $query->whereBetween('date', [request()->from_date, request()->to_date]);
             })
@@ -140,7 +140,7 @@ class OpsVoyageReportController extends Controller
 
             $bunkerMaterialTitle=[];
             foreach($vesselBunkers as $vesselBunker){                
-                foreach($vesselBunker->opsBunkers as $bunker){
+                foreach($vesselBunker->stockable as $bunker){
                     $bunkerMaterialTitle[]=$bunker->scmMaterial->name;
                 }
             }
@@ -178,12 +178,12 @@ class OpsVoyageReportController extends Controller
             })->unique('name');
 
             $vesselBunkers->map(function ($vesselBunker) use($bunkerMaterialTitle){
-                $vesselBunker?->opsVoyage?->opsVoyageSectors->map(function ($sector) {
+                $vesselBunker?->opsVoyage?->opsVoyageSectors?->map(function ($sector) {
                     $sector['quantity'] = $this->chooseQuantity($sector);
                     return $sector;
                 });
 
-                $vesselBunker?->opsVoyage?->opsContractTariffs->map(function ($tariff) {
+                $vesselBunker?->opsVoyage?->opsContractTariffs?->map(function ($tariff) {
                     $tariff->opsCargoTariff?->opsCargoTariffLines
                     ->whereNotNull($tariff?->tariff_month)
                     ->map(function ($item) use ($tariff){
@@ -192,15 +192,15 @@ class OpsVoyageReportController extends Controller
                     });
                 });
 
-                $vesselBunker?->opsVoyage?->opsVesselBunkers->map(function($vessel_bunker){
-                    $vessel_bunker['sub_total']= $vessel_bunker->opsBunkers->sum('quantity');                    
-                    return $vessel_bunker;
-                });
-
-                $vesselBunker['stock_in_total']= $vesselBunker?->opsVoyage?->opsVesselBunkers->where('type','Stock In')->sum('sub_total');
-                $vesselBunker['stock_out_total']= $vesselBunker?->opsVoyage?->opsVesselBunkers->where('type','Stock Out')->sum('sub_total');
+                // $vesselBunker?->opsVoyage?->opsVesselBunkers->map(function($vessel_bunker){
+                //     $vessel_bunker['sub_total']= $vessel_bunker?->opsBunkers->sum('quantity');                    
+                //     return $vessel_bunker;
+                // });
                 return $vesselBunker;
             });
+
+            $vesselBunkers['stock_in_total']= $vesselBunker?->opsVoyage?->opsVesselBunkers->where('type','Stock In')->sum('quantity');
+            $vesselBunkers['stock_out_total']= $vesselBunker?->opsVoyage?->opsVesselBunkers->where('type','Stock Out')->sum('quantity');
 
 
             $data= [
