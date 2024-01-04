@@ -146,8 +146,6 @@ class OpsBunkerReportController extends Controller
             return $material;
         });
 
-        dd($allBunkers, $end, $scm_warehouse_id, $start);
-        dd($output);
         // $scm_material_id, $scm_warehouse_id, $toDate = null
 
         return view('operations::reports.single-vessel-bunker-report')->with([
