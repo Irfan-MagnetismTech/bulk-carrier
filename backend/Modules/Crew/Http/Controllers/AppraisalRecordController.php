@@ -2,78 +2,116 @@
 
 namespace Modules\Crew\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Modules\Crew\Entities\AppraisalRecord;
+use Modules\Crew\Http\Requests\AppraisalRecordRequest;
 
 class AppraisalRecordController extends Controller
 {
     /**
      * Display a listing of the resource.
-     * @return Renderable
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('crew::index');
-    }
+        try {
+            $appraisalRecords = AppraisalRecord::with('appraisalRecordLines.appraisalFormLineItem')->globalSearch($request->all());
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('crew::create');
+            return response()->success('Retrieved Successfully', $appraisalRecords, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AppraisalRecordRequest $request)
     {
-        //
+        try {
+            DB::transaction(function () use ($request)
+            {
+                $appraisalRecordData = $request->only('crw_crew_id', 'appraisal_form_id', 'crw_crew_assignment_id', 'appraisal_date', 'age', 'business_unit');
+                $appraisalRecord     = AppraisalRecord::create($appraisalRecordData);
+                $appraisalRecord->appraisalRecordLines()->createMany($request->appraisalRecordLines);
+
+            });
+            return response()->success('Created Successfully', '', 201);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
+     * Display the specified resource.
+     *
+     * @param  \App\Models\AppraisalRecord  $appraisalRecord
+     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(AppraisalRecord $appraisalRecord)
     {
-        return view('crew::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('crew::edit');
+        try {
+            return response()->success('Retrieved Successfully', $appraisalRecord->load('appraisalRecordLines'), 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\AppraisalRecord  $appraisalRecord
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(AppraisalRecordRequest $request, AppraisalRecord $appraisalRecord)
+    {        
+        try {
+            DB::transaction(function () use ($request, $appraisalRecord)
+            {
+                $appraisalRecordData = $request->only('crw_crew_id', 'appraisal_form_id', 'crw_crew_assignment_id', 'appraisal_date', 'age', 'business_unit');
+                $appraisalRecord->update($appraisalRecordData);
+                $appraisalRecord->appraisalRecordLines()->delete();
+                $appraisalRecord->appraisalRecordLines()->createMany($request->appraisalRecordLines);
+            });
+            
+            return response()->success('Updated Successfully', '', 202);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
+     *
+     * @param  \App\Models\AppraisalRecord  $appraisalRecord
+     * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(AppraisalRecord $appraisalRecord)
     {
-        //
+        try {
+            $appraisalRecord->delete();
+
+            return response()->success('Deleted Successfully', null, 204);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }
