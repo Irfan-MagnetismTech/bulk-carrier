@@ -16,14 +16,15 @@ export default function useAppraisalRecord() {
 
     const appraisalRecord = ref({
         business_unit: '',
-        crw_crew_profile_id: '',
+        crw_crew_id: '',
+        age: '',
         crw_crew_profile: '',
         completed_job_id: '',
         completed_job: '',
         appraisal_form_id: '',
         appraisal_form: '', 
-        completed_assignment: '',
-        completed_assignment_id: '',
+        crw_crew_assignment: '',
+        crw_crew_assignment_id: '',
         appraisal_date: '',
         appraisalRecordLines: [],
     });

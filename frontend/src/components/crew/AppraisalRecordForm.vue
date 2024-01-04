@@ -13,8 +13,8 @@
                   />
                 </template>
             </v-select>
-            <input type="hidden" v-model="form.crw_crew_profile_id">
-            <Error v-if="errors?.crw_crew_profile_id" :errors="errors.crw_crew_profile_id" />
+            <input type="hidden" v-model="form.crw_crew_id">
+            <Error v-if="errors?.crw_crew_id" :errors="errors.crw_crew_id" />
         </label>
         
         <label class="block w-full mt-2 text-sm">
@@ -26,7 +26,7 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Age</span>
-            <input type="text" :value="calculateAge(form.crw_crew_profile?.date_of_birth, null)" placeholder="Age" class="form-input vms-readonly-input" readonly />
+            <input type="text" :value="form.age = calculateAge(form.crw_crew_profile?.date_of_birth, null)" placeholder="Age" class="form-input vms-readonly-input" readonly />
             <Error v-if="errors?.age" :errors="errors.age" />
         </label>
 
@@ -53,42 +53,42 @@
 
         <label class="block w-full mt-2 text-sm col-start-1">
             <span class="text-gray-700 dark-disabled:text-gray-300">Completed Assignment Code <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Completed Assignment" :loading="isAppraisalUndoneAssignmentLoading"  :options="appraisalUndoneAssignments" @search="" v-model="form.completed_assignment" label="assignment_code" @update:modelValue="completedAssignmentChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <v-select placeholder="Select Completed Assignment" :loading="isAppraisalUndoneAssignmentLoading"  :options="appraisalUndoneAssignments" @search="" v-model="form.crw_crew_assignment" label="assignment_code" @update:modelValue="crwCrewAssignmentChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
                       class="vs__search"
-                      :required="!form.completed_assignment"
+                      :required="!form.crw_crew_assignment"
                       v-bind="attributes"
                       v-on="events"
                   />
                 </template>
             </v-select>
-            <input type="hidden" v-model="form.completed_assignment_id">
-            <Error v-if="errors?.completed_assignment_id" :errors="errors.completed_assignment_id" />
+            <input type="hidden" v-model="form.crw_crew_assignment_id">
+            <Error v-if="errors?.crw_crew_assignment_id" :errors="errors.crw_crew_assignment_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Vessel</span>
-            <input type="text" :value="form.completed_assignment?.opsVessel?.name" placeholder="Vessel" class="form-input vms-readonly-input" readonly />
+            <input type="text" :value="form.crw_crew_assignment?.opsVessel?.name" placeholder="Vessel" class="form-input vms-readonly-input" readonly />
             <!-- <Error v-if="errors?.nationality" :errors="errors.nationality" /> -->
         </label>
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Rank</span>
-            <input type="text" :value="form.completed_assignment?.position_onboard" placeholder="Rank" class="form-input vms-readonly-input" readonly />
+            <input type="text" :value="form.crw_crew_assignment?.position_onboard" placeholder="Rank" class="form-input vms-readonly-input" readonly />
             <!-- <Error v-if="errors?.nationality" :errors="errors.nationality" /> -->
         </label>
 
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Service From</span>
-            <input type="text" :value="form.completed_assignment?.joining_date" placeholder="Service From" class="form-input vms-readonly-input" readonly />
+            <input type="text" :value="form.crw_crew_assignment?.joining_date" placeholder="Service From" class="form-input vms-readonly-input" readonly />
             <!-- <Error v-if="errors?.nationality" :errors="errors.nationality" /> -->
         </label>
 
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Service To</span>
-            <input type="text" :value="form.completed_assignment?.completion_date" placeholder="Service To" class="form-input vms-readonly-input" readonly />
+            <input type="text" :value="form.crw_crew_assignment?.completion_date" placeholder="Service To" class="form-input vms-readonly-input" readonly />
             <!-- <Error v-if="errors?.nationality" :errors="errors.nationality" /> -->
         </label>
 
@@ -120,6 +120,325 @@
             <Error v-if="errors?.appraisal_date" :errors="errors.appraisal_date" />
         </label>
 
+      </div>
+      
+      <div class="grid grid-cols-1 mt-2">
+        <div class="">
+            <!-- <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Aspects</legend> -->
+            <template class="px-2 py-2 mt-3 border border-gray-300 rounded dark-disabled:border-gray-400" v-for="(appraisalFormLine, index) in  
+              form?.appraisalRecordLines" :key="index">
+                <!-- <div class="flex items-center gap-3 mb-2">
+                  <div class="w-1/6 text-sm">
+                    <span class="text-gray-700 dark-disabled:text-gray-300">Section No</span>
+                    <input type="text" :value="appraisalFormLine.section_no"  placeholder="Section No" class="form-input section-name-input vms-readonly-input"  readonly />
+                  </div>
+                  <div class="w-3/6 block  text-sm relative">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Section Name <span class="text-red-500">*</span></span>
+                      <div class="relative">
+                        <input type="text" v-model.trim="appraisalFormLine.section_name" placeholder="Section Name" class="form-input section-name-input" required />
+                        <span v-show="appraisalFormLine.isSectionDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-1" title="Duplicate Section" v-html="icons.ExclamationTriangle"></span>
+                        <Error v-if="errors?.section_name" :errors="errors.section_name" />
+                      </div>
+                  </div>
+                  
+                  <div class="w-2/6 block  text-sm relative">
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Section Type <span class="text-red-500">*</span></span>
+                      <select v-model.trim="appraisalFormLine.is_tabular" class="form-input" required>
+                        <option value="" disabled selected>Select Section Type</option>
+                        <option value="1" >Tabular</option>
+                        <option value="0">Non Tabular</option>
+                      </select>
+                  </div>
+
+
+
+                </div> -->
+                <!-- {{ appraisalFormLine.is_tabular }} -->
+                <table class="w-full whitespace-no-wrap" id="table" v-if="appraisalFormLine.is_tabular">
+                    <thead>
+                        <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+                            <th colspan="4" class="px-4 py-2 text-center">{{ appraisalFormLine.section_no }}. {{ appraisalFormLine.section_name }}</th>    
+                        </tr>
+                        
+                        <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+                            <th class="w-1/5 px-4 py-2 text-center">Aspect</th>
+                            <th class="w-2/5 px-4 py-2 text-center">Description</th>
+                            <th class="w-1/5 px-4 py-2 text-center">Comments</th>
+                            <th class="w-1/5 px-4 py-2 text-center">Marks <span class="text-red-500">*</span></th>
+                        </tr>
+
+                    </thead>
+                    <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+                        <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(appraisalFormLineItem, appraisalFormLineItemIndex) in appraisalFormLine?.appraisalFormLineItems" :key="appraisalFormLineItemIndex">
+                            <td class="px-1 py-1">
+                              <div class="relative">
+                                <input type="text" class="form-input"  v-model.trim="appraisalFormLineItem.aspect" placeholder="Aspect" required />
+                                <span v-show="appraisalFormLineItem.isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-1" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
+                              </div>
+                            </td>
+                            <td class="px-1 py-1"><input type="text" class="form-input"  v-model.trim="appraisalFormLineItem.description" placeholder="Description" /></td>
+                            <td>
+                              <input type="text" class="form-input"  v-model.trim="appraisalFormLineItem.comment" placeholder="Comment"  />
+                            </td>
+                            <td class="px-1 py-1">
+                              <div v-if="appraisalFormLineItem.answer_type == 'Number'">
+                                <input type="number" min="1" max="5" class="form-input"  v-model.trim="appraisalFormLineItem.marks" placeholder="Marks" required />
+                              </div>
+
+                              <div v-else-if="appraisalFormLineItem.answer_type == 'Boolean'" class="flex gap-2 justify-around flex-wrap">
+                                <div class="flex  items-center">
+                                  <input :id="`boolean-mark-yes-${index}-${appraisalFormLineItemIndex}`" type="radio" value="true" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`boolean-mark-yes-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`boolean-mark-yes-${index}-${appraisalFormLineItemIndex}`" :name="`boolean-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`boolean-mark-yes-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    Yes
+                                  </label>
+                                </div>
+                                
+                                <div class="flex  items-center">
+                                  <input :id="`boolean-mark-no-${index}-${appraisalFormLineItemIndex}`" type="radio" value="false" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`boolean-mark-no-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`boolean-mark-no-${index}-${appraisalFormLineItemIndex}`" :name="`boolean-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`boolean-mark-no-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    No
+                                  </label>
+                                </div>
+
+                              </div>
+
+            
+                              <div class="flex gap-2 justify-around flex-wrap" v-else-if= "appraisalFormLineItem.answer_type == 'Grade'" >
+                                <div class="flex  items-center">
+                                  <input :id="`grade-mark-excellent-${index}-${appraisalFormLineItemIndex}`" type="radio" value="5" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`grade-mark-excellent-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`grade-mark-excellent-${index}-${appraisalFormLineItemIndex}`" :name="`grade-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`grade-mark-excellent-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    Excellent
+                                  </label>
+                                </div>
+                                <div class="flex  items-center">
+                                  <input :id="`grade-mark-very_good-${index}-${appraisalFormLineItemIndex}`" type="radio" value="4" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`grade-mark-very_good-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`grade-mark-very_good-${index}-${appraisalFormLineItemIndex}`" :name="`grade-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`grade-mark-very_good-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    Very Good
+                                  </label>
+                                </div>
+                                
+                                <div class="flex  items-center">
+                                  <input :id="`grade-mark-good-${index}-${appraisalFormLineItemIndex}`" type="radio" value="3" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`grade-mark-good-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`grade-mark-good-${index}-${appraisalFormLineItemIndex}`" :name="`grade-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`grade-mark-good-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    Good
+                                  </label>
+                                </div>
+
+                                
+                                <div class="flex  items-center">
+                                  <input :id="`grade-mark-fair-${index}-${appraisalFormLineItemIndex}`" type="radio" value="2" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`grade-mark-fair-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`grade-mark-fair-${index}-${appraisalFormLineItemIndex}`" :name="`grade-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`grade-mark-fair-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    Fair
+                                  </label>
+                                </div>
+
+                                
+                                <div class="flex  items-center">
+                                  <input :id="`grade-mark-poor-${index}-${appraisalFormLineItemIndex}`" type="radio" value="1" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`grade-mark-poor-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`grade-mark-poor-${index}-${appraisalFormLineItemIndex}`" :name="`grade-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`grade-mark-poor-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    Poor
+                                  </label>
+                                </div>
+
+
+
+                              </div>
+
+
+
+                              
+
+
+                              <!-- <select v-model.trim="appraisalFormLineItem.answer_type" class="form-input" required>
+                                <option value="" disabled selected>Select</option>
+                                <option value="Number">Number</option>
+                                <option value="Boolean">Boolean</option>
+                                <option value="Grade">Grade</option>
+                              </select> -->
+                            </td>
+                            <!-- <td class="px-1 py-1"> <button type="button" class="bg-red-600 text-white px-3 py-2 rounded-md" @click="removeAppraisalFormLineItem(index, appraisalFormLineItemIndex)" ><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                          </svg></button></td> -->
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="w-full whitespace-no-wrap border-none mt-2" id="table" v-else>
+                  <thead>
+                        <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+                            <th colspan="2" class="px-4 py-2 text-center">{{ appraisalFormLine.section_no }}. {{ appraisalFormLine.section_name }}</th>    
+                        </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800 border-none">
+                        <tr class="text-gray-700 dark-disabled:text-gray-400 border-none" v-for="(appraisalFormLineItem, appraisalFormLineItemIndex) in appraisalFormLine?.appraisalFormLineItems" :key="appraisalFormLineItemIndex">
+                          <td class="border-none w-1/2">
+                            {{ appraisalFormLineItemIndex+1 }}. {{ appraisalFormLineItem.aspect }}
+                          </td>
+                          <td class="border-none w-1/2">
+                            <div v-if="appraisalFormLineItem.answer_type == 'Number'">
+                                <input type="number" min="1" max="5" class="form-input"  v-model.trim="appraisalFormLineItem.marks" placeholder="Marks" required />
+                              </div>
+
+                              <div v-else-if="appraisalFormLineItem.answer_type == 'Boolean'" class="flex gap-2 justify-around flex-wrap">
+                                <div class="flex  items-center">
+                                  <input :id="`boolean-mark-yes-${index}-${appraisalFormLineItemIndex}`" type="radio" value="true" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`boolean-mark-yes-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`boolean-mark-yes-${index}-${appraisalFormLineItemIndex}`" :name="`boolean-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`boolean-mark-yes-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    Yes
+                                  </label>
+                                </div>
+                                
+                                <div class="flex  items-center">
+                                  <input :id="`boolean-mark-no-${index}-${appraisalFormLineItemIndex}`" type="radio" value="false" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`boolean-mark-no-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`boolean-mark-no-${index}-${appraisalFormLineItemIndex}`" :name="`boolean-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`boolean-mark-no-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    No
+                                  </label>
+                                </div>
+
+                              </div>
+
+            
+                              <div class="flex gap-2 justify-around flex-wrap" v-else-if= "appraisalFormLineItem.answer_type == 'Grade'" >
+                                <div class="flex  items-center">
+                                  <input :id="`grade-mark-excellent-${index}-${appraisalFormLineItemIndex}`" type="radio" value="5" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`grade-mark-excellent-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`grade-mark-excellent-${index}-${appraisalFormLineItemIndex}`" :name="`grade-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`grade-mark-excellent-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    Excellent
+                                  </label>
+                                </div>
+                                <div class="flex  items-center">
+                                  <input :id="`grade-mark-very_good-${index}-${appraisalFormLineItemIndex}`" type="radio" value="4" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`grade-mark-very_good-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`grade-mark-very_good-${index}-${appraisalFormLineItemIndex}`" :name="`grade-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`grade-mark-very_good-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    Very Good
+                                  </label>
+                                </div>
+                                
+                                <div class="flex  items-center">
+                                  <input :id="`grade-mark-good-${index}-${appraisalFormLineItemIndex}`" type="radio" value="3" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`grade-mark-good-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`grade-mark-good-${index}-${appraisalFormLineItemIndex}`" :name="`grade-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`grade-mark-good-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    Good
+                                  </label>
+                                </div>
+
+                                
+                                <div class="flex  items-center">
+                                  <input :id="`grade-mark-fair-${index}-${appraisalFormLineItemIndex}`" type="radio" value="2" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`grade-mark-fair-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`grade-mark-fair-${index}-${appraisalFormLineItemIndex}`" :name="`grade-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`grade-mark-fair-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    Fair
+                                  </label>
+                                </div>
+
+                                
+                                <div class="flex  items-center">
+                                  <input :id="`grade-mark-poor-${index}-${appraisalFormLineItemIndex}`" type="radio" value="1" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`grade-mark-poor-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`grade-mark-poor-${index}-${appraisalFormLineItemIndex}`" :name="`grade-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`grade-mark-poor-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    Poor
+                                  </label>
+                                </div>
+
+
+
+                              </div>
+                              
+                              <div class="flex gap-2 justify-around flex-wrap" v-else >
+                                <input type="text" class="form-input"  v-model.trim="appraisalFormLineItem.comment" placeholder=""  />
+
+
+
+                              </div>
+
+                          </td>
+                            <!-- <td class="px-1 py-1">
+                              <div class="relative">
+                                <input type="text" class="form-input"  v-model.trim="appraisalFormLineItem.aspect" placeholder="Aspect" required />
+                                <span v-show="appraisalFormLineItem.isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-1" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
+                              </div>
+                            </td>
+                            <td class="px-1 py-1"><input type="text" class="form-input"  v-model.trim="appraisalFormLineItem.description" 
+                              placeholder="Description" />
+                            </td>
+                            <td></td>
+                            <td class="px-1 py-1">
+                              <div v-if="appraisalFormLineItem.answer_type == 'Number'">
+                                <input type="number" min="1" max="5" class="form-input"  v-model.trim="appraisalFormLineItem.marks" placeholder="Marks" required />
+                              </div>
+
+                              <div v-else-if="appraisalFormLineItem.answer_type == 'Boolean'" class="flex gap-2 justify-around flex-wrap">
+                                <div class="flex  items-center">
+                                  <input :id="`boolean-mark-yes-${index}-${appraisalFormLineItemIndex}`" type="radio" value="true" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`boolean-mark-yes-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`boolean-mark-yes-${index}-${appraisalFormLineItemIndex}`" :name="`boolean-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`boolean-mark-yes-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    Yes
+                                  </label>
+                                </div>
+                                
+                                <div class="flex  items-center">
+                                  <input :id="`boolean-mark-no-${index}-${appraisalFormLineItemIndex}`" type="radio" value="false" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`boolean-mark-no-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`boolean-mark-no-${index}-${appraisalFormLineItemIndex}`" :name="`boolean-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`boolean-mark-no-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    No
+                                  </label>
+                                </div>
+
+                              </div>
+
+            
+                              <div class="flex gap-2 justify-around flex-wrap" v-else>
+                                <div class="flex  items-center">
+                                  <input :id="`grade-mark-excellent-${index}-${appraisalFormLineItemIndex}`" type="radio" value="5" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`grade-mark-excellent-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`grade-mark-excellent-${index}-${appraisalFormLineItemIndex}`" :name="`grade-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`grade-mark-excellent-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    Excellent
+                                  </label>
+                                </div>
+                                <div class="flex  items-center">
+                                  <input :id="`grade-mark-very_good-${index}-${appraisalFormLineItemIndex}`" type="radio" value="4" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`grade-mark-very_good-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`grade-mark-very_good-${index}-${appraisalFormLineItemIndex}`" :name="`grade-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`grade-mark-very_good-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    Very Good
+                                  </label>
+                                </div>
+                                
+                                <div class="flex  items-center">
+                                  <input :id="`grade-mark-good-${index}-${appraisalFormLineItemIndex}`" type="radio" value="3" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`grade-mark-good-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`grade-mark-good-${index}-${appraisalFormLineItemIndex}`" :name="`grade-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`grade-mark-good-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    Good
+                                  </label>
+                                </div>
+
+                                
+                                <div class="flex  items-center">
+                                  <input :id="`grade-mark-fair-${index}-${appraisalFormLineItemIndex}`" type="radio" value="2" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`grade-mark-fair-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`grade-mark-fair-${index}-${appraisalFormLineItemIndex}`" :name="`grade-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`grade-mark-fair-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    Fair
+                                  </label>
+                                </div>
+
+                                
+                                <div class="flex  items-center">
+                                  <input :id="`grade-mark-poor-${index}-${appraisalFormLineItemIndex}`" type="radio" value="1" v-model="appraisalFormLineItem.marks" class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-purple-600 text-purple-700" :aria-labelledby="`grade-mark-poor-${index}-${appraisalFormLineItemIndex}`" :aria-describedby="`grade-mark-poor-${index}-${appraisalFormLineItemIndex}`" :name="`grade-mark-${index}-${appraisalFormLineItemIndex}`" required>
+                                  <label :for="`grade-mark-poor-${index}-${appraisalFormLineItemIndex}`" class="text-sm font-medium text-gray-900 ml-2 block">
+                                    Poor
+                                  </label>
+                                </div>
+
+
+
+                              </div>
+
+
+
+                              
+
+
+                              
+                            </td> -->
+                        </tr>
+                    </tbody>
+
+                </table>
+                <!-- <div>
+                  <button type="button" v-if="form?.appraisalFormLines?.length > 1" @click="removeAppraisalFormLine(index)" class="px-3 py-2 mt-2 mx-auto  text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center">
+                    Remove
+                </button> 
+                </div> -->
+            </template>
+           
+        </div>
       </div>
 
       <!-- <div class="grid grid-cols-1">
@@ -213,6 +532,7 @@
   import RemarksComponent from "../utils/RemarksComponent.vue";
   import cloneDeep from 'lodash/cloneDeep';
   import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
+import useAppraisalForm from "../../composables/crew/useAppraisalForm";
   
   
   // const { getItemCodeByGroupId } = useItem();
@@ -237,23 +557,34 @@
   
 
   const { crews, appraisalUndoneAssignments, getCrews, getAppraisalUndoneAssignments, crwRankLists, getCrewRankLists, isLoading:isCrewLoading, isAppraisalUndoneAssignmentLoading } = useCrewCommonApiRequest();
+  const { appraisalForms, appraisalForm, getAppraisalFormsWithoutPaginate, showAppraisalForm, isLoading:isAppraisalFormLoading } = useAppraisalForm();
  
 
   const crewProfileChange = () => {
-    props.form.crw_crew_profile_id = props.form.crw_crew_profile?.id;
+    props.form.crw_crew_id = props.form.crw_crew_profile?.id;
     
-    if(props.form.crw_crew_profile_id){
-        getAppraisalUndoneAssignments(props.form.crw_crew_profile_id);
+    if(props.form.crw_crew_id){
+        getAppraisalUndoneAssignments(props.form.crw_crew_id);
     }
   }
 
-  const completedAssignmentChange = () => {
-    props.form.completed_assignment_id = props.form.completed_assignment?.id;
+  const crwCrewAssignmentChange = () => {
+    props.form.crw_crew_assignment_id = props.form.crw_crew_assignment?.id;
   }
 
   const appraisalFormChange = () => {
-       props.form.appraisal_form_id = props.form.appraisal_form?.id;
+      props.form.appraisal_form_id = props.form.appraisal_form?.id;
+      appraisalForm.value = null;
+      if (props.form.appraisal_form_id) {
+        showAppraisalForm(props.form.appraisal_form_id);
+      }
   }
+
+  watch(() => appraisalForm.value, (value) => {
+    props.form.appraisalRecordLines = [];
+    if(value)
+      props.form.appraisalRecordLines = value?.appraisalFormLines;
+  });
 
   function calculateAge(dateOfBirth, currentDate) {
         if (!dateOfBirth) return '';
@@ -323,6 +654,7 @@
     watchEffect(() => {
       if(businessUnit.value && businessUnit.value != 'ALL'){
         getCrews(businessUnit.value);
+        getAppraisalFormsWithoutPaginate(businessUnit.value);
       }
         
     });
@@ -334,8 +666,15 @@
   
   <style lang="postcss" scoped>
   #table, #table th, #table td{
+    @apply border border-collapse border-gray-400 text-left text-gray-700 px-1
+  }
+
+  
+  #table.text-center, #table th.text-center, #table td.text-center{
     @apply border border-collapse border-gray-400 text-center text-gray-700 px-1
   }
+
+
   
   .input-group {
     @apply flex flex-col justify-center w-full h-full md:flex-row md:gap-2;
@@ -352,6 +691,11 @@
   }
   .section-name-input{
     margin-top: 0 !important;
+  }
+
+  .table-borderless tbody tr td,
+  .table-borderless tbody tr th{
+      border: none;
   }
   
   >>> {
