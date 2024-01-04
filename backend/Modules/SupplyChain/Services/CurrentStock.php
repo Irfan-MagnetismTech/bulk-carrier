@@ -67,7 +67,7 @@ class CurrentStock
      */
     public static function countStockOut($scm_material_id, $scm_warehouse_id, $fromDate = null, $toDate = null): int
     {
-        $currentStockIn = ScmStockLedger::query()
+        $currentStockOut = ScmStockLedger::query()
             ->where([
                 'scm_material_id' => $scm_material_id,
                 'scm_warehouse_id' => $scm_warehouse_id
@@ -78,6 +78,6 @@ class CurrentStock
             })
             ->sum('quantity');
 
-        return $currentStockIn;
+        return $currentStockOut;
     }
 }
