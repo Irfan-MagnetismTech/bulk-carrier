@@ -13,13 +13,17 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import FooterComponent from "../../../components/utils/FooterComponent.vue";
 
 import { useRouter } from 'vue-router';
+import useIndexUtils from '../../../services/indexUtils';
 const { getPurchaseRequisitions, purchaseRequisitions, deletePurchaseRequisition, isLoading ,isTableLoading, errors} = usePurchaseRequisition();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
+
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
+setTitle('Purchase Requisitions');
 const router = useRouter();
 const props = defineProps({
   page: {
@@ -29,17 +33,10 @@ const props = defineProps({
 });
 
 const critical = ['No','Yes'];
-// Code for global search start
-const columns = ["ref_no"];
-const searchKey = useDebouncedRef('', 600);
-const table = "purchase_requisitions";
-
 const icons = useHeroIcon();
 
-const tableScrollWidth = ref(null);
-const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
-setTitle('Purchase Requisitions');
+
 // Code for global search starts here
 
 
@@ -128,76 +125,79 @@ let filterOptions = ref({
   ]
 });
 
-const currentPage = ref(1);
-const paginatedPage = ref(1);
+// const currentPage = ref(1);
+// const paginatedPage = ref(1);
 
-let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+// let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 
-onMounted(() => {
-  watchPostEffect(() => {
-    if(currentPage.value == props.page && currentPage.value != 1) {
-      filterOptions.value.page = 1;
-      router.push({ name: 'scm.purchase-requisitions.index', query: { page: filterOptions.value.page } });
-    } else {
-      filterOptions.value.page = props.page;
-    }
-    currentPage.value = props.page;
-    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
-      filterOptions.value.isFilter = true;
-    }
-    getPurchaseRequisitions(filterOptions.value)
-      .then(() => {
-        paginatedPage.value = filterOptions.value.page;
-      const customDataTable = document.getElementById("customDataTable");
-      if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching PR:", error);
-    });
-});
-});
+const routeName = 'scm.purchase-requisitions.index';
+
+const { currentPage,paginatedPage,stringifiedFilterOptions,tableScrollWidth,screenWidth } = useIndexUtils(props, filterOptions, routeName,getPurchaseRequisitions);
+// onMounted(() => {
+//   watchPostEffect(() => {
+//     if(currentPage.value == props.page && currentPage.value != 1) {
+//       filterOptions.value.page = 1;
+//       router.push({ name: 'scm.purchase-requisitions.index', query: { page: filterOptions.value.page } });
+//     } else {
+//       filterOptions.value.page = props.page;
+//     }
+//     currentPage.value = props.page;
+//     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+//       filterOptions.value.isFilter = true;
+//     }
+//     getPurchaseRequisitions(filterOptions.value)
+//       .then(() => {
+//         paginatedPage.value = filterOptions.value.page;
+//       const customDataTable = document.getElementById("customDataTable");
+//       if (customDataTable) {
+//         tableScrollWidth.value = customDataTable.scrollWidth;
+//       }
+//     })
+//     .catch((error) => {
+//       console.error("Error fetching PR:", error);
+//     });
+// });
+// });
 // Code for global search end here
 
-const navigateToPOCreate = (purchaseRequisitionId) => {
-  const pr_id = purchaseRequisitionId; 
-  const cs_id = null;
-  const routeOptions = {
-    name: 'scm.purchase-orders.create',
-    query: {
-      pr_id: pr_id,
-      cs_id: cs_id
-    }
-  };
-  router.push(routeOptions);
-};  
+// const navigateToPOCreate = (purchaseRequisitionId) => {
+//   const pr_id = purchaseRequisitionId; 
+//   const cs_id = null;
+//   const routeOptions = {
+//     name: 'scm.purchase-orders.create',
+//     query: {
+//       pr_id: pr_id,
+//       cs_id: cs_id
+//     }
+//   };
+//   router.push(routeOptions);
+// };  
 
-const navigateToMRRCreate = (purchaseRequisitionId) => {
-  const pr_id = purchaseRequisitionId; 
-  const po_id = null;
-  const routeOptions = {
-    name: 'scm.material-receipt-reports.create',
-    query: {
-      pr_id: pr_id,
-      po_id: po_id
-    }
-  };
-  router.push(routeOptions);
-};
+// const navigateToMRRCreate = (purchaseRequisitionId) => {
+//   const pr_id = purchaseRequisitionId; 
+//   const po_id = null;
+//   const routeOptions = {
+//     name: 'scm.material-receipt-reports.create',
+//     query: {
+//       pr_id: pr_id,
+//       po_id: po_id
+//     }
+//   };
+//   router.push(routeOptions);
+// };
 
 
-const navigateToCSCreate = (purchaseRequisitionId) => {
-  const pr_id = purchaseRequisitionId; 
-  const routeOptions = {
-    name: 'scm.material-cs.create',
-    query: {
-      pr_id: pr_id
-    }
-  };
-  router.push(routeOptions);
-}; 
+// const navigateToCSCreate = (purchaseRequisitionId) => {
+//   const pr_id = purchaseRequisitionId; 
+//   const routeOptions = {
+//     name: 'scm.material-cs.create',
+//     query: {
+//       pr_id: pr_id
+//     }
+//   };
+//   router.push(routeOptions);
+// }; 
 
 function confirmDelete(id) {
         Swal.fire({
@@ -227,22 +227,12 @@ function confirmDelete(id) {
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
-          <!-- <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>PR No</th>
-            <th>Raised Date</th>
-            <th>Is Critical</th>
-            <th>Purchase Center</th>
-            <th>Warehouse</th>
-            <th>Business Unit</th>
-            <th>Action</th>
-          </tr>
-          </thead> -->
+
           <FilterComponent :filterOptions = "filterOptions"/>
+
           <tbody>
             <tr v-for="(purchaseRequisition,index) in (purchaseRequisitions?.data ? purchaseRequisitions?.data : purchaseRequisitions)" :key="index">
-              <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
+              <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1}}</td>
               <td>{{ purchaseRequisition?.ref_no }}</td>
               <td>{{ purchaseRequisition?.raised_date }}</td>
               <td>{{ critical[purchaseRequisition?.is_critical] }}</td>
@@ -259,19 +249,19 @@ function confirmDelete(id) {
               <td>
                 <nobr>
                 <div class="grid grid-flow-col-dense gap-x-2">
-                    <template v-if="(purchaseRequisition?.scmCss.length > 0) || ((purchaseRequisition?.scmCss.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) && (purchaseRequisition?.scmPos.length <= 0))">
+                    <!-- <template v-if="(purchaseRequisition?.scmCss.length > 0) || ((purchaseRequisition?.scmCss.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) && (purchaseRequisition?.scmPos.length <= 0))">
                      <button @click="navigateToCSCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create CS</button>
-                    </template>
-                    <template v-if="purchaseRequisition?.scmPos.length > 0 || ((purchaseRequisition?.scmCss.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) && (purchaseRequisition?.scmPos.length <= 0))">
+                    </template> -->
+                    <!-- <template v-if="purchaseRequisition?.scmPos.length > 0 || ((purchaseRequisition?.scmCss.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) && (purchaseRequisition?.scmPos.length <= 0))">
 
                     <button @click="navigateToPOCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
 
-                    </template>
-                    <template v-if="(purchaseRequisition?.scmMrrs.length > 0 && purchaseRequisition?.scmPos.length <= 0 ) || ((purchaseRequisition?.scmCss.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) && (purchaseRequisition?.scmPos.length <= 0))">
+                    </template> -->
+                    <!-- <template v-if="(purchaseRequisition?.scmMrrs.length > 0 && purchaseRequisition?.scmPos.length <= 0 ) || ((purchaseRequisition?.scmCss.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) && (purchaseRequisition?.scmPos.length <= 0))">
 
                       <button @click="navigateToMRRCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button>
 
-                    </template>
+                    </template> -->
                     <template v-if="(purchaseRequisition?.scmPos.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) ">
                       <action-button :action="'edit'" :to="{ name: 'scm.purchase-requisitions.edit', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>
                     </template>
@@ -284,21 +274,10 @@ function confirmDelete(id) {
             </tr>
             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && purchaseRequisitions?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!purchaseRequisitions?.data?.length" class="relative h-[250px]">
-            <tr v-if="isLoading">
-            </tr>
-            <tr v-else-if="isTableLoading">
-                <td colspan="7">
-                  <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
-                </td>
-            </tr>
-            <tr v-else-if="!purchaseRequisitions?.data?.length">
-              <td colspan="7">No Data found.</td>
-            </tr>
-        </tfoot>
+         <FooterComponent :dataList="purchaseRequisitions" :isLoading="isLoading" :isTableLoading="isTableLoading" Colspan="9" />
       </table>
     </div>
-    <Paginate :data="purchaseRequisitions" to="scm.purchase-requisitions.index" :page="page"></Paginate>
+    <Paginate :data="purchaseRequisitions" :to="routeName" :page="page"></Paginate>
   </div>
   <!-- Heading -->
   
