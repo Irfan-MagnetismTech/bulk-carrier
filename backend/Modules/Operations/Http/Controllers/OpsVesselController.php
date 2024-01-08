@@ -45,7 +45,7 @@ class OpsVesselController extends Controller
                             ->groupBy('ops_maritime_certification_id');
                     })->latest();
                 },
-                'opsBunkers',             
+                // 'opsBunkers',             
                 'scmWareHouse.scmWarehouseContactPersons',
                 'scmWareHouse.accCostCenter'
             ])
@@ -77,7 +77,7 @@ class OpsVesselController extends Controller
             );
             $vessel = OpsVessel::create($vesselInfo);
             $vessel->opsVesselCertificates()->createMany($request->opsVesselCertificates);
-            $vessel->opsBunkers()->createMany($request->opsBunkers);
+            // $vessel->opsBunkers()->createMany($request->opsBunkers);
 
             // create cost center
             $costCenter= [
@@ -143,7 +143,7 @@ class OpsVesselController extends Controller
                         ->groupBy('ops_maritime_certification_id');
                 })->latest();
             },
-            'opsBunkers.scmMaterial',
+            // 'opsBunkers.scmMaterial',
             'portOfRegistry',
             'scmWareHouse.scmWarehouseContactPersons',
             'scmWareHouse.accCostCenter'
@@ -157,12 +157,12 @@ class OpsVesselController extends Controller
             return $certificate;
         });
 
-        $vessel->opsBunkers->map(function($bunker) {
-            $bunker->id = $bunker->scmMaterial->id;
-            $bunker->name = $bunker->scmMaterial->name;
-            $bunker->is_readonly = true;
-            return $bunker;
-        });
+        // $vessel->opsBunkers->map(function($bunker) {
+        //     $bunker->id = $bunker->scmMaterial->id;
+        //     $bunker->name = $bunker->scmMaterial->name;
+        //     $bunker->is_readonly = true;
+        //     return $bunker;
+        // });
 
         try
         {
@@ -197,8 +197,8 @@ class OpsVesselController extends Controller
             $vessel->update($vesselInfo);
             $vessel->opsVesselCertificates()->delete();
             $vessel->opsVesselCertificates()->createMany($request->opsVesselCertificates);
-            $vessel->opsBunkers()->delete();
-            $vessel->opsBunkers()->createMany($request->opsBunkers);
+            // $vessel->opsBunkers()->delete();
+            // $vessel->opsBunkers()->createMany($request->opsBunkers);
             DB::commit();
             return response()->success('Data updated successfully.', $vessel, 202);
         }
@@ -220,7 +220,7 @@ class OpsVesselController extends Controller
         try
         {
             $vessel->opsVesselCertificates()->delete();
-            $vessel->opsBunkers()->delete();
+            // $vessel->opsBunkers()->delete();
             $vessel->delete();
             return response()->json([
                 'message' => 'Data deleted successfully.',
@@ -293,7 +293,7 @@ class OpsVesselController extends Controller
                         ->groupBy('ops_maritime_certification_id');
                 })->latest();
             },
-            'opsBunkers'
+            // 'opsBunkers'
         ])->find($request->vessel_id);
 
         $vessel->opsVesselCertificates->map(function($certificate) {
@@ -320,7 +320,7 @@ class OpsVesselController extends Controller
             'opsVesselCertificates' => function ($query) use ($request) {
                 $query->where('ops_maritime_certification_id', $request->certificate_id);
             },
-            'opsBunkers'
+            // 'opsBunkers'
         ])->find($request->vessel_id);
         $currentDate = Carbon::now();
 
@@ -329,7 +329,6 @@ class OpsVesselController extends Controller
             $certificate->validity  =$certificate->opsMaritimeCertification->validity;
             $certificate->name = $certificate->opsMaritimeCertification->name;
             $certificate->id = $certificate->id;
-            // $certificate->expire_days = 
 
             $expireDate = Carbon::parse($certificate->expire_date);
                     $expire_days = $currentDate->diffInDays($expireDate, false);

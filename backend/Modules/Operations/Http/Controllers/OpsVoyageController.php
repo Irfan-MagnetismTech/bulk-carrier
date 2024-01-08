@@ -32,7 +32,9 @@ class OpsVoyageController extends Controller
     public function index(Request $request) : JsonResponse
     {
         try {
-            $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules','opsBunkers')
+            $voyages = OpsVoyage::with('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors','opsVoyagePortSchedules'
+            // ,'opsBunkers'
+            )
             ->globalSearch($request->all());
             
             return response()->success('Data retrieved successfully.', $voyages, 200);
@@ -59,7 +61,7 @@ class OpsVoyageController extends Controller
                 '_token',
                 'opsVoyageSectors',
                 'opsVoyagePortSchedules',
-                'opsBunkers',
+                // 'opsBunkers',
             );
 
             $voyageSectors= collect($request->opsVoyageSectors)->map(function($sector){
@@ -97,7 +99,7 @@ class OpsVoyageController extends Controller
             $voyage = OpsVoyage::create($voyageInfo);
             $voyage->opsVoyageSectors()->createMany($voyageSectors);
             $voyage->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedules);
-            $voyage->opsBunkers()->createMany($request->opsBunkers);
+            // $voyage->opsBunkers()->createMany($request->opsBunkers);
             DB::commit();
             return response()->success('Data added successfully.', $voyage, 201);
         }
@@ -116,7 +118,10 @@ class OpsVoyageController extends Controller
       */
      public function show(OpsVoyage $voyage): JsonResponse
      {
-        $voyage->load('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors.loadingPoint','opsVoyageSectors.unloadingPoint','opsVoyagePortSchedules.portCode','opsBunkers.scmMaterial');
+        $voyage->load('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors.loadingPoint',
+        'opsVoyageSectors.unloadingPoint','opsVoyagePortSchedules.portCode',
+        // 'opsBunkers.scmMaterial'
+    );
 
         $voyage->opsVoyageSectors->map(function($sector) {
             $sector->voyage_sector_id = $sector->id;
@@ -125,12 +130,12 @@ class OpsVoyageController extends Controller
             return $sector;
         });
         
-        $voyage->opsBunkers->map(function($bunker) {
-            $bunker->id = $bunker->scmMaterial->id;
-            $bunker->name = $bunker->scmMaterial->name;
-            $bunker->is_readonly = true;
-            return $bunker;
-        });
+        // $voyage->opsBunkers->map(function($bunker) {
+        //     $bunker->id = $bunker->scmMaterial->id;
+        //     $bunker->name = $bunker->scmMaterial->name;
+        //     $bunker->is_readonly = true;
+        //     return $bunker;
+        // });
 
         try
         {
@@ -159,7 +164,7 @@ class OpsVoyageController extends Controller
                 '_token',
                 'opsVoyageSectors',
                 'opsVoyagePortSchedules',
-                'opsBunkers',
+                // 'opsBunkers',
             );
 
             $voyageSectors= collect($request->opsVoyageSectors)->map(function($sector){
@@ -204,8 +209,8 @@ class OpsVoyageController extends Controller
             $voyage->opsVoyagePortSchedules()->delete();
             $voyage->opsVoyagePortSchedules()->createMany($request->opsVoyagePortSchedules);
 
-            $voyage->opsBunkers()->delete();
-            $voyage->opsBunkers()->createMany($request->opsBunkers);
+            // $voyage->opsBunkers()->delete();
+            // $voyage->opsBunkers()->createMany($request->opsBunkers);
 
             DB::commit();
             return response()->success('Data updated Successfully.', $voyage, 202);
@@ -229,7 +234,7 @@ class OpsVoyageController extends Controller
         {
             $voyage->opsVoyageSectors()->delete();
             $voyage->opsVoyagePortSchedules()->delete();
-            $voyage->opsBunkers()->delete();
+            // $voyage->opsBunkers()->delete();
             $voyage->delete();
 
             return response()->json([
