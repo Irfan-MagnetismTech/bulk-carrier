@@ -18,7 +18,9 @@ class CrwPayrollBatchController extends Controller
     public function index(Request $request)
     {
         try {
-            $CrwPayrollBatches = CrwPayrollBatch::with('opsVessel:id,name')->withCount('crwPayrollBatchLines as total_crew')->globalSearch($request->all());
+            $CrwPayrollBatches = CrwPayrollBatch::with('opsVessel:id,name', 'crwAttendance')
+            ->withCount('crwPayrollBatchLines as total_crew')
+            ->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $CrwPayrollBatches, 200);
         }
@@ -37,7 +39,7 @@ class CrwPayrollBatchController extends Controller
         try {
             DB::transaction(function () use ($request)
             {
-                $crwPayrollBatchData = $request->only('ops_vessel_id', 'year_month', 'compensation_type', 'process_date', 'net_payment', 'currency', 'working_days', 'total_crew','business_unit');
+                $crwPayrollBatchData = $request->only('ops_vessel_id',  'crw_attendance_id', 'compensation_type', 'process_date', 'net_payment', 'currency', 'working_days', 'total_crew','business_unit');
                 $crwPayrollBatch     = CrwPayrollBatch::create($crwPayrollBatchData);
                 $crwPayrollBatch->crwPayrollBatchLines()->createMany($request->crwPayrollBatchLines);
 
@@ -79,6 +81,7 @@ class CrwPayrollBatchController extends Controller
         try {
             $crwPayrollBatchData = $crwPayrollBatch
             ->load('opsVessel:id,name', 
+            'crwAttendance', 
             'crwPayrollBatchHeads', 
             // 'crwPayrollBatchHeads.crwPayrollBatchHeadLines.crwCrew:id,full_name,pre_mobile_no', 
             'crwPayrollBatchHeadLines.crwCrew:id,full_name,pre_mobile_no',
@@ -105,7 +108,7 @@ class CrwPayrollBatchController extends Controller
         try {
             DB::transaction(function () use ($request, $crwPayrollBatch)
             {
-                $crwPayrollBatchData = $request->only('ops_vessel_id', 'year_month', 'compensation_type', 'process_date', 'net_payment', 'currency', 'working_days', 'total_crew','business_unit');
+                $crwPayrollBatchData = $request->only('ops_vessel_id',  'crw_attendance_id', 'compensation_type', 'process_date', 'net_payment', 'currency', 'working_days', 'total_crew','business_unit');
                 $crwPayrollBatch->update($crwPayrollBatchData);
 
                 $crwPayrollBatch->crwPayrollBatchLines()->delete();
@@ -135,6 +138,8 @@ class CrwPayrollBatchController extends Controller
                     }
                 }
             });
+
+            return response()->success('Updated Succesfully', [], 201);
         }
         catch (QueryException $e)
         {

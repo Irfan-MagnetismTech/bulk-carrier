@@ -15,11 +15,13 @@ return new class extends Migration
     {
         Schema::create('appraisal_form_line_items', function (Blueprint $table) {
             $table->id();
+            $table->string('item_no');            
             $table->unsignedBigInteger('appraisal_form_line_id');
             $table->foreign('appraisal_form_line_id', 'fk_appraisal_form_line_id')->references('id')->on('appraisal_form_lines')->cascadeOnDelete();            
             $table->string('aspect');
             $table->text('description')->nullable();
-            $table->enum('answer_type', ['Number', 'Boolean', 'Grade']);            
+            $table->enum('answer_type', ['Number', 'Boolean', 'Grade', 'Other']);
+            $table->string('item_composite')->nullable();
             $table->timestamps();
         });
     }

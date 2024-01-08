@@ -5,6 +5,7 @@ namespace Modules\Crew\Http\Controllers;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Crew\Entities\AppraisalForm;
 use Modules\Crew\Entities\CrwAgency;
 use Modules\Crew\Entities\CrwAgencyContract;
 use Modules\Crew\Entities\CrwAttendance;
@@ -184,6 +185,22 @@ class CrwCommonController extends Controller
         }
     }
 
+    public function getVesselMonthlyAttendances(Request $request)
+    {
+        try {
+            $vesselMonthlyAttendances = CrwAttendance::where('ops_vessel_id', $request->ops_vessel_id)
+            ->doesntHave('crwPayrollBatch')
+            ->orderBy('year_month')
+            ->get(); 
+
+            return response()->success('Retrieved Successfully', $vesselMonthlyAttendances, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }    
+
     /**
      * @param Request $request
      * @return mixed
@@ -192,8 +209,7 @@ class CrwCommonController extends Controller
     {
         try {
             $attendance = CrwAttendance::with('crwAttendanceLines.crwCrew:id,full_name,pre_mobile_no', 'crwAttendanceLines.crwSalaryStructure')
-                ->where('ops_vessel_id', $request->ops_vessel_id)
-                ->where('year_month', $request->year_month)
+                ->whereId($request->crw_attendance_id)
                 ->first();
 
             // return $attendance;
@@ -251,6 +267,23 @@ class CrwCommonController extends Controller
             ->get();
 
             return response()->success('Retrieved Successfully', $appraisalUndoneAssignments, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+    
+    public function getAppraisalForms()
+    {
+        try {
+            $appraisalForms = AppraisalForm::when(request()->business_unit != 'ALL', function ($q)
+            {
+                $q->where('business_unit', request()->business_unit);
+            })
+            ->get();
+             
+            return response()->success('Retrieved succesfully', $appraisalForms, 200);
         }
         catch (QueryException $e)
         {

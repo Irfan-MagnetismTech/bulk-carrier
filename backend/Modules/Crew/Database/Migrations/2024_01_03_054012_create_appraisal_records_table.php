@@ -15,8 +15,12 @@ return new class extends Migration
     {
         Schema::create('appraisal_records', function (Blueprint $table) {
             $table->id();
-			$table->foreignId('crw_crew_assignment_id')->constrained('crw_crew_assignments', 'id')->cascadeOnDelete();
-            
+			$table->unsignedBigInteger('crw_crew_id');
+			$table->unsignedBigInteger('appraisal_form_id');
+			$table->unsignedBigInteger('crw_crew_assignment_id');			
+			$table->date('appraisal_date');
+			$table->integer('age');
+			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
     }

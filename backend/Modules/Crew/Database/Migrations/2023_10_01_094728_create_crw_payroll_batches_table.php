@@ -16,14 +16,14 @@ return new class extends Migration
         Schema::create('crw_payroll_batches', function (Blueprint $table) {
             $table->id();
 			$table->unsignedBigInteger('ops_vessel_id');
-			$table->string('year_month');
+            $table->unsignedBigInteger('crw_attendance_id');
 			$table->string('compensation_type');
 			$table->date('process_date');
 			$table->decimal('net_payment', 16, 2);
 			$table->string('currency');
 			$table->integer('working_days');
 			$table->integer('total_crew');
-			$table->enum('business_unit', ['PSML', 'TSLL']);            
+			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
     }

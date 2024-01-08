@@ -232,6 +232,7 @@ export default function useCrewCommonApiRequest() {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
         } finally {
+            // loader.hide();
             isAppraisalUndoneAssignmentLoading.value = false;
         }
     }
