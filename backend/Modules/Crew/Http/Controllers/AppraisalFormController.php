@@ -50,7 +50,7 @@ class AppraisalFormController extends Controller
                     $lineItems = $request->appraisalFormLines[$key]['appraisalFormLineItems'];
 
                     $formatedLineItems = collect($lineItems)->map(function($lineItem) use ($appraisalForm, $appraisalFormLine) {
-                        $lineItem['item_composite'] = "F$appraisalForm->id-L$appraisalFormLine->section_no-I".$lineItem['item_no']; 
+                        $lineItem['item_composite'] = "F$appraisalForm->id-S$appraisalFormLine->section_no-I".$lineItem['item_no']; 
                         
                         return $lineItem;
                     });
@@ -107,7 +107,7 @@ class AppraisalFormController extends Controller
                     $lineItems = $request->appraisalFormLines[$key]['appraisalFormLineItems'];
 
                     $formatedLineItems = collect($lineItems)->map(function($lineItem) use ($appraisalForm, $appraisalFormLine) {
-                        $lineItem['item_composite'] = "F$appraisalForm->id-L$appraisalFormLine->section_no-I".$lineItem['item_no']; 
+                        $lineItem['item_composite'] = "F$appraisalForm->id-S$appraisalFormLine->section_no-I".$lineItem['item_no']; 
                         
                         return $lineItem;
                     });                    
