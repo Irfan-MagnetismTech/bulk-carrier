@@ -185,16 +185,16 @@
                               <input type="text" class="form-input"  v-model.trim="appraisalFormLineItem.comment" placeholder="Comment"  />
                             </td>
                             <td class="px-1 py-1">
-                              <template> {{ appraisalFormLineItem.marks = appraisalFormLineItem.marks ?? '' }} </template>
+                              <template> {{ appraisalFormLineItem.answer = appraisalFormLineItem.answer ?? '' }} </template>
                               <div v-if="appraisalFormLineItem.answer_type == 'Boolean'" class="">
-                                <select v-model.trim="appraisalFormLineItem.marks" class="form-input" required>
+                                <select v-model.trim="appraisalFormLineItem.answer" class="form-input" required>
                                   <option value="" disabled selected>Select</option>
                                   <option value="1">Yes</option>
                                   <option value="0">No</option>
                                 </select>
                               </div>
                               <div v-else-if="appraisalFormLineItem.answer_type == 'Number' || appraisalFormLineItem.answer_type == 'Grade'" >
-                                <select v-model.trim="appraisalFormLineItem.marks" class="form-input" required>
+                                <select v-model.trim="appraisalFormLineItem.answer" class="form-input" required>
                                   <option value="" disabled selected>Select</option>
                                   <option value="1">{{ appraisalFormLineItem.answer_type == 'Grade' ? 'Poor' : 1 }}</option>
                                   <option value="2">{{ appraisalFormLineItem.answer_type == 'Grade' ? 'Fair' : 2 }}</option>
@@ -220,16 +220,16 @@
                             {{ appraisalFormLineItemIndex+1 }}. {{ appraisalFormLineItem.aspect }}
                           </td>
                           <td class="border-none ">
-                            <template> {{ appraisalFormLineItem.marks = appraisalFormLineItem.marks ?? '' }} </template>
+                            <template> {{ appraisalFormLineItem.answer = appraisalFormLineItem.answer ?? '' }} </template>
                               <div v-if="appraisalFormLineItem.answer_type == 'Boolean'" class="">
-                                <select v-model.trim="appraisalFormLineItem.marks" class="form-input" required>
+                                <select v-model.trim="appraisalFormLineItem.answer" class="form-input" required>
                                   <option value="" disabled selected>Select</option>
                                   <option value="1">Yes</option>
                                   <option value="0">No</option>
                                 </select>
                               </div>
                               <div v-else-if="appraisalFormLineItem.answer_type == 'Number' || appraisalFormLineItem.answer_type == 'Grade'" >
-                                <select v-model.trim="appraisalFormLineItem.marks" class="form-input" required>
+                                <select v-model.trim="appraisalFormLineItem.answer" class="form-input" required>
                                   <option value="" disabled selected>Select</option>
                                   <option value="1">{{ appraisalFormLineItem.answer_type == 'Grade' ? 'Poor' : 1 }}</option>
                                   <option value="2">{{ appraisalFormLineItem.answer_type == 'Grade' ? 'Fair' : 2 }}</option>
