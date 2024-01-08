@@ -158,8 +158,8 @@ onMounted(() => {
         <Error v-if="errors?.transaction_date" :errors="errors.transaction_date" />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Instrument Type <span class="text-red-500">*</span></span>
-        <select class="label-item-input" v-model.trim="form.instrument_type" required>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Instrument Type</span>
+        <select class="label-item-input" v-model.trim="form.instrument_type">
           <option value="" selected disabled>Select Value</option>
           <option value="A/C Payee">A/C Payee</option>
           <option value="Cheque">Cheque</option>
@@ -172,21 +172,21 @@ onMounted(() => {
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="label-group">
-      <span class="label-item-title"> Instrument Number <span class="text-red-500">*</span></span>
-      <input type="text" class="label-item-input" placeholder="Cheque no." v-model.trim="form.instrument_no" required />
+      <span class="label-item-title">Instrument Number</span>
+      <input type="text" class="label-item-input" placeholder="Cheque no." v-model.trim="form.instrument_no" />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark-disabled:text-gray-300">Instrument Date <span class="text-red-500">*</span></span>
-      <input type="date" v-model.trim="form.instrument_date" class="form-input" autocomplete="off" required />
+      <span class="text-gray-700 dark-disabled:text-gray-300">Instrument Date</span>
+      <input type="date" v-model.trim="form.instrument_date" class="form-input" autocomplete="off" />
       <Error v-if="errors?.instrument_date" :errors="errors.instrument_date" />
     </label>
     <label class="label-group">
-      <span class="label-item-title"> Bill No. <span class="text-red-500">*</span></span>
-      <input type="text" class="label-item-input" placeholder="Bill no." v-model.trim="form.bill_no" required />
+      <span class="label-item-title"> Bill No.</span>
+      <input type="text" class="label-item-input" placeholder="Bill no." v-model.trim="form.bill_no" />
     </label>
     <label class="label-group">
-      <span class="label-item-title"> Instrument Amount <span class="text-red-500">*</span></span>
-      <input type="number" step=".01" class="label-item-input" placeholder="Instrument Amount" v-model.trim="form.instrument_amount" required />
+      <span class="label-item-title"> Instrument Amount</span>
+      <input type="number" step=".01" class="label-item-input" placeholder="Instrument Amount" v-model.trim="form.instrument_amount" />
     </label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -201,7 +201,7 @@ onMounted(() => {
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
         <th class="px-4 py-3 align-bottom w-[40%]">Accounts <span class="text-red-500">*</span></th>
-        <th class="px-4 py-3 align-bottom">Ref Bill <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 align-bottom">Ref Bill</th>
         <th class="px-4 py-3 align-bottom">Debit Amount <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Credit Amount <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Remarks</th>
@@ -219,7 +219,7 @@ onMounted(() => {
           </v-select>
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model.trim="form.ledgerEntries[index].ref_bill" placeholder="Ref bill" class="form-input" required autocomplete="off" />
+          <input type="text" v-model.trim="form.ledgerEntries[index].ref_bill" placeholder="Ref bill" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
           <input type="number" step=".01" v-model.trim="form.ledgerEntries[index].dr_amount" placeholder="Ex: 1500" required class="form-input" autocomplete="off" />

@@ -71,7 +71,7 @@ function fetchAccounts(search, loading) {
         </div>
         <div>
           <label for="">&nbsp;</label>
-          <button type="submit" :disabled="isLoading" class="w-full flex items-center justify-center px-2 mt-1 py-2 text-sm font-medium leading-2 text-white transition-colors duration-150 bg-[#0F6B61] border border-transparent rounded-lg active:bg-[#0F6B61] hover:bg-[#0F6B90] focus:outline-none focus:shadow-outline-purple">Submit</button>
+          <button type="submit" :disabled="isLoading" class="w-full flex items-center justify-center px-2 mt-1 py-2 text-sm font-medium leading-2 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Submit</button>
         </div>
       </fieldset>
     </div>
@@ -230,6 +230,9 @@ function fetchAccounts(search, loading) {
 
 table tr,td,th {
   border: 1px solid grey;
+}
+thead th{
+  @apply bg-green-600 text-white;
 }
 
 #close_tr td {

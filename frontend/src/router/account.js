@@ -217,7 +217,7 @@ export default [
     {
         path: `/${BASE}/loans/:loanId`,
         name: `${BASE}.loans.show`,
-        component: () => import(`../views/${BASE}/loan/show.vue`),
+        component: () => import(`../views/${VIEW_BASE}/loan/show.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
     
@@ -244,7 +244,7 @@ export default [
     {
         path: `/${BASE}/loan-received/:loanReceivedId`,
         name: `${BASE}.loan-received.show`,
-        component: () => import(`../views/${BASE}/loan-received/show.vue`),
+        component: () => import(`../views/${VIEW_BASE}/loan-received/show.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
     
@@ -271,7 +271,7 @@ export default [
     {
         path: `/${BASE}/fixed-assets/:fixedAssetId`,
         name: `${BASE}.fixed-assets.show`,
-        component: () => import(`../views/${BASE}/fixed-asset/show.vue`),
+        component: () => import(`../views/${VIEW_BASE}/fixed-asset/show.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
 
@@ -298,7 +298,7 @@ export default [
     {
         path: `/${BASE}/depreciations/:depreciationId`,
         name: `${BASE}.depreciations.show`,
-        component: () => import(`../views/${BASE}/depreciation/show.vue`),
+        component: () => import(`../views/${VIEW_BASE}/depreciation/show.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
     
@@ -325,7 +325,7 @@ export default [
     {
         path: `/${BASE}/cash-requisitions/:cashRequisitionId`,
         name: `${BASE}.cash-requisitions.show`,
-        component: () => import(`../views/${BASE}/cash-requisition/show.vue`),
+        component: () => import(`../views/${VIEW_BASE}/cash-requisition/show.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
 
@@ -416,6 +416,20 @@ export default [
         path: `/${BASE}/ais-reports/day-book`,
         name: `${BASE}.ais-reports.day-book`,
         component: () => import(`../views/${VIEW_BASE}/ais-report/day-book.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/ais-reports/fixed-asset-statement`,
+        name: `${BASE}.ais-reports.fixed-asset-statement`,
+        component: () => import(`../views/${VIEW_BASE}/ais-report/fixed-asset-statement.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/ais-reports/cost-center-summary`,
+        name: `${BASE}.ais-reports.cost-center-summary`,
+        component: () => import(`../views/${VIEW_BASE}/ais-report/cost-center-summary.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
         props: (route) => ({ page: parseInt(route.query.page) || 1 }),
     },

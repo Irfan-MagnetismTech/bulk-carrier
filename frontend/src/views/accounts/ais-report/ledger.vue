@@ -57,7 +57,7 @@ function fetchAccounts(search, loading) {
         </div>
         <div>
           <label for="">&nbsp;</label>
-          <button type="submit" :disabled="isLoading" class="w-full flex items-center justify-center px-2 mt-1 py-2 text-sm font-medium leading-2 text-white transition-colors duration-150 bg-[#0F6B61] border border-transparent rounded-lg active:bg-[#0F6B61] hover:bg-[#0F6B90] focus:outline-none focus:shadow-outline-purple">Submit</button>
+          <button type="submit" :disabled="isLoading" class="w-full flex items-center justify-center px-2 mt-1 py-2 text-sm font-medium leading-2 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Submit</button>
         </div>
       </fieldset>
     </div>
@@ -79,9 +79,9 @@ function fetchAccounts(search, loading) {
         </thead>
         <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
             <tr v-if="ledgers?.currentLedgers?.length" style="background-color: #369382;color: white" id="opening_tr">
-              <td colspan="5" class="text-gray-700 dark-disabled:text-gray-400 font-bold">Opening Balance</td>
-              <td class="text-gray-700 dark-disabled:text-gray-400 font-bold">{{ ledgers?.opening_dr_amount }}</td>
-              <td class="text-gray-700 dark-disabled:text-gray-400 font-bold">{{ ledgers?.opening_cr_amount }}</td>
+              <td colspan="5" class="text-gray-700 dark-disabled:text-gray-400 font-bold bg-green-600 text-white">Opening Balance</td>
+              <td class="text-gray-700 dark-disabled:text-gray-400 font-bold bg-green-600 text-white">{{ ledgers?.opening_dr_amount }}</td>
+              <td class="text-gray-700 dark-disabled:text-gray-400 font-bold bg-green-600 text-white">{{ ledgers?.opening_cr_amount }}</td>
             </tr>
             <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(ledgerData, index) in ledgers?.currentLedgers" :key="index"
                 :class="{'bg-white': index % 2 === 0, 'bg-gray-100': index % 2 !== 0}"
@@ -99,9 +99,9 @@ function fetchAccounts(search, loading) {
               <td class="text-sm"> {{ ledgerData?.cr_amount }} </td>
               </tr>
             <tr v-if="ledgers?.currentLedgers?.length" style="background-color: #369382;" id="close_tr">
-              <td colspan="5" class="text-gray-700 dark-disabled:text-gray-400 font-bold">Closing Balance</td>
-              <td class="text-gray-700 dark-disabled:text-gray-400 font-bold">{{ ledgers?.closing_dr_amount }}</td>
-              <td class="text-gray-700 dark-disabled:text-gray-400 font-bold">{{ ledgers?.closing_cr_amount }}</td>
+              <td colspan="5" class="text-gray-700 dark-disabled:text-gray-400 font-bold bg-green-600 text-white">Closing Balance</td>
+              <td class="text-gray-700 dark-disabled:text-gray-400 font-bold bg-green-600 text-white">{{ ledgers?.closing_dr_amount }}</td>
+              <td class="text-gray-700 dark-disabled:text-gray-400 font-bold bg-green-600 text-white">{{ ledgers?.closing_cr_amount }}</td>
             </tr>
         </tbody>
         <tfoot v-if="!ledgers?.currentLedgers?.length" class="bg-white dark-disabled:bg-gray-800">
