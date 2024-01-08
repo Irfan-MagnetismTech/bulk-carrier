@@ -275,6 +275,20 @@ export default [
                 permissionKey: '',
                 subSubMenu: [],
             },
+
+            
+            {
+                route: 'crw.appraisal-records.index',
+                label: 'Appraisal Records',
+                preIcon: '',
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: [],
+            },
+
+
         ]
     },
 ];
