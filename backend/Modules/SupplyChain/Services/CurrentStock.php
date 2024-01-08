@@ -7,7 +7,7 @@ use Modules\SupplyChain\Entities\ScmStockLedger;
 
 /**
  * @package Modules\SupplyChain\Services
- * 
+ *
  * @class-type Service
  */
 class CurrentStock
@@ -20,7 +20,7 @@ class CurrentStock
      * @param string|null $toDate (optional)
      * @return int
      */
-    public static function count($scm_material_id, $scm_warehouse_id, $toDate = null): int
+    public static function count(int $scm_material_id, int $scm_warehouse_id, string $toDate = null): int
     {
         $currentStock = ScmStockLedger::query()
             ->where([
@@ -35,7 +35,7 @@ class CurrentStock
         return (int) $currentStock;
     }
 
-    
+
     /**
      * Counts the stock in of a material in a warehouse.
      *
@@ -59,7 +59,7 @@ class CurrentStock
 
         return $currentStockIn;
     }
-    
+
     /**
      * Counts the stock out of a material from a warehouse.
      *
