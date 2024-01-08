@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Administration\Http\Controllers\UserController;
 use Modules\Operations\Http\Controllers\OpsBunkerReportController;
+use Modules\Operations\Http\Controllers\OpsVoyageReportController;
 use Modules\Operations\Http\Controllers\OpsExpenseReportController;
 
 /*
@@ -17,4 +19,6 @@ use Modules\Operations\Http\Controllers\OpsExpenseReportController;
 // Route::get('login', [UserController::class, 'index']);
 // Route::get('/test', fn()=> 'hi');
 Route::get('/', fn() => 'BG Torony - Magnetism Tech Limited');
+
+Route::get('bulk-voyage-report', [OpsVoyageReportController::class, 'bulkVoyageReport']);
 

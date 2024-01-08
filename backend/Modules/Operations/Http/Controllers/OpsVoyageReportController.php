@@ -272,4 +272,10 @@ class OpsVoyageReportController extends Controller
     }
     
 
+    public function bulkVoyageReport(Request $request) {
+        $start = date($request->start);
+        $end = date($request->end);
+
+        return view('operations::reports.bulk-voyage-report');
+    }
 }
