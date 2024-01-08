@@ -80,6 +80,7 @@ class OpsVoyageController extends Controller
                     return response()->json($error, 422);
                 }
             }
+            
 
             $schedules= [];
             foreach($request->opsVoyagePortSchedules as $key=>$schedule){
