@@ -361,37 +361,4 @@ class OpsBulkNoonReportController extends Controller
     }
 
 
-        /**
-     * Display the specified maritime certification.
-    *
-    * @param  OpsBulkNoonReport  $bulk_noon_report
-    * @return JsonResponse
-    */
-    public function showReport(Request $request)
-    {
-        // dd($request->all());
-        $bulk_noon_report= OpsBulkNoonReport::with(['opsVessel','opsVoyage','opsBunkers','opsBulkNoonReportPorts.lastPort','opsBulkNoonReportPorts.nextPort','opsBulkNoonReportCargoTanks','opsBulkNoonReportConsumptions.opsBulkNoonReportConsumptionHeads.scmMaterial','opsBulkNoonReportDistance','opsBulkNoonReportEngineInputs'])->where('id', request()->id)->latest()->first();
-
-        try
-        {
-            $bulk_noon_report->opsBulkNoonReportConsumptions->map(function($item) {
-                $item->name = $item->scmMaterial->name;
-
-                return $item;
-            });
-
-            // dd($bulk_noon_report);
-            $data= [
-                'bulk_noon_report'=> $bulk_noon_report,
-                'companyName' => 'TOGGI SHIPPING & LOGISTIC',
-            ];
-            return view('operations::reports.bulk-voyage-report',compact('data'));
-            return response()->success('Successfully retrieved bulk noon report.', $bulk_noon_report, 200);
-        }
-        catch (QueryException $e)
-        {
-            return response()->error($e->getMessage(), 500);
-        }
-
-    }
 }

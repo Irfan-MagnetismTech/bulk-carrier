@@ -161,7 +161,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     // start=2023-12-01&end=2023-12-31&business_unit=TSLL&ops_vessel_id=2
 
     // Route::get('lighter-voyage-report', [OpsVoyageReportController::class, 'voyageReport']);
-    // Route::get('bulk-voyage-report', [OpsVoyageReportController::class, 'bulkVoyageReport']);
+    Route::post('bulk-voyage-report', [OpsVoyageReportController::class, 'bulkVoyageReport']);
     Route::post('vessel-bunker-report', [OpsBunkerReportController::class, 'vesselBunkerReport']);
     // Route::get('gross-bunker-report', [OpsBunkerReportController::class, '']);
     Route::post('business-unit-wise-bunker-report', [OpsBunkerReportController::class, 'businessUnitWiseBunkerReport']);
