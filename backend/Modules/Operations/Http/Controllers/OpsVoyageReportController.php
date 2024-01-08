@@ -287,10 +287,20 @@ class OpsVoyageReportController extends Controller
                                 ->latest()
                                 ->first();
 
+        if (isset($bulk_noon_report)) {
+            $error= [
+                'message'=>'Report not found.',
+                'errors'=>[
+                    'type'=>['Report not found.',]
+                    ]
+                ];
+            return response()->json($error, 422);
+        }
+
         try
         {
-            $bulk_noon_report->opsBulkNoonReportConsumptions->map(function($item) {
-                $item->name = $item->scmMaterial->name;
+            $bulk_noon_report->opsBulkNoonReportConsumptions?->map(function($item) {
+                $item->name = $item->scmMaterial?->name;
 
                 return $item;
             });
