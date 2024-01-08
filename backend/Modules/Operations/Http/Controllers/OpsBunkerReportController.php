@@ -122,7 +122,7 @@ class OpsBunkerReportController extends Controller
     // }
 
 
-    public function vesselBunkerReport(Request $request)
+    public function vesselBunkerReportBackup(Request $request)
     {
 
         $business_unit = $request->business_unit;
