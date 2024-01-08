@@ -72,13 +72,17 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('search-mrr', [ScmMrrController::class, "searchMrr"])->name('searchMrr');
     Route::get('search-pr', [ScmPrController::class, "searchPr"])->name('searchPr');
     Route::get('search-purchase-requisitions', [ScmPrController::class, "searchPurchaseRequisitions"])->name('search-purchase-requisitions');
+    Route::get('get-po-line-datas', [ScmPoController::class, "getPoLineDatas"])->name('get-po-line-datas');
+    Route::get('cs-wise-vendor-list', [ScmCsController::class, "csWiseVendorList"])->name('cs-wise-vendor-list');
     Route::get('search-mmr', [ScmMmrController::class, "searchMmr"])->name('searchMmr');
     Route::get('search-mo', [ScmMoController::class, "searchMo"])->name('searchMo');
+    Route::get('search-material-cs', [ScmCsController::class, "searchMaterialCs"])->name('searchMaterialCs');
     Route::get('get-material-for-mrr', [ScmMrrController::class, "getMaterialByPrId"])->name('getMaterialForMrrId');
     Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse');
     Route::get('getCsData/{csId}', [ScmCsController::class, "getCsData"])->name('getCsData');
     Route::post('selected-supplier', [ScmCsController::class, "selectedSupplierstore"])->name('selectedSupplier.store');
-
+    //route close-pr
+    Route::post('close-pr', [ScmPrController::class, "closePr"])->name('closePr');
     //Business Info Apis
     Route::get('store-categories', fn () => config('businessinfo.store_category'));
     Route::get('product-types', fn () => config('businessinfo.product_type'));

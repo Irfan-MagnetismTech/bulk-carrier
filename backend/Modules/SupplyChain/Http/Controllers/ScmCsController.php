@@ -464,4 +464,47 @@ foreach ($request->scmCsMaterialVendors as $key => $values) {
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    public function searchMaterialCs(Request $request)
+    {
+        if (isset($request->searchParam)) {
+            $cs = ScmCs::query()
+                ->with('scmCsVendors','scmCsMaterials','scmCsMaterialVendors')
+                ->where(function ($query) use ($request) {
+                    $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+                        ->where('business_unit', $request->business_unit)
+                        ->where('scm_warehouse_id', $request->scm_warehouse_id)
+                        ->where('purchase_center', $request->purchase_center);
+                })
+                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        } else {
+            $cs = ScmCs::query()
+                ->with('scmCsVendors','scmCsMaterials','scmCsMaterialVendors')
+                ->where(function ($query) use ($request) {
+                    $query->where('business_unit', $request->business_unit)
+                    ->where('scm_warehouse_id', $request->scm_warehouse_id)
+                    ->where('purchase_center', $request->purchase_center);
+                })
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        }
+
+        return response()->success('Search result', $cs, 200);
+    }
+
+    public function csWiseVendorList(Request $request)
+    {
+        $csVendor = ScmCsVendor::query()
+            ->with('scmVendor')
+            ->where('scm_cs_id', $request->cs_id)
+            ->get()
+            ->map(function ($item) {
+                return $item->scmVendor;
+            });
+        return response()->success('Search result', $csVendor, 200);
+    }
 }

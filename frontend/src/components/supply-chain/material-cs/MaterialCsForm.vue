@@ -15,9 +15,6 @@
             class="form-input vms-readonly-input"
             name="ref_no"
             :id="'ref_no'" />
-         <Error
-            v-if="errors?.ref_no"
-            :errors="errors.ref_no" />
       </label>
   </div>
   <div class="input-group">
@@ -42,45 +39,6 @@
           :id="'expire_date'" />
     </label>
       <label class="label-group">
-          <span class="label-item-title">PR No<span class="text-red-500">*</span></span>
-            <!-- <v-select
-                :options="filteredStoreIssues"
-                placeholder="--Choose an option--"
-                @option:selected="setStoreIssueOtherData(form.scmSi)"
-                v-model="form.scmSi"
-                label="ref_no"
-                class="block form-input">
-                  <template #search="{attributes, events}">
-                      <input
-                          class="vs__search"
-                          :required="!form.scmSi"
-                          v-bind="attributes"
-                          v-on="events"
-                          />
-                  </template>
-              </v-select> -->
-              <input
-                type="text"
-                readonly
-                :value="form.scmPr?.ref_no"
-                required
-                class="form-input vms-readonly-input"
-                name="si_no"
-                :id="'si_no'" />
-      </label>
-      <!-- <label class="label-group">
-        <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-          <input
-            type="text"
-            readonly
-            :value="form?.scmWarehouse?.name"
-            required
-            class="form-input vms-readonly-input"
-            name="scmwarehouse_name"
-            :id="'scm_warehouse_id'" />
-         
-      </label>    -->
-      <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
           <!-- <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse" v-model="form.scmWarehouse" label="name" class="block form-input"> -->
           <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" class="block form-input" @update:modelValue="warehouseChange">
@@ -97,10 +55,24 @@
       </label>  
   </div>
   <div class="input-group">
-      <label class="label-group">
+      <!-- <label class="label-group">
         <span class="label-item-title">Cs Type <span class="text-red-500">*</span></span>
           <input type="text" readonly :value="form.purchase_center" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
-          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
+          <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> 
+      </label> -->
+
+      <label class="label-group">
+          <span class="label-item-title">Purchase Center <span class="text-red-500">*</span></span>
+          <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input" @update:modelValue="changePurchaseCenter">
+            <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.purchase_center"
+                    v-bind="attributes"
+                    v-on="events"
+                />  
+            </template>        
+          </v-select>
       </label>
       <label class="label-group">
         <span class="label-item-title">Prioity <span class="text-red-500">*</span></span>
@@ -131,14 +103,12 @@
 
   <div class="input-group !w-3/4">
     <label class="label-group">
-          <span class="label-item-title">Special instruction
+          <span class="label-item-title">Special Instruction
              <span class="text-red-500">*</span></span>
           <textarea
             v-model="form.special_instructions"
             class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
-          <Error
-            v-if="errors?.remarks"
-            :errors="errors.remarks" />
+        
     </label>
   </div>  
   <div id="customDataTable" ref="customDataTableirf" class="!min-w-screen"> 
@@ -421,15 +391,20 @@ onMounted(() => {
 
 onMounted(() => {
   watchEffect(() => {
-    searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id, null)
+    searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id,props.form.purchase_center, null)
     fetchWarehouse('');
   });
 });
 
+function changePurchaseCenter() {
+  // searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id,props.form.purchase_center, null)
+}
 function fetchWarehouse(search) {
     searchWarehouse(search, props.form.business_unit);
   }
 const DEPARTMENTS = ['N/A','Store Department', 'Engine Department', 'Provision Department'];
+const purchase_center = ['Local', 'Foreign', 'Plant'];
+
 </script>
 
 

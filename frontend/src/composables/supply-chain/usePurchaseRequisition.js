@@ -73,6 +73,12 @@ export default function usePurchaseRequisition() {
         store_category_name: ''
     });
 
+    const closingData = ref({
+        closing_date: null,
+        closing_remarks: null,
+        scm_pr_id: null,
+    });
+
     const errors = ref('');
     const isLoading = ref(false);
     const filterParams = ref(null);
@@ -205,20 +211,20 @@ export default function usePurchaseRequisition() {
         }
     }
 
-    async function searchPurchaseRequisition(searchParam, loading) {
-        isLoading.value = true;
+    // async function searchPurchaseRequisition(searchParam, loading) {
+    //     isLoading.value = true;
 
-        try {
-            const {data, status} = await Api.get(`/${BASE}/search-purchase-requisitions`,searchParam);
-            filteredPurchaseRequisitions.value = data.value;
-        } catch (error) {
-            const { data, status } = error.response;
-            notification.showError(status);
-        } finally {
-            loading(false)
-            isLoading.value = false;
-        }
-    }
+    //     try {
+    //         const {data, status} = await Api.get(`/${BASE}/search-purchase-requisitions`,searchParam);
+    //         filteredPurchaseRequisitions.value = data.value;
+    //     } catch (error) {
+    //         const { data, status } = error.response;
+    //         notification.showError(status);
+    //     } finally {
+    //         loading(false)
+    //         isLoading.value = false;
+    //     }
+    // }
 
     async function searchPr(business_unit, cost_center_id = null, searchParam = '') {
         //NProgress.start();
@@ -245,7 +251,7 @@ export default function usePurchaseRequisition() {
     }
 
 
-    async function searchPurchaseRequisition(business_unit, warehouse_id = null, searchParam = '') {
+    async function searchPurchaseRequisition(business_unit, warehouse_id = null,purchase_center = null, cs_id = null ,searchParam = null) {
         //NProgress.start();
         //const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -256,6 +262,8 @@ export default function usePurchaseRequisition() {
                     business_unit: business_unit,
                     searchParam: searchParam,
                     scm_warehouse_id: warehouse_id,
+                    purchase_center: purchase_center,
+                    cs_id: cs_id,
                 },
             });
             filteredPurchaseRequisitions.value = data.value;
@@ -310,6 +318,31 @@ export default function usePurchaseRequisition() {
 
     }
 
+    async function closePr(id,closing_remarks) {
+        try {
+            let formData = new FormData();
+            formData.append('id', id);
+            formData.append('closing_remarks', closing_remarks);
+
+            const { data, status } = await Api.post(`/${BASE}/close-pr`, formData);
+            notification.showSuccess(status);
+            await getPurchaseRequisitions(filterParams.value);
+        }
+        catch (error) {
+            if (error.response) {
+                const { data, status ,messege } = error.response;
+                console.log(data,error.response);
+                notification.showError(status);
+            } else {
+                notification.showError("An error occurred. Please check your internet connection.");
+            }
+
+        } finally {
+            // isLoading.value = false;
+        }
+
+    }
+
     return {
         purchaseRequisitions,
         purchaseRequisition,
@@ -324,6 +357,8 @@ export default function usePurchaseRequisition() {
         searchWarehouseWisePurchaseRequisition,
         materialObject,
         searchPr,
+        closePr,
+        closingData,
         excelExportData,
         isTableLoading,
         isLoading,

@@ -11,6 +11,7 @@ use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmPo;
 use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Entities\ScmCs;
+use Modules\SupplyChain\Entities\ScmCsMaterial;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Entities\ScmVendor;
@@ -339,5 +340,67 @@ class ScmPoController extends Controller
         }
 
         return response()->success('Search result', $scmPo, 200);
+    }
+
+
+    public function getPoLineDatas(Request $request): JsonResponse
+    {
+        try {
+            if($request->cs_id == null){
+                $scmPoLines = ScmPrLine::query()
+                ->with('scmMaterial')
+                ->where('scm_pr_id', $request->pr_id)
+                ->get()
+                ->map(function ($item) {
+                    $data = [
+                        'scm_material_id' => $item->scmMaterial->id,
+                        'scmMaterial' => $item->scmMaterial,
+                        'unit' => $item->scmMaterial->unit,
+                        'brand' => $item->brand,
+                        'model' => $item->model,
+                        'quantity' => $item->quantity,
+                        'pr_composite_key' => $item->pr_composite_key,
+                        'max_quantity' => $item->quantity - $item->scmPoLines->sum('quantity'),
+                        'rate' => 0,
+                        // 'total_price' => $item->total_price
+                    ];
+
+                    return $data;
+                });
+
+
+            }else{
+                $scmPoLines = ScmCsMaterial::query()
+                ->with([
+                    'scmWarehouse',
+                    'scmCsMaterialLines.scmMaterial',
+                ])
+                ->where('scm_cs_id', $request->cs_id)
+                ->where('scm_pr_id', $request->pr_id)
+                ->get()
+                ->map(function ($item) {
+                    $data = [
+                        'scm_material_id' => $item->scmMaterial->id,
+                        'scmMaterial' => $item->scmMaterial,
+                        'unit' => $item->scmMaterial->unit,
+                        'brand' => $item->brand,
+                        'model' => $item->model,
+                        'quantity' => $item->quantity,
+                        // 'pr_composite_key' => $item->scmCsMaterialLines->pr_composite_key,
+                        // 'max_quantity' => $item->scmCsMaterialLines->quantity - $item->scmCsMaterialLines->scmPoLines->sum('quantity'),
+                        // 'rate' => 0,
+                        // 'total_price' => $item->total_price
+                    ];
+
+                    return $data;
+                });
+
+
+            }
+
+            return response()->success('data', $data, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }

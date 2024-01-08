@@ -296,7 +296,6 @@
     const CSID = route.params.csId;
 
 watch(() => materialCs.value, (newVal, oldVal) => {
-  console.log(materialCs.value.scmCsMaterials);
       props.form.scmCs = newVal;
       props.form.scm_cs_id = newVal?.id;
 

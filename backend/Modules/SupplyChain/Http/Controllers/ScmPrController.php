@@ -267,19 +267,36 @@ class ScmPrController extends Controller
                 ->where(function ($query) use ($request) {
                     $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
                         ->where('business_unit', $request->business_unit)
-                        ->where('scm_warehouse_id', $request->scm_warehouse_id);
+                        ->where('scm_warehouse_id', $request->scm_warehouse_id)
+                        ->where('purchase_center', $request->purchase_center);
                 })
                 // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
                 // ->limit(10)
                 ->get();
-        } else {
+        } elseif(isset($request->cs_id)) {
             $purchase_requisition = ScmPr::query()
                 ->with('scmPrLines')
                 ->where(function ($query) use ($request) {
                     $query->where('business_unit', $request->business_unit)
-                        ->where('scm_warehouse_id', $request->scm_warehouse_id);
+                    ->where('scm_warehouse_id', $request->scm_warehouse_id)
+                    ->where('purchase_center', $request->purchase_center);
                 })
+                ->whereHas('scmCsMaterial', function ($query) use ($request) {
+                    $query->where('scm_cs_id', $request->cs_id);
+                })
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        }else{
+            $purchase_requisition = ScmPr::query()
+                ->with('scmPrLines')
+                ->where(function ($query) use ($request) {
+                    $query->where('business_unit', $request->business_unit)
+                        ->where('scm_warehouse_id', $request->scm_warehouse_id)
+                        ->where('purchase_center', $request->purchase_center);
+                })
+                ->whereDoesntHave('scmCsMaterial')
                 ->orderByDesc('ref_no')
                 // ->limit(10)
                 ->get();
@@ -385,4 +402,21 @@ class ScmPrController extends Controller
 
     //     return response()->success('Search Result', $materialReceiptReport, 200);
     // }
+
+
+    public function closePr(Request $request): JsonResponse
+    {
+        try {
+            $pr = ScmPr::find($request->id);
+            $pr->update([
+                'is_closed' => 1,
+                'closed_by' => auth()->user()->id,
+                'closed_at' => now(),
+                'closing_remarks' => $request->closing_remarks,
+            ]);
+            return response()->success('Data updated sucessfully!', $pr, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }

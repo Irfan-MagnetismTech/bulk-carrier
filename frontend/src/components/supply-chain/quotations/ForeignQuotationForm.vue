@@ -339,7 +339,7 @@
     import DropZoneV2 from '../../DropZoneV2.vue';
     import {useStore} from "vuex";
     import env from '../../../config/env';
-    import { merge ,cloneDeep} from 'lodash';
+    import { merge ,cloneDeep,groupBy,first, values} from 'lodash';
     import useStoreIssue from '../../../composables/supply-chain/useStoreIssue';
     import useStoreIssueReturn from '../../../composables/supply-chain/useStoreIssueReturn';
     import useVendor from '../../../composables/supply-chain/useVendor';
@@ -349,7 +349,7 @@
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
     const { searchVendor, vendors, vendor, isLoading: vendorLoading } = useVendor();
-    const { materialCs, showMaterialCs } = useMaterialCs();
+    const { materialCs, showMaterialCs,getCsData } = useMaterialCs();
     const props = defineProps({
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
@@ -415,7 +415,9 @@
       if (props.formType != 'edit') {
         props.form.scmCsMaterialVendors = [];
         materialCs.value.scmCsMaterials.map((lines, index) => {
+          console.log(lines);
           lines.map((line, index) => {
+            console.log(line);
             line['negotiated_price'] = '';
             line['brand'] = '';
             line['model'] = '';
@@ -566,7 +568,7 @@ onMounted(() => {
   searchVendor('');
   searchMaterial('');
   props.form.payment_method = 'LC';
-  showMaterialCs(CSID);
+  getCsData(CSID);
 });
 
 const DEPARTMENTS = ['N/A','Store Department', 'Engine Department', 'Provision Department'];

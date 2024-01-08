@@ -315,6 +315,25 @@ export default function usePurchaseOrder() {
         }
     }
 
+    async function getLineData(prId, csId = null) { 
+        isLoading.value = true;
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-po-line-datas`,{
+                params: {
+                    pr_id: prId,
+                    cs_id: csId,
+                },
+            });
+            return data.value;  
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            isLoading.value = false;
+        }
+    }
+        
+
     return {
         purchaseOrders,
         purchaseOrder,
@@ -329,6 +348,7 @@ export default function usePurchaseOrder() {
         searchPurchaseOrderForLc,
         getMaterialList,
         prMaterialList,
+        getLineData,
         materialObject,
         poLineObject,
         termsObject,
