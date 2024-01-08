@@ -77,7 +77,6 @@ class AppraisalFormController extends Controller
     public function show(AppraisalForm $appraisalForm)
     {
         try {
-
             return response()->success('Retrieved succesfully', $appraisalForm->load('appraisalFormLines.appraisalFormLineItems'), 200);
         }
         catch (QueryException $e)

@@ -37,17 +37,18 @@ class AppraisalRecordController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());        
+        // dd($request->all());
         try {
             DB::transaction(function () use ($request)
             {
-                $appraisalRecordData = $request->only('crw_crew_id', 'appraisal_form_id', 'crw_crew_assignment_id', 'appraisal_date', 'age', 'business_unit');
-                $appraisalFormLineItems = collect($request->appraisalRecordLines)->pluck('appraisalFormLineItems')->collapse(); 
-                
-                $appraisalRecord     = AppraisalRecord::create($appraisalRecordData);
+                $appraisalRecordData    = $request->only('crw_crew_id', 'appraisal_form_id', 'crw_crew_assignment_id', 'appraisal_date', 'age', 'business_unit');
+                $appraisalFormLineItems = collect($request->appraisalRecordLines)->pluck('appraisalFormLineItems')->collapse();
+
+                $appraisalRecord = AppraisalRecord::create($appraisalRecordData);
                 $appraisalRecord->appraisalRecordLines()->createMany($appraisalFormLineItems);
 
             });
+
             return response()->success('Created Successfully', '', 201);
         }
         catch (QueryException $e)
@@ -65,7 +66,42 @@ class AppraisalRecordController extends Controller
     public function show(AppraisalRecord $appraisalRecord)
     {
         try {
-            return response()->success('Retrieved Successfully', $appraisalRecord->load('appraisalRecordLines.appraisalFormLineItem'), 200);
+            $appraisalRecord->load('crwCrew', 'appraisalForm', 'crwCrewAssignment', 'appraisalRecordLines.appraisalFormLineItem.appraisalFormLine');
+
+            $formattedSections = $appraisalRecord->appraisalRecordLines->groupBy('appraisalFormLineItem.appraisalFormLine.section_no');
+            
+            unset($appraisalRecord->appraisalRecordLines);
+
+            $appraisalRecord['appraisalRecordLines'] = $formattedSections->map(function ($formattedSection, $key)
+            {
+                $section      = $formattedSection->first()->appraisalFormLineItem->appraisalFormLine;
+                $sectionItems = $formattedSection->pluck('appraisalFormLineItem');
+
+                $formattedSection = [
+                    'section_no'             => $section->section_no,
+                    'section_name'           => $section->section_name,
+                    'is_tabular'             => $section->is_tabular,
+                    'appraisalFormLineItems' => $sectionItems->map(function ($appraisalFormLineItem, $key) use ($formattedSection)
+                    {
+                        $appraisalFormLineItem = [
+                            'appraisal_form_line_id' => $appraisalFormLineItem->appraisal_form_line_id,
+                            'item_no'                => $appraisalFormLineItem->item_no,
+                            'aspect'                 => $appraisalFormLineItem->aspect,
+                            'item_composite'         => $appraisalFormLineItem->item_composite,
+                            'description'            => $appraisalFormLineItem->description,
+                            'answer_type'            => $appraisalFormLineItem->answer_type,
+                            'comment'                => $formattedSection[$key]->comment,
+                            'answer'                 => $formattedSection[$key]->answer,
+                        ];
+
+                        return $appraisalFormLineItem;
+                    }),
+                ];
+
+                return $formattedSection;
+            })->values();        
+
+            return response()->success('Retrieved Successfully', $appraisalRecord, 200);
         }
         catch (QueryException $e)
         {
@@ -81,7 +117,7 @@ class AppraisalRecordController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(AppraisalRecordRequest $request, AppraisalRecord $appraisalRecord)
-    {        
+    {
         try {
             DB::transaction(function () use ($request, $appraisalRecord)
             {
@@ -90,7 +126,7 @@ class AppraisalRecordController extends Controller
                 $appraisalRecord->appraisalRecordLines()->delete();
                 $appraisalRecord->appraisalRecordLines()->createMany($request->appraisalRecordLines);
             });
-            
+
             return response()->success('Updated Successfully', '', 202);
         }
         catch (QueryException $e)
