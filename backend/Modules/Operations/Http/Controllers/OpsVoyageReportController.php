@@ -273,8 +273,9 @@ class OpsVoyageReportController extends Controller
     
 
     public function bulkVoyageReport(Request $request) {
-        $start = date($request->start);
-        $end = date($request->end);
+        $type = $request->type;
+        $ops_voyage_id = $request->ops_voyage_id;
+        $ops_vessel_id = $request->ops_vessel_id;
 
         return view('operations::reports.bulk-voyage-report');
     }
