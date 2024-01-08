@@ -27,6 +27,10 @@ watch(() => form.value.ops_vessel_id, (value) => {
 
 }, { deep: true })
 
+watch(() => form.value.type, (value) => {
+  bulkVoyageReport.value = '';
+}, { deep: true })
+
 
 function getReport() {
   getBulkVoyageReport(form.value)
@@ -92,7 +96,7 @@ onMounted(() => {
 
   <div v-if="bulkVoyageReport != ''" class="mb-5">
     <h4 class="text-center text-xl font-semibold my-4">
-      Report for {{ form.port }}
+      {{ form.type }}
     </h4>
     <div v-html="bulkVoyageReport"></div>
   </div>

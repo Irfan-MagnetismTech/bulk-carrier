@@ -44,6 +44,7 @@ watch(() => form.value.business_unit, (value) => {
 
 
 function getReport() {
+  vesselBunkerReport.value = '';
   getVesselBunkerReport(form.value)
 }
 </script>

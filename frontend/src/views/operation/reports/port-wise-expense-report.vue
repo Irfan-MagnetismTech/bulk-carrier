@@ -37,6 +37,7 @@ function fetchPorts(search, loading) {
 }
 
 function getReport() {
+  operationsReport.value = '';
   portWiseExpenseReport(form.value)
 }
 </script>

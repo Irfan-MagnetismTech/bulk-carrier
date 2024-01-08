@@ -22,6 +22,7 @@ watch(() => form.value.port, (value) => {
 
 
 function getReport() {
+  lighterVoyageReport.value = '';
   getLighterVoyageReport(form.value)
 }
 </script>
