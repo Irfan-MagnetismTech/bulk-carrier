@@ -15,7 +15,4 @@ class AppraisalRecord extends Model
 		return $this->hasMany(AppraisalRecordLine::class);
 	}
 
-	public function appraisalFormLineItem(){
-		return $this->belongsTo(AppraisalFormLineItem::class, 'line_item_composite', 'line_item_composite');
-	}
 }

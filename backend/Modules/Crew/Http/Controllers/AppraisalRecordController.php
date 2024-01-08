@@ -35,14 +35,17 @@ class AppraisalRecordController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(AppraisalRecordRequest $request)
+    public function store(Request $request)
     {
+        // dd($request->all());        
         try {
             DB::transaction(function () use ($request)
             {
                 $appraisalRecordData = $request->only('crw_crew_id', 'appraisal_form_id', 'crw_crew_assignment_id', 'appraisal_date', 'age', 'business_unit');
+                $appraisalFormLineItems = collect($request->appraisalRecordLines)->pluck('appraisalFormLineItems')->collapse(); 
+                
                 $appraisalRecord     = AppraisalRecord::create($appraisalRecordData);
-                $appraisalRecord->appraisalRecordLines()->createMany($request->appraisalRecordLines);
+                $appraisalRecord->appraisalRecordLines()->createMany($appraisalFormLineItems);
 
             });
             return response()->success('Created Successfully', '', 201);
@@ -62,7 +65,7 @@ class AppraisalRecordController extends Controller
     public function show(AppraisalRecord $appraisalRecord)
     {
         try {
-            return response()->success('Retrieved Successfully', $appraisalRecord->load('appraisalRecordLines'), 200);
+            return response()->success('Retrieved Successfully', $appraisalRecord->load('appraisalRecordLines.appraisalFormLineItem'), 200);
         }
         catch (QueryException $e)
         {

@@ -45,10 +45,17 @@ class AppraisalFormController extends Controller
                 $appraisalFormData = $request->only('form_no', 'form_name', 'version', 'description', 'business_unit');
                 $appraisalForm     = AppraisalForm::create($appraisalFormData);
 
-                $appraisalForm->appraisalFormLines()->createMany($request->appraisalFormLines)->map(function ($appraisalFormLine, $key) use ($request)
+                $appraisalForm->appraisalFormLines()->createMany($request->appraisalFormLines)->map(function ($appraisalFormLine, $key) use ($request, $appraisalForm)
                 {
                     $lineItems = $request->appraisalFormLines[$key]['appraisalFormLineItems'];
-                    $appraisalFormLine->appraisalFormLineItems()->createMany($lineItems);
+
+                    $formatedLineItems = collect($lineItems)->map(function($lineItem) use ($appraisalForm, $appraisalFormLine) {
+                        $lineItem['item_composite'] = "F$appraisalForm->id-L$appraisalFormLine->section_no-I".$lineItem['item_no']; 
+                        
+                        return $lineItem;
+                    });
+
+                    $appraisalFormLine->appraisalFormLineItems()->createMany($formatedLineItems);
                 });
 
             });
@@ -95,10 +102,16 @@ class AppraisalFormController extends Controller
                 $appraisalForm->update($appraisalFormData);
                 $appraisalForm->appraisalFormLines()->delete(); 
 
-                $appraisalForm->appraisalFormLines()->createMany($request->appraisalFormLines)->map(function ($appraisalFormLine, $key) use ($request)
+                $appraisalForm->appraisalFormLines()->createMany($request->appraisalFormLines)->map(function ($appraisalFormLine, $key) use ($request, $appraisalForm)
                 {
                     $lineItems = $request->appraisalFormLines[$key]['appraisalFormLineItems'];
-                    $appraisalFormLine->appraisalFormLineItems()->createMany($lineItems);
+
+                    $formatedLineItems = collect($lineItems)->map(function($lineItem) use ($appraisalForm, $appraisalFormLine) {
+                        $lineItem['item_composite'] = "F$appraisalForm->id-L$appraisalFormLine->section_no-I".$lineItem['item_no']; 
+                        
+                        return $lineItem;
+                    });                    
+                    $appraisalFormLine->appraisalFormLineItems()->createMany($formatedLineItems);
                 });
 
             });
