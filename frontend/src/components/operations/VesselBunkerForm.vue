@@ -210,16 +210,16 @@ onMounted(() => {
         </select>
       </label>
       <label v-if="form.type != ''" class="block w-full mt-2 text-sm">
-        <span class="text-gray-700">Consumption Type <span class="text-red-500">*</span></span>
+        <span class="text-gray-700">{{ form.type }} Type <span class="text-red-500">*</span></span>
         <select v-model="form.usage_type" class="form-input" required>
           <option disabled selected value="">Select Option</option>
           <option value="Idle">Idle</option>
           <option value="Voyage Wise">Voyage Wise</option>
         </select>
       </label>
-      <label v-if="form.type=='Reconciliation'" class="block w-full mt-2 text-sm"></label>
+      <!-- <label v-if="form.type=='Reconciliation'" class="block w-full mt-2 text-sm"></label> -->
       <label class="block w-full mt-2 text-sm" v-if="form.type=='Reconciliation'">
-        <span class="text-gray-700">Type <span class="text-red-500">*</span></span>
+        <span class="text-gray-700">Reconfiliation Option <span class="text-red-500">*</span></span>
         <select v-model="form.reconciliation_type" class="form-input" required>
           <option disabled selected value="">Select Option</option>
           <option value="Addition">Addition</option>

@@ -134,6 +134,8 @@ class OpsBunkerReportController extends Controller
             ->with('opsVessel', 'opsVoyage', 'stockable')
             ->whereBetween('date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
             ->get();
+
+        $vesselBunkers = $vesselBunkers->groupBy('ops_voyage_id');
             
         // dd($output[37]->groupBy('type'));
         $scm_warehouse_id = ScmWarehouse::where('ops_vessel_id', $ops_vessel_id)->first()->id;
@@ -148,6 +150,11 @@ class OpsBunkerReportController extends Controller
         // dd($vesselBunkers);
 
         // $scm_material_id, $scm_warehouse_id, $toDate = null
+
+        return view('operations::reports.single-vessel-bunker-report')->with([
+            'allBunkers' => $allBunkers,
+            'stockRecords' => $vesselBunkers
+        ]);
 
         $view = view('operations::reports.single-vessel-bunker-report')->with([
             'allBunkers' => $allBunkers,
