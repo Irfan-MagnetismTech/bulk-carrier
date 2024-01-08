@@ -56,7 +56,7 @@
 
     <table class="table_css">
         <tbody>
-            <h2 style="margin-bottom: 5px; margin-top: 10px; font-size:20px; font:bold;">Basic Information</h2>
+            <h2 style="margin-bottom: -2px; margin-top: 10px; font-size:20px; font:bold;">Basic Information</h2>
             <tr>
                 <th colspan="2">Business Unit</th>
                 <td colspan="8">{{ $data['bulk_noon_report']->business_unit}}</td>
@@ -111,7 +111,7 @@
     <table style="margin-top: 12px" class="table_css">
         <tbody>
             @if(count($data['bulk_noon_report']->opsBulkNoonReportPorts))
-                <h2 style="margin-bottom: 5px; margin-top: 10px; font-size:20px; font:bold;">Upcoming Port</h2>
+                <h2 style="margin-bottom: -10px; margin-top: 10px; font-size:20px; font:bold;">Upcoming Port</h2>
                 @foreach($data['bulk_noon_report']->opsBulkNoonReportPorts as $port)
                     <tr>
                         <th colspan="2">Last Port:</th>
@@ -139,7 +139,7 @@
     <table style="margin-top: 12px" class="table_css">
         <tbody>
             @if(isset($data['bulk_noon_report']->opsBulkNoonReportDistance))
-                <h2 style="margin-bottom: 5px; margin-top: 10px; font-size:20px; font:bold;">Distance and Vessel</h2>
+                <h2 style="margin-bottom: -10px; margin-top: 10px; font-size:20px; font:bold;">Distance and Vessel</h2>
                 <tr>
                     <th>CP/Ordered Speed:</th>
                     <td>{{ $data['bulk_noon_report']->opsBulkNoonReportDistance->cp_ordered_speed }}</td>
@@ -223,7 +223,7 @@
     </table>
     @if(count($data['bulk_noon_report']->opsBulkNoonReportConsumptions))
         <table style="margin-top: 12px" class="sub_table_css">
-            <h2 style="margin-bottom: 5px; margin-top: 10px; font-size:20px; font:bold;">Bunker Consumptions</h2>
+            <h2 style="margin-bottom: -10px; margin-top: 10px; font-size:20px; font:bold;">Bunker Consumptions</h2>
             <tr>
                 <th class="w-40">Type</th>
                 <th class="w-40">Previous ROB</th>
@@ -246,7 +246,7 @@
     @endif
     @if(count($data['bulk_noon_report']->opsBulkNoonReportEngineInputs))
         <table style="margin-top: 12px" class="sub_table_css">
-            <h2 style="margin-bottom: 5px; margin-top: 10px; font-size:20px; font:bold;">Engine Info</h2>
+            <h2 style="margin-bottom: -10px; margin-top: 10px; font-size:20px; font:bold;">Engine Info</h2>
             <tr>
                 <th class="w-40">Unit </th>
                 <th class="w-40">PCO</th>
