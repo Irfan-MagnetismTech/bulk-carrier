@@ -8,7 +8,7 @@ import useVoyage from "../../../composables/operations/useVoyage";
 import useVessel from "../../../composables/operations/useVessel";
 
 
-const { bulkVoyageReport, isLoading, getBulkVoyageReport } = useOperationsReport();
+const { bulkVoyageReport, isLoading, getBulkVoyageReport, errors } = useOperationsReport();
 const icons = useHeroIcon();
 const { voyage, voyages, showVoyage, getVoyageList,searchVoyages } = useVoyage();
 const { vessel, vessels, getVesselList, showVessel } = useVessel();

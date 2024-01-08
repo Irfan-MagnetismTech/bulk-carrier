@@ -287,7 +287,7 @@ class OpsVoyageReportController extends Controller
                                 ->latest()
                                 ->first();
 
-        if (isset($bulk_noon_report)) {
+        if (empty($bulk_noon_report)) {
             $error= [
                 'message'=>'Report not found.',
                 'errors'=>[
