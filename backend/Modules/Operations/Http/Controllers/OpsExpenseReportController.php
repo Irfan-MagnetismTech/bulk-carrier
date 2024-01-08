@@ -7,10 +7,14 @@ use Illuminate\Support\Carbon;
 use Illuminate\Routing\Controller;
 use Modules\Operations\Entities\OpsVoyage;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Facades\DB;
 use Modules\Operations\Entities\OpsExpenseHead;
 use Modules\Operations\Entities\OpsVessel;
 use Modules\Operations\Entities\OpsVesselExpenseHead;
 use Modules\Operations\Entities\OpsVoyageExpenditureEntry;
+use Modules\Operations\Services\OpsVesselBunkerService;
+use Modules\SupplyChain\Services\CurrentStock;
+use Modules\SupplyChain\Services\StockLedgerData;
 
 class OpsExpenseReportController extends Controller
 {
@@ -167,5 +171,5 @@ class OpsExpenseReportController extends Controller
         // return Excel::download(new VoyageExpenditure($heads, $filteredVoyage), 'voyage_expenditure_report.xlsx');
     }
 
-
+    
 }
