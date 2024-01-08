@@ -110,7 +110,6 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Material",
-      "filter_type": "input"
     },
     {
       "relation_name": "scmWarehouse",
@@ -292,7 +291,7 @@ function confirmDelete(id) {
               <td>{{ purchaseRequisition?.purchase_center }}</td>
               <td style="text-align: left !important;">
                 <span v-for="(line,index) in purchaseRequisition?.scmPrLines" :key="index" class="text-xs mr-2 mb-2 inline-block py-1 px-2.5 leading-none whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded">
-                  {{ line?.scmMaterial?.name ?? '' }}
+                  {{ line?.material_name_quantity_unit ?? '' }}
                 </span>
               </td>
               <td>{{ purchaseRequisition?.scmWarehouse?.name?? '' }}</td>

@@ -19,6 +19,8 @@ class ScmPrLine extends Model
         'scm_pr_id', 'scm_material_id', 'unit', 'brand', 'model',  'country_id', 'country_name', 'sample_file', 'drawing_no', 'part_no', 'specification', 'quantity', 'required_date', 'pr_composite_key',
     ];
 
+    protected $appends = ['material_name_quantity_unit'];
+
     public function scmPr(): BelongsTo
     {
         return $this->belongsTo(ScmPr::class);
@@ -43,4 +45,10 @@ class ScmPrLine extends Model
     {
         return $this->hasMany(ScmMrrLine::class, 'pr_composite_key', 'pr_composite_key');
     }
+
+    public function getMaterialNameQuantityUnitAttribute()
+    {
+        return $this->scmMaterial->name . ' - ' . $this->quantity . ' - ' . $this->unit;
+    }
+
 }
