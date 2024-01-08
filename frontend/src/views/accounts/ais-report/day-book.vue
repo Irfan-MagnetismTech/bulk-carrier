@@ -3,9 +3,13 @@ import useTransaction from '../../../composables/accounts/useTransaction';
 import Title from "../../../services/title";
 import { ref } from "vue";
 import useAisReport from "../../../composables/accounts/useAisReport";
+import Store from "../../../store";
+import useAccountCommonApiRequest from "../../../composables/accounts/useAccountCommonApiRequest";
 
 const { dayBooks, getDayBooks, isLoading} = useAisReport();
-const { bgColor, allAccount, getAccount } = useTransaction();
+const { bgColor, allAccount } = useTransaction();
+const { allAccountLists, getAccount } = useAccountCommonApiRequest();
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const { setTitle } = Title();
 
@@ -22,7 +26,7 @@ function fetchAccounts(search, loading) {
   if(search.length < 3) {
     return;
   } else {
-    getAccount(search, loading);
+    getAccount(search, businessUnit.value, loading);
   }
 }
 </script>
@@ -36,7 +40,7 @@ function fetchAccounts(search, loading) {
         <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Search Day Book</legend>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">Account</label>
-          <v-select :options="allAccount" placeholder="--Choose an option--" @search="fetchAccounts"  v-model="searchParams.account_id" label="account_name" :reduce="allAccount=> allAccount.account_id" class="block w-full rounded form-input"></v-select>
+          <v-select :options="allAccountLists" placeholder="--Choose an option--" @search="fetchAccounts"  v-model="searchParams.account_id" label="account_name" :reduce="allAccountLists=> allAccountLists.acc_account_id" class="block w-full rounded form-input"></v-select>
         </div>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">From Date <span class="text-red-500">*</span></label>
