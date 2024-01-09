@@ -319,6 +319,9 @@ import { formatDate } from "../../utils/helper";
 
   const crewProfileChange = () => {
     props.form.crw_crew_id = props.form.crw_crew_profile?.id;
+
+    props.form.crw_crew_assignment = null;
+    props.form.crw_crew_assignment_id = null;
     
     if(props.form.crw_crew_id){
         getAppraisalUndoneAssignments(props.form.crw_crew_id);

@@ -4,32 +4,33 @@ import { useRoute } from 'vue-router';
 import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
-import useAppraisalForm from '../../../composables/crew/useAppraisalForm';
+import useAppraisalRecord from '../../../composables/crew/useAppraisalRecord';
+import { formatDate } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 
 const route = useRoute();
-const appraisalFormId = route.params.appraisalFormId;
-const { appraisalForm, showAppraisalForm, errors } = useAppraisalForm();
+const appraisalRecordId = route.params.appraisalRecordId;
+const { appraisalRecord, showAppraisalRecord, errors } = useAppraisalRecord();
 
 const { setTitle } = Title();
 
-setTitle('Appraisal Form Details');
+setTitle('Appraisal Record Details');
 
 onMounted(() => {
-  showAppraisalForm(appraisalFormId);
+  showAppraisalRecord(appraisalRecordId);
 });
 </script>
 
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Appraisal Form Details</h2>
-    <default-button :title="'Appraisal Form List'" :to="{ name: 'crw.appraisal-forms.index' }" :icon="icons.DataBase"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Appraisal Record Details</h2>
+    <default-button :title="'Appraisal Record List'" :to="{ name: 'crw.appraisal-records.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
       <div class="flex md:gap-4">
         <div class="w-full">
-          <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Appraisal Form Information</h2>
+          <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Appraisal Record Information</h2>
           <table class="w-full">
             <!-- <thead>
             <tr>
@@ -39,103 +40,108 @@ onMounted(() => {
             <tbody>
               <tr>
                 <th class="w-40">Business Unit</th>
-                <td><span :class="appraisalForm?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ appraisalForm?.business_unit }}</span></td>
+                <td><span :class="appraisalRecord?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ appraisalRecord?.business_unit }}</span></td>
               </tr>
              <tr>
-                <th class="w-40">Form No</th>
-                <td>{{ appraisalForm?.form_no }}</td>
+                <th class="w-40">Crew</th>
+                <td>{{ appraisalRecord?.crwCrew?.full_name }}</td>
               </tr>
+              
              <tr>
-                <th class="w-40">Form Name</th>
-                <td>{{ appraisalForm?.form_name }}</td>
+                <th class="w-40">Contact No</th>
+                <td>{{ appraisalRecord?.crwCrew?.pre_mobile_no }}</td>
               </tr>
+
              <tr>
-                <th class="w-40">Version</th>
-                <td>{{ appraisalForm?.version }}</td>
+                <th class="w-40">Age</th>
+                <td>{{ appraisalRecord?.age }}</td>
+              </tr>
+              <tr>
+                <th class="w-40">Passport No</th>
+                <td>{{ appraisalRecord?.crwCrew?.passport_no }}</td>
               </tr>
 
               
-             <tr>
-                <th class="w-40">Description</th>
-                <td>{{ appraisalForm?.description }}</td>
-              </tr>
-              <tr >
-                <td colspan="2">
-                  <table class=" w-full ">
-                    <thead>
-                      <tr class="bg-gray-300 text-black-700">
-                        <th colspan="5" class="text-center">Form Preview</th>
-                      </tr>
-                      <tr class="bg-gray-300 text-black-700">
-                        <th class="text-center w-1/5">Section No</th>
-                        <th class="text-center w-1/5">Section Name</th>
-                        <th class="text-center w-1/5">Aspect</th>
-                        <th class="text-center w-1/5">Description</th>
-                        <th class="text-center w-1/5">Answer Type</th>
-                      </tr>
-                    </thead>
-                        <tbody class="">
-
-
-                          <template v-for="(appraisalFormLine, index) in appraisalForm?.appraisalFormLines" :key="index">
-                            
-                            <tr v-for="(appraisalFormLineItem, appraisalFormLineItemIndex) in appraisalFormLine?.appraisalFormLineItems" :key="appraisalFormLineItemIndex">
-                              <td v-if="appraisalFormLineItemIndex == 0" :rowspan="appraisalFormLine?.appraisalFormLineItems?.length ?? 1">{{ appraisalFormLine?.section_no }}</td>
-                              <td v-if="appraisalFormLineItemIndex == 0" :rowspan="appraisalFormLine?.appraisalFormLineItems?.length ?? 1">{{ appraisalFormLine?.section_name }}</td>
-                              <td>{{ appraisalFormLineItem?.aspect }}</td>
-                              <td>{{ appraisalFormLineItem?.description }}</td>
-                              <td>{{ appraisalFormLineItem?.answer_type }}</td>
-
-                            </tr>
-                            <tr v-if="appraisalFormLine?.appraisalFormLineItems?.length == 0">
-                              <td>{{ appraisalFormLine?.section_no }}</td>
-                              <td>{{ appraisalFormLine?.section_name }}</td>
-                              <td></td>
-                              <td></td>
-                              <td></td>
-                            </tr>
-                            
-                          </template>
-                          
-                            
-                        </tbody>
-                    </table>
-                </td>
-              </tr>
-
-
-
-
-
-
-               <!-- 
               <tr>
-                <th class="w-40">Item Group</th>
-                <td>{{ item?.mntItemGroup?.name }}</td>
+                <th class="w-40">Seaman's Book No</th>
+                <td></td>
               </tr>
+
               
               <tr>
-                <th class="w-40">Item Code</th>
-                <td>{{ item?.item_code }}</td>
+                <th class="w-40">Nationality</th>
+                <td>{{ appraisalRecord?.crwCrew?.nationality }}</td>
               </tr>
+
+              <tr>
+                <th class="w-40">Completed Assignment Code</th>
+                <td>{{ appraisalRecord?.crwCrewAssignment?.assignment_code }}</td>
+              </tr>
+
               
               <tr>
-                <th class="w-40">Item Name</th>
-                <td>{{ item?.name }}</td>
+                <th class="w-40">Vessel</th>
+                <td>{{ appraisalRecord?.crwCrewAssignment?.opsVessel?.name }}</td>
               </tr>
+
               
               <tr>
-                <th class="w-40">Description</th>
-                <td>
-                    <table class=" w-full border-none">
-                        <tbody class="border-none">
-                            <tr class="border-none" v-for="(des, index) in item?.description" :key="index">
-                                <td class="border-none p-0 pb-1"><strong>{{ des.key }} :</strong> {{ des.value }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </td>
-              </tr>               -->
+                <th class="w-40">Rank</th>
+                <td>{{ appraisalRecord?.crwCrewAssignment?.position_onboard }}</td>
+              </tr>
+
+              
+              <tr>
+                <th class="w-40">Service From</th>
+                <td>{{ formatDate(appraisalRecord?.crwCrewAssignment?.joining_date) }}</td>
+              </tr>
+
+              
+              <tr>
+                <th class="w-40">Service To</th>
+                <td>{{ formatDate(appraisalRecord?.crwCrewAssignment?.completion_date) }}</td>
+              </tr>
+
+              
+              <tr>
+                <th class="w-40">Appraisal Form</th>
+                <td></td>
+              </tr>
+
+              
+              <tr>
+                <th class="w-40">Total Marks</th>
+                <td></td>
+              </tr>
+
+              
+              <tr>
+                <th class="w-40">Appraisal Date</th>
+                <td>{{ formatDate(appraisalRecord?.appraisal_date) }}</td>
+              </tr>
+
+
+
+
+
+
+
+
+
+              
+
+
+
+
+
+
+              
+
+
+
+
+
+               
             </tbody>
           </table>
           
