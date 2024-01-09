@@ -13,6 +13,17 @@ class MntRunHourRequest extends FormRequest
      */
     public function rules(): array
     {
+        $method = $this->method();
+
+        if($method == "PUT"){
+            if ($this->running_hour == 0 && $this->previous_run_hour == 0) {
+                return [
+                    'present_run_hour' => 'required|integer|min:1',
+                    'updated_on' => 'required|date'
+                ];
+            }
+        }
+
         return [
             'running_hour' => 'required|integer|min:1',
             'updated_on' => 'required|date'
@@ -29,6 +40,15 @@ class MntRunHourRequest extends FormRequest
         return [
             //
         ];
+    }
+    
+
+    public function attributes()
+    {
+        return[
+            'present_run_hour' => 'present running hour'
+        ];
+
     }
 
     /**

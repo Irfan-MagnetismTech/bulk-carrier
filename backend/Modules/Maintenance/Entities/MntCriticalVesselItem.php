@@ -18,6 +18,7 @@ class MntCriticalVesselItem extends Model
         'ops_vessel_id',
         'mnt_critical_item_id',
         'is_critical',
+        'specification',
         'notes',
         'business_unit'
     ];

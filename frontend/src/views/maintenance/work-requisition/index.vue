@@ -173,9 +173,9 @@ onMounted(() => {
     });
 });
 
-filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-  });
+// filterOptions.value.filter_options.forEach((option, index) => {
+//     filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+//   });
 
 });
 
@@ -230,6 +230,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
             
             <td>
               <nobr> 
+                <action-button :action="'show'" :to="{ name: 'mnt.work-requisitions.show', params: { workRequisitionId: workRequisition?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'mnt.work-requisitions.edit', params: { workRequisitionId: workRequisition?.id } }"></action-button>
                 <action-button @click="confirmDelete(workRequisition?.id)" :action="'delete'"></action-button>
               </nobr>

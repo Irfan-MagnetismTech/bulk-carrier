@@ -17,7 +17,6 @@ class MntCriticalItem extends Model
     protected $fillable = [
         'mnt_critical_item_cat_id',
         'item_name',
-        'specification',
         'notes'
     ];
 

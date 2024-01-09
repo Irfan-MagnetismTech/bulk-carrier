@@ -88,7 +88,8 @@
 
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Present Running Hour <span v-show="(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" class="text-red-500">*</span></span>
-            <input type="number" v-model="computedPresentRunHour" placeholder="Present Running Hour" class="form-input" :required="(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" :class="{ 'vms-readonly-input': !(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)  }" :readonly="!(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" />
+            <input type="number" min="1" v-model="computedPresentRunHour" placeholder="Present Running Hour" class="form-input" :required="(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" :class="{ 'vms-readonly-input': !(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)  }" :readonly="!(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" />
+            <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
 
         <label class="block w-full mt-2 text-sm">
