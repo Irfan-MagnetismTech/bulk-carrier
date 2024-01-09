@@ -81,7 +81,7 @@ function fetchAccounts(search, loading) {
   </form>
   <!-- Table -->
   <template v-if="balanceSheets?.liabilities">
-    <div class="w-full mb-10 income_statement_top_div">
+    <div class="w-full mb-10">
       <table class="w-full whitespace-no-wrap top_table">
         <thead>
         <tr class="text-xs font-semibold tracking-wide text-center" style="background-color: #369382;color: #ffff">

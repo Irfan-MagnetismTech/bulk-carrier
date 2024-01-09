@@ -1,45 +1,82 @@
 <script setup>
+import useTransaction from '../../../composables/accounts/useTransaction';
 import Title from "../../../services/title";
-import {onMounted, ref, watch, watchEffect} from "vue";
+import {onMounted, ref, watchEffect} from "vue";
 import useAisReport from "../../../composables/accounts/useAisReport";
 import useAccountCommonApiRequest from "../../../composables/accounts/useAccountCommonApiRequest";
 import Store from "../../../store";
 
-const { costCenterSummaries, getCostCenterSummary, isLoading} = useAisReport();
-const { allCostCenterLists, getCostCenter} = useAccountCommonApiRequest();
+const { trialBalances, getTrialBalance, isLoading} = useAisReport();
+const { bgColor, allAccount, getAccount } = useTransaction();
+const { allCostCenterLists, getCostCenter } = useAccountCommonApiRequest();
 
 const { setTitle } = Title();
 
-let expenses = ref(0.00);
-let incomes = ref(0.00);
-
-setTitle('AIS Report - Cost Center Summary');
+setTitle('AIS Report - Trial Balance');
 
 const searchParams = ref({
-  cost_center_id: null,
-  from_date: '2022-01-01',
-  till_date: '2022-12-31',
+  acc_cost_center_id: '',
+  from_date: '',
+  till_date: '',
 });
-const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
+function toggleBalanceLineTrID(event) {
+  let currentLine = event.target.id;
+  document.querySelectorAll(".balance_account_" + currentLine).forEach(function (el) {
+    el.style.display = (el.style.display == "none") ? "table-row" : "none";
+  });
+  document.querySelectorAll(".hide_parent_account_" + currentLine).forEach(function (el) {
+    el.style.display = "none";
+  });
+}
+
+function toggleParentAccountTrID(event) {
+  let parentAccount = event.target.id;
+  document.querySelectorAll(".parent_account_" + parentAccount).forEach(function (el) {
+    el.style.display = (el.style.display == "none") ? "table-row" : "none";
+  });
+  document.querySelectorAll(".hide_child_account_" + parentAccount).forEach(function (el) {
+    el.style.display = "none";
+  });
+}
+
+function toggleChildAccountTrID(event) {
+  let childAccount = event.target.id;
+  document.querySelectorAll(".child_account_" + childAccount).forEach(function (el) {
+    el.style.display = (el.style.display == "none") ? "table-row" : "none";
+  });
+}
+
+
+function fetchAccounts(search, loading) {
+  if(search.length < 3) {
+    return;
+  } else {
+    getAccount(search, loading);
+  }
+}
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 onMounted(() => {
   watchEffect(() => {
     getCostCenter(null,businessUnit.value);
   });
 });
-
 </script>
 
 <template>
   <!-- Table -->
   <!--  <button type="button"> Click Me </button>-->
-  <form @submit.prevent="getCostCenterSummary(searchParams)">
+  <form @submit.prevent="getTrialBalance(searchParams)">
     <div class="w-full flex items-center justify-between mb-2 my-2 select-none">
-      <fieldset class="w-full grid grid-cols-4 gap-1 px-2 pb-3 border border-gray-500 rounded dark-disabled:border-gray-400">
+      <fieldset class="w-full grid grid-cols-4 gap-1 px-2 pb-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Search Cost Center Summary</legend>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">Cost Center <span class="text-red-500">*</span></label>
-          <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="searchParams.acc_cost_center_name" label="name" :reduce="allCostCenterLists=>allCostCenterLists.id" class="block w-full rounded form-input"></v-select>
+          <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="searchParams.acc_cost_center_id" label="name" :reduce="allCostCenterLists=>allCostCenterLists.id" class="block w-full rounded form-input">
+            <template #search="{attributes, events}">
+              <input class="vs__search w-full" style="width: 50%" :required="!searchParams.acc_cost_center_id" v-bind="attributes" v-on="events"/>
+            </template>
+          </v-select>
         </div>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">From Date <span class="text-red-500">*</span></label>
@@ -57,45 +94,93 @@ onMounted(() => {
     </div>
   </form>
   <!-- Table -->
-  <div class="w-full mb-10 income_statement_top_div">
-    <table class="w-full whitespace-no-wrap top_table">
-      <thead>
-      <tr class="text-sm font-semibold tracking-wide text-center">
-        <th class="bg-green-600 text-white" rowspan="2">Particulars</th>
-        <th class="bg-green-600 text-white" rowspan="2">Dep. rate</th>
-        <th class="bg-green-600 text-white" rowspan="2">Acquisition Date</th>
-        <th class="bg-green-600 text-white" colspan="4">Cost</th>
-        <th class="bg-green-600 text-white" colspan="4">Depreciation</th>
-        <th class="bg-green-600 text-white" rowspan="2">WDV</th>
-      </tr>
-      <tr class="text-sm font-semibold tracking-wide text-center">
-        <th class="bg-green-600 text-white">Opening</th>
-        <th class="bg-green-600 text-white">Addition</th>
-        <th class="bg-green-600 text-white">Deletion</th>
-        <th class="bg-green-600 text-white">Closing</th>
-        <th class="bg-green-600 text-white">Opening</th>
-        <th class="bg-green-600 text-white">Addition</th>
-        <th class="bg-green-600 text-white">Deletion</th>
-        <th class="bg-green-600 text-white">Closing</th>
-      </tr>
-      </thead>
-      <tbody class="bg-white dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-      <tr class="text-gray-700 dark-disabled:text-gray-400">
-        <td class="text-sm">ASSDSD</td>
-        <td class="text-sm">2</td>
-        <td class="text-sm">15-12-2023</td>
-        <td class="text-sm">15000</td>
-        <td class="text-sm">5000</td>
-        <td class="text-sm">2000</td>
-        <td class="text-sm">500</td>
-        <td class="text-sm">35000</td>
-        <td class="text-sm">16000</td>
-        <td class="text-sm">8000</td>
-        <td class="text-sm">15620</td>
-        <td class="text-sm">ASDSD</td>
-      </tr>
-      </tbody>
-    </table>
+  <div class="w-full overflow-hidden">
+    <div class="w-full overflow-x-auto">
+      <table class="w-full whitespace-no-wrap mb-8">
+        <thead>
+        <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+          <th rowspan="2"> Particulars </th>
+          <th rowspan="2"> Opening Balance </th>
+          <th colspan="2"> Transactions </th>
+          <th rowspan="2"> Closing Balance </th>
+        </tr>
+        <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+          <th class=""> Debit </th>
+          <th class=""> Credit </th>
+        </tr>
+        </thead>
+        <tbody class="bg-white dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+        <template v-for="(trialBalanceData, trialBalanceDataIndex) in trialBalances" :key="trialBalanceDataIndex">
+          <template v-for="(trialBalanceDataLine, trialBalanceDataLineIndex) in trialBalanceData.lines">
+            <tr class="text-gray-700 dark-disabled:text-gray-400" style="background-color: #DBECDB" v-if="trialBalanceDataLineIndex === 0">
+              <td class="text-sm balance_header" :id="trialBalanceData?.line_id">{{ trialBalanceData?.line_text }}</td>
+              <td class="text-sm text-right font-bold">{{ trialBalanceData?.opening_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ trialBalanceData?.opening_balance_status }}</td>
+              <td class="text-sm text-right">{{ trialBalanceData?.current_dr_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+              <td class="text-sm text-right">{{ trialBalanceData?.current_cr_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+              <td class="text-sm text-right font-bold">{{ trialBalanceData?.closing_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ trialBalanceData?.closing_balance_status }}</td>
+            </tr>
+            <tr style="background-color: #eff1f1" class="second_label">
+              <td class="relative text-sm balance_line_style balance_line" :style="{'cursor': trialBalanceDataLine.parent_accounts?.length ? 'pointer' : 'auto'}" :id="trialBalanceDataLine?.line_id" @click="toggleBalanceLineTrID($event)">
+                {{ trialBalanceDataLine?.line_text }}
+                <svg v-if="trialBalanceDataLine.parent_accounts?.length" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="custom_down_arrow w-3 h-3">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </td>
+              <td class="text-sm text-right">{{ trialBalanceDataLine?.opening_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ trialBalanceDataLine?.opening_balance_status }}</td>
+              <td class="text-sm text-right">{{ trialBalanceDataLine?.current_dr_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+              <td class="text-sm text-right">{{ trialBalanceDataLine?.current_cr_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+              <td class="text-sm text-right">{{ trialBalanceDataLine?.closing_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ trialBalanceDataLine?.closing_balance_status }}</td>
+            </tr>
+            <template v-for="(lineParentAccount, lineParentAccountIndex) in trialBalanceDataLine.parent_accounts">
+              <tr :class="'balance_account_'+trialBalanceDataLine?.line_id" style="display: none" class="third_label account_row">
+                <td class="relative text-sm account_line parent_account" :style="{'cursor': lineParentAccount.child_accounts?.length ? 'pointer' : 'auto'}" :id="lineParentAccount?.line_id" @click="toggleParentAccountTrID($event)">
+                  {{ lineParentAccount?.line_text }}
+                  <svg v-if="lineParentAccount.child_accounts?.length" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="custom_down_arrow w-3 h-3">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5" />
+                  </svg>
+                </td>
+                <td class="text-sm text-right">{{ lineParentAccount?.opening_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ lineParentAccount?.opening_balance_status }}</td>
+                <td class="text-sm text-right">{{ lineParentAccount?.current_dr_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+                <td class="text-sm text-right">{{ lineParentAccount?.current_cr_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+                <td class="text-sm text-right">{{ lineParentAccount?.closing_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ lineParentAccount?.closing_balance_status }}</td>
+              </tr>
+              <template v-for="(lineChildAccount, lineChildAccountIndex) in lineParentAccount.child_accounts">
+                <tr :class="['parent_account_'+lineParentAccount?.line_id,'hide_parent_account_'+trialBalanceDataLine?.line_id,'hide_child_account_'+trialBalanceDataLine?.line_id]" class="fourth_label account_row" style="display: none;background-color: #CAF1F1">
+                  <td class="relative text-sm account child_account" :style="{'cursor': lineChildAccount.grandchild_accounts?.length ? 'pointer' : 'auto'}" :id="lineChildAccount?.line_id" @click="toggleChildAccountTrID($event)">
+                    {{ lineChildAccount?.line_text }}
+                    <svg v-if="lineChildAccount.grandchild_accounts?.length" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="custom_down_arrow w-3 h-3">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </td>
+                  <td class="text-sm text-right">{{ lineChildAccount?.opening_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ lineChildAccount?.opening_balance_status }}</td>
+                  <td class="text-sm text-right">{{ lineChildAccount?.current_dr_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+                  <td class="text-sm text-right">{{ lineChildAccount?.current_cr_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+                  <td class="text-sm text-right">{{ lineChildAccount?.closing_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ lineChildAccount?.closing_balance_status }}</td>
+                </tr>
+                <template v-for="(lineGrandChildAccount, lineGrandChildAccountIndex) in lineChildAccount.grandchild_accounts">
+                  <tr :class="['child_account_'+lineChildAccount?.line_id,'hide_parent_account_'+trialBalanceDataLine?.line_id,'hide_child_account_'+lineParentAccount?.line_id]" class="fifth_label account_row" style="display: none;background-color: #e0edff">
+                    <td class="text-sm account child_account_style">{{ lineGrandChildAccount?.line_text }}</td>
+                    <td class="text-sm text-right">{{ lineGrandChildAccount?.opening_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ lineGrandChildAccount?.opening_balance_status }}</td>
+                    <td class="text-sm text-right">{{ lineGrandChildAccount?.current_dr_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+                    <td class="text-sm text-right">{{ lineGrandChildAccount?.current_cr_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+                    <td class="text-sm text-right">{{ lineGrandChildAccount?.closing_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ lineGrandChildAccount?.closing_balance_status }}</td>
+                  </tr>
+                </template>
+              </template>
+            </template>
+          </template>
+        </template>
+        </tbody>
+        <tfoot v-if="!trialBalances?.length" class="bg-white dark-disabled:bg-gray-800">
+        <tr v-if="isLoading">
+          <td colspan="5">Loading...</td>
+        </tr>
+        <tr v-else-if="!trialBalances?.length">
+          <td colspan="5">No Data found.</td>
+        </tr>
+        </tfoot>
+      </table>
+    </div>
   </div>
 </template>
 <style lang="postcss" scoped>
@@ -119,40 +204,52 @@ onMounted(() => {
     @apply tab;
   }
   tfoot td {
-    @apply tab;
+    @apply tab text-center;
   }
-  table th {
-    @apply tab;
-  }
+}
+
+.base_header {
+  font-weight: bold;
+  text-align: left;
 }
 
 .balance_header {
   font-weight: bold;
+  padding-left: 20px;
   text-align: left;
 }
 
 .balance_line_style {
   font-weight: bold;
-  padding-left: 30px;
-  cursor: pointer;
-}
-
-.balance_line_parent {
   padding-left: 50px;
-  cursor: pointer;
+  text-align: left;
 }
 
-.balance_line_parent_child {
-  padding-left: 70px;
-  cursor: pointer;
+.account_line {
+  padding-left: 80px;
+  text-align: left;
 }
 
-.balance_line_parent_grand_child {
-  padding-left: 90px;
+.account {
+  padding-left: 110px;
+  text-align: left;
+}
+
+.child_account_style {
+  padding-left: 130px;
+  text-align: left;
+}
+
+.account_row
+{
+  display: none;
 }
 
 table tr,td,th {
-  border: 1px solid #cbc5c5;
+  border: 1px solid grey;
+}
+thead th{
+  @apply bg-green-600 text-white;
 }
 
 #close_tr td {
@@ -161,11 +258,6 @@ table tr,td,th {
 
 #opening_tr td {
   color: #f1ebeb;
-}
-
-.income_statement_top_div{
-  padding: 10px;
-  border: 1px solid #727272;
 }
 
 .input-group {

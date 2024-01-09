@@ -39,7 +39,7 @@ onMounted(() => {
         <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Search Fixed Asset Statement</legend>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">Asset Tag <span class="text-red-500">*</span></label>
-          <v-select :options="allFixedAssetLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="searchParams.asset_tag" :reduce="allFixedAssetLists => allFixedAssetLists.asset_tag" label="asset_tag"  class="block w-full rounded form-input">
+          <v-select :options="allFixedAssetLists" placeholder="--Choose an option--" v-model.trim="searchParams.asset_tag" :reduce="allFixedAssetLists => allFixedAssetLists.asset_tag" label="asset_tag"  class="block w-full rounded form-input">
             <template #search="{attributes, events}">
               <input class="vs__search w-full" style="width: 50%" v-bind="attributes" v-on="events"/>
             </template>
@@ -61,7 +61,7 @@ onMounted(() => {
     </div>
   </form>
   <!-- Table -->
-  <div class="w-full mb-10 income_statement_top_div">
+  <div class="w-full mb-10">
     <table class="w-full whitespace-no-wrap top_table">
       <thead>
       <tr class="text-sm font-semibold tracking-wide text-center">
@@ -84,21 +84,29 @@ onMounted(() => {
       </tr>
       </thead>
       <tbody class="bg-white dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-      <tr class="text-gray-700 dark-disabled:text-gray-400">
-        <td class="text-sm">ASSDSD</td>
-        <td class="text-sm">2</td>
-        <td class="text-sm">15-12-2023</td>
-        <td class="text-sm">15000</td>
-        <td class="text-sm">5000</td>
-        <td class="text-sm">2000</td>
-        <td class="text-sm">500</td>
-        <td class="text-sm">35000</td>
-        <td class="text-sm">16000</td>
-        <td class="text-sm">8000</td>
-        <td class="text-sm">15620</td>
-        <td class="text-sm">ASDSD</td>
+      <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(fixedAssetData,index) in fixedAssetStatements" :key="index">
+        <td class="text-sm">{{ fixedAssetData?.particular }}</td>
+        <td class="text-sm">{{ fixedAssetData?.dep_rate }}</td>
+        <td class="text-sm">{{ fixedAssetData?.acquisition_date }}</td>
+        <td class="text-sm">{{ fixedAssetData?.opening_cost }}</td>
+        <td class="text-sm">{{ fixedAssetData?.addition_cost }}</td>
+        <td class="text-sm">{{ fixedAssetData?.delation_cost }}</td>
+        <td class="text-sm">{{ fixedAssetData?.closing_cost }}</td>
+        <td class="text-sm">{{ fixedAssetData?.opening_depreciation }}</td>
+        <td class="text-sm">{{ fixedAssetData?.addition_depreciation }}</td>
+        <td class="text-sm">{{ fixedAssetData?.delation_depreciation }}</td>
+        <td class="text-sm">{{ fixedAssetData?.closing_depreciation }}</td>
+        <td class="text-sm">{{ fixedAssetData?.wdv }}</td>
       </tr>
       </tbody>
+      <tfoot v-if="!fixedAssetStatements?.length" class="bg-white dark:bg-gray-800">
+      <tr v-if="isLoading">
+        <td colspan="12">Loading...</td>
+      </tr>
+      <tr v-else-if="!fixedAssetStatements?.length">
+        <td colspan="12">No data found.</td>
+      </tr>
+      </tfoot>
     </table>
   </div>
 </template>

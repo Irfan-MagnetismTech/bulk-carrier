@@ -141,6 +141,9 @@ function fetchAccounts(search, loading) {
   tfoot td {
     @apply tab text-center;
   }
+  thead th{
+    @apply bg-green-600 text-white
+  }
 }
 
 #close_tr td {
