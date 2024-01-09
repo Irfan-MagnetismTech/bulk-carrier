@@ -55,7 +55,6 @@ function getReport() {
 watch(() => form.value.ops_vessel_id, (newValue, oldValue) => {
 
   if(newValue){
-    form.value.ops_vessel_id = newValue?.id;
     fetchVesselWiseVoyages(form.value.ops_vessel_id, false);
   }
 
@@ -86,8 +85,8 @@ function fetchVesselWiseVoyages(ops_vessel_id, loading) {
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700">Type <span class="text-red-500">*</span></span>
-        <select v-model="form.type" class="form-input" required>
+        <span class="text-gray-700">Type</span>
+        <select v-model="form.type" class="form-input">
           <option disabled selected value="">Select Option</option>
           <option value="Stock In">Stock In</option>
           <option value="Stock Out">Stock Out</option>
@@ -95,8 +94,8 @@ function fetchVesselWiseVoyages(ops_vessel_id, loading) {
         </select>
       </label>
       <label v-if="form.type != ''" class="block w-full mt-2 text-sm">
-        <span class="text-gray-700">{{ form.type }} Type <span class="text-red-500">*</span></span>
-        <select v-model="form.usage_type" class="form-input" required>
+        <span class="text-gray-700">{{ form.type }} Type </span>
+        <select v-model="form.usage_type" class="form-input">
           <option disabled selected value="">Select Option</option>
           <option value="Idle">Idle</option>
           <option value="Voyage Wise">Voyage Wise</option>
@@ -129,12 +128,11 @@ function fetchVesselWiseVoyages(ops_vessel_id, loading) {
             </v-select>
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage </span>
               <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.ops_voyage_id" label="voyage_sequence" class="block form-input" :reduce="voyage=>voyage.id">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
-                          :required="!form.ops_voyage_id"
                           v-bind="attributes"
                           v-on="events"
                           />
