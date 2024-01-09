@@ -42,63 +42,67 @@ onMounted(() => {
 </script>
 <template>
   <!-- Basic information -->
-  <h2 class="my-5 text-2xl text-center font-semibold">Voyage Report (Bulk)</h2>
-  <form @submit.prevent="getReport()">
+  <h2 class="my-5 text-2xl font-semibold">Voyage Report (Bulk)</h2>
 
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 ">Report Type <span class="text-red-500">*</span></span>
-        <select v-model="form.type" class="form-input" required :class="{ 'bg-gray-100 text-gray-900': formType === 'edit' }" :disabled="formType=='edit'" >
-          <option value="" disabled selected>Select Option</option>
-          <option value="Noon Report">Noon Report</option>
-          <option value="Arrival Report">Arrival Report</option>
-          <option value="Departure Report">Departure Report</option>
-        </select>
-      </label>
-      <label class="block w-full mt-2 text-sm"></label>
-      <label class="block w-full mt-2 text-sm"></label>
-      <label class="block w-full mt-2 text-sm"></label>
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
+
+    <form @submit.prevent="getReport()">
+
+      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700 ">Report Type <span class="text-red-500">*</span></span>
+          <select v-model="form.type" class="form-input" required :class="{ 'bg-gray-100 text-gray-900': formType === 'edit' }" :disabled="formType=='edit'" >
+            <option value="" disabled selected>Select Option</option>
+            <option value="Noon Report">Noon Report</option>
+            <option value="Arrival Report">Arrival Report</option>
+            <option value="Departure Report">Departure Report</option>
+          </select>
+        </label>
+        <label class="block w-full mt-2 text-sm"></label>
+        <label class="block w-full mt-2 text-sm"></label>
+        <label class="block w-full mt-2 text-sm"></label>
+      </div>
+
+      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <label class="block w-full mt-2 text-sm">
+                <span class="text-gray-700 ">Vessel <span class="text-red-500">*</span></span>
+                <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.ops_vessel_id" label="name" class="block form-input" :reduce="vessel => vessel.id">
+                    <template #search="{attributes, events}">
+                        <input
+                            class="vs__search"
+                            :required="!form.ops_vessel_id"
+                            v-bind="attributes"
+                            v-on="events"
+                            />
+                    </template>
+                </v-select>
+        </label>
+        <label class="block w-full mt-2 text-sm">
+                <span class="text-gray-700 ">Voyage <span class="text-red-500">*</span></span>
+                <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.ops_voyage_id" label="voyage_sequence" class="block form-input" :reduce="voyage => voyage.id">
+                    <template #search="{attributes, events}">
+                        <input
+                            class="vs__search"
+                            :required="!form.ops_voyage_id"
+                            v-bind="attributes"
+                            v-on="events"
+                            />
+                    </template>
+                </v-select>
+        </label>
+      </div>
+
+      <div class="flex items-center justify-center">
+        <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Submit</button>
+      </div>
+    </form>
+
+    <div v-if="bulkVoyageReport != ''" class="mb-5">
+      <h4 class="text-center text-xl font-semibold my-4">
+        {{ form.type }}
+      </h4>
+      <div v-html="bulkVoyageReport"></div>
     </div>
-
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Vessel <span class="text-red-500">*</span></span>
-              <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.ops_vessel_id" label="name" class="block form-input" :reduce="vessel => vessel.id">
-                  <template #search="{attributes, events}">
-                      <input
-                          class="vs__search"
-                          :required="!form.ops_vessel_id"
-                          v-bind="attributes"
-                          v-on="events"
-                          />
-                  </template>
-              </v-select>
-      </label>
-      <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Voyage <span class="text-red-500">*</span></span>
-              <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.ops_voyage_id" label="voyage_sequence" class="block form-input" :reduce="voyage => voyage.id">
-                  <template #search="{attributes, events}">
-                      <input
-                          class="vs__search"
-                          :required="!form.ops_voyage_id"
-                          v-bind="attributes"
-                          v-on="events"
-                          />
-                  </template>
-              </v-select>
-      </label>
-    </div>
-
-    <div class="flex items-center justify-center">
-      <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Submit</button>
-    </div>
-  </form>
-
-  <div v-if="bulkVoyageReport != ''" class="mb-5">
-    <h4 class="text-center text-xl font-semibold my-4">
-      {{ form.type }}
-    </h4>
-    <div v-html="bulkVoyageReport"></div>
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
