@@ -131,7 +131,7 @@ class OpsVoyageReportController extends Controller
 
     // }
 
-    public function voyageReport(Request $request)
+    public function lighterVoyageReport(Request $request)
     {
         try {
             

@@ -166,5 +166,5 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     // Route::get('gross-bunker-report', [OpsBunkerReportController::class, '']);
     Route::post('business-unit-wise-bunker-report', [OpsBunkerReportController::class, 'businessUnitWiseBunkerReport']);
 
-
+    Route::get('lighter-voyage-report', [OpsVoyageReportController::class, 'lighterVoyageReport']);
 });

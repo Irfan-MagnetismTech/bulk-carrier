@@ -22,5 +22,5 @@ Route::prefix('operations')->group(function() {
 // Route::resources([
 //     'ports' => OpsPortController::class,
 // ]);
-Route::get('voyage-report', [OpsVoyageReportController::class, 'voyageReport']);
-Route::get('bulk-report', [OpsBulkNoonReportController::class, 'showReport']);
+// Route::get('lighter-voyage-report', [OpsVoyageReportController::class, 'lighterVoyageReport']);
+// Route::get('bulk-report', [OpsBulkNoonReportController::class, 'showReport']);
