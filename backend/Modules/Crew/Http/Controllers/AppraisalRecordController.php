@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\AppraisalRecord;
+use Modules\Crew\Entities\AppraisalRecordLine;
 use Modules\Crew\Http\Requests\AppraisalRecordRequest;
 
 class AppraisalRecordController extends Controller
@@ -20,7 +21,7 @@ class AppraisalRecordController extends Controller
     {
         try {
             $appraisalRecords = AppraisalRecord::with('crwCrew:id,full_name', 'crwCrewAssignment.opsVessel:id,name')
-            ->globalSearch($request->all());
+                ->globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $appraisalRecords, 200);
         }
@@ -38,16 +39,24 @@ class AppraisalRecordController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         try {
             DB::transaction(function () use ($request)
             {
-                $appraisalRecordData    = $request->only('crw_crew_id', 'appraisal_form_id', 'crw_crew_assignment_id', 'appraisal_date', 'age', 'business_unit');
-                $appraisalFormLineItems = collect($request->appraisalRecordLines)->pluck('appraisalFormLineItems')->collapse();
+                $appraisalRecordData = $request->only('crw_crew_id', 'appraisal_form_id', 'crw_crew_assignment_id', 'appraisal_date', 'age', 'business_unit');
 
                 $appraisalRecord = AppraisalRecord::create($appraisalRecordData);
-                $appraisalRecord->appraisalRecordLines()->createMany($appraisalFormLineItems);
 
+                foreach ($request->appraisalRecordLines as $recordLineData)
+                {
+                    $recordLineData['appraisal_record_id'] = $appraisalRecord->id;
+                    $appraisalRecordLine                   = AppraisalRecordLine::create($recordLineData);
+                    $recordItems                           = $recordLineData['appraisalFormLineItems'];
+
+                    if ( $recordItems )
+                    {
+                        $appraisalRecordLine->appraisalRecordLineItems()->createMany($recordItems);
+                    }
+                }
             });
 
             return response()->success('Created Successfully', '', 201);
@@ -66,11 +75,11 @@ class AppraisalRecordController extends Controller
      */
     public function show(AppraisalRecord $appraisalRecord)
     {
-        try {            
+        try {
             $appraisalRecord->load('crwCrew', 'appraisalForm', 'crwCrewAssignment', 'appraisalRecordLines.appraisalFormLineItem.appraisalFormLine');
 
             $formattedSections = $appraisalRecord->appraisalRecordLines->groupBy('appraisalFormLineItem.appraisalFormLine.section_no');
-            
+
             unset($appraisalRecord->appraisalRecordLines);
 
             $appraisalRecord['appraisalRecordLines'] = $formattedSections->map(function ($formattedSection, $key)
@@ -100,7 +109,7 @@ class AppraisalRecordController extends Controller
                 ];
 
                 return $formattedSection;
-            })->values();        
+            })->values();
 
             return response()->success('Retrieved Successfully', $appraisalRecord, 200);
         }

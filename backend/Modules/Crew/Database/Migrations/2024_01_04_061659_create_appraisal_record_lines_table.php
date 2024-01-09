@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('appraisal_record_id')->constrained('appraisal_records', 'id')->cascadeOnDelete();
             $table->string('line_composite');
-            $table->string('comment');
-            $table->string('answer');
+            $table->string('answer')->nullable();
+            $table->text('comment')->nullable();
             $table->timestamps();
         });
     }

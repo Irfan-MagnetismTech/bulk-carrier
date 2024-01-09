@@ -9,7 +9,7 @@ class AppraisalRecordLineItem extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['appraisal_record_id', 'item_composite', 'comment', 'answer'];
+    protected $fillable = ['appraisal_record_line_id', 'item_composite', 'comment', 'answer'];
 
 	public function appraisalFormLineItem(){
 		return $this->belongsTo(AppraisalFormLineItem::class, 'item_composite', 'item_composite');
