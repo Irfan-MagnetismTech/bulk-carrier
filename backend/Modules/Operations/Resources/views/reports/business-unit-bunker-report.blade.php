@@ -26,7 +26,7 @@
 			<tr>
                 <th rowspan="2">Vessel</th>
                 <th rowspan="2">Voyages</th>
-                <th></th>
+                <th>Bunker</th>
                 <th>Previous Stock</th>
                 <th>Bunker Purchased</th>
                 <th>Bunker Used</th>

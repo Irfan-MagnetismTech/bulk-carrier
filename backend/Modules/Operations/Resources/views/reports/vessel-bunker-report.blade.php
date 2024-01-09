@@ -31,7 +31,7 @@
                 <th>Date</th>
                 <th>Vessel</th>
                 <th>Voyage</th>
-                <th></th>
+                <th>Bunker</th>
                 <th>Bunker Used</th>
                 <th>Bunker Purchased</th>
                 <th>Previous Stock</th>
