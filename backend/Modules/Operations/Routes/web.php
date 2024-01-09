@@ -16,8 +16,7 @@ use Modules\Operations\Http\Controllers\OpsBulkNoonReportController;
 */
 
 Route::prefix('operations')->group(function() {
-    // Route::get('/', 'OperationsController@index');  
-
+    // Route::get('/', 'OperationsController@index'); 
 });
 // Route::resources([
 //     'ports' => OpsPortController::class,
