@@ -40,7 +40,7 @@ class ScmOpeningStockController extends Controller
             DB::beginTransaction();
             $scm_opening_stock = ScmOpeningStock::create($request->all());
             $scm_opening_stock->scmOpeningStockLines()->createMany($request->scmOpeningStockLines);
-            (new StockLedgerData)->insert($scm_opening_stock, $request->scmOpeningStockLines, true);
+            StockLedgerData::insert($scm_opening_stock, $request->scmOpeningStockLines, true);
 
             DB::commit();
 
@@ -81,7 +81,7 @@ class ScmOpeningStockController extends Controller
             $opening_stock->scmOpeningStockLines()->createUpdateOrDelete($request->scmOpeningStockLines);
 
             $opening_stock->stockable()->delete();
-            (new StockLedgerData)->insert($opening_stock, $request->scmOpeningStockLines, true);
+            StockLedgerData::insert($opening_stock, $request->scmOpeningStockLines, true);
 
             return response()->success('Data updated sucessfully!', $opening_stock, 202);
         } catch (\Exception $e) {

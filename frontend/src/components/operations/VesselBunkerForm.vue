@@ -209,7 +209,7 @@ onMounted(() => {
           <option value="Reconciliation">Reconciliation</option>
         </select>
       </label>
-      <label v-if="form.type != 'Stock In' && form.type != ''" class="block w-full mt-2 text-sm">
+      <label v-if="form.type != ''" class="block w-full mt-2 text-sm">
         <span class="text-gray-700">Consumption Type <span class="text-red-500">*</span></span>
         <select v-model="form.usage_type" class="form-input" required>
           <option disabled selected value="">Select Option</option>
@@ -217,7 +217,7 @@ onMounted(() => {
           <option value="Voyage Wise">Voyage Wise</option>
         </select>
       </label>
-      <label v-else class="block w-full mt-2 text-sm"></label>
+      <label v-if="form.type=='Reconciliation'" class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm" v-if="form.type=='Reconciliation'">
         <span class="text-gray-700">Type <span class="text-red-500">*</span></span>
         <select v-model="form.reconciliation_type" class="form-input" required>
@@ -233,16 +233,16 @@ onMounted(() => {
       <span class="text-gray-700">Date <span class="text-red-500">*</span></span>
       <input type="date" v-model="form.date" required placeholder="Effective From" class="form-input" autocomplete="off" />
     </label>
-    <label class="block w-full mt-2 text-sm" v-if="form.usage_type=='Idle'">
+    <label class="block w-full mt-2 text-sm" v-if="form.usage_type=='Idle' && form.type!='Stock In'">
       <span class="text-gray-700">From Date <span class="text-red-500">*</span></span>
       <input type="date" v-model="form.effective_from" required placeholder="Effective From" class="form-input" autocomplete="off" />
     </label>
-    <label class="block w-full mt-2 text-sm" v-if="form.usage_type=='Idle'">
+    <label class="block w-full mt-2 text-sm" v-if="form.usage_type=='Idle' && form.type!='Stock In'">
       <span class="text-gray-700">Till Date <span class="text-red-500">*</span></span>
       <input type="date" v-model="form.effective_till" required placeholder="Effective Till" class="form-input" autocomplete="off" />
     </label>
-    <label class="block w-full mt-2 text-sm" v-if="form.usage_type!='Idle'"></label>
-    <label class="block w-full mt-2 text-sm" v-if="form.usage_type!='Idle'"></label>
+    <label class="block w-full mt-2 text-sm" v-if="form.usage_type!='Idle' && form.type!='Stock In'"></label>
+    <label class="block w-full mt-2 text-sm" v-if="form.usage_type!='Idle' && form.type!='Stock In'"></label>
     <label class="block w-full mt-2 text-sm"></label>
 
   </div>

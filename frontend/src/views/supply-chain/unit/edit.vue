@@ -31,7 +31,7 @@ onMounted(() => {
         <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Update Unit</h2>
         <default-button :title="'Unit List'" :to="{ name: 'scm.units.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="updateUnit(unit, unitId)">
             <unit-form v-model:form="unit" :errors="errors"></unit-form>
             <!-- Submit button -->

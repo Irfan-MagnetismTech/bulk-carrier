@@ -264,6 +264,7 @@ class CrwCommonController extends Controller
             ->where('crw_crew_id', $request->crw_crew_profile_id)
             ->doesntHave('appraisalRecord')
             ->where('status', 'Complete')
+            ->orWhere('id', $request->crw_crew_assignment_id) //take existing one also 
             ->get();
 
             return response()->success('Retrieved Successfully', $appraisalUndoneAssignments, 200);

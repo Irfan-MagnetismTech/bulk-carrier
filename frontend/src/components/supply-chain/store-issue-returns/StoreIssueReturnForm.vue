@@ -4,7 +4,7 @@
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
     <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
   </div>
-  <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
+  <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2" v-if="formType == 'edit'">
  
     <label class="label-group">
           <span class="label-item-title">SIR Ref</span>
@@ -24,13 +24,7 @@
   <div class="input-group">
     <label class="label-group">
         <span class="label-item-title">Date<span class="text-red-500">*</span></span>
-        <input
-          type="date"
-          v-model="form.date"
-          required
-          class="form-input"
-          name="date"
-          :id="'date'" />
+        <VueDatePicker v-model="form.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
         <!-- <Error
           v-if="errors?.date"
           :errors="errors.date" /> -->

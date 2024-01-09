@@ -104,7 +104,7 @@ class ScmMiController extends Controller
                 }
             }
 
-            (new StockLedgerData)->insert($scmMi, $request->scmMiLines);
+            StockLedgerData::insert($scmMi, $request->scmMiLines);
 
             DB::commit();
 
@@ -209,7 +209,7 @@ class ScmMiController extends Controller
 
             $movementIn->scmMiLines()->createMany($linesData);
 
-            (new StockLedgerData)->insert($movementIn, $request->scmMiLines);
+            StockLedgerData::insert($movementIn, $request->scmMiLines);
 
             if ($request->scmMiShortage['shortage_type'] == "") {
 
@@ -362,7 +362,7 @@ class ScmMiController extends Controller
                             'mmr_quantity' => $item->scmMmrLine->quantity,
                             'mmr_composite_key' => $item->mmr_composite_key,
                             'mo_composite_key' => $item->mo_composite_key,
-                            'current_stock' => (new CurrentStock)->count($item->scm_material_id, $scmMmr->scm_warehouse_id),
+                            'current_stock' => CurrentStock::count($item->scm_material_id, $scmMmr->scm_warehouse_id),
 
                         ];
                     })
@@ -403,7 +403,7 @@ class ScmMiController extends Controller
                             'mmr_quantity' => $item->scmMmrLine->quantity,
                             'mmr_composite_key' => $item->mmr_composite_key,
                             'mo_composite_key' => $item->mo_composite_key,
-                            'current_stock' => (new CurrentStock)->count($item->scm_material_id, $scmMmr->scm_warehouse_id),
+                            'current_stock' => CurrentStock::count($item->scm_material_id, $scmMmr->scm_warehouse_id),
 
                         ];
                     })

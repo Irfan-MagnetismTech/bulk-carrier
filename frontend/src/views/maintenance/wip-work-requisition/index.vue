@@ -170,9 +170,9 @@ onMounted(() => {
     });
   });
 
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-  });
+  // filterOptions.value.filter_options.forEach((option, index) => {
+  //   filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  // });
 
 });
 
@@ -236,6 +236,7 @@ onMounted(() => {
             <td><span :class="wipWorkRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ wipWorkRequisition?.business_unit }}</span></td>
             
             <td>
+                <action-button :action="'show'" :to="{ name: 'mnt.wip-work-requisitions.show', params: { wipWorkRequisitionId: wipWorkRequisition?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'mnt.wip-work-requisitions.edit', params: { wipWorkRequisitionId: wipWorkRequisition?.id } }"></action-button>
                 <!-- <action-button @click="confirmDelete(wipWorkRequisition?.id)" :action="'delete'"></action-button> -->
             </td>

@@ -78,7 +78,7 @@ class OpsVesselBunkerController extends Controller
 
             $vessel_bunker->opsBunkers()->createMany($bunkers);
             
-            if($request->type=="Stock In"){
+            if($request->type=="Stock In") {
                 (new StockLedgerData)->insert($vessel_bunker, $bunkers);
             }else if($request->type=="Stock Out"){
                 $dataForStock = [];

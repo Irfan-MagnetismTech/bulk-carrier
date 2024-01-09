@@ -42,16 +42,6 @@ export default function useMovementIn() {
         scm_mo_id: null,
         business_unit: '',
         scmMiLines: [
-            {
-                scmMaterial: '',
-                scm_material_id: '',
-                unit: '',
-                remarks: '',
-                mi_composite_key: '',
-                mmr_quantity: 0.00,
-                mo_quantity: 0.00,
-                quantity: 0.00
-            }
         ],
         scmMiShortage: {
             shortage_type: '',

@@ -2,19 +2,26 @@
 
 namespace Modules\SupplyChain\Services;
 
+/**
+ * @package Modules\SupplyChain\Services
+ *
+ * @class-type Service
+ */
 class CompositeKey
 {
     /**
      * this function is used to generate unique id for any model
-     * 
+     *
+     * @param int $index
      * @param int $model_id
      * @param string $infix
      * @param int $column_id
      * @return string
      */
+
     public static function generate(int $index, int $model_id, string $infix, int $column_id): string
     {
-        return $index . '-' . $model_id . '-' . strtoupper($infix) . '-' . $column_id;
+        return (string) $index . '-' . $model_id . '-' . strtoupper($infix) . '-' . $column_id;
     }
 
     /**
@@ -26,7 +33,7 @@ class CompositeKey
      * @param string $infix
      * @return array
      */
-    public static function generateArray(array $lines, int $parentModelId, string $columnName, string $infix)
+    public static function generateArray(array $lines, int $parentModelId, string $columnName, string $infix): array
     {
         foreach ($lines as $index => &$line) {
             if (isset($line[$columnName])) {
@@ -36,6 +43,6 @@ class CompositeKey
             }
         }
 
-        return $lines;
+        return (array) $lines;
     }
 }

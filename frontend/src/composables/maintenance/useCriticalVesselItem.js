@@ -21,6 +21,7 @@ export default function useCriticalVesselItem() {
         mnt_critical_item_id: '',
         mnt_critical_item: '',
         is_critical: 0,
+        specification: '',
         notes: '',
         business_unit: '',
         

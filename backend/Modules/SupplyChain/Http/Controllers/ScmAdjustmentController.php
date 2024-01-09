@@ -7,11 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
 use Modules\SupplyChain\Entities\ScmAdjustment;
 use Modules\SupplyChain\Entities\ScmStockLedger;
+use Modules\SupplyChain\Entities\TestStock;
 use Modules\SupplyChain\Services\StockLedgerData;
 use Modules\SupplyChain\Http\Requests\ScmAdjustmentRequest;
 
@@ -68,11 +70,11 @@ class ScmAdjustmentController extends Controller
             $adjustment->scmAdjustmentLines()->createMany($linesData);
 
             if ($request->type === 'Addition') {
-                (new StockLedgerData)->insert($adjustment, $linesData);
+                StockLedgerData::insert($adjustment, $linesData);
             } else {
                 $dataForStock = [];
                 foreach ($request->scmAdjustmentLines as $key => $value) {
-                    $dataForStock[] = (new StockLedgerData)->out($value['scm_material_id'], $requestData['scm_warehouse_id'], $value['quantity'], 'lifo');
+                    $dataForStock[] = StockLedgerData::out($value['scm_material_id'], $requestData['scm_warehouse_id'], $value['quantity'], 'lifo');
                 }
                 $dataForStockLedger = array_merge(...$dataForStock);
 
@@ -128,11 +130,11 @@ class ScmAdjustmentController extends Controller
             $adjustment->scmAdjustmentLines()->createMany($linesData);
 
             if ($request->type === 'Addition') {
-                (new StockLedgerData)->insert($adjustment, $linesData);
+                StockLedgerData::insert($adjustment, $linesData);
             } else {
                 $dataForStock = [];
                 foreach ($request->scmAdjustmentLines as $key => $value) {
-                    $dataForStock[] = (new StockLedgerData)->out($value['scm_material_id'], $request->scm_warehouse_id, $value['quantity'], 'lifo');
+                    $dataForStock[] = StockLedgerData::out($value['scm_material_id'], $request->scm_warehouse_id, $value['quantity'], 'lifo');
                 }
                 $dataForStockLedger = array_merge(...$dataForStock);
 
@@ -159,9 +161,16 @@ class ScmAdjustmentController extends Controller
             $adjustment->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);
-        } catch (\Exception $e) {
+        } catch (QueryException $e) {
 
-            return response()->error($e->getMessage(), 500);
+            return response()->json($adjustment->preventDeletionIfRelated(), 422);
         }
+    }
+
+    public function testStock()
+    {
+        TestStock::create([
+            'ref_no' => UniqueId::generate(TestStock::class, 'TS')
+        ]);
     }
 }

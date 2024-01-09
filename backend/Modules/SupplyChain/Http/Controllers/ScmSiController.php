@@ -67,11 +67,11 @@ class ScmSiController extends Controller
             //loop through each line and update current stock
             $dataForStock = [];
             //    collect($request->scmSiLines)->map(function ($scmSiLine) use ($scmSi, &$dataForStock) {
-            //        $dataForStock[] = (new StockLedgerData)->out($scmSiLine->scm_material_id, $scmSi->scm_warehouse_id, $scmSiLine->quantity);
+            //        $dataForStock[] = StockLedgerData::out($scmSiLine->scm_material_id, $scmSi->scm_warehouse_id, $scmSiLine->quantity);
             //     });
 
             foreach ($request->scmSiLines as $scmSiLine) {
-                if ((new CurrentStock)->count($scmSiLine['scm_material_id'], $scmSi->scm_warehouse_id) < $scmSiLine['quantity']) {
+                if (CurrentStock::count($scmSiLine['scm_material_id'], $scmSi->scm_warehouse_id) < $scmSiLine['quantity']) {
 
                     $error = array(
                         "message" => "Insufficient stock",
@@ -81,7 +81,7 @@ class ScmSiController extends Controller
                     );
                     return response()->json($error, 422);
                 }
-                $dataForStock[] = (new StockLedgerData)->out($scmSiLine['scm_material_id'], $scmSi->scm_warehouse_id, $scmSiLine['quantity']);
+                $dataForStock[] = StockLedgerData::out($scmSiLine['scm_material_id'], $scmSi->scm_warehouse_id, $scmSiLine['quantity']);
             }
 
             $dataForStockLedger = array_merge(...$dataForStock);
@@ -109,7 +109,7 @@ class ScmSiController extends Controller
             $storeIssue->load('scmSiLines.scmMaterial', 'scmWarehouse', 'createdBy', 'scmSr');
 
             $scmSiLines = $storeIssue->scmSiLines->map(function ($scmSiLine) use ($storeIssue) {
-                $currentStock = (new CurrentStock)->count($scmSiLine->scm_material_id, $storeIssue->scm_warehouse_id) + $scmSiLine->quantity;
+                $currentStock = CurrentStock::count($scmSiLine->scm_material_id, $storeIssue->scm_warehouse_id) + $scmSiLine->quantity;
                 $srQty = $scmSiLine->scmSrLine->quantity - $scmSiLine->scmSrLine->scmSiLines->sum('quantity') + $scmSiLine->quantity;
                 $maxQty = $currentStock > $srQty ? $srQty : $currentStock;
 
@@ -119,7 +119,7 @@ class ScmSiController extends Controller
                     'unit' => $scmSiLine->unit,
                     'quantity' => $scmSiLine->quantity,
                     'sr_quantity' => $scmSiLine->scmSrLine->quantity,
-                    'current_stock' => (new CurrentStock)->count($scmSiLine->scm_material_id, $storeIssue->scm_warehouse_id),
+                    'current_stock' => CurrentStock::count($scmSiLine->scm_material_id, $storeIssue->scm_warehouse_id),
                     'max_quantity' => $maxQty,
                     'sr_composite_key' => $scmSiLine->sr_composite_key ?? null,
                     'remaining_quantity' => $scmSiLine->scmSrLine->quantity - $scmSiLine->scmSrLine->scmSiLines->sum('quantity'),
@@ -159,7 +159,7 @@ class ScmSiController extends Controller
             $storeIssue->scmSiLines()->createMany($linesData);
 
             foreach ($request->scmSiLines as $scmSiLine) {
-                if ((new CurrentStock)->count($scmSiLine['scm_material_id'], $storeIssue->scm_warehouse_id) < $scmSiLine['quantity']) {
+                if (CurrentStock::count($scmSiLine['scm_material_id'], $storeIssue->scm_warehouse_id) < $scmSiLine['quantity']) {
 
                     $error = array(
                         "message" => "Insufficient stock",
@@ -169,7 +169,7 @@ class ScmSiController extends Controller
                     );
                     return response()->json($error, 422);
                 }
-                $dataForStock[] = (new StockLedgerData)->out($scmSiLine['scm_material_id'], $storeIssue->scm_warehouse_id, $scmSiLine['quantity']);
+                $dataForStock[] = StockLedgerData::out($scmSiLine['scm_material_id'], $storeIssue->scm_warehouse_id, $scmSiLine['quantity']);
             }
 
             $dataForStockLedger = array_merge(...$dataForStock);
@@ -263,7 +263,7 @@ class ScmSiController extends Controller
                     'acc_cost_center_id' => $scmSr->acc_cost_center_id,
                     'business_unit' => $scmSr->business_unit,
                     'scmSiLines' => $scmSr->scmSrLines->map(function ($item) use ($scmSr) {
-                        $currentStock = (new CurrentStock)->count($item->scm_material_id, $scmSr->scm_warehouse_id);
+                        $currentStock = CurrentStock::count($item->scm_material_id, $scmSr->scm_warehouse_id);
                         $srQty = $item->quantity - $item->scmSiLines->sum('quantity');
                         $maxQty = $currentStock > $srQty ? $srQty : $currentStock;
                         return [
@@ -300,7 +300,7 @@ class ScmSiController extends Controller
     //         ->where('scm_sr_id', request()->sr_id)
     //         ->get()
     //         ->map(function ($item) {
-    //             $currentStock = (new CurrentStock)->count($item->scm_material_id, $item->scm_warehouse_id);
+    //             $currentStock = CurrentStock::count($item->scm_material_id, $item->scm_warehouse_id);
     //             $srQty = $item->quantity - $item->scmSiLines->sum('quantity');
     //             $maxQty = $currentStock > $srQty ? $srQty : $currentStock;
 
@@ -324,7 +324,7 @@ class ScmSiController extends Controller
                 ->where('scm_si_id', request()->si_id)
                 ->get()
                 ->map(function ($item) {
-                    $currentStock = (new CurrentStock)->count($item->scm_material_id, $item->scmSi->scm_warehouse_id);
+                    $currentStock = CurrentStock::count($item->scm_material_id, $item->scmSi->scm_warehouse_id);
                     if (request()->sir_id) {
                         $qty = $item->scmSirLines->where('scm_sir_id', request()->sir_id)->where('si_composite_key', $item->si_composite_key)->first()->quantity ?? 0;
                     } else {

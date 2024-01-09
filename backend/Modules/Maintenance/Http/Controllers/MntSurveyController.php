@@ -3,8 +3,10 @@
 namespace Modules\Maintenance\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Maintenance\Entities\MntSurvey;
 use Modules\Maintenance\Http\Requests\MntSurveyRequest;
 
@@ -18,7 +20,7 @@ class MntSurveyController extends Controller
     {
         try {
 
-            $surveys = MntSurvey::with(["opsVessel","mntSurveyItem", "mntSurveyType"])
+            $surveys = MntSurvey::with(["mntSurveyItem", "mntSurveyType"])
                                 ->globalSearch($request->all());
 
             return response()->success('Surveys are retrieved successfully', $surveys, 200);
@@ -34,11 +36,14 @@ class MntSurveyController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function MntSurveyTypes()
+    public function MntSurveys()
     {
         try {
 
-            $surveys = MntSurvey::with(["opsVessel","mntSurveyItem", "mntSurveyType"])->get();
+            $surveys = MntSurvey::with(["mntSurveyItem", "mntSurveyType"])
+                        ->where('mnt_survey_type_id', request()->mnt_survey_type_id)
+                        ->where('mnt_survey_item_id', request()->mnt_survey_item_id)
+                        ->get();
 
             return response()->success('Surveys are retrieved successfully', $surveys, 200);
 
@@ -88,7 +93,7 @@ class MntSurveyController extends Controller
     {
         try {
 
-            $survey = MntSurvey::with(["opsVessel","mntSurveyItem", "mntSurveyType"])->find($id);
+            $survey = MntSurvey::with(["mntSurveyItem", "mntSurveyType"])->find($id);
             $survey->applySurveyNameModification = true;
             $survey->survey_name = $survey->survey_name;
 
@@ -139,18 +144,20 @@ class MntSurveyController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(MntSurvey $survey)
     {
-        try {
-            $survey = MntSurvey::findorfail($id);
+        try {            
+            DB::beginTransaction();
             $survey->delete();
-
+            DB::commit();
             return response()->success('Survey deleted successfully', $survey, 204);
-
+            
         }
-        catch (\Exception $e)
+        catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($survey->preventDeletionIfRelated(), 422);
+
         }
     }
 }

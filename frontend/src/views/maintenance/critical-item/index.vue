@@ -152,9 +152,9 @@ onMounted(() => {
     });
   });
 
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-  });
+  // filterOptions.value.filter_options.forEach((option, index) => {
+  //   filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  // });
 
 });
 
@@ -212,6 +212,7 @@ onMounted(() => {
             <!-- <td><span :class="criticalItem?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ criticalItem?.business_unit }}</span></td> -->
             <td>
               <nobr>
+                <action-button :action="'show'" :to="{ name: 'mnt.critical-items.show', params: { criticalItemId: criticalItem?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'mnt.critical-items.edit', params: { criticalItemId: criticalItem?.id } }"></action-button>
                 <action-button @click="confirmDelete(criticalItem?.id)" :action="'delete'"></action-button>
               </nobr>
