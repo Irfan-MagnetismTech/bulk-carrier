@@ -9,6 +9,7 @@ import useOperationsReport from '../../../composables/operations/useOperationsRe
 
 const { grossBunkerReport, isLoading, getGrossBunkerReport } = useOperationsReport();
 const icons = useHeroIcon();
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const form = ref({
   business_unit: '',
@@ -40,11 +41,13 @@ function getReport() {
         
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700">From Date <span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.start" required placeholder="From" class="form-input" autocomplete="off" />
+          <VueDatePicker v-model="form.start" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+          <!-- <input type="date" v-model="form.start" required placeholder="From" class="form-input" autocomplete="off" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700">Till Date <span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.end" required placeholder="Till" class="form-input" autocomplete="off" />
+          <VueDatePicker v-model="form.end" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+          <!-- <input type="date" v-model="form.end" required placeholder="Till" class="form-input" autocomplete="off" /> -->
         </label>
     </div>
 
