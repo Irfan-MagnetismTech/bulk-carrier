@@ -30,7 +30,7 @@ onMounted(() => {
         <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Edit Material CS</h2>
         <default-button :title="'Store Issue Return List'" :to="{ name: 'scm.store-issue-returns.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="updateMaterialCs(materialCs, materialCsId)">
             <material-cs-form :form="materialCs" :page="formType" :errors="errors" :formType="formType" :materialObj="materialObj"></material-cs-form>
             <!-- Submit button -->

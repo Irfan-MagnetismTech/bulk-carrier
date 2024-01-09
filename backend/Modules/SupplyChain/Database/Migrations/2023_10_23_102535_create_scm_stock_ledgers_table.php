@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('currency')->nullable();
             $table->decimal('exchange_rate')->nullable();
             $table->string('business_unit')->comment('ALL, PSML,TSLL')->nullable();
-            $table->timestamp('received_date')->nullable();
+            $table->timestamp('date')->nullable();
             $table->timestamps();
         });
     }

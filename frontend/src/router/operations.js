@@ -702,4 +702,28 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/reports/port-wise-expense-report.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	{
+		path: `/${BASE}/reports/lighter-voyage-report`,
+		name: `${BASE}.reports.lighter-voyage-report`,
+		component: () => import (`../views/${ViEWBASE}/reports/lighter-voyage-report.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/reports/bulk-voyage-report`,
+		name: `${BASE}.reports.bulk-voyage-report`,
+		component: () => import (`../views/${ViEWBASE}/reports/bulk-voyage-report.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/reports/vessel-bunker-report`,
+		name: `${BASE}.reports.vessel-bunker-report`,
+		component: () => import (`../views/${ViEWBASE}/reports/vessel-bunker-report.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/reports/gross-bunker-report`,
+		name: `${BASE}.reports.gross-bunker-report`,
+		component: () => import (`../views/${ViEWBASE}/reports/gross-bunker-report.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];

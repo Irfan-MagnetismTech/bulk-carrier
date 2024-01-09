@@ -11,7 +11,7 @@ class ScmStockLedger extends Model
     use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
-        'scm_material_id', 'scm_warehouse_id', 'acc_cost_center_id', 'parent_id', 'stockable_type', 'stockable_id', 'recievable_type', 'recievable_id', 'quantity', 'gross_unit_price', 'gross_foreign_unit_price', 'net_unit_price', 'net_foreign_unit_price', 'currency', 'exchange_rate', 'business_unit', 'received_date',
+        'scm_material_id', 'scm_warehouse_id', 'acc_cost_center_id', 'parent_id', 'stockable_type', 'stockable_id', 'recievable_type', 'recievable_id', 'quantity', 'gross_unit_price', 'gross_foreign_unit_price', 'net_unit_price', 'net_foreign_unit_price', 'currency', 'exchange_rate', 'business_unit', 'date',
     ];
 
     public function stockable()
@@ -27,5 +27,10 @@ class ScmStockLedger extends Model
     public function child()
     {
         return $this->hasMany(ScmStockLedger::class,'parent_id');
+    }
+
+    public function scmMaterial()
+    {
+        return $this->belongsTo(ScmMaterial::class, 'scm_material_id' , 'id');
     }
 }

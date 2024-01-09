@@ -4,6 +4,11 @@ namespace Modules\SupplyChain\Services;
 
 use Modules\SupplyChain\Entities\ScmStockLedger;
 
+/**
+ * @package Modules\SupplyChain\Services
+ * 
+ * @class-type Service
+ */
 class StockLedgerData
 {
     /**
@@ -13,9 +18,9 @@ class StockLedgerData
      * @param array $lines
      * @param bool $os (opening stock)
      *
-     * @return void
+     * @return array
      */
-    public function insert(object $parentModel, array $lines, bool $os = false)
+    public static function insert(object $parentModel, array $lines, bool $os = false): array
     {
         $stock_ledger_data = [];
         collect($lines)->map(function ($line) use ($parentModel, &$stock_ledger_data, $os) {
@@ -27,13 +32,13 @@ class StockLedgerData
                 'gross_unit_price' => $line['rate'] ?? null,
                 'net_unit_price' => $os ? $line['rate'] : $line['net_rate'] ?? null,
                 'currency' => $line['currency'] ?? null,
-                'received_date' => now(),
+                'date' => now(),
                 'business_unit' => $parentModel->business_unit,
             ];
         });
 
         $parentModel->stockable()->createMany($stock_ledger_data);
-        return $stock_ledger_data;
+        return (array) $stock_ledger_data;
     }
 
     /**
@@ -44,11 +49,11 @@ class StockLedgerData
      * @param int $qty
      * @param string $method (Optional)
      * 
-     * @return array Returns an array of stock outflow records.
+     * @return array
      */
-    public function out(int $materialId, int $warehouseId, int $qty, string $method = 'fifo')
+    public static function out(int $materialId, int $warehouseId, int $qty, string $method = 'fifo'): array
     {
-        if ((new CurrentStock)->count($materialId, $warehouseId) < $qty) {
+        if (CurrentStock::count($materialId, $warehouseId) < $qty) {
             return response()->json(['message' => 'Insufficient stock'], 422);
         }
 
@@ -64,9 +69,9 @@ class StockLedgerData
             });
 
         if ($method == 'lifo') {
-            $currentStock = $currentStock->sortByDesc('received_date');
+            $currentStock = $currentStock->sortByDesc('date');
         } else {
-            $currentStock = $currentStock->sortBy('received_date');
+            $currentStock = $currentStock->sortBy('date');
         }
 
         $stockOutArray = [];
@@ -91,7 +96,7 @@ class StockLedgerData
                     'currency'                  => $value->currency,
                     'exchange_rate'             => $value->exchange_rate,
                     'business_unit'             => $value->business_unit,
-                    'received_date'             => $value->received_date,
+                    'date'             => $value->received_date,
                 ];
 
                 break;
@@ -111,12 +116,12 @@ class StockLedgerData
                     'currency'                  => $value->currency,
                     'exchange_rate'             => $value->exchange_rate,
                     'business_unit'             => $value->business_unit,
-                    'received_date'             => $value->received_date,
+                    'date'             => $value->received_date,
                 ];
                 $outQty = $outQty - $currentStock;
             }
         }
 
-        return $stockOutArray;
+        return (array) $stockOutArray;
     }
 }
