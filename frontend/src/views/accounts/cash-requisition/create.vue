@@ -19,7 +19,7 @@ const page = 'create';
         <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Create Cash Requisition</h2>
       <default-button :title="'Cash Requisition List'" :to="{ name: 'acc.cash-requisitions.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="storeCashRequisition(cashRequisition)">
             <!-- Booking Form -->
             <cash-requisition-form :page="page" v-model:form="cashRequisition" :errors="errors"></cash-requisition-form>

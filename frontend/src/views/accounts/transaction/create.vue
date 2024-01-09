@@ -22,7 +22,7 @@ function handleColorSelected(color) {
         <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Create Voucher</h2>
       <default-button :title="'Voucher List'" :to="{ name: 'acc.transactions.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden" :style="{ 'background-color': bgColor }">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800" :style="{ 'background-color': bgColor }">
         <form @submit.prevent="storeTransaction(transaction)">
             <!-- Booking Form -->
             <transaction-form @bgColor="handleColorSelected" :page="page" v-model:form="transaction" :errors="errors"></transaction-form>

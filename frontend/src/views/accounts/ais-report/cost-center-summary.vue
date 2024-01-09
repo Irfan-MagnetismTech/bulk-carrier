@@ -10,9 +10,10 @@ const { trialBalances, getTrialBalance, isLoading} = useAisReport();
 const { bgColor, allAccount, getAccount } = useTransaction();
 const { allCostCenterLists, getCostCenter } = useAccountCommonApiRequest();
 
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const { setTitle } = Title();
 
-setTitle('AIS Report - Trial Balance');
+setTitle('AIS Report - Cost Center Summary');
 
 const searchParams = ref({
   acc_cost_center_id: '',
@@ -69,7 +70,7 @@ onMounted(() => {
   <form @submit.prevent="getTrialBalance(searchParams)">
     <div class="w-full flex items-center justify-between mb-2 my-2 select-none">
       <fieldset class="w-full grid grid-cols-4 gap-1 px-2 pb-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Search Cost Center Summary</legend>
+        <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Cost Center Summary</legend>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">Cost Center <span class="text-red-500">*</span></label>
           <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="searchParams.acc_cost_center_id" label="name" :reduce="allCostCenterLists=>allCostCenterLists.id" class="block w-full rounded form-input">
@@ -80,11 +81,11 @@ onMounted(() => {
         </div>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">From Date <span class="text-red-500">*</span></label>
-          <input type="date" required v-model="searchParams.from_date" class="block w-full rounded form-input">
+          <VueDatePicker v-model.trim="searchParams.from_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
         </div>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">Till Date <span class="text-red-500">*</span></label>
-          <input type="date" required v-model="searchParams.till_date" class="block w-full rounded form-input">
+          <VueDatePicker v-model.trim="searchParams.till_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
         </div>
         <div>
           <label for="">&nbsp;</label>

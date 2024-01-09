@@ -11,6 +11,8 @@ const { vessels, searchVessels } = useVessel();
 
 const { allAccountLists, getAccount, allCostCenterLists, getCostCenter, isLoading } = useAccountCommonApiRequest();
 
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
+
 const { emit } = getCurrentInstance();
 const { bgColor } = useTransaction();
 
@@ -154,7 +156,7 @@ onMounted(() => {
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Transaction Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model.trim="form.transaction_date" class="form-input" autocomplete="off" required />
+        <VueDatePicker v-model.trim="form.transaction_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
         <Error v-if="errors?.transaction_date" :errors="errors.transaction_date" />
       </label>
       <label class="block w-full mt-2 text-sm">
@@ -177,7 +179,7 @@ onMounted(() => {
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Instrument Date</span>
-      <input type="date" v-model.trim="form.instrument_date" class="form-input" autocomplete="off" />
+      <VueDatePicker v-model.trim="form.instrument_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
       <Error v-if="errors?.instrument_date" :errors="errors.instrument_date" />
     </label>
     <label class="label-group">

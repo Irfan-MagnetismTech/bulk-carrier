@@ -329,6 +329,12 @@ input.custom_date::-webkit-calendar-picker-indicator{
     --vs-dropdown-option--active-color: #eeeeee;
 }
 
+.dp__input{
+    --dp-border-color: #4b5563;
+    --dp-border-color-hover: #4b5563;
+    --dp-icon-color: #4b5563;
+}
+
 
 @media only screen and (min-width: 768px) {
     #customDataTable {

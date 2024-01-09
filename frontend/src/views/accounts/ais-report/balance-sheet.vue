@@ -3,10 +3,11 @@ import useTransaction from '../../../composables/accounts/useTransaction';
 import Title from "../../../services/title";
 import {ref, computed, watch} from "vue";
 import useAisReport from "../../../composables/accounts/useAisReport";
+import Store from "../../../store";
 
 const { balanceSheets, getBalanceSheet, isLoading} = useAisReport();
 const { bgColor, allAccount, getAccount } = useTransaction();
-
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const { setTitle } = Title();
 
 let liabilities = ref(0.00);
@@ -63,14 +64,14 @@ function fetchAccounts(search, loading) {
   <form @submit.prevent="getBalanceSheet(searchParams)">
     <div class="w-full flex items-center justify-between mb-2 my-2 select-none">
       <fieldset class="w-full grid grid-cols-4 gap-1 px-2 pb-3 border border-gray-500 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Search Balance Sheet</legend>
+        <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Balance Sheet</legend>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">From Date <span class="text-red-500">*</span></label>
-          <input type="date" required v-model="searchParams.from_date" class="block w-full rounded form-input">
+          <VueDatePicker v-model.trim="searchParams.from_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
         </div>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">Till Date <span class="text-red-500">*</span></label>
-          <input type="date" required v-model="searchParams.till_date" class="block w-full rounded form-input">
+          <VueDatePicker v-model.trim="searchParams.till_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
         </div>
         <div>
           <label for="">&nbsp;</label>
