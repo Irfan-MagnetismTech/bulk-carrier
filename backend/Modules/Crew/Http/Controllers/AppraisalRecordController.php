@@ -76,40 +76,8 @@ class AppraisalRecordController extends Controller
     public function show(AppraisalRecord $appraisalRecord)
     {
         try {
-            $appraisalRecord->load('crwCrew', 'appraisalForm', 'crwCrewAssignment', 'appraisalRecordLines.appraisalFormLineItem.appraisalFormLine');
-
-            $formattedSections = $appraisalRecord->appraisalRecordLines->groupBy('appraisalFormLineItem.appraisalFormLine.section_no');
-
-            unset($appraisalRecord->appraisalRecordLines);
-
-            $appraisalRecord['appraisalRecordLines'] = $formattedSections->map(function ($formattedSection, $key)
-            {
-                $section      = $formattedSection->first()->appraisalFormLineItem->appraisalFormLine;
-                $sectionItems = $formattedSection->pluck('appraisalFormLineItem');
-
-                $formattedSection = [
-                    'section_no'             => $section->section_no,
-                    'section_name'           => $section->section_name,
-                    'is_tabular'             => $section->is_tabular,
-                    'appraisalFormLineItems' => $sectionItems->map(function ($appraisalFormLineItem, $key) use ($formattedSection)
-                    {
-                        $appraisalFormLineItem = [
-                            'appraisal_form_line_id' => $appraisalFormLineItem->appraisal_form_line_id,
-                            'item_no'                => $appraisalFormLineItem->item_no,
-                            'aspect'                 => $appraisalFormLineItem->aspect,
-                            'item_composite'         => $appraisalFormLineItem->item_composite,
-                            'description'            => $appraisalFormLineItem->description,
-                            'answer_type'            => $appraisalFormLineItem->answer_type,
-                            'comment'                => $formattedSection[$key]->comment,
-                            'answer'                 => $formattedSection[$key]->answer,
-                        ];
-
-                        return $appraisalFormLineItem;
-                    }),
-                ];
-
-                return $formattedSection;
-            })->values();
+            $appraisalRecord->load('crwCrew:id,full_name', 'appraisalForm', 'crwCrewAssignment', 'appraisalRecordLines.appraisalFormLine',  
+            'appraisalRecordLines.appraisalRecordLineItems.appraisalFormLineItem');
 
             return response()->success('Retrieved Successfully', $appraisalRecord, 200);
         }
