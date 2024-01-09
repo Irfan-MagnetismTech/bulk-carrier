@@ -195,6 +195,15 @@ class OpsBunkerReportController extends Controller
             ->get();
 
 
+        if (empty($vesselBunkers)) {
+            $error= [
+                'message'=>'Report not found.',
+                'errors'=>[
+                    'type'=>['Report not found.',]
+                    ]
+                ];
+            return response()->json($error, 422);
+        }
         // $vesselBunkers = $vesselBunkers->groupBy('ops_voyage_id');
             
         // dd($output[37]->groupBy('type'));
