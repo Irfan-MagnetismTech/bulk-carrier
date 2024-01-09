@@ -5,6 +5,7 @@ namespace Modules\Accounts\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Accounts\Entities\AccFixedAsset;
 use Modules\Accounts\Services\DayBookService;
 use Modules\Accounts\Services\LedgerService;
 use Modules\Accounts\Services\TrialBalanceService;
@@ -161,6 +162,33 @@ class AisReportController extends Controller
         }
 
         return $profitLossInfo;
+    }
+
+    public function fixedAssetStatement(){
+        $assets = AccFixedAsset::get()
+            ->map(function($asset){
+                $data = [
+                    'particular'           =>  $asset->asset_tag,
+                    'dep_rate'             =>  $asset->depreciation_rate,
+                    'acquisition_date'     =>  $asset->acquisition_date,
+                    'opening_cost'         =>  '',
+                    'addition_cost'        =>  $add_cost = $asset->fixedAssetAccount?->ledgers->sum('dr_amount'),
+                    'delation_cost'        =>  $del_cost = $asset->fixedAssetAccount?->ledgers->sum('cr_amount'),
+                    'closing_cost'         =>  $cost     = $add_cost - $del_cost,
+                    'opening_depreciation' =>  '',
+                    'addition_depreciation'=>  $add_dep = $asset->depreciationAccount?->ledgers->sum('dr_amount'),
+                    'delation_depreciation'=>  $del_dep = $asset->depreciationAccount?->ledgers->sum('cr_amount'),
+                    'closing_depreciation' =>  $dep     = $add_dep - $del_dep,
+                    'wdv'                  =>  $cost - $dep
+                ];
+
+            return $data;
+        });
+        // dd('gg');
+        return response()->json([
+            'status' => 'success',
+            'value'  => $assets,
+        ], 200);
     }
 
 }
