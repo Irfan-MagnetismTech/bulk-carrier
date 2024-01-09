@@ -277,11 +277,7 @@ class OpsBunkerReportController extends Controller
         });
 
         // dd(count($allBunkers));
-        
-        return view('operations::reports.business-unit-bunker-report')->with([
-            'allBunkers' => $allBunkers,
-            'voyages' => $voyages
-        ]);
+
         $view = view('operations::reports.business-unit-bunker-report')->with([
             'allBunkers' => $allBunkers,
             'voyages' => $voyages
