@@ -11,6 +11,7 @@ import useOperationsReport from '../../../composables/operations/useOperationsRe
 const { ports, searchPorts, isPortLoading } = usePort();
 const { operationsReport, isLoading, portWiseExpenseReport } = useOperationsReport();
 const icons = useHeroIcon();
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const form = ref({
   business_unit: '',

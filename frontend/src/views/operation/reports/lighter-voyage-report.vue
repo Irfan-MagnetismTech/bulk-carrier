@@ -8,6 +8,8 @@ import useOperationsReport from '../../../composables/operations/useOperationsRe
 const { lighterVoyageReport, isLoading, getLighterVoyageReport } = useOperationsReport();
 const icons = useHeroIcon();
 
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
+
 const form = ref({
   start: '',
   end: ''
