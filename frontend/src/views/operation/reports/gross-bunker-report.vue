@@ -32,7 +32,7 @@ function getReport() {
 </script>
 <template>
   <!-- Basic information -->
-  <h2 class="my-5 text-2xl text-center font-semibold">Gross Bunker Report</h2>
+  <h2 class="my-5 text-2xl text-center font-semibold">Vessel Bunker Report (Gross)</h2>
   <form @submit.prevent="getReport()">
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
