@@ -28,25 +28,20 @@
     <table>
         <thead>
 			<tr>
-                <th rowspan="2">Vessel</th>
-                <th rowspan="2">Voyage</th>
-                <th colspan="{{ count($allBunkers) }}">Bunker Used</th>
-                <th colspan="{{ count($allBunkers) }}">Bunker Purchased</th>
-                <th colspan="{{ count($allBunkers) }}">Previous Stock</th>
-                <th colspan="{{ count($allBunkers) }}">Final Stock</th>
-            </tr>
-            <tr>
-                @for ($i = 1; $i < 5; $i++)
-                    @foreach($allBunkers as $bunker)
-                    <th> {{ $bunker['name'] }} </th>
-                    @endforeach
-                @endfor
+                <th>Date</th>
+                <th>Vessel</th>
+                <th>Voyage</th>
+                <th></th>
+                <th>Bunker Used</th>
+                <th>Bunker Purchased</th>
+                <th>Previous Stock</th>
+                <th>Final Stock</th>
             </tr>
         </thead>
         <tbody>
 
-            <tr>
-                <td colspan="{{ count($allBunkers) * 2 + 2 }}"><br></td>
+            {{-- <tr>
+                <td colspan="{{ 3 + 2 }}"><br></td>
                 @foreach($allBunkers as $bunker)
                     <td>
                         {{ ($bunker['previous_stock'] != 0) ? abs($bunker['previous_stock']) : null }}
@@ -54,14 +49,60 @@
                 @endforeach
                 <td></td>
 
-            </tr>
+            </tr> --}}
 
 
 
             @if(isset($stockRecords))
                 @foreach($stockRecords as $vesselBunkerId => $stockRecord)
 
-                    <tr>
+                    @foreach($allBunkers as $bunker)
+                        <tr>
+                            @if($loop->first)
+                                <td rowspan="{{count($allBunkers)}}"><nobr>{{ \Carbon\Carbon::parse($stockRecord?->date)->format('d/m/Y') }}</nobr></td>
+                                <td rowspan="{{count($allBunkers)}}"><nobr>{{ $stockRecord?->opsVessel?->name }}</nobr></td>
+                                <td rowspan="{{count($allBunkers)}}"><nobr>{{ $stockRecord?->opsVoyage?->voyage_sequence }}</nobr></td>
+                            @endif                        
+                            <td> {{ $bunker['name'] }} </td>
+                                
+                            <td>
+                                @php
+                                $output = ($stockRecord->type == 'Stock Out') ? $stockRecord->stockable->where('scm_material_id', $bunker['scm_material_id'])->sum('quantity') : 0;
+                                @endphp
+                                {{ ($output !=0 ) ? abs($output) : null }}
+                            </td>
+                            <td>
+                                @php
+                                $output = ($stockRecord->type == 'Stock In') ? $stockRecord->stockable->where('scm_material_id', $bunker['scm_material_id'])->sum('quantity') : 0;
+                                @endphp
+                                {{ ($output !=0 ) ? abs($output) : null }}
+                            </td>                        
+                            <td>
+                                {{ ($bunker['previous_stock'] != 0 && $loop->parent->first) ? abs($bunker['previous_stock']) : null }}
+                            </td>
+                            <td>
+                                {{ ($bunker['final_stock'] != 0  && $loop->parent->last) ? abs($bunker['final_stock']) : null }}
+                            </td>
+                            
+
+
+                            {{-- @foreach($allBunkers as $bunker)
+                            <td>
+                                @php
+                                $output = ($stockRecord->type == 'Stock In') ? $stockRecord->stockable->where('scm_material_id', $bunker['scm_material_id'])->sum('quantity') : 0;
+                                @endphp
+                                {{ ($output !=0 ) ? abs($output) : null }}
+                            </td>
+                            @endforeach
+
+                            @foreach($allBunkers as $bunker)
+                                <td></td>
+                                <td></td>
+                            @endforeach --}}
+                        </tr>
+                    @endforeach
+
+                    {{-- <tr>
                         <td><nobr>{{ $stockRecord?->opsVessel?->name }}</nobr></td>
                         <td><nobr>{{ $stockRecord?->opsVoyage?->voyage_sequence }}</nobr></td>
                         
@@ -89,12 +130,12 @@
                             <td></td>
                             <td></td>
                         @endforeach
-                    </tr>
+                    </tr> --}}
 
                 @endforeach
             @endif
         </tbody>
-        <tfoot>
+        {{-- <tfoot>
             <tr>
                 <td colspan="{{ count($allBunkers) * 2 + 3 }}" style="text-align: center;"><br>
                 </td>
@@ -105,7 +146,7 @@
                 @endforeach
             </tr>
 
-        </tfoot>
+        </tfoot> --}}
     </table>
 
 </body>
