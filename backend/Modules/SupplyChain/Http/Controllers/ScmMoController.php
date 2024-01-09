@@ -36,7 +36,7 @@ class ScmMoController extends Controller
                 'toWarehouse',
                 'createdBy',
             )
-            ->globalSearch(request()->all());
+                ->globalSearch(request()->all());
 
             return response()->success('Data list', $movementOuts, 200);
         } catch (\Exception $e) {
@@ -153,12 +153,23 @@ class ScmMoController extends Controller
 
         try {
             $movementOut->update($requestData);
-
             $movementOut->scmMoLines()->delete();
+            $movementOut->stockable()->delete();
+
 
             $linesData = CompositeKey::generateArray($request->scmMoLines, $movementOut->id, 'scm_material_id', 'mo');
 
             $movementOut->scmMoLines()->createMany($linesData);
+
+            $dataForStock = [];
+            foreach ($request->scmMoLines as $key => $value) {
+                $dataForStock[] = StockLedgerData::out($value['scm_material_id'], $request->from_warehouse_id, $value['quantity']);
+            }
+            $dataForStockLedger = array_merge(...$dataForStock);
+
+            $movementOut->stockable()->createMany($dataForStockLedger);
+
+
 
             return response()->success('Data updated sucessfully!', $movementOut, 202);
         } catch (\Exception $e) {
@@ -186,7 +197,7 @@ class ScmMoController extends Controller
     }
 
 
-      /**
+    /**
      * Searches for MMR records based on the given request parameters.
      *
      * @param Request $request
@@ -199,7 +210,7 @@ class ScmMoController extends Controller
                 $movementRequisitions = ScmMo::query()
                     ->when(!$request->isEdit, function ($query) {
                         return $query->whereDoesntHave('scmMi');
-                    }, function ($query) use ($request){
+                    }, function ($query) use ($request) {
                         $query->whereDoesntHave('scmMi', function ($q) use ($request) {
                             $q->whereNot('scm_mo_id', $request->mo_id);
                         });
@@ -207,7 +218,7 @@ class ScmMoController extends Controller
                     ->with('scmMoLines', 'fromWarehouse', 'toWarehouse', 'createdBy')
                     ->whereBusinessUnit($request->business_unit)
                     ->when($request->searchParam, function ($query) {
-                        return $query->where('ref_no', 'LIKE', "%".request()->searchParam."%");
+                        return $query->where('ref_no', 'LIKE', "%" . request()->searchParam . "%");
                     })
                     ->when($request->mmr_id, function ($query) {
                         return $query->where('scm_mmr_id', request()->mmr_id);
