@@ -175,7 +175,8 @@ class OpsBunkerReportController extends Controller
         $ops_voyage_id = $request->ops_voyage_id;
         $type = $request->type;
         $usage_type = $request->usage_type;
-        $start = Carbon::parse($request->start)->subDay(1)->endOfDay();
+        $start = date($request->start);
+        $previous_date = Carbon::parse($request->start)->subDay(1)->endOfDay();
         $end = date($request->end);
         // dd($request->all());
 
@@ -214,8 +215,8 @@ class OpsBunkerReportController extends Controller
         $scm_warehouse_id = ScmWarehouse::where('ops_vessel_id', $ops_vessel_id)->first()->id;
 
         $ops_vessel_ids= $vesselBunkers->pluck('ops_vessel_id')->toArray();
-        $allBunkers = OpsVesselBunkerService::getBunkers($ops_vessel_ids, null)->map(function ($material) use ($start, $end, $scm_warehouse_id) {
-            $material['previous_stock'] = CurrentStock::count($material['scm_material_id'], $scm_warehouse_id, $start);
+        $allBunkers = OpsVesselBunkerService::getBunkers($ops_vessel_ids, null)->map(function ($material) use ($previous_date, $end, $scm_warehouse_id) {
+            $material['previous_stock'] = CurrentStock::count($material['scm_material_id'], $scm_warehouse_id, $previous_date);
             $material['final_stock'] = CurrentStock::count($material['scm_material_id'], $scm_warehouse_id, $end);
             $material['scm_warehoust_id'] = $scm_warehouse_id;
             return $material;
