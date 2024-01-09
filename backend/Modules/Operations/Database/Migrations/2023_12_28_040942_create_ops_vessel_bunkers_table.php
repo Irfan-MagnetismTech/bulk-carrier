@@ -30,6 +30,7 @@ return new class extends Migration
             $table->date('date');
             $table->date('from_date')->nullable();
             $table->date('till_date')->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();
             $table->timestamps();
         });
     }

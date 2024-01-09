@@ -61,42 +61,35 @@
             @if(isset($stockRecords))
                 @foreach($stockRecords as $vesselBunkerId => $stockRecord)
 
+                    <tr>
+                        <td><nobr>{{ $stockRecord?->opsVessel?->name }}</nobr></td>
+                        <td><nobr>{{ $stockRecord?->opsVoyage?->voyage_sequence }}</nobr></td>
+                        
+                        @foreach($allBunkers as $bunker)
+
+                        <td>
+                            @php
+                            $output = ($stockRecord->type == 'Stock Out') ? $stockRecord->stockable->where('scm_material_id', $bunker['scm_material_id'])->sum('quantity') : 0;
+                            @endphp
+                            {{ ($output !=0 ) ? abs($output) : null }}
+                        </td>
+                        @endforeach
 
 
+                        @foreach($allBunkers as $bunker)
+                        <td>
+                            @php
+                            $output = ($stockRecord->type == 'Stock In') ? $stockRecord->stockable->where('scm_material_id', $bunker['scm_material_id'])->sum('quantity') : 0;
+                            @endphp
+                            {{ ($output !=0 ) ? abs($output) : null }}
+                        </td>
+                        @endforeach
 
-
-                <tr>
-                    <td><nobr>{{ $stockRecord?->opsVessel?->name }}</nobr></td>
-                    <td><nobr>{{ $stockRecord?->opsVoyage?->voyage_sequence }}</nobr></td>
-                    
-                    @foreach($allBunkers as $bunker)
-
-                    <td>
-                        @php
-                         $output = ($stockRecord->type == 'Stock Out') ? $stockRecord->stockable->where('scm_material_id', $bunker['scm_material_id'])->sum('quantity') : 0;
-                        @endphp
-                        {{ ($output !=0 ) ? abs($output) : null }}
-                    </td>
-                    @endforeach
-
-
-                    @foreach($allBunkers as $bunker)
-                    <td>
-                        @php
-                         $output = ($stockRecord->type == 'Stock In') ? $stockRecord->stockable->where('scm_material_id', $bunker['scm_material_id'])->sum('quantity') : 0;
-                        @endphp
-                        {{ ($output !=0 ) ? abs($output) : null }}
-                    </td>
-                    @endforeach
-
-                    @foreach($allBunkers as $bunker)
-                        <td></td>
-                        <td></td>
-                    @endforeach
-                </tr>
-
-
-
+                        @foreach($allBunkers as $bunker)
+                            <td></td>
+                            <td></td>
+                        @endforeach
+                    </tr>
 
                 @endforeach
             @endif
