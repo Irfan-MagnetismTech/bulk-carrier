@@ -28,6 +28,8 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
+
 const editInitiated = ref(0)
 
 function fetchVendors(searchParam, loading) {
@@ -233,8 +235,10 @@ onMounted(() => {
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700">Date <span class="text-red-500">*</span></span>
-      <input type="date" v-model="form.date" required placeholder="Effective From" class="form-input" autocomplete="off" />
+      <VueDatePicker v-model="form.date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+      <!-- <input type="date" v-model="form.date" required placeholder="Effective From" class="form-input" autocomplete="off" /> -->
     </label>
+
     <label class="block w-full mt-2 text-sm" v-if="form.usage_type=='Idle' && form.type!='Stock In'">
       <span class="text-gray-700">From Date <span class="text-red-500">*</span></span>
       <input type="date" v-model="form.effective_from" required placeholder="Effective From" class="form-input" autocomplete="off" />
