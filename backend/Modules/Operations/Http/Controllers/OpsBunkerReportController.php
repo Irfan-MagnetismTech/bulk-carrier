@@ -334,4 +334,78 @@ class OpsBunkerReportController extends Controller
         ], 200);
 
     }
+
+    public function vesselBunkerReportHorizontalBackup(Request $request)
+    {
+
+        $business_unit = $request->business_unit;
+        $ops_vessel_id = $request->ops_vessel_id;
+        $ops_voyage_id = $request->ops_voyage_id;
+        $type = $request->type;
+        $usage_type = $request->usage_type;
+        $start = date($request->start);
+        $previous_date = Carbon::parse($request->start)->subDay(1)->endOfDay();
+        $end = date($request->end);
+        // dd($request->all());
+
+        $vesselBunkers = OpsVesselBunker::when(isset($ops_vessel_id), function($query) use ($ops_vessel_id){
+                $query->where('ops_vessel_id', $ops_vessel_id);
+            })
+            ->when(isset($ops_voyage_id), function($query) use ($ops_voyage_id){
+                $query->where('ops_voyage_id', $ops_voyage_id);
+            })
+            ->when(isset($type), function($query) use ($type){
+                $query->where('type', $type);
+            })
+            ->when(isset($usage_type), function($query) use ($usage_type){
+                $query->where('usage_type', $usage_type);
+            })
+            ->with('opsVessel', 'opsVoyage', 'stockable')
+            ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
+                $query->where('business_unit', request()->business_unit);
+            })
+            ->whereBetween('date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
+            ->get();
+
+        if (count($vesselBunkers)<1) {
+            $error= [
+                'message'=>'Report not found.',
+                'errors'=>[
+                    'type'=>['Report not found.',]
+                    ]
+                ];
+            return response()->json($error, 422);
+        }
+        // $vesselBunkers = $vesselBunkers->groupBy('ops_voyage_id');
+            
+        // dd($output[37]->groupBy('type'));
+        $scm_warehouse_id = ScmWarehouse::where('ops_vessel_id', $ops_vessel_id)->first()->id;
+
+        $ops_vessel_ids= $vesselBunkers->pluck('ops_vessel_id')->toArray();
+        $allBunkers = OpsVesselBunkerService::getBunkers($ops_vessel_ids, null)->map(function ($material) use ($previous_date, $end, $scm_warehouse_id) {
+            $material['previous_stock'] = CurrentStock::count($material['scm_material_id'], $scm_warehouse_id, $previous_date);
+            $material['final_stock'] = CurrentStock::count($material['scm_material_id'], $scm_warehouse_id, $end);
+            $material['scm_warehoust_id'] = $scm_warehouse_id;
+            return $material;
+        });
+
+        
+
+
+        // $scm_material_id, $scm_warehouse_id, $toDate = null
+
+        // return view('operations::reports.vessel-bunker-report')->with([
+        //     'allBunkers' => $allBunkers,
+        //     'stockRecords' => $vesselBunkers
+        // ]);
+
+        $view = view('operations::reports.vessel-bunker-report')->with([
+            'allBunkers' => $allBunkers,
+            'stockRecords' => $vesselBunkers
+        ])->render();
+
+        return response()->json([
+            'value' => $view
+        ], 200);
+    }
 }
