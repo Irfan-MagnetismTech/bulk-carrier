@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('appraisal_record_line_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('appraisal_record_id')->constrained('appraisal_records', 'id')->cascadeOnDelete();
+            $table->foreignId('appraisal_record_line_id')->constrained('appraisal_record_lines', 'id')->cascadeOnDelete();
             $table->string('item_composite');
-            $table->string('comment');
-            $table->string('answer');            
+            $table->text('comment');
+            $table->string('answer');
             $table->timestamps();
         });
     }

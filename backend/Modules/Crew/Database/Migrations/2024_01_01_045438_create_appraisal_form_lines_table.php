@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('section_no');
             $table->string('section_name');
             $table->tinyInteger('is_tabular')->default(1);
+            $table->string('line_composite');
             $table->timestamps();
         });
     }
