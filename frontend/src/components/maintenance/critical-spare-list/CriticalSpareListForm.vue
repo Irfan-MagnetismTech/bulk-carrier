@@ -3,7 +3,7 @@
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Vessel" :options="vessels" @search="" v-model="form.ops_vessel" label="name" @update:modelValue="vesselChange" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <v-select placeholder="Select Vessel" :options="vessels" :loading="isVesselLoading" @search="" v-model="form.ops_vessel" label="name" @update:modelValue="vesselChange" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
                       class="vs__search"
@@ -47,7 +47,7 @@
           
           <template  v-for="(criticalVesselItem, index) in form.mntCriticalSpListLines" :key="index">
               <tr class="text-gray-700 dark-disabled:text-gray-400" v-if="criticalVesselItem?.mntCriticalItemSps?.length">
-                <td colspan="4" ><strong class="text-left block "><span class="text-base">{{ criticalVesselItem?.mntCriticalItem?.item_name }}</span> <span class="pl-1" v-show="criticalVesselItem?.mntCriticalItem?.specification">({{ criticalVesselItem?.mntCriticalItem?.specification }})</span></strong> </td>
+                <td colspan="4" ><strong class="text-left block "><span class="text-base">{{ criticalVesselItem?.mntCriticalItem?.item_name }}</span> <span class="pl-1" v-show="criticalVesselItem?.specification">({{ criticalVesselItem?.specification }})</span></strong> </td>
               </tr>
               <tr class="text-gray-700 dark-disabled:text-gray-400"  v-for="(mntCriticalItemSp, mntCriticalItemSpIndex) in criticalVesselItem?.mntCriticalItemSps" :key="mntCriticalItemSpIndex">
                 <td>{{ mntCriticalItemSp?.sp_name }}</td>
@@ -100,7 +100,7 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 
-const { vessels, getVesselsWithoutPaginate } = useVessel();
+const { vessels, getVesselsWithoutPaginate, isLoading: isVesselLoading } = useVessel();
 const { criticalFunctions, getCriticalFunctionsWithoutPagination } = useCriticalFunction();
 const { criticalFunctionWiseItemCategories, getCriticalFunctionWiseItemCategories, isLoading } = useCriticalItemCategory();
 const { criticalItemCategoryWiseItems, getCriticalItemCategoryWiseItems } = useCriticalItem();
@@ -123,6 +123,11 @@ function vesselChange() {
 
 watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
+
+  if (props.page != 'edit') {
+    props.form.ops_vessel = null;
+    vesselChange();
+  }
 });
 watch(() => criticalVesselItems.value, (value) => {
   props.form.mntCriticalSpListLines = value;

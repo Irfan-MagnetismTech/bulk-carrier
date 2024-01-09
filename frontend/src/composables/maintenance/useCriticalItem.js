@@ -18,7 +18,7 @@ export default function useCriticalItem() {
         mnt_critical_item_cat_id: '',
         mnt_critical_item_cat_name: '',
         item_name: '',
-        specification: '',
+        // specification: '',
         notes: '',
         mntItemCategories: [],
         // business_unit: '',

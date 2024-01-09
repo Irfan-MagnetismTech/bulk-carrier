@@ -62,6 +62,11 @@
           <input type="hidden" v-model="form.mnt_critical_item_id">
           <Error v-if="errors?.mnt_critical_item_id" :errors="errors.mnt_critical_item_id" />
         </label>
+        <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700 dark-disabled:text-gray-300">Specification</span>
+          <input type="text" v-model.trim="form.specification" placeholder="Specification" class="form-input"/>
+          <Error v-if="errors?.specification" :errors="errors.specification" />
+        </label>
 
       <!-- <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Notes</span>
@@ -208,6 +213,11 @@ watch(() => criticalItemCategoryWiseItems.value, (val) => {
 });
 watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
+
+  if (props.page != 'edit') {
+    props.form.ops_vessel = null;
+    vesselChange();
+  }
 });
 
 // watch(() => props.form.is_critical, (newValue, oldValue) => {

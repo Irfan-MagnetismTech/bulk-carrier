@@ -18,7 +18,6 @@ return new class extends Migration
             $table->unsignedBigInteger('mnt_critical_item_cat_id');
             $table->foreign('mnt_critical_item_cat_id')->references('id')->on('mnt_critical_item_cats');
             $table->string('item_name', 255);
-            $table->text('specification')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
         });
