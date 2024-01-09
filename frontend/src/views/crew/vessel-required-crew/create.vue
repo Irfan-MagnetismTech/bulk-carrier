@@ -16,7 +16,7 @@ setTitle('Create Vessel Required Crew');
         <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Create Vessel Crew Manning</h2>
       <default-button :title="'Vessel Required Crew List'" :to="{ name: 'crw.vesselRequiredCrews.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="storeVesselRequiredCrew(vesselRequiredCrew)">
             <!-- Booking Form -->
             <vessel-required-crew-form v-model:form="vesselRequiredCrew" :errors="errors"></vessel-required-crew-form>

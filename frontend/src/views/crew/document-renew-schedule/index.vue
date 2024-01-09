@@ -15,6 +15,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import useCrewDocument from "../../../composables/crew/useCrewDocument";
 import useCrewCommonApiRequest from "../../../composables/crew/useCrewCommonApiRequest";
 import env from '../../../config/env';
+import Store from "../../../store";
 
 const props = defineProps({
   page: {
@@ -23,6 +24,7 @@ const props = defineProps({
   },
 });
 
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const { crewDocumentRenewSchedules, currentCrewDocRenewData, isCrewDocumentRenewScheduleModalOpen, getCrewDocumentRenewSchedules, storeCrewRenewDocument, deleteCrewRenewDocument, updateCrewRenewDocument, isLoading, isTableLoading } = useCrewDocument();
 const { crewDocumentRenewals, getCrewDocumentRenewals, isCrewDocumentRenewModalOpen } = useCrewCommonApiRequest();
 
