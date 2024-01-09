@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('appraisal_record_lines', function (Blueprint $table) {
+        Schema::create('appraisal_record_line_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('appraisal_record_id')->constrained('appraisal_records', 'id')->cascadeOnDelete();
-            $table->string('line_composite');
+            $table->string('item_composite');
             $table->string('comment');
-            $table->string('answer');
+            $table->string('answer');            
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('appraisal_record_lines');
+        Schema::dropIfExists('appraisal_record_line_items');
     }
 };

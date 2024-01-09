@@ -2,12 +2,14 @@
 
 namespace Modules\Crew\Entities;
 
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\Operations\Entities\OpsVessel;
 
 class AppraisalRecord extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     protected $fillable = ['crw_crew_id', 'appraisal_form_id', 'crw_crew_assignment_id', 'appraisal_date', 'age', 'business_unit'];
 
@@ -28,5 +30,5 @@ class AppraisalRecord extends Model
 	public function crwCrewAssignment()
     {
         return $this->belongsTo(CrwCrewAssignment::class);
-    }	
+    }
 }

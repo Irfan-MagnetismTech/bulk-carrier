@@ -19,7 +19,8 @@ class AppraisalRecordController extends Controller
     public function index(Request $request)
     {
         try {
-            $appraisalRecords = AppraisalRecord::with('appraisalRecordLines.appraisalFormLineItem')->globalSearch($request->all());
+            $appraisalRecords = AppraisalRecord::with('crwCrew:id,full_name', 'crwCrewAssignment.opsVessel:id,name')
+            ->globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $appraisalRecords, 200);
         }
@@ -65,7 +66,7 @@ class AppraisalRecordController extends Controller
      */
     public function show(AppraisalRecord $appraisalRecord)
     {
-        try {
+        try {            
             $appraisalRecord->load('crwCrew', 'appraisalForm', 'crwCrewAssignment', 'appraisalRecordLines.appraisalFormLineItem.appraisalFormLine');
 
             $formattedSections = $appraisalRecord->appraisalRecordLines->groupBy('appraisalFormLineItem.appraisalFormLine.section_no');
