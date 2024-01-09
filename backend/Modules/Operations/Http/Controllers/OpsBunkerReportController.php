@@ -198,7 +198,7 @@ class OpsBunkerReportController extends Controller
             })
             ->whereBetween('date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
             ->get();
-            
+
         if (count($vesselBunkers)<1) {
             $error= [
                 'message'=>'Report not found.',
@@ -276,6 +276,12 @@ class OpsBunkerReportController extends Controller
             return $voyagesWithBunkers;
         });
 
+        // dd(count($allBunkers));
+        
+        return view('operations::reports.business-unit-bunker-report')->with([
+            'allBunkers' => $allBunkers,
+            'voyages' => $voyages
+        ]);
         $view = view('operations::reports.business-unit-bunker-report')->with([
             'allBunkers' => $allBunkers,
             'voyages' => $voyages
