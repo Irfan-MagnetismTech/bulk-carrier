@@ -87,7 +87,6 @@ function getReport() {
 
   <div v-if="vesselBunkerReport != ''" class="mb-5">
     <h4 class="text-center text-xl font-semibold my-4">
-      Report for {{ form.port }}
     </h4>
     <div v-html="vesselBunkerReport"></div>
   </div>

@@ -28,4 +28,9 @@ class ScmStockLedger extends Model
     {
         return $this->hasMany(ScmStockLedger::class,'parent_id');
     }
+
+    public function scmMaterial()
+    {
+        return $this->belongsTo(ScmMaterial::class, 'scm_material_id' , 'id');
+    }
 }

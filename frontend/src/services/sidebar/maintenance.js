@@ -260,6 +260,20 @@ export default [
                         permissionKey: '',
                         subSubMenu: [],
                     },
+
+                    
+                    {
+                        route: 'mnt.survey-entries.index',
+                        label: 'Survey Entries',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+
+
                 ]
             },
             
@@ -282,6 +296,60 @@ export default [
                         permissionKey: '',
                         subSubMenu: [],
                     },
+                    
+                    {
+                        route: 'mnt.reports.upcoming-jobs',
+                        label: 'Upcoming Jobs',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+                    
+                    {
+                        route: 'mnt.reports.overdue-jobs',
+                        label: 'Overdue Jobs',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+
+                    
+                    {
+                        route: 'mnt.reports.critical-vessel-functions',
+                        label: 'Cri. Vessel Functions',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+
+                    
+                    {
+                        route: 'mnt.reports.surveys',
+                        label: 'Survey Status',
+                        preIcon: icons.User,
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+
+
+
+
+
+
+
+
                              
                     
                 ]
