@@ -32,38 +32,9 @@
                 <th>Bunker Used</th>
                 <th>Final Stock</th>
             </tr>
-            {{-- <tr>
-                @for ($i = 0; $i < 4; $i++)
-                    @foreach ($allBunkers as $bunker)
-                        <th><nobr>{{ $bunker['name'] }}</nobr></th>
-                    @endforeach
-                @endfor
-            </tr> --}}
         </thead>
         <tbody>
             @if(isset($voyages))
-                {{-- @foreach($voyages as $voyage)
-                <tr>
-                    <td><nobr>{{ $voyage['vessel_name'] }}</nobr></td>
-                    <td><nobr>{{ $voyage['voyage_count'] }}</nobr></td>
-
-                    @foreach ($allBunkers as $bunker)
-                        <td><nobr>{{ ($voyage['previous_stock'][$bunker['scm_material_id']] != 0) ? $voyage['previous_stock'][$bunker['scm_material_id']] : null }}</nobr></td>
-                    @endforeach
-
-                    @foreach ($allBunkers as $bunker)
-                        <td><nobr>{{ ($voyage['stock_in'][$bunker['scm_material_id']] != 0) ? $voyage['stock_in'][$bunker['scm_material_id']] : null }}</nobr></td>
-                    @endforeach
-
-                    @foreach ($allBunkers as $bunker)
-                        <td><nobr>{{ ($voyage['stock_out'][$bunker['scm_material_id']] != 0 ) ? abs($voyage['stock_out'][$bunker['scm_material_id']]) : null }}</nobr></td>
-                    @endforeach
-
-                    @foreach ($allBunkers as $bunker)
-                        <td><nobr>{{ ($voyage['current_stock'][$bunker['scm_material_id']] != 0) ? $voyage['current_stock'][$bunker['scm_material_id']] : null }}</nobr></td>
-                    @endforeach
-                </tr>
-                @endforeach --}}
                 @foreach($voyages as $voyage)
                     @foreach ($allBunkers as $bunker)                        
                     <tr>
