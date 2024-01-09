@@ -198,9 +198,8 @@ class OpsBunkerReportController extends Controller
             })
             ->whereBetween('date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
             ->get();
-
-
-        if (empty($vesselBunkers)) {
+            
+        if (count($vesselBunkers)<1) {
             $error= [
                 'message'=>'Report not found.',
                 'errors'=>[
