@@ -6,21 +6,25 @@ import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 import useHeroIcon from "../../../assets/heroIcon";
 import useVessel from '../../../composables/operations/useVessel';
 import useOperationsReport from '../../../composables/operations/useOperationsReport';
+import useVoyage from "../../../composables/operations/useVoyage";
 
 
 const { vessels, searchVessels, isVesselLoading } = useVessel();
-const { vesselBunkerReport, isLoading, getVesselBunkerReport } = useOperationsReport();
+const { vesselBunkerReport, isLoading, getVesselBunkerReport, errors } = useOperationsReport();
 const icons = useHeroIcon();
+const { voyages, searchVoyages } = useVoyage();
 
 const form = ref({
   business_unit: '',
-  port: '',
   start: '',
-  end: ''
+  end: '',
+  type: '',
+  ops_vessel_id: '',
+  ops_voyage_id: '',
 })
 
 watch(() => form.value.business_unit, (value) => {
-
+  form.value.ops_vessel_id = ''
   fetchVessels("", false);
 
 }, { deep: true })
@@ -44,16 +48,72 @@ watch(() => form.value.business_unit, (value) => {
 
 
 function getReport() {
+  vesselBunkerReport.value = '';
   getVesselBunkerReport(form.value)
+}
+
+watch(() => form.value.ops_vessel_id, (newValue, oldValue) => {
+
+  if(newValue){
+    fetchVesselWiseVoyages(form.value.ops_vessel_id, false);
+  }
+
+}, { deep: true });
+
+function fetchVesselWiseVoyages(ops_vessel_id, loading) {
+  searchVoyages("", form.value.business_unit, loading, ops_vessel_id)
 }
 </script>
 <template>
   <!-- Basic information -->
   <h2 class="my-5 text-2xl text-center font-semibold">Vessel Bunker Report</h2>
   <form @submit.prevent="getReport()">
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+      <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
+        
+        <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700">From Date <span class="text-red-500">*</span></span>
+          <input type="date" v-model="form.start" required placeholder="From" class="form-input" autocomplete="off" />
+        </label>
+        <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700">Till Date <span class="text-red-500">*</span></span>
+          <input type="date" v-model="form.end" required placeholder="Till" class="form-input" autocomplete="off" />
+        </label>
+        <label class="block w-full mt-2 text-sm"></label>
+        
+    </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700">Type</span>
+        <select v-model="form.type" class="form-input">
+          <option disabled selected value="">Select Option</option>
+          <option value="Stock In">Stock In</option>
+          <option value="Stock Out">Stock Out</option>
+          <option value="Reconciliation">Reconciliation</option>
+        </select>
+      </label>
+      <label v-if="form.type != ''" class="block w-full mt-2 text-sm">
+        <span class="text-gray-700">{{ form.type }} Type </span>
+        <select v-model="form.usage_type" class="form-input">
+          <option disabled selected value="">Select Option</option>
+          <option value="Idle">Idle</option>
+          <option value="Voyage Wise">Voyage Wise</option>
+        </select>
+      </label>
+      <label class="block w-full mt-2 text-sm"></label>
+      <label class="block w-full mt-2 text-sm"></label>
+      <!-- <label class="block w-full mt-2 text-sm" v-if="form.type=='Reconciliation'">
+        <span class="text-gray-700">Reconfiliation Option <span class="text-red-500">*</span></span>
+        <select v-model="form.reconciliation_type" class="form-input" required>
+          <option disabled selected value="">Select Option</option>
+          <option value="Addition">Addition</option>
+          <option value="Deletion">Deletion</option>
+        </select>
+      </label> -->
+    </div>
+
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700">Vessel <span class="text-red-500">*</span></span>
             <v-select :options="vessels" placeholder="--Choose an option--" :loading="isVesselLoading"  v-model="form.ops_vessel_id" label="name" class="block form-input" :reduce="vessel=>vessel.id">
@@ -67,18 +127,20 @@ function getReport() {
                 </template>
             </v-select>
         </label>
-    </div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      
-      <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700">From Date <span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.start" required placeholder="From" class="form-input" autocomplete="off" />
-        </label>
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700">Till Date <span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.end" required placeholder="Till" class="form-input" autocomplete="off" />
-        </label>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage </span>
+              <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.ops_voyage_id" label="voyage_sequence" class="block form-input" :reduce="voyage=>voyage.id">
+                  <template #search="{attributes, events}">
+                      <input
+                          class="vs__search"
+                          v-bind="attributes"
+                          v-on="events"
+                          />
+                  </template>
+              </v-select>
+        </label> 
     </div>
+    
 
     <div class="flex items-center justify-center">
       <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Submit</button>

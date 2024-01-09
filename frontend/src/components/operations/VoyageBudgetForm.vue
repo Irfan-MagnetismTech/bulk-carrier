@@ -186,8 +186,8 @@ onMounted(() => {
 <template>
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <business-unit-input class="w-1/4" v-model="form.business_unit" :page="formType"></business-unit-input>
-      <label class="block w-3/4 mt-2 text-sm">
+      <business-unit-input class="w-1/3" v-model="form.business_unit" :page="formType"></business-unit-input>
+      <label class="block mt-2 text-sm" :class="{ 'w-full': form.business_unit !== 'ALL', 'w-2/3': form.business_unit === 'ALL' }">
         <span class="text-gray-700">Title <span class="text-red-500">*</span></span>
         <input type="text" maxlength="250" required v-model="form.title" placeholder="Title" class="form-input" autocomplete="off" />
       </label>

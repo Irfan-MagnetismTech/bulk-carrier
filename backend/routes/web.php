@@ -19,6 +19,4 @@ use Modules\Operations\Http\Controllers\OpsVoyageReportController;
 // Route::get('/test', fn()=> 'hi');
 Route::get('/', fn() => 'BG Torony - Magnetism Tech Limited');
 
-Route::get('bulk-voyage-report', [OpsVoyageReportController::class, 'bulkVoyageReport']);
-
 Route::get('vessel-bunker-report', [OpsBunkerReportController::class, 'vesselBunkerReport']);

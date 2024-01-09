@@ -26,6 +26,7 @@ watch(() => form.value.business_unit, (value) => {
 
 
 function getReport() {
+  grossBunkerReport.value = '';
   getGrossBunkerReport(form.value)
 }
 </script>

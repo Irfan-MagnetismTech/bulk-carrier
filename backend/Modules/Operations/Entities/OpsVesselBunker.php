@@ -23,7 +23,8 @@ class OpsVesselBunker extends Model
         'usage_type',
         'date',
         'from_date',
-        'till_date'
+        'till_date',
+        'business_unit'
     ];
 
     public function opsBunkers()

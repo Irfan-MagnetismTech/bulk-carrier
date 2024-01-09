@@ -33,7 +33,7 @@ export default function useOperationsReport() {
 			// notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
-			notification.showError(status);
+			errors.value = notification.showError(status, data);
 		} finally {
 			loader.hide();
 			isLoading.value = false;
@@ -53,7 +53,7 @@ export default function useOperationsReport() {
 			// notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
-			notification.showError(status);
+			errors.value = notification.showError(status, data);
 		} finally {
 			loader.hide();
 			isLoading.value = false;
@@ -73,7 +73,7 @@ export default function useOperationsReport() {
 			// notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
-			notification.showError(status);
+			errors.value = notification.showError(status, data);
 		} finally {
 			loader.hide();
 			isLoading.value = false;
@@ -93,7 +93,7 @@ export default function useOperationsReport() {
 			// notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
-			notification.showError(status);
+			errors.value = notification.showError(status, data);
 		} finally {
 			loader.hide();
 			isLoading.value = false;
@@ -113,7 +113,7 @@ export default function useOperationsReport() {
 			// notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
-			notification.showError(status);
+			errors.value = notification.showError(status, data);
 		} finally {
 			loader.hide();
 			isLoading.value = false;

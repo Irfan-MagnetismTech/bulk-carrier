@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Operations\Http\Controllers\OpsVoyageReportController;
+use Modules\Operations\Http\Controllers\OpsBulkNoonReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,3 +23,4 @@ Route::prefix('operations')->group(function() {
 //     'ports' => OpsPortController::class,
 // ]);
 Route::get('voyage-report', [OpsVoyageReportController::class, 'voyageReport']);
+Route::get('bulk-report', [OpsBulkNoonReportController::class, 'showReport']);
