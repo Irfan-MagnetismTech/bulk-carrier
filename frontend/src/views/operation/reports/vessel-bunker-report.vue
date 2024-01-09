@@ -55,7 +55,6 @@ function getReport() {
 watch(() => form.value.ops_vessel_id, (newValue, oldValue) => {
 
   if(newValue){
-    form.value.ops_vessel_id = newValue?.id;
     fetchVesselWiseVoyages(form.value.ops_vessel_id, false);
   }
 
@@ -80,7 +79,40 @@ function fetchVesselWiseVoyages(ops_vessel_id, loading) {
           <span class="text-gray-700">Till Date <span class="text-red-500">*</span></span>
           <input type="date" v-model="form.end" required placeholder="Till" class="form-input" autocomplete="off" />
         </label>
+        <label class="block w-full mt-2 text-sm"></label>
+        
     </div>
+
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700">Type</span>
+        <select v-model="form.type" class="form-input">
+          <option disabled selected value="">Select Option</option>
+          <option value="Stock In">Stock In</option>
+          <option value="Stock Out">Stock Out</option>
+          <option value="Reconciliation">Reconciliation</option>
+        </select>
+      </label>
+      <label v-if="form.type != ''" class="block w-full mt-2 text-sm">
+        <span class="text-gray-700">{{ form.type }} Type </span>
+        <select v-model="form.usage_type" class="form-input">
+          <option disabled selected value="">Select Option</option>
+          <option value="Idle">Idle</option>
+          <option value="Voyage Wise">Voyage Wise</option>
+        </select>
+      </label>
+      <label class="block w-full mt-2 text-sm"></label>
+      <label class="block w-full mt-2 text-sm"></label>
+      <!-- <label class="block w-full mt-2 text-sm" v-if="form.type=='Reconciliation'">
+        <span class="text-gray-700">Reconfiliation Option <span class="text-red-500">*</span></span>
+        <select v-model="form.reconciliation_type" class="form-input" required>
+          <option disabled selected value="">Select Option</option>
+          <option value="Addition">Addition</option>
+          <option value="Deletion">Deletion</option>
+        </select>
+      </label> -->
+    </div>
+
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700">Vessel <span class="text-red-500">*</span></span>
@@ -96,12 +128,11 @@ function fetchVesselWiseVoyages(ops_vessel_id, loading) {
             </v-select>
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage </span>
               <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.ops_voyage_id" label="voyage_sequence" class="block form-input" :reduce="voyage=>voyage.id">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
-                          :required="!form.ops_voyage_id"
                           v-bind="attributes"
                           v-on="events"
                           />
@@ -109,34 +140,7 @@ function fetchVesselWiseVoyages(ops_vessel_id, loading) {
               </v-select>
         </label> 
     </div>
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700">Type <span class="text-red-500">*</span></span>
-        <select v-model="form.type" class="form-input" required>
-          <option disabled selected value="">Select Option</option>
-          <option value="Stock In">Stock In</option>
-          <option value="Stock Out">Stock Out</option>
-          <option value="Reconciliation">Reconciliation</option>
-        </select>
-      </label>
-      <label v-if="form.type != ''" class="block w-full mt-2 text-sm">
-        <span class="text-gray-700">{{ form.type }} Type <span class="text-red-500">*</span></span>
-        <select v-model="form.usage_type" class="form-input" required>
-          <option disabled selected value="">Select Option</option>
-          <option value="Idle">Idle</option>
-          <option value="Voyage Wise">Voyage Wise</option>
-        </select>
-      </label>
-      <!-- <label v-if="form.type=='Reconciliation'" class="block w-full mt-2 text-sm"></label> -->
-      <label class="block w-full mt-2 text-sm" v-if="form.type=='Reconciliation'">
-        <span class="text-gray-700">Reconfiliation Option <span class="text-red-500">*</span></span>
-        <select v-model="form.reconciliation_type" class="form-input" required>
-          <option disabled selected value="">Select Option</option>
-          <option value="Addition">Addition</option>
-          <option value="Deletion">Deletion</option>
-        </select>
-      </label>
-    </div>
+    
 
     <div class="flex items-center justify-center">
       <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Submit</button>
