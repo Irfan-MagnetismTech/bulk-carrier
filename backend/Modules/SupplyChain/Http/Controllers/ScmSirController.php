@@ -138,7 +138,6 @@ class ScmSirController extends Controller
      */
     public function show(ScmSir $storeIssueReturn): JsonResponse
     {
-
         try {
             $storeIssueReturn->load('scmSirLines.scmMaterial', 'scmWarehouse', 'createdBy', 'scmSi');
 
