@@ -298,6 +298,7 @@ onMounted(() => {
             <td><span :class="job?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ job?.business_unit }}</span></td>
             <td>
               <nobr>
+                <action-button :action="'show'" :to="{ name: 'mnt.jobs.show', params: { jobId: job?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'mnt.jobs.edit', params: { jobId: job?.id } }"></action-button>
                 <action-button @click="confirmDelete(job?.id)" :action="'delete'"></action-button>
               </nobr>

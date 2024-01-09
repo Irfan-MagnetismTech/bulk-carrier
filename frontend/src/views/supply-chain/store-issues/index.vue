@@ -63,7 +63,7 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Date",
-      "filter_type": "input"
+      "filter_type": "date"
     },
     {
       "relation_name": "scmWarehouse",
@@ -141,33 +141,7 @@ onMounted(() => {
 });
 
 });
-// Code for global search end here
 
-// const navigateToPOCreate = (storeIssueId) => {
-//   const pr_id = storeIssueId; 
-//   const cs_id = null;
-//   const routeOptions = {
-//     name: 'scm.store-orders.create',
-//     query: {
-//       pr_id: pr_id,
-//       cs_id: cs_id
-//     }
-//   };
-//   router.push(routeOptions);
-// };  
-
-// const navigateToMRRCreate = (storeIssueId) => {
-//   const pr_id = storeIssueId; 
-//   const po_id = null;
-//   const routeOptions = {
-//     name: 'scm.material-receipt-reports.create',
-//     query: {
-//       pr_id: pr_id,
-//       po_id: po_id
-//     }
-//   };
-//   router.push(routeOptions);
-// };
 
 
 function confirmDelete(id) {
@@ -201,17 +175,6 @@ const DEPARTMENTS = ['N/A','Store Department', 'Engine Department', 'Provision D
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
-          <!-- <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>Ref No</th>
-            <th>Date</th>
-            <th>Warehouse</th>
-            <th>Department</th>
-            <th>Business Unit</th>
-            <th>Action</th>
-          </tr>
-          </thead> -->
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
             <tr v-for="(storeIssue,index) in (storeIssues?.data ? storeIssues?.data : storeIssues)" :key="index">

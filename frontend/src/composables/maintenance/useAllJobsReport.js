@@ -35,7 +35,6 @@ export default function useAllJobsReport() {
         showReport.value = true;
         try {
             const { data, status } = await Api.get('/mnt/report-all-jobs', { params: form });
-            console.log("lorew", data);
             allJobs.value = data.value;
             notification.showSuccess(status);
         } catch (error) {

@@ -14,7 +14,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
-
+import moment from 'moment';
 
 const { getMaterialAdjustments, materialAdjustments, deleteMaterialAdjustment, isLoading, isTableLoading } = useMaterialAdjustment();
 const { numberFormat } = useHelper();
@@ -85,13 +85,14 @@ let filterOptions = ref({
       "filter_type": "input"
     },
     {
-      "relation_name": null,
-      "field_name": null,
+      "relation_name": "createdBy",
+      "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
       "label": "Adjusted By",
+      "filter_type": "input"
     },
   ]
 });
@@ -166,16 +167,17 @@ function confirmDelete(id) {
           <tbody>
             <tr v-for="(materialAdjustment,index) in (materialAdjustments?.data ? materialAdjustments?.data : materialAdjustments)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-              <td>{{ materialAdjustment?.date }}</td>
+              <td><nobr>{{  moment(materialAdjustment?.date).format('DD-MM-YYYY') }}</nobr></td>
               <td>{{ materialAdjustment?.type ?? '' }}</td>
               <td>{{ materialAdjustment?.scmWarehouse?.name?? '' }}</td>
-              <td>{{ materialAdjustment?.scmWarehouse?.name?? '' }}</td>
+              <td>{{ materialAdjustment?.createdBy?.name?? '' }}</td>
               <td>
                 <span :class="materialAdjustment?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialAdjustment?.business_unit }}</span>
               </td>
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">
 
+                  <action-button :action="'show'" :to="{ name: 'scm.material-adjustments.show', params: { materialAdjustmentId: materialAdjustment.id } }"></action-button>
                   <action-button :action="'edit'" :to="{ name: 'scm.material-adjustments.edit', params: { materialAdjustmentId: materialAdjustment.id } }"></action-button>
                   <action-button @click="confirmDelete(materialAdjustment.id)" :action="'delete'"></action-button>
 

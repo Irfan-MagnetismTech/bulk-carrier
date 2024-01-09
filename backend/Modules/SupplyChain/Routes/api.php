@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\SupplyChain\Services\UniqueId;
+use Modules\SupplyChain\Http\Controllers\ScmCsController;
+use Modules\SupplyChain\Http\Controllers\ScmMiController;
+use Modules\SupplyChain\Http\Controllers\ScmMoController;
 use Modules\SupplyChain\Http\Controllers\ScmPoController;
 use Modules\SupplyChain\Http\Controllers\ScmPrController;
 use Modules\SupplyChain\Http\Controllers\ScmSiController;
@@ -15,15 +19,12 @@ use Modules\SupplyChain\Http\Controllers\ScmLcRecordController;
 use Modules\SupplyChain\Http\Controllers\ScmMaterialController;
 use Modules\SupplyChain\Http\Controllers\SupplyChainController;
 use Modules\SupplyChain\Http\Controllers\ScmWarehouseController;
+use Modules\SupplyChain\Http\Controllers\ScmAdjustmentController;
 use Modules\SupplyChain\Http\Controllers\ScmStockLedgerController;
 use Modules\SupplyChain\Http\Controllers\ScmOpeningStockController;
 use Modules\SupplyChain\Http\Controllers\ScmMaterialCategoryController;
-use Modules\SupplyChain\Http\Controllers\ScmMoController;
-use Modules\SupplyChain\Http\Controllers\ScmMiController;
-use Modules\SupplyChain\Http\Controllers\ScmCsController;
-use Modules\SupplyChain\Http\Controllers\ScmAdjustmentController;
 
-Route::middleware('auth:api')->prefix('scm')->group(function () {
+Route::prefix('scm')->group(function () {
     Route::apiResources([
         'material-categories' => ScmMaterialCategoryController::class,
         'units' => ScmUnitController::class,
@@ -96,4 +97,5 @@ Route::middleware('auth:api')->prefix('scm')->group(function () {
     Route::get('quotations', [ScmCsController::class, "getQuotations"])->name('quotations.index');
     Route::get('quotations/{quotationId}', [ScmCsController::class, "showQuotation"])->name('quotations.show');
     Route::put('quotations/{quotationId}', [ScmCsController::class, "updateQuotation"])->name('quotations.update');
+
 });

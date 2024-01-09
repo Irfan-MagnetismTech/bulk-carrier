@@ -479,13 +479,92 @@ export default [
 
 	/* Survey End */
 
+	
+	/* Survey Entry Start */
+	{
+		path: `/${BASE}/survey-entries`,
+		name: `${BASE}.survey-entries.index`,
+		component: () => import(`../views/${VIEWBASE}/survey-entry/index.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-entry-index' },
+		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+	},
+	{
+		path: `/${BASE}/survey-entries/create`,
+		name: `${BASE}.survey-entries.create`,
+		component: () => import(`../views/${VIEWBASE}/survey-entry/create.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-entry-create' },
+	},
+	{
+		path: `/${BASE}/survey-entries/:surveyEntryId/edit`,
+		name: `${BASE}.survey-entries.edit`,
+		component: () => import(`../views/${VIEWBASE}/survey-entry/edit.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-entry-edit' },
+	},
+	{
+		path: `/${BASE}/survey-entries/:surveyEntryId`,
+		name: `${BASE}.survey-entries.show`,
+		component: () => import(`../views/${VIEWBASE}/survey-entry/show.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-entry-show'  },
+	},
+
+	/* Survey Entry End */
+
+
+
 	/* Report Start */
+	/* All Jobs */
 	{
 		path: `/${BASE}/reports/all-jobs`,
 		name: `${BASE}.reports.all-jobs`,
 		component: () => import(`../views/${VIEWBASE}/reports/all-jobs-report/report.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: 'all-jobs-report' },
 	},
+	/* All Jobs */
+	
+	/* Upcoming Jobs */
+	{
+		path: `/${BASE}/reports/upcoming-jobs`,
+		name: `${BASE}.reports.upcoming-jobs`,
+		component: () => import(`../views/${VIEWBASE}/reports/upcoming-jobs-report/report.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'upcoming-jobs-report' },
+	},
+	/* Upcoming Jobs */
+
+	
+	/* Overdue Jobs */
+	{
+		path: `/${BASE}/reports/overdue-jobs`,
+		name: `${BASE}.reports.overdue-jobs`,
+		component: () => import(`../views/${VIEWBASE}/reports/overdue-jobs-report/report.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'overdue-jobs-report' },
+	},
+	/* Overdue Jobs */
+
+
+	
+	/* Critical Items */
+	{
+		path: `/${BASE}/reports/critical-vessel-functions`,
+		name: `${BASE}.reports.critical-vessel-functions`,
+		component: () => import(`../views/${VIEWBASE}/reports/critical-vessel-functions-report/report.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'critical-vessel-functions-report' },
+	},
+	/* Critical Items */
+
+	
+	/* Survey Start */
+	{
+		path: `/${BASE}/reports/surveys`,
+		name: `${BASE}.reports.surveys`,
+		component: () => import(`../views/${VIEWBASE}/reports/survey-entries-report/report.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'survey-entries-report' },
+	},
+	/* Survey End */
+
+
+
+	
+
 	/* Report End */
 
 

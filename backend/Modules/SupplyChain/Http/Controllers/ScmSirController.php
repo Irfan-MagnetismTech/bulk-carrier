@@ -87,7 +87,7 @@ class ScmSirController extends Controller
                         'currency' => $stock->currency,
                         'exchange_rate' => $stock->exchange_rate,
                         'business_unit' => $stock->business_unit,
-                        'received_date' => $stock->received_date,
+                        'date' => $stock->received_date,
                     ];
                     break;
                 } else {
@@ -106,7 +106,7 @@ class ScmSirController extends Controller
                         'currency' => $stock->currency,
                         'exchange_rate' => $stock->exchange_rate,
                         'business_unit' => $stock->business_unit,
-                        'received_date' => $stock->received_date,
+                        'date' => $stock->received_date,
                     ];
                     $remainingQty = $remainingQty - $convertMinusToPlus;
                 }
@@ -138,7 +138,6 @@ class ScmSirController extends Controller
      */
     public function show(ScmSir $storeIssueReturn): JsonResponse
     {
-
         try {
             $storeIssueReturn->load('scmSirLines.scmMaterial', 'scmWarehouse', 'createdBy', 'scmSi');
 
@@ -152,7 +151,7 @@ class ScmSirController extends Controller
                     'si_quantity' => $scmSirLine->scmSiLine->quantity ?? null,
                     'max_quantity' => $maxQuantity,
                     // 'sr_quantity' => $scmSirLine->scmSrLine->quantity,
-                    // 'current_stock' => (new CurrentStock)->count($scmSirLine->scm_material_id, $storeIssue->scm_warehouse_id),
+                    // 'current_stock' => CurrentStock::count($scmSirLine->scm_material_id, $storeIssue->scm_warehouse_id),
                     'sr_composite_key' => $scmSirLine->sr_composite_key ?? null,
                     'si_composite_key' => $scmSirLine->si_composite_key ?? null,
                 ];

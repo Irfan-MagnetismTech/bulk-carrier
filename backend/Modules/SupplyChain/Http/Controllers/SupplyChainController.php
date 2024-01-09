@@ -102,9 +102,9 @@ class SupplyChainController extends Controller
             });
 
         if ($method == 'lifo') {
-            $currentStock1 = $currentStock1->sortByDesc('received_date');
+            $currentStock1 = $currentStock1->sortByDesc('date');
         } else {
-            $currentStock1 = $currentStock1->sortBy('received_date');
+            $currentStock1 = $currentStock1->sortBy('date');
         }
 
         $stockOutArray = [];
@@ -129,7 +129,7 @@ class SupplyChainController extends Controller
                     'currency'                  => $value->currency,
                     'exchange_rate'             => $value->exchange_rate,
                     'business_unit'             => $value->business_unit,
-                    'received_date'             => $value->received_date,
+                    'date'             => $value->received_date,
                 ];
                 break;
             } else {
@@ -148,7 +148,7 @@ class SupplyChainController extends Controller
                     'currency'                  => $value->currency,
                     'exchange_rate'             => $value->exchange_rate,
                     'business_unit'             => $value->business_unit,
-                    'received_date'             => $value->received_date,
+                    'date'             => $value->received_date,
                 ];
                 $outQty = $outQty - $currentStock;
             }

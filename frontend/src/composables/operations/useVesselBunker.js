@@ -87,7 +87,7 @@ export default function useVesselBunker() {
 		}
 
 		form.opsBunkers.map((bunker) => {
-			bunker.scm_vendor_id = form.scmVendor.id;
+			bunker.scm_vendor_id = form?.scmVendor?.id;
 			return bunker;
 		});
 
