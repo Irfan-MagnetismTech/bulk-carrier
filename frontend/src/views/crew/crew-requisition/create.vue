@@ -16,7 +16,7 @@ setTitle('Create Crew Requisition');
         <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Create Crew Requisition</h2>
       <default-button :title="'Crew Requisition List'" :to="{ name: 'crw.crewRequisitions.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="storeCrewRequisition(crewRequisition)">
             <!-- Booking Form -->
             <crew-requisition-form v-model:form="crewRequisition" :errors="errors"></crew-requisition-form>
