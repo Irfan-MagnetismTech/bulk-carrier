@@ -141,6 +141,16 @@ class OpsVoyageReportController extends Controller
             })
             ->get();
 
+            if (count($vesselBunkers)<1) {
+                $error= [
+                    'message'=>'Report not found.',
+                    'errors'=>[
+                        'type'=>['Report not found.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
+
 
             $bunkerMaterialTitle=[];
             foreach($vesselBunkers as $vesselBunker){                
@@ -244,8 +254,13 @@ class OpsVoyageReportController extends Controller
                 'bunkerMaterialTitle'=> array_unique($bunkerMaterialTitle),
                 'companyName' => 'TOGGI SHIPPING & LOGISTIC',
             ];
-            return view('operations::reports.voyage',compact('data'));
-            return response()->success('Data retrieved successfully.', $data, 200);
+
+            $view = view('operations::reports.lighter-voyage-report',compact('data'))->render();
+
+            return response()->json([
+                'value' => $view
+            ], 200);
+           
         }
         catch (QueryException $e)
         {
