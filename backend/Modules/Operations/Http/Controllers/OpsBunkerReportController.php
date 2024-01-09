@@ -174,6 +174,7 @@ class OpsBunkerReportController extends Controller
         $ops_vessel_id = $request->ops_vessel_id;
         $ops_voyage_id = $request->ops_voyage_id;
         $type = $request->type;
+        $usage_type = $request->usage_type;
         $start = date($request->start);
         $end = date($request->end);
         // dd($request->all());
@@ -185,7 +186,10 @@ class OpsBunkerReportController extends Controller
                 $query->where('ops_voyage_id', $ops_voyage_id);
             })
             ->when(isset($type), function($query) use ($type){
-                $query->where('usage_type', $type);
+                $query->where('type', $type);
+            })
+            ->when(isset($usage_type), function($query) use ($usage_type){
+                $query->where('usage_type', $usage_type);
             })
             ->with('opsVessel', 'opsVoyage', 'stockable')
             ->when(isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
