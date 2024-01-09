@@ -13,7 +13,7 @@ class MntSurveyType extends Model
 
     protected $fillable = ['survey_type_name','due_period','window_period'];
 
-    public function mntSurvey() : HasMany {
+    public function mntSurveys() : HasMany {
         return $this->hasMany(MntSurvey::class);
     }
 }

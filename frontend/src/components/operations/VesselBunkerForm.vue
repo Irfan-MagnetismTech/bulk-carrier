@@ -227,6 +227,8 @@ onMounted(() => {
         </select>
       </label>
       <label v-else class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm" v-if="form.type==''"></label>
+
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
@@ -243,6 +245,8 @@ onMounted(() => {
     </label>
     <label class="block w-full mt-2 text-sm" v-if="form.usage_type!='Idle' && form.type!='Stock In'"></label>
     <label class="block w-full mt-2 text-sm" v-if="form.usage_type!='Idle' && form.type!='Stock In'"></label>
+    <label class="block w-full mt-2 text-sm" v-if="form.type=='Stock In'"></label>
+    <label class="block w-full mt-2 text-sm" v-if="form.type=='Stock In'"></label>
     <label class="block w-full mt-2 text-sm"></label>
 
   </div>

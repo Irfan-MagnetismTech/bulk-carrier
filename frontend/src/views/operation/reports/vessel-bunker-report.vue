@@ -24,7 +24,7 @@ const form = ref({
 })
 
 watch(() => form.value.business_unit, (value) => {
-
+  form.value.ops_vessel_id = ''
   fetchVessels("", false);
 
 }, { deep: true })

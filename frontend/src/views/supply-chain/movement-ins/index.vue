@@ -181,6 +181,7 @@ function confirmDelete(id) {
                   <!-- <button @click="navigateToSICreate(movementIn.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create SI</button> -->
                   <!-- <button @click="navigateToPOCreate(movementIn.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
                   <button @click="navigateToMRRCreate(movementIn.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
+                  <action-button :action="'show'" :to="{ name: 'scm.movement-ins.show', params: { movementInId: movementIn.id } }"></action-button>
                   <action-button :action="'edit'" :to="{ name: 'scm.movement-ins.edit', params: { movementInId: movementIn.id } }"></action-button>
                   <action-button @click="confirmDelete(movementIn.id)" :action="'delete'"></action-button>
                 </div>

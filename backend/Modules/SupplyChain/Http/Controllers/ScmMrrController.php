@@ -19,7 +19,7 @@ use Modules\SupplyChain\Http\Requests\ScmMrrRequest;
 
 class ScmMrrController extends Controller
 {
-    function __construct(private CompositeKey $compositeKey)
+    function __construct()
     {
         //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
         //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
@@ -46,6 +46,7 @@ class ScmMrrController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * @param ScmMrrRequest $request
      * @return JsonResponse
      */
     public function store(ScmMrrRequest $request): JsonResponse
@@ -72,7 +73,7 @@ class ScmMrrController extends Controller
 
     /**
      * Show the specified resource.
-     * @param ScmMrr $materialReceiptReport
+     * @param $id
      * @return JsonResponse
      */
     public function show($id): JsonResponse

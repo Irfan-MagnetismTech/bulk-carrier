@@ -55,8 +55,8 @@ class OpsVesselRequest extends FormRequest
             'live_tracking_config'=> ['nullable', 'string', 'max:5000'],
             'remarks'         => ['nullable', 'string', 'max:500'],
             'opsVesselCertificates.*.ops_maritime_certification_id' => ['nullable', 'numeric', 'max:255'],           
-            // 'opsBunkers.*.scm_material_id' => ['nullable', 'numeric', 'max:255'],
-            // 'opsBunkers.*.unit' => ['nullable', 'string', 'max:255'],
+            'opsBunkers.*.scm_material_id' => ['nullable', 'numeric', 'max:255'],
+            'opsBunkers.*.unit' => ['nullable', 'string', 'max:255'],
             // 'opsBunkers.*.opening_balance' => ['nullable', 'numeric'],
         ];
     }

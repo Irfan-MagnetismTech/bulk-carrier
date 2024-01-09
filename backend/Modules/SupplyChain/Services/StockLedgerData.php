@@ -96,7 +96,7 @@ class StockLedgerData
                     'currency'                  => $value->currency,
                     'exchange_rate'             => $value->exchange_rate,
                     'business_unit'             => $value->business_unit,
-                    'date'             => $value->received_date,
+                    'date'                      => $value->received_date,
                 ];
 
                 break;
@@ -116,7 +116,7 @@ class StockLedgerData
                     'currency'                  => $value->currency,
                     'exchange_rate'             => $value->exchange_rate,
                     'business_unit'             => $value->business_unit,
-                    'date'             => $value->received_date,
+                    'date'                      => $value->received_date,
                 ];
                 $outQty = $outQty - $currentStock;
             }

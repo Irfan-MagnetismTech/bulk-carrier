@@ -1,7 +1,7 @@
 <template>
   <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2">
-      <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
-      <label class="block w-full mt-2 text-sm">
+      <!-- <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input> -->
+      <!-- <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
             <v-select placeholder="Select Vessel" :loading="isVesselLoading"  :options="vessels" @search="" v-model="form.ops_vessel" label="name" @update:modelValue="vesselChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
@@ -15,7 +15,7 @@
               </v-select>
               <input type="hidden" v-model="form.ops_vessel_id">
           <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" />
-        </label>
+        </label> -->
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Survey Item <span class="text-red-500">*</span></span>
           <v-select placeholder="Select Survey Item" :loading="isSurveyItemLoading"  :options="surveyItems" @search="" v-model="form.mnt_survey_item" label="item_name" @update:modelValue="surveyItemChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
@@ -61,36 +61,32 @@
         <Error v-if="errors?.survey_name" :errors="errors.survey_name" />
       </label>
       
-      <label class="block w-full mt-2 text-sm">
+      <!-- <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Range Date (From) <span class="text-red-500">*</span></span>
-        <!-- <input type="date" v-model="form.range_date_from" placeholder="Range Date (From)" class="form-input" @input="setRangeDateTo"  required/> -->
         <VueDatePicker v-model="form.range_date_from" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" @update:model-value="setRangeDateTo"></VueDatePicker>
         <Error v-if="errors?.range_date_from" :errors="errors.range_date_from" />
-      </label>
+      </label> -->
 
       
-      <label class="block w-full mt-2 text-sm">
+      <!-- <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Range Date (To) <span class="text-red-500">*</span></span>
-        <!-- <input type="date" v-model="form.range_date_to" placeholder="Range Date (To)" class="form-input" required/> -->
         <VueDatePicker v-model="form.range_date_to" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
         <Error v-if="errors?.range_date_to" :errors="errors.range_date_to" />
-      </label>
+      </label> -->
 
       
-      <label class="block w-full mt-2 text-sm">
+      <!-- <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Assigned Date <span class="text-red-500">*</span></span>
-        <!-- <input type="date" v-model="form.assigned_date" placeholder="Assigned date" @input="setDueDate"  class="form-input" required/> -->
         <VueDatePicker v-model="form.assigned_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" @update:model-value="setDueDate"></VueDatePicker>
         <Error v-if="errors?.assigned_date" :errors="errors.assigned_date" />
-      </label>
+      </label> -->
 
       
-      <label class="block w-full mt-2 text-sm">
+      <!-- <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Due Date <span class="text-red-500">*</span></span>
-        <!-- <input type="date" v-model="form.due_date" placeholder="Due date" class="form-input" required/> -->
         <VueDatePicker v-model="form.due_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
         <Error v-if="errors?.due_date" :errors="errors.due_date" />
-      </label>
+      </label> -->
 
       <!-- <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Status</span>
@@ -143,12 +139,13 @@ function surveyItemChange() {
     props.form.mnt_survey_item_id = props.form.mnt_survey_item?.id;
 }
 
+
 function surveyTypeChange() {
   props.form.mnt_survey_type_id = props.form.mnt_survey_type?.id;
-  setRangeDateTo();
-  setDueDate();
+  // setRangeDateTo();
+  // setDueDate();
 }
-
+/*
 function setRangeDateTo() {
   props.form.range_date_to = "";
   if(props.form.range_date_from)
@@ -160,7 +157,7 @@ function setDueDate() {
   if(props.form.assigned_date)
     props.form.due_date = moment(props.form.assigned_date).add(props.form?.mnt_survey_type?.due_period ?? 0, 'months').format('YYYY-MM-DD');
 }
-
+*/
 
 
 

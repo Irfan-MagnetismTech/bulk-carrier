@@ -66,9 +66,6 @@ class ScmSiController extends Controller
 
             //loop through each line and update current stock
             $dataForStock = [];
-            //    collect($request->scmSiLines)->map(function ($scmSiLine) use ($scmSi, &$dataForStock) {
-            //        $dataForStock[] = StockLedgerData::out($scmSiLine->scm_material_id, $scmSi->scm_warehouse_id, $scmSiLine->quantity);
-            //     });
 
             foreach ($request->scmSiLines as $scmSiLine) {
                 if (CurrentStock::count($scmSiLine['scm_material_id'], $scmSi->scm_warehouse_id) < $scmSiLine['quantity']) {
