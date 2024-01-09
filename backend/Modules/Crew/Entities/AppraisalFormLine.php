@@ -13,5 +13,9 @@ class AppraisalFormLine extends Model
 
 	public function appraisalFormLineItems(){
 		return $this->hasMany(AppraisalFormLineItem::class);
+	}
+
+	public function appraisalRecordLine(){
+		return $this->hasOne(AppraisalRecordLine::class, 'line_composite', 'line_composite');
 	}    
 }

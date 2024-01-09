@@ -52,7 +52,7 @@ class AppraisalRecordController extends Controller
                     $appraisalRecordLine                   = AppraisalRecordLine::create($recordLineData);
                     $recordItems                           = $recordLineData['appraisalFormLineItems'];
 
-                    if ( $recordItems )
+                    if ($recordItems)
                     {
                         $appraisalRecordLine->appraisalRecordLineItems()->createMany($recordItems);
                     }
@@ -76,8 +76,45 @@ class AppraisalRecordController extends Controller
     public function show(AppraisalRecord $appraisalRecord)
     {
         try {
-            $appraisalRecord->load('crwCrew:id,full_name', 'appraisalForm', 'crwCrewAssignment', 'appraisalRecordLines.appraisalFormLine',  
-            'appraisalRecordLines.appraisalRecordLineItems.appraisalFormLineItem');
+
+            $appraisalRecord->load('crwCrew:id,full_name', 'appraisalForm', 'crwCrewAssignment', 'appraisalRecordLines.appraisalFormLine',
+                'appraisalRecordLines.appraisalRecordLineItems.appraisalFormLineItem');
+            
+
+            $appraisalRecordLines = $appraisalRecord->appraisalRecordLines->map(function ($recordLine, $key)
+            {
+                $formattedSection = [
+                    'section_no'               => $recordLine->appraisalFormLine->section_no,
+                    'section_name'             => $recordLine->appraisalFormLine->section_name,
+                    'is_tabular'               => $recordLine->appraisalFormLine->is_tabular,
+                    'line_composite'           => $recordLine->line_composite,
+                    'comment'                  => $recordLine->comment,
+                    'answer'                   => $recordLine->answer,
+                    'appraisalRecordLineItems' => $recordLine->appraisalRecordLineItems->map(function ($lineItem, $key) use ($recordLine)
+                    {
+                        $appraisalFormLineItem = [
+                            'item_no'                  => $lineItem->appraisalFormLineItem->item_no,
+                            'aspect'                   => $lineItem->appraisalFormLineItem->aspect,
+                            'description'              => $lineItem->appraisalFormLineItem->description,
+                            'answer_type'              => $lineItem->appraisalFormLineItem->answer_type,
+                            'item_composite'           => $lineItem->item_composite,
+                            'appraisal_record_line_id' => $lineItem->appraisal_record_line_id,
+                            'comment'                  => $lineItem->comment,
+                            'answer'                   => $lineItem->answer,
+                        ];
+
+                        return $appraisalFormLineItem;
+                    }),
+                ];
+
+                return $formattedSection;
+            });
+
+            unset($appraisalRecord->appraisalRecordLines); 
+
+            $appraisalRecord->appraisalRecordLines = $appraisalRecordLines; 
+
+
 
             return response()->success('Retrieved Successfully', $appraisalRecord, 200);
         }
