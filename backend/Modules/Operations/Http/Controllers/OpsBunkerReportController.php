@@ -175,7 +175,7 @@ class OpsBunkerReportController extends Controller
         $ops_voyage_id = $request->ops_voyage_id;
         $type = $request->type;
         $usage_type = $request->usage_type;
-        $start = date($request->start);
+        $start = Carbon::parse($request->start)->subDay(1)->endOfDay();
         $end = date($request->end);
         // dd($request->all());
 
