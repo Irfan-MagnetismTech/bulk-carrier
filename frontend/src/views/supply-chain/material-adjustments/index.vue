@@ -177,6 +177,7 @@ function confirmDelete(id) {
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">
 
+                  <action-button :action="'show'" :to="{ name: 'scm.material-adjustments.show', params: { materialAdjustmentId: materialAdjustment.id } }"></action-button>
                   <action-button :action="'edit'" :to="{ name: 'scm.material-adjustments.edit', params: { materialAdjustmentId: materialAdjustment.id } }"></action-button>
                   <action-button @click="confirmDelete(materialAdjustment.id)" :action="'delete'"></action-button>
 

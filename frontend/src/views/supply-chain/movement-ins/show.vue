@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Store Requistion Details</h2>
-    <default-button :title="'Store Requistion List'" :to="{ name: 'scm.store-requisitions.index' }" :icon="icons.DataBase"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Movement In Details</h2>
+    <default-button :title="'Movement In List'" :to="{ name: 'scm.store-issues.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
     <div class="flex md:gap-4">
@@ -15,33 +15,33 @@
                 <tbody>
                     <tr>
                         <th class="w-40">Business Unit</th>
-                        <td><span :class="storeRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ storeRequisition?.business_unit }}</span></td>
+                        <td><span :class="movementIn?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ movementIn?.business_unit }}</span></td>
                     </tr>
                     <tr>
-                        <th class="w-40">Requisition No.</th>
-                        <td>{{ storeRequisition?.ref_no }}</td>
+                        <th class="w-40">Movement In No.</th>
+                        <td>{{ movementIn?.ref_no }}</td>
                     </tr>
                     <tr>
-                        <th class="w-40">Warehouse</th>
-                        <td>{{ storeRequisition.scmWarehouse?.name }}</td>
+                        <th class="w-40">From Warehouse</th>
+                        <td>{{ movementIn?.fromWarehouse?.name }}</td>
                     </tr>
                     <tr>
-                        <th class="w-40">Department</th>
-                        <td>{{ DEPARTMENTS[storeRequisition.department_id] }}</td>
+                        <th class="w-40">To Warehouse</th>
+                        <td>{{ movementIn.toWarehouse.name }}</td>
                     </tr>
                     <tr>
-                        <th class="w-40">Requisition Date</th>
-                        <td>{{ storeRequisition?.date }}</td>
+                        <th class="w-40">In Date.</th>
+                        <td>{{ movementIn?.date }}</td>
                     </tr>
                     <tr>
-                        <th class="w-40">Remarks </th>
-                        <td>{{ storeRequisition?.remarks }}</td>
+                        <th class="w-40">Requsiotion Ref </th>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
-    <div class="flex md:gap-4 mt-1 md:mt-2" v-if="storeRequisition.scmSrLines?.length">
+    <div class="flex md:gap-4 mt-1 md:mt-2" v-if="movementIn.scmMiLines?.length">
         <div class="w-full">
           <table class="w-full">
             <thead>
@@ -53,28 +53,24 @@
               <tr class="w-full">
                 <th>SL</th>
                 <th class="w-72">Material Name</th>
-                <th>Specification</th>
                 <th>Unit</th>
                 <th>Quantity</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(certificate, index) in storeRequisition.scmSrLines">
+              <tr v-for="(certificate, index) in movementIn.scmMiLines">
                 <td>
                   {{ index+1 }}
                 </td>
                 <td>
-                  <span v-if="storeRequisition.scmSrLines[index]?.scmMaterial?.name">{{ storeRequisition.scmSrLines[index]?.scmMaterial?.name }}</span>
+                  <span v-if="movementIn.scmMiLines[index]?.scmMaterial?.name">{{ movementIn.scmMiLines[index]?.scmMaterial?.name }}</span>
                 </td>
                 <td>
-                  <span v-if="storeRequisition.scmSrLines[index]?.specification">{{ storeRequisition.scmSrLines[index]?.specification }}</span>
-                </td>
-                <td>
-                  <span v-if="storeRequisition.scmSrLines[index]?.unit">{{ storeRequisition.scmSrLines[index]?.unit }}</span>
+                  <span v-if="movementIn.scmMiLines[index]?.unit">{{ movementIn.scmMiLines[index]?.unit }}</span>
                 </td>
                 <td>
                 <span>
-                    {{ numberFormat(storeRequisition.scmSrLines[index].quantity) }}
+                    {{ numberFormat(movementIn.scmMiLines[index].quantity) }}
                 </span>
               </td>
               </tr>
@@ -101,31 +97,25 @@ import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHelper from "../../../composables/useHelper";
 import useHeroIcon from "../../../assets/heroIcon";
-import useStoreRequisition from "../../../composables/supply-chain/useStoreRequisition";
-import StoreRequisitionShow from "../../../components/supply-chain/store-requisitions/StoreRequisitionShow.vue";
+import useMovementIn from "../../../composables/supply-chain/useMovementIn";
 
 const icons = useHeroIcon();
 
 const route = useRoute();
-const storeRequisitionId = route.params.storeRequisitionId;
+const movementInId = route.params.movementInId;
 
-const { getStoreRequisition, showStoreRequisition, storeRequisition, updateStoreRequisition,materialObject, errors, isLoading } = useStoreRequisition();
-
+const { getMovementIn, showMovementIn, movementIn, updateMovementIn,materialObject, errors, isLoading } = useMovementIn();
 const { numberFormat } = useHelper();
 
 const { setTitle } = Title();
 
-setTitle('Store Requistion Details');
 
 const DEPARTMENTS = ['', 'Store Department', 'Engine Department', 'Provision Department'];
 
-// watch(bunkerRequisition, (value) => {
-//    bunkerRequisition.value.opsVoyage = value?.opsVoyage;
-// });
+setTitle('Show Movement In');
 
 onMounted(() => {
-    showStoreRequisition(storeRequisitionId);
+    showMovementIn(movementInId);
 });
-
 
 </script>
