@@ -13,7 +13,7 @@ class MntSurveyItem extends Model
 
     protected $fillable = ['item_name'];
 
-    public function mntSurvey() : HasMany {
+    public function mntSurveys() : HasMany {
         return $this->hasMany(MntSurvey::class);
     }
 }

@@ -38,11 +38,11 @@
           <Error v-if="errors?.item_name" :errors="errors.item_name" />
         </label>
 
-      <label class="block w-full mt-2 text-sm">
+      <!-- <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Specification</span>
         <input type="text" v-model.trim="form.specification" placeholder="Specification" class="form-input"/>
         <Error v-if="errors?.specification" :errors="errors.specification" />
-      </label>
+      </label> -->
 
       
       <!-- <label class="block w-full mt-2 text-sm">
