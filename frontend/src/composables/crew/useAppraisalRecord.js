@@ -17,16 +17,19 @@ export default function useAppraisalRecord() {
     const appraisalRecord = ref({
         business_unit: '',
         crw_crew_id: '',
-        age: 0,
         crw_crew_profile: '',
-        completed_job_id: '',
-        completed_job: '',
+        age: 0,
+        // completed_job_id: '',
+        // completed_job: '',
         appraisal_form_id: '',
         appraisal_form: '', 
         crw_crew_assignment: '',
         crw_crew_assignment_id: '',
         appraisal_date: '',
-        appraisalRecordLines: [],
+        appraisalRecordLines: [{
+            appraisalFormLine: {},
+            appraisalRecordLineItems: [],
+        }],
     });
 
     const filterParams = ref(null);

@@ -53,7 +53,7 @@
 
         <label class="block w-full mt-2 text-sm col-start-1">
             <span class="text-gray-700 dark-disabled:text-gray-300">Completed Assignment Code <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Completed Assignment" :loading="isAppraisalUndoneAssignmentLoading"  :options="appraisalUndoneAssignments" @search="" v-model="form.crw_crew_assignment" label="assignment_code" @update:modelValue="crwCrewAssignmentChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <v-select placeholder="Select Completed Assignment" :loading="isAppraisalUndoneAssignmentLoading"  :options="form.appraisalUndoneAssignments" @search="" v-model="form.crw_crew_assignment" label="assignment_code" @update:modelValue="crwCrewAssignmentChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
                       class="vs__search"
@@ -81,14 +81,14 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Service From</span>
-            <input type="text" :value="form.crw_crew_assignment?.joining_date" placeholder="Service From" class="form-input vms-readonly-input" readonly />
+            <input type="text" :value="formatDate(form.crw_crew_assignment?.joining_date)" placeholder="Service From" class="form-input vms-readonly-input" readonly />
             <!-- <Error v-if="errors?.nationality" :errors="errors.nationality" /> -->
         </label>
 
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Service To</span>
-            <input type="text" :value="form.crw_crew_assignment?.completion_date" placeholder="Service To" class="form-input vms-readonly-input" readonly />
+            <input type="text" :value="formatDate(form.crw_crew_assignment?.completion_date)" placeholder="Service To" class="form-input vms-readonly-input" readonly />
             <!-- <Error v-if="errors?.nationality" :errors="errors.nationality" /> -->
         </label>
 
@@ -154,7 +154,7 @@
 
                 </div> -->
                 <!-- {{ appraisalFormLine.is_tabular }} -->
-                <table class="w-full whitespace-no-wrap" id="table" v-if="appraisalFormLine.is_tabular">
+                <table class="w-full whitespace-no-wrap mt-2" id="table" v-if="appraisalFormLine.is_tabular">
                     <thead>
                         <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
                             <th colspan="4" class="px-4 py-2 text-center">{{ appraisalFormLine.section_no }}. {{ appraisalFormLine.section_name }}</th>    
@@ -169,7 +169,11 @@
 
                     </thead>
                     <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-                        <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(appraisalFormLineItem, appraisalFormLineItemIndex) in appraisalFormLine?.appraisalFormLineItems" :key="appraisalFormLineItemIndex">
+                      <template> 
+                        {{ appraisalFormLine.appraisalRecordLineItems = (page == 'create' ? appraisalFormLine?.appraisalFormLineItems : appraisalFormLine.appraisalRecordLineItems) }} 
+                      </template>
+
+                        <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(appraisalFormLineItem, appraisalFormLineItemIndex) in appraisalFormLine?.appraisalRecordLineItems" :key="appraisalFormLineItemIndex">
                             <td class="px-1 py-1">
                               <!-- <div class="relative">
                                 <input type="text" class="form-input"  v-model.trim="appraisalFormLineItem.aspect" placeholder="Aspect" required />
@@ -208,14 +212,20 @@
                     </tbody>
                 </table>
 
-                <table class="w-full whitespace-no-wrap border-none mt-2" id="table" v-else>
+                <table class="w-full whitespace-no-wrap  mt-2" id="table" v-else>
                   <thead>
                         <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-                            <th colspan="2" class="px-4 py-2 text-center">{{ appraisalFormLine.section_no }}. {{ appraisalFormLine.section_name }}</th>    
+                            <th class="px-4 py-2 text-center">{{ appraisalFormLine.section_no }}. {{ appraisalFormLine.section_name }}</th>    
                         </tr>
                   </thead>
-                  <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800 border-none">
-                        <tr class="text-gray-700 dark-disabled:text-gray-400 border-none" v-for="(appraisalFormLineItem, appraisalFormLineItemIndex) in appraisalFormLine?.appraisalFormLineItems" :key="appraisalFormLineItemIndex">
+                  <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800 ">
+                        <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800 ">
+                            <td class="px-4 py-2 ">
+                              <RemarksComponent v-model.trim="appraisalFormLine.comment" :maxlength="500" :fieldLabel="'Comment'"></RemarksComponent>
+                              <!-- {{ appraisalFormLine.section_no }}. {{ appraisalFormLine.section_name }} -->
+                            </td>    
+                        </tr>
+                        <!-- <tr class="text-gray-700 dark-disabled:text-gray-400 border-none" v-for="(appraisalFormLineItem, appraisalFormLineItemIndex) in appraisalFormLine?.appraisalFormLineItems" :key="appraisalFormLineItemIndex">
                           <td class="border-none ">
                             {{ appraisalFormLineItemIndex+1 }}. {{ appraisalFormLineItem.aspect }}
                           </td>
@@ -248,7 +258,7 @@
 
                           </td>
                             
-                        </tr>
+                        </tr> -->
                     </tbody>
 
                 </table>
@@ -279,6 +289,7 @@
   import cloneDeep from 'lodash/cloneDeep';
   import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
 import useAppraisalForm from "../../composables/crew/useAppraisalForm";
+import { formatDate } from "../../utils/helper";
   
   
   // const { getItemCodeByGroupId } = useItem();
@@ -331,6 +342,15 @@ import useAppraisalForm from "../../composables/crew/useAppraisalForm";
     if(value)
       props.form.appraisalRecordLines = value?.appraisalFormLines;
   });
+
+  
+  watch(() => appraisalUndoneAssignments.value, (value) => {
+    props.form.appraisalUndoneAssignments = [];
+    if(value)
+      props.form.appraisalUndoneAssignments = value;
+  });
+
+
 
   function calculateAge(dateOfBirth, currentDate) {
         if (!dateOfBirth) return '';
@@ -442,6 +462,10 @@ import useAppraisalForm from "../../composables/crew/useAppraisalForm";
   .table-borderless tbody tr td,
   .table-borderless tbody tr th{
       border: none;
+  }
+
+  td label{
+    font-size: 12px;
   }
   
   >>> {

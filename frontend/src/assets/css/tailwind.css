@@ -53,3 +53,9 @@ input[type='search'] {
 	background: #664cc3 !important;
 }
 
+
+.dp__theme_light, .dp__theme_dark {
+	--dp-border-color: #4b5563 !important;
+	--dp-border-color-hover: #4b5563 !important;
+  	--dp-icon-color: #4b5563 !important;
+}
