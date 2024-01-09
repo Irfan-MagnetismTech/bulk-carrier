@@ -77,7 +77,7 @@ class AppraisalRecordController extends Controller
     {
         try {
 
-            $appraisalRecord->load('crwCrew', 'appraisalForm', 'crwCrewAssignment', 'appraisalRecordLines.appraisalFormLine',
+            $appraisalRecord->load('crwCrew', 'appraisalForm', 'crwCrewAssignment.opsVessel', 'appraisalRecordLines.appraisalFormLine',
                 'appraisalRecordLines.appraisalRecordLineItems.appraisalFormLineItem');
             
 
