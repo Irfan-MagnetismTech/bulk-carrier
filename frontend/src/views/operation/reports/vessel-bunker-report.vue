@@ -66,7 +66,7 @@ function fetchVesselWiseVoyages(ops_vessel_id, loading) {
 </script>
 <template>
   <!-- Basic information -->
-  <h2 class="my-5 text-2xl text-center font-semibold">Vessel Bunker Report</h2>
+  <h2 class="my-5 text-2xl text-center font-semibold">Voyage Bunker Report</h2>
   <form @submit.prevent="getReport()">
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
