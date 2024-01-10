@@ -359,4 +359,6 @@ class OpsBulkNoonReportController extends Controller
 
             return Excel::download(new BulkNoonReportExport($bulk_noon_report), 'vessel_particular_report.xlsx');
     }
+
+
 }

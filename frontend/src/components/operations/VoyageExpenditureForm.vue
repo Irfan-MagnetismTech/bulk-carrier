@@ -19,7 +19,7 @@ const { ports, searchPorts } = usePort();
 const { voyages, searchVoyages } = useVoyage();
 const { vesselExpenseHeads, showFlatVesselExpenseHead } = useVesselExpenseHead();
 const { currencies, getCurrencies } = useBusinessInfo();
-
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const icons = useHeroIcon();
 
 const props = defineProps({
@@ -300,7 +300,7 @@ function attachFile(e) {
         <thead>
             <tr class="w-full">
               <th class="w-72">Expesne Head <span class="text-red-500">*</span></th>
-              <th class="w-24">Invoice Date <span class="text-red-500">*</span></th>
+              <th style="width: 160px">Invoice Date <span class="text-red-500">*</span></th>
               <th class="w-24">Invoice No. <span class="text-red-500">*</span></th>
               <th class="w-20">Quantity <span class="text-red-500">*</span></th>
               <th>Rate <span class="text-red-500">*</span></th>
@@ -334,7 +334,7 @@ function attachFile(e) {
 
               </td>
               <td>
-                <input type="date" v-model="form.opsVoyageExpenditureEntries[index].invoice_date" placeholder="Invoice Date" class="form-input"/>
+                <VueDatePicker v-model="form.opsVoyageExpenditureEntries[index].invoice_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
               </td>
               <td>
                 <input type="text" v-model="form.opsVoyageExpenditureEntries[index].invoice_no" placeholder="Invoice No." class="form-input"/>

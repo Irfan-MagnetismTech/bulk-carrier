@@ -57,7 +57,7 @@ class OpsVesselRequest extends FormRequest
             'opsVesselCertificates.*.ops_maritime_certification_id' => ['nullable', 'numeric', 'max:255'],           
             'opsBunkers.*.scm_material_id' => ['nullable', 'numeric', 'max:255'],
             'opsBunkers.*.unit' => ['nullable', 'string', 'max:255'],
-            'opsBunkers.*.opening_balance' => ['nullable', 'numeric'],
+            // 'opsBunkers.*.opening_balance' => ['nullable', 'numeric'],
         ];
     }
     /**
@@ -114,10 +114,10 @@ class OpsVesselRequest extends FormRequest
             'remarks.max' => 'Remarks may not be greater than :max characters.',
 
             // 'opsVesselCertificates.*.ops_maritime_certification_id.max' => 'Certificate name not be greater than :max characters for row is :position',
-            'opsBunkers.*.scm_material_id.max' => 'Bunker name not be greater than :max characters for row is :position.',
-            'opsBunkers.*.unit.max' => 'Unit not be greater than :max characters for row is :position.',            
-            'opsBunkers.*.opening_balance.integer' => 'Opening balance must be an integer for row is :position.',
-            'opsBunkers.*.opening_balance.max' => 'Opening balance must not exceed :max for row is :position.',
+            // 'opsBunkers.*.scm_material_id.max' => 'Bunker name not be greater than :max characters for row is :position.',
+            // 'opsBunkers.*.unit.max' => 'Unit not be greater than :max characters for row is :position.',            
+            // 'opsBunkers.*.opening_balance.integer' => 'Opening balance must be an integer for row is :position.',
+            // 'opsBunkers.*.opening_balance.max' => 'Opening balance must not exceed :max for row is :position.',
            
         ];
     }
