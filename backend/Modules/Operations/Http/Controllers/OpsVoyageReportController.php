@@ -134,6 +134,7 @@ class OpsVoyageReportController extends Controller
 
     public function lighterVoyageReport(Request $request)
     {
+        // dd($request->all());
         try {
             
             $business_unit = $request->business_unit;
@@ -264,7 +265,7 @@ class OpsVoyageReportController extends Controller
 
             // return view('operations::reports.lighter-voyage-report',compact('data'));
             $view = view('operations::reports.lighter-voyage-report',compact('data'))->render();
-
+    
             return response()->json([
                 'value' => $view
             ], 200);
