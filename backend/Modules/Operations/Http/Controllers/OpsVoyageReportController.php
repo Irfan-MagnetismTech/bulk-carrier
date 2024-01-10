@@ -2,6 +2,7 @@
 
 namespace Modules\Operations\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
@@ -136,11 +137,11 @@ class OpsVoyageReportController extends Controller
         try {
             
             $business_unit = $request->business_unit;
+            $start = date($request->start);
+            $end = date($request->end);
 
             $vesselBunkers= OpsVesselBunker::with(['opsVessel','opsBunkers.scmMaterial','stockable.scmMaterial','opsVoyage.opsCargoType','opsVoyage.opsVoyageSectors.opsContractTariff.opsCargoTariff.opsCargoTariffLines','opsVoyage.opsContractTariffs.opsCargoTariff.opsCargoTariffLines','opsVoyage.opsVoyageExpenditureEntries.opsExpenseHead'])
-            ->when(isset(request()->from_date) && isset(request()->to_date), function($query) {
-                $query->whereBetween('date', [request()->from_date, request()->to_date]);
-            })
+            ->whereBetween('date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
             ->where('business_unit', $business_unit)
             ->get();
 
