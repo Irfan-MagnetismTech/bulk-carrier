@@ -24,7 +24,11 @@ class ScmMoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date' => 'required|date', 
+            'business_unit' => 'required',
+            'scm_mmr_id' => 'required|exists:scm_mmrs,id',
+            'date' => 'required|date',
+            'scmMoLins.*.scm_material_id' => 'required|exists:scm_materials,id|integer',
+            'scmMoLins.*.quantity' => 'required|numeric',
         ];
     }
 
@@ -36,8 +40,20 @@ class ScmMoRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'business_unit.required' => 'Business unit is required',
+
+            'scm_mmr_id.required' => 'MMR is required',
+            'scm_mmr_id.exists' => 'MMR is not valid',
+
             'date.required' => 'Date is required',
             'date.date' => 'Date must be a valid date',
+
+            'scmMoLins.*.scm_material_id.required' => 'Material is required',
+            'scmMoLins.*.scm_material_id.exists' => 'Material is not valid',
+            'scmMoLins.*.scm_material_id.integer' => 'Material is not valid',
+
+            'scmMoLins.*.quantity.required' => 'Quantity is required',
+            'scmMoLins.*.quantity.numeric' => 'Quantity must be a number',
         ];
     }
 
