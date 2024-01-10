@@ -51,11 +51,11 @@
               </tr>
               <tr>
                 <th class="w-32">Sail Date</th>
-                <td>{{ voyage?.sail_date?moment(voyage?.sail_date).format('DD-MM-YYYY') : null }}</td>
+                <td>{{ voyage?.sail_date?moment(voyage?.sail_date).format('DD/MM/YYYY') : null }}</td>
               </tr>
               <tr>
                 <th class="w-32">Transit Date</th>
-                <td>{{ voyage?.transit_date?moment(voyage?.transit_date).format('DD-MM-YYYY') : null }}</td>
+                <td>{{ voyage?.transit_date?moment(voyage?.transit_date).format('DD/MM/YYYY') : null }}</td>
               </tr>
             </tbody>
           </table>
