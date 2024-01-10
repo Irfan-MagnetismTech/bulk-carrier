@@ -15,7 +15,7 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const selectedFile = (event) => {
   props.form.attachment = event.target.files[0];
 };
@@ -58,7 +58,7 @@ onMounted(() => {
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Effective Date <span class="text-red-500">*</span></span>
-      <input type="date" v-model.trim="form.effective_date" class="form-input" autocomplete="off" required/>
+      <VueDatePicker v-model="form.effective_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Currency <span class="text-red-500">*</span></span>

@@ -109,10 +109,10 @@ onMounted(() => {
       <input type="text" :value="form.total_crews" class="form-input vms-readonly-input" autocomplete="off" required readonly/>
     </label>
 
-    <label class="block w-full mt-2 text-sm">
+    <div class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Month - Year <span class="text-red-500">*</span></span>
-      <input type="month" v-model.trim="form.year_month" class="form-input" autocomplete="off" required />
-    </label>
+      <VueDatePicker v-model.trim="form.year_month" month-picker class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="mm/yyyy" format="MMMM/yyyy" model-type="yyyy-MM" :text-input="{ format: dateFormat }"></VueDatePicker>
+    </div>
     
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Working Days <span class="text-red-500">*</span></span>

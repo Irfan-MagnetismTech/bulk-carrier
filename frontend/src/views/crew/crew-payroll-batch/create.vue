@@ -19,7 +19,7 @@ setTitle('Create Payroll Batch');
         <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Create Payroll Batch</h2>
       <default-button :title="'Payroll Batch List'" :to="{ name: 'crw.crewPayrollBatches.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="storePayrollBatch(payrollBatch)">
             <!-- Booking Form -->
             <payroll-batch-form v-model:form="payrollBatch" :page="page" :errors="errors"></payroll-batch-form>
