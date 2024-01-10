@@ -215,13 +215,14 @@ export default function useCrewCommonApiRequest() {
         }
     }
 
-    async function getAppraisalUndoneAssignments(crwCrewProfileId) {
+    async function getAppraisalUndoneAssignments(crwCrewProfileId, crwCrewAsignmentId = null) {
 
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isAppraisalUndoneAssignmentLoading.value = true;
 
         let form = {
             'crw_crew_profile_id': crwCrewProfileId,
+            'crw_crew_assignment_id': crwCrewAsignmentId,
         }
 
         try {

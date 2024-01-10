@@ -16,7 +16,7 @@
       </div>
   </template>
   <script setup>
-  import {onMounted, ref, watch} from 'vue';
+  import {onMounted, ref, watch, watchEffect} from 'vue';
   import { useRoute } from 'vue-router';
   
   import Title from "../../../services/title";
@@ -24,10 +24,12 @@
   import DefaultButton from '../../../components/buttons/DefaultButton.vue';
   import useAppraisalRecord from '../../../composables/crew/useAppraisalRecord';
   import AppraisalRecordForm from '../../../components/crew/AppraisalRecordForm.vue';
+import useCrewCommonApiRequest from '../../../composables/crew/useCrewCommonApiRequest';
   
   const route = useRoute();
   const appraisalRecordId = route.params.appraisalRecordId;
   const { appraisalRecord, showAppraisalRecord, updateAppraisalRecord, errors } = useAppraisalRecord();
+  const { crews, getAppraisalUndoneAssignments, appraisalUndoneAssignments } = useCrewCommonApiRequest();
   const icons = useHeroIcon();
   
   const { setTitle } = Title();
@@ -38,9 +40,24 @@
   watch(appraisalRecord, (value) => {
     appraisalRecord.value.crw_crew_profile = value?.crwCrew;
     appraisalRecord.value.appraisal_form = value?.appraisalForm;
+    appraisalRecord.value.crw_crew_assignment = value?.crwCrewAssignment;
   });
+
+  watch(() => appraisalUndoneAssignments.value, (value) => {
+    appraisalRecord.value.appraisalUndoneAssignments = [];
+    if(value)
+    appraisalRecord.value.appraisalUndoneAssignments = value;
+  });
+
 
   onMounted(() => {
       showAppraisalRecord(appraisalRecordId);
+
+      watchEffect(() => {
+          if (appraisalRecord.value.crw_crew_assignment) {
+              getAppraisalUndoneAssignments(appraisalRecord.value.crw_crew_assignment.crw_crew_id, appraisalRecord.value.crw_crew_assignment.id);
+        }
+          
+      });
   });
   </script>
