@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('requisition_no')->nullable();
             $table->bigInteger('created_by')->nullable();           
             $table->text('remarks')->nullable();
+            $table->date('date')->nullable();
             $table->string('status')->default('pending');
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();          
             $table->timestamps();

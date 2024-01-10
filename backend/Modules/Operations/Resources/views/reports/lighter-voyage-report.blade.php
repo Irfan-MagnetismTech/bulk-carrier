@@ -63,7 +63,7 @@
             </tr>
             <tr>
                 <td colspan="{{ count($data['opsContractTitle']) + count($data['opsExpenditureHeadTitle']) + 1 + 4}}" style="text-align: right;">Date:</td>
-                <td colspan="4">{{ now()->format('d-M-Y') }}</td>
+                <td colspan="4">{{ now()->format('d/m/Y') }}</td>
             </tr>
             <tr>
                 <td colspan="{{ count($data['opsContractTitle']) + count($data['opsExpenditureHeadTitle']) + 1 + 4}}" style="text-align: right;">Time:</td>
@@ -138,7 +138,7 @@
                         @foreach($vesselBunker?->opsVoyage?->opsVoyageSectors as $key1=>$sector)
                             <tr>
                                 @if($loop->first)
-                                    <td rowspan="{{count($vesselBunker->opsVoyage->opsVoyageSectors)}}">{{$vesselBunker['date']}}</td>
+                                    <td rowspan="{{count($vesselBunker->opsVoyage->opsVoyageSectors)}}"><nobr>{{ \Carbon\Carbon::parse($vesselBunker['date'])->format('d/m/Y') }}</nobr></td>
                                     <td rowspan="{{count($vesselBunker->opsVoyage->opsVoyageSectors)}}">{{ $vesselBunker->type }}</td>
                                     <td rowspan="{{count($vesselBunker->opsVoyage->opsVoyageSectors)}}">{{ $vesselBunker->opsVoyage->voyage_no }}</td>
                                     <td rowspan="{{count($vesselBunker->opsVoyage->opsVoyageSectors)}}">{{$vesselBunker->opsVessel->name}}</td>
