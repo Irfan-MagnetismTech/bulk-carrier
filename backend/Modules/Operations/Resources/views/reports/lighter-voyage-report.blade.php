@@ -138,7 +138,7 @@
                         @foreach($vesselBunker?->opsVoyage?->opsVoyageSectors as $key1=>$sector)
                             <tr>
                                 @if($loop->first)
-                                    <td rowspan="{{count($vesselBunker->opsVoyage->opsVoyageSectors)}}">{{$vesselBunker['date']}}</td>
+                                    <td rowspan="{{count($vesselBunker->opsVoyage->opsVoyageSectors)}}"><nobr>{{ \Carbon\Carbon::parse($vesselBunker['date'])->format('d/m/Y') }}</nobr></td>
                                     <td rowspan="{{count($vesselBunker->opsVoyage->opsVoyageSectors)}}">{{ $vesselBunker->type }}</td>
                                     <td rowspan="{{count($vesselBunker->opsVoyage->opsVoyageSectors)}}">{{ $vesselBunker->opsVoyage->voyage_no }}</td>
                                     <td rowspan="{{count($vesselBunker->opsVoyage->opsVoyageSectors)}}">{{$vesselBunker->opsVessel->name}}</td>
