@@ -117,7 +117,7 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Total Marks</span>
-            <input type="text" v-model="form.total_marks" placeholder="Total Marks" class="form-input vms-readonly-input" readonly />
+            <input type="text" :value="form.appraisal_form?.total_marks" placeholder="Total Marks" class="form-input vms-readonly-input" readonly />
             <Error v-if="errors?.total_marks" :errors="errors.total_marks" />
         </label>
 
