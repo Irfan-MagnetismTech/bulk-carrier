@@ -64,7 +64,7 @@ function fetchAccounts(search, loading) {
     </div>
   </form>
   <!-- Table -->
-  <div class="w-full overflow-hidden">
+  <div class="w-full overflow-hidden mb-10">
     <div class="w-full overflow-x-auto">
       <table class="w-full whitespace-no-wrap">
         <thead v-once>

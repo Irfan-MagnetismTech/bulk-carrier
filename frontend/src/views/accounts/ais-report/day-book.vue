@@ -18,7 +18,7 @@ const { setTitle } = Title();
 setTitle('AIS Report - Day Book');
 
 const searchParams = ref({
-  account_id: null,
+  acc_account_id: null,
   from_date: '',
   till_date: '',
 });
@@ -42,7 +42,7 @@ function fetchAccounts(search, loading) {
         <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Day Book</legend>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">Account</label>
-          <v-select :options="allAccountLists" placeholder="--Choose an option--" @search="fetchAccounts"  v-model="searchParams.account_id" label="account_name" :reduce="allAccountLists=> allAccountLists.acc_account_id" class="block w-full rounded form-input"></v-select>
+          <v-select :options="allAccountLists" placeholder="--Choose an option--" @search="fetchAccounts"  v-model="searchParams.acc_account_id" label="account_name" :reduce="allAccountLists=> allAccountLists.acc_account_id" class="block w-full rounded form-input"></v-select>
         </div>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">From Date <span class="text-red-500">*</span></label>
@@ -60,7 +60,7 @@ function fetchAccounts(search, loading) {
     </div>
   </form>
   <!-- Table -->
-  <div class="w-full overflow-hidden">
+  <div class="w-full overflow-hidden mb-10">
     <div class="w-full overflow-x-auto">
       <table class="w-full whitespace-no-wrap">
         <thead v-once>
