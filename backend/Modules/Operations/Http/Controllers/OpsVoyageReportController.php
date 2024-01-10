@@ -8,8 +8,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
+use App\Exports\LighterVoyageReportExport;
 use Modules\Operations\Entities\OpsVoyage;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Services\CurrentStock;
@@ -345,5 +347,152 @@ class OpsVoyageReportController extends Controller
         {
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+    public function lighterVoyageReportExcelExport(Request $request)
+    {
+        // dd($request->all());
+        try {
+            
+            $business_unit = $request->business_unit;
+            $start = date($request->start);
+            $end = date($request->end);
+
+            $vesselBunkers= OpsVesselBunker::with(['opsVessel','opsBunkers.scmMaterial','stockable.scmMaterial','opsVoyage.opsCargoType','opsVoyage.opsVoyageSectors.opsContractTariff.opsCargoTariff.opsCargoTariffLines','opsVoyage.opsContractTariffs.opsCargoTariff.opsCargoTariffLines','opsVoyage.opsVoyageExpenditureEntries.opsExpenseHead'])
+            ->whereBetween('date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
+            ->where('business_unit', $business_unit)
+            ->get();
+
+            if (count($vesselBunkers)<1) {
+                $error= [
+                    'message'=>'Report not found.',
+                    'errors'=>[
+                        'type'=>['Report not found.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
+
+
+            $bunkerMaterialTitle=[];
+            foreach($vesselBunkers as $vesselBunker){                
+                foreach($vesselBunker->stockable as $bunker){
+                    $bunkerMaterialTitle[]=$bunker->scmMaterial->name;
+                }
+            }
+
+            $opsVesselBunkerTitle = $vesselBunkers->flatMap(function ($vesselBunker){                    
+                return collect($vesselBunker?->opsBunkers->whereNotNull('particular'))->map(function ($bunker){                                             
+                        return [
+                            'particular' => $bunker['particular'],
+                        ];
+                });
+            })->unique('particular');
+
+            // dd($opsVesselBunkerTitle);
+
+            $opsCargoTitle = $vesselBunkers->flatMap(function ($vesselBunker) {
+                return $vesselBunker?->opsVoyage?->opsContractTariffs->flatMap(function ($opsContractTariff) {
+                    return collect($opsContractTariff->opsCargoTariff->opsCargoTariffLines)->map(function ($tariffLine){                        
+                        return [
+                            'particular' => $tariffLine['particular'],                            
+                        ];
+                    });
+                });
+            })->unique('particular');
+
+
+            
+
+            $opsExpenditureHeadTitle = $vesselBunkers->flatMap(function ($vesselBunker) {
+                return $vesselBunker?->opsVoyage?->opsVoyageExpenditureEntries->map(function ($opsExpenditure){
+                    $opsExpenditure= [
+                        'name' => $opsExpenditure->opsExpenseHead['name'],                            
+                    ];
+                    return $opsExpenditure;
+                });
+            })->unique('name');
+
+            $vesselBunkers->map(function ($vesselBunker) use($bunkerMaterialTitle){
+                if($vesselBunker?->opsVoyage){
+                    $vesselBunker?->opsVoyage?->opsVoyageSectors?->map(function ($sector) {
+                        $sector['quantity'] = $this->chooseQuantity($sector);
+                        return $sector;
+                    });
+                }
+
+                $vesselBunker?->opsVoyage?->opsContractTariffs?->map(function ($tariff) {
+                    $tariff->opsCargoTariff?->opsCargoTariffLines
+                    ->whereNotNull($tariff?->tariff_month)
+                    ->map(function ($item) use ($tariff){
+                        $tariff[$item['particular']] = $item[$tariff?->tariff_month];
+                        return $tariff;
+                    });
+                });
+
+                // $vesselBunker?->opsVoyage?->opsVesselBunkers->map(function($vessel_bunker){
+                //     $vessel_bunker['sub_total']= $vessel_bunker?->opsBunkers->sum('quantity');                    
+                //     return $vessel_bunker;
+                // });
+                return $vesselBunker;
+            });
+            // $vesselBunkers['stock_in_total']= $vesselBunker?->opsVoyage?->opsVesselBunkers->where('type','Stock In')->sum('quantity');
+            // $vesselBunkers['stock_out_total']= $vesselBunker?->opsVoyage?->opsVesselBunkers->where('type','Stock Out')->sum('quantity');
+
+
+
+            // $voyagesWithBunkers=[];
+            $allBunkers = OpsVesselBunkerService::getBunkers(null, $request->business_unit);
+
+            $filteredBunkers = $allBunkers->filter(function($bunker) use ($bunkerMaterialTitle) {
+                return in_array($bunker['name'], $bunkerMaterialTitle);
+            });
+
+            // return response()->success('Data retrieved successfully.', $filteredBunkers, 200);
+            $voyagesWithBunkers= $vesselBunkers->map(function($vessel_bunker) use ($request,$filteredBunkers) {
+                $voyagesWithBunkers = [
+                    'date' => $vessel_bunker?->date,
+                    'id' => $vessel_bunker?->id,
+                    'ops_vessel_id' => $vessel_bunker?->ops_vessel_id,
+                    'ops_voyage_id' => $vessel_bunker?->ops_voyage_id
+                ];
+                $warehouse_id = $vessel_bunker?->opsVessel?->scmWareHouse?->id;
+                foreach ($filteredBunkers as $bunker) {
+                    $bunker_id = $bunker['scm_material_id'];
+                    $voyagesWithBunkers['previous_stock'][$bunker['name']] = CurrentStock::count($bunker_id, $warehouse_id, $request->from_date);
+                    $voyagesWithBunkers['current_stock'][$bunker['name']] = CurrentStock::count($bunker_id, $warehouse_id, $vessel_bunker?->date);
+                    $voyagesWithBunkers['stock_in'][$bunker['name']] = CurrentStock::countStockIn($bunker_id, $warehouse_id, $request->from_date, $request->to_date);
+                    $voyagesWithBunkers['stock_out'][$bunker['name']] = CurrentStock::countStockOut($bunker_id, $warehouse_id, $request->from_date, $request->to_date);
+                }
+    
+                return $voyagesWithBunkers;
+            });
+
+            // dd($bunkerMaterialTitle);
+
+            $voyageReportData = [
+                'vesselBunkers'=> $vesselBunkers,
+                'bunkerStocks'=> $voyagesWithBunkers,
+                'opsContractTitle'=> $opsCargoTitle,
+                'opsExpenditureHeadTitle'=> $opsExpenditureHeadTitle,
+                'opsVesselBunkerTitle'=> $opsVesselBunkerTitle,
+                'bunkerMaterialTitle'=> array_unique($bunkerMaterialTitle),
+                'companyName' => 'TOGGI SHIPPING and LOGISTIC',
+            ];
+
+            // return view('operations::reports.lighter-voyage-report',compact('data'));
+            // $view = view('operations::reports.lighter-voyage-report',compact('data'))->render();
+    
+            return Excel::download(new LighterVoyageReportExport($voyageReportData), 'Lighter Voyage Report.xlsx');
+
+           
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+
+
+
     }
 }
