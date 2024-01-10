@@ -169,11 +169,11 @@
                 </tr>
                 <tr>
                     <th class="w-40">Valid From</th>
-                    <td>{{ chartererContract.opsChartererContractsFinancialTerms.valid_from }}</td>
+                    <td>{{ formatDate(chartererContract.opsChartererContractsFinancialTerms.valid_from) }}</td>
                 </tr>                               
                 <tr>
                     <th class="w-40">Valid Till</th>
-                    <td>{{ chartererContract.opsChartererContractsFinancialTerms.valid_till }}</td>
+                    <td>{{ formatDate(chartererContract.opsChartererContractsFinancialTerms.valid_till) }}</td>
                 </tr>                               
             </tbody>
             <tbody v-else>
@@ -246,6 +246,7 @@ import useHeroIcon from "../../../assets/heroIcon";
 import useHelper from "../../../composables/useHelper";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
+import { formatDate } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 

@@ -241,11 +241,11 @@ onMounted(() => {
 
     <label class="block w-full mt-2 text-sm" v-if="form.usage_type=='Idle' && form.type!='Stock In'">
       <span class="text-gray-700">From Date <span class="text-red-500">*</span></span>
-      <input type="date" v-model="form.effective_from" required placeholder="Effective From" class="form-input" autocomplete="off" />
+      <VueDatePicker v-model="form.from_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
     </label>
     <label class="block w-full mt-2 text-sm" v-if="form.usage_type=='Idle' && form.type!='Stock In'">
       <span class="text-gray-700">Till Date <span class="text-red-500">*</span></span>
-      <input type="date" v-model="form.effective_till" required placeholder="Effective Till" class="form-input" autocomplete="off" />
+      <VueDatePicker v-model="form.till_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
     </label>
     <label class="block w-full mt-2 text-sm" v-if="form.usage_type!='Idle' && form.type!='Stock In'"></label>
     <label class="block w-full mt-2 text-sm" v-if="form.usage_type!='Idle' && form.type!='Stock In'"></label>

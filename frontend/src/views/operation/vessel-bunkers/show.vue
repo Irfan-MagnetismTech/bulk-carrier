@@ -40,17 +40,17 @@
 
                     <tr>
                         <th class="w-40">Date</th>
-                        <td>{{ (vesselBunker.date) ? moment(vesselBunker.date).format('D/M/Y') : '' }}</td>
+                        <td>{{ formatDate(vesselBunker.date) }}</td>
                     </tr>
 
                     <tr>
                         <th class="w-40">From Date</th>
-                        <td>{{ (vesselBunker.from_date) ? moment(vesselBunker.from_date).format('D/M/Y') : '' }}</td>
+                        <td>{{ formatDate(vesselBunker.from_date) }}</td>
                     </tr>
 
                     <tr>
                         <th class="w-40">Till Date</th>
-                        <td>{{ (vesselBunker.till_date) ? moment(vesselBunker.till_date).format('D/M/Y') : '' }}</td>
+                        <td>{{ formatDate(vesselBunker.till_date) }}</td>
                     </tr>
                     <template v-if="vesselBunker.type == 'Stock In'">
                       <tr>
@@ -144,6 +144,7 @@ import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHeroIcon from "../../../assets/heroIcon";
 import useHelper from "../../../composables/useHelper";
 import moment from 'moment';
+import { formatDate } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 

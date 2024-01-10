@@ -189,11 +189,12 @@
           </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Valid From <span class="text-red-500">*</span></span>
-            <input type="date" required v-model.trim="form.opsChartererContractsFinancialTerms.valid_from" placeholder="Valid From" class="form-input" autocomplete="off" />
+            <VueDatePicker v-model="form.opsChartererContractsFinancialTerms.valid_from" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Valid Till <span class="text-red-500">*</span></span>
-            <input type="date" required v-model.trim="form.opsChartererContractsFinancialTerms.valid_till" placeholder="Valid Till" class="form-input" autocomplete="off" />
+            <VueDatePicker v-model="form.opsChartererContractsFinancialTerms.valid_till" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
         </label>
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -290,6 +291,7 @@ const { vessel, vessels, getVesselList, showVessel } = useVessel();
 const { ports, searchPorts } = usePort();
 const { getAllChartererProfiles, chartererProfiles } = useChartererProfile();
 const { cargoTariffs, getAllCargoTariffs } = useCargoTariff();
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const props = defineProps({
     form: {
