@@ -226,10 +226,10 @@ class OpsBunkerReportController extends Controller
 
         // $scm_material_id, $scm_warehouse_id, $toDate = null
 
-        return view('operations::reports.vessel-bunker-report')->with([
-            'allBunkers' => $allBunkers,
-            'stockRecords' => $vesselBunkers
-        ]);
+        // return view('operations::reports.vessel-bunker-report')->with([
+        //     'allBunkers' => $allBunkers,
+        //     'stockRecords' => $vesselBunkers
+        // ]);
 
         $view = view('operations::reports.vessel-bunker-report')->with([
             'allBunkers' => $allBunkers,
