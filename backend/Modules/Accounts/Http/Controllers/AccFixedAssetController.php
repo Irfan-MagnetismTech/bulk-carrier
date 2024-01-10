@@ -41,12 +41,12 @@ class AccFixedAssetController extends Controller
     {
         try {
             $accFixedAssetData = $request->only('acc_cost_center_id', 'scm_mrr_id', 'scm_material_id', 'brand', 'model', 'serial', 'acc_parent_account_id', 'acc_account_id', 'asset_tag', 'location', 'acquisition_date', 'useful_life', 'depreciation_rate', 'acquisition_cost', 'business_unit');
-            
+
             DB::transaction(function () use ($request, $accFixedAssetData)
             {
                 $accFixedAsset = AccFixedAsset::create($accFixedAssetData);
                 $accFixedAsset->fixedAssetCosts()->createMany($request->fixedAssetCosts);
-                
+
                 $FA_AccountCode = config('accounts.balance_income_base_header.assets').'-'.
                                   config('accounts.balance_income_balance_header.non_current_assets').'-'.
                                   config('accounts.balance_income_line.fixed_assets_at_cost').'-'.
@@ -59,48 +59,48 @@ class AccFixedAssetController extends Controller
                                   config('accounts.balance_income_balance_header.indirect_exp').'-'.
                                   config('accounts.balance_income_line.administrative_expenses').'-'.
                                   $accFixedAsset->id;
-                
+
                 $FA_accountData = [
                     'acc_balance_and_income_line_id' => config('accounts.balance_income_line.fixed_assets_at_cost'),
                     'account_name'                   => 'FA-'.$accFixedAsset->scmMaterial->name,
                     'account_code'                   => $FA_AccountCode,
                     'account_type'                   => config('accounts.account_types.Assets'),
                     'business_unit'                  => $accFixedAsset->business_unit,
-                    'parent_account_id'              => $accFixedAsset->acc_parent_account_id, 
-                ]; 
+                    'parent_account_id'              => $accFixedAsset->acc_parent_account_id,
+                ];
                 $AD_accountData = [
                     'acc_balance_and_income_line_id' => config('accounts.balance_income_line.acumulated_depreciation'),
                     'account_name'                   => 'AD-'.$accFixedAsset->scmMaterial->name,
                     'account_code'                   => $AD_AccountCode,
                     'account_type'                   => config('accounts.account_types.Assets'),
-                    'business_unit'                  => $accFixedAsset->business_unit, 
-                ]; 
+                    'business_unit'                  => $accFixedAsset->business_unit,
+                ];
                 $dep_accountData = [
                     'acc_balance_and_income_line_id' => config('accounts.balance_income_line.administrative_expenses'),
                     'account_name'                   => 'Dep-'.$accFixedAsset->scmMaterial->name,
                     'account_code'                   => $Dep_AccountCode,
                     'account_type'                   => config('accounts.account_types.Expenses'),
-                    'business_unit'                  => $accFixedAsset->business_unit, 
-                ]; 
+                    'business_unit'                  => $accFixedAsset->business_unit,
+                ];
                 // dd($accFixedAsset);
                 // $FA_line_id = config('accounts.balance_income_line.fixed_assets_at_cost');
                 // $name       = $accFixedAsset->scmMaterial->name;
                 // $FA_account = config('accounts.account_types.Assets');
                 // // dd('kk');
                 // $data = (new AccountService())->handleAccountService($FA_line_id,$name,$accountCode,$FA_account,$accFixedAsset->business_unit,AccFixedAsset::class,$accFixedAsset->id);
-                
+
                 // dd($FA_line_id,$accountCode,$FA_account,$accFixedAsset->business_unit,AccFixedAsset::class,$accFixedAsset->id);
                 // return response()->json($data);
                 // dd($data);
 
                 $accFixedAsset->morphaccount()->create($FA_accountData);
                 $accFixedAsset->morphaccount()->create($AD_accountData);
-                $accFixedAsset->morphaccount()->create($dep_accountData); 
+                $accFixedAsset->morphaccount()->create($dep_accountData);
 
                 //Account Transection Process
                 $transectionData = [
                     'acc_cost_center_id'    => $accFixedAsset->acc_cost_center_id,
-                    'voucher_type'          => 'Journal', 
+                    'voucher_type'          => 'Journal',
                     'transaction_date'      => now()->format('Y-m-d'),
                     'narration'             => '',
                     'business_unit'         => $accFixedAsset->business_unit,
@@ -144,7 +144,8 @@ class AccFixedAssetController extends Controller
         try {
 
             return response()->success('Retrieved Successfully',
-                $accFixedAsset->load('fixedAssetCosts', 'account', 'costCenter', 'scmMrr', 'scmMaterial.account', 'fixedAssetCategory'),
+                $accFixedAsset->load('fixedAssetCosts', 'account', 'costCenter', 'scmMrr', 'scmMaterial.account', 'fixedAssetCategory',
+                'fixedAssetAccount','acumulateDepreciationAccount','depreciationAccount'),
                 200);
         }
         catch (\Exception $e)
@@ -170,6 +171,11 @@ class AccFixedAssetController extends Controller
                 $accFixedAsset->update($accFixedAssetData);
                 $accFixedAsset->fixedAssetCosts()->delete();
                 $accFixedAsset->fixedAssetCosts()->createMany($request->fixedAssetCosts);
+
+                AccAccount::where('id', $accFixedAsset->fixedAssetAccount->id)->update(['account_name' => 'FA-' . $accFixedAsset->scmMaterial->name]);
+                AccAccount::where('id', $accFixedAsset->acumulateDepreciationAccount->id)->update(['account_name' => 'AD-' . $accFixedAsset->scmMaterial->name]);
+                AccAccount::where('id', $accFixedAsset->depreciationAccount->id)->update(['account_name' => 'Dep-' . $accFixedAsset->scmMaterial->name]);
+
             });
 
             return response()->success('Updated Successfully', '', 202);
