@@ -13,6 +13,7 @@ use Modules\Operations\Entities\OpsVoyage;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Services\CurrentStock;
 use Modules\Operations\Entities\OpsVesselBunker;
+use Modules\Operations\Entities\OpsBulkNoonReport;
 use Modules\Operations\Services\OpsVesselBunkerService;
 
 class OpsVoyageReportController extends Controller
@@ -130,7 +131,7 @@ class OpsVoyageReportController extends Controller
 
     // }
 
-    public function voyageReport(Request $request)
+    public function lighterVoyageReport(Request $request)
     {
         try {
             
@@ -139,6 +140,16 @@ class OpsVoyageReportController extends Controller
                 $query->whereBetween('date', [request()->from_date, request()->to_date]);
             })
             ->get();
+
+            if (count($vesselBunkers)<1) {
+                $error= [
+                    'message'=>'Report not found.',
+                    'errors'=>[
+                        'type'=>['Report not found.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
 
 
             $bunkerMaterialTitle=[];
@@ -243,8 +254,13 @@ class OpsVoyageReportController extends Controller
                 'bunkerMaterialTitle'=> array_unique($bunkerMaterialTitle),
                 'companyName' => 'TOGGI SHIPPING & LOGISTIC',
             ];
-            return view('operations::reports.voyage',compact('data'));
-            return response()->success('Data retrieved successfully.', $data, 200);
+
+            $view = view('operations::reports.lighter-voyage-report',compact('data'))->render();
+
+            return response()->json([
+                'value' => $view
+            ], 200);
+           
         }
         catch (QueryException $e)
         {
@@ -277,6 +293,48 @@ class OpsVoyageReportController extends Controller
         $ops_voyage_id = $request->ops_voyage_id;
         $ops_vessel_id = $request->ops_vessel_id;
 
-        return view('operations::reports.bulk-voyage-report');
+        $bulk_noon_report= OpsBulkNoonReport::where([
+                                    'ops_vessel_id' => $ops_vessel_id,
+                                    'ops_voyage_id' => $ops_voyage_id,
+                                    'type' => $type
+                                ])
+                                ->with(['opsVessel','opsVoyage','opsBunkers','opsBulkNoonReportPorts.lastPort','opsBulkNoonReportPorts.nextPort','opsBulkNoonReportCargoTanks','opsBulkNoonReportConsumptions.opsBulkNoonReportConsumptionHeads.scmMaterial','opsBulkNoonReportDistance','opsBulkNoonReportEngineInputs'])
+                                ->latest()
+                                ->first();
+
+        if (empty($bulk_noon_report)) {
+            $error= [
+                'message'=>'Report not found.',
+                'errors'=>[
+                    'type'=>['Report not found.',]
+                    ]
+                ];
+            return response()->json($error, 422);
+        }
+
+        try
+        {
+            $bulk_noon_report->opsBulkNoonReportConsumptions?->map(function($item) {
+                $item->name = $item->scmMaterial?->name;
+
+                return $item;
+            });
+
+            // dd($bulk_noon_report);
+            $data= [
+                'bulk_noon_report'=> $bulk_noon_report,
+                'companyName' => 'TOGGI SHIPPING & LOGISTIC',
+            ];
+            $view = view('operations::reports.bulk-voyage-report',compact('data'))->render();
+
+            return response()->json([
+                'value' => $view
+            ], 200);
+            
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }
