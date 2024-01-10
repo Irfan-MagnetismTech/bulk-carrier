@@ -42,7 +42,7 @@ class AppraisalFormController extends Controller
         try {
             DB::transaction(function () use ($request)
             {
-                $appraisalFormData = $request->only('form_no', 'form_name', 'version', 'description', 'business_unit');
+                $appraisalFormData = $request->only('form_no', 'form_name', 'total_marks', 'version', 'description', 'business_unit');
                 $appraisalForm     = AppraisalForm::create($appraisalFormData);
 
                 foreach($request->appraisalFormLines as $lineData){
@@ -94,7 +94,7 @@ class AppraisalFormController extends Controller
         try {
             DB::transaction(function () use ($request, $appraisalForm)
             {
-                $appraisalFormData = $request->only('form_no', 'form_name', 'version', 'description', 'business_unit');
+                $appraisalFormData = $request->only('form_no', 'form_name', 'total_marks', 'version', 'description', 'business_unit');
                 $appraisalForm->update($appraisalFormData);
                 $appraisalForm->appraisalFormLines()->delete();  
                 

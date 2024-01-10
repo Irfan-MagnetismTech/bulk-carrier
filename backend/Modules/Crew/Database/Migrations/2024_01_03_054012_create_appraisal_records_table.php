@@ -20,6 +20,7 @@ return new class extends Migration
 			$table->unsignedBigInteger('crw_crew_assignment_id');			
 			$table->date('appraisal_date');
 			$table->integer('age');
+			$table->integer('obtained_marks');
 			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
