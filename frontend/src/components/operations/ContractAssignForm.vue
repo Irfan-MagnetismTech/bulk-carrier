@@ -8,8 +8,8 @@
     </div>
     <div class="flex flex-col justify-center w-1/2 md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Assign Date <span class="text-red-500">*</span></span>
-              <input type="date" v-model="form.assign_date" required class="form-input">
+              <span class="text-gray-700 ">Assign Date<span class="text-red-500">*</span></span>
+              <VueDatePicker v-model="form.assign_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
       </label>
 
     </div>
@@ -191,6 +191,7 @@ import useCustomer from "../../composables/operations/useCustomer";
 import useCargoTariff from "../../composables/operations/useCargoTariff";
 
 const editInitiated = ref(false);
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const { currencies, getCurrencies } = useBusinessInfo();
 const { getChartererByBusinessUnit, chartererProfiles } = useChartererProfile();
