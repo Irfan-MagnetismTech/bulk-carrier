@@ -31,6 +31,7 @@ export default function useAppraisalForm() {
         form_name: '',
         version: '',
         description: '',
+        total_marks: 0,
         // appraisalFormLines: [{...appraisalFormLineObject}],
         appraisalFormLines: [cloneDeep(appraisalFormLineObject)],
     });

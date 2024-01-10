@@ -18,6 +18,12 @@
             <input type="text" v-model.trim="form.version" placeholder="Version" class="form-input" required />
             <Error v-if="errors?.version" :errors="errors.version" />
         </label>
+    
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Total Marks</span>
+            <input type="text" v-model.trim="form.total_marks" placeholder="Total Marks" class="form-input vms-readonly-input" readonly />
+            <Error v-if="errors?.total_marks" :errors="errors.total_marks" />
+        </label>
 
         <RemarksComponent class="md:col-span-3" v-model.trim="form.description" :maxlength="500" :fieldLabel="'Description'"></RemarksComponent>
 
@@ -90,10 +96,10 @@
                         </td>
                         <td class="px-1 py-1"><input type="text" class="form-input"  v-model.trim="appraisalFormLineItem.description" placeholder="Description" /></td>
                         <td class="px-1 py-1">
-                          <select v-model.trim="appraisalFormLineItem.answer_type" class="form-input" required>
+                          <select :value="appraisalFormLineItem.answer_type" class="form-input" required @change="answerTypeChange(appraisalFormLineItem, $event)">
                             <option value="" disabled selected>Select</option>
-                            <option value="Number">Number</option>
-                            <option value="Boolean">Boolean</option>
+                            <option value="Number">Number (1-5)</option>
+                            <option value="Boolean">Yes/No</option>
                             <option value="Grade">Grade</option>
                             <option value="Other">Other</option>
                           </select>
@@ -181,6 +187,13 @@
 
   function removeAppraisalFormLineItem(parentIndex, childIndex) {
     props.form.appraisalFormLines[parentIndex].appraisalFormLineItems.splice(childIndex, 1);
+  }
+
+  function answerTypeChange(appraisalFormLineItem, event) {
+    props.form.total_marks = props.form.total_marks ?? 0;
+    if (event.target.value === 'Number') props.form.total_marks += 5;
+    else if( appraisalFormLineItem.answer_type && appraisalFormLineItem.answer_type === 'Number') props.form.total_marks -= 5;
+    appraisalFormLineItem.answer_type = event.target.value;
   }
 
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
