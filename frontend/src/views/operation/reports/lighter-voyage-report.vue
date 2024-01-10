@@ -64,7 +64,7 @@ function getReport() {
       </div>
     </form>
 
-    <div v-if="lighterVoyageReport != ''" class="my-5 overflow-x-scroll">
+    <div v-if="lighterVoyageReport != ''" class="my-5 overflow-x-scroll" style="max-width: 98%">
       <div id="customDataTable">
         <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
           <div v-html="lighterVoyageReport"></div>
