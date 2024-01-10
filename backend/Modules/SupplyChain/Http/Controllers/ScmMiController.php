@@ -400,7 +400,7 @@ class ScmMiController extends Controller
                             'unit' => $item->scmMaterial->unit,
                             'quantity' => $item->quantity,
                             'mo_quantity' => $item->quantity,
-                            'mmr_quantity' => $item->scmMoLine->quantity,
+                            'mmr_quantity' => $item->scmMmrLine->quantity,
                             'mmr_composite_key' => $item->mmr_composite_key,
                             'mo_composite_key' => $item->mo_composite_key,
                             'current_stock' => CurrentStock::count($item->scm_material_id, $scmMo->to_warehouse_id),
