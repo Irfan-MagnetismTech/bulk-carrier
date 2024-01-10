@@ -176,8 +176,8 @@ class AisReportController extends Controller
                     'delation_cost'        =>  $del_cost = $asset->fixedAssetAccount?->ledgers->sum('cr_amount'),
                     'closing_cost'         =>  $cost     = $add_cost - $del_cost,
                     'opening_depreciation' =>  '',
-                    'addition_depreciation'=>  $add_dep = $asset->depreciationAccount?->ledgers->sum('dr_amount'),
-                    'delation_depreciation'=>  $del_dep = $asset->depreciationAccount?->ledgers->sum('cr_amount'),
+                    'addition_depreciation'=>  $add_dep = $asset->acumulateDepreciationAccount?->ledgers->sum('dr_amount'),
+                    'delation_depreciation'=>  $del_dep = $asset->acumulateDepreciationAccount?->ledgers->sum('cr_amount'),
                     'closing_depreciation' =>  $dep     = $add_dep - $del_dep,
                     'wdv'                  =>  $cost - $dep
                 ];
