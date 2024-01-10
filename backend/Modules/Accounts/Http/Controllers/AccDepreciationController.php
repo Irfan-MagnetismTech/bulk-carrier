@@ -31,8 +31,10 @@ class AccDepreciationController extends Controller
     /**
      * @param AccDepreciationRequest $request
      */
-    public function store(AccDepreciationRequest $request)
+    public function store(Request $request)
     {
+        // dd($request->all());
+
         try {
             $accDepreciationData = $request->only('month_year', 'applied_date', 'acc_cost_center_id', 'business_unit');
 
@@ -41,32 +43,34 @@ class AccDepreciationController extends Controller
                 $accDepreciation = AccDepreciation::create($accDepreciationData);
                 $accDepreciation->accDepreciationLines()->createMany($request->accDepreciationLines);
 
-                // foreach($accDepreciation->accDepreciationLines as $depLine){
-                    
-                //     $transection[] = [
-                //         'acc_cost_center_id'    => $accDepreciation->acc_cost_center_id,
-                //         'voucher_type'          => 'Journal',
-                //         'transaction_date'      => $accDepreciation->applied_date,
-                //         'narration'             => '',
-                //         'business_unit'         => $accDepreciation->business_unit,
-                //         // 'AD_ledgers'            => [
-                //         //         'acc_cost_center_id'            => $accDepreciation->acc_cost_center_id,
-                //         //         'acc_balance_and_income_line_id'=> $depLine->accFixedAsset->acumulateDepreciationAccount->acc_balance_and_income_line_id,
-                //         //         'acc_account_id'                => $depLine->accFixedAsset->acumulateDepreciationAccount->id,
-                //         //         'dr_amount'                     => $depLine->amount,
-                //         // ],
-                //         // 'Dep_ledgers'            => [
-                //         //         'acc_cost_center_id'            => $accDepreciation->acc_cost_center_id,
-                //         //         'acc_balance_and_income_line_id'=> $depLine->accFixedAsset->depreciationAccount->acc_balance_and_income_line_id,
-                //         //         'acc_account_id'                => $depLine->accFixedAsset->depreciationAccount->id,
-                //         //         'cr_amount'                     => $depLine->amount,
-                //         // ],
-                //     ];
-                // }
+                foreach ($accDepreciation->accDepreciationLines as $depLine)
+                {
+                    $transactionData = [
+                        'acc_cost_center_id' => $accDepreciation->acc_cost_center_id,
+                        'voucher_type'       => 'Journal',
+                        'transaction_date'   => $accDepreciation->applied_date,
+                        'narration'          => '',
+                        'business_unit'      => $accDepreciation->business_unit,
+                    ];
 
-                // // $accDepreciation->transaction()->createMany($transection);
+                    $ledgers = [
+                        [ //acumulated deprecation
+                            'acc_cost_center_id'             => $accDepreciation->acc_cost_center_id,
+                            'acc_balance_and_income_line_id' => $depLine->accFixedAsset->acumulateDepreciationAccount->acc_balance_and_income_line_id,
+                            'acc_account_id'                 => $depLine->accFixedAsset->acumulateDepreciationAccount->id,
+                            'dr_amount'                      => $depLine->amount,
+                        ],
+                        [ //deprecation
+                            'acc_cost_center_id'             => $accDepreciation->acc_cost_center_id,
+                            'acc_balance_and_income_line_id' => $depLine->accFixedAsset->depreciationAccount->acc_balance_and_income_line_id,
+                            'acc_account_id'                 => $depLine->accFixedAsset->depreciationAccount->id,
+                            'cr_amount'                      => $depLine->amount,
+                        ],
+                    ];
 
-                // dd($transection);
+                    $transaction = $accDepreciation->transaction()->create($transactionData);
+                    $transaction->ledgerEntries()->createMany($ledgers);
+                }
             });
 
             return response()->success('Created Successfully', '', 201);
