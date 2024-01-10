@@ -14,8 +14,8 @@
   <div class="input-group">
       <label class="label-group">
           <span class="label-item-title">Requested Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
-         
+          <!-- <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" /> -->
+          <VueDatePicker v-model="form.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
       </label>
       <label class="label-group">
           <span class="label-item-title">Delivery Date<span class="text-red-500">*</span></span>
@@ -163,6 +163,7 @@
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
     import useStockLedger from '../../../composables/supply-chain/useStockLedger';
+    import Swal from "sweetalert2";
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
@@ -235,7 +236,7 @@ function fwarehouseChange() {
     props.form.fromWarehouse = null;
     props.form.from_warehouse_id = props.form.fromWarehouse?.id;
     props.form.from_cost_center_id = props.form.fromWarehouse?.acc_cost_center_id;
-    alert('From warehouse and To warehouse can not be same');
+    SwalNotify('From Warehouse and To Warehouse can not be same');
     return;
   }
   props.form.from_warehouse_id = props.form.fromWarehouse?.id;
@@ -250,7 +251,7 @@ function toWarehouseChange() {
     props.form.toWarehouse = null;
     props.form.to_warehouse_id = props.form.toWarehouse?.id;
     props.form.to_cost_center_id = props.form.toWarehouse?.acc_cost_center_id;
-    alert('From warehouse and To warehouse can not be same');
+    SwalNotify('From Warehouse and To Warehouse can not be same');
     return;
   }
   props.form.to_warehouse_id = props.form.toWarehouse?.id;
@@ -300,7 +301,7 @@ watch(() => props.form.scmMmrLines, (newLines) => {
         if (materialArray.indexOf(material_key) === -1) {
           materialArray.push(material_key);
         } else {
-          alert("Duplicate Material Found");
+          SwalNotify("Duplicate Material Found");
           props.form.scmMmrLines.splice(index, 1);
       } 
       if (line.scmMaterial) {
@@ -350,7 +351,19 @@ function fetchMaterials(search) {
      props.form.to_cost_center_id = '';
       
   }
-});
+  });
+
+  function SwalNotify(msg) {
+        Swal.fire({
+          title: `${msg}`,
+          icon: 'warning',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'OK'
+        })
+    }
+
 
 function tableWidth() {
   setTimeout(function() {

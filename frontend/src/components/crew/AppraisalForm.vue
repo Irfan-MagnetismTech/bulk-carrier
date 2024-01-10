@@ -177,8 +177,10 @@
   }
 
   function removeAppraisalFormLine(index) {
-    if(props.form.appraisalFormLines.length > 1)
+    if(props.form.appraisalFormLines.length > 1){
+      props.form.total_marks -= (5 * (props.form.appraisalFormLines[index].appraisalFormLineItems.filter(appraisalFormLineItem => appraisalFormLineItem.answer_type === 'Number')?.length ?? 0));
       props.form.appraisalFormLines.splice(index, 1)
+    }
   }
 
   function addAppraisalFormLineItem(parentIndex) {
@@ -186,6 +188,11 @@
   }
 
   function removeAppraisalFormLineItem(parentIndex, childIndex) {
+    // if the answer type of the line item is 'Number' then subtract 5 from total marks
+    if (props.form.appraisalFormLines[parentIndex].appraisalFormLineItems[childIndex].answer_type === 'Number') {
+      props.form.total_marks = props.form.total_marks ?? 0;
+      props.form.total_marks -= 5;
+    }
     props.form.appraisalFormLines[parentIndex].appraisalFormLineItems.splice(childIndex, 1);
   }
 
