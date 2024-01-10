@@ -79,4 +79,5 @@ Route::middleware(['auth:api'])->prefix('acc')->as('acc.')->group(function ()
     Route::post('trial-balance', [AisReportController::class, 'trialBalance']);
     Route::post('income-statement', [AisReportController::class, 'incomeStatement']);
     Route::post('balance-sheet', [AisReportController::class, 'balanceSheet']);
+    Route::post('fixed-asset-statement', [AisReportController::class, 'fixedAssetStatement']);
 });

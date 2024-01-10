@@ -37,7 +37,7 @@ export default function useFixedAsset() {
         material_account_name: '',
         fixedAssetCosts: [
             {
-                particular: '',
+                particular: 'Purchase Value',
                 amount: '',
                 remarks: '',
                 isParticularDuplicate: false

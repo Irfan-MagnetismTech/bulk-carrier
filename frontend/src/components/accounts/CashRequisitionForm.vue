@@ -16,7 +16,7 @@ const icons = useHeroIcon();
 const { allCostCenterLists, getCostCenter, isLoading } = useAccountCommonApiRequest();
 const { searchMrr, filteredMaterialReceiptReports } = useMaterialReceiptReport();
 const { searchPr, filteredPurchaseRequisitions } = usePurchaseRequisition();
-
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const { emit } = getCurrentInstance();
 
@@ -99,7 +99,7 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> Applied Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model.trim="form.applied_date" class="form-input" autocomplete="off" required />
+        <VueDatePicker v-model.trim="form.applied_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
       </label> 
 
       <label class="block w-full mt-2 text-sm">

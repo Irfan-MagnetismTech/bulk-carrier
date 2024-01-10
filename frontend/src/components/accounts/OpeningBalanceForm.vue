@@ -7,6 +7,7 @@ import useAccountCommonApiRequest from "../../composables/accounts/useAccountCom
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
 const { allAccountLists, getAccount, allCostCenterLists, getCostCenter, isLoading } = useAccountCommonApiRequest();
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const props = defineProps({
   form: {
@@ -82,8 +83,13 @@ onMounted(() => {
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Date <span class="text-red-500">*</span></span>
-      <input type="date" v-model.trim="form.date" class="form-input" autocomplete="off" required />
+      <VueDatePicker v-model.trim="form.date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+      <Error v-if="errors?.date" :errors="errors.date" />
     </label>
+<!--    <label class="block w-full mt-2 text-sm">-->
+<!--      <span class="text-gray-700 dark-disabled:text-gray-300">Date <span class="text-red-500">*</span></span>-->
+<!--      <input type="date" v-model.trim="form.date" class="form-input" autocomplete="off" required />-->
+<!--    </label>-->
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Debit Amount <span class="text-red-500">*</span></span>
       <input type="number" step=".01" v-model.trim="form.dr_amount" placeholder="Debit Amount" class="form-input" autocomplete="off" required />

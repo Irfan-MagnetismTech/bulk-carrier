@@ -182,6 +182,7 @@ onMounted(() => {
 
                 <td>
                   <nobr>
+                    <action-button :action="'show'" :to="{ name: 'acc.cash-requisitions.show', params: { cashRequisitionId: cashRequisition?.id } }"></action-button>
                     <action-button :action="'edit'" :to="{ name: 'acc.cash-requisitions.edit', params: { cashRequisitionId: cashRequisition?.id } }"></action-button>
                     <action-button @click="confirmDelete(cashRequisition?.id)" :action="'delete'"></action-button>
                   </nobr>

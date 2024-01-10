@@ -1,20 +1,22 @@
 <script setup>
 import useTransaction from '../../../composables/accounts/useTransaction';
 import Title from "../../../services/title";
-import { ref } from "vue";
+import {onMounted, ref, watchEffect} from "vue";
 import useAisReport from "../../../composables/accounts/useAisReport";
+import useAccountCommonApiRequest from "../../../composables/accounts/useAccountCommonApiRequest";
 import Store from "../../../store";
 
 const { trialBalances, getTrialBalance, isLoading} = useAisReport();
 const { bgColor, allAccount, getAccount } = useTransaction();
-const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
+const { allCostCenterLists, getCostCenter } = useAccountCommonApiRequest();
 
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const { setTitle } = Title();
 
-setTitle('AIS Report - Trial Balance');
+setTitle('AIS Report - Cost Center Summary');
 
 const searchParams = ref({
-  account_id: null,
+  acc_cost_center_id: '',
   from_date: '',
   till_date: '',
 });
@@ -54,6 +56,12 @@ function fetchAccounts(search, loading) {
     getAccount(search, loading);
   }
 }
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+onMounted(() => {
+  watchEffect(() => {
+    getCostCenter(null,businessUnit.value);
+  });
+});
 </script>
 
 <template>
@@ -62,7 +70,15 @@ function fetchAccounts(search, loading) {
   <form @submit.prevent="getTrialBalance(searchParams)">
     <div class="w-full flex items-center justify-between mb-2 my-2 select-none">
       <fieldset class="w-full grid grid-cols-4 gap-1 px-2 pb-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Trial Balance</legend>
+        <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Cost Center Summary</legend>
+        <div>
+          <label for="" class="text-xs" style="margin-left: .01rem">Cost Center <span class="text-red-500">*</span></label>
+          <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="searchParams.acc_cost_center_id" label="name" :reduce="allCostCenterLists=>allCostCenterLists.id" class="block w-full rounded form-input">
+            <template #search="{attributes, events}">
+              <input class="vs__search w-full" style="width: 50%" :required="!searchParams.acc_cost_center_id" v-bind="attributes" v-on="events"/>
+            </template>
+          </v-select>
+        </div>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">From Date <span class="text-red-500">*</span></label>
           <VueDatePicker v-model.trim="searchParams.from_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
@@ -130,18 +146,18 @@ function fetchAccounts(search, loading) {
                 <td class="text-sm text-right">{{ lineParentAccount?.closing_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ lineParentAccount?.closing_balance_status }}</td>
               </tr>
               <template v-for="(lineChildAccount, lineChildAccountIndex) in lineParentAccount.child_accounts">
-                  <tr :class="['parent_account_'+lineParentAccount?.line_id,'hide_parent_account_'+trialBalanceDataLine?.line_id,'hide_child_account_'+trialBalanceDataLine?.line_id]" class="fourth_label account_row" style="display: none;background-color: #CAF1F1">
-                    <td class="relative text-sm account child_account" :style="{'cursor': lineChildAccount.grandchild_accounts?.length ? 'pointer' : 'auto'}" :id="lineChildAccount?.line_id" @click="toggleChildAccountTrID($event)">
-                      {{ lineChildAccount?.line_text }}
-                      <svg v-if="lineChildAccount.grandchild_accounts?.length" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="custom_down_arrow w-3 h-3">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5" />
-                      </svg>
-                    </td>
-                    <td class="text-sm text-right">{{ lineChildAccount?.opening_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ lineChildAccount?.opening_balance_status }}</td>
-                    <td class="text-sm text-right">{{ lineChildAccount?.current_dr_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
-                    <td class="text-sm text-right">{{ lineChildAccount?.current_cr_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
-                    <td class="text-sm text-right">{{ lineChildAccount?.closing_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ lineChildAccount?.closing_balance_status }}</td>
-                  </tr>
+                <tr :class="['parent_account_'+lineParentAccount?.line_id,'hide_parent_account_'+trialBalanceDataLine?.line_id,'hide_child_account_'+trialBalanceDataLine?.line_id]" class="fourth_label account_row" style="display: none;background-color: #CAF1F1">
+                  <td class="relative text-sm account child_account" :style="{'cursor': lineChildAccount.grandchild_accounts?.length ? 'pointer' : 'auto'}" :id="lineChildAccount?.line_id" @click="toggleChildAccountTrID($event)">
+                    {{ lineChildAccount?.line_text }}
+                    <svg v-if="lineChildAccount.grandchild_accounts?.length" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="custom_down_arrow w-3 h-3">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </td>
+                  <td class="text-sm text-right">{{ lineChildAccount?.opening_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ lineChildAccount?.opening_balance_status }}</td>
+                  <td class="text-sm text-right">{{ lineChildAccount?.current_dr_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+                  <td class="text-sm text-right">{{ lineChildAccount?.current_cr_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+                  <td class="text-sm text-right">{{ lineChildAccount?.closing_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ lineChildAccount?.closing_balance_status }}</td>
+                </tr>
                 <template v-for="(lineGrandChildAccount, lineGrandChildAccountIndex) in lineChildAccount.grandchild_accounts">
                   <tr :class="['child_account_'+lineChildAccount?.line_id,'hide_parent_account_'+trialBalanceDataLine?.line_id,'hide_child_account_'+lineParentAccount?.line_id]" class="fifth_label account_row" style="display: none;background-color: #e0edff">
                     <td class="text-sm account child_account_style">{{ lineGrandChildAccount?.line_text }}</td>
@@ -157,12 +173,12 @@ function fetchAccounts(search, loading) {
         </template>
         </tbody>
         <tfoot v-if="!trialBalances?.length" class="bg-white dark-disabled:bg-gray-800">
-          <tr v-if="isLoading">
-            <td colspan="5">Loading...</td>
-          </tr>
-          <tr v-else-if="!trialBalances?.length">
-            <td colspan="5">No Data found.</td>
-          </tr>
+        <tr v-if="isLoading">
+          <td colspan="5">Loading...</td>
+        </tr>
+        <tr v-else-if="!trialBalances?.length">
+          <td colspan="5">No Data found.</td>
+        </tr>
         </tfoot>
       </table>
     </div>
