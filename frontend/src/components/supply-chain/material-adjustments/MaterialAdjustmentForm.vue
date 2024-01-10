@@ -89,12 +89,12 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmAdjustmentLines[index].rate" min="1" class="form-input">
+                 <input type="number" v-model="form.scmAdjustmentLines[index].rate" min="1" class="form-input">
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmAdjustmentLines[index].quantity" min="1" class="form-input">
+                 <input type="number" v-model="form.scmAdjustmentLines[index].quantity" min="1" class="form-input">
               </label>
             </td>
             <td class="px-1 py-1 text-center">
