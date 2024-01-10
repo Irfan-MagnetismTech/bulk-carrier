@@ -43,7 +43,7 @@
             <tr>
                 <td style="width:50%;"></td>
                 <td style="text-align: right; width:30%;">Date:</td>
-                <td>{{ now()->format('d/M/Y') }}</td>
+                <td>{{ now()->format('d/m/Y') }}</td>
             </tr>
             <tr>
                 <td style="width:50%;"></td>

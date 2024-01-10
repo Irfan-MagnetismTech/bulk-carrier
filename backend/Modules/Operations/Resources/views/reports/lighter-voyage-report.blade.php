@@ -63,7 +63,7 @@
             </tr>
             <tr>
                 <td colspan="{{ count($data['opsContractTitle']) + count($data['opsExpenditureHeadTitle']) + 1 + 4}}" style="text-align: right;">Date:</td>
-                <td colspan="4">{{ now()->format('d-M-Y') }}</td>
+                <td colspan="4">{{ now()->format('d/m/Y') }}</td>
             </tr>
             <tr>
                 <td colspan="{{ count($data['opsContractTitle']) + count($data['opsExpenditureHeadTitle']) + 1 + 4}}" style="text-align: right;">Time:</td>
