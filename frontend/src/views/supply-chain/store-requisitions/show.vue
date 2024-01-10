@@ -31,7 +31,7 @@
                     </tr>
                     <tr>
                         <th class="w-40">Requisition Date</th>
-                        <td>{{ storeRequisition?.date }}</td>
+                        <td>{{ formatDate(storeRequisition?.date) }}</td>
                     </tr>
                     <tr>
                         <th class="w-40">Remarks </th>
@@ -103,6 +103,7 @@ import useHelper from "../../../composables/useHelper";
 import useHeroIcon from "../../../assets/heroIcon";
 import useStoreRequisition from "../../../composables/supply-chain/useStoreRequisition";
 import StoreRequisitionShow from "../../../components/supply-chain/store-requisitions/StoreRequisitionShow.vue";
+import { formatDate } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 

@@ -15,6 +15,7 @@ import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import moment from 'moment';
+import { formatDate } from '../../../utils/helper';
 
 const { getStoreIssues, storeIssues, deleteStoreIssue, isLoading ,errors,isTableLoading} = useStoreIssue();
 const { numberFormat } = useHelper();
@@ -180,7 +181,7 @@ const DEPARTMENTS = ['N/A','Store Department', 'Engine Department', 'Provision D
             <tr v-for="(storeIssue,index) in (storeIssues?.data ? storeIssues?.data : storeIssues)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ storeIssue?.ref_no }}</td>
-              <td>{{ storeIssue?.date ? moment(storeIssue?.date).format('DD-MM-YYYY') : null }}</td>
+              <td>{{ formatDate(storeIssue?.date) }}</td>
               <td>{{ storeIssue?.scmWarehouse?.name?? '' }}</td>
               <td>{{ DEPARTMENTS[storeIssue.department_id] ?? '' }}</td>
               <td>

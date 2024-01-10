@@ -98,6 +98,7 @@
                  type="number"
                  v-model="form.scmMoLines[index].quantity"
                  class="form-input"
+                 min="1"
                  :max="form.scmMoLines[index].max_quantity"
                  :class="{'border-2': form.scmMoLines[index].quantity > form.scmMoLines[index].max_quantity,'border-red-500 bg-red-100': form.scmMoLines[index].quantity > form.scmMoLines[index].max_quantity}">
               </label>

@@ -15,6 +15,7 @@ import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import moment from 'moment';
+import { formatDate } from '../../../utils/helper';
 
 const { getMaterialAdjustments, materialAdjustments, deleteMaterialAdjustment, isLoading, isTableLoading } = useMaterialAdjustment();
 const { numberFormat } = useHelper();
@@ -167,7 +168,7 @@ function confirmDelete(id) {
           <tbody>
             <tr v-for="(materialAdjustment,index) in (materialAdjustments?.data ? materialAdjustments?.data : materialAdjustments)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-              <td><nobr>{{  moment(materialAdjustment?.date).format('DD-MM-YYYY') }}</nobr></td>
+              <td><nobr>{{ formatDate(materialAdjustment?.date) }}</nobr></td>
               <td>{{ materialAdjustment?.type ?? '' }}</td>
               <td>{{ materialAdjustment?.scmWarehouse?.name?? '' }}</td>
               <td>{{ materialAdjustment?.createdBy?.name?? '' }}</td>

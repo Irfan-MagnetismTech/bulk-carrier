@@ -31,11 +31,11 @@
                     </tr>
                     <tr>
                         <th class="w-40">Requisition Date.</th>
-                        <td>{{ movementRequisition?.date }}</td>
+                        <td>{{ formatDate(movementRequisition?.date) }}</td>
                     </tr>
                     <tr>
                         <th class="w-40">Delivery Date.</th>
-                        <td>{{ movementRequisition?.delivery_date }}</td>
+                        <td>{{ formatDate(movementRequisition?.delivery_date) }}</td>
                     </tr>
                     <tr>
                       <th class="w-40">Requested By.</th>
@@ -110,6 +110,7 @@ import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHelper from "../../../composables/useHelper";
 import useHeroIcon from "../../../assets/heroIcon";
 import useMovementRequisition from "../../../composables/supply-chain/useMovementRequisition";
+import { formatDate } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 

@@ -31,11 +31,7 @@
                     </tr>
                     <tr>
                         <th class="w-40">In Date.</th>
-                        <td>{{ movementIn?.date }}</td>
-                    </tr>
-                    <tr>
-                        <th class="w-40">Requsiotion Ref </th>
-                        <td></td>
+                        <td>{{ formatDate(movementIn?.date) }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -98,6 +94,7 @@ import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHelper from "../../../composables/useHelper";
 import useHeroIcon from "../../../assets/heroIcon";
 import useMovementIn from "../../../composables/supply-chain/useMovementIn";
+import { formatDate } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 

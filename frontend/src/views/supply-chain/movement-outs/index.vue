@@ -15,6 +15,7 @@ import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import moment from 'moment';
+import { formatDate } from '../../../utils/helper';
 
 const { getMovementOuts, movementOuts, deleteMovementOut, isLoading,isTableLoading } = useMovementOut();
 const { numberFormat } = useHelper();
@@ -173,7 +174,7 @@ function confirmDelete(id) {
               <td>{{ movementOut?.ref_no }}</td>
               <td>{{ movementOut?.fromWarehouse?.name?? '' }}</td>
               <td>{{ movementOut?.toWarehouse?.name?? '' }}</td>
-              <td>{{ movementOut?.date ? moment(movementOut?.date).format('DD-MM-YYYY') : null }}</td>
+              <td>{{ formatDate(movementOut?.date) }}</td>
               <td>
                 <span :class="movementOut?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ movementOut?.business_unit }}</span>
               </td>

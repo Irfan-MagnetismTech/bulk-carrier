@@ -31,7 +31,7 @@
                     </tr>
                     <tr>
                         <th class="w-40">Issue Date</th>
-                        <td>{{ storeIssue?.date }}</td>
+                        <td>{{ formatDate(storeIssue?.date) }}</td>
                     </tr>
                     <tr>
                         <th class="w-40">SR Ref</th>
@@ -104,6 +104,7 @@ import useHeroIcon from "../../../assets/heroIcon";
 
 import useStoreIssue from "../../../composables/supply-chain/useStoreIssue";
 import StoreIssueShow from "../../../components/supply-chain/store-issues/StoreIssueShow.vue";
+import { formatDate } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 
