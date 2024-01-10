@@ -12,7 +12,7 @@
   </div>
   <div class="input-group">
     <label class="label-group">
-        <span class="label-item-title">MR No <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Movement Requisition No <span class="text-red-500">*</span></span>
           <v-select :options="filteredMovementRequisitions" :key="mmrKey" placeholder="-- Search Here --" v-model="form.scmMmr" label="ref_no" class="block form-input" @update:modelValue="setMovementRequisitionData(form.scmMmr)">
           <template #search="{attributes, events}">
               <input
@@ -92,7 +92,7 @@
                  <input type="text" v-model="form.scmMoLines[index].remaining_quantity" class="form-input vms-readonly-input" readonly>
                </label>
             </td>
-            <td>
+            <td class="!w-32">
               <label class="block w-full mt-2 text-sm">
                <input
                  type="number"
