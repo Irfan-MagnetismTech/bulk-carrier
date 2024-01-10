@@ -36,6 +36,16 @@ class AccFixedAsset extends Model
         return $this->hasMany(AccFixedAssetCost::class);
     }
 
+    public function transaction()
+    {
+        return $this->morphOne(AccTransaction::class,'transactionable')->withDefault();
+    }
+
+    public function morphaccount()
+    {
+        return $this->morphMany(AccAccount::class,'accountable');
+    }
+
     public function account()
     {
         return $this->belongsTo(AccAccount::class, 'acc_account_id','id');

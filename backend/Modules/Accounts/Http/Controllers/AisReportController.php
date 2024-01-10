@@ -164,7 +164,7 @@ class AisReportController extends Controller
         return $profitLossInfo;
     }
 
-    public function fixedAssetStatement(){
+    public function fixedAssetStatement(Request $request){
         $assets = AccFixedAsset::get()
             ->map(function($asset){
                 $data = [
