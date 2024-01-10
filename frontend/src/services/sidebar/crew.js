@@ -213,37 +213,37 @@ export default [
                 permissionKey: '',
                 subSubMenu: [],
             },
-            // {
-            //     route: 'administration.users.index',
-            //     label: 'Salary',
-            //     preIcon: '',
-            //     postIcon: icons.DownArrow,
-            //     is_active: false,
-            //     is_open: false,
-            //     permissionKey: '',
-            //     subSubMenu: [
-            //         {
-            //             route: 'administration.users.index',
-            //             label: 'Generate Salary',
-            //             preIcon: '',
-            //             postIcon: icons.DownArrow,
-            //             is_active: false,
-            //             is_open: false,
-            //             permissionKey: '',
-            //             subSubMenu: [],
-            //         },
-            //         {
-            //             route: 'administration.users.index',
-            //             label: 'Salary List',
-            //             preIcon: '',
-            //             postIcon: icons.DownArrow,
-            //             is_active: false,
-            //             is_open: false,
-            //             permissionKey: '',
-            //             subSubMenu: [],
-            //         },
-            //     ],
-            // },
+            {
+                route: '',
+                label: 'Salary',
+                preIcon: '',
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: [
+                    {
+                        route: 'crw.crewPayrollBatches.create',
+                        label: 'Generate Salary',
+                        preIcon: '',
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+                    {
+                        route: 'crw.crewPayrollBatches.index',
+                        label: 'Salary List',
+                        preIcon: '',
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
+                ],
+            },
             // {
             //     route: 'administration.users.index',
             //     label: 'Appraisal Records',
@@ -264,6 +264,31 @@ export default [
             //     permissionKey: '',
             //     subSubMenu: [],
             // },
+
+            {
+                route: 'crw.appraisal-forms.index',
+                label: 'Appraisal Forms',
+                preIcon: '',
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: [],
+            },
+
+            
+            {
+                route: 'crw.appraisal-records.index',
+                label: 'Appraisal Records',
+                preIcon: '',
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: [],
+            },
+
+
         ]
     },
 ];

@@ -20,7 +20,7 @@ class CrwAttendanceController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwAttendances = CrwAttendance::with('opsVessel:id,name', 'crwAttendanceLines')->globalSearch($request->all());
+            $crwAttendances = CrwAttendance::with('opsVessel:id,name', 'crwAttendanceLines', 'crwPayrollBatch')->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwAttendances, 200);
         }

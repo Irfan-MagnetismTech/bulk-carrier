@@ -180,6 +180,7 @@ onMounted(() => {
                 </td>
                 <td>
                   <nobr>
+                    <action-button :action="'show'" :to="{ name: 'acc.fixed-assets.show', params: { fixedAssetId: fixedAsset?.id } }"></action-button>
                     <action-button :action="'edit'" :to="{ name: 'acc.fixed-assets.edit', params: { fixedAssetId: fixedAsset?.id } }"></action-button>
                     <action-button @click="confirmDelete(fixedAsset?.id)" :action="'delete'"></action-button>
                   </nobr>

@@ -13,13 +13,17 @@ export default function useCrewCommonApiRequest() {
     const recruitmentApprovals = ref([]);
     const crewDocuments = ref([]);
     const crewDocumentRenewals = ref([]);
+    const appraisalUndoneAssignments = ref([]);
+    
     const vesselAssignedCrews = ref([]);
+    const vesselWiseMonthlyAttendances = ref([]);
     const isCrewDocumentRenewModalOpen = ref(0);
     const $loading = useLoading();
     const notification = useNotification();
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const isAppraisalUndoneAssignmentLoading = ref(false);
     const isCommonCrewLoading = ref(false);
 
     async function getCrewRankLists(businessUnit) {
@@ -191,7 +195,48 @@ export default function useCrewCommonApiRequest() {
         }
     }
 
+    async function getVesselMonthlyAttendances(opsVesselId) {
 
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        let form = {
+            'ops_vessel_id': opsVesselId,
+        }
+
+        try {
+            const { data, status } = await Api.post('/crw/get-vessel-monthly-attendances', form);
+            vesselWiseMonthlyAttendances.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            isLoading.value = false;
+        }
+    }
+
+    async function getAppraisalUndoneAssignments(crwCrewProfileId, crwCrewAsignmentId = null) {
+
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isAppraisalUndoneAssignmentLoading.value = true;
+
+        let form = {
+            'crw_crew_profile_id': crwCrewProfileId,
+            'crw_crew_assignment_id': crwCrewAsignmentId,
+        }
+
+        try {
+            const { data, status } = await Api.post('/crw/get-appraisal-undone-assignments', form);
+            appraisalUndoneAssignments.value = data.value;
+
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            // loader.hide();
+            isAppraisalUndoneAssignmentLoading.value = false;
+        }
+    }
 
     return {
         crwRankLists,
@@ -203,6 +248,8 @@ export default function useCrewCommonApiRequest() {
         crewDocumentRenewals,
         isCrewDocumentRenewModalOpen,
         vesselAssignedCrews,
+        vesselWiseMonthlyAttendances,
+        appraisalUndoneAssignments,
         getCrewRankLists,
         getCrewAgencyLists,
         getCrewAgencyContracts,
@@ -211,7 +258,10 @@ export default function useCrewCommonApiRequest() {
         getCrewDocuments,
         getCrewDocumentRenewals,
         getVesselAssignedCrews,
+        getVesselMonthlyAttendances,
+        getAppraisalUndoneAssignments,
         isLoading,
+        isAppraisalUndoneAssignmentLoading,
         isCommonCrewLoading,
         errors,
     };

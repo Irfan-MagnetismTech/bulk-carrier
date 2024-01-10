@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Accounts\Entities\AccFixedAsset;
 use Modules\Accounts\Http\Requests\AccFixedAssetRequest;
+use Modules\Accounts\Services\AccountService;
 
 class AccFixedAssetController extends Controller
 {
@@ -35,15 +36,39 @@ class AccFixedAssetController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(AccFixedAssetRequest $request)
+    public function store(Request $request)
     {
         try {
             $accFixedAssetData = $request->only('acc_cost_center_id', 'scm_mrr_id', 'scm_material_id', 'brand', 'model', 'serial', 'acc_parent_account_id', 'acc_account_id', 'asset_tag', 'location', 'acquisition_date', 'useful_life', 'depreciation_rate', 'acquisition_cost', 'business_unit');
 
+            
             DB::transaction(function () use ($request, $accFixedAssetData)
             {
                 $accFixedAsset = AccFixedAsset::create($accFixedAssetData);
                 $accFixedAsset->fixedAssetCosts()->createMany($request->fixedAssetCosts);
+                
+                // $codeData = [
+                //     'base_header' => config('accounts.account_types.assets'),
+                //     'header'      => config('accounts.balance_income_balance_header.non_current_assets'),
+                //     'line'        => config('accounts.balance_income_line.fixed_assets_at_cost'),
+                //     'id'          => $accFixedAsset->id,
+                // ];
+                // $accountCode = (new AccountService())->generateAccountCode($codeData);
+                $accountData = [
+                    'balance_income_line_id' => config('accounts.balance_income_base_header.fixed_assets_at_cost'),
+                    'name' => $accFixedAsset->scmMaterial->name,
+                    'code' => '33',
+                    'type' => config('accounts.account_types.Assets'),
+                    'unit' => $accFixedAsset->business_unit,
+                    'accountable_type' => AccFixedAsset::class,
+                    'accountable_id' => $accFixedAsset?->id,
+                ];
+
+                $data = (new AccountService())->handleAccountService($accountData);
+                
+                dd($data);
+                return response()->json($data);
+                
             });
 
             return response()->success('Created Successfully', '', 201);

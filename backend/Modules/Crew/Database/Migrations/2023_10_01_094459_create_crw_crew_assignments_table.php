@@ -17,15 +17,16 @@ return new class extends Migration
             $table->id();
 			$table->unsignedBigInteger('ops_vessel_id');
 			$table->unsignedBigInteger('crw_crew_id');
+			$table->string('assignment_code'); // assignment code
 			$table->string('position_onboard'); // rank name
-			$table->date('joining_date');   
-			$table->string('joining_port_code'); // port code 
+			$table->date('joining_date');
+			$table->string('joining_port_code'); // port code
 			$table->string('duration'); //4 months (+/-1)
 			$table->enum('status', ['Onboard', 'Complete'])->default('Onboard'); //[assigned/onboard->active->complete]
-			$table->date('completion_date')->nullable();   
-			$table->string('completion_remarks')->nullable();   
-			$table->string('remarks')->nullable();            
-			$table->enum('business_unit', ['PSML', 'TSLL']);            
+			$table->date('completion_date')->nullable();
+			$table->string('completion_remarks')->nullable();
+			$table->string('remarks')->nullable();
+			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();
         });
     }

@@ -12,7 +12,7 @@ const { vessels, searchVessels } = useVessel();
 
 const { allCostCenterLists, getAccount, getCostCenter, isLoading } = useAccountCommonApiRequest();
 const { filteredFixedAssets, searchFixedAsset } = useFixedAsset();
-
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const { emit } = getCurrentInstance();
 
@@ -110,7 +110,7 @@ onMounted(() => {
       </label>
       <label class="label-group">
         <span class="label-item-title"> Applied Date <span class="text-red-500">*</span></span>
-        <input type="date" class="label-item-input" v-model.trim="form.applied_date" required />
+        <VueDatePicker v-model.trim="form.applied_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> Cost Center <span class="text-red-500">*</span></span>
