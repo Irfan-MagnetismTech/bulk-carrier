@@ -101,7 +101,7 @@ class AccFixedAssetController extends Controller
                 $transectionData = [
                     'acc_cost_center_id'    => $accFixedAsset->acc_cost_center_id,
                     'voucher_type'          => 'Journal',
-                    'transaction_date'      => now()->format('Y-m-d'),
+                    'transaction_date'      => $accFixedAsset->acquisition_date,
                     'narration'             => '',
                     'business_unit'         => $accFixedAsset->business_unit,
                 ];

@@ -40,6 +40,33 @@ class AccDepreciationController extends Controller
             {
                 $accDepreciation = AccDepreciation::create($accDepreciationData);
                 $accDepreciation->accDepreciationLines()->createMany($request->accDepreciationLines);
+
+                // foreach($accDepreciation->accDepreciationLines as $depLine){
+                    
+                //     $transection[] = [
+                //         'acc_cost_center_id'    => $accDepreciation->acc_cost_center_id,
+                //         'voucher_type'          => 'Journal',
+                //         'transaction_date'      => $accDepreciation->applied_date,
+                //         'narration'             => '',
+                //         'business_unit'         => $accDepreciation->business_unit,
+                //         // 'AD_ledgers'            => [
+                //         //         'acc_cost_center_id'            => $accDepreciation->acc_cost_center_id,
+                //         //         'acc_balance_and_income_line_id'=> $depLine->accFixedAsset->acumulateDepreciationAccount->acc_balance_and_income_line_id,
+                //         //         'acc_account_id'                => $depLine->accFixedAsset->acumulateDepreciationAccount->id,
+                //         //         'dr_amount'                     => $depLine->amount,
+                //         // ],
+                //         // 'Dep_ledgers'            => [
+                //         //         'acc_cost_center_id'            => $accDepreciation->acc_cost_center_id,
+                //         //         'acc_balance_and_income_line_id'=> $depLine->accFixedAsset->depreciationAccount->acc_balance_and_income_line_id,
+                //         //         'acc_account_id'                => $depLine->accFixedAsset->depreciationAccount->id,
+                //         //         'cr_amount'                     => $depLine->amount,
+                //         // ],
+                //     ];
+                // }
+
+                // // $accDepreciation->transaction()->createMany($transection);
+
+                // dd($transection);
             });
 
             return response()->success('Created Successfully', '', 201);
