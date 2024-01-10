@@ -26,7 +26,11 @@ class ScmAdjustmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'business_unit' => 'required',
+            'date' => 'required|date',
+            'scm_warehouse_id' => 'required|exists:scm_warehouses,id',
+            'acc_cost_center_id' => 'nullable|exists:acc_cost_centers,id',
+            'type' => 'required',
         ];
     }
 
@@ -38,7 +42,17 @@ class ScmAdjustmentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'business_unit.required' => 'Business unit is required',
+
+            'date.required' => 'Date is required',
+            'date.date' => 'Date must be a valid date',
+
+            'scm_warehouse_id.required' => 'Warehouse is required',
+            'scm_warehouse_id.exists' => 'Warehouse is not valid',
+
+            'acc_cost_center_id.exists' => 'Cost center is not valid',
+
+            'type.required' => 'Type is required',
         ];
     }
 
