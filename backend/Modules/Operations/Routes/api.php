@@ -155,16 +155,11 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
 
     // Reports
     Route::post('port-wise-expense-report', [OpsExpenseReportController::class, 'portWiseExpenditureReport']);
-    // start=2023-12-01&end=2023-12-31&business_unit=TSLL&port=DAOUTKANDI
 
-    // Route::get('/single-vessel-wise-bunker-report', [OpsExpenseReportController::class, 'singleVesselWiseBunkerReport']);
-    // start=2023-12-01&end=2023-12-31&business_unit=TSLL&ops_vessel_id=2
-
-    // Route::get('lighter-voyage-report', [OpsVoyageReportController::class, 'voyageReport']);
-    Route::post('bulk-voyage-report', [OpsVoyageReportController::class, 'bulkVoyageReport']);
     Route::post('vessel-bunker-report', [OpsBunkerReportController::class, 'vesselBunkerReport']);
-    // Route::get('gross-bunker-report', [OpsBunkerReportController::class, '']);
     Route::post('business-unit-wise-bunker-report', [OpsBunkerReportController::class, 'businessUnitWiseBunkerReport']);
 
     Route::post('lighter-voyage-report', [OpsVoyageReportController::class, 'lighterVoyageReport']);
+    Route::post('bulk-voyage-report', [OpsVoyageReportController::class, 'bulkVoyageReport']);
+
 });

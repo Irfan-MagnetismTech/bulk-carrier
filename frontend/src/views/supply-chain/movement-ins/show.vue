@@ -74,6 +74,47 @@
           </table>
         </div>
     </div>
+    <div class="flex md:gap-4 mt-1 md:mt-2" v-if="movementIn.scmMiShortage && movementIn.scmMiShortage.scmMiShortageLines && movementIn.scmMiShortage.scmMiShortageLines.length">
+        <div class="w-full">
+          <table class="w-full">
+            <thead>
+                <tr>
+                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="4">Shortage Information</td>
+                </tr>
+                <tr>
+                    <td class="!text-center font-bold" colspan="2">Shortage Type: {{ movementIn.scmMiShortage.shortage_type }}</td>
+                    <td class="!text-center font-bold" colspan="2">Assign to: {{ movementIn.scmMiShortage.scmWarehouse.name }}</td>
+                </tr>
+            </thead>
+            <thead v-once>
+              <tr class="w-full">
+                <th>SL</th>
+                <th class="w-72">Material Name</th>
+                <th>Unit</th>
+                <th>Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(scmMiShortageLine, index) in movementIn.scmMiShortage.scmMiShortageLines" :key="index">
+                <td>
+                  {{ index+1 }}
+                </td>
+                <td>
+                  <span v-if="movementIn.scmMiShortage.scmMiShortageLines[index]?.scmMaterial?.name">{{ movementIn.scmMiShortage.scmMiShortageLines[index]?.scmMaterial?.name }}</span>
+                </td>
+                <td>
+                  <span v-if="movementIn.scmMiShortage.scmMiShortageLines[index]?.unit">{{ movementIn.scmMiShortage.scmMiShortageLines[index]?.unit }}</span>
+                </td>
+                <td>
+                <span>
+                    {{ numberFormat(movementIn.scmMiShortage.scmMiShortageLines[index].quantity) }}
+                </span>
+              </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+    </div>
   </div>
 </template>
 <style lang="postcss" scoped>

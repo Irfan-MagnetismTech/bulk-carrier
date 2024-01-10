@@ -107,13 +107,12 @@
             </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Sail Date <span class="text-red-500">*</span></span>
-            <input type="datetime-local" v-model="form.sail_date" placeholder="Sail Date " class="form-input" required autocomplete="off" />
+            <VueDatePicker v-model.trim="form.sail_date" class="form-input" required auto-apply   format="dd/MM/yyyy hh:mm a" model-type="yyyy-MM-dd HH:mm:ss" :is-24="false"  :flow="['calendar', 'time']" :text-input="{ format: dateTimeFormat }" ></VueDatePicker>
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Transit Date <span class="text-red-500">*</span></span>
-            <input type="datetime-local" v-model="form.transit_date" placeholder="Transit Date" class="form-input" required autocomplete="off" />
-          </label>
-          
+            <VueDatePicker v-model.trim="form.transit_date" class="form-input" required auto-apply   format="dd/MM/yyyy hh:mm a" model-type="yyyy-MM-dd HH:mm:ss" :is-24="false"  :flow="['calendar', 'time']" :text-input="{ format: dateTimeFormat }" ></VueDatePicker>
+          </label>          
           
         </div>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -277,42 +276,39 @@
 
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">ATA </span>
+                      <VueDatePicker v-model.trim="form.opsVoyagePortSchedules[index].ata" class="form-input" auto-apply   format="dd/MM/yyyy hh:mm a" model-type="yyyy-MM-dd HH:mm:ss" :is-24="false"  :flow="['calendar', 'time']" :text-input="{ format: dateTimeFormat }" ></VueDatePicker>
 
-                      <input type="datetime-local" v-model.trim="form.opsVoyagePortSchedules[index].ata" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <!-- <input type="datetime-local" v-model.trim="form.opsVoyagePortSchedules[index].ata" placeholder="" class="form-input text-right" autocomplete="off"/> -->
                     </label>
 
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">ATB</span>
-
-                      <input type="datetime-local" v-model="form.opsVoyagePortSchedules[index].atb" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <VueDatePicker v-model.trim="form.opsVoyagePortSchedules[index].atb" class="form-input" auto-apply   format="dd/MM/yyyy hh:mm a" model-type="yyyy-MM-dd HH:mm:ss" :is-24="false"  :flow="['calendar', 'time']" :text-input="{ format: dateTimeFormat }" ></VueDatePicker>
+                      <!-- <input type="datetime-local" v-model="form.opsVoyagePortSchedules[index].atb" placeholder="" class="form-input text-right" autocomplete="off"/> -->
                     </label>
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">ATD </span>
-
-                      <input type="datetime-local" v-model="form.opsVoyagePortSchedules[index].atd" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <VueDatePicker v-model.trim="form.opsVoyagePortSchedules[index].atd" class="form-input" auto-apply   format="dd/MM/yyyy hh:mm a" model-type="yyyy-MM-dd HH:mm:ss" :is-24="false"  :flow="['calendar', 'time']" :text-input="{ format: dateTimeFormat }" ></VueDatePicker>
                     </label>
           </div>
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
 
                     <label class="block w-full mt-2 text-sm">
-                      <span class="text-gray-700 dark-disabled:text-gray-300">Load Commence </span>
-
-                      <input type="datetime-local" v-model="form.opsVoyagePortSchedules[index].load_commence" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Load Commence </span>                      
+                      <VueDatePicker v-model.trim="form.opsVoyagePortSchedules[index].load_commence" class="form-input" auto-apply   format="dd/MM/yyyy hh:mm a" model-type="yyyy-MM-dd HH:mm:ss" :is-24="false"  :flow="['calendar', 'time']" :text-input="{ format: dateTimeFormat }" ></VueDatePicker>
                     </label>
                     <label class="block w-full mt-2 text-sm">
-                      <span class="text-gray-700 dark-disabled:text-gray-300">Load Completed </span>
-
-                      <input type="datetime-local" v-model="form.opsVoyagePortSchedules[index].load_complete" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Load Completed </span>                 
+                      <VueDatePicker v-model.trim="form.opsVoyagePortSchedules[index].load_complete" class="form-input" auto-apply   format="dd/MM/yyyy hh:mm a" model-type="yyyy-MM-dd HH:mm:ss" :is-24="false"  :flow="['calendar', 'time']" :text-input="{ format: dateTimeFormat }" ></VueDatePicker>
                     </label>
                     <label class="block w-full mt-2 text-sm">
-                      <span class="text-gray-700 dark-disabled:text-gray-300">Unload Commence </span>
-
-                      <input type="datetime-local" v-model="form.opsVoyagePortSchedules[index].unload_commence" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <span class="text-gray-700 dark-disabled:text-gray-300">Unload Commence </span>         
+                      <VueDatePicker v-model.trim="form.opsVoyagePortSchedules[index].unload_commence" class="form-input" auto-apply   format="dd/MM/yyyy hh:mm a" model-type="yyyy-MM-dd HH:mm:ss" :is-24="false"  :flow="['calendar', 'time']" :text-input="{ format: dateTimeFormat }" ></VueDatePicker>
                     </label>
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Unload Completed </span>
-
-                      <input type="datetime-local" v-model="form.opsVoyagePortSchedules[index].unload_complete" placeholder="" class="form-input text-right" autocomplete="off"/>
+  
+                      <VueDatePicker v-model.trim="form.opsVoyagePortSchedules[index].unload_complete" class="form-input" auto-apply   format="dd/MM/yyyy hh:mm a" model-type="yyyy-MM-dd HH:mm:ss" :is-24="false"  :flow="['calendar', 'time']" :text-input="{ format: dateTimeFormat }" ></VueDatePicker>
                     </label>
                     
                     
@@ -371,6 +367,9 @@ const { vessel, vessels, searchVessels, showVessel, isVesselLoading } = useVesse
 const { cargoTypes, searchCargoTypes, isCargoTypeLoading } = useCargoType();
 const { materials, searchMaterialWithCategory } = useMaterial();
 const { checkValidation } = useVoyage();
+
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
+const dateTimeFormat = ref(Store.getters.getVueDatePickerTextInputFormat.dateTime);
 
 const props = defineProps({
     form: {
