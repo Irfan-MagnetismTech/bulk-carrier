@@ -16,6 +16,8 @@ const form = ref({
   business_unit: 'TSLL'
 })
 
+const tableScrollWidth = ref(null);
+const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
 watch(() => form.value.port, (value) => {
 
@@ -26,7 +28,13 @@ watch(() => form.value.port, (value) => {
 
 function getReport() {
   lighterVoyageReport.value = '';
-  getLighterVoyageReport(form.value)
+  getLighterVoyageReport(form.value).then(() => {
+    const customDataTable = document.getElementById("customDataTable");
+
+      if (customDataTable) {
+        tableScrollWidth.value = customDataTable.scrollWidth;
+      }
+  })
 }
 </script>
 <template>
@@ -57,8 +65,11 @@ function getReport() {
     </form>
 
     <div v-if="lighterVoyageReport != ''" class="my-5 overflow-x-scroll">
-      
-      <div v-html="lighterVoyageReport"></div>
+      <div id="customDataTable">
+        <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
+          <div v-html="lighterVoyageReport"></div>
+        </div>
+      </div>
     </div>
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>
@@ -95,6 +106,24 @@ input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+::-webkit-scrollbar:horizontal {
+  height: 0.3rem!important; 
+}
+
+::-webkit-scrollbar-thumb:horizontal{
+  background-color: rgba(126, 58, 242); 
+  border-radius: 12rem!important;
+  width: 2rem!important;
+}
+
+::-webkit-scrollbar-track:horizontal{
+  background: rgb(148, 144, 155)!important; 
+  border-radius: 12rem!important;
+}
+
+
+
 >>> {
   --vs-controls-color: #374151;
   --vs-border-color: #4b5563;
