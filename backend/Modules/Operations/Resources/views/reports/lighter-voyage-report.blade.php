@@ -375,7 +375,7 @@
                             }}
                         </th>
                     @endforeach
-                    <th>{{$grand_total_cost}}</th>
+                    <th>{{ number_format($grand_total_cost,2) }}</th>
                     {{-- @foreach($data['opsVesselBunkerTitle'] as $bunker)                        	
                         @foreach($data['bunkerMaterialTitle'] as $matrial)                        	
                             <th>
