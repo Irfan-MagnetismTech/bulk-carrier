@@ -15,6 +15,8 @@ import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import moment from 'moment';
+import { formatDate } from '../../../utils/helper';
+
 
 const { getMovementIns, movementIns, deleteMovementIn, isLoading,isTableLoading } = useMovementIn();
 const { numberFormat } = useHelper();
@@ -172,7 +174,7 @@ function confirmDelete(id) {
               <td>{{ movementIn?.ref_no }}</td>
               <td>{{ movementIn?.fromWarehouse?.name?? '' }}</td>
               <td>{{ movementIn?.toWarehouse?.name?? '' }}</td>
-              <td><nobr>{{  moment(movementIn?.date).format('DD-MM-YYYY') }}</nobr></td>
+              <td><nobr>{{ formatDate(movementIn?.date) }}</nobr></td>
               <td>
                 <span :class="movementIn?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ movementIn?.business_unit }}</span>
               </td>

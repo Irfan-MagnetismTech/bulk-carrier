@@ -12,8 +12,8 @@
   </div>
   <div class="input-group">
     <label class="label-group">
-        <span class="label-item-title">MR No <span class="text-red-500">*</span></span>
-          <v-select :options="filteredMovementRequisitions" :key="mmrKey" placeholder="-- Search Here --"  @option:selected="setMovementRequisitionData(form.scmMmr)" v-model="form.scmMmr" label="ref_no" class="block form-input">
+        <span class="label-item-title">Movement Requisition No <span class="text-red-500">*</span></span>
+          <v-select :options="filteredMovementRequisitions" :key="mmrKey" placeholder="-- Search Here --" v-model="form.scmMmr" label="ref_no" class="block form-input" @update:modelValue="setMovementRequisitionData(form.scmMmr)">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -61,7 +61,7 @@
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmMoLine, index) in form.scmMoLines" :key="index">
             <td class="!w-72">
-              <v-select :options="mmrWiseMaterials" placeholder="--Choose an option--" v-model="form.scmMoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @option:selected="setMaterialOtherData(form.scmMoLines[index].scmMaterial,index)">
+              <v-select :options="mmrWiseMaterials" placeholder="--Choose an option--" v-model="form.scmMoLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @update:modelValue="setMaterialOtherData(form.scmMoLines[index].scmMaterial,index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -92,12 +92,13 @@
                  <input type="text" v-model="form.scmMoLines[index].remaining_quantity" class="form-input vms-readonly-input" readonly>
                </label>
             </td>
-            <td>
+            <td class="!w-32">
               <label class="block w-full mt-2 text-sm">
                <input
                  type="number"
                  v-model="form.scmMoLines[index].quantity"
                  class="form-input"
+                 min="1"
                  :max="form.scmMoLines[index].max_quantity"
                  :class="{'border-2': form.scmMoLines[index].quantity > form.scmMoLines[index].max_quantity,'border-red-500 bg-red-100': form.scmMoLines[index].quantity > form.scmMoLines[index].max_quantity}">
               </label>

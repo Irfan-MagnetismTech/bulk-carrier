@@ -8,14 +8,15 @@
       <label class="label-group">
           <span class="label-item-title">Ref No</span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
-          <Error v-if="errors?.ref_no" :errors="errors.ref_no"  />
+          <!-- <Error v-if="errors?.ref_no" :errors="errors.ref_no"  /> -->
       </label>
   </div>
   <div class="input-group">
       <label class="label-group">
           <span class="label-item-title">Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
-          <Error v-if="errors?.date" :errors="errors.date"  />
+          <VueDatePicker v-model="form.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+         
+          <!-- <Error v-if="errors?.date" :errors="errors.date"  /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">Adjustment Type <span class="text-red-500">*</span></span>
@@ -37,7 +38,7 @@
               />
           </template>
           </v-select>
-         <Error v-if="errors?.unit" :errors="errors.unit" />
+         <!-- <Error v-if="errors?.unit" :errors="errors.unit" /> -->
       </label>
      
      
@@ -46,7 +47,7 @@
     <label class="label-group">
           <span class="label-item-title">Remarks</span>
           <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
-          <Error v-if="errors?.remarks" :errors="errors.remarks" />
+          <!-- <Error v-if="errors?.remarks" :errors="errors.remarks" /> -->
     </label>
   </div>
 
@@ -89,12 +90,12 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmAdjustmentLines[index].rate" min="1" class="form-input">
+                 <input type="number" v-model="form.scmAdjustmentLines[index].rate" min="1" class="form-input">
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="text" v-model="form.scmAdjustmentLines[index].quantity" min="1" class="form-input">
+                 <input type="number" v-model="form.scmAdjustmentLines[index].quantity" min="1" class="form-input">
               </label>
             </td>
             <td class="px-1 py-1 text-center">

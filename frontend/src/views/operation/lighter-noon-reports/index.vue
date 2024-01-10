@@ -13,10 +13,10 @@ import moment from 'moment';
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import useGlobalFilter from "../../../composables/useGlobalFilter";
+import { formatDateTime } from "../../../utils/helper";
 
 const { lighterNoonReports, getLighterNoonReports, deleteLighterNoonReport, isLoading, isTableLoading} = useLighterNoonReport();
 const { showFilter,  swapFilter, setSortingState, clearFilter } = useGlobalFilter()
-
 const icons = useHeroIcon();
 const debouncedValue = useDebouncedRef('', 800);
 
@@ -257,7 +257,7 @@ onMounted(() => {
               <tr v-for="(lighterNoonReport, index) in lighterNoonReports.data" :key="lighterNoonReport?.id">
                   <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>
-                    <nobr>{{ lighterNoonReport?.date ? moment(lighterNoonReport?.date).format('MM-DD-YYYY hh:mm A') : null }}</nobr>
+                    <nobr>{{ formatDateTime(lighterNoonReport?.date) }}</nobr>
                   </td>
                   <td>{{ lighterNoonReport?.opsVessel?.name }}</td>
                   <td>{{ lighterNoonReport?.opsVoyage?.voyage_sequence }}</td>

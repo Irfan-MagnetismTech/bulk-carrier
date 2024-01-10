@@ -16,7 +16,7 @@ const { warehouse, showWarehouse, updateWarehouse , isLoading, errors} = useWare
 const { setTitle } = Title();
 const route = useRoute();
 const warehouseId = route.params.warehouseId;
-
+const formType = 'edit';
 
 setTitle('Update Warehouse');
 
@@ -34,7 +34,7 @@ onMounted(() => {
     </div>
         <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="updateWarehouse(warehouse, warehouseId)">
-            <warehouse-form v-model:form="warehouse" :errors="errors"></warehouse-form>
+            <warehouse-form v-model:form="warehouse" :errors="errors" :formType="formType"></warehouse-form>
             <!-- Submit button -->
             <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600  hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update</button>
         </form>

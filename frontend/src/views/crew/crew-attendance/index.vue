@@ -158,8 +158,8 @@ onMounted(() => {
             <td>
               <nobr>
                <action-button :action="'show'" :to="{ name: 'crw.crwAttendances.show', params: { crwAttendanceId: crwAttendance?.id } }"></action-button>
-                <action-button :action="'edit'" :to="{ name: 'crw.crwAttendances.edit', params: { crwAttendanceId: crwAttendance?.id } }"></action-button>
-                <action-button @click="confirmDelete(crwAttendance?.id)" :action="'delete'"></action-button>
+                <action-button :action="'edit'" :class="{'custom_disabled': crwAttendance && crwAttendance.crwPayrollBatch}" :to="{ name: 'crw.crwAttendances.edit', params: { crwAttendanceId: crwAttendance?.id } }"></action-button>
+                <action-button :class="{'custom_disabled': crwAttendance && crwAttendance.crwPayrollBatch}" @click="confirmDelete(crwAttendance?.id)" :action="'delete'"></action-button>
               </nobr>
             </td>
           </tr>

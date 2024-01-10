@@ -2,6 +2,7 @@
 
 namespace Modules\Operations\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
@@ -133,12 +134,16 @@ class OpsVoyageReportController extends Controller
 
     public function lighterVoyageReport(Request $request)
     {
+        // dd($request->all());
         try {
             
+            $business_unit = $request->business_unit;
+            $start = date($request->start);
+            $end = date($request->end);
+
             $vesselBunkers= OpsVesselBunker::with(['opsVessel','opsBunkers.scmMaterial','stockable.scmMaterial','opsVoyage.opsCargoType','opsVoyage.opsVoyageSectors.opsContractTariff.opsCargoTariff.opsCargoTariffLines','opsVoyage.opsContractTariffs.opsCargoTariff.opsCargoTariffLines','opsVoyage.opsVoyageExpenditureEntries.opsExpenseHead'])
-            ->when(isset(request()->from_date) && isset(request()->to_date), function($query) {
-                $query->whereBetween('date', [request()->from_date, request()->to_date]);
-            })
+            ->whereBetween('date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
+            ->where('business_unit', $business_unit)
             ->get();
 
             if (count($vesselBunkers)<1) {
@@ -167,11 +172,11 @@ class OpsVoyageReportController extends Controller
                 });
             })->unique('particular');
 
+            // dd($opsVesselBunkerTitle);
+
             $opsCargoTitle = $vesselBunkers->flatMap(function ($vesselBunker) {
                 return $vesselBunker?->opsVoyage?->opsContractTariffs->flatMap(function ($opsContractTariff) {
-                    return collect($opsContractTariff->opsCargoTariff->opsCargoTariffLines)->map(function ($tariffLine){
-                        
-                        
+                    return collect($opsContractTariff->opsCargoTariff->opsCargoTariffLines)->map(function ($tariffLine){                        
                         return [
                             'particular' => $tariffLine['particular'],                            
                         ];
@@ -192,10 +197,12 @@ class OpsVoyageReportController extends Controller
             })->unique('name');
 
             $vesselBunkers->map(function ($vesselBunker) use($bunkerMaterialTitle){
-                $vesselBunker?->opsVoyage?->opsVoyageSectors?->map(function ($sector) {
-                    $sector['quantity'] = $this->chooseQuantity($sector);
-                    return $sector;
-                });
+                if($vesselBunker?->opsVoyage){
+                    $vesselBunker?->opsVoyage?->opsVoyageSectors?->map(function ($sector) {
+                        $sector['quantity'] = $this->chooseQuantity($sector);
+                        return $sector;
+                    });
+                }
 
                 $vesselBunker?->opsVoyage?->opsContractTariffs?->map(function ($tariff) {
                     $tariff->opsCargoTariff?->opsCargoTariffLines
@@ -224,7 +231,6 @@ class OpsVoyageReportController extends Controller
                 return in_array($bunker['name'], $bunkerMaterialTitle);
             });
 
-
             // return response()->success('Data retrieved successfully.', $filteredBunkers, 200);
             $voyagesWithBunkers= $vesselBunkers->map(function($vessel_bunker) use ($request,$filteredBunkers) {
                 $voyagesWithBunkers = [
@@ -245,6 +251,8 @@ class OpsVoyageReportController extends Controller
                 return $voyagesWithBunkers;
             });
 
+            // dd($bunkerMaterialTitle);
+
             $data= [
                 'vesselBunkers'=> $vesselBunkers,
                 'bunkerStocks'=> $voyagesWithBunkers,
@@ -255,8 +263,9 @@ class OpsVoyageReportController extends Controller
                 'companyName' => 'TOGGI SHIPPING & LOGISTIC',
             ];
 
+            // return view('operations::reports.lighter-voyage-report',compact('data'));
             $view = view('operations::reports.lighter-voyage-report',compact('data'))->render();
-
+    
             return response()->json([
                 'value' => $view
             ], 200);

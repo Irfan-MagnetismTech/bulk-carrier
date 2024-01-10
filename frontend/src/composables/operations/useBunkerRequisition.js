@@ -18,6 +18,7 @@ export default function useBunkerRequisition() {
 		ops_vessel_id: null,
 		ops_voyage_id: null,
 		requisition_no: null,
+		date: null,
 		created_by: null,
 		approved_by: null,
 		water_density: null,

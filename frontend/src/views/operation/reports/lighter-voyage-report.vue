@@ -5,14 +5,15 @@ import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 import useHeroIcon from "../../../assets/heroIcon";
 import useOperationsReport from '../../../composables/operations/useOperationsReport';
 
-const { lighterVoyageReport, isLoading, getLighterVoyageReport } = useOperationsReport();
+const { lighterVoyageReport, isLoading, getLighterVoyageReport, errors } = useOperationsReport();
 const icons = useHeroIcon();
 
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const form = ref({
   start: '',
-  end: ''
+  end: '',
+  business_unit: 'TSLL'
 })
 
 
@@ -55,10 +56,8 @@ function getReport() {
       </div>
     </form>
 
-    <div v-if="lighterVoyageReport != ''" class="mb-5">
-      <h4 class="text-center text-xl font-semibold my-4">
-        Report for {{ form.port }}
-      </h4>
+    <div v-if="lighterVoyageReport != ''" class="my-5 overflow-x-scroll">
+      
       <div v-html="lighterVoyageReport"></div>
     </div>
   </div>

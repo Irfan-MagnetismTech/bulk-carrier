@@ -71,15 +71,15 @@
               </tr>
               <tr>
                 <th class="w-32">Keel Laying Date</th>
-                <td>{{ vessel?.keel_laying_date }}</td>
+                <td>{{ formatDate(vessel?.keel_laying_date) }}</td>
               </tr>
               <tr>
                 <th class="w-32">Launching Date</th>
-                <td>{{ vessel?.launching_date }}</td>
+                <td>{{ formatDate(vessel?.launching_date) }}</td>
               </tr>
               <tr>
                 <th class="w-32">Delivery Date</th>
-                <td>{{ vessel?.delivery_date }}</td>
+                <td>{{ formatDate(vessel?.delivery_date) }}</td>
               </tr>
               <tr>
                 <th class="w-32">Length Overall</th>
@@ -207,6 +207,8 @@ import useVessel from '../../../composables/operations/useVessel';
 import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
+import {formatDate} from "../../../utils/helper.js"
+
 
 const icons = useHeroIcon();
 

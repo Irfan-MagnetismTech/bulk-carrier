@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Movement In Details</h2>
-    <default-button :title="'Movement In List'" :to="{ name: 'scm.store-issues.index' }" :icon="icons.DataBase"></default-button>
+    <default-button :title="'Movement In List'" :to="{ name: 'scm.movement-ins.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
     <div class="flex md:gap-4">
@@ -31,11 +31,7 @@
                     </tr>
                     <tr>
                         <th class="w-40">In Date.</th>
-                        <td>{{ movementIn?.date }}</td>
-                    </tr>
-                    <tr>
-                        <th class="w-40">Requsiotion Ref </th>
-                        <td></td>
+                        <td>{{ formatDate(movementIn?.date) }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -98,6 +94,7 @@ import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHelper from "../../../composables/useHelper";
 import useHeroIcon from "../../../assets/heroIcon";
 import useMovementIn from "../../../composables/supply-chain/useMovementIn";
+import { formatDate } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 

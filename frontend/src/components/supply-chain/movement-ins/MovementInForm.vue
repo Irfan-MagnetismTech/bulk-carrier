@@ -6,15 +6,15 @@
   </div>
   <div class="input-group !w-1/4" v-if="formType == 'edit'">
       <label class="label-group">
-          <span class="label-item-title">MI Ref</span>
+          <span class="label-item-title">Movement In Ref</span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'"/>
           <!-- <Error v-if="errors?.ref_no" :errors="errors.ref_no"  /> -->
       </label>
   </div>
   <div class="input-group">
     <label class="label-group">
-        <span class="label-item-title">MR No <span class="text-red-500">*</span></span>
-          <v-select :options="filteredMovementRequisitions" :key="mmrKey" placeholder="-- Search Here --" @option:selected="setMovementRequisitionData(form.scmMmr)" v-model="form.scmMmr" label="ref_no" class="block form-input">
+        <span class="label-item-title">Movement Requisition No <span class="text-red-500">*</span></span>
+          <v-select :options="filteredMovementRequisitions" :key="mmrKey" placeholder="-- Search Here --" v-model="form.scmMmr" label="ref_no" class="block form-input" @update:modelValue="setMovementRequisitionData(form.scmMmr)">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -37,7 +37,7 @@
           <!-- <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" /> -->
       </label>
       <label class="label-group">
-        <span class="label-item-title">MO No<span class="text-red-500">*</span></span>
+        <span class="label-item-title">Movement Out No<span class="text-red-500">*</span></span>
         <!-- <input type="text" v-model="form.mo_no" required class="form-input" name="mo_no" :id="'mo_no'" /> -->
         <v-select :options="filteredMovementOuts" placeholder="-- Search Here --" v-model="form.scmMo" label="ref_no" class="block form-input" @update:modelValue="setMoData(form.scmMo)">
           <template #search="{attributes , events}">
@@ -116,37 +116,41 @@
         </fieldset>
       </div>
     </div>
+    <div v-else>
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
+        <div class="text-center">Select Movement Out No. First</div>
+      </fieldset>
+    </div>
   <hr class="w-7"/>
-<div class="mt-5" v-if="form.scmMiShortage.scmMiShortageLines.length">
-    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-    <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Shortage <span class="text-red-500">*</span></legend>
-    
-    <div class="input-group !w-1/2">
-        <label class="label-group">
-          <span class="label-item-title">Shortage Type<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.scmMiShortage.shortage_type" required class="form-input" name="to_warehouse_name" :id="'to_warehouse_name'" />
-            <!-- <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" /> -->
-        </label>
-        <label class="label-group">
-          <span class="label-item-title">Assigned To<span class="text-red-500">*</span></span>
-          <!-- <input type="text" v-model="form.scmMiShortage.scmWarehouse" required class="form-input" name="mo_no" :id="'mo_no'" /> -->
-           <v-select :options="assgnWarehouseList" placeholder="-- Search Here --" v-model="form.scmMiShortage.scmWarehouse" label="name" class="block form-input" @update:modelValue="setWarehouseData(form.scmMiShortage.scmWarehouse)">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.scmMiShortage.scmWarehouse"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
-
-
-        </label>
+    <div class="mt-5" v-if="form.scmMiShortage.scmMiShortageLines.length">
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+      <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Shortage <span class="text-red-500">*</span></legend>
+      
+      <div class="input-group !w-1/2">
+          <label class="label-group">
+            <span class="label-item-title">Shortage Type<span class="text-red-500">*</span></span>
+            <input type="text" v-model="form.scmMiShortage.shortage_type" required class="form-input" name="to_warehouse_name" :id="'to_warehouse_name'" />
+              <!-- <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" /> -->
+          </label>
+          <label class="label-group">
+            <span class="label-item-title">Assigned To<span class="text-red-500">*</span></span>
+            <!-- <input type="text" v-model="form.scmMiShortage.scmWarehouse" required class="form-input" name="mo_no" :id="'mo_no'" /> -->
+            <v-select :options="assgnWarehouseList" placeholder="-- Search Here --" v-model="form.scmMiShortage.scmWarehouse" label="name" class="block form-input" @update:modelValue="setWarehouseData(form.scmMiShortage.scmWarehouse)">
+            <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.scmMiShortage.scmWarehouse"
+                    v-bind="attributes"
+                    v-on="events"
+                />
+            </template>
+            </v-select>
+          </label>
     </div>
     <div class="mt-5" v-if="form.scmMiShortage.scmMiShortageLines.length">
       <div class="table-responsive min-w-screen">
-      <table class="whitespace-no-wrap">
+          <table class="whitespace-no-wrap">
             <thead>
             <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
               <th class="py-3 align-center">Material Name </th>
@@ -184,8 +188,9 @@
             </tr>
             </tbody>
           </table>
+      </div>
     </div>
-    </div>
+    
     </fieldset>
   </div>
 
@@ -291,7 +296,7 @@
             searchMovementRequisition(search,props.form.business_unit);
         }
 
-    function setMovementRequisitionData(mmr) {
+    function setMovementRequisitionData(mmr){
       if (mmr) {
         if (props.formType == 'create') {
           getMmrWiseMo(props.form.business_unit, mmr.id);
@@ -302,6 +307,18 @@
         props.form.fromWarehouse = mmr.fromWarehouse;
         props.form.toWarehouse = mmr.toWarehouse;
         assgnWarehouseList.value = [];
+      } else {
+        filteredMovementOuts.value = [];
+        props.form.scm_mmr_id = '';
+        props.form.fromWarehouse = null;
+        props.form.toWarehouse = null;
+        props.form.from_warehouse_id = '';
+        props.form.from_cost_center_id = '';
+        props.form.to_warehouse_id = '';
+        props.form.to_cost_center_id = '';
+        props.form.scmMo = null;
+        props.form.scmMiLines = [];
+        props.form.scm_mo_id = '';
       }
 }
 
@@ -309,6 +326,9 @@
       if (mo) {
         props.form.scm_mo_id = mo?.id;
         getMoWiseMiLines(mo.id);
+      } else {
+        props.form.scm_mo_id = '';
+        props.form.scmMiLines = [];
       }
     }
 
@@ -343,19 +363,19 @@
       assgnWarehouseList.value.push(value);
     });
 
-  watch(() => props.form.toWarehouse, (value) => {
-    props.form.to_warehouse_id = value?.id;
-    props.form.to_cost_center_id = value?.acc_cost_center_id;
-    props.form.to_warehouse_name = value?.name;
-    assgnWarehouseList.value.push(value);
-  });
+    watch(() => props.form.toWarehouse, (value) => {
+      props.form.to_warehouse_id = value?.id;
+      props.form.to_cost_center_id = value?.acc_cost_center_id;
+      props.form.to_warehouse_name = value?.name;
+      assgnWarehouseList.value.push(value);
+    });
     
  
-function setMaterialOtherData(datas, index) {
-      props.form.scmMiLines[index].unit = datas.unit;
-      props.form.scmMiLines[index].scm_material_id = datas.id;
-      // getFromAndToWarehouseWiseCurrentStock(props.form.from_warehouse_id, props.form.to_warehouse_id, datas.id, index);
-}
+    function setMaterialOtherData(datas, index) {
+          props.form.scmMiLines[index].unit = datas.unit;
+          props.form.scmMiLines[index].scm_material_id = datas.id;
+          // getFromAndToWarehouseWiseCurrentStock(props.form.from_warehouse_id, props.form.to_warehouse_id, datas.id, index);
+    }
 
 
 

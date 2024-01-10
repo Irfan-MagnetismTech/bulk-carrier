@@ -49,7 +49,7 @@ export default function useOperationsReport() {
 		try {
 			const { data, status } = await Api.post('/ops/lighter-voyage-report', form);
 
-			operationsReport.value = data.value;
+			lighterVoyageReport.value = data.value;
 			// notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;

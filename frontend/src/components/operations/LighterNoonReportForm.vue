@@ -70,7 +70,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Date <span class="text-red-500">*</span></span>
-              <input type="datetime-local" v-model.trim="form.date" required placeholder="Vessel" class="form-input" autocomplete="off" />
+              <VueDatePicker v-model.trim="form.date" class="form-input" auto-apply   format="dd/MM/yyyy hh:mm a" model-type="yyyy-MM-dd HH:mm:ss" :is-24="false"  :flow="['calendar', 'time']" :text-input="{ format: dateTimeFormat }" ></VueDatePicker>
         </label>
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -177,7 +177,7 @@ import useHeroIcon from "../../assets/heroIcon";
 
 
 const icons = useHeroIcon();
-
+const dateTimeFormat = ref(Store.getters.getVueDatePickerTextInputFormat.dateTime);
 const { ports, searchPorts } = usePort();
 const { voyage, voyages, showVoyage, getVoyageList } = useVoyage();
 const { vessel, vessels, getVesselList, showVessel } = useVessel();

@@ -20,7 +20,7 @@
                       </tr>
                       <tr>
                           <th class="w-40">Date</th>
-                          <td><nobr>{{ lighterNoonReport?.date ? moment(lighterNoonReport?.date).format('DD-MM-YYYY hh:mm A') : null }}</nobr></td>
+                          <td><nobr>{{ formatDateTime(lighterNoonReport?.date) }}</nobr></td>
                       </tr>
                       <tr>
                           <th class="w-40">Vessel</th>
@@ -139,7 +139,7 @@ import useHeroIcon from "../../../assets/heroIcon";
 import useHelper from "../../../composables/useHelper";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import moment from 'moment';
-
+import { formatDateTime } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 

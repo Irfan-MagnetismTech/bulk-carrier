@@ -31,7 +31,7 @@
                     </tr>
                     <tr>
                         <th class="w-40">Return Date</th>
-                        <td>{{ storeIssueReturn?.date }}</td>
+                        <td>{{ formatDate(storeIssueReturn?.date) }}</td>
                     </tr>
                     <tr>
                         <th class="w-40">Remarks </th>
@@ -99,6 +99,7 @@ import useHelper from "../../../composables/useHelper";
 import useHeroIcon from "../../../assets/heroIcon";
 
 import useStoreIssueReturn from "../../../composables/supply-chain/useStoreIssueReturn";
+import { formatDate } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 

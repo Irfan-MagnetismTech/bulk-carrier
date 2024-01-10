@@ -76,11 +76,11 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 ">Date/Time </span>
-          <input type="datetime-local" v-model="form.date_time" placeholder="Date/Time" class="form-input" autocomplete="off" />
+          <VueDatePicker v-model.trim="form.date_time" class="form-input" auto-apply   format="dd/MM/yyyy hh:mm a" model-type="yyyy-MM-dd HH:mm:ss" :is-24="false"  :flow="['calendar', 'time']" :text-input="{ format: dateTimeFormat }" ></VueDatePicker>
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 ">GMT Time </span>
-          <input type="datetime-local" v-model="form.gmt_time" placeholder="GMT Time" class="form-input" autocomplete="off" />
+          <VueDatePicker v-model.trim="form.gmt_time" class="form-input" auto-apply   format="dd/MM/yyyy hh:mm a" model-type="yyyy-MM-dd HH:mm:ss" :is-24="false"  :flow="['calendar', 'time']" :text-input="{ format: dateTimeFormat }" ></VueDatePicker>
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 ">Location </span>
@@ -109,7 +109,7 @@
         <div class="dt-responsive table-responsive" v-for="(port, index) in form.opsBulkNoonReportPorts" :key="index">
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-full mt-2 text-sm">
-                    <span class="text-gray-700 flex">Last Port <span class="text-red-500">*</span>
+                    <span class="text-gray-700">Last Port <span class="text-red-500">*</span>
                       <span v-show="isPortDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
                     </span>
                     <v-select :options="ports" placeholder="Search Port" v-model="form.opsBulkNoonReportPorts[index].lastPort" label="code_name" class="block form-input">
@@ -125,7 +125,7 @@
                     <input type="hidden" v-model="form.opsBulkNoonReportPorts[index].last_port" />
             </label>
             <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 flex">Next Port <span class="text-red-500">*</span>
+              <span class="text-gray-700">Next Port <span class="text-red-500">*</span>
                 <span v-show="isPortDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
               </span>
               <v-select :options="ports" placeholder="Search Port" v-model="form.opsBulkNoonReportPorts[index].nextPort" label="code_name" class="block form-input">
@@ -146,7 +146,7 @@
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700">ETA </span>
-              <input type="datetime-local" class="form-input" v-model.trim="form.opsBulkNoonReportPorts[index].eta">
+              <VueDatePicker v-model.trim="form.opsBulkNoonReportPorts[index].eta" class="form-input" auto-apply   format="dd/MM/yyyy hh:mm a" model-type="yyyy-MM-dd HH:mm:ss" :is-24="false"  :flow="['calendar', 'time']" :text-input="{ format: dateTimeFormat }" ></VueDatePicker>
             </label>
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700">Distance Run </span>
@@ -578,7 +578,7 @@ const { ports, searchPorts } = usePort();
 const { voyage, voyages, showVoyage, getVoyageList } = useVoyage();
 const { vessel, vessels, getVesselList, showVessel } = useVessel();
 const { getBunkerConsumptionHeadList, getEngineTemparatureTypeList, bunkerConsumptionHeads, engineTemparatureTypes, isLoading, checkValidation } = useBulkNoonReport();
-
+const dateTimeFormat = ref(Store.getters.getVueDatePickerTextInputFormat.dateTime);
 const props = defineProps({
   form: {
       required: false,

@@ -13,6 +13,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import useHelper from "../../../composables/useHelper";
+import { formatDate } from "../../../utils/helper";
 
 const { customerInvoices, getCustomerInvoices, deleteCustomerInvoice, isLoading,isTableLoading ,errors } = useCustomerInvoice();
 const { numberFormat } = useHelper();
@@ -155,7 +156,7 @@ onMounted(() => {
                   <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
                   <td>{{ customerInvoice?.opsCustomer?.name_code }}</td>
                   <td>{{ customerInvoice?.voyage_name }}</td>
-                  <td><nobr>{{ customerInvoice?.date }}</nobr></td>
+                  <td><nobr>{{ formatDate(customerInvoice?.date) }}</nobr></td>
                   <td>{{ numberFormat(customerInvoice?.grand_total) }}</td>
                   <!-- <td>
                     <span :class="customerInvoice?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ customerInvoice?.business_unit }}</span>

@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Crew\Entities\CrwCrewDocumentRenewal;
+use Modules\Crew\Http\Controllers\AppraisalFormController;
+use Modules\Crew\Http\Controllers\AppraisalRecordController;
 use Modules\Crew\Http\Controllers\CrwAgencyBillController;
 use Modules\Crew\Http\Controllers\CrwAgencyContractController;
 use Modules\Crew\Http\Controllers\CrwAgencyController;
@@ -17,6 +19,7 @@ use Modules\Crew\Http\Controllers\CrwCrewProfileController;
 use Modules\Crew\Http\Controllers\CrwCrewRankController;
 use Modules\Crew\Http\Controllers\CrwCrewRequisitionController;
 use Modules\Crew\Http\Controllers\CrwIncidentController;
+use Modules\Crew\Http\Controllers\CrwPayrollBatchController;
 use Modules\Crew\Http\Controllers\CrwPolicyController;
 use Modules\Crew\Http\Controllers\CrwRankController;
 use Modules\Crew\Http\Controllers\CrwRecruitmentApprovalController;
@@ -57,6 +60,9 @@ Route::middleware(['auth:api'])->prefix('crw')->as('crw.')->group(function ()
     Route::apiResource('crw-incidents', CrwIncidentController::class);
     Route::apiResource('crw-salary-structures', CrwSalaryStructureController::class);
     Route::apiResource('crw-bank-accounts', CrwBankAccountController::class);
+    Route::apiResource('crw-payroll-batches', CrwPayrollBatchController::class);
+    Route::apiResource('appraisal-forms', AppraisalFormController::class);
+    Route::apiResource('appraisal-records', AppraisalRecordController::class);
 
     //Additional Routes
     Route::get('crw-crew-document-renew-schedules', [CrwCrewDocumentController::class, 'renewScehdules']);
@@ -71,6 +77,11 @@ Route::middleware(['auth:api'])->prefix('crw')->as('crw.')->group(function ()
     Route::post('get-crew-documents', [CrwCommonController::class, 'getCrewDocuments']);
     Route::post('get-crew-document-renewals', [CrwCommonController::class, 'getCrewDocumentRenewals']);
     Route::post('get-vessel-assigned-crews', [CrwCommonController::class, 'getVesselAssignedCrews']);    
+    Route::post('get-vessel-monthly-attendances', [CrwCommonController::class, 'getVesselMonthlyAttendances']);
+    Route::post('get-crw-monthly-attendances', [CrwCommonController::class, 'getCrewMonthlyAttendances']);
+    Route::post('get-appraisal-undone-assignments', [CrwCommonController::class, 'getAppraisalUndoneAssignments']);
+    Route::post('get-appraisal-forms', [CrwCommonController::class, 'getAppraisalForms']);
+
     Route::post('update-crew-assign-status/{crw_crew_assignment}', [CrwCrewAssignmentController::class, 'updateCrewAssignStatus']);
 
 });

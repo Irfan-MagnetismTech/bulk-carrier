@@ -27,7 +27,7 @@
                     </tr>
                     <tr>
                         <th class="w-40">Date.</th>
-                        <td>{{ materialAdjustment?.date }}</td>
+                        <td>{{ formatDate(materialAdjustment?.date) }}</td>
                     </tr>
                     <tr>
                         <th class="w-40">Type</th>
@@ -101,6 +101,7 @@ import useHelper from "../../../composables/useHelper";
 import useHeroIcon from "../../../assets/heroIcon";
 import useMaterialAdjustment from "../../../composables/supply-chain/useMaterialAdjustment";
 import MaterialAdjustmentForm from "../../../components/supply-chain/material-adjustments/MaterialAdjustmentForm.vue";
+import { formatDate } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 
