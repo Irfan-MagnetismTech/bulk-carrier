@@ -387,23 +387,23 @@ class ScmMiController extends Controller
 
 
             if ($request->mo_id != null) {
-                $scmMmr = ScmMo::query()
+                $scmMo = ScmMo::query()
                     ->with('scmMoLines', 'fromWarehouse', 'toWarehouse', 'createdBy')
                     ->where('id', $request->mo_id)
                     ->first();
 
                 $data = [
-                    'scmMiLines' => $scmMmr->scmMoLines->map(function ($item) use ($scmMmr) {
+                    'scmMiLines' => $scmMo->scmMoLines->map(function ($item) use ($scmMo) {
                         return [
                             'scmMaterial' => $item->scmMaterial,
                             'scm_material_id' => $item->scmMaterial->id,
                             'unit' => $item->scmMaterial->unit,
                             'quantity' => $item->quantity,
                             'mo_quantity' => $item->quantity,
-                            'mmr_quantity' => $item->scmMmrLine->quantity,
+                            'mmr_quantity' => $item->scmMoLine->quantity,
                             'mmr_composite_key' => $item->mmr_composite_key,
                             'mo_composite_key' => $item->mo_composite_key,
-                            'current_stock' => CurrentStock::count($item->scm_material_id, $scmMmr->scm_warehouse_id),
+                            'current_stock' => CurrentStock::count($item->scm_material_id, $scmMo->to_warehouse_id),
 
                         ];
                     })
