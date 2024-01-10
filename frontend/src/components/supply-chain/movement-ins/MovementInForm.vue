@@ -6,14 +6,14 @@
   </div>
   <div class="input-group !w-1/4" v-if="formType == 'edit'">
       <label class="label-group">
-          <span class="label-item-title">MI Ref</span>
+          <span class="label-item-title">Movement In Ref</span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'"/>
           <!-- <Error v-if="errors?.ref_no" :errors="errors.ref_no"  /> -->
       </label>
   </div>
   <div class="input-group">
     <label class="label-group">
-        <span class="label-item-title">MR No <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Movement Requisition No <span class="text-red-500">*</span></span>
           <v-select :options="filteredMovementRequisitions" :key="mmrKey" placeholder="-- Search Here --" v-model="form.scmMmr" label="ref_no" class="block form-input" @update:modelValue="setMovementRequisitionData(form.scmMmr)">
           <template #search="{attributes, events}">
               <input
@@ -37,7 +37,7 @@
           <!-- <Error v-if="errors?.to_warehouse_name" :errors="errors.to_warehouse_name" /> -->
       </label>
       <label class="label-group">
-        <span class="label-item-title">MO No<span class="text-red-500">*</span></span>
+        <span class="label-item-title">Movement Out No<span class="text-red-500">*</span></span>
         <!-- <input type="text" v-model="form.mo_no" required class="form-input" name="mo_no" :id="'mo_no'" /> -->
         <v-select :options="filteredMovementOuts" placeholder="-- Search Here --" v-model="form.scmMo" label="ref_no" class="block form-input" @update:modelValue="setMoData(form.scmMo)">
           <template #search="{attributes , events}">
@@ -119,7 +119,7 @@
     <div v-else>
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
-        <div class="text-center">Select MO No. First</div>
+        <div class="text-center">Select Movement Out No. First</div>
       </fieldset>
     </div>
   <hr class="w-7"/>
