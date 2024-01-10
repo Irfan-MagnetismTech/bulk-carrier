@@ -56,10 +56,8 @@ function getReport() {
       </div>
     </form>
 
-    <div v-if="lighterVoyageReport != ''" class="mb-5">
-      <h4 class="text-center text-xl font-semibold my-4">
-        Report for {{ form.port }}
-      </h4>
+    <div v-if="lighterVoyageReport != ''" class="my-5 overflow-x-scroll">
+      
       <div v-html="lighterVoyageReport"></div>
     </div>
   </div>

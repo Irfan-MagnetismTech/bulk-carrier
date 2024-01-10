@@ -91,7 +91,7 @@
                   <span v-if="voyageExpenditure?.opsVoyageExpenditureEntries[index]?.opsExpenseHead?.name">{{ voyageExpenditure?.opsVoyageExpenditureEntries[index]?.opsExpenseHead?.name }}</span>
                 </td>
                 <td>
-                  {{ voyageExpenditure?.opsVoyageExpenditureEntries[index]?.invoice_date ? moment(voyageExpenditure.opsVoyageExpenditureEntries?.invoice_date).format('DD-MM-YYYY') : null }}
+                  {{ formatDate(voyageExpenditure.opsVoyageExpenditureEntries[index]?.invoice_date) }}
                 </td>
                 <td>
                   {{ voyageExpenditure?.opsVoyageExpenditureEntries[index]?.invoice_no }}
@@ -172,8 +172,8 @@ import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHeroIcon from "../../../assets/heroIcon";
 import useHelper from "../../../composables/useHelper";
-import moment from 'moment';
 import env from '../../../config/env';
+import { formatDate } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 
