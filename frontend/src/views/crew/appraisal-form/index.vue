@@ -94,6 +94,21 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
 
+    
+    {
+      "rel_type": null,
+      "relation_name": null,
+      "field_name": "total_marks",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Total Marks",
+      "filter_type": "input"
+    },
+
+
+
 
 
 
@@ -181,6 +196,7 @@ onMounted(() => {
             <td>{{ appraisalForm?.form_no }}</td>
             <td>{{ appraisalForm?.form_name }}</td>
             <td>{{ appraisalForm?.version }}</td>
+            <td>{{ appraisalForm?.total_marks }}</td>
             <td><span :class="appraisalForm?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ appraisalForm?.business_unit }}</span></td>
            
             <td>

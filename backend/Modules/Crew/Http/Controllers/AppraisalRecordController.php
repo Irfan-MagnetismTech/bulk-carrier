@@ -20,7 +20,7 @@ class AppraisalRecordController extends Controller
     public function index(Request $request)
     {
         try {
-            $appraisalRecords = AppraisalRecord::with('crwCrew:id,full_name', 'crwCrewAssignment.opsVessel:id,name')
+            $appraisalRecords = AppraisalRecord::with('crwCrew:id,full_name', 'appraisalForm', 'crwCrewAssignment.opsVessel:id,name')
                 ->globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $appraisalRecords, 200);
