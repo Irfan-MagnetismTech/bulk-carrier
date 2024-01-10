@@ -38,11 +38,11 @@
         </label>
 
         
-        <label class="block w-full mt-2 text-sm">
+        <!-- <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Seaman's Book No</span>
             <input type="text" :value="form.seaman_book_no" placeholder="Seaman's Book No" class="form-input vms-readonly-input" readonly />
             <Error v-if="errors?.seaman_book_no" :errors="errors.seaman_book_no" />
-        </label>
+        </label> -->
 
         
         <label class="block w-full mt-2 text-sm">
@@ -113,6 +113,13 @@
             <input type="text" v-model="form.total_marks" placeholder="Total Marks" class="form-input vms-readonly-input" readonly />
             <Error v-if="errors?.total_marks" :errors="errors.total_marks" />
         </label>
+        
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Obtained Marks</span>
+            <input type="text" v-model="form.obtained_marks" placeholder="Obtained Marks" class="form-input vms-readonly-input" readonly />
+            <Error v-if="errors?.obtained_marks" :errors="errors.obtained_marks" />
+        </label>
+
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Appraisal Date</span>
@@ -198,7 +205,7 @@
                                 </select>
                               </div>
                               <div v-else-if="appraisalFormLineItem.answer_type == 'Number' || appraisalFormLineItem.answer_type == 'Grade'" >
-                                <select v-model.trim="appraisalFormLineItem.answer" class="form-input" required>
+                                <select :value="appraisalFormLineItem.answer" class="form-input" required @change="answerTypeChange(appraisalFormLineItem.answer_type, appraisalFormLineItem, $event)">
                                   <option value="" disabled selected>Select</option>
                                   <option value="1">{{ appraisalFormLineItem.answer_type == 'Grade' ? 'Poor' : 1 }}</option>
                                   <option value="2">{{ appraisalFormLineItem.answer_type == 'Grade' ? 'Fair' : 2 }}</option>
@@ -212,7 +219,7 @@
                     </tbody>
                 </table>
 
-                <table class="w-full whitespace-no-wrap  mt-2" id="table" v-else>
+                <table class="w-full whitespace-no-wrap  mt-2" id="table" v-else-if="appraisalFormLine.is_tabular != null">
                   <thead>
                         <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
                             <th class="px-4 py-2 text-center">{{ appraisalFormLine.section_no }}. {{ appraisalFormLine.section_name }}</th>    
@@ -367,7 +374,16 @@ import { formatDate } from "../../utils/helper";
         }
         
         return age;
+  }
+
+  function answerTypeChange(answerType, appraisalFormLineItem, event) {
+    props.form.obtained_marks = props.form.obtained_marks ?? 0;
+    if (answerType === 'Number') {
+      props.form.obtained_marks -= Number(appraisalFormLineItem.answer ?? 0);
+      props.form.obtained_marks += Number(event.target.value ?? 0);
     }
+    appraisalFormLineItem.answer = event.target.value;
+  }
   
 
   

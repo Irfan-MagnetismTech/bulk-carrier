@@ -42,7 +42,7 @@ class AppraisalRecordController extends Controller
         try {
             DB::transaction(function () use ($request)
             {
-                $appraisalRecordData = $request->only('crw_crew_id', 'appraisal_form_id', 'crw_crew_assignment_id', 'appraisal_date', 'age', 'business_unit');
+                $appraisalRecordData = $request->only('crw_crew_id', 'appraisal_form_id', 'crw_crew_assignment_id', 'appraisal_date', 'age', 'obtained_marks', 'business_unit');
 
                 $appraisalRecord = AppraisalRecord::create($appraisalRecordData);
 
@@ -134,10 +134,9 @@ class AppraisalRecordController extends Controller
     public function update(Request $request, AppraisalRecord $appraisalRecord)
     {
         try {
-
             DB::transaction(function () use ($request, $appraisalRecord)
             {
-                $appraisalRecordData = $request->only('crw_crew_id', 'appraisal_form_id', 'crw_crew_assignment_id', 'appraisal_date', 'age', 'business_unit');
+                $appraisalRecordData = $request->only('crw_crew_id', 'appraisal_form_id', 'crw_crew_assignment_id', 'appraisal_date', 'age', 'obtained_marks', 'business_unit');
                 $appraisalRecord->update($appraisalRecordData);
                 $appraisalRecord->appraisalRecordLines()->delete();
 
@@ -147,8 +146,7 @@ class AppraisalRecordController extends Controller
                     $appraisalRecordLine                   = AppraisalRecordLine::create($recordLineData);
                     $recordItems                           = $recordLineData['appraisalRecordLineItems'];
 
-                    if ($recordItems)
-                    {
+                    if ($recordItems){
                         $appraisalRecordLine->appraisalRecordLineItems()->createMany($recordItems);
                     }
                 }

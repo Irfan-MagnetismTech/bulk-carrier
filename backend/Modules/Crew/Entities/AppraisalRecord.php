@@ -11,7 +11,7 @@ class AppraisalRecord extends Model
 {
     use HasFactory, GlobalSearchTrait;
 
-    protected $fillable = ['crw_crew_id', 'appraisal_form_id', 'crw_crew_assignment_id', 'appraisal_date', 'age', 'business_unit'];
+    protected $fillable = ['crw_crew_id', 'appraisal_form_id', 'crw_crew_assignment_id', 'appraisal_date', 'age', 'obtained_marks', 'business_unit'];
 
 	public function appraisalRecordLines(){
 		return $this->hasMany(AppraisalRecordLine::class);

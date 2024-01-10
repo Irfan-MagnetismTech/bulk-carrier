@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('form_no');
             $table->string('form_name');
             $table->string('version');
+            $table->integer('total_marks');
             $table->text('description')->nullable();            
 			$table->enum('business_unit', ['PSML', 'TSLL']);
             $table->timestamps();

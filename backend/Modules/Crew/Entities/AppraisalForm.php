@@ -10,10 +10,10 @@ class AppraisalForm extends Model
 {
     use HasFactory, GlobalSearchTrait;
 
-    protected $fillable = ['form_no', 'form_name', 'version', 'description', 'business_unit'];
+    protected $fillable = ['form_no', 'form_name', 'total_marks', 'version', 'description', 'business_unit'];
 
 	public function appraisalFormLines(){
 		return $this->hasMany(AppraisalFormLine::class);
-	}    
+	}
 
 }
