@@ -21,7 +21,7 @@
 
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Effective Date <span class="text-red-500">*</span></span>
-              <input type="date" required v-model.trim="form.effective_date" placeholder="Effective Date" class="form-input" autocomplete="off" />
+              <VueDatePicker v-model="form.effective_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
 
             </label>
 
@@ -171,6 +171,8 @@ import useVoyage from "../../composables/operations/useVoyage";
 import useChartererProfile from "../../composables/operations/useChartererProfile";
 import RemarksComponet from '../../components/utils/RemarksComponent.vue';
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
+
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const editInitiated = ref(false);
 const { getCurrencies, currencies } = useBusinessInfo();

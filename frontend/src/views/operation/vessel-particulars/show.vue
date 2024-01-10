@@ -59,7 +59,7 @@
                         </tr>
                         <tr>
                             <th class="w-40">Delivery Date</th>
-                            <td>{{ vesselParticular?.delivery_date ? moment(vesselParticular?.delivery_date).format('DD-MM-YYYY') : null }}</td>
+                            <td>{{ formatDate(vesselParticular?.delivery_date) }}</td>
                         </tr>
                         <tr>
                             <th class="w-40">GRT</th>
@@ -83,11 +83,11 @@
                         </tr>
                         <tr>
                             <th class="w-40">Keel Laying Date</th>
-                            <td>{{ vesselParticular?.keel_laying_date ? moment(vesselParticular?.keel_laying_date).format('DD-MM-YYYY') : null }}</td>
+                            <td>{{ formatDate(vesselParticular?.keel_laying_date) }}</td>
                         </tr>
                         <tr>
                             <th class="w-40">Launching Date</th>
-                            <td>{{ vesselParticular?.launching_date ? moment(vesselParticular?.launching_date).format('DD-MM-YYYY') : null }}</td>
+                            <td>{{ formatDate(vesselParticular?.launching_date) }}</td>
                         </tr>
                         <tr>
                             <th class="w-40">MMSI</th>
@@ -185,7 +185,7 @@ import useVesselParticular from '../../../composables/operations/useVesselPartic
 import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHeroIcon from "../../../assets/heroIcon";
-import moment from 'moment';
+import { formatDate } from '../../../utils/helper';
 const icons = useHeroIcon();
 
 const route = useRoute();

@@ -24,7 +24,7 @@
                     <tr>
                         <th class="w-40">Effective Date</th>
                         <td><span>
-                          <nobr>{{ deliveryRedelivery?.effective_date ? moment(deliveryRedelivery?.effective_date).format('DD-MM-YYYY') : null }}</nobr>
+                          <nobr>{{ formatDate(deliveryRedelivery.effective_date) }}</nobr>
                           </span>
                         </td>
                     </tr>
@@ -158,7 +158,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import useHelper from "../../../composables/useHelper";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
-import moment from 'moment';
+import { formatDate } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 
