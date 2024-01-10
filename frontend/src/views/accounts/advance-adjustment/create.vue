@@ -19,7 +19,7 @@ const page = 'create';
         <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Create Advance Adjustment</h2>
       <default-button :title="'Advance Adjustment List'" :to="{ name: 'acc.advance-adjustments.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="storeAdvanceAdjustment(advanceAdjustment)">
             <!-- Booking Form -->
             <advance-adjustment-form :page="page" v-model:form="advanceAdjustment" :errors="errors"></advance-adjustment-form>

@@ -27,6 +27,14 @@
     });
 
     onMounted(() => {
+        if (props.form.scmWarehouseContactPersons.length == 0) {
+            props.form.scmWarehouseContactPersons.push({
+                name: null,
+                designation: null,
+                phone: null,
+                email: null,
+            });
+        }  
         watchEffect(() => {
                 getCostCenters(props.form.business_unit);
         });
@@ -36,6 +44,16 @@
         if (newValue != oldValue && oldValue != '')
             props.form.accCostCenter = null;
         });
+    watch(() => props.form.scmWarehouseContactPersons, (newValue, oldValue) => {
+        if (newValue != oldValue && oldValue != '' && newValue.length == 0)
+            props.form.scmWarehouseContactPersons.push({
+                name: null,
+                designation: null,
+                phone: null,
+                email: null,
+            });
+        });
+
 
 </script>
 <template>
@@ -70,7 +88,7 @@
                         </template>
                     </v-select>
                     <!-- <input type="hidden" v-model="form.cost_center_id" class="label-item-input" name="parent_category" :id="'parent_category'" /> -->
-                    <Error v-if="errors?.cost_center_no" :errors="errors.cost_center_no" />
+                    <!-- <Error v-if="errors?.cost_center_no" :errors="errors.cost_center_no" /> -->
                 </label>
                 <label class="label-group">
                     <span class="label-item-title">Address</span>

@@ -9,7 +9,7 @@ import RemarksComponent from "../utils/RemarksComponent.vue";
 import useHeroIcon from "../../assets/heroIcon";
 const icons = useHeroIcon();
 const { allSalaryHeadLists, getSalaryHead, isLoading } = useAccountCommonApiRequest();
-
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const { emit } = getCurrentInstance();
 
 const props = defineProps({
@@ -102,10 +102,10 @@ onMounted(() => {
 <!--      </label>-->
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-    <label class="block w-3/6 mt-2 text-sm">
+    <div class="block w-3/6 mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Month-Year <span class="text-red-500">*</span></span>
-      <input type="month" v-model="form.year_month" class="form-input" id="monthInput" name="monthInput" required>
-    </label>
+      <VueDatePicker v-model.trim="form.year_month" month-picker class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="mm/yyyy" format="MMMM/yyyy" model-type="yyyy-MM" :text-input="{ format: dateFormat }"></VueDatePicker>
+    </div>
     <label class="block w-3/6 mt-2 text-sm"></label>
     <label class="block w-3/6 mt-2 text-sm"></label>
   </div>

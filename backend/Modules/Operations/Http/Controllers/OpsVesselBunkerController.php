@@ -64,6 +64,16 @@ class OpsVesselBunkerController extends Controller
                 '_token',
                 'opsBunkers.scmMaterial',
             );
+
+            if (count($request->opsBunkers)<1) {
+                $error= [
+                    'message'=>'Must be add at least one item.',
+                    'errors'=>[
+                        'bunker'=>['Must be add at least one item.']
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
             
             // dd($request->all());
             $vessel_bunker = OpsVesselBunker::create($vessel_bunkerInfo);

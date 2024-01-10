@@ -59,11 +59,11 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.contract_type == 'Day Wise'">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Bill From <span class="text-red-500">*</span></span>
-              <input type="date" v-model.trim="form.bill_from" class="form-input" autocomplete="off" readonly/>
+              <VueDatePicker v-model="form.bill_from" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Bill Till <span class="text-red-500">*</span></span>
-              <input type="date" v-model.trim="form.bill_till" class="form-input" autocomplete="off" :readonly="isActiveTill()" />
+              <VueDatePicker v-model="form.bill_till" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Total Days</span>
@@ -592,7 +592,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import useHelper from "../../composables/useHelper";
 
 const editInitiated = ref(false);
-
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const { currencies, getCurrencies } = useBusinessInfo();
 const { getAllChartererProfiles, chartererProfiles } = useChartererProfile();
 const { getChartererContractsByCharterOwner, chartererContracts,getContractWiseVoyage,voyages } = useChartererContract();

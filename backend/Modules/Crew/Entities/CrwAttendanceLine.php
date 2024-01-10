@@ -14,11 +14,16 @@ class CrwAttendanceLine extends Model
 
     public function crwCrew()
     {
-        return $this->belongsTo(CrwCrew::class);
-    }  
+        return $this->belongsTo(CrwCrewProfile::class, 'crw_crew_id', 'id');
+    }
 
     public function crwCrewAssignment()
     {
         return $this->belongsTo(CrwCrewAssignment::class);
-    }      
+    }
+
+    public function crwSalaryStructure()
+    {
+        return $this->belongsTo(CrwSalaryStructure::class, 'crw_crew_id', 'crw_crew_id');
+    }
 }

@@ -31,7 +31,7 @@
                     </tr>
                     <tr>
                         <th class="w-40">Out Date.</th>
-                        <td>{{ movementOut?.date }}</td>
+                        <td>{{ formatDate(movementOut?.date) }}</td>
                     </tr>
                     <tr>
                         <th class="w-40">Requsiotion Ref </th>
@@ -98,6 +98,7 @@ import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHelper from "../../../composables/useHelper";
 import useHeroIcon from "../../../assets/heroIcon";
 import useMovementOut from "../../../composables/supply-chain/useMovementOut";
+import { formatDate } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 

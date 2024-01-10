@@ -11,6 +11,7 @@ import env from '../../../config/env';
 import Store from './../../../store/index.js';
 import moment from 'moment';
 import { useRoute } from 'vue-router';
+import { formatDate } from "../../../utils/helper";
 
 const icons = useHeroIcon();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -136,10 +137,10 @@ onMounted(() => {
                     <span v-if="item?.opsMaritimeCertification?.validity=='120'">10 Years</span>  
                 </td>
                 <td>
-                  <nobr>{{ item?.issue_date ? moment(item?.issue_date).format('DD-MM-YYYY') : null }}</nobr>
+                  <nobr>{{ formatDate(item?.issue_date) }}</nobr>
                 </td>
                 <td>
-                  <nobr>{{ item?.expire_date ? moment(item?.expire_date).format('DD-MM-YYYY') : null }}</nobr>
+                  <nobr>{{ formatDate(item?.expire_date) }}</nobr>
                 </td>
                 <td>
                   {{ (item?.expire_days < 0) ? 'Expired' : (item?.expire_days == 0 ? null : item?.expire_days) }}

@@ -23,7 +23,7 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const selectedFile = (event) => {
   props.form.attachment = event.target.files[0];
 };
@@ -381,7 +381,7 @@ onMounted(() => {
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Date of Birth <span class="text-red-500">*</span></span>
-            <input type="date" v-model.trim="form.date_of_birth" id="date_of_birth" class="form-input" autocomplete="off" required />
+            <VueDatePicker v-model="form.date_of_birth" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Gender <span class="text-red-500">*</span></span>
@@ -428,7 +428,7 @@ onMounted(() => {
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Passport Issue Date</span>
-            <input type="date" v-model.trim="form.passport_issue_date" id="passport_issue_date" class="form-input" autocomplete="off" />
+            <VueDatePicker v-model="form.passport_issue_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
           </label>
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Blood Group</span>
@@ -667,10 +667,10 @@ onMounted(() => {
                 <input type="text" v-model.trim="form.experiences[index].employer_name" placeholder="Employer Name" class="form-input" autocomplete="off" required />
               </td>
               <td class="px-1 py-1">
-                <input type="date" v-model.trim="form.experiences[index].from_date" class="form-input" autocomplete="off" required />
+                <VueDatePicker v-model="form.experiences[index].from_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
               </td>
               <td class="px-1 py-1">
-                <input type="date" v-model.trim="form.experiences[index].till_date" class="form-input" autocomplete="off" required />
+                <VueDatePicker v-model="form.experiences[index].till_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
               </td>
               <td class="px-1 py-1">
                 <input type="text" v-model.trim="form.experiences[index].last_designation" placeholder="Ex: Master" class="form-input" autocomplete="off" required />

@@ -110,6 +110,7 @@ import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHelper from "../../../composables/useHelper";
 import useHeroIcon from "../../../assets/heroIcon";
 import useMovementRequisition from "../../../composables/supply-chain/useMovementRequisition";
+import { formatDate } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 

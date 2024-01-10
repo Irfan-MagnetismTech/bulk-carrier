@@ -1,0 +1,162 @@
+<script setup>
+import { onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import Title from "../../../services/title";
+import useHeroIcon from "../../../assets/heroIcon";
+import DefaultButton from "../../../components/buttons/DefaultButton.vue";
+import useAppraisalForm from '../../../composables/crew/useAppraisalForm';
+
+const icons = useHeroIcon();
+
+const route = useRoute();
+const appraisalFormId = route.params.appraisalFormId;
+const { appraisalForm, showAppraisalForm, errors } = useAppraisalForm();
+
+const { setTitle } = Title();
+
+setTitle('Appraisal Form Details');
+
+onMounted(() => {
+  showAppraisalForm(appraisalFormId);
+});
+</script>
+
+<template>
+  <div class="flex items-center justify-between w-full my-3" v-once>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Appraisal Form Details</h2>
+    <default-button :title="'Appraisal Form List'" :to="{ name: 'crw.appraisal-forms.index' }" :icon="icons.DataBase"></default-button>
+  </div>
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
+      <div class="flex md:gap-4">
+        <div class="w-full">
+          <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Appraisal Form Information</h2>
+          <table class="w-full">
+            <!-- <thead>
+            <tr>
+              <td class="!text-center bg-gray-200 font-bold" colspan="2">Personal Info</td>
+            </tr>
+            </thead> -->
+            <tbody>
+              <tr>
+                <th class="w-40">Business Unit</th>
+                <td><span :class="appraisalForm?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ appraisalForm?.business_unit }}</span></td>
+              </tr>
+             <tr>
+                <th class="w-40">Form No</th>
+                <td>{{ appraisalForm?.form_no }}</td>
+              </tr>
+             <tr>
+                <th class="w-40">Form Name</th>
+                <td>{{ appraisalForm?.form_name }}</td>
+              </tr>
+             <tr>
+                <th class="w-40">Version</th>
+                <td>{{ appraisalForm?.version }}</td>
+              </tr>
+
+              
+             <tr>
+                <th class="w-40">Description</th>
+                <td>{{ appraisalForm?.description }}</td>
+              </tr>
+              <tr >
+                <td colspan="2">
+                  <table class=" w-full ">
+                    <thead>
+                      <tr class="bg-gray-300 text-black-700">
+                        <th colspan="5" class="text-center">Form Preview</th>
+                      </tr>
+                      <tr class="bg-gray-300 text-black-700">
+                        <th class="text-center w-1/5">Section No</th>
+                        <th class="text-center w-1/5">Section Name</th>
+                        <th class="text-center w-1/5">Aspect</th>
+                        <th class="text-center w-1/5">Description</th>
+                        <th class="text-center w-1/5">Answer Type</th>
+                      </tr>
+                    </thead>
+                        <tbody class="">
+
+
+                          <template v-for="(appraisalFormLine, index) in appraisalForm?.appraisalFormLines" :key="index">
+                            
+                            <tr v-for="(appraisalFormLineItem, appraisalFormLineItemIndex) in appraisalFormLine?.appraisalFormLineItems" :key="appraisalFormLineItemIndex">
+                              <td v-if="appraisalFormLineItemIndex == 0" :rowspan="appraisalFormLine?.appraisalFormLineItems?.length ?? 1">{{ appraisalFormLine?.section_no }}</td>
+                              <td v-if="appraisalFormLineItemIndex == 0" :rowspan="appraisalFormLine?.appraisalFormLineItems?.length ?? 1">{{ appraisalFormLine?.section_name }}</td>
+                              <td>{{ appraisalFormLineItem?.aspect }}</td>
+                              <td>{{ appraisalFormLineItem?.description }}</td>
+                              <td>{{ appraisalFormLineItem?.answer_type }}</td>
+
+                            </tr>
+                            <tr v-if="appraisalFormLine?.appraisalFormLineItems?.length == 0">
+                              <td>{{ appraisalFormLine?.section_no }}</td>
+                              <td>{{ appraisalFormLine?.section_name }}</td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                            </tr>
+                            
+                          </template>
+                          
+                            
+                        </tbody>
+                    </table>
+                </td>
+              </tr>
+
+
+
+
+
+
+               <!-- 
+              <tr>
+                <th class="w-40">Item Group</th>
+                <td>{{ item?.mntItemGroup?.name }}</td>
+              </tr>
+              
+              <tr>
+                <th class="w-40">Item Code</th>
+                <td>{{ item?.item_code }}</td>
+              </tr>
+              
+              <tr>
+                <th class="w-40">Item Name</th>
+                <td>{{ item?.name }}</td>
+              </tr>
+              
+              <tr>
+                <th class="w-40">Description</th>
+                <td>
+                    <table class=" w-full border-none">
+                        <tbody class="border-none">
+                            <tr class="border-none" v-for="(des, index) in item?.description" :key="index">
+                                <td class="border-none p-0 pb-1"><strong>{{ des.key }} :</strong> {{ des.value }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+              </tr>               -->
+            </tbody>
+          </table>
+          
+        </div>
+      </div>
+  </div>
+</template>
+<style lang="postcss" scoped>
+  th, td, tr {
+    @apply text-left border-gray-500
+  }
+
+  #profileDetailTable th{
+    text-align: center;
+  }
+  #profileDetailTable thead tr{
+    @apply bg-gray-200
+  }
+
+  th.text-center, td.text-center, tr.text-center {
+    @apply text-center border-gray-500
+  }
+
+</style>

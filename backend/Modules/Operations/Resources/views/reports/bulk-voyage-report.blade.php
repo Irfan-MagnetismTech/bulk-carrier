@@ -43,7 +43,7 @@
             <tr>
                 <td style="width:50%;"></td>
                 <td style="text-align: right; width:30%;">Date:</td>
-                <td>{{ now()->format('d-M-Y') }}</td>
+                <td>{{ now()->format('d/m/Y') }}</td>
             </tr>
             <tr>
                 <td style="width:50%;"></td>
@@ -63,7 +63,7 @@
             </tr>
             <tr>
                 <th colspan="2">Date & Time</th>
-                <td colspan="8">{{ \Carbon\Carbon::parse($data['bulk_noon_report']->date_time)->format('d-m-Y h:i A') }}</td>
+                <td colspan="8">{{ \Carbon\Carbon::parse($data['bulk_noon_report']->date_time)->format('d/m/Y \a\t h:i A') }}</td>
             </tr>
             <tr>
                 <th colspan="2">Vessel</th>

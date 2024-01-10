@@ -20,6 +20,7 @@ class OpsBunkerRequisition extends Model
         'remarks',
         'status',
         'note',
+        'date',
         'business_unit',
     ];
 

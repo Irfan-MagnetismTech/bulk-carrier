@@ -18,7 +18,7 @@ setTitle('Create Bank Account');
         <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Create Bank Account</h2>
       <default-button :title="'Bank Account List'" :to="{ name: 'acc.bank-accounts.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="storeBankAccount(bankAccount)">
             <!-- Booking Form -->
             <bank-account-form :page="page" v-model:form="bankAccount" :errors="errors"></bank-account-form>

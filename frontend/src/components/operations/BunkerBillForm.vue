@@ -3,7 +3,8 @@
         <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Date <span class="text-red-500">*</span></span>
-            <input type="date" v-model.trim="form.date" placeholder="Date" class="form-input" required autocomplete="off" />
+            <VueDatePicker v-model="form.date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+
         </label>
         <label class="block w-full mt-2 text-sm"></label>
         <label class="block w-full mt-2 text-sm"></label>
@@ -191,7 +192,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import RemarksComponet from '../../components/utils/RemarksComponent.vue';
 import useHeroIcon from "../../assets/heroIcon";
 
-
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const icons = useHeroIcon();
 const editInitiated = ref(false);
 const props = defineProps({

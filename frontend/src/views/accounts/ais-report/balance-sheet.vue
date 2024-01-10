@@ -3,10 +3,11 @@ import useTransaction from '../../../composables/accounts/useTransaction';
 import Title from "../../../services/title";
 import {ref, computed, watch} from "vue";
 import useAisReport from "../../../composables/accounts/useAisReport";
+import Store from "../../../store";
 
 const { balanceSheets, getBalanceSheet, isLoading} = useAisReport();
 const { bgColor, allAccount, getAccount } = useTransaction();
-
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const { setTitle } = Title();
 
 let liabilities = ref(0.00);
@@ -63,29 +64,29 @@ function fetchAccounts(search, loading) {
   <form @submit.prevent="getBalanceSheet(searchParams)">
     <div class="w-full flex items-center justify-between mb-2 my-2 select-none">
       <fieldset class="w-full grid grid-cols-4 gap-1 px-2 pb-3 border border-gray-500 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Search Balance Sheet</legend>
+        <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Balance Sheet</legend>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">From Date <span class="text-red-500">*</span></label>
-          <input type="date" required v-model="searchParams.from_date" class="block w-full rounded form-input">
+          <VueDatePicker v-model.trim="searchParams.from_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
         </div>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">Till Date <span class="text-red-500">*</span></label>
-          <input type="date" required v-model="searchParams.till_date" class="block w-full rounded form-input">
+          <VueDatePicker v-model.trim="searchParams.till_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
         </div>
         <div>
           <label for="">&nbsp;</label>
-          <button type="submit" :disabled="isLoading" class="w-full flex items-center justify-center px-2 mt-1 py-2 text-sm font-medium leading-2 text-white transition-colors duration-150 bg-[#0F6B61] border border-transparent rounded-lg active:bg-[#0F6B61] hover:bg-[#0F6B90] focus:outline-none focus:shadow-outline-purple">Submit</button>
+          <button type="submit" :disabled="isLoading" class="w-full flex items-center justify-center px-2 mt-1 py-2 text-sm font-medium leading-2 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Submit</button>
         </div>
       </fieldset>
     </div>
   </form>
   <!-- Table -->
   <template v-if="balanceSheets?.liabilities">
-    <div class="w-full mb-10 income_statement_top_div">
+    <div class="w-full mb-10">
       <table class="w-full whitespace-no-wrap top_table">
         <thead>
         <tr class="text-xs font-semibold tracking-wide text-center" style="background-color: #369382;color: #ffff">
-          <th> Balance Sheet </th>
+          <th class="bg-green-600 text-white"> Balance Sheet </th>
         </tr>
         </thead>
       </table>
@@ -94,7 +95,7 @@ function fetchAccounts(search, loading) {
           <table class="w-full whitespace-no-wrap mb-1">
             <thead>
             <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800" style="background-color: #369382;color: #ffff">
-              <th colspan="3"> Liabilities </th>
+              <th colspan="3" class="bg-green-600 text-white"> Liabilities </th>
             </tr>
             </thead>
             <tbody class="bg-white dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
@@ -165,7 +166,7 @@ function fetchAccounts(search, loading) {
           <table class="w-full whitespace-no-wrap mb-1">
             <thead>
             <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800" style="background-color: #369382;color: #fff">
-              <th colspan="3"> Assets </th>
+              <th colspan="3" class="bg-green-600 text-white"> Assets </th>
             </tr>
             </thead>
             <tbody class="bg-white dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
@@ -227,16 +228,16 @@ function fetchAccounts(search, loading) {
         <table class="w-full">
           <tfoot>
           <tr style="background-color: #E3E3E3">
-            <td class="text-sm font-bold text-right" colspan="2">Total Liabilities</td>
-             <td class="text-sm font-bold text-right">{{ balanceSheets?.grand_total_liabilities?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+            <td class="text-sm font-bold text-right bg-green-600 text-white" colspan="2">Total Liabilities</td>
+             <td class="text-sm font-bold text-right bg-green-600 text-white">{{ balanceSheets?.grand_total_liabilities?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
           </tr>
           </tfoot>
         </table>
         <table class="w-full">
           <tfoot>
           <tr style="background-color: #E3E3E3">
-            <td class="text-sm font-bold text-right" colspan="2">Total Assets</td>
-             <td class="text-sm font-bold text-right">{{ balanceSheets?.grand_total_assets?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+            <td class="text-sm font-bold text-right bg-green-600 text-white" colspan="2">Total Assets</td>
+             <td class="text-sm font-bold text-right bg-green-600 text-white">{{ balanceSheets?.grand_total_assets?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
           </tr>
           </tfoot>
         </table>

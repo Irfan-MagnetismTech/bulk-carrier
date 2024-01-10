@@ -22,6 +22,7 @@ return [
 
     'balance_income_balance_header' => [
         'current_assets' => 5,
+        'non_current_assets' => 2,
     ],
 
     'balance_income_line'           => [
@@ -32,6 +33,8 @@ return [
         'expense_for_service' => 83, //@ranks = Expenses of Service
         'fixed_assets_at_cost' => 3, //Fixed Assets at Cost (balance_income_line_id:3)
         'inventory' => 11, //Fixed Assets at Cost (balance_income_line_id:3)
+        'acumulated_depreciation' => 4,
+
     ],
 
     'account_types'                 => [

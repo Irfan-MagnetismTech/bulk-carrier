@@ -18,6 +18,7 @@ const props = defineProps({
     default: {}
   },
 });
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 let renewFormData = ref({
@@ -340,11 +341,11 @@ onMounted(() => {
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Issue Date <span v-if="form.validity_period !== '0'" class="text-red-500">*</span></span>
-              <input type="date" v-model.trim="form.issue_date" class="form-input" autocomplete="off" :required="form.validity_period !== '0'" />
+              <VueDatePicker v-model="form.issue_date" class="form-input" :required="form.validity_period !== '0'" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
             </label>
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Expire Date <span v-if="form.validity_period !== '0'" class="text-red-500">*</span></span>
-              <input type="date" v-model.trim="form.expire_date" class="form-input" autocomplete="off" :required="form.validity_period !== '0'" />
+              <VueDatePicker v-model="form.expire_date" class="form-input" :required="form.validity_period !== '0'" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
             </label>
           </div>
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -413,10 +414,10 @@ onMounted(() => {
             <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
             <tr class="text-gray-700 dark-disabled:text-gray-400">
               <td class="px-1 py-1">
-                <input type="date" v-model.trim="renewFormData.issue_date" class="form-input" autocomplete="off" required/>
+                <VueDatePicker v-model.trim="renewFormData.issue_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
               </td>
               <td class="px-1 py-1">
-                <input type="date" v-model.trim="renewFormData.expire_date" class="form-input" autocomplete="off" required/>
+                <VueDatePicker v-model.trim="renewFormData.expire_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
               </td>
               <td class="px-1 py-1">
                 <input type="text" v-model.trim="renewFormData.reference_no" placeholder="Reference" class="form-input" autocomplete="off" />
@@ -449,10 +450,10 @@ onMounted(() => {
             <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
             <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(renewData,renewDataIndex) in crewDocumentRenewals" :key="renewDataIndex">
               <td class="px-1 py-1">
-                <input type="date" v-model.trim="crewDocumentRenewals[renewDataIndex].issue_date" class="form-input" autocomplete="off" required />
+                <VueDatePicker v-model.trim="crewDocumentRenewals[renewDataIndex].issue_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
               </td>
               <td class="px-1 py-1">
-                <input type="date" v-model.trim="crewDocumentRenewals[renewDataIndex].expire_date" class="form-input" autocomplete="off" required />
+                <VueDatePicker v-model.trim="crewDocumentRenewals[renewDataIndex].expire_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
               </td>
               <td class="px-1 py-1">
                 <input type="text" v-model.trim="crewDocumentRenewals[renewDataIndex].reference_no" placeholder="Reference" class="form-input" autocomplete="off" />

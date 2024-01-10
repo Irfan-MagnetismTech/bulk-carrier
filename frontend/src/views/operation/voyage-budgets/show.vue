@@ -28,14 +28,14 @@
                     <tr>
                         <th class="w-40">Effective From </th>
                         <td><span>
-                          <nobr>{{ voyageBudget?.effective_from ? moment(voyageBudget?.effective_from).format('DD-MM-YYYY') : null }}</nobr>
+                          <nobr>{{ formatDate(voyageBudget?.effective_from) }}</nobr>
                           </span>
                         </td>
                     </tr>
                     <tr>
                         <th class="w-40">Effective To </th>
                         <td><span>
-                          <nobr>{{ voyageBudget?.effective_till ? moment(voyageBudget?.effective_till).format('DD-MM-YYYY') : null }}</nobr>
+                          <nobr>{{ formatDate(voyageBudget?.effective_till) }}</nobr>
                           </span>
                         </td>
                     </tr>
@@ -120,7 +120,7 @@ import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHeroIcon from "../../../assets/heroIcon";
 import useHelper from "../../../composables/useHelper";
-import moment from 'moment';
+import { formatDate } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 

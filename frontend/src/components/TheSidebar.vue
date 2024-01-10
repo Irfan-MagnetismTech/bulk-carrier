@@ -95,7 +95,7 @@ function replaceLastOccurrence(mainString, search, replacement) {
                     <ul v-if="elementSubMenu?.subSubMenu?.length && elementSubMenu.is_open" :class="{ '': grandChildsVisible }" style="height: 100%" class="collapse overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner dark-disabled:text-gray-400 dark-disabled:bg-gray-900 grand-child" aria-label="submenu">
                       <li @click="toggleActiveClass(elementIndex,elementSubIndex,elementSubSubIndex)" v-for="(elementSubSubMenu,elementSubSubIndex) in elementSubMenu.subSubMenu" class="p-2 transition-colors duration-150  dark-disabled:hover:text-gray-200 rounded-md duration-200 ease-linear p-2" :class="{ 'active': isActive === 'New Fixed Contract' }">
                         <router-link :to="{ name: elementSubSubMenu.route }" class="inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-gray-800 dark-disabled:hover:text-gray-200 dark-disabled:text-gray-400">
-                          -<span class="ml-1" :class="{'active_menu': elementSubSubMenu.route === currentRoute.name ? true : currentRoute.name.includes(replaceLastOccurrence(elementSubSubMenu.route, '.index',''))}">{{ elementSubSubMenu.label }} </span>
+                          -<span class="ml-1" :class="{'active_menu': elementSubSubMenu.route === currentRoute.name }">{{ elementSubSubMenu.label }} </span>
                         </router-link>
                       </li>
                     </ul>

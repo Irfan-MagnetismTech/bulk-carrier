@@ -10,6 +10,7 @@ import RemarksComponent from "../utils/RemarksComponent.vue";
 const { vessels, searchVessels } = useVessel();
 
 const { allAccountLists, allBankLists, getAccount, allCostCenterLists, getBank, getCostCenter, isLoading } = useAccountCommonApiRequest();
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const { emit } = getCurrentInstance();
 
@@ -129,17 +130,17 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> Opening Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model.trim="form.opening_date" class="form-input" autocomplete="off" required />
+        <VueDatePicker v-model.trim="form.opening_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
       </label>
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> Maturity Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model.trim="form.maturity_date" class="form-input" autocomplete="off" required />
+        <VueDatePicker v-model.trim="form.maturity_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
       </label>
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> EMI Payment Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model.trim="form.emi_date" class="form-input" autocomplete="off" required />
+        <VueDatePicker v-model.trim="form.emi_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
       </label>   
     </div>
 
