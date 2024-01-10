@@ -444,12 +444,12 @@ export default [
         component: () => import(`../views/crew/crew-bank-account/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: '' },
     },
-    // {
-    //     path: `/${BASE}/crew-bank-accounts/:crewBankAccountId/show`,
-    //     name: `${BASE}.crewBankAccounts.show`,
-    //     component: () => import(`../views/crew/crew-bank-account/show.vue`),
-    //     meta: { requiresAuth: true, role: "all", permission: '' },
-    // },
+    {
+        path: `/${BASE}/crew-bank-accounts/:crewBankAccountId/show`,
+        name: `${BASE}.crewBankAccounts.show`,
+        component: () => import(`../views/crew/crew-bank-account/show.vue`),
+        meta: { requiresAuth: true, role: "all", permission: '' },
+    },
 
     /* Crew Payroll Batch Routes */
     {

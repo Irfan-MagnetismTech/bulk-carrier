@@ -21,6 +21,7 @@ const props = defineProps({
 });
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 watch(() => props.form, (value) => {
   if(value){
     props.form.ops_vessel_id      = props.form?.ops_vessel_name?.id ?? '';
@@ -116,10 +117,10 @@ onMounted(() => {
             />
           </template>
         </v-select>
-      </label>    
+      </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Joining Date <span class="text-red-500">*</span></span>
-      <input type="date" v-model="form.joining_date" class="form-input" autocomplete="off" required />
+      <VueDatePicker v-model="form.joining_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300"> Joining Port Code <span class="text-red-500">*</span></span>

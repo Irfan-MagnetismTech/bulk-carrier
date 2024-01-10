@@ -12,7 +12,7 @@ const { vessels, getVesselsWithoutPaginate } = useVessel();
 const { getVesselAssignedCrews, vesselAssignedCrews, isLoading } = useCrewCommonApiRequest();
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
-
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const props = defineProps({
   form: {
     required: false,
