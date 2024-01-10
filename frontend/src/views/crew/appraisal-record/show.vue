@@ -109,15 +109,29 @@ onMounted(() => {
 
               
               <tr>
-                <th class="w-40">Appraisal Form</th>
-                <td>{{ appraisalRecord?.appraisalForm?.form_name }}</td>
+                <th class="w-40">Appraisal Form No</th>
+                <td>{{ appraisalRecord?.appraisalForm?.form_no }}</td>
               </tr>
 
               
               <tr>
-                <th class="w-40">Total Marks</th>
-                <td></td>
+                <th class="w-40">Appraisal Form Version</th>
+                <td>{{ appraisalRecord?.appraisalForm?.version }}</td>
               </tr>
+
+
+
+              
+              <tr>
+                <th class="w-40">Total Marks</th>
+                <td>{{ appraisalRecord.total_marks }}</td>
+              </tr>
+              
+              <tr>
+                <th class="w-40">Obtained Marks</th>
+                <td>{{ appraisalRecord.obtained_marks }}</td>
+              </tr>
+
 
               
               <tr>
