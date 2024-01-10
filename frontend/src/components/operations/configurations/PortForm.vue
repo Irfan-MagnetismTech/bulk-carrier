@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-1/2 text-sm">
+        <label class="block w-1/2 text-sm" v-if="businessUnit === 'ALL'">
           <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
         </label>
         <label class="block w-full mt-2 text-sm">
@@ -18,8 +18,10 @@
 </template>
 <script setup>
 import Error from "../../Error.vue";
+import { ref } from "vue";
 import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const props = defineProps({
     form: {

@@ -71,7 +71,8 @@
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Delivery Date </span>
-      <input type="date" v-model="form.delivery_date" placeholder="Delivery Date" class="form-input" autocomplete="off" />
+      <VueDatePicker v-model="form.delivery_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+
     </label>
     
   </div>
@@ -107,11 +108,12 @@
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Keel Laying Date </span>
-      <input type="date" v-model="form.keel_laying_date" placeholder="Keel Laying Date" class="form-input" autocomplete="off" />
+      <VueDatePicker v-model="form.keel_laying_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Launching Date </span>
-      <input type="date" v-model="form.launching_date" placeholder="Launching Date" class="form-input" autocomplete="off" />
+      <VueDatePicker v-model="form.launching_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
     </label>
   </div>
 
@@ -239,6 +241,7 @@ import DropZoneV2 from '../../components/DropZoneV2.vue';
 import {useStore} from "vuex";
 import env from '../../config/env';
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const store = useStore();
 const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));
