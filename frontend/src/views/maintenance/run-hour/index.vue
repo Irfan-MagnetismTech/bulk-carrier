@@ -45,7 +45,7 @@ function swapFilter() {
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
-    text: "You want to delete this runnig hour!",
+    text: "You want to delete this running hour!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
@@ -177,7 +177,7 @@ onMounted(() => {
       // isTableLoader.value = true;
     })
     .catch((error) => {
-      console.error("Error fetching runnig hours:", error);
+      console.error("Error fetching running hours:", error);
     });
   });
 
@@ -330,7 +330,7 @@ onMounted(() => {
               </td>
             </tr>
           <tr v-else-if="!runHours?.data?.length">
-            <td colspan="7">No runnig hour found.</td>
+            <td colspan="7">No running hour found.</td>
           </tr>
           </tfoot>
       </table>
