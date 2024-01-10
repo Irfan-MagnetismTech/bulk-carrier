@@ -34,7 +34,10 @@ export default function useFixedAsset() {
         location : '',
         business_unit : '',
         acquisition_cost: '',
-        material_account_name: '',
+        material_account_name: null,
+        fixedAssetAccount:'',
+        acumulateDepreciationAccount:'',
+        depreciationAccount:'',
         fixedAssetCosts: [
             {
                 particular: 'Purchase Value',
