@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('mnt_critical_item_id');
             $table->foreign('mnt_critical_item_id')->references('id')->on('mnt_critical_items');
             $table->integer('is_critical')->default('0')->comment('0=No, 1=Yes');
+            $table->text('specification')->nullable();
             $table->text('notes')->nullable();
             $table->enum('business_unit',['TSLL','PSML']);
             $table->timestamps();

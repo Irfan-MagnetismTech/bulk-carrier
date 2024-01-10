@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Operations\Http\Controllers\OpsVoyageReportController;
+use Modules\Operations\Http\Controllers\OpsBulkNoonReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,10 +16,10 @@ use Modules\Operations\Http\Controllers\OpsVoyageReportController;
 */
 
 Route::prefix('operations')->group(function() {
-    // Route::get('/', 'OperationsController@index');  
-
+    // Route::get('/', 'OperationsController@index'); 
 });
 // Route::resources([
 //     'ports' => OpsPortController::class,
 // ]);
-Route::get('voyage-report', [OpsVoyageReportController::class, 'voyageReport']);
+// Route::get('lighter-voyage-report', [OpsVoyageReportController::class, 'lighterVoyageReport']);
+// Route::get('bulk-report', [OpsBulkNoonReportController::class, 'showReport']);

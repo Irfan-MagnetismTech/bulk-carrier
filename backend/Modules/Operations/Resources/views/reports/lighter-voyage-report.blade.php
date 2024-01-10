@@ -345,7 +345,7 @@
                                                 @endforeach
                                             @endforeach
                                         @endif                                               
-                                    @endif   
+                                    @endif
                                 @else
                                         <td rowspan=""></td>
                                 @endif
@@ -361,20 +361,12 @@
                                     @endforeach
                                     <td rowspan="">{{$getBunker[$material]}}</td>
                                 @endforeach
-                                
                         </tr>
                     @endif
 
-
-                    
-
-                    
-
-
-
-                    {{-- @php
+                    @php
                         $voyage_id=($sector?->ops_voyage_id)?$sector?->ops_voyage_id:'';
-                    @endphp --}}
+                    @endphp
                 @endforeach
                 <tr>
                     <td></td>

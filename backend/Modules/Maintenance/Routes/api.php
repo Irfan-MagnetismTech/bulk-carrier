@@ -2,11 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Modules\Maintenance\Entities\MntCriticalFunction;
-use Modules\Maintenance\Entities\MntCriticalItemCat;
-use Modules\Maintenance\Entities\MntCriticalSpList;
-use Modules\Maintenance\Entities\MntSurveyItem;
-use Modules\Maintenance\Entities\MntSurveyType;
 use Modules\Maintenance\Http\Controllers\MntCriticalFunctionController;
 use Modules\Maintenance\Http\Controllers\MntCriticalItemCatController;
 use Modules\Maintenance\Http\Controllers\MntCriticalItemController;
@@ -19,6 +14,7 @@ use Modules\Maintenance\Http\Controllers\MntReportController;
 use Modules\Maintenance\Http\Controllers\MntRunHourController;
 use Modules\Maintenance\Http\Controllers\MntShipDepartmentController;
 use Modules\Maintenance\Http\Controllers\MntSurveyController;
+use Modules\Maintenance\Http\Controllers\MntSurveyEntryController;
 use Modules\Maintenance\Http\Controllers\MntSurveyItemController;
 use Modules\Maintenance\Http\Controllers\MntSurveyTypeController;
 use Modules\Maintenance\Http\Controllers\MntWorkRequisitionController;
@@ -51,6 +47,7 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
         'survey-items' => MntSurveyItemController::class,
         'survey-types' => MntSurveyTypeController::class,
         'surveys' => MntSurveyController::class,
+        'survey-entries' => MntSurveyEntryController::class,
     ]);
     // get mnt ship departments without pagination
     Route::get('get-mnt-ship-departments', [MntShipDepartmentController::class, 'getMntShipDepartments']);
@@ -91,11 +88,21 @@ Route::middleware(['auth:api'])->prefix('mnt')->as('mnt.')->group(function ()
     Route::get('get-critical-items', [MntCriticalItemController::class, 'getCriticalItems']);
     // getCriticalVesselItems
     Route::get('get-critical-vessel-items', [MntCriticalVesselItemController::class, 'getCriticalVesselItems']);
+    // getCriticalVesselFunctions
+    Route::get('get-critical-vessel-functions', [MntCriticalVesselItemController::class, 'getCriticalVesselFunctions']);
     // getSurveyItems 
     Route::get('get-survey-items', [MntSurveyItemController::class, 'mntSurveyItems']);
     // getSurveyTypes
     Route::get('get-survey-types', [MntSurveyTypeController::class, 'mntSurveyTypes']);
+    // getSurveys
+    Route::get('get-surveys', [MntSurveyController::class, 'mntSurveys']);
+    // getSurveyEntries
+    Route::get('get-survey-entries', [MntSurveyEntryController::class, 'getSurveyEntries']);
+
 
     // report all jobs
     Route::get('report-all-jobs', [MntReportController::class, 'reportAllJobs']);
+    Route::get('report-upcoming-jobs', [MntReportController::class, 'reportUpcomingJobs']);
+    Route::get('report-overdue-jobs', [MntReportController::class, 'reportOverdueJobs']);
+
 });

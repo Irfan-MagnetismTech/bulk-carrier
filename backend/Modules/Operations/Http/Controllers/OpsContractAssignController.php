@@ -235,11 +235,12 @@ class OpsContractAssignController extends Controller
     }
 
 
-        /**
-     * get the specified resource in storage.
+    /**
+    * get the specified resource in storage.
     *
     * @return JsonResponse
     */
+    
     public function getContractTariffByVoyage(Request $request): JsonResponse
     {
         $contract_tariffs= OpsVoyage::query()

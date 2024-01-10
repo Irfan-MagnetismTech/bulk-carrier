@@ -45,7 +45,7 @@ class OpsVesselController extends Controller
                             ->groupBy('ops_maritime_certification_id');
                     })->latest();
                 },
-                'opsBunkers',             
+                // 'opsBunkers',             
                 'scmWareHouse.scmWarehouseContactPersons',
                 'scmWareHouse.accCostCenter'
             ])
@@ -220,7 +220,7 @@ class OpsVesselController extends Controller
         try
         {
             $vessel->opsVesselCertificates()->delete();
-            $vessel->opsBunkers()->delete();
+            // $vessel->opsBunkers()->delete();
             $vessel->delete();
             return response()->json([
                 'message' => 'Data deleted successfully.',
@@ -293,7 +293,7 @@ class OpsVesselController extends Controller
                         ->groupBy('ops_maritime_certification_id');
                 })->latest();
             },
-            'opsBunkers'
+            // 'opsBunkers'
         ])->find($request->vessel_id);
 
         $vessel->opsVesselCertificates->map(function($certificate) {
@@ -320,7 +320,7 @@ class OpsVesselController extends Controller
             'opsVesselCertificates' => function ($query) use ($request) {
                 $query->where('ops_maritime_certification_id', $request->certificate_id);
             },
-            'opsBunkers'
+            // 'opsBunkers'
         ])->find($request->vessel_id);
         $currentDate = Carbon::now();
 
@@ -329,7 +329,6 @@ class OpsVesselController extends Controller
             $certificate->validity  =$certificate->opsMaritimeCertification->validity;
             $certificate->name = $certificate->opsMaritimeCertification->name;
             $certificate->id = $certificate->id;
-            // $certificate->expire_days = 
 
             $expireDate = Carbon::parse($certificate->expire_date);
                     $expire_days = $currentDate->diffInDays($expireDate, false);
