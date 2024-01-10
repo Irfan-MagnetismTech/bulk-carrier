@@ -31,11 +31,11 @@
                       </tr>
                       <tr v-if="chartererInvoice.contract_type == 'Day Wise'">
                           <th class="w-40">Bill From</th>
-                          <td>{{ chartererInvoice.bill_from  }}</td>
+                          <td>{{ formatDate(chartererInvoice.bill_from)  }}</td>
                       </tr>
                       <tr v-if="chartererInvoice.contract_type == 'Day Wise'">
                           <th class="w-40">Bill Till</th>
-                          <td>{{ chartererInvoice.bill_till  }}</td>
+                          <td>{{ formatDate(chartererInvoice.bill_till)  }}</td>
                       </tr>
                       <tr v-if="chartererInvoice.contract_type == 'Day Wise'">
                           <th class="w-40">Total Days</th>
@@ -272,6 +272,7 @@ import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHeroIcon from "../../../assets/heroIcon";
 import useHelper from '../../../composables/useHelper';
+import { formatDate } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 

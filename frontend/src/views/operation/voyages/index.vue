@@ -244,7 +244,7 @@ onMounted(() => {
           </tfoot>
       </table>
     </div>
-    <Paginate :data="voyages" to="ops.configurations.voyages.index" :page="page"></Paginate>
+    <Paginate :data="voyages" to="ops.voyages.index" :page="page"></Paginate>
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
