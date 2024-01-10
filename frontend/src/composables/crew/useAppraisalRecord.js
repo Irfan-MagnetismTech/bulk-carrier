@@ -25,6 +25,8 @@ export default function useAppraisalRecord() {
         appraisal_form: '', 
         crw_crew_assignment: '',
         crw_crew_assignment_id: '',
+        total_marks: '',
+        obtained_marks: '',
         appraisal_date: '',
         appraisalRecordLines: [{
             appraisalFormLine: {},
