@@ -13,6 +13,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import { formatDate } from '../../../utils/helper';
 
 import { useRouter } from 'vue-router';
 const { getPurchaseRequisitions, purchaseRequisitions, deletePurchaseRequisition, isLoading ,isTableLoading, errors} = usePurchaseRequisition();
@@ -244,7 +245,7 @@ function confirmDelete(id) {
             <tr v-for="(purchaseRequisition,index) in (purchaseRequisitions?.data ? purchaseRequisitions?.data : purchaseRequisitions)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ purchaseRequisition?.ref_no }}</td>
-              <td>{{ purchaseRequisition?.raised_date }}</td>
+              <td>{{ formatDate(purchaseRequisition?.raised_date) }}</td>
               <td>{{ critical[purchaseRequisition?.is_critical] }}</td>
               <td>{{ purchaseRequisition?.purchase_center }}</td>
               <td style="text-align: left !important;">
