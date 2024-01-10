@@ -124,7 +124,7 @@ onMounted(() => {
               
               <tr>
                 <th class="w-40">Total Marks</th>
-                <td>{{ appraisalRecord.total_marks }}</td>
+                <td>{{ appraisalRecord?.appraisalForm?.total_marks }}</td>
               </tr>
               
               <tr>
