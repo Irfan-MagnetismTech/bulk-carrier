@@ -12,6 +12,7 @@ import RemarksComponent from "../utils/RemarksComponent.vue";
 import useHeroIcon from "../../assets/heroIcon";
 const icons = useHeroIcon();
 
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const props = defineProps({
   form: {
     required: false,
@@ -103,7 +104,7 @@ onMounted(() => {
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Incident Date & Time <span class="text-red-500">*</span></span>
-        <input type="datetime-local" v-model.trim="form.date_time" class="form-input" autocomplete="off" required />
+        <VueDatePicker v-model.trim="form.date_time" utc class="form-input" required auto-apply  :enable-time-picker = "true" placeholder="Select Date Time" :text-input="{ format: dateFormat }"></VueDatePicker>
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Incident Type <span class="text-red-500">*</span></span>

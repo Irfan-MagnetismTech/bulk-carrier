@@ -56,7 +56,7 @@ class AccDepreciationController extends Controller
     public function show(AccDepreciation $accDepreciation)
     {
         try {
-            return response()->success('Retrieved Successfully', $accDepreciation->load('costCenter', 'accDepreciationLines.accFixedAsset'), 200);
+            return response()->success('Retrieved Successfully', $accDepreciation->load('costCenter', 'accDepreciationLines.accFixedAsset.scmMaterial'), 200);
         }
         catch (\Exception $e)
         {

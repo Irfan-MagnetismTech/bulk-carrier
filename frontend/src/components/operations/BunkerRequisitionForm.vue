@@ -8,7 +8,7 @@
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">      
-        <label class="block w-1/2 mt-2 text-sm">
+        <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Voyage <span class="text-red-500">*</span></span>
               <v-select :options="voyages" placeholder="--Choose an option--" :loading="isVoyageLoading"  v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
@@ -26,11 +26,20 @@
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel</span>
               <input type="text" readonly v-model.trim="form.vessel_name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
         </label>
-        <label class="block w-1/2 mt-2 text-sm">
+    </div>
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">      
+      
+      <label class="block w-1/2 mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Requisition No. <span class="text-red-500">*</span></span>
               <input type="text" maxlength="50" v-model.trim="form.requisition_no" placeholder="Requisition No." class="form-input" autocomplete="off" required/>
         </label>
+        <label class="block w-1/2 mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Requisition Date. <span class="text-red-500">*</span></span>
+              <VueDatePicker v-model="form.date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+
+        </label>
     </div>
+
     <div>
       <RemarksComponet v-model="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponet>
 
@@ -81,7 +90,7 @@ import ErrorComponent from "../utils/ErrorComponent.vue";
 import RemarksComponet from '../../components/utils/RemarksComponent.vue';
 
 const editInitiated = ref(false);
-
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const { voyage, voyages, showVoyage, searchVoyages, isVoyageLoading } = useVoyage();
 const { vessel, showVessel, isVesselLoading } = useVessel();
 

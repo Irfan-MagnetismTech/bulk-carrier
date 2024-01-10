@@ -44,6 +44,17 @@ let filterOptions = ref( {
   "isFilter": false,
   "filter_options": [
     {
+      "relation_name": null,
+      "field_name": "assignment_code",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Assignment Code",
+      "filter_type": "input",
+      "nobr_tag": true
+    },
+    {
       "relation_name": "opsVessel",
       "field_name": "name",
       "search_param": "",
@@ -228,8 +239,9 @@ onMounted(() => {
           <tbody>
             <tr v-for="(crwAssign,index) in crewAssigns?.data" :key="index">
               <td> {{ index + 1 }} </td>
+              <td> <nobr> {{ crwAssign?.assignment_code }} </nobr> </td>
               <td> <nobr> {{ crwAssign?.opsVessel?.name }} </nobr> </td>
-              <td> <nobr> {{ crwAssign?.crwCrew?.full_name }} </nobr> </td>
+              <td class="text-left"> <nobr> {{ crwAssign?.crwCrew?.full_name }} </nobr> </td>
               <td> <nobr> {{ crwAssign?.crwCrew?.pre_mobile_no }} </nobr> </td>
               <td> <nobr> {{ crwAssign?.position_onboard }} </nobr> </td>
               <td> <nobr> {{ crwAssign?.joining_date }} </nobr> </td>

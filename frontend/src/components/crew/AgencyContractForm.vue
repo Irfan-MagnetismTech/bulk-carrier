@@ -8,6 +8,7 @@ import {onMounted, ref, watch, watchEffect} from "vue";
 import Store from "../../store";
 import RemarksComponent from "../utils/RemarksComponent.vue";
 
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const props = defineProps({
   form: {
     required: false,
@@ -56,11 +57,11 @@ onMounted(() => {
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Validity From <span class="text-red-500">*</span></span>
-        <input type="date" v-model.trim="form.validity_from" class="form-input" autocomplete="off" required />
+        <VueDatePicker v-model="form.validity_from" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Validity Till <span class="text-red-500">*</span></span>
-        <input type="date" v-model.trim="form.validity_till" class="form-input" autocomplete="off" required />
+        <VueDatePicker v-model="form.validity_till" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">

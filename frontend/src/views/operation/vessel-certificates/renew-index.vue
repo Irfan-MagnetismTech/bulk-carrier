@@ -13,6 +13,8 @@ import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import { formatDate } from "../../../utils/helper";
+
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
@@ -258,10 +260,10 @@ function getFilteredResult() {
                   {{ item?.opsMaritimeCertification?.validity }}
                 </td>
                 <td>
-                  {{ item?.issue_date ? moment(item?.issue_date).format('DD-MM-YYYY') : null }}
+                  {{ formatDate(item?.issue_date) }}
                 </td>
                 <td>
-                  {{ item?.expire_date ? moment(item?.expire_date).format('DD-MM-YYYY') : null }}
+                  {{ formatDate(item?.expire_date) }}
                 </td>
                 <td>
                   {{ (item?.expire_days < 0) ? 'Expired' : item?.expire_days }}

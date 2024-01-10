@@ -50,11 +50,12 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Issue Date <span class="text-red-500">*</span></span>
-            <input type="date" v-model="form.issue_date" required placeholder="Issue Date" class="form-input" autocomplete="off" />
+            <VueDatePicker v-model="form.issue_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+
         </label>
         <label class="block w-full mt-2 text-sm" v-if="form.type != 'Permanent'">
             <span class="text-gray-700 dark-disabled:text-gray-300" >Expire Date <span class="text-red-500">*</span></span>
-            <input type="date" v-model="form.expire_date" required placeholder="Expire Date" class="form-input" autocomplete="off" />
+            <VueDatePicker v-model="form.expire_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
         </label>
         <label class="block w-full mt-2 text-sm" v-else></label>
 
@@ -81,6 +82,7 @@ import {useStore} from "vuex";
 import env from '../../config/env';
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import useMaritimeCertificate from "../../composables/operations/useMaritimeCertificate";
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const store = useStore();
 const dropZoneFile = ref(computed(() => store.getters.getDropZoneFile));

@@ -12,6 +12,7 @@ export default function useAccountCommonApiRequest() {
     const allCostCenterLists = ref([]);
     const allLoanLists = ref([]);
     const allBankLists = ref([]);
+    const allFixedAssetLists = ref([]);
     const allFixedAssetCategoryList = ref([]);
     const allCashRequisitionLists = ref([]);
     const allSalaryHeadLists = ref([]);
@@ -233,6 +234,29 @@ export default function useAccountCommonApiRequest() {
         }
     }
 
+    async function getFixedAsset(name=null, businessUnit, loading=null) {
+
+        isLoading.value = true;
+
+        let form = {
+            name: name,
+            business_unit: businessUnit,
+        };
+
+        try {
+            const { data,status } = await Api.post('/acc/get-fixed-assets', form);
+            allFixedAssetLists.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            //loader.hide();
+            isLoading.value = false;
+        }
+    }
+
+
+
     return {
         balanceIncomeLineLists,
         balanceIncomeAccountLists,
@@ -241,6 +265,7 @@ export default function useAccountCommonApiRequest() {
         allLoanLists,
         allBankLists,
         allFixedAssetCategoryList,
+        allFixedAssetLists,
         allCashRequisitionLists,
         allSalaryHeadLists,
         generatedAccountCode,
@@ -254,6 +279,7 @@ export default function useAccountCommonApiRequest() {
         getGeneratedAccountCode,
         getCashRequisition,
         getSalaryHead,
+        getFixedAsset,
         isLoading,
         errors,
     };

@@ -13,6 +13,8 @@ export default function useAisReport() {
     const ledgers = ref([]);
     const trialBalances = ref([]);
     const incomeStatements = ref([]);
+    const costCenterSummaries = ref([]);
+    const fixedAssetStatements = ref([]);
     const balanceSheets = ref([]);
 
     const errors = ref('');
@@ -86,6 +88,40 @@ export default function useAisReport() {
         }
     }
 
+    async function getFixedAssetStatement(form) {
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.post('/acc/fixed-asset-statement', form);
+            fixedAssetStatements.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
+    }
+
+    async function getCostCenterSummary(form) {
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.post('/acc/cost-center-summary', form);
+            costCenterSummaries.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
+    }
+
     async function getBalanceSheet(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
@@ -109,11 +145,15 @@ export default function useAisReport() {
         ledgers,
         trialBalances,
         incomeStatements,
+        fixedAssetStatements,
+        costCenterSummaries,
         balanceSheets,
         getDayBooks,
         getLedgers,
         getTrialBalance,
         getIncomeStatement,
+        getFixedAssetStatement,
+        getCostCenterSummary,
         getBalanceSheet,
         isLoading,
         errors,

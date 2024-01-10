@@ -13,7 +13,7 @@ const icons = useHeroIcon();
 
 const { allAccountLists, allBankLists, allCostCenterLists,  allFixedAssetCategoryList, getFixedAssetCategory, getAccount, getBank, getCostCenter, isLoading } = useAccountCommonApiRequest();
 const { searchMrr, filteredMaterialReceiptReports } = useMaterialReceiptReport();
-
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const { emit } = getCurrentInstance();
 
@@ -124,6 +124,7 @@ function changeAccountName(){
   props.form.material_account_name = props.form.scm_material_name?.account?.account_name;
   props.form.scm_material_id = props.form.scm_material_name?.id;
   props.form.acc_account_id = props.form.scm_material_name?.account?.id;
+  props.form.fixedAssetCosts[0].amount = props.form.scm_material_name?.purchase_price;
 }
 
 function changeParentAccountName(){
@@ -232,7 +233,7 @@ onMounted(() => {
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> Acquisition Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model.trim="form.acquisition_date" class="form-input" autocomplete="off" required />
+        <VueDatePicker v-model.trim="form.acquisition_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
       </label>   
     </div>
 
@@ -259,14 +260,27 @@ onMounted(() => {
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(fixedAssetCost, index) in form.fixedAssetCosts" :key="fixedAssetCost.id">
             <td class="px-1 py-1">
               <div style="position: relative;">
-                <input
-                    type="text"
-                    v-model.trim="form.fixedAssetCosts[index].particular"
-                    placeholder="Particular"
-                    class="form-input"
-                    autocomplete="off"
-                    required
-                />
+                <template v-if="index===0">
+                  <input
+                      type="text"
+                      v-model.trim="form.fixedAssetCosts[index].particular"
+                      placeholder="Particular"
+                      class="form-input vms-readonly-input"
+                      autocomplete="off"
+                      required
+                      readonly
+                  />
+                </template>
+                <template v-else>
+                  <select v-model.trim="form.fixedAssetCosts[index].particular" class="form-input" required>
+                    <option value="">Select</option>
+                    <option value="Carry Cost">Carry Cost</option>
+                    <option value="Process Cost">Process Cost</option>
+                    <option value="Installation Cost">Installation Cost</option>
+                    <option value="Any Other Cost">Any Other Cost</option>
+                    <option value="Insurance Cost">Insurance Cost</option>
+                  </select>
+                </template>
                 <span
                     v-show="fixedAssetCost.isParticularDuplicate"
                     class="text-yellow-600 pl-1"

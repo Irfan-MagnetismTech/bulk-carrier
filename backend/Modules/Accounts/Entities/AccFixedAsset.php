@@ -38,7 +38,15 @@ class AccFixedAsset extends Model
 
     public function account()
     {
-        return $this->hasOne(AccAccount::class, 'id', 'acc_account_id');
+        return $this->belongsTo(AccAccount::class, 'acc_account_id','id');
+    }
+
+    public function fixedAssetAccount (){
+        return $this->morphOne(AccAccount::class,'accountable')->where('acc_balance_and_income_line_id', config('accounts.balance_income_line.fixed_assets_at_cost'));
+    }
+
+    public function depreciationAccount(){
+        return $this->morphOne(AccAccount::class, 'accountable')->where('acc_balance_and_income_line_id', config('accounts.balance_income_line.acumulated_depreciation'));
     }
 
     public function costCenter()

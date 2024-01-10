@@ -24,7 +24,8 @@
         </label>
         <label class="block w-1/4 mt-2 text-sm">
           <span class="text-gray-700">Invoice Date <span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.date" placeholder="Invoice Date" class="form-input" autocomplete="off" required />
+          <VueDatePicker v-model="form.date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+
         </label>
     </div>
 
@@ -507,7 +508,7 @@ import useHeroIcon from "../../assets/heroIcon";
 const editInitiated = ref(false);
 const icons = useHeroIcon();
 
-
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const { currencies, getCurrencies } = useBusinessInfo();
 const { getCustomersByBusinessUnit, customers } = useCustomer();
 const { numberFormat } = useHelper();

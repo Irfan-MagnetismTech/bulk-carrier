@@ -19,7 +19,7 @@
                       </tr>                      
                       <tr>
                           <th class="w-40">Invoice Date</th>
-                          <td>{{ customerInvoice?.date ? moment(customerInvoice?.date).format('DD-MM-YYYY') : null }}</td>
+                          <td>{{ formatDate(customerInvoice?.date) }}</td>
                       </tr>
                       <tr>
                           <th class="w-40">Customer Name</th>
@@ -204,8 +204,7 @@ import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHeroIcon from "../../../assets/heroIcon";
 import useHelper from '../../../composables/useHelper';
-import moment from 'moment';
-
+import { formatDate } from '../../../utils/helper';
 const icons = useHeroIcon();
 
 const route = useRoute();
