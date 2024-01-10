@@ -50,7 +50,7 @@ class AppraisalRecordController extends Controller
                 {
                     $recordLineData['appraisal_record_id'] = $appraisalRecord->id;
                     $appraisalRecordLine                   = AppraisalRecordLine::create($recordLineData);
-                    $recordItems                           = $recordLineData['appraisalFormLineItems'];
+                    $recordItems                           = $recordLineData['appraisalRecordLineItems'];
 
                     if ($recordItems)
                     {
@@ -131,15 +131,27 @@ class AppraisalRecordController extends Controller
      * @param  \App\Models\AppraisalRecord  $appraisalRecord
      * @return \Illuminate\Http\Response
      */
-    public function update(AppraisalRecordRequest $request, AppraisalRecord $appraisalRecord)
+    public function update(Request $request, AppraisalRecord $appraisalRecord)
     {
         try {
+
             DB::transaction(function () use ($request, $appraisalRecord)
             {
                 $appraisalRecordData = $request->only('crw_crew_id', 'appraisal_form_id', 'crw_crew_assignment_id', 'appraisal_date', 'age', 'business_unit');
                 $appraisalRecord->update($appraisalRecordData);
                 $appraisalRecord->appraisalRecordLines()->delete();
-                $appraisalRecord->appraisalRecordLines()->createMany($request->appraisalRecordLines);
+
+                foreach ($request->appraisalRecordLines as $recordLineData)
+                {
+                    $recordLineData['appraisal_record_id'] = $appraisalRecord->id;
+                    $appraisalRecordLine                   = AppraisalRecordLine::create($recordLineData);
+                    $recordItems                           = $recordLineData['appraisalRecordLineItems'];
+
+                    if ($recordItems)
+                    {
+                        $appraisalRecordLine->appraisalRecordLineItems()->createMany($recordItems);
+                    }
+                }
             });
 
             return response()->success('Updated Successfully', '', 202);
