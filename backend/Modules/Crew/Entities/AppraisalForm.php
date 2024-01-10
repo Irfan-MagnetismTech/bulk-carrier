@@ -14,6 +14,6 @@ class AppraisalForm extends Model
 
 	public function appraisalFormLines(){
 		return $this->hasMany(AppraisalFormLine::class);
-	}    
+	}
 
 }
