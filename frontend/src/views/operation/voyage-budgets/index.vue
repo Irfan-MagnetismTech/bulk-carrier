@@ -13,8 +13,8 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import {useRouter} from "vue-router";
-import moment from "moment";
 import useHelper from "../../../composables/useHelper";
+import { formatDate } from "../../../utils/helper";
 
 
 const { voyageBudgets, getVoyageBudgets, deleteVoyageBudget, isLoading, isTableLoading, errors } = useVoyageBudget();
@@ -169,10 +169,10 @@ onMounted(() => {
                   <td>{{ voyageBudget?.title }}</td>
                   <td>{{ voyageBudget?.opsVoyage?.voyage_sequence }}</td>
                   <td>
-                    <nobr>{{ voyageBudget?.effective_from ? moment(voyageBudget?.effective_from).format('DD-MM-YYYY') : null }}</nobr>
+                    <nobr>{{ formatDate(voyageBudget?.effective_from) }}</nobr>
                   </td>
                   <td>
-                    <nobr>{{ voyageBudget?.effective_till ? moment(voyageBudget?.effective_till).format('DD-MM-YYYY') : null }}</nobr>
+                    <nobr>{{ formatDate(voyageBudget?.effective_till) }}</nobr>
                   </td>
                   <td class="!text-right">
                     {{ numberFormat((voyageBudget?.opsVoyageBudgetEntries.reduce((accumulator, currentObject) => {

@@ -19,7 +19,7 @@
                     </tr>
                     <tr>
                         <th class="w-40">Date</th>
-                        <td>{{ bunkerBill?.date ? moment(bunkerBill?.date).format('DD-MM-YYYY') : null }}</td>
+                        <td>{{ formatDate(bunkerBill?.date) }}</td>
                     </tr>
                     <tr>
                         <th class="w-40">Vendor</th>
@@ -154,8 +154,8 @@ import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHeroIcon from "../../../assets/heroIcon";
 import useHelper from "../../../composables/useHelper";
-import moment from 'moment';
 import env from '../../../config/env';
+import { formatDate } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 

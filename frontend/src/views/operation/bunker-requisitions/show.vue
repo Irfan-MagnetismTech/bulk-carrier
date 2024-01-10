@@ -22,6 +22,10 @@
                         <td>{{ bunkerRequisition?.requisition_no }}</td>
                     </tr>
                     <tr>
+                        <th class="w-40">Requisition Date</th>
+                        <td>{{ formatDate(bunkerRequisition?.date) }}</td>
+                    </tr>
+                    <tr>
                         <th class="w-40">Voyage</th>
                         <td>{{ bunkerRequisition.opsVoyage?.voyage_sequence }}</td>
                     </tr>
@@ -97,6 +101,7 @@ import Title from "../../../services/title";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHelper from "../../../composables/useHelper";
 import useHeroIcon from "../../../assets/heroIcon";
+import { formatDate } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 

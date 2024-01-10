@@ -11,7 +11,7 @@ import useVoyage from "../../composables/operations/useVoyage";
 import useBusinessInfo from "../../composables/useBusinessInfo";
 import useHeroIcon from "../../assets/heroIcon";
 
-
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const { voyageBudgets, expenseHeadObject, getVoyageBudgets, showHead, isLoading } = useVoyageBudget();
 const { vessel, vessels, getVesselList, showVessel } = useVessel();
 const { voyages, searchVoyages } = useVoyage();
@@ -195,11 +195,12 @@ onMounted(() => {
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700">Effective From <span class="text-red-500">*</span></span>
-      <input type="date" v-model="form.effective_from" required placeholder="Effective From" class="form-input" autocomplete="off" />
+      <VueDatePicker v-model="form.effective_from" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700">Effective Till <span class="text-red-500">*</span></span>
-      <input type="date" v-model="form.effective_till" required placeholder="Effective Till" class="form-input" autocomplete="off" />
+      <VueDatePicker v-model="form.effective_till" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
     </label>
     <label class="block w-full mt-2 text-sm"></label>
     <label class="block w-full mt-2 text-sm"></label>

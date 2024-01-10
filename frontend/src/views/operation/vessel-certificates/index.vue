@@ -16,6 +16,7 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import { formatDate } from "../../../utils/helper";
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 
@@ -232,7 +233,7 @@ onMounted(() => {
                     <span v-if=" item?.opsMaritimeCertification?.validity=='120'">10 Years</span>  
                 </td>
                 <td>
-                  <nobr>{{ item?.expire_date ? moment(item?.expire_date).format('MM-DD-YYYY') : null }}</nobr>
+                  <nobr>{{ formatDate(item?.expire_date) }}</nobr>
                 </td>
                 <td>
                   {{ (item?.expire_days < 0) ? 'Expired' : (item?.expire_days == 0 ? null : item?.expire_days) }}
