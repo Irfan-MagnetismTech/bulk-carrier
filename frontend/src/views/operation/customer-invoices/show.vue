@@ -138,7 +138,7 @@
                   {{ customerInvoice.opsCustomerInvoiceServices[index].quantity }}
                 </td>
                 <td>
-                  {{ numberFormat(customerInvoiceIdustomerInvoice.opsCustomerInvoiceServices[index].rate) }}
+                  {{ numberFormat(customerInvoice.opsCustomerInvoiceServices[index].rate) }}
                 </td>
                 <td>
                   {{ numberFormat(customerInvoice.opsCustomerInvoiceServices[index].amount) }}

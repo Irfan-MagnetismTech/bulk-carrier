@@ -305,69 +305,98 @@ export default [
                 is_open: false,
                 permissionKey: '',
                 subSubMenu: [
-                    {
-                        route: 'ops.maritime-certifications.index',
-                        label: 'All Certificates',
-                        preIcon: '',
-                        postIcon: icons.DownArrow,
-                        is_active: false,
-                        is_open: false,
-                        permissionKey: '',
-                        subSubMenu: []
-                    },
-                    {
-                        route: 'ops.vessel-certificates.index',
-                        label: 'Vessel Wise Certificate',
-                        preIcon: '',
-                        postIcon: icons.DownArrow,
-                        is_active: false,
-                        is_open: false,
-                        permissionKey: '',
-                        subSubMenu: []
-                    },
-                    // {
-                    //     route: 'ops.vessel-certificates.renew-list',
-                    //     label: 'Renew Schedule',
-                    //     preIcon: '',
-                    //     postIcon: icons.DownArrow,
-                    //     is_active: false,
-                    //     is_open: false,
-                    //     permissionKey: '',
-                    //     subSubMenu: []
-                    // },
-                ]
-            },
-                    // {
-                    //     route: 'ops.configurations.cargo-types.index',
-                    //     label: 'Cargo Types',
-                    //     preIcon: '',
-                    //     postIcon: icons.DownArrow,
-                    //     is_active: false,
-                    //     is_open: false,
-                    //     permissionKey: '',
-                    //     subSubMenu: []
-                    // },
-                    // {
-                    //     route: 'ops.configurations.customers.index',
-                    //     label: 'Customers',
-                    //     preIcon: '',
-                    //     postIcon: icons.DownArrow,
-                    //     is_active: false,
-                    //     is_open: false,
-                    //     permissionKey: '',
-                    //     subSubMenu: []
-                    // },
-                    // {
-                    //     route: 'ops.configurations.cargo-tariffs.index',
-                    //     label: 'Cargo Tariffs',
-                    //     preIcon: '',
-                    //     postIcon: icons.DownArrow,
-                    //     is_active: false,
-                    //     is_open: false,
-                    //     permissionKey: '',
-                    //     subSubMenu: []
-                    // }
-                
+                        {
+                            route: 'ops.maritime-certifications.index',
+                            label: 'All Certificates',
+                            preIcon: '',
+                            postIcon: icons.DownArrow,
+                            is_active: false,
+                            is_open: false,
+                            permissionKey: '',
+                            subSubMenu: []
+                        },
+                        {
+                            route: 'ops.vessel-certificates.index',
+                            label: 'Vessel Wise Certificate',
+                            preIcon: '',
+                            postIcon: icons.DownArrow,
+                            is_active: false,
+                            is_open: false,
+                            permissionKey: '',
+                            subSubMenu: []
+                        }
+                    ]
+                },
+                {
+                    route: 'ops.vessel-bunkers.index',
+                    label: 'Vessel Bunkers',
+                    preIcon: '',
+                    postIcon: icons.DownArrow,
+                    is_active: false,
+                    is_open: false,
+                    permissionKey: '',
+                    subSubMenu: []
+                },
+                {
+                    route: 'ops.voyage-expenditures.index',
+                    label: 'Voyage Expense',
+                    preIcon: '',
+                    postIcon: icons.DownArrow,
+                    is_active: false,
+                    is_open: false,
+                    permissionKey: '',
+                    subSubMenu: []
+                },
+                {
+                    route: 'ops.reports.vessel-bunker-report',
+                    label: 'Voyage Bunker Report',
+                    preIcon: '',
+                    postIcon: icons.DownArrow,
+                    is_active: false,
+                    is_open: false,
+                    permissionKey: '',
+                    subSubMenu: []
+                },
+                {
+                    route: 'ops.reports.gross-bunker-report',
+                    label: 'Vessel Bunker Report (Gross)',
+                    preIcon: '',
+                    postIcon: icons.DownArrow,
+                    is_active: false,
+                    is_open: false,
+                    permissionKey: '',
+                    subSubMenu: []
+                },
+                {
+                    route: 'ops.reports.lighter-voyage-report',
+                    label: 'Voyage Report (L)',
+                    preIcon: '',
+                    postIcon: icons.DownArrow,
+                    is_active: false,
+                    is_open: false,
+                    permissionKey: '',
+                    subSubMenu: []
+                },
+                {
+                    route: 'ops.reports.bulk-voyage-report',
+                    label: 'Voyage Report (B)',
+                    preIcon: '',
+                    postIcon: icons.DownArrow,
+                    is_active: false,
+                    is_open: false,
+                    permissionKey: '',
+                    subSubMenu: []
+                },
+                {
+                    route: 'ops.reports.port-wise-expense-report',
+                    label: 'Port Wise Expense Report',
+                    preIcon: '',
+                    postIcon: icons.DownArrow,
+                    is_active: false,
+                    is_open: false,
+                    permissionKey: '',
+                    subSubMenu: []
+                }
             
             
         ]

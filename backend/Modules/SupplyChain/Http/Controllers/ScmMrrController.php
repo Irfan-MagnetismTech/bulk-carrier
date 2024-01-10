@@ -185,7 +185,9 @@ class ScmMrrController extends Controller
 
         $materialReceiptReport = $materialReceiptReport->map(function ($item) {
             $item->scmMaterials = $item->scmMrrLines->map(function ($item1) {
-                return $item1->scmMaterial;
+                $data = $item1->scmMaterial;
+                $data['purchase_price'] = $item1->rate;
+                return $data;
             });
             return $item;
         });

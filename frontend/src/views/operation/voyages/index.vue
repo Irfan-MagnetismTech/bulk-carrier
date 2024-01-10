@@ -97,7 +97,7 @@ let filterOptions = ref( {
     {
       "rel_type": null,
       "relation_name": null,
-      "field_name": "voyage_no",
+      "field_name": "voyage_sequence",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -214,7 +214,7 @@ onMounted(() => {
                 <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ voyage?.mother_vessel }}</td>
                   <td>{{ voyage?.opsVessel?.name }}</td>
-                  <td>{{ voyage?.voyage_no }}</td>
+                  <td>{{ voyage?.voyage_sequence }}</td>
                   <td>{{ voyage?.opsCargoType?.cargo_type }}</td>
 
                   <td class="items-center justify-center space-x-1 text-gray-600">

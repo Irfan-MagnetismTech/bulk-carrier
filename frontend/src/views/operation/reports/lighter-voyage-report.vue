@@ -5,12 +5,15 @@ import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 import useHeroIcon from "../../../assets/heroIcon";
 import useOperationsReport from '../../../composables/operations/useOperationsReport';
 
-const { lighterVoyageReport, isLoading, getLighterVoyageReport } = useOperationsReport();
+const { lighterVoyageReport, isLoading, getLighterVoyageReport, errors } = useOperationsReport();
 const icons = useHeroIcon();
+
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const form = ref({
   start: '',
-  end: ''
+  end: '',
+  business_unit: 'TSLL'
 })
 
 
@@ -22,36 +25,41 @@ watch(() => form.value.port, (value) => {
 
 
 function getReport() {
+  lighterVoyageReport.value = '';
   getLighterVoyageReport(form.value)
 }
 </script>
 <template>
   <!-- Basic information -->
-  <h2 class="my-5 text-2xl text-center font-semibold">Voyage Report (Lighter)</h2>
-  <form @submit.prevent="getReport()">
+  <h2 class="my-5 text-2xl font-semibold">Voyage Report (Lighter)</h2>
 
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      
-      <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700">From Date <span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.start" required placeholder="From" class="form-input" autocomplete="off" />
-        </label>
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
+
+    <form @submit.prevent="getReport()">
+
+      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700">Till Date <span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.end" required placeholder="Till" class="form-input" autocomplete="off" />
-        </label>
-    </div>
+            <span class="text-gray-700">From Date <span class="text-red-500">*</span></span>
+            <VueDatePicker v-model="form.start" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+            <!-- <input type="date" v-model="form.start" required placeholder="From" class="form-input" autocomplete="off" /> -->
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700">Till Date <span class="text-red-500">*</span></span>
+            <VueDatePicker v-model="form.end" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+            <!-- <input type="date" v-model="form.end" required placeholder="Till" class="form-input" autocomplete="off" /> -->
+          </label>
+      </div>
 
-    <div class="flex items-center justify-center">
-      <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Submit</button>
-    </div>
-  </form>
+      <div class="flex items-center justify-center">
+        <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Submit</button>
+      </div>
+    </form>
 
-  <div v-if="lighterVoyageReport != ''" class="mb-5">
-    <h4 class="text-center text-xl font-semibold my-4">
-      Report for {{ form.port }}
-    </h4>
-    <div v-html="lighterVoyageReport"></div>
+    <div v-if="lighterVoyageReport != ''" class="my-5 overflow-x-scroll">
+      
+      <div v-html="lighterVoyageReport"></div>
+    </div>
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

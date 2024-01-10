@@ -28,7 +28,8 @@ const props = defineProps({
 });
 
 const { setTitle } = Title();
-setTitle('Charterer Invoice List');
+setTitle('Contract Assign List');
+
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;

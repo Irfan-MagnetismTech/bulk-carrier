@@ -217,7 +217,7 @@
               </tr>
               <tbody>
                 <tr v-for="(consumption, index) in bulkNoonReport.opsBulkNoonReportEngineInputs">
-                  <td>{{ bulkNoonReport.opsBulkNoonReportEngineInputs[index]?.type }}<span class="ml-2"></span>{{ (bulkNoonReport.opsBulkNoonReportEngineInputs[index]?.engine_unit)?bulkNoonReport.opsBulkNoonReportEngineInputs[index]?.engine_unit : null }}</td>
+                  <td>{{ (bulkNoonReport.opsBulkNoonReportEngineInputs[index]?.type == 'engine_unit')? 'Engine Unit': bulkNoonReport.opsBulkNoonReportEngineInputs[index]?.type }}<span class="ml-2"></span>{{ (bulkNoonReport.opsBulkNoonReportEngineInputs[index]?.engine_unit)?bulkNoonReport.opsBulkNoonReportEngineInputs[index]?.engine_unit : null }}</td>
                   <td>{{ bulkNoonReport.opsBulkNoonReportEngineInputs[index]?.pco }}</td>
                   <td>{{ bulkNoonReport.opsBulkNoonReportEngineInputs[index]?.rack }}</td>
                   <td>{{ bulkNoonReport.opsBulkNoonReportEngineInputs[index]?.exh_temp }}</td>
