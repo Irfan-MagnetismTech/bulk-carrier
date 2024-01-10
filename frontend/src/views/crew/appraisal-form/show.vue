@@ -53,6 +53,12 @@ onMounted(() => {
                 <th class="w-40">Version</th>
                 <td>{{ appraisalForm?.version }}</td>
               </tr>
+              
+             <tr>
+                <th class="w-40">Total Marks</th>
+                <td>{{ appraisalForm?.total_marks }}</td>
+              </tr>
+
 
               
              <tr>
