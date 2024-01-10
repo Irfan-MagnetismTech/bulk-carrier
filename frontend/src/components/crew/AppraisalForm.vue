@@ -177,8 +177,10 @@
   }
 
   function removeAppraisalFormLine(index) {
-    if(props.form.appraisalFormLines.length > 1)
+    if(props.form.appraisalFormLines.length > 1){
+      props.form.total_marks -= (5 * (props.form.appraisalFormLines[index].appraisalFormLineItems.filter(appraisalFormLineItem => appraisalFormLineItem.answer_type === 'Number')?.length ?? 0));
       props.form.appraisalFormLines.splice(index, 1)
+    }
   }
 
   function addAppraisalFormLineItem(parentIndex) {
