@@ -5,14 +5,15 @@ import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 import useHeroIcon from "../../../assets/heroIcon";
 import useOperationsReport from '../../../composables/operations/useOperationsReport';
 
-const { lighterVoyageReport, isLoading, getLighterVoyageReport } = useOperationsReport();
+const { lighterVoyageReport, isLoading, getLighterVoyageReport, errors } = useOperationsReport();
 const icons = useHeroIcon();
 
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const form = ref({
   start: '',
-  end: ''
+  end: '',
+  business_unit: 'TSLL'
 })
 
 

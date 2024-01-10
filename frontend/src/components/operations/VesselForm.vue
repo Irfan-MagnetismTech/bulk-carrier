@@ -72,7 +72,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Delivery Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model="form.delivery_date" placeholder="Delivery Date" class="form-input" required autocomplete="off" />
+        <VueDatePicker v-model="form.delivery_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">NRT <span class="text-red-500">*</span></span>
@@ -99,11 +99,11 @@
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Keel Laying Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model="form.keel_laying_date" placeholder="Keel Laying Date" class="form-input" required autocomplete="off" />
+        <VueDatePicker v-model="form.keel_laying_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Launching Date <span class="text-red-500">*</span></span>
-        <input type="date" v-model="form.launching_date" placeholder="Launching Date" class="form-input" required autocomplete="off" />
+        <VueDatePicker v-model="form.launching_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
       </label>
     </div>
 
@@ -266,7 +266,7 @@ import usePort from '../../composables/operations/usePort';
 import useMaterial from '../../composables/supply-chain/useMaterial';
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import RemarksComponent from '../../components/utils/RemarksComponent.vue';
-
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const props = defineProps({
     form: {
