@@ -53,7 +53,7 @@
       <table class="w-full mt-2">
             <thead>
                 <tr>
-                  <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="14"> Bunker List </td>
+                  <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="14"> Rate List </td>
                 </tr>
                 <tr class="w-full">
                   <th class="block">Particulars</th>

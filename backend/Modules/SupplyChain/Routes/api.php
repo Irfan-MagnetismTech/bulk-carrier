@@ -24,7 +24,7 @@ use Modules\SupplyChain\Http\Controllers\ScmStockLedgerController;
 use Modules\SupplyChain\Http\Controllers\ScmOpeningStockController;
 use Modules\SupplyChain\Http\Controllers\ScmMaterialCategoryController;
 
-Route::prefix('scm')->group(function () {
+Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::apiResources([
         'material-categories' => ScmMaterialCategoryController::class,
         'units' => ScmUnitController::class,
