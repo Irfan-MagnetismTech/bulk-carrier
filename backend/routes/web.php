@@ -21,3 +21,4 @@ Route::get('/', fn() => 'BG Torony - Magnetism Tech Limited');
 
 Route::get('vessel-bunker-report', [OpsBunkerReportController::class, 'vesselBunkerReport']);
 Route::get('unit-wise-bunker-report', [OpsBunkerReportController::class, 'businessUnitWiseBunkerReport']);
+// Route::get('lighter-voyage-report', [OpsVoyageReportController::class, 'lighterVoyageReport']);
