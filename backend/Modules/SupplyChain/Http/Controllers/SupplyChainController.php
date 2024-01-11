@@ -24,7 +24,9 @@ class SupplyChainController extends Controller
      */
     public function create()
     {
-        return view('supplychain::create');
+        return response()->json([
+            'message' => 'This is a create method'
+        ]);
     }
 
     /**
