@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Http\Controllers\ScmCsController;
 use Modules\SupplyChain\Http\Controllers\ScmMiController;
 use Modules\SupplyChain\Http\Controllers\ScmMoController;
@@ -74,10 +73,10 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('search-mmr', [ScmMmrController::class, "searchMmr"])->name('searchMmr');
     Route::get('search-mo', [ScmMoController::class, "searchMo"])->name('searchMo');
     Route::get('get-material-for-mrr', [ScmMrrController::class, "getMaterialByPrId"])->name('getMaterialForMrrId');
-    Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse'); 
+    Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse');
     Route::get('getCsData/{csId}', [ScmCsController::class, "getCsData"])->name('getCsData');
     Route::post('selected-supplier', [ScmCsController::class, "selectedSupplierstore"])->name('selectedSupplier.store');
-    
+
     //Business Info Apis
     Route::get('store-categories', fn () => config('businessinfo.store_category'));
     Route::get('product-types', fn () => config('businessinfo.product_type'));
@@ -97,5 +96,6 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('quotations', [ScmCsController::class, "getQuotations"])->name('quotations.index');
     Route::get('quotations/{quotationId}', [ScmCsController::class, "showQuotation"])->name('quotations.show');
     Route::put('quotations/{quotationId}', [ScmCsController::class, "updateQuotation"])->name('quotations.update');
-
 });
+
+require __DIR__ . '/robiul.php';
