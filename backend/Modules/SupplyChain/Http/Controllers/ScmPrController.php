@@ -281,10 +281,10 @@ class ScmPrController extends Controller
 
     public function getPrWiseCsData(Request $request): JsonResponse
     {
-        if(request()->filled('pr_id')){
-        $pr_data = ScmPr::query()
-            ->with('scmPrLines.scmMaterial', 'scmWarehouse')
-            ->find($request->pr_id);
+        if (request()->filled('pr_id')) {
+            $pr_data = ScmPr::query()
+                ->with('scmPrLines.scmMaterial', 'scmWarehouse')
+                ->find($request->pr_id);
 
             $data = [
                 "scmWarehouse" => $pr_data->scmWarehouse,
@@ -298,7 +298,7 @@ class ScmPrController extends Controller
                 "business_unit" => $pr_data->business_unit,
                 "scmCsMaterials" => $pr_data->scmPrLines,
             ];
-         }else{
+        } else {
             $data = [
                 "scmWarehouse" => null,
                 "scm_warehouse_id" => null,
@@ -310,16 +310,15 @@ class ScmPrController extends Controller
                 "purchase_center" => null,
                 "business_unit" => null,
             ];
-         }
+        }
 
         try {
-            return response()->success
-            ('Data updated sucessfully!', $data, 200);
+            return response()->success('Data updated sucessfully!', $data, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
     }
-     
+
     // public function searchMrr(Request $request): JsonResponse
     // {
     //     if($request->has('searchParam')) { 
@@ -355,4 +354,20 @@ class ScmPrController extends Controller
 
     //     return response()->success('Search Result', $materialReceiptReport, 200);
     // }
+
+    public function closePr(Request $request): JsonResponse
+    {
+        try {
+            $pr = ScmPr::find($request->id);
+            $pr->update([
+                'is_closed' => 1,
+                'closed_by' => auth()->user()->id,
+                'closed_at' => now(),
+                'closing_remarks' => $request->closing_remarks,
+            ]);
+            return response()->success('Data updated sucessfully!', $pr, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }
