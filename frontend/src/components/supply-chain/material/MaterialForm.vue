@@ -15,6 +15,7 @@
     const { units, searchUnit } = useUnit();
     const store = useStore();
     const store_category = ref([]);
+    const type = ref(['Consumable', 'Asset']);
     const categoryKey = ref(0);
     const unitKey = ref(0);
 
@@ -39,9 +40,9 @@
     //     loading(true)
 // }
 
-        function fetchCategory(query) {
-            searchMaterialCategory(query);
-        }
+    function fetchCategory(query) {
+        searchMaterialCategory(query);
+    }
 
     watch(() => props.form.scm_material_category_name, (value) => {
         props.form.scm_material_category_id = value?.id;
@@ -142,7 +143,7 @@
                     <!-- <Error v-if="errors?.unit" :errors="errors.unit" /> -->
                 </label>
             </div>
-            <div class="input-group !w-3/4">
+            <div class="input-group">
                 <label class="label-group">
                     <span class="label-item-title">HS Code <span class="required-style">*</span></span>
                     <input type="text" required v-model="form.hs_code" class="form-input" name="hs_code" :id="'hs_code'" />
@@ -172,6 +173,25 @@
                         </template>
                     </v-select>
                     <!-- <Error v-if="errors?.store_category" :errors="errors.store_category" /> -->
+                </label>
+                <label class="label-group">
+                    <span class="label-item-title">Type <span class="text-red-500">*</span></span>
+                    <v-select
+                      name="user"
+                      v-model="form.type"
+                      placeholder="--Choose An Option--"
+                      label="Store Category"
+                      :options="type"
+                      class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+                      <template #search="{attributes, events}">
+                            <input
+                                class="vs__search"
+                                :required="!form.type"
+                                v-bind="attributes"
+                                v-on="events"
+                            />
+                        </template>
+                    </v-select>
                 </label>
             </div>          
             <div class="input-group !w-1/2">

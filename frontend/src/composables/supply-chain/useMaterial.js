@@ -23,6 +23,7 @@ export default function useMaterial() {
             minimum_stock: 0,
             store_category: '',
             description: '',
+            type: '',
             sample_photo: null
         });
 
