@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Http\Controllers\ScmCsController;
 use Modules\SupplyChain\Http\Controllers\ScmMiController;
 use Modules\SupplyChain\Http\Controllers\ScmMoController;
