@@ -33,7 +33,7 @@ class ScmMaterialRequest extends FormRequest
                 'max:255',
                 'string'
             ],
-            'hs_code' => 'required|max:255|string',
+            'hs_code' => 'max:255|string',
             'sample_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:11048',
             'type' => 'required|string',
         ];
@@ -57,7 +57,6 @@ class ScmMaterialRequest extends FormRequest
             'material_code.max' => ' Material code is too long',
             'material_code.string' => ' Material code must be a string',
 
-            'hs_code.required' => ' HS code is required',
             'hs_code.max' => ' HS code is too long',
             'hs_code.string' => ' HS code must be a string',
 
