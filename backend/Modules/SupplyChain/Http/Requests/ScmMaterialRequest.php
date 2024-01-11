@@ -7,6 +7,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ScmMaterialRequest extends FormRequest
 {
+    protected function prepareForValidation()
+    {
+        $imgData = is_object(request('sample_photo')) ? request('sample_photo') : null;
+        $mergeData = array_merge($this->all, ['sample_photo' => $imgData]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -21,17 +27,15 @@ class ScmMaterialRequest extends FormRequest
                 'max:255',
                 'string'
             ],
-
             'material_code' => [
                 'required',
                 Rule::unique('scm_materials')->ignore($this->material, 'material_code'),
                 'max:255',
                 'string'
             ],
-
             'hs_code' => 'required|max:255|string',
-
-            'sample_photo' => 'image|mimes:jpeg,png,jpg|max:11048',
+            'sample_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:11048',
+            'type' => 'required|string',
         ];
     }
 
@@ -59,7 +63,10 @@ class ScmMaterialRequest extends FormRequest
 
             'sample_photo.image' => ' Sample photo must be an image',
             'sample_photo.mimes' => ' Sample photo must be an image type (jpeg, png or jpg)',
-            'sample_photo.max' => ' Sample photo must be less than 10 MB'
+            'sample_photo.max' => ' Sample photo must be less than 10 MB',
+
+            'type.required' => ' Type is required',
+            'type.string' => ' Type must be a string',
         ];
     }
 

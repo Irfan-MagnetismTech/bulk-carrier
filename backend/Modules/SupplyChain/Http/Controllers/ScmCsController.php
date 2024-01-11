@@ -34,7 +34,6 @@ class ScmCsController extends Controller
     public function index()
     {
         try {
-
             $scmCs = ScmCs::query()
                 ->with('scmPr', 'scmWarehouse')
                 ->globalSearch(request()->all());
@@ -66,9 +65,7 @@ class ScmCsController extends Controller
                     'quantity' => $value['quantity'],
                 ]);
             }
-            //throw exception if creating fail
-
-
+            
             DB::commit();
             return response()->success('Data created succesfully', $scmMi, 201);
         } catch (\Exception $e) {
