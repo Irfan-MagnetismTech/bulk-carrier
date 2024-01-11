@@ -19,7 +19,7 @@
                     </tr>
                     <tr>
                         <th class="w-40">Assign Date</th>
-                        <td>{{ contractAssign?.assign_date ? moment(contractAssign?.assign_date).format('DD-MM-YYYY') : null }}</td>
+                        <td>{{ contractAssign?.assign_date ? formatDateTime(contractAssign?.assign_date) : null }}</td>
                         <!-- <td>{{ contractAssign?.assign_date }}</td> -->
                     </tr>
                     <tr>
@@ -122,6 +122,7 @@ import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useHeroIcon from "../../../assets/heroIcon";
 import useHelper from "../../../composables/useHelper";
 import moment from 'moment';
+import { formatDateTime } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 

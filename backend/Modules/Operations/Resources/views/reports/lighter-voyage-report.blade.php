@@ -285,7 +285,7 @@
                     @elseif(isset($vesselBunker))                        
                             {{-- @dd($vesselBunker) --}}
                         <tr>
-                            <td>{{$vesselBunker['date']}}</td>
+                            <td><nobr>{{ \Carbon\Carbon::parse($vesselBunker['date'])->format('d/m/Y') }}</nobr></td>
                             <td>{{ $vesselBunker->type }}</td>
                             <td></td>
                             <td>{{$vesselBunker->opsVessel->name}}</td>

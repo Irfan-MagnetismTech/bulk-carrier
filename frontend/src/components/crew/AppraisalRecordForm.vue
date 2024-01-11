@@ -93,8 +93,8 @@
         </label>
 
         <label class="block w-full mt-2 text-sm col-start-1">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Appraisal Form <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Appraisal Form" :loading="isAppraisalFormLoading"  :options="appraisalForms" @search="" v-model="form.appraisal_form" label="form_name" @update:modelValue="appraisalFormChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Appraisal Form No <span class="text-red-500">*</span></span>
+            <v-select placeholder="Select Appraisal Form" :loading="isAppraisalFormLoading"  :options="appraisalForms" @search="" v-model="form.appraisal_form" label="form_no" @update:modelValue="appraisalFormChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
                       class="vs__search"
@@ -109,10 +109,19 @@
         </label>
 
         <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Appraisal Form Version</span>
+            <input type="text" :value="form.appraisal_form?.version" placeholder="Version" class="form-input vms-readonly-input" readonly />
+            <Error v-if="errors?.version" :errors="errors.version" />
+        </label>
+
+        
+        <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Total Marks</span>
-            <input type="text" v-model="form.total_marks" placeholder="Total Marks" class="form-input vms-readonly-input" readonly />
+            <input type="text" :value="form.appraisal_form?.total_marks" placeholder="Total Marks" class="form-input vms-readonly-input" readonly />
             <Error v-if="errors?.total_marks" :errors="errors.total_marks" />
         </label>
+
+
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Obtained Marks</span>

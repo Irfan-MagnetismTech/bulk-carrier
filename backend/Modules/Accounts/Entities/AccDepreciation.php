@@ -23,8 +23,18 @@ class AccDepreciation extends Model
         return $this->hasMany(AccDepreciationLine::class);
     }
 
+    public function accFixedAsset()
+    {
+        return $this->belongsTo(AccFixedAsset::class,'acc_fixed_asset_id','id');
+    }
+
     public function costCenter()
     {
         return $this->belongsTo(AccCostCenter::class, 'acc_cost_center_id', 'id');
     }    
+
+    public function transaction()
+    {
+        return $this->morphOne(AccTransaction::class,'transactionable')->withDefault();
+    }
 }

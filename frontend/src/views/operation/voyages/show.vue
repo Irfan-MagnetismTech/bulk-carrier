@@ -51,11 +51,11 @@
               </tr>
               <tr>
                 <th class="w-32">Sail Date</th>
-                <td>{{ voyage?.sail_date?moment(voyage?.sail_date).format('DD-MM-YYYY') : null }}</td>
+                <td>{{ voyage?.sail_date?formatDateTime(voyage?.sail_date) : null }}</td>
               </tr>
               <tr>
                 <th class="w-32">Transit Date</th>
-                <td>{{ voyage?.transit_date?moment(voyage?.transit_date).format('DD-MM-YYYY') : null }}</td>
+                <td>{{ voyage?.transit_date?formatDateTime(voyage?.transit_date) : null }}</td>
               </tr>
             </tbody>
           </table>
@@ -169,13 +169,13 @@
                   <span >{{ schedule.operation_type }}</span>
                 </td>
                 <td>
-                  <span >{{ schedule?.ata ? moment(schedule?.ata).format('DD-MM-YYYY') : null }}</span>
+                  <span >{{ schedule?.ata ?formatDateTime(schedule?.ata) : null }}</span>
                 </td>             
                 <td>
-                  <span >{{ schedule?.load_commence ? moment(schedule?.load_commence).format('DD-MM-YYYY') : null }}</span>
+                  <span >{{ schedule?.load_commence ? formatDateTime(schedule?.load_commence)  : null }}</span>
                 </td>             
                 <td>
-                  <span >{{ schedule?.unload_commence ? moment(schedule?.unload_commence).format('DD-MM-YYYY') : null }}</span>
+                  <span >{{ schedule?.unload_commence ? formatDateTime(schedule?.unload_commence)  : null }}</span>
                 </td>             
               </tr>
             </tbody>
@@ -194,6 +194,7 @@ import useHeroIcon from "../../../assets/heroIcon";
 import useHelper from "../../../composables/useHelper";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import moment from 'moment';
+import { formatDateTime } from '../../../utils/helper';
 
 const icons = useHeroIcon();
 

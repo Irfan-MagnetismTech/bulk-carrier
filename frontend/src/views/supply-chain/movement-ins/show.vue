@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Movement In Details</h2>
-    <default-button :title="'Movement In List'" :to="{ name: 'scm.store-issues.index' }" :icon="icons.DataBase"></default-button>
+    <default-button :title="'Movement In List'" :to="{ name: 'scm.movement-ins.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
     <div class="flex md:gap-4">
@@ -67,6 +67,47 @@
                 <td>
                 <span>
                     {{ numberFormat(movementIn.scmMiLines[index].quantity) }}
+                </span>
+              </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+    </div>
+    <div class="flex md:gap-4 mt-1 md:mt-2" v-if="movementIn.scmMiShortage && movementIn.scmMiShortage.scmMiShortageLines && movementIn.scmMiShortage.scmMiShortageLines.length">
+        <div class="w-full">
+          <table class="w-full">
+            <thead>
+                <tr>
+                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="4">Shortage Information</td>
+                </tr>
+                <tr>
+                    <td class="!text-center font-bold" colspan="2">Shortage Type: {{ movementIn.scmMiShortage.shortage_type }}</td>
+                    <td class="!text-center font-bold" colspan="2">Assign to: {{ movementIn.scmMiShortage.scmWarehouse.name }}</td>
+                </tr>
+            </thead>
+            <thead v-once>
+              <tr class="w-full">
+                <th>SL</th>
+                <th class="w-72">Material Name</th>
+                <th>Unit</th>
+                <th>Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(scmMiShortageLine, index) in movementIn.scmMiShortage.scmMiShortageLines" :key="index">
+                <td>
+                  {{ index+1 }}
+                </td>
+                <td>
+                  <span v-if="movementIn.scmMiShortage.scmMiShortageLines[index]?.scmMaterial?.name">{{ movementIn.scmMiShortage.scmMiShortageLines[index]?.scmMaterial?.name }}</span>
+                </td>
+                <td>
+                  <span v-if="movementIn.scmMiShortage.scmMiShortageLines[index]?.unit">{{ movementIn.scmMiShortage.scmMiShortageLines[index]?.unit }}</span>
+                </td>
+                <td>
+                <span>
+                    {{ numberFormat(movementIn.scmMiShortage.scmMiShortageLines[index].quantity) }}
                 </span>
               </td>
               </tr>

@@ -53,6 +53,12 @@ onMounted(() => {
                 <th class="w-40">Version</th>
                 <td>{{ appraisalForm?.version }}</td>
               </tr>
+              
+             <tr>
+                <th class="w-40">Total Marks</th>
+                <td>{{ appraisalForm?.total_marks }}</td>
+              </tr>
+
 
               
              <tr>
@@ -84,7 +90,7 @@ onMounted(() => {
                               <td v-if="appraisalFormLineItemIndex == 0" :rowspan="appraisalFormLine?.appraisalFormLineItems?.length ?? 1">{{ appraisalFormLine?.section_name }}</td>
                               <td>{{ appraisalFormLineItem?.aspect }}</td>
                               <td>{{ appraisalFormLineItem?.description }}</td>
-                              <td>{{ appraisalFormLineItem?.answer_type }}</td>
+                              <td class="text-center">{{ appraisalFormLineItem?.answer_type }}</td>
 
                             </tr>
                             <tr v-if="appraisalFormLine?.appraisalFormLineItems?.length == 0">

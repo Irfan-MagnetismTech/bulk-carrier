@@ -36,6 +36,16 @@ class AccFixedAsset extends Model
         return $this->hasMany(AccFixedAssetCost::class);
     }
 
+    public function transaction()
+    {
+        return $this->morphOne(AccTransaction::class,'transactionable')->withDefault();
+    }
+
+    public function morphaccount()
+    {
+        return $this->morphMany(AccAccount::class,'accountable');
+    }
+
     public function account()
     {
         return $this->belongsTo(AccAccount::class, 'acc_account_id','id');
@@ -45,8 +55,12 @@ class AccFixedAsset extends Model
         return $this->morphOne(AccAccount::class,'accountable')->where('acc_balance_and_income_line_id', config('accounts.balance_income_line.fixed_assets_at_cost'));
     }
 
-    public function depreciationAccount(){
+    public function acumulateDepreciationAccount(){
         return $this->morphOne(AccAccount::class, 'accountable')->where('acc_balance_and_income_line_id', config('accounts.balance_income_line.acumulated_depreciation'));
+    }
+
+    public function depreciationAccount(){
+        return $this->morphOne(AccAccount::class, 'accountable')->where('acc_balance_and_income_line_id', config('accounts.balance_income_line.administrative_expenses'));
     }
 
     public function costCenter()

@@ -67,9 +67,35 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Crew Name",
+      "label": "Crew",
       "filter_type": "input"
     },
+    
+    {
+      "rel_type": null,
+      "relation_name": 'appraisalForm',
+      "field_name": "form_no",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Appraisal Form No",
+      "filter_type": "input"
+    },
+    
+    {
+      "rel_type": null,
+      "relation_name": 'appraisalForm',
+      "field_name": "version",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Appraisal Form Version",
+      "filter_type": "input"
+    },
+
+
     {
       "rel_type": null,
       "relation_name": 'crwCrewAssignment.opsVessel',
@@ -78,7 +104,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Vessel Name",
+      "label": "Vessel",
       "filter_type": "input"
     },
 
@@ -103,7 +129,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Service Till",
+      "label": "Service To",
       "filter_type": "date"
     },
 
@@ -192,6 +218,8 @@ onMounted(() => {
           <tr v-for="(appraisalRecord,index) in appraisalRecords?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
             <td>{{ appraisalRecord?.crwCrew?.full_name }}</td>
+            <td>{{ appraisalRecord?.appraisalForm?.form_no }}</td>
+            <td>{{ appraisalRecord?.appraisalForm?.version }}</td>
             <td>{{ appraisalRecord?.crwCrewAssignment?.opsVessel?.name }}</td>
             <td>{{ formatDate(appraisalRecord?.crwCrewAssignment?.joining_date) }}</td>
             <td>{{ formatDate(appraisalRecord?.crwCrewAssignment?.completion_date) }}</td>
