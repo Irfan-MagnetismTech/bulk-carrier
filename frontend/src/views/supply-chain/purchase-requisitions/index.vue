@@ -14,6 +14,7 @@ import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import FooterComponent from "../../../components/utils/FooterComponent.vue";
+import { formatDate } from "../../../utils/helper.js";
 
 import { useRouter } from 'vue-router';
 import useIndexUtils from '../../../services/indexUtils';
@@ -69,31 +70,6 @@ let filterOptions = ref({
     },
     {
       "relation_name": null,
-      "field_name": "is_critical",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Is Critical",
-      "filter_type": "dropdown",
-      "select_options": [
-        {
-          value: '',
-          label: "ALL",
-          defaultSelected : true
-        },
-        {
-          value: "0",
-          label: "No"
-        },
-        {
-          value: "1",
-          label: "Yes"
-        }
-      ]
-    },
-    {
-      "relation_name": null,
       "field_name": "purchase_center",
       "search_param": "",
       "action": null,
@@ -109,7 +85,16 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Material",
+      "label": "Material - Code",
+    },
+    {
+      "relation_name": "scmPrLines.scmMaterial",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Qty - Price",
     },
     {
       "relation_name": "scmWarehouse",
@@ -286,17 +271,34 @@ function confirmDelete(id) {
             <tr v-for="(purchaseRequisition,index) in (purchaseRequisitions?.data ? purchaseRequisitions?.data : purchaseRequisitions)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1}}</td>
               <td>{{ purchaseRequisition?.ref_no }}</td>
-              <td>{{ purchaseRequisition?.raised_date }}</td>
-              <td>{{ critical[purchaseRequisition?.is_critical] }}</td>
+              <td>{{ formatDate(purchaseRequisition?.raised_date) }}</td>
               <td>{{ purchaseRequisition?.purchase_center }}</td>
-              <td style="text-align: left !important;">
-                <span v-for="(line,index) in purchaseRequisition?.scmPrLines" :key="index" class="text-xs mr-2 mb-2 inline-block py-1 px-2.5 leading-none whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded">
+              <td style="text-align: center !important;">
+                <!-- <span v-for="(line,index) in purchaseRequisition?.scmPrLines" :key="index" class="text-xs mr-2 mb-2 inline-block py-1 px-2.5 leading-none whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded">
                   {{ line?.material_name_quantity_unit ?? '' }}
-                </span>
+                </span> -->
+                <table class="w-full">
+                  <tr v-for="(line,index) in purchaseRequisition?.scmPrLines" :key="index">
+                    <td>{{ line?.scmMaterial.name ?? '' }}</td>
+                    <td>{{ line?.scmMaterial.material_code ?? '' }}</td>
+                  </tr>
+                </table>
+              </td>
+              <td style="text-align: center !important;">
+                <!-- <span v-for="(line,index) in purchaseRequisition?.scmPrLines" :key="index" class="text-xs mr-2 mb-2 inline-block py-1 px-2.5 leading-none whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded">
+                  {{ line?.material_name_quantity_unit ?? '' }}
+                </span> -->
+                <table class="w-full">
+                  <tr v-for="(line,index) in purchaseRequisition?.scmPrLines" :key="index">
+                    <td>{{ line?.quantity ?? '' }}</td>
+                    <td>{{ line?.unit ?? '' }}</td>
+                  </tr>
+                </table>
               </td>
               <td>{{ purchaseRequisition?.scmWarehouse?.name?? '' }}</td>
               <td>
-                <button class="bg-red-600 hover:bg-red-700 hover:outline-black" v-if="purchaseRequisition.is_closed == 0" @click="showModal(purchaseRequisition.id)">close</button>
+                <!-- <button class="bg-red-600 hover:bg-red-700 hover:outline-black" v-if="purchaseRequisition.is_closed == 0" @click="showModal(purchaseRequisition.id)">close</button> -->
+                <button v-if="purchaseRequisition.is_closed == 0" @click="showModal(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Close</button>
                 <span v-else :class="purchaseRequisition?.is_closed === 0 ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.is_closed === 0 ? 'Open' : 'Closed' }}</span>
               </td>
               <td>
@@ -362,7 +364,7 @@ function confirmDelete(id) {
           <thead v-once>
           <tr style="background-color: #04AA6D;color: white"
               class="text-xs font-semibold tracking-wide text-gray-500 uppercase border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-            <th colspan="5">Details</th>
+            <th colspan="5">Remarks</th>
           </tr>
           </thead>
         </table>
@@ -371,7 +373,6 @@ function confirmDelete(id) {
           <table id="dataTable" class="w-full table table-striped table-bordered">
             <tbody>
               <tr>
-                <td>Remarks</td>
                 <td><textarea v-model="closingRemarks"></textarea></td>
               </tr>
            </tbody>
