@@ -98,7 +98,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::put('quotations/{quotationId}', [ScmCsController::class, "updateQuotation"])->name('quotations.update');
 
     //Close PR
-    Route::put('close-pr', [ScmPrController::class, "closePr"])->name('closePr');
+    Route::post('close-pr', [ScmPrController::class, "closePr"])->name('closePr');
 });
 
 require __DIR__ . '/robiul.php';
