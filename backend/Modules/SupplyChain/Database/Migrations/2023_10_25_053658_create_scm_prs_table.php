@@ -26,7 +26,7 @@ return new class extends Migration
             $table->tinyInteger('is_critical')->default(0)->comment('0, 1');
             $table->date('approved_date')->nullable();
             $table->tinyInteger('is_closed')->default(0)->comment('0, 1');
-            $table->tinyInteger('closed_by')->nullable();
+            $table->integer('closed_by')->nullable();
             $table->datetime('closed_at')->nullable();
             $table->string('closing_remarks')->nullable();
             $table->string('business_unit')->nullable();

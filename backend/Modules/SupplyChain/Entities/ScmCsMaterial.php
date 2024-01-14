@@ -13,7 +13,7 @@ class ScmCsMaterial extends Model
     use HasFactory;
 
     protected $fillable = [
-        'scm_cs_id', 'scm_pr_id' , 'scm_material_id', 'quantity', 'unit'
+        'scm_cs_id', 'scm_pr_id', 'scm_material_id', 'cs_composite_key', 'pr_composite_key', 'quantity', 'unit'
     ];
 
 
