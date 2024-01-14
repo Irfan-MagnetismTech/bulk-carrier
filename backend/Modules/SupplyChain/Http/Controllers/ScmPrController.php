@@ -42,8 +42,7 @@ class ScmPrController extends Controller
                     'scmPrLines.scmMaterial',
                     'scmWarehouse',
                     'scmPos',
-                    'scmMrrs',
-                    'scmCss'
+                    'scmMrrs'
                 )
                 ->globalSearch($request->all());
 
@@ -274,14 +273,14 @@ class ScmPrController extends Controller
                 ->orderByDesc('ref_no')
                 // ->limit(10)
                 ->get();
-        } elseif(isset($request->cs_id)) {
+        } elseif (isset($request->cs_id)) {
             $purchase_requisition = ScmPr::query()
                 ->with('scmPrLines')
                 ->where('is_closed', 0)
                 ->where(function ($query) use ($request) {
                     $query->where('business_unit', $request->business_unit)
-                    ->where('scm_warehouse_id', $request->scm_warehouse_id)
-                    ->where('purchase_center', $request->purchase_center);
+                        ->where('scm_warehouse_id', $request->scm_warehouse_id)
+                        ->where('purchase_center', $request->purchase_center);
                 })
                 ->whereHas('scmCsMaterial', function ($query) use ($request) {
                     $query->where('scm_cs_id', $request->cs_id);
@@ -289,7 +288,7 @@ class ScmPrController extends Controller
                 ->orderByDesc('ref_no')
                 // ->limit(10)
                 ->get();
-        }else{
+        } else {
             $purchase_requisition = ScmPr::query()
                 ->with('scmPrLines')
                 ->where('is_closed', 0)
@@ -347,17 +346,17 @@ class ScmPrController extends Controller
     public function getMaterialByPrIdForCs(Request $request): JsonResponse
     {
         $lineData = ScmPrLine::query()
-        ->with('scmMaterial')
-        ->where('scm_pr_id', $request->pr_id)
-        ->whereHas('scmPr', function($query){
-            $query->where('is_closed', 0);
-        })
-        ->get()
-        ->map(function($item) {
-            $data = $item->scmMaterial;
-            $data['pr_composite_key'] = $item->pr_composite_key;
-            return $data;
-        });
+            ->with('scmMaterial')
+            ->where('scm_pr_id', $request->pr_id)
+            ->whereHas('scmPr', function ($query) {
+                $query->where('is_closed', 0);
+            })
+            ->get()
+            ->map(function ($item) {
+                $data = $item->scmMaterial;
+                $data['pr_composite_key'] = $item->pr_composite_key;
+                return $data;
+            });
 
         return response()->success('Search result', $lineData, 200);
     }
