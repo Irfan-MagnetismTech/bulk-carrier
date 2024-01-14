@@ -8,9 +8,10 @@ class ScmWrRequest extends FormRequest
 {
     protected function prepareForValidation()
     {
-        $data =  request('info');
+        $data =  request('data');
         $dataArray = json_decode($data, true);
-        $mergeData = array_merge($dataArray, ['attachment' => request('attachment')]);
+        $attachment = is_object(request('attachment')) ? request('attachment') : null;
+        $mergeData = array_merge($dataArray, ['attachment' => $attachment]);
         $this->replace($mergeData);
     }
     /**
@@ -28,7 +29,7 @@ class ScmWrRequest extends FormRequest
             'attachment' => 'nullable|mimes:xlsx,pdf,jpg,png,jpeg,doc,docx',
             'remarks' => 'max:500',
 
-            'scmWrLines.*.scm_material_id' => 'exclude_if:entry_type,1|required|exists:scm_materials,id|integer',
+            'scmWrLines.*.scm_service_id' => 'exclude_if:entry_type,1|required|exists:scm_services,id|integer',
             'scmWrLines.*.quantity' => 'exclude_if:entry_type,1|required|numeric|min:1',
             'scmWrLines.*.required_date' => 'exclude_if:entry_type,1|required|date',
             'scmWrLines.*.description' => 'max:500',
@@ -38,7 +39,7 @@ class ScmWrRequest extends FormRequest
 
     /**
      * Get the error messages for the defined validation rules.
-     * 
+     *
      * @return array
      */
     public function messages(): array
@@ -57,14 +58,14 @@ class ScmWrRequest extends FormRequest
             'attachment.mimes' => 'Attachment must be an xlsx,pdf,jpg,png,jpeg,doc,docx',
             'remarks.max' => 'Remarks must be less than 500 characters',
 
-            
-            'scmWrLines.*.scm_material_id.required' => 'In row no :position Material is required',
-            'scmWrLines.*.scm_material_id.integer' => 'In row no :position Material must be an integer',
-            'scmWrLines.*.scm_material_id.exists' => 'In row no :position Material is not found',
-            
+
+            'scmWrLines.*.scm_service_id.required' => 'In row no :position Service is required',
+            'scmWrLines.*.scm_service_id.integer' => 'In row no :position Service must be an integer',
+            'scmWrLines.*.scm_service_id.exists' => 'In row no :position Service is not found',
+
             'scmWrLines.*.description.max' => 'In row no :position Description must be less than 500 characters',
             'scmWrLines.*.remarks.max' => 'In row no :position Remarks must be less than 500 characters',
-            
+
             'scmWrLines.*.quantity.required' => 'In row no :position Quantity is required',
             'scmWrLines.*.quantity.numeric' => 'In row no :position Quantity must be a number',
             'scmWrLines.*.quantity.min' => 'In row no :position Quantity must be greater than 0',

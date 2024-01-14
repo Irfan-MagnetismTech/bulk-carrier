@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('scm_wr_lines', function (Blueprint $table) {
             $table->id();
             $table->foreignId('scm_wr_id')->constrained('scm_wrs')->onDelete('cascade');
-            $table->bigInteger('scm_material_id')->nullable();
+            $table->bigInteger('scm_service_id')->nullable();
             $table->float('quantity', 20, 2)->nullable();
             $table->date('required_date')->nullable();
             $table->text('description')->nullable();

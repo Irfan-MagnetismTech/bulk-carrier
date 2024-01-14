@@ -29,7 +29,7 @@ class ScmWrController extends Controller
     public function index(Request $request) : JsonResponse
     {
         try {
-            $scmWr = ScmWr::with('scmWrLines')
+            $scmWr = ScmWr::with('scmWrLines', 'scmWarehouse')
             ->globalSearch($request->all());
 
             return response()->success('Data retrieved successfully.', $scmWr, 200);
@@ -43,7 +43,7 @@ class ScmWrController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * 
+     *
      * @param ScmWrRequest $request
      * @return JsonResponse
     */
@@ -94,7 +94,7 @@ class ScmWrController extends Controller
     public function show(ScmWr $work_requisition): JsonResponse
     {
         // dd('dddd');
-        $work_requisition->load('scmWrLines');
+        $work_requisition->load('scmWrLines.scmService', 'scmWarehouse');
         try
         {
             return response()->success('Data retrieved successfully.', $work_requisition, 200);
@@ -133,12 +133,12 @@ class ScmWrController extends Controller
                 return response()->json($error, 422);
             }
 
-            if(isset($request->attachment)){
-                $this->fileUpload->deleteFile($work_requisition->attachment);
+            // if(isset($request->attachment)){
+                // $this->fileUpload->deleteFile($work_requisition->attachment);
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/work_requisitions', $work_requisition->attachment);
                 $work_requisition_info['attachment'] = $attachment;
-            }
-            
+            // }
+
             $work_requisition->update($work_requisition_info);
             $work_requisition->scmWrLines()->delete();
             $work_requisition->scmWrLines()->createMany($request->scmWrLines);
@@ -163,7 +163,7 @@ class ScmWrController extends Controller
         try
         {
             if(isset($work_requisition->attachment)){
-                $this->fileUpload->deleteFile($work_requisition->attachment);            
+                $this->fileUpload->deleteFile($work_requisition->attachment);
             }
             $work_requisition->scmWrLines()->delete();
             $work_requisition->delete();

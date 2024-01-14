@@ -40,26 +40,26 @@ export default [
 
         {
             path: `/${BASE}/work-requisitions`,
-            name: `${BASE}.work-requisition.index`,
+            name: `${BASE}.work-requisitions.index`,
             component: () => import(`../views/${PATH_BASE}/work-requisition/index.vue`),
             meta: { requiresAuth: true, role: ROLE, permission: 'work-requisition-index' },
             props: (route) => ({ page: parseInt(route.query.page) || 1 }),
         },
         {
-            path: `/${BASE}/work-requisition/create`,
-            name: `${BASE}.work-requisition.create`,
+            path: `/${BASE}/work-requisitions/create`,
+            name: `${BASE}.work-requisitions.create`,
             component: () => import(`../views/${PATH_BASE}/work-requisition/create.vue`),
             meta: { requiresAuth: true, role: ROLE, permission: 'work-requisition-create' },
         },
         {
-            path: `/${BASE}/work-requisition/:workRequisitionId/edit`,
-            name: `${BASE}.work-requisition.edit`,
+            path: `/${BASE}/work-requisitions/:workRequisitionId/edit`,
+            name: `${BASE}.work-requisitions.edit`,
             component: () => import(`../views/${PATH_BASE}/work-requisition/edit.vue`),
             meta: { requiresAuth: true, role: ROLE, permission: 'work-requisition-edit' },
         },
         {
-            path: `/${BASE}/work-requisition/:workRequisitionId`,
-            name: `${BASE}.work-requisition.show`,
+            path: `/${BASE}/work-requisitions/:workRequisitionId`,
+            name: `${BASE}.work-requisitions.show`,
             component: () => import(`../views/${PATH_BASE}/work-requisition/show.vue`),
             meta: { requiresAuth: true, role: ROLE, permission: 'work-requisition-show'  },
         },

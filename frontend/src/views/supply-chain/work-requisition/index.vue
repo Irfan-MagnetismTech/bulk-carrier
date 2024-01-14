@@ -2,7 +2,7 @@
 import {onMounted, watchEffect,watch,ref, watchPostEffect} from 'vue';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
-import usePurchaseRequisition from "../../../composables/supply-chain/usePurchaseRequisition";
+import useWorkRequisition from "../../../composables/supply-chain/useWorkRequisition";
 import useHelper from "../../../composables/useHelper.js";
 import Title from "../../../services/title";
 import useDebouncedRef from '../../../composables/useDebouncedRef';
@@ -16,7 +16,7 @@ import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import { formatDate } from '../../../utils/helper';
 
 import { useRouter } from 'vue-router';
-const { getPurchaseRequisitions, purchaseRequisitions, deletePurchaseRequisition, isLoading ,isTableLoading, errors} = usePurchaseRequisition();
+const { getWorkRequisitions, workRequisitions, deleteWorkRequisition, isLoading ,isTableLoading, errors} = useWorkRequisition();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -29,18 +29,18 @@ const props = defineProps({
   },
 });
 
-const critical = ['No','Yes'];
+// const critical = ['No','Yes'];
 // Code for global search start
-const columns = ["ref_no"];
-const searchKey = useDebouncedRef('', 600);
-const table = "purchase_requisitions";
+// const columns = ["ref_no"];
+// const searchKey = useDebouncedRef('', 600);
+// const table = "purchase_requisitions";
 
 const icons = useHeroIcon();
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
-setTitle('Purchase Requisitions');
+setTitle('Work Requisitions');
 // Code for global search starts here
 
 
@@ -51,15 +51,70 @@ let filterOptions = ref({
   "page": props.page,
   "isFilter": false,
   "filter_options": [
+    // {
+    //   "relation_name": null,
+    //   "field_name": "ref_no",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "PR No",
+    //   "filter_type": "input" 
+    // },
+    // {
+    //   "relation_name": null,
+    //   "field_name": "raised_date",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Raised Date",
+    //   "filter_type": "input" 
+    // },
+    // {
+    //   "relation_name": null,
+    //   "field_name": "is_critical",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Is Critical",
+    //   "filter_type": "dropdown",
+    //   "select_options": [
+    //     {
+    //       value: '',
+    //       label: "ALL",
+    //       defaultSelected : true
+    //     },
+    //     {
+    //       value: "0",
+    //       label: "No"
+    //     },
+    //     {
+    //       value: "1",
+    //       label: "Yes"
+    //     }
+    //   ]
+    // },
+    // {
+    //   "relation_name": null,
+    //   "field_name": "purchase_center",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Purchase Center",
+    //   "filter_type": "input"
+    // },
     {
-      "relation_name": null,
-      "field_name": "ref_no",
+      "relation_name": "scmWarehouse",
+      "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "PR No",
-      "filter_type": "input" 
+      "label": "Warehouse Name",
+      "filter_type": "input"
     },
     {
       "relation_name": null,
@@ -69,63 +124,20 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Raised Date",
-      "filter_type": "input" 
+      "filter_type": "date"
     },
+    
     {
       "relation_name": null,
-      "field_name": "is_critical",
+      "field_name": "approved_date",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Is Critical",
-      "filter_type": "dropdown",
-      "select_options": [
-        {
-          value: '',
-          label: "ALL",
-          defaultSelected : true
-        },
-        {
-          value: "0",
-          label: "No"
-        },
-        {
-          value: "1",
-          label: "Yes"
-        }
-      ]
+      "label": "Approved Date",
+      "filter_type": "date"
     },
-    {
-      "relation_name": null,
-      "field_name": "purchase_center",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Purchase Center",
-      "filter_type": "input"
-    },
-    {
-      "relation_name": "scmPrLines.scmMaterial",
-      "field_name": "name",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Material",
-      "filter_type": "input"
-    },
-    {
-      "relation_name": "scmWarehouse",
-      "field_name": "name",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Warehouse",
-      "filter_type": "input"
-    }
+
   ]
 });
 
@@ -139,7 +151,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      router.push({ name: 'scm.purchase-requisitions.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'scm.work-requisitions.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -147,7 +159,7 @@ onMounted(() => {
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
-    getPurchaseRequisitions(filterOptions.value)
+    getWorkRequisitions(filterOptions.value)
       .then(() => {
         paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
@@ -156,49 +168,49 @@ onMounted(() => {
       }
     })
     .catch((error) => {
-      console.error("Error fetching PR:", error);
+      console.error("Error fetching WR:", error);
     });
 });
 });
 // Code for global search end here
 
-const navigateToPOCreate = (purchaseRequisitionId) => {
-  const pr_id = purchaseRequisitionId; 
-  const cs_id = null;
-  const routeOptions = {
-    name: 'scm.purchase-orders.create',
-    query: {
-      pr_id: pr_id,
-      cs_id: cs_id
-    }
-  };
-  router.push(routeOptions);
-};  
+// const navigateToPOCreate = (purchaseRequisitionId) => {
+//   const pr_id = purchaseRequisitionId; 
+//   const cs_id = null;
+//   const routeOptions = {
+//     name: 'scm.purchase-orders.create',
+//     query: {
+//       pr_id: pr_id,
+//       cs_id: cs_id
+//     }
+//   };
+//   router.push(routeOptions);
+// };  
 
-const navigateToMRRCreate = (purchaseRequisitionId) => {
-  const pr_id = purchaseRequisitionId; 
-  const po_id = null;
-  const routeOptions = {
-    name: 'scm.material-receipt-reports.create',
-    query: {
-      pr_id: pr_id,
-      po_id: po_id
-    }
-  };
-  router.push(routeOptions);
-};
+// const navigateToMRRCreate = (purchaseRequisitionId) => {
+//   const pr_id = purchaseRequisitionId; 
+//   const po_id = null;
+//   const routeOptions = {
+//     name: 'scm.material-receipt-reports.create',
+//     query: {
+//       pr_id: pr_id,
+//       po_id: po_id
+//     }
+//   };
+//   router.push(routeOptions);
+// };
 
 
-const navigateToCSCreate = (purchaseRequisitionId) => {
-  const pr_id = purchaseRequisitionId; 
-  const routeOptions = {
-    name: 'scm.material-cs.create',
-    query: {
-      pr_id: pr_id
-    }
-  };
-  router.push(routeOptions);
-}; 
+// const navigateToCSCreate = (purchaseRequisitionId) => {
+//   const pr_id = purchaseRequisitionId; 
+//   const routeOptions = {
+//     name: 'scm.material-cs.create',
+//     query: {
+//       pr_id: pr_id
+//     }
+//   };
+//   router.push(routeOptions);
+// }; 
 
 function confirmDelete(id) {
         Swal.fire({
@@ -211,7 +223,7 @@ function confirmDelete(id) {
           confirmButtonText: 'Yes'
         }).then((result) => {
           if (result.isConfirmed) {
-            deletePurchaseRequisition(id);
+            deleteWorkRequisition(id);
           }
         })
       }
@@ -221,8 +233,8 @@ function confirmDelete(id) {
   <!-- Heading -->
  
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Purchase Requisition List</h2>
-    <default-button :title="'Create Purchase Requisition'" :to="{ name: 'scm.purchase-requisitions.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Work Requisition List</h2>
+    <default-button :title="'Create Work Requisition'" :to="{ name: 'scm.work-requisitions.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <!-- Table -->
   <div id="customDataTable">
@@ -242,9 +254,22 @@ function confirmDelete(id) {
           </thead> -->
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
-            <tr v-for="(purchaseRequisition,index) in (purchaseRequisitions?.data ? purchaseRequisitions?.data : purchaseRequisitions)" :key="index">
+            <tr v-for="(workRequisition,index) in workRequisitions?.data" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-              <td>{{ purchaseRequisition?.ref_no }}</td>
+              <td>{{ workRequisition?.scmWarehouse?.name }}</td>
+              <td>{{ formatDate(workRequisition?.raised_date) }}</td>
+              <td>{{ formatDate(workRequisition?.approved_date) }}</td>
+              <td>
+                <span :class="workRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ workRequisition?.business_unit }}</span>
+              </td>
+              <td>
+                <nobr>
+                  <action-button :action="'show'" :to="{ name: 'scm.work-requisitions.show', params: { workRequisitionId: workRequisition?.id } }"></action-button>
+                  <action-button :action="'edit'" :to="{ name: 'scm.work-requisitions.edit', params: { workRequisitionId: workRequisition?.id } }"></action-button>
+                  <action-button @click="confirmDelete(workRequisition?.id)" :action="'delete'"></action-button>
+                </nobr>
+              </td>
+              <!-- <td>{{ purchaseRequisition?.ref_no }}</td>
               <td>{{ formatDate(purchaseRequisition?.raised_date) }}</td>
               <td>{{ critical[purchaseRequisition?.is_critical] }}</td>
               <td>{{ purchaseRequisition?.purchase_center }}</td>
@@ -261,7 +286,7 @@ function confirmDelete(id) {
                 <nobr>
                 <div class="grid grid-flow-col-dense gap-x-2">
                     <template v-if="(purchaseRequisition?.scmCss.length > 0) || ((purchaseRequisition?.scmCss.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) && (purchaseRequisition?.scmPos.length <= 0))">
-                      <!-- <button @click="navigateToCSCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create CS</button> -->
+                    
                     </template>
                     <template v-if="purchaseRequisition?.scmPos.length > 0 || ((purchaseRequisition?.scmCss.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) && (purchaseRequisition?.scmPos.length <= 0))">
 
@@ -281,11 +306,11 @@ function confirmDelete(id) {
                     <action-button @click="confirmDelete(purchaseRequisition.id)" :action="'delete'"></action-button>
                   </div>
                 </nobr>
-              </td>
+              </td> -->
             </tr>
-            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && purchaseRequisitions?.data?.length"></LoaderComponent>
+            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && workRequisitions?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!purchaseRequisitions?.data?.length" class="relative h-[250px]">
+          <tfoot v-if="!workRequisitions?.data?.length" class="relative h-[250px]">
             <tr v-if="isLoading">
             </tr>
             <tr v-else-if="isTableLoading">
@@ -293,13 +318,13 @@ function confirmDelete(id) {
                   <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
                 </td>
             </tr>
-            <tr v-else-if="!purchaseRequisitions?.data?.length">
+            <tr v-else-if="!workRequisitions?.data?.length">
               <td colspan="7">No Data found.</td>
             </tr>
         </tfoot>
       </table>
     </div>
-    <Paginate :data="purchaseRequisitions" to="scm.purchase-requisitions.index" :page="page"></Paginate>
+    <Paginate :data="workRequisitions" to="scm.work-requisitions.index" :page="page"></Paginate>
   </div>
   <!-- Heading -->
   

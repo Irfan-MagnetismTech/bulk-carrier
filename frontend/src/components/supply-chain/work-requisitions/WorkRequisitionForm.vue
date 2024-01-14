@@ -49,6 +49,15 @@
       // setMinHeight();
     }
 
+    function addWork(){
+      props.form.scmWrLines.push(cloneDeep(props.workObject));
+    }
+
+    function removeWork(index){
+      if(props.form.scmWrLines?.length > 1)
+        props.form.scmWrLines.splice(index, 1);
+    }
+
     // function setMaterialOtherData(index){
     //   let material = materials.value.find((material) => material.id === props.form.materials[index].material_id);
     //   props.form.materials[index].unit = material.unit;
@@ -154,38 +163,38 @@
 
 // const previousLines = ref(cloneDeep(props.form.scmPrLines));
 
-watch(() => props.form.scmPrLines, (newLines) => {
-  let materialArray = [];
-  newLines.forEach((line, index) => {
-    let material_key = line.scm_material_id + "-" + line?.brand ?? + "-" + line?.model ?? '';
-    if (materialArray.indexOf(material_key) === -1) {
-      materialArray.push(material_key);
-    } else {
-      alert("Duplicate Material Found");
-      props.form.scmPrLines.splice(index, 1);
-    }
+// watch(() => props.form.scmPrLines, (newLines) => {
+//   let materialArray = [];
+//   newLines.forEach((line, index) => {
+//     let material_key = line.scm_material_id + "-" + line?.brand ?? + "-" + line?.model ?? '';
+//     if (materialArray.indexOf(material_key) === -1) {
+//       materialArray.push(material_key);
+//     } else {
+//       alert("Duplicate Material Found");
+//       props.form.scmPrLines.splice(index, 1);
+//     }
 
-    if (line.scmMaterial) {
-      const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
-      if (selectedMaterial) {
-        if ( line.scm_material_id !== selectedMaterial.id
-        ) {
-          props.form.scmPrLines[index].unit = selectedMaterial.unit;
-          props.form.scmPrLines[index].scm_material_id = selectedMaterial.id;
-          getMaterialWiseCurrentStock(selectedMaterial.id,props.form.scm_warehouse_id).then(() => {
+//     if (line.scmMaterial) {
+//       const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
+//       if (selectedMaterial) {
+//         if ( line.scm_material_id !== selectedMaterial.id
+//         ) {
+//           props.form.scmPrLines[index].unit = selectedMaterial.unit;
+//           props.form.scmPrLines[index].scm_material_id = selectedMaterial.id;
+//           getMaterialWiseCurrentStock(selectedMaterial.id,props.form.scm_warehouse_id).then(() => {
         
-            props.form.scmPrLines[index].rob = CurrentStock ?? 0;
-          });
-        }
-      }
-    }
-  });
+//             props.form.scmPrLines[index].rob = CurrentStock ?? 0;
+//           });
+//         }
+//       }
+//     }
+//   });
   
-  if (props.form.scmPrLines.length === 0) {
-        addMaterial();
-  }
-  // previousLines.value = cloneDeep(newLines);
-}, { deep: true });
+//   if (props.form.scmPrLines.length === 0) {
+//         addMaterial();
+//   }
+//   // previousLines.value = cloneDeep(newLines);
+// }, { deep: true });
 
 
 //   function fetchMaterials(search, loading) {
@@ -258,7 +267,7 @@ function tytytyasd(indx) {
         <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
 
         <label class="label-group col-start-1">
-            <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
+            <span class="label-item-title">Warehouse Name <span class="text-red-500">*</span></span>
             <!-- <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse" v-model="form.scmWarehouse" label="name" class="block form-input"> -->
             <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" @update:modelValue="warehouseChange" class="block form-input">
             <template #search="{attributes, events}">
@@ -286,22 +295,29 @@ function tytytyasd(indx) {
             <Error v-if="errors?.approved_date" :errors="errors.approved_date"  />
         </label>
         <label class="label-group">
-            <span class="label-item-title">Attachment</span>
+            <span class="label-item-title">Attachment 
+              <template v-if="form.attachment">
+                    <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+form?.attachment">{{
+                        (typeof $props.form?.attachment === 'string')
+                            ? '('+$props.form?.attachment.split('/').pop()+')'
+                            : ''
+                    }}</a>
+              </template></span>
             <input type="file" class="form-input" @change="handleAttachmentChange" />
             <Error v-if="errors?.attachment" :errors="errors.attachment"  />
         </label>
         <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
 
         <div class="md:col-span-3">
-            <table class="w-full whitespace-no-wrap" id="table">
+            <!-- <table class="w-full whitespace-no-wrap" id="table">
                 <thead>
                     <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-                    <th class="w-5/12 px-4 align-center">Service Name <span class="text-red-500">*</span></th>
-                    <th class="w-5/12 px-4 align-center">Description <span class="text-red-500">*</span></th>
-                    <th class="w-5/12 px-4 align-center">Remarks <span class="text-red-500">*</span></th>
-                    <th class="w-5/12 px-4 align-center">Quantity <span class="text-red-500">*</span></th>
-                    <th class="w-5/12 px-4 align-center">Required Date <span class="text-red-500">*</span></th>
-                    <th class="w-2/12 px-4 align-center text-center">
+                    <th class="w-3/12 px-4 align-center">Service Name <span class="text-red-500">*</span></th>
+                    <th class="w-3/12 px-4 align-center">Description <span class="text-red-500">*</span></th>
+                    <th class="w-2/12 px-4 align-center">Remarks <span class="text-red-500">*</span></th>
+                    <th class="w-1/12 px-4 align-center">Quantity <span class="text-red-500">*</span></th>
+                    <th class="w-2/12 px-4 align-center">Required Date <span class="text-red-500">*</span></th>
+                    <th class="w-1/12 px-4 align-center text-center">
                         Action
                     </th>
                     </tr>
@@ -309,21 +325,29 @@ function tytytyasd(indx) {
                 <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
                     <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmWrLine, index) in form.scmWrLines" :key="index">
                     <td class="px-1 py-1">
-                        <!-- <v-select :options="services" placeholder="--Choose an option--" :loading="serviceLoading" v-model="form.scmWrLine.scmService" label="name" class="block form-input" @update:modelValue="scmServiceChange(form.scmWrLine)">
-                  <template #search="{attributes, events}">
-                      <input
-                          class="vs__search"
-                          :required="!form.scmWrLine.scmService"
-                          v-bind="attributes"
-                          v-on="events"
-                          />
-                  </template>
-              </v-select> -->
+                      <v-select :options="services" placeholder="--Choose an option--" :loading="serviceLoading" v-model="scmWrLine.scmService" label="name" class="block form-input" @update:modelValue="scmServiceChange(scmWrLine)">
+                          <template #search="{attributes, events}">
+                              <input
+                                  class="vs__search"
+                                  :required="!scmWrLine.scmService"
+                                  v-bind="attributes"
+                                  v-on="events"
+                                  />
+                          </template>
+                      </v-select>
                     </td>
-                    <td class="px-1 py-1"></td>
-                    <td class="px-1 py-1"></td>
-                    <td class="px-1 py-1"></td>
-                    <td class="px-1 py-1"></td>
+                    <td class="px-1 py-1">
+                      <input type="text" :value="scmWrLine?.scmService?.description" placeholder="Description" class="form-input vms-readonly-input"  />
+                    </td>
+                    <td class="px-1 py-1">
+                      <input type="text" v-model.trim="scmWrLine.remarks" placeholder="Remarks" class="form-input" required />
+                    </td>
+                    <td class="px-1 py-1">
+                      <input type="text" v-model.trim="scmWrLine.quantity" placeholder="Quantity" class="form-input" required />
+                    </td>
+                    <td class="px-1 py-1">
+                      <VueDatePicker v-model="form.required_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
+                    </td>
                     <td class="px-1 py-1">
                         <button v-if="index==0" type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" @click="addWork"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
@@ -334,7 +358,61 @@ function tytytyasd(indx) {
                 </td>
                     </tr>
                 </tbody>
-            </table>
+            </table> -->
+            <fieldset class="px-2 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400" >
+              <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Services <span class="text-red-500">*</span></legend>
+              <div v-for="(scmWrLine, index) in form.scmWrLines" :key="index" class="p-2 my-2 rounded-md border-2 border-gray-200">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2 ">
+                  <label class="block w-full mt-2 text-sm">
+                    <span class="text-gray-700 dark-disabled:text-gray-300">Service Name</span>
+                    <v-select :options="services" placeholder="--Choose an option--" :loading="serviceLoading" v-model="scmWrLine.scmService" label="name" class="block form-input" @update:modelValue="scmServiceChange(scmWrLine)">
+                      <template #search="{attributes, events}">
+                          <input
+                            class="vs__search"
+                            :required="!scmWrLine.scmService"
+                            v-bind="attributes"
+                            v-on="events"
+                            />
+                      </template>
+                    </v-select>
+                  </label>
+                
+                  <label class="block w-full mt-2 text-sm">
+                    <span class="text-gray-700 dark-disabled:text-gray-300">Description</span>
+                    <input type="text" :value="scmWrLine.description = scmWrLine?.scmService?.description" placeholder="Description" class="form-input vms-readonly-input"  />
+                  </label>
+                  <template>{{ scmWrLine.business_unit = props.form.business_unit }}</template>
+                
+                  <label class="block w-full mt-2 text-sm">
+                    <span class="text-gray-700 dark-disabled:text-gray-300">Remarks</span>
+                    <input type="text" v-model.trim="scmWrLine.remarks" placeholder="Remarks" class="form-input" required />
+                  </label>
+                  
+                  <label class="block w-full mt-2 text-sm">
+                    <span class="text-gray-700 dark-disabled:text-gray-300">Quantity</span>
+                    <input type="number" step="0.01" v-model.trim="scmWrLine.quantity" placeholder="Quantity" class="form-input" required />
+                  </label>
+                  
+                  <label class="block w-full mt-2 text-sm">
+                    <span class="text-gray-700 dark-disabled:text-gray-300">Required Date</span>
+                    <VueDatePicker v-model="scmWrLine.required_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
+                  </label>
+                </div>
+
+                <div>
+                  <button type="button" v-if="form?.scmWrLines?.length > 1" @click="removeWork(index)" class="px-3 py-2 mt-2 mx-auto  text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center">
+                      Remove
+                  </button> 
+                </div>
+                
+              </div>
+
+              <button type="button" @click="addWork" class="px-3 py-2 mx-auto mt-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center">
+                    Add More
+              </button>
+              
+              
+            </fieldset>
         </div>
 
         

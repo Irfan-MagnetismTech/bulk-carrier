@@ -4,6 +4,7 @@ namespace Modules\SupplyChain\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ScmWrLine extends Model
 {
@@ -11,7 +12,7 @@ class ScmWrLine extends Model
 
     protected $fillable = [
         'scm_wr_id',
-        'scm_material_id',
+        'scm_service_id',
         'quantity',
         'required_date',
         'description',
@@ -21,5 +22,10 @@ class ScmWrLine extends Model
     public function scmWr()
     {
         return $this->belongsTo(ScmWr::class, 'scm_wr_id' , 'id');
+    }
+
+    public function scmService(): BelongsTo
+    {
+        return $this->belongsTo(ScmService::class);
     }
 }

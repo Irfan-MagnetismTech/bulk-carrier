@@ -5,10 +5,12 @@ namespace Modules\SupplyChain\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\GlobalSearchTrait;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ScmWr extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
         'scm_warehouse_id',
@@ -24,5 +26,10 @@ class ScmWr extends Model
     public function scmWrLines(): HasMany
     {
         return $this->hasMany(ScmWrLine::class)->latest();
+    }
+
+    public function scmWarehouse(): BelongsTo
+    {
+        return $this->belongsTo(ScmWarehouse::class);
     }
 }
