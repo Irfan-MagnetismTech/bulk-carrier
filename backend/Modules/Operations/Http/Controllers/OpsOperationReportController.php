@@ -97,7 +97,7 @@ class OpsOperationReportController extends Controller
                     ->get();
 
         if(!empty($request->ops_voyage_id)) {
-            $voyages = OpsVoyage::where('id', $ops_voyage_id)
+            $voyages = OpsVoyage::whereIn('id', $ops_voyage_id)
                         // ->with('voyageExpenseEntries.invoice', 'budget.entries.head')
                         ->get();
 
@@ -153,12 +153,12 @@ class OpsOperationReportController extends Controller
         /* Unique Ports */
 
         // return response()->json($voyages, 200);
-        return view('operations::reports.budget-vs-expense-report', 
-                    compact('heads', 'voyages', 'expenseEntries'));
+        $view = view('operations::reports.budget-vs-expense-report', 
+                    compact('heads', 'voyages', 'expenseEntries'))->render();
 
         // return $view;
         return response()->json([
-            'view' => $view
+            'value' => $view
         ], 200);
 
     }
