@@ -6,7 +6,7 @@
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
  
     <label class="label-group">
-          <span class="label-item-title">CS Ref<span class="text-red-500">*</span></span>
+          <span class="label-item-title">CS Ref</span>
           <input
             type="text"
             readonly
@@ -19,7 +19,7 @@
   </div>
   <div class="input-group">
     <label class="label-group">
-        <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
+        <span class="label-item-title">Vendor Name <span class="text-red-500">*</span></span>
           <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoading" v-model="form.scmVendor" label="name" class="block form-input" @update:modelValue="setVendorOtherData(form.scmVendor)">
               <template #search="{attributes, events}">
                   <input
@@ -32,26 +32,22 @@
           </v-select>
     </label>
     <label class="label-group">
-        <span class="label-item-title">Vendor Contact No<span class="text-red-500">*</span></span>
+        <span class="label-item-title">Vendor Contact No <span class="text-red-500">*</span></span>
         <input
           type="text"
           :value="form.scmVendor?.scmVendorContactPerson?.phone"
-          class="form-input"
-          name="date"
-          :id="'expire_date'" />
+          class="form-input vms-readonly-input" readonly />
     </label>
     <label class="label-group">
-        <span class="label-item-title">Product Source Type<span class="text-red-500">*</span></span>
+        <span class="label-item-title">Product Source Type <span class="text-red-500">*</span></span>
         <input
           type="text"
           :value="form.scmVendor?.product_source_type"
-          class="form-input"
-          name="date"
-          :id="'expire_date'" />
+          class="form-input vms-readonly-input" readonly/>
     </label>
     <label class="label-group">
-        <span class="label-item-title">Sourcing<span class="text-red-500">*</span></span>
-        <select v-model="form.sourcing" class="form-input">
+        <span class="label-item-title">Sourcing <span class="text-red-500">*</span></span>
+        <select v-model="form.sourcing" class="form-input" required>
             <option value="Existing">Existing</option>
             <option value="New">New</option>
         </select>
@@ -59,99 +55,81 @@
   </div>
   <div class="input-group">
       <label class="label-group">
-        <span class="label-item-title">Date Of RFQ<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.date_of_rfq" class="form-input " name="scm_department_id" :id="'scm_department_id'" />
-          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
+        <span class="label-item-title">Date Of RFQ <span class="text-red-500">*</span></span>
+          <VueDatePicker v-model="form.date_of_rfq" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+       </label>
+      <label class="label-group">
+        <span class="label-item-title">Quotation Received Date <span class="text-red-500">*</span></span>
+          <VueDatePicker v-model="form.quotations_received_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Quotation Received Date<span class="text-red-500">*</span></span>
-          <!-- <input type="text" readonly :value="form.purchase_center" required class="form-input " name="scm_department_id" :id="'scm_department_id'" /> -->
-          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
-          <input type="date" v-model="form.quotations_received_date" class="form-input " name="scm_department_id" :id="'scm_department_id'" />
-      </label>
-      <label class="label-group">
-        <span class="label-item-title">Vendor Quotation No<span class="text-red-500">*</span></span>
+        <span class="label-item-title">Vendor Quotation No <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.quotation_ref" class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
           <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
       </label>
       <label class="label-group">
-        <span class="label-item-title">Vendor Quotation Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.quotation_date" class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
-          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
+        <span class="label-item-title">Vendor Quotation Date <span class="text-red-500">*</span></span>
+         <VueDatePicker v-model="form.quotation_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
       </label>
   </div>
 
   <div class="input-group">
       <label class="label-group">
-        <span class="label-item-title">Quotation Validity<span class="text-red-500">*</span></span>
-          <input type="number" v-model="form.quotation_validity" class="form-input " name="scm_department_id" :id="'scm_department_id'" />
-          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
+        <span class="label-item-title">Quotation Validity <span class="text-red-500">*</span></span>
+          <input type="number" v-model="form.quotation_validity" class="form-input" name="scm_department_id" :id="'scm_department_id'" required/>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Payment Method<span class="text-red-500">*</span></span>
-          <!-- <input type="text" readonly :value="form.purchase_center" required class="form-input " name="scm_department_id" :id="'scm_department_id'" /> -->
-          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
-         <!-- <input type="text" readonly :value="form.payment_method" class="form-input " name="scm_department_id" :id="'scm_department_id'" /> -->
-         <select v-model="form.payment_method" class="form-input">
+        <span class="label-item-title">Payment Method <span class="text-red-500">*</span></span>
+         <select v-model="form.payment_method" class="form-input" required>
             <option value="Cash">Cash</option>
             <option value="Credit">Credit</option>
         </select>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Currency<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.currency" class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
-          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
+        <span class="label-item-title">Currency <span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.currency" class="form-input" required/>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Carrying Charge Bear By<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.carring_cost_bear_by" required class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
-          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
+        <span class="label-item-title">Carrying Charge Bear By <span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.carring_cost_bear_by" class="form-input" required/>
       </label>
   </div>
 
   
   <div class="input-group">
       <label class="label-group">
-        <span class="label-item-title">Unloading Charge Bear By<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.unloading_cost_bear_by" required class="form-input " name="scm_department_id" :id="'scm_department_id'" />
-          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
+        <span class="label-item-title">Unloading Charge Bear By <span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.unloading_cost_bear_by" class="form-input" required/>
       </label>
       <label class="label-group">
-        <span class="label-item-title">VAT<span class="text-red-500">*</span></span>
-          <!-- <input type="text" readonly :value="form.purchase_center" required class="form-input " name="scm_department_id" :id="'scm_department_id'" /> -->
-          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
-          <input type="text" v-model="form.vat" required class="form-input " name="scm_department_id" :id="'scm_department_id'" />
+        <span class="label-item-title">VAT <span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.vat" class="form-input" required/>
       </label>
       <label class="label-group">
-        <span class="label-item-title">AIT<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.ait" required class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
-          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
+        <span class="label-item-title">AIT <span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.ait" class="form-input" required/>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Delivery Term<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.delivery_term" required class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
-          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
+        <span class="label-item-title">Delivery Term <span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.delivery_term" class="form-input" required/>
       </label>
   </div>
 
   
   <div class="input-group">
     <label class="label-group">
-        <span class="label-item-title">Credit Term<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.credit_term" required class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
-          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
+        <span class="label-item-title">Credit Term <span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.credit_term" class="form-input" required/>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Terms & Conditions<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.terms_and_condition" required class="form-input " name="scm_department_id" :id="'scm_department_id'" />
-          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
+        <span class="label-item-title">Terms & Conditions <span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.terms_and_condition" class="form-input" required/>
       </label>
   </div>
 
   <div class="input-group !w-3/4">
     <label class="label-group">
-          <span class="label-item-title">Remarks
-             <span class="text-red-500">*</span></span>
+          <span class="label-item-title">Remarks</span>
           <textarea
             v-model="form.remarks"
             class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
@@ -161,7 +139,7 @@
 
   <div id="">
     <div id="">
-      <div class="table-responsive min-w-screen pb-20">
+      <div class="table-responsive min-w-screen">
         <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
           <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
           <table class="whitespace-no-wrap">
@@ -180,7 +158,6 @@
               
               <template v-for="(lines, indexa) in form.scmCsMaterialVendors" :key="indexa">
                 <template v-for="(scmSrLine, index) in lines" :key="index">
-                  
                   <tr v-if="index != 0">
                     <td>{{ scmSrLine?.scmPr?.ref_no }}</td>
                   </tr>
@@ -189,13 +166,13 @@
                     <td>{{ scmSrLine?.scmPr?.ref_no }}</td>
                     <td :rowspan="lines.length">{{ scmSrLine?.scmMaterial?.unit }}</td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].brand" class="form-input"/>
+                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].brand" class="form-input" required/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].model" class="form-input"/>
+                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].model" class="form-input" required/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input"/>
+                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input" min="1" required/>
                     </td>
                   </tr>
                   
@@ -295,23 +272,23 @@
     const route = useRoute();
     const CSID = route.params.csId;
 
-watch(() => materialCs.value, (newVal, oldVal) => {
-      props.form.scmCs = newVal;
-      props.form.scm_cs_id = newVal?.id;
+    watch(() => materialCs.value, (newVal, oldVal) => {
+          props.form.scmCs = newVal;
+          props.form.scm_cs_id = newVal?.id;
 
-      if (props.formType != 'edit') {
-        props.form.scmCsMaterialVendors = [];
-       
-        materialCs.value.scmCsMaterials.map((lines, index) => {
-          lines.map((line, index) => {
-            line['negotiated_price'] = '';
-            line['brand'] = '';
-            line['model'] = '';
-          });
-        });
-        props.form.scmCsMaterialVendors = materialCs.value.scmCsMaterials;
-      }
-    });
+          if (props.formType != 'edit') {
+            props.form.scmCsMaterialVendors = [];
+          
+            materialCs.value.scmCsMaterials.map((lines, index) => {
+              lines.map((line, index) => {
+                line['negotiated_price'] = null;
+                line['brand'] = null;
+                line['model'] = null;
+              });
+            });
+            props.form.scmCsMaterialVendors = materialCs.value.scmCsMaterials;
+          }
+      });
 
 
     const addLine = () => {

@@ -45,6 +45,7 @@ export default function useMaterialCs() {
                 scm_pr_id: null,
                 scm_material_id: null,
                 scmMaterial: null,
+                pr_composite_key: null,
                 unit : null,
                 quantity : null,
             }
@@ -52,10 +53,13 @@ export default function useMaterialCs() {
     });
 
     const materialObj = {
-        scm_material_id: null,
-        scmMaterial: null,
-        unit: null,
-        quantity: null,
+                scmPr: null,
+                scm_pr_id: null,
+                scm_material_id: null,
+                scmMaterial: null,
+                pr_composite_key: null,
+                unit : null,
+                quantity : null,
     }
 
     const materialList = ref([]);
