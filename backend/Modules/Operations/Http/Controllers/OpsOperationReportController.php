@@ -2,9 +2,14 @@
 
 namespace Modules\Operations\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Routing\Controller;
+use Modules\Operations\Entities\OpsVoyage;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Operations\Entities\OpsExpenseHead;
+use Modules\Operations\Entities\OpsVesselExpenseHead;
+use Modules\Operations\Entities\OpsVoyageExpenditureEntry;
 
 class OpsOperationReportController extends Controller
 {
@@ -78,115 +83,78 @@ class OpsOperationReportController extends Controller
     }
 
     public function budgetVsExpenseReport(Request $request) {
-        $start = date($request->date_from);
-        $end = date($request->date_to);
-        $port = $request->port_name;
-        $service = $request->service_id;
-        $vessel = $request->vessel_id;
+        $start = date($request->start);
+        $end = date($request->end);
+        $port = $request->port;
+        $ops_vessel_id = $request->ops_vessel_id;
+        $ops_voyage_id = $request->ops_voyage_id;
 
-        $voyages = VoyagePair::
-        with([
-            'firstVoyage' => function ($q) {
-                $q->select('id', 'vessel_id', 'service_id', 'voyage');
-            },
-            'secondVoyage' => function ($q) {
-                $q->select('id', 'vessel_id', 'service_id', 'voyage');
-            }
-        ])
-        ->when($vessel, function($voyagePair)use($vessel) {
-            $voyagePair->whereHas('firstVoyage', function($voyage)use($vessel) {
-                $voyage->where('vessel_id', $vessel);
-            });
-        })->when($service, function($voyagePair) use($service) {
-            $voyagePair->where('service_id', $service);
-        })
-        ->whereBetween('financial_closing_date', [$start, $end])
-        ->with('voyageExpenseEntries.invoice', 'budget.entries.head')
-        ->get();
+        $voyages = OpsVoyage::when($ops_vessel_id, function($voyage) use ($ops_vessel_id) {
+                        $voyage->where('ops_vessel_id', $ops_vessel_id);
+                    })
+                    ->whereBetween('sail_date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
+                    // ->with('voyageExpenseEntries.invoice', 'budget.entries.head')
+                    ->get();
 
-        if(!empty($request->voyagePair)) {
-            $voyages = VoyagePair::
-            with([
-                'firstVoyage' => function ($q) {
-                    $q->select('id', 'vessel_id', 'service_id', 'voyage');
-                },
-                'secondVoyage' => function ($q) {
-                    $q->select('id', 'vessel_id', 'service_id', 'voyage');
-                }
-            ])
-            ->with('voyageExpenseEntries.invoice', 'budget.entries.head')
-            ->where('id', $request->voyagePair)
-            ->get();
+        if(!empty($request->ops_voyage_id)) {
+            $voyages = OpsVoyage::where('id', $ops_voyage_id)
+                        // ->with('voyageExpenseEntries.invoice', 'budget.entries.head')
+                        ->get();
 
         }
 
-        $heads = [];
+        $voyageIds = $voyages->pluck('id');
+        $vesselIds = $voyages->pluck('ops_vessel_id')->unique()->values()->toArray();
 
-        $mappingBudgetExpenses = $voyages->map(function ($item, $key) use(&$heads) {
+        $vesselExpenseHeads = OpsVesselExpenseHead::whereIn('ops_vessel_id', $vesselIds)->get()->pluck('ops_expense_head_id')->unique()->toArray();
 
-            $item['expenses'] = $item?->voyageExpenseEntries->where('voyage_pairs_id', $item->id)->groupBy('invoice.port');
-            $item['globalExpenses'] = $item?->voyageExpenseEntries
-                                    ->where('voyage_pairs_id', $item->id)
-                                    ->where('invoice.port', null);
+        $findingHeads = OpsExpenseHead::whereIn('id', $vesselExpenseHeads)->with('opsSubHeads')
+                        ->get()
+                        ->pluck('head_id')
+                        ->filter()
+                        ->unique()
+                        ->values()->toArray();
 
-            $item['budgetInfo'] = $item?->budget?->entries->map(function ($entries) use($item, &$heads) {
-                $entries['expenses'] = $item?->voyageExpenseEntries
-                                        ->where('particular_id', $entries->particular_id)
-                                        ->where('voyage_pairs_id', $item->id)
-                                        ->groupBy('invoice.port');
-                
+        $expenseHeads = OpsExpenseHead::whereIn('id', $findingHeads)->where('head_id', null)->with('opsSubHeads')->get();
 
-                array_push($heads, [
-                    'particular_id' => $entries->particular_id,
-                    'name' => $entries->head->name,
-                    'port' => $entries->port
-                    // 'port' => $item->first()->voyageExpenseEntries->where('particular_id', $entries->particular_id)->first()?->invoice?->port
-                ]);
+        $allHeads = [];
 
-                return $entries;
-            });
+        $expenseHeads->map(function($item) use($vesselExpenseHeads, &$allHeads) {
+
+            $result = $item->opsSubHeads->map(function($subhead) use($vesselExpenseHeads, &$allHeads) {
+                if(in_array($subhead['id'], $vesselExpenseHeads)) {
+                    $subhead['ops_expense_head_id'] = $subhead['id'];
+                    $subhead['type'] = 'subhead';
+                    return $subhead;
+                }
+            })->filter()->values()->all();
+
+            $item['ops_expense_head_id'] = $item['id'];
+            $item['type'] = 'head';
+
+            data_forget($item, 'opsSubHeads');
+            $item->opsSubHeads = $result;
+
+            if(!empty($item->opsSubHeads)) {
+                array_push($allHeads, $result);
+            } else {
+                array_push($allHeads, data_forget($vessel_expense_heads, 'opsSubHeads'));
+            }
             return $item;
         });
+
+        $heads = collect($allHeads)->flatten();
+        
+        $expenseEntries = OpsVoyageExpenditureEntry::with('opsExpenseHead.opsSubHeads')
+                    // ->where('port_code', $port)
+                    ->whereIn('ops_voyage_id', $voyageIds)->get();
         
         // return $mappingBudgetExpenses;
         /* Unique Ports */
 
-        $allPorts = collect($heads)->pluck('port')->filter()->unique()->values();
-
-        if(!empty($request->port_name)) {
-            $allPorts = [$request->port_name];
-        }
-
-        // return $heads;
-
-        /* Port Wise Cost Heads */
-        $elements = PortExpenditureHead::with('voyageExpenditureHead')->whereIn('port', $allPorts)->orderBy('voyage_expenditure_head_id', 'asc')->get();
-
-        $headInfo = [];
-        $headIds = [];
-        $elements->map(function($item, $key) use(&$headIds, &$headInfo) {
-            if($item->voyageExpenditureHead->head_id == NULL) {
-                array_push($headInfo, [
-                    'port' => $item->port,
-                    'head_id' => $item->voyageExpenditureHead->id
-                ]);
-                array_push($headIds, $item->voyageExpenditureHead->id);
-            }
-        });
-        
-        $globalHeads = VoyageExpenditureHead::where(['is_global' =>  1, 'head_id' => null])->with('subheads')->get();
-
-        $uniqueHeadIds = collect($headIds)->unique()->values();
-        $portWiseHeads = $elements->map(function($item) {
-            $data['port'] = $item['port'];
-            $data['head_id'] = $item['voyage_expenditure_head_id'];
-            $name = (empty($item->voyageExpenditureHead?->head?->name)) ? $item->voyageExpenditureHead->name : $item->voyageExpenditureHead->name .' ('. $item->voyageExpenditureHead?->head?->name.')';
-            $data['name'] = $name;
-            return $data;
-        })->groupBy('port');
-
         // return response()->json($voyages, 200);
-        $view = view('finance.revenue-and-expense.budget-vs-expense', compact('voyages', 'portWiseHeads', 'globalHeads', 'mappingBudgetExpenses'))->render();
+        return view('operations::reports.budget-vs-expense-report', 
+                    compact('heads', 'voyages', 'expenseEntries'));
 
         // return $view;
         return response()->json([
