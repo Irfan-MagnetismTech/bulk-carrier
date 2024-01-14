@@ -94,10 +94,12 @@ class OpsOperationReportController extends Controller
                     })
                     ->whereBetween('sail_date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
                     // ->with('voyageExpenseEntries.invoice', 'budget.entries.head')
+                    ->with('opsVesselBunkers.stockable')
                     ->get();
 
         if(!empty($request->ops_voyage_id)) {
             $voyages = OpsVoyage::whereIn('id', $ops_voyage_id)
+            ->with('opsVesselBunkers.stockable')
                         // ->with('voyageExpenseEntries.invoice', 'budget.entries.head')
                         ->get();
 
@@ -151,8 +153,16 @@ class OpsOperationReportController extends Controller
         
         // return $mappingBudgetExpenses;
         /* Unique Ports */
+        $voyages->map(function($voyage) {
+            $stockCost = $this->calculateStockOutCost($voyage->opsVesselBunkers->where('type', 'Stock Out'));
+            $voyage->amount_bdt = $stockCost['amount_bdt'];
+            return $voyage;
+        });
 
         // return response()->json($voyages, 200);
+        return view('operations::reports.budget-vs-expense-report', 
+        compact('heads', 'voyages', 'expenseEntries'));
+
         $view = view('operations::reports.budget-vs-expense-report', 
                     compact('heads', 'voyages', 'expenseEntries'))->render();
 
@@ -160,6 +170,23 @@ class OpsOperationReportController extends Controller
         return response()->json([
             'value' => $view
         ], 200);
+
+    }
+
+    private function calculateStockOutCost($vesselBunkers) {
+
+        // $voyage->opsVesselBunkers
+
+        $amount_bdt = 0;
+        $amount_usd = 0;
+
+        $vesselBunkers->map(function($bunker) use(&$amount_bdt) {
+            $bunker->stockable->map(function($stock) use(&$amount_bdt) {
+                $amount_bdt += abs($stock->quantity) * $stock->gross_unit_price;
+            });
+        });
+
+        return ['amount_bdt' => $amount_bdt];
 
     }
 }
