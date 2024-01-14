@@ -15,7 +15,7 @@ class ScmCsMaterialVendor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'scm_cs_id', 'scm_cs_vendor_id', 'scm_cs_material_id', 'scm_material_id', 'scm_pr_id', 'brand', 'unit', 'origin', 'model', 'stock_type', 'manufacturing_days', 'offered_price', 'negotiated_price', 'quantity', 'amount',
+        'scm_cs_id', 'scm_cs_vendor_id', 'scm_cs_material_id', 'scm_vendor_id', 'scm_material_id', 'scm_pr_id', 'brand', 'unit', 'origin', 'model', 'stock_type', 'manufacturing_days', 'offered_price', 'negotiated_price', 'quantity', 'amount',
     ];
 
     public function scmCs()

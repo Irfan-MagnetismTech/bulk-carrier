@@ -7,7 +7,7 @@ import Store from '../../store/index.js';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
 import { merge } from 'lodash';
-
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 export default function useQuotation() {
     const BASE = 'scm' 
@@ -20,7 +20,7 @@ export default function useQuotation() {
     const $loading = useLoading();
     const isTableLoading = ref(false);
     const notification = useNotification();
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const quotation = ref({
         scmCs: null,

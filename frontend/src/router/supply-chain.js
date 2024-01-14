@@ -590,7 +590,7 @@ export default [
         })
     },
     {
-        path: `/${BASE}/material-cs/index`,
+        path: `/${BASE}/material-cs`,
         name: `${BASE}.material-cs.index`,
         component: () => import(`../views/${PATH_BASE}/material-cs/index.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'material-cs-index' },

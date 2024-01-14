@@ -258,70 +258,58 @@ class ScmPrController extends Controller
         return response()->success('Search result', $purchase_requisition, 200);
     }
 
-    // getPrWiseCsData
 
-    // const materialCs = ref({
-    //     ref_no: '',
-    //     date: '',
-    //     expire_date: '',
-    //     priority: '',
-    //     scmWarehouse: '',
-    //     scm_warehouse_id: '',
-    //     scm_warehouse_name: '',
-    //     acc_cost_center_id: '',
-    //     scmPr: '',
-    //     scm_pr_id: '',
-    //     pr_no: '',
-    //     special_instruction: '',
-    //     purchase_center: '',
-    //     business_unit: '',
-    //     required_days: '',
-    // });
-
-
-    public function getPrWiseCsData(Request $request): JsonResponse
+    public function searchPurchaseRequisitions(Request $request): JsonResponse
     {
-        if (request()->filled('pr_id')) {
-            $pr_data = ScmPr::query()
-                ->with('scmPrLines.scmMaterial', 'scmWarehouse')
-                ->find($request->pr_id);
-
-            $data = [
-                "scmWarehouse" => $pr_data->scmWarehouse,
-                "scm_warehouse_id" => $pr_data->scm_warehouse_id,
-                "scm_warehouse_name" => $pr_data->scmWarehouse->name,
-                "acc_cost_center_id" => $pr_data->acc_cost_center_id,
-                "scmPr" => $pr_data,
-                "scm_pr_id" => $pr_data->id,
-                "pr_no" => $pr_data->ref_no,
-                "purchase_center" => $pr_data->purchase_center,
-                "business_unit" => $pr_data->business_unit,
-                "scmCsMaterials" => $pr_data->scmPrLines,
-            ];
-        } else {
-            $data = [
-                "scmWarehouse" => null,
-                "scm_warehouse_id" => null,
-                "scm_warehouse_name" => null,
-                "acc_cost_center_id" => null,
-                "scmPr" => null,
-                "scm_pr_id" => null,
-                "pr_no" => null,
-                "purchase_center" => null,
-                "business_unit" => null,
-            ];
+        if (isset($request->searchParam)) {
+            $purchase_requisition = ScmPr::query()
+                ->with('scmPrLines')
+                ->where(function ($query) use ($request) {
+                    $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+                        ->where('business_unit', $request->business_unit)
+                        ->where('scm_warehouse_id', $request->scm_warehouse_id)
+                        ->where('purchase_center', $request->purchase_center);
+                })
+                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        } elseif(isset($request->cs_id)) {
+            $purchase_requisition = ScmPr::query()
+                ->with('scmPrLines')
+                ->where('is_closed', 0)
+                ->where(function ($query) use ($request) {
+                    $query->where('business_unit', $request->business_unit)
+                    ->where('scm_warehouse_id', $request->scm_warehouse_id)
+                    ->where('purchase_center', $request->purchase_center);
+                })
+                ->whereHas('scmCsMaterial', function ($query) use ($request) {
+                    $query->where('scm_cs_id', $request->cs_id);
+                })
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        }else{
+            $purchase_requisition = ScmPr::query()
+                ->with('scmPrLines')
+                ->where('is_closed', 0)
+                ->where(function ($query) use ($request) {
+                    $query->where('business_unit', $request->business_unit)
+                        ->where('scm_warehouse_id', $request->scm_warehouse_id)
+                        ->where('purchase_center', $request->purchase_center);
+                })
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
         }
 
-        try {
-            return response()->success('Data updated sucessfully!', $data, 200);
-        } catch (\Exception $e) {
-            return response()->error($e->getMessage(), 500);
-        }
+        return response()->success('Search result', $purchase_requisition, 200);
     }
+
 
     // public function searchMrr(Request $request): JsonResponse
     // {
-    //     if($request->has('searchParam')) { 
+    //     if($request->has('searchParam')) {
     //         $materialReceiptReport = ScmMrr::query()
     //         ->with('scmMrrLines.scmMaterial')
     //         ->where(function($query) use ($request) {
@@ -349,11 +337,30 @@ class ScmPrController extends Controller
     //         $item->scmMaterials = $item->scmMrrLines->map(function($item1) {
     //                  return $item1->scmMaterial;
     //             });
-    //          return $item;             
+    //          return $item;
     //         });
 
     //     return response()->success('Search Result', $materialReceiptReport, 200);
     // }
+
+
+    public function getMaterialByPrIdForCs(Request $request): JsonResponse
+    {
+        $lineData = ScmPrLine::query()
+        ->with('scmMaterial')
+        ->where('scm_pr_id', $request->pr_id)
+        ->whereHas('scmPr', function($query){
+            $query->where('is_closed', 0);
+        })
+        ->get()
+        ->map(function($item) {
+            $data = $item->scmMaterial;
+            $data['pr_composite_key'] = $item->pr_composite_key;
+            return $data;
+        });
+
+        return response()->success('Search result', $lineData, 200);
+    }
 
     public function closePr(Request $request): JsonResponse
     {

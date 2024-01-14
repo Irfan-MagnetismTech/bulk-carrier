@@ -53,6 +53,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('search-warehouse', [ScmWarehouseController::class, "searchWarehouse"])->name('searchWarehouse');
     Route::get('search-vendor', [ScmVendorController::class, "searchVendor"])->name('searchVendor');
     Route::get('search-pr-wise-material', [ScmPoController::class, "getMaterialByPrId"])->name('getMaterialByPrId');
+    Route::get('search-pr-wise-material-for-cs', [ScmPrController::class, "getMaterialByPrIdForCs"])->name('getMaterialByPrIdForCs');
     Route::get('search-sr-wise-material', [ScmSrController::class, "getMaterialBySrId"])->name('getMaterialBySrId');
     Route::get('get-si-wise-materials', [ScmSiController::class, "getMaterialBySiId"])->name('getMaterialBySiId');
     Route::get('get-mmr-wise-materials', [ScmMmrController::class, "getMaterialByMmrId"])->name('getMaterialByMmrId');
@@ -70,8 +71,12 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('get-pr-wise-cs-data', [ScmPrController::class, "getPrWiseCsData"])->name('getPrWiseCsData');
     Route::get('search-mrr', [ScmMrrController::class, "searchMrr"])->name('searchMrr');
     Route::get('search-pr', [ScmPrController::class, "searchPr"])->name('searchPr');
+    Route::get('search-purchase-requisitions', [ScmPrController::class, "searchPurchaseRequisitions"])->name('search-purchase-requisitions');
+    Route::get('get-po-line-datas', [ScmPoController::class, "getPoLineDatas"])->name('get-po-line-datas');
+    Route::get('cs-wise-vendor-list', [ScmCsController::class, "csWiseVendorList"])->name('cs-wise-vendor-list');
     Route::get('search-mmr', [ScmMmrController::class, "searchMmr"])->name('searchMmr');
     Route::get('search-mo', [ScmMoController::class, "searchMo"])->name('searchMo');
+    Route::get('search-material-cs', [ScmCsController::class, "searchMaterialCs"])->name('searchMaterialCs');
     Route::get('get-material-for-mrr', [ScmMrrController::class, "getMaterialByPrId"])->name('getMaterialForMrrId');
     Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse');
     Route::get('getCsData/{csId}', [ScmCsController::class, "getCsData"])->name('getCsData');
@@ -97,8 +102,8 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('quotations/{quotationId}', [ScmCsController::class, "showQuotation"])->name('quotations.show');
     Route::put('quotations/{quotationId}', [ScmCsController::class, "updateQuotation"])->name('quotations.update');
 
-    //Close PR
     Route::post('close-pr', [ScmPrController::class, "closePr"])->name('closePr');
+    Route::get('get-cs-data/{id}', [ScmCsController::class, "getCsWiseData"])->name('getCsWiseData');
 });
 
 require __DIR__ . '/robiul.php';

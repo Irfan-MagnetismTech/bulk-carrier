@@ -7,7 +7,7 @@ import Store from '../../store/index.js';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
 import { merge } from 'lodash';
-
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 export default function useMaterialCs() {
     const BASE = 'scm' 
@@ -21,7 +21,7 @@ export default function useMaterialCs() {
     const prMaterialList = ref([]);
     const isTableLoading = ref(false);
     const notification = useNotification();
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const materialCs = ref({
         ref_no: null,
@@ -123,7 +123,6 @@ export default function useMaterialCs() {
     }
 
     async function showMaterialCs(materialCsId) {
-        console.log('tag', materialCsId);
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -254,7 +253,7 @@ export default function useMaterialCs() {
         // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
         try {
-            const {data, status} = await Api.get(`/${BASE}/search-pr-wise-material`,{
+            const {data, status} = await Api.get(`/${BASE}/search-pr-wise-material-for-cs`,{
                 params: {
                     pr_id: prId,
                 },
