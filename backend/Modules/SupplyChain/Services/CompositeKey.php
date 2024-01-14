@@ -19,8 +19,12 @@ class CompositeKey
      * @return string
      */
 
-    public static function generate(int $index, int $model_id, string $infix, int $column_id): string
+    public static function generate(int $index = null, int $model_id, string $infix, int $column_id, int $optional_column_id = null): string
     {
+        if ($optional_column_id !== null) {
+            return (string) $model_id . '-' . strtoupper($infix) . '-' . $column_id . '-' . $optional_column_id;
+        }
+
         return (string) $index . '-' . $model_id . '-' . strtoupper($infix) . '-' . $column_id;
     }
 
