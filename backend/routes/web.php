@@ -20,5 +20,3 @@ use Modules\Operations\Http\Controllers\OpsOperationReportController;
 // Route::get('login', [UserController::class, 'index']);
 // Route::get('/test', fn()=> 'hi');
 Route::get('/', fn() => 'BG Torony - Magnetism Tech Limited');
-
-Route::get('month-wise-expense-report', [OpsExpenseReportController::class, 'monthWiseExpenseReport']);

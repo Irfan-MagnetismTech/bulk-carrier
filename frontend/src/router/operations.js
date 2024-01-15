@@ -732,4 +732,10 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/reports/budget-vs-expense-report.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	{
+		path: `/${BASE}/reports/month-wise-expense-report`,
+		name: `${BASE}.reports.month-wise-expense-report`,
+		component: () => import (`../views/${ViEWBASE}/reports/month-wise-expense-report.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];

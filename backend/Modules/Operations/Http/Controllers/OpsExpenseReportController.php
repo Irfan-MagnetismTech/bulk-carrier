@@ -204,8 +204,8 @@ class OpsExpenseReportController extends Controller
         });
 
         // return response()->json($voyages, 200);
-        return view('operations::reports.month-wise-expense-report', 
-        compact('voyages', 'expenseEntries', 'allCashRequisitions'));
+        // return view('operations::reports.month-wise-expense-report', 
+        // compact('voyages', 'expenseEntries', 'allCashRequisitions'));
 
         $view = view('operations::reports.month-wise-expense-report', 
                     compact('voyages', 'expenseEntries', 'allCashRequisitions'))->render();

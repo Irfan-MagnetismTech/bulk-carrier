@@ -17,7 +17,9 @@
     </style>
 </head>
 <body>
-    <h2 style="text-align: center; margin: 15px auto; font-weight: 600; font-size: 1.7rem">Month Wise Expense Report</h2>
+    <h2 style="text-align: center; margin: 15px auto; font-weight: 600; font-size: 1.7rem">
+        {{-- Month Wise Expense Report --}}
+    </h2>
     <table>
         <thead>
             <tr>
@@ -42,7 +44,7 @@
     </table>
 
     <table style="margin-top: 80px;">
-        <thead>
+        <tbody>
             <tr>
                 <th rowspan="2">Summary</th>
                 <th>Total Voyage</th>
@@ -56,6 +58,6 @@
                 <td style="text-align: right;">{{ number_format($voyages->sum('amount_bdt'), 2) }}</td>
                 <td style="text-align: right;">{{ ($allCashRequisitions->sum('total_amount') - $voyages->sum('amount_bdt') > 0 ) ? number_format($allCashRequisitions->sum('total_amount') - $voyages->sum('amount_bdt'), 2) : '('.number_format(abs($allCashRequisitions->sum('total_amount') - $voyages->sum('amount_bdt')), 2).')' }}</td>
             </tr>
-        </thead>
+        </tbody>
     </table>
 </body>
