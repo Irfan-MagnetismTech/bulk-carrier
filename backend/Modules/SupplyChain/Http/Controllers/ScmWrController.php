@@ -179,6 +179,7 @@ class ScmWrController extends Controller
         }
     }
 
+    // for closing Work Requisition
     public function closeWr(Request $request): JsonResponse
     {
         try {
@@ -205,5 +206,36 @@ class ScmWrController extends Controller
         }
     }
 
+    public function closeWrLine(Request $request): JsonResponse
+    {
+        try {
+            $wrLine = ScmWrLine::find($request->id);
+            $wrLine->update([
+                'is_closed' => 1,
+                'closed_by' => auth()->user()->id,
+                'closed_at' => now(),
+                'closing_remarks' => $request->closing_remarks,
+            ]);
+
+            $work_requisition = ScmWr::find($request->parent_id);
+            $work_requisition->load('scmWrLines');
+
+            $wrLines = $work_requisition->scmWrLines->count();
+            $sumIsClosed = $work_requisition->scmWrLines->sum('is_closed');
+
+            if ($wrLines === $sumIsClosed) {
+                $work_requisition->update([
+                    'is_closed' => 1,
+                    'closed_by' => auth()->user()->id,
+                    'closed_at' => now(),
+                    'closing_remarks' => "All lines are closed",
+                ]);
+            }
+
+            return response()->success('Data updated sucessfully!',[$wrLines,$sumIsClosed], 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 
 }

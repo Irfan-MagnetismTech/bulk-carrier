@@ -10,5 +10,5 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     ]);
 
     Route::post('close-wr', [ScmWrController::class, "closeWr"])->name('closeWr');
-    // Route::post('close-wrline', [ScmWrController::class, "closeWrLine"])->name('closeWrLine');
+    Route::post('close-wrline', [ScmWrController::class, "closeWrLine"])->name('closeWrLine');
 });
