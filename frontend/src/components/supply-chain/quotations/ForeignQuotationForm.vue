@@ -20,7 +20,7 @@
   <div class="input-group">
     <label class="label-group">
         <span class="label-item-title">Vendor Name <span class="text-red-500">*</span></span>
-        <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoading" v-model="form.scmVendor" label="name" class="block form-input" @search="searchVendor" @change="setVendorOtherData(form.scmVendor)">
+        <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoading" v-model="form.scmVendor" label="name" class="block form-input" @search="searchVendor" @change="setVendorOtherData(form.scmVendor)" @update:modelValue="setVendorOtherData(form.scmVendor)">
               <template #search="{attributes, events}">
                   <input
                       class="vs__search"
@@ -153,7 +153,7 @@
               <th class="py-3 align-center">Stock Type</th>
               <th class="py-3 align-center">Manufacturing Days</th>
               <th class="py-3 align-center">Offer Price</th>
-              <th class="py-3 align-center">Negotitated Price</th>
+              <th class="py-3 align-center">Negotiated Price</th>
             </tr>
             </thead>
 
@@ -163,11 +163,11 @@
                 <template v-for="(scmSrLine, index) in lines" :key="index">
                   
                   <tr v-if="index != 0">
-                    <td>{{ scmSrLine?.scmPr?.ref_no }}</td>
+                    <td><nobr>{{ scmSrLine?.scmPr?.ref_no }}</nobr></td>
                   </tr>
                   <tr class="text-gray-700 dark-disabled:text-gray-400" v-else>
                     <td :rowspan="lines.length">{{ first(values(lines))?.scmMaterial?.name }}</td>
-                    <td>{{ scmSrLine?.scmPr?.ref_no }}</td>
+                    <td><nobr>{{ scmSrLine?.scmPr?.ref_no }}</nobr></td>
                     <td :rowspan="lines.length">{{ scmSrLine?.scmMaterial?.unit }}</td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].brand" class="form-input"/>
@@ -410,125 +410,11 @@
       }
     });
 
-// function fetchStoreIssue(search, loading = false) {
-//     // if (search.length > 0) {
-//     //   loading(true);
-//       searchStoreIssue(search, /*loading,*/ props.form.business_unit);
-//     // }
-//   }
-
-// function setStoreIssueOtherData(datas) {
-//       props.form.scm_si_id = datas.id;
-//       props.form.si_no = datas.ref_no;
-//       props.form.acc_cost_center_id = datas.acc_cost_center_id;
-//       props.form.scm_warehouse_id = datas.scm_warehouse_id;
-//       props.form.scmWarehouse = datas.scmWarehouse;
-//       props.form.scm_warehouse_name = datas.scmWarehouse.name;
-//       props.form.scm_department_id = datas.scm_department_id;
-//       getSiWiseSir(datas.id);    
-// }
+    function setVendorOtherData(){
+      props.form.scm_vendor_id = props.form.scmVendor?.id ?? null;
+    }
 
 
-
-// watch(() => props.form.scmSi, (new Val,oldVal) => {
-//       props.form.scm_si_id = newVal?.id;
-//       props.form.si_no = newVal?.ref_no;
-//       props.form.acc_cost_center_id = newVal?.acc_cost_center_id;
-//       props.form.scm_warehouse_id = newVal?.scm_warehouse_id;
-//       props.form.scmWarehouse = newVal?.scmWarehouse;
-//       props.form.scm_department_id = newVal?.scm_department_id;
-//       filteredStoreIssues.value = []; 
-//       getSiWiseSir(newVal?.id);    
-// });
-// watch(() => props.form.scmDepartment, (value) => {
-//   if (value) {
-//     props.form.scm_department_id = value?.id;
-//   }
-// });
-
-
-// watch(() => props.form.scmWarehouse, (value) => {
-//   if (value) {
-//     props.form.scm_warehouse_name = value?.scmWarehouse?.name;
-//   }
-// });
-
-
-
-// watch(() => props.form.scm_si_id, (value) => {
-//   if (value) {
-
-//   }
-// });
-
-// watchEffect filteredStoreIssueReturnLines
-// watchEffect(() => {
-//   props.form.scmSirLines = filteredStoreIssueReturnLines.value;
-// });
-//watch filteredStoreIssueReturnLines
-// watch(() => filteredStoreIssueReturnLines.value, (newVal, oldVal) => {
-//   props.form.scmSirLines = newVal;
-// });
-// function setMaterialOtherData(datas, index) {
-//       props.form.scmSirLines[index].unit = datas.unit;
-//       props.form.scmSirLines[index].scm_material_id = datas.id;
-          
-// }
-
-// const previousLines = ref(cloneDeep(props.form.scmSrLines));
-
-// watch(() => props.form.scmSirLines, (newLines) => {
-//   newLines.forEach((line, index) => {
-//     // const previousLine = previousLines.value[index];
-
-//     if (line.scmMaterial) {
-//       const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
-//       if (selectedMaterial) {
-//         if ( line.scm_material_id !== selectedMaterial.id
-//         ) {
-//           props.form.scmSirLines[index].unit = selectedMaterial.unit;
-//           props.form.scmSirLines[index].scm_material_id = selectedMaterial.id;
-//         }
-//       }
-//     }
-//   });
-//   // previousLines.value = cloneDeep(newLines);
-// }, { deep: true });
-
-
-  //   function fetchMaterials(search, loading) {
-  //   loading(true);
-  //   searchMaterial(search, loading)
-  // }
-
-
-  //   function fetchMaterials(search, loading = false) {
-  //     // loading(true);
-  //     fetchSiWiseMaterials(props.form.scm_si_id);
-  // }
-
-  // watch(() => props.form.scmSi, (newVal, oldVal) => {
-  //   fetchMaterials(newVal?.id)
-  //   props.form.department_id = newVal?.department_id;
-  //   props.form.scm_warehouse_id = newVal?.scm_warehouse_id;
-  //   props.form.scmWarehouse = newVal?.scmWarehouse;
-  // });
-
-//   watch(() => props.form.business_unit, (newValue, oldValue) => {
-//    if(newValue !== oldValue && oldValue != ''){
-//     props.form.scm_warehouse_id = '';
-//     props.form.acc_cost_center_id = '';
-//     props.form.scmWarehouse = null;
-//     props.form.scmSi = null;
-//     props.form.scm_si_id = null;
-//     props.form.si_no = null,
-//     props.form.scmDepartment= null,
-//     props.form.scm_department_id = null,
-//     props.form.scmSirLines = [];
-//     filteredStoreIssues.value = [];
-//    } 
-//      fetchStoreIssue('');
-// });
 
 function tableWidth() {
   setTimeout(function() {
