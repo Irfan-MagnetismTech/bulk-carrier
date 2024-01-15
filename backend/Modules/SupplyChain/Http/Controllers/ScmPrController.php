@@ -19,6 +19,7 @@ use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Http\Requests\ScmPrRequest;
 use Maatwebsite\Excel\Validators\ValidationException;
+use Modules\SupplyChain\Entities\ScmCsMaterial;
 
 class ScmPrController extends Controller
 {
@@ -141,7 +142,8 @@ class ScmPrController extends Controller
                 'closed_by' => $scmPrLine->closedBy?->name ?? null,
                 'closed_at' => $scmPrLine->closed_at,
                 'closing_remarks' => $scmPrLine->closing_remarks,
-                'required_date' => $scmPrLine->required_date
+                'required_date' => $scmPrLine->required_date,
+                'status' => $scmPrLine->status,
             ];
             return $lines;
         });
@@ -164,6 +166,7 @@ class ScmPrController extends Controller
             'closed_by' => $purchaseRequisition->closedBy?->name ?? null,
             'closed_at' => $purchaseRequisition->closed_at,
             'closing_remarks' => $purchaseRequisition->closing_remarks,
+            'status' => $purchaseRequisition->status,
             'scmPrLines' => $prLines,
         ];
 
@@ -206,28 +209,28 @@ class ScmPrController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     * @param ScmPr $purchase_requisition
+     * @param ScmPr $purchaseRequisition
      * @return JsonResponse
      */
-    public function destroy(ScmPr $purchase_requisition): JsonResponse
+    public function destroy(ScmPr $purchaseRequisition): JsonResponse
     {
         try {
-            $pos = ScmPo::where('scm_pr_id', $purchase_requisition->id)->count();
-            $css = ScmCs::where('scm_pr_id', $purchase_requisition->id)->count();
-            $mrrs = ScmMrr::where('scm_pr_id', $purchase_requisition->id)->count();
+            $poCount = ScmPo::where('scm_pr_id', $purchaseRequisition->id)->count();
+            $csCount = ScmCsMaterial::where('scm_pr_id', $purchaseRequisition->id)->count();
+            $mrrCount = ScmMrr::where('scm_pr_id', $purchaseRequisition->id)->count();
 
-            if ($pos > 0 || $css > 0 || $mrrs > 0) {
+            if ($poCount + $csCount + $mrrCount > 0) {
                 $error = array(
                     "message" => "Data could not be deleted!",
                     "errors" => [
-                        "id" => ["This data could not be deleted as it has reference to other table"]
+                        "id" => ["This data could not be deleted as it has references in other table!"]
                     ]
                 );
                 return response()->json($error, 422);
             }
 
-            $purchase_requisition->scmPrLines()->delete();
-            $purchase_requisition->delete();
+            $purchaseRequisition->scmPrLines()->delete();
+            $purchaseRequisition->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (\Exception $e) {
