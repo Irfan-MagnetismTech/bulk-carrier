@@ -79,4 +79,9 @@ class ScmPr extends Model
     {
         return $this->belongsTo(User::class, 'closed_by', 'id');
     }
+
+    public function createdBy(): BelongsTo  
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
+    }
 }

@@ -42,7 +42,11 @@ class ScmPrController extends Controller
                     'scmPrLines.scmMaterial',
                     'scmWarehouse',
                     'scmPos',
-                    'scmMrrs'
+                    'scmMrrs',
+                    'closedBy',
+                    'createdBy',
+                    'scmPrLines.closedBy',
+                    'scmPrLines.createdBy'
                 )
                 ->globalSearch($request->all());
 
@@ -113,7 +117,7 @@ class ScmPrController extends Controller
     public function show($id): JsonResponse
     {
         $purchaseRequisition = ScmPr::query()
-            ->with('scmPrLines.scmMaterial', 'scmWarehouse', 'scmPrLines.scmStockLedgers', 'closedBy', 'scmPrLines.closedBy')
+            ->with('scmPrLines.scmMaterial', 'scmWarehouse', 'scmPrLines.scmStockLedgers', 'closedBy', 'createdBy', 'scmPrLines.closedBy', 'scmPrLines.createdBy')
             ->find($id);
 
         $prLines = $purchaseRequisition->scmPrLines->map(function ($scmPrLine) use ($purchaseRequisition) {
@@ -364,6 +368,7 @@ class ScmPrController extends Controller
             ->map(function ($item) {
                 $data = $item->scmMaterial;
                 $data['pr_composite_key'] = $item->pr_composite_key;
+                $data['max_quantity'] = $item->quantity - $item->scmCsmaterials->sum('quantity');
                 return $data;
             });
 
