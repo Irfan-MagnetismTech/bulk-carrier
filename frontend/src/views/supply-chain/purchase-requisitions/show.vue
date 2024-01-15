@@ -34,7 +34,7 @@
                         <td>{{ formatDate(purchaseRequisition?.approved_date) }}</td>
                     </tr>
                     <tr>
-                        <th class="w-40">Critcal</th>
+                        <th class="w-40">Critical</th>
                         <td>{{ purchaseRequisition?.is_critical }}</td>
                     </tr>
                     
@@ -48,7 +48,7 @@
                     </tr>
                     <tr>
                         <th class="w-40">Closing Status </th>
-                        <td>{{ purchaseRequisition?.is_closed }}</td>
+                        <td>{{ status[purchaseRequisition?.is_closed] }}</td>
                     </tr>
                     <tr v-if="purchaseRequisition.is_closed">
                         <th class="w-40">Closed At</th>
@@ -77,17 +77,17 @@
             <thead v-once>
               <tr class="w-full">
                 <th>SL</th>
-                <th class="w-72">Material Name</th>
-                <th>Unit</th>
-                <th>Brand</th>
-                <th>Model</th>
-                <th>Country Name</th>
-                <th>Drawing No</th>
-                <th>Part No</th>
-                <th>Specification</th>
-                <th>Required Days</th>
-                <th>Quantity</th>
-                <th>Status </th>
+                <th class="w-36 text-center"><nobr>Material Name</nobr></th>
+                <th class="!text-center"><nobr>Unit</nobr></th>
+                <th><nobr>Model</nobr></th>
+                <th><nobr>Brand</nobr></th>
+                <th><nobr>Country Name</nobr></th>
+                <th><nobr>Drawing No</nobr></th>
+                <th><nobr>Part No</nobr></th>
+                <th><nobr>Specification</nobr></th>
+                <th><nobr>Required Days</nobr></th>
+                <th><nobr>Quantity</nobr></th>
+                <th><nobr>Status</nobr></th>
               </tr>
             </thead>
             <tbody>
@@ -120,7 +120,7 @@
                   <span v-if="purchaseRequisition.scmPrLines[index]?.specification">{{ purchaseRequisition.scmPrLines[index]?.specification }}</span>
                 </td>
                 <td>
-                  <span v-if="purchaseRequisition.scmPrLines[index]?.required_date">{{ purchaseRequisition.scmPrLines[index]?.required_date }}</span>
+                  <span v-if="purchaseRequisition.scmPrLines[index]?.required_date"><nobr>{{ purchaseRequisition.scmPrLines[index]?.required_date }}</nobr></span>
                 </td>
                 <td>
                 <span>
@@ -226,7 +226,7 @@ const isModalOpen = ref(0);
 const details = ref([{type: ''}]);
 const currentId = ref(null);
 const closingRemarks = ref(null);
-
+const status = ['Open', 'Closed'];
 
 function showModal(id) {
   isModalOpen.value = 1

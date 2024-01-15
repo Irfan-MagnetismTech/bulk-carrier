@@ -84,6 +84,36 @@ let filterOptions = ref({
       "filter_type": "input" 
     },
     {
+      "relation_name": null,
+      "field_name": "selection_ground",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Selection Ground",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": "selectedVendors",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Selected Vendors",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": "scmCsMaterials",
+      "field_name": "scmMaterial.name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Material",
+      "filter_type": "input"
+    },
+    {
       "relation_name": "scmWarehouse",
       "field_name": "name",
       "search_param": "",
@@ -217,15 +247,37 @@ function confirmDelete(id) {
               <td>{{ materialCsdata?.effective_date }}</td>
               <td>{{ materialCsdata?.expire_date }}</td>
               <td>{{ materialCsdata?.purchase_center }}</td>
+              <td>{{ materialCsdata?.selection_ground }}</td>
+              <td>
+                <template v-if="materialCsdata.selectedVendors.length">
+                  <div v-for="(vendor,index) in materialCsdata?.selectedVendors" :key="index">
+                    <span>{{ vendor?.name }}</span>
+                  </div>
+                </template>
+                <template v-else>
+                  <span class="text-red-500">No Vendor Selected</span>
+                </template>
+              </td>
+              <td>
+                <template v-if="materialCsdata.scmCsMaterials.length">
+                  <table class="w-full">
+                    <tr v-for="(material,index) in materialCsdata?.scmCsMaterials" :key="index">
+                      <td>
+                        {{ material.scmMaterial.name  }}
+                      </td>
+                    </tr>
+                  </table>
+                </template>
+              </td>
               <td>{{ materialCsdata?.scmWarehouse?.name?? '' }}</td>
               <td>
                 <span :class="materialCsdata?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialCsdata?.business_unit }}</span>
               </td>
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">
-                  <button @click="navigateToPOCreate(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
-                  <button @click="navigateToQuotation(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Quotations</button>
-                  <button @click="navigateSupplierSelection(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Select Supplier</button>
+                  <button @click="navigateToPOCreate(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Create PO</nobr></button>
+                  <button @click="navigateToQuotation(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Quotations</nobr></button>
+                  <button @click="navigateSupplierSelection(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Select Supplier</nobr></button>
                   <!-- <button @click="navigateToMRRCreate(materialCs.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> --> 
                   <action-button :action="'edit'" :to="{ name: 'scm.material-cs.edit', params: { materialCsId: materialCsdata.id } }"></action-button>
                   <action-button @click="confirmDelete(materialCsdata.id)" :action="'delete'"></action-button>
