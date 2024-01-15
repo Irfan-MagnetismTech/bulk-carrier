@@ -2,8 +2,10 @@
 
 namespace Modules\SupplyChain\Entities;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmPr;
+use Modules\SupplyChain\Entities\ScmPoLine;
 use Modules\SupplyChain\Entities\ScmMrrLine;
 use Modules\SupplyChain\Entities\ScmMaterial;
 use Modules\SupplyChain\Entities\ScmStockLedger;
@@ -49,5 +51,10 @@ class ScmPrLine extends Model
     public function getMaterialNameQuantityUnitAttribute()
     {
         return $this->scmMaterial->name . ' - ' . $this->quantity . ' - ' . $this->unit;
+    }
+
+    public function closedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'closed_by', 'id');
     }
 }
