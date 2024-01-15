@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Services\FileUploadService;
 use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmWr;
+use Modules\SupplyChain\Entities\ScmWrLine;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Http\Requests\ScmWrRequest;
 
@@ -177,5 +178,32 @@ class ScmWrController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    public function closeWr(Request $request): JsonResponse
+    {
+        try {
+            $work_requisition = ScmWr::find($request->id);
+            $work_requisition->update([
+                'is_closed' => 1,
+                'closed_by' => auth()->user()->id,
+                'closed_at' => now(),
+                'closing_remarks' => $request->closing_remarks,
+            ]);
+
+            $work_requisition->load('scmWrLines');
+            foreach ($work_requisition->scmWrLines as $wrLine) {
+                $wrLine->update([
+                    'is_closed' => 1,
+                    'closed_by' => auth()->user()->id,
+                    'closed_at' => now(),
+                    'closing_remarks' => $request->closing_remarks,
+                ]);
+            }
+            return response()->success('Data updated sucessfully!', $work_requisition, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
 
 }
