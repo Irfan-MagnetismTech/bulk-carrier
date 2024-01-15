@@ -65,7 +65,9 @@
             <tr>
                 <td><nobr>Fuel</nobr></td>
                 @foreach($voyages as $voyage)
-                    <td></td>
+                    <td style="text-align: right;">
+                        {{ ($voyage['amount_bdt'] > 0 ) ? number_format($voyage['amount_bdt'], 2) : null }}
+                    </td>
                     <td style="text-align: right;">
                         {{ ($voyage['amount_bdt'] > 0 ) ? number_format($voyage['amount_bdt'], 2) : null }}
                     </td>

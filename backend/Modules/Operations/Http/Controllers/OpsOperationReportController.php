@@ -160,8 +160,8 @@ class OpsOperationReportController extends Controller
         });
 
         // return response()->json($voyages, 200);
-        return view('operations::reports.budget-vs-expense-report', 
-        compact('heads', 'voyages', 'expenseEntries'));
+        // return view('operations::reports.budget-vs-expense-report', 
+        // compact('heads', 'voyages', 'expenseEntries'));
 
         $view = view('operations::reports.budget-vs-expense-report', 
                     compact('heads', 'voyages', 'expenseEntries'))->render();
