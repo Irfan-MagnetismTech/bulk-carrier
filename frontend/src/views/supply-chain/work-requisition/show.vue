@@ -102,6 +102,10 @@ onMounted(() => {
                 <th class="w-40">Remarks</th>
                 <td>{{ workRequisition?.remarks }}</td>
               </tr>
+              <tr>
+                        <th class="w-40">Requested By </th>
+                        <td>{{ workRequisition?.createdBy?.name }}</td>
+                    </tr>
 
               <tr>
                         <th class="w-40">Status </th>

@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Purchase Requistion Details</h2>
-    <default-button :title="'Store Requistion List'" :to="{ name: 'scm.store-requisitions.index' }" :icon="icons.DataBase"></default-button>
+    <default-button :title="'Store Requistion List'" :to="{ name: 'scm.purchase-requisitions.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
     <div class="flex md:gap-4">
@@ -35,30 +35,41 @@
                     </tr>
                     <tr>
                         <th class="w-40">Critical</th>
-                        <td>{{ purchaseRequisition?.is_critical }}</td>
+                        <td>{{ critical[purchaseRequisition?.is_critical ?? 0]  }}</td>
                     </tr>
                     
-                    <tr>
+                    <!-- <tr>
                         <th class="w-40">Requisition Date</th>
                         <td>{{ purchaseRequisition?.is_closed }}</td>
-                    </tr>
+                    </tr> -->
                     <tr>
                         <th class="w-40">Remarks </th>
                         <td>{{ purchaseRequisition?.remarks }}</td>
                     </tr>
+                    
                     <tr>
-                        <th class="w-40">Closing Status </th>
-                        <td>{{ status[purchaseRequisition?.is_closed] }}</td>
+                        <th class="w-40">Requested By </th>
+                        <td>{{ purchaseRequisition?.createdBy?.name }}</td>
                     </tr>
-                    <tr v-if="purchaseRequisition.is_closed">
+
+                    <tr>
+                        <th class="w-40"> Status </th>
+                        <!-- <td>{{ status[purchaseRequisition?.is_closed] }}</td> -->
+                        
+                        <td>
+                          <!-- {{ workRequisition?.status }} -->
+                          <span :class="purchaseRequisition?.status === 'Pending' ? 'text-yellow-700 bg-yellow-100' : (purchaseRequisition?.status == 'WIP' ? 'text-blue-700 bg-blue-100' : 'text-red-700 bg-red-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.status ?? 'Closed' }}</span>
+                        </td>
+                    </tr>
+                    <tr v-if="purchaseRequisition.status === 'Closed'">
                         <th class="w-40">Closed At</th>
-                        <td>{{ formatDate(purchaseRequisition?.closed_at) }}</td>
+                        <td>{{ formatDateTime(purchaseRequisition?.closed_at) }}</td>
                     </tr>
-                    <tr v-if="purchaseRequisition.is_closed">
-                        <th class="w-40">Closed Date</th>
-                        <td>{{ formatDate(purchaseRequisition?.closed_by) }}</td>
+                    <tr v-if="purchaseRequisition.status === 'Closed'">
+                        <th class="w-40">Closed By</th>
+                        <td>{{ purchaseRequisition?.closed_by }}</td>
                     </tr>
-                    <tr v-if="purchaseRequisition.is_closed">
+                    <tr v-if="purchaseRequisition.status === 'Closed'">
                         <th class="w-40">Closing Remarks </th>
                         <td>{{ purchaseRequisition?.closing_remarks }}</td>
                     </tr>
@@ -85,7 +96,7 @@
                 <th><nobr>Drawing No</nobr></th>
                 <th><nobr>Part No</nobr></th>
                 <th><nobr>Specification</nobr></th>
-                <th><nobr>Required Days</nobr></th>
+                <th><nobr>Required Date</nobr></th>
                 <th><nobr>Quantity</nobr></th>
                 <th><nobr>Status</nobr></th>
               </tr>
@@ -120,7 +131,7 @@
                   <span v-if="purchaseRequisition.scmPrLines[index]?.specification">{{ purchaseRequisition.scmPrLines[index]?.specification }}</span>
                 </td>
                 <td>
-                  <span v-if="purchaseRequisition.scmPrLines[index]?.required_date"><nobr>{{ purchaseRequisition.scmPrLines[index]?.required_date }}</nobr></span>
+                  <span v-if="purchaseRequisition.scmPrLines[index]?.required_date"><nobr>{{ formatDate(purchaseRequisition.scmPrLines[index]?.required_date) }}</nobr></span>
                 </td>
                 <td>
                 <span>
@@ -128,8 +139,13 @@
                 </span>
               </td>
               <td>
-                <button v-if="purchaseRequisition.scmPrLines[index].is_closed == 0" @click="showModal(purchaseRequisition.scmPrLines[index].id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Close</button>
-                <span v-else :class="purchaseRequisition.scmPrLines[index]?.is_closed === 0 ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition.scmPrLines[index].is_closed === 0 ? 'Open' : 'Closed' }}</span>
+                <!-- <button v-if="purchaseRequisition.scmPrLines[index].is_closed == 0" @click="showModal(purchaseRequisition.scmPrLines[index].id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Close</button>
+                <span v-else :class="purchaseRequisition.scmPrLines[index]?.is_closed === 0 ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition.scmPrLines[index].is_closed === 0 ? 'Open' : 'Closed' }}</span> -->
+                <button v-if="purchaseRequisition.scmPrLines[index].status != 'Closed'" @click="showModal(purchaseRequisition.scmPrLines[index].id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Close</button>
+                                  
+                                  <span v-else :class="purchaseRequisition.scmPrLines[index]?.status === 'Pending' ? 'text-yellow-700 bg-yellow-100' : (purchaseRequisition.scmPrLines[index]?.status == 'WIP' ? 'text-blue-700 bg-blue-100' : 'text-red-700 bg-red-100') " :title="purchaseRequisition.scmPrLines[index]?.status === 'Closed' ? `
+                                  Closed At : ${formatDateTime(purchaseRequisition.scmPrLines[index]?.closed_at)}\nClosed By : ${purchaseRequisition.scmPrLines[index]?.closed_by}
+                                  ` : ''" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition.scmPrLines[index]?.status ?? 'Closed' }}</span>
               </td>
               </tr>
             </tbody>
@@ -210,7 +226,7 @@ import useHeroIcon from "../../../assets/heroIcon";
 import useStoreRequisition from "../../../composables/supply-chain/useStoreRequisition";
 import usePurchaseRequisition from "../../../composables/supply-chain/usePurchaseRequisition";
 import StoreRequisitionShow from "../../../components/supply-chain/store-requisitions/StoreRequisitionShow.vue";
-import { formatDate } from '../../../utils/helper';
+import { formatDate, formatDateTime } from '../../../utils/helper';
 import RemarksComponent from '../../../components/utils/RemarksComponent.vue';
 
 const icons = useHeroIcon();
@@ -227,6 +243,7 @@ const details = ref([{type: ''}]);
 const currentId = ref(null);
 const closingRemarks = ref(null);
 const status = ['Open', 'Closed'];
+const critical = ['Yes', 'No'];
 
 function showModal(id) {
   isModalOpen.value = 1

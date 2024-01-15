@@ -165,15 +165,56 @@ let filterOptions = ref({
     },
 
     {
+      "relation_name": "createdBy",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Requested By",
+      "filter_type": "input"
+    },
+
+    // {
+    //   "relation_name": null,
+    //   "field_name": "is_closed",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Status",
+    //   "filter_type": "input"
+    // }
+    {
       "relation_name": null,
-      "field_name": "is_closed",
+      "field_name": "status",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
       "label": "Status",
-      "filter_type": "input"
-    }
+      "filter_type": "dropdown",
+      "select_options": [
+        {
+          value: '',
+          label: "ALL",
+          defaultSelected : true
+        },
+        {
+          value: "Pending",
+          label: "Pending"
+        },
+        {
+          value: "WIP",
+          label: "WIP"
+        },
+        {
+          value: "Closed",
+          label: "Closed"
+        },
+
+      ]
+    },
 
   ]
 });
@@ -296,6 +337,7 @@ function confirmDelete(id) {
               <td>{{ workRequisition?.scmWarehouse?.name }}</td>
               <td>{{ formatDate(workRequisition?.raised_date) }}</td>
               <td>{{ formatDate(workRequisition?.approved_date) }}</td>
+              <td>{{ workRequisition?.createdBy?.name }}</td>
               <td>
                 <!-- <button v-if="workRequisition.is_closed == 0" @click="showModal(workRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Close</button>
                 <span v-else :class="workRequisition?.is_closed === 0 ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ workRequisition?.is_closed === 0 ? 'Open' : 'Closed' }}</span> -->
