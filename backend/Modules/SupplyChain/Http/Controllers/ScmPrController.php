@@ -371,7 +371,8 @@ class ScmPrController extends Controller
         try {
             $pr = ScmPr::find($request->id);
             $pr->update([
-                'is_closed' => 1,
+                // 'is_closed' => 1,
+                'status' => 'Closed',
                 'closed_by' => auth()->user()->id,
                 'closed_at' => now(),
                 'closing_remarks' => $request->closing_remarks,
@@ -380,7 +381,8 @@ class ScmPrController extends Controller
             $pr->load('scmPrLines');
             foreach ($pr->scmPrLines as $prLine) {
                 $prLine->update([
-                    'is_closed' => 1,
+                    // 'is_closed' => 1,
+                    'status' => 'Closed',
                     'closed_by' => auth()->user()->id,
                     'closed_at' => now(),
                     'closing_remarks' => $request->closing_remarks,
@@ -397,7 +399,8 @@ class ScmPrController extends Controller
         try {
             $prLine = ScmPrLine::find($request->id);
             $prLine->update([
-                'is_closed' => 1,
+                // 'is_closed' => 1,
+                'status' => 'Closed',
                 'closed_by' => auth()->user()->id,
                 'closed_at' => now(),
                 'closing_remarks' => $request->closing_remarks,
@@ -407,11 +410,13 @@ class ScmPrController extends Controller
             $pr->load('scmPrLines');
 
             $prLines = $pr->scmPrLines->count();
-            $sumIsClosed = $pr->scmPrLines->sum('is_closed');
+            // $sumIsClosed = $pr->scmPrLines->sum('is_closed');
+            $sumIsClosed = $pr->scmPrLines->where('status', 'Closed')->count();
 
             if ($prLines === $sumIsClosed) {
                 $pr->update([
-                    'is_closed' => 1,
+                    // 'is_closed' => 1,
+                    'status' => 'Closed',
                     'closed_by' => auth()->user()->id,
                     'closed_at' => now(),
                     'closing_remarks' => "All lines are closed",

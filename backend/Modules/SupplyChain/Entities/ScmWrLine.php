@@ -20,8 +20,8 @@ class ScmWrLine extends Model
         'closed_at',
         'closed_by',
         'is_closed',        
+        'closing_remarks',
         'status',
-        'closing_remarks'
     ];
 
     public function scmWr()
