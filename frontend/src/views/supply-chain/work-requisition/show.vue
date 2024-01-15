@@ -79,11 +79,11 @@ onMounted(() => {
                     <table class="w-full whitespace-no-wrap" id="table">
                         <thead>
                             <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-200 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-                                <th>Service Name</th>
-                                <th>Description</th>
-                                <th>Remarks</th>
-                                <th>Quantity</th>
-                                <th>Required Date</th>
+                                <th class="text-center w-3/12" >Service Name</th>
+                                <th class="text-center w-3/12" >Description</th>
+                                <th class="text-center w-3/12" >Remarks</th>
+                                <th class="text-center w-1/12" >Quantity</th>
+                                <th class="text-center w-2/12" >Required Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -91,8 +91,8 @@ onMounted(() => {
                                 <td>{{ scmWrLine?.scmService?.name }}</td>
                                 <td>{{ scmWrLine?.scmService?.description }}</td>
                                 <td>{{ scmWrLine?.remarks }}</td>
-                                <td>{{ scmWrLine?.quantity }}</td>
-                                <td>{{ formatDate(scmWrLine?.required_date) }}</td>
+                                <td class="text-right">{{ scmWrLine?.quantity }}</td>
+                                <td class="text-center">{{ formatDate(scmWrLine?.required_date) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -147,6 +147,10 @@ onMounted(() => {
 
   th.text-center, td.text-center, tr.text-center {
     @apply text-center border-gray-500
+  }
+
+  th.text-right, td.text-right, tr.text-right {
+    @apply text-right border-gray-500
   }
 
 </style>
