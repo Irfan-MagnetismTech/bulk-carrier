@@ -50,5 +50,4 @@ class ScmPrLine extends Model
     {
         return $this->scmMaterial->name . ' - ' . $this->quantity . ' - ' . $this->unit;
     }
-
 }
