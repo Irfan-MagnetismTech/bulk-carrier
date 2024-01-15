@@ -120,12 +120,12 @@ class ScmPrController extends Controller
         
         $purchaseRequisition->scmPrLines->each(function ($line) use ($loggedInUserId) {
             if ($line->closed_by == $loggedInUserId) {
-                $line->closedBy?->name = 'You';
+                $line->closedBy->name = 'You';
             }
         });
 
         if ($purchaseRequisition->closed_by == $loggedInUserId) {
-            $purchaseRequisition->closedBy?->name = 'You';
+            $purchaseRequisition->closedBy->name = 'You';
         }
 
         $prLines = $purchaseRequisition->scmPrLines->map(function ($scmPrLine) use ($purchaseRequisition) {

@@ -100,12 +100,12 @@ class ScmWrController extends Controller
         $work_requisition->load('scmWrLines.scmService', 'scmWrLines.closedBy', 'scmWarehouse', 'closedBy');
         $work_requisition->scmWrLines->each(function ($line) use ($loggedInUserId) {
             if ($line->closed_by == $loggedInUserId) {
-                $line->closedBy?->name = 'You';
+                $line->closedBy->name = 'You';
             }
         });
 
         if ($work_requisition->closed_by == $loggedInUserId) {
-            $work_requisition->closedBy?->name = 'You';
+            $work_requisition->closedBy->name = 'You';
         }
 
         try
