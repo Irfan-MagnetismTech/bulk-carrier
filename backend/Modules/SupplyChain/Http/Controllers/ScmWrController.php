@@ -185,7 +185,7 @@ class ScmWrController extends Controller
         try {
             $work_requisition = ScmWr::find($request->id);
             $work_requisition->update([
-                'is_closed' => 1,
+                'status' => 'Closed',
                 'closed_by' => auth()->user()->id,
                 'closed_at' => now(),
                 'closing_remarks' => $request->closing_remarks,
@@ -194,7 +194,7 @@ class ScmWrController extends Controller
             $work_requisition->load('scmWrLines');
             foreach ($work_requisition->scmWrLines as $wrLine) {
                 $wrLine->update([
-                    'is_closed' => 1,
+                    'status' => 'Closed',
                     'closed_by' => auth()->user()->id,
                     'closed_at' => now(),
                     'closing_remarks' => $request->closing_remarks,
@@ -211,7 +211,7 @@ class ScmWrController extends Controller
         try {
             $wrLine = ScmWrLine::find($request->id);
             $wrLine->update([
-                'is_closed' => 1,
+                'status' => 'Closed',
                 'closed_by' => auth()->user()->id,
                 'closed_at' => now(),
                 'closing_remarks' => $request->closing_remarks,
@@ -221,11 +221,11 @@ class ScmWrController extends Controller
             $work_requisition->load('scmWrLines');
 
             $wrLines = $work_requisition->scmWrLines->count();
-            $sumIsClosed = $work_requisition->scmWrLines->sum('is_closed');
+            $sumIsClosed = $work_requisition->scmWrLines->where('status', 'Closed')->count();
 
             if ($wrLines === $sumIsClosed) {
                 $work_requisition->update([
-                    'is_closed' => 1,
+                    'status' => 'Closed',
                     'closed_by' => auth()->user()->id,
                     'closed_at' => now(),
                     'closing_remarks' => "All lines are closed",

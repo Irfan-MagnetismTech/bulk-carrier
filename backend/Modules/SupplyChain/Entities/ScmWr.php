@@ -24,6 +24,7 @@ class ScmWr extends Model
         'closed_at',
         'closed_by',
         'is_closed',
+        'status',
         'closing_remarks'
     ];
 

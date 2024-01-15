@@ -19,7 +19,8 @@ class ScmWrLine extends Model
         'remarks',
         'closed_at',
         'closed_by',
-        'is_closed',
+        'is_closed',        
+        'status',
         'closing_remarks'
     ];
 

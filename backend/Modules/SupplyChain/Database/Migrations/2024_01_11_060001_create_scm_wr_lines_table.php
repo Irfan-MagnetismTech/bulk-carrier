@@ -26,6 +26,7 @@ return new class extends Migration
             $table->integer('closed_by')->nullable();
             $table->datetime('closed_at')->nullable();
             $table->string('closing_remarks')->nullable();
+            $table->enum('status', ['Pending','WIP','Closed'])->nullable();
             $table->timestamps();
         });
     }

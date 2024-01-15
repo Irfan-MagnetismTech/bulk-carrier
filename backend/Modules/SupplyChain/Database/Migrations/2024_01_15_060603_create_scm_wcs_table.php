@@ -13,20 +13,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('scm_wrs', function (Blueprint $table) {
+        Schema::create('scm_wcs', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('scm_wr_id')->nullable();
             $table->bigInteger('scm_warehouse_id')->nullable();
             $table->bigInteger('acc_cost_center_id')->nullable();
-            $table->date('raised_date')->nullable();
-            $table->date('approved_date')->nullable();
-            $table->string('attachment')->nullable();
+            $table->string('ref_no')->nullable();
+            $table->string('requirment_type')->nullable();
+            $table->string('special_instruction')->nullable();
+            $table->date('effective_date')->nullable();
+            $table->date('expire_date')->nullable();
+            $table->date('required_date')->nullable();
             $table->text('remarks')->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();
-            $table->tinyInteger('is_closed')->default(0)->comment('0, 1');
-            $table->integer('closed_by')->nullable();
-            $table->datetime('closed_at')->nullable();
-            $table->string('closing_remarks')->nullable();
-            $table->enum('status', ['Pending','WIP','Closed'])->nullable();
             $table->timestamps();
         });
     }
@@ -38,6 +37,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scm_wrs');
+        Schema::dropIfExists('scm_wcs');
     }
 };
