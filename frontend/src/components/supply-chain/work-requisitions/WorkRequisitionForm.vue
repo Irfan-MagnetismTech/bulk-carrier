@@ -291,7 +291,7 @@ function tytytyasd(indx) {
         
         <label class="label-group">
             <span class="label-item-title">Approved Date<span class="text-red-500">*</span></span>
-            <VueDatePicker v-model="form.approved_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
+            <VueDatePicker v-model="form.approved_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :min-date="form.raised_date"></VueDatePicker>
             <Error v-if="errors?.approved_date" :errors="errors.approved_date"  />
         </label>
         <label class="label-group">
@@ -364,7 +364,7 @@ function tytytyasd(indx) {
               <div v-for="(scmWrLine, index) in form.scmWrLines" :key="index" class="p-2 my-2 rounded-md border-2 border-gray-200">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-2 ">
                   <label class="block w-full mt-2 text-sm">
-                    <span class="text-gray-700 dark-disabled:text-gray-300">Service Name</span>
+                    <span class="text-gray-700 dark-disabled:text-gray-300">Service Name <span class="text-red-500">*</span></span>
                     <v-select :options="services" placeholder="--Choose an option--" :loading="serviceLoading" v-model="scmWrLine.scmService" label="name" class="block form-input" @update:modelValue="scmServiceChange(scmWrLine)">
                       <template #search="{attributes, events}">
                           <input
@@ -385,17 +385,17 @@ function tytytyasd(indx) {
                 
                   <label class="block w-full mt-2 text-sm">
                     <span class="text-gray-700 dark-disabled:text-gray-300">Remarks</span>
-                    <input type="text" v-model.trim="scmWrLine.remarks" placeholder="Remarks" class="form-input" required />
+                    <input type="text" v-model.trim="scmWrLine.remarks" placeholder="Remarks" class="form-input"  />
                   </label>
                   
                   <label class="block w-full mt-2 text-sm">
-                    <span class="text-gray-700 dark-disabled:text-gray-300">Quantity</span>
-                    <input type="number" step="0.01" v-model.trim="scmWrLine.quantity" placeholder="Quantity" class="form-input" required />
+                    <span class="text-gray-700 dark-disabled:text-gray-300">Quantity <span class="text-red-500">*</span></span>
+                    <input type="number" step="0.01" v-model.trim="scmWrLine.quantity" placeholder="Quantity" class="form-input" min="1" required />
                   </label>
                   
                   <label class="block w-full mt-2 text-sm">
-                    <span class="text-gray-700 dark-disabled:text-gray-300">Required Date</span>
-                    <VueDatePicker v-model="scmWrLine.required_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
+                    <span class="text-gray-700 dark-disabled:text-gray-300">Required Date <span class="text-red-500">*</span></span>
+                    <VueDatePicker v-model="scmWrLine.required_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :min-date="form.approved_date"></VueDatePicker>
                   </label>
                 </div>
 
