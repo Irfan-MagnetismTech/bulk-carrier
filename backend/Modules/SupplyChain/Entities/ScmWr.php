@@ -37,4 +37,9 @@ class ScmWr extends Model
     {
         return $this->belongsTo(ScmWarehouse::class);
     }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(ScmWarehouse::class, 'closed_by' , 'id');
+    }
 }

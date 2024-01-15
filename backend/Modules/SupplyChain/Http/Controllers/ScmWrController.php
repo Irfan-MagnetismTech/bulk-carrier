@@ -30,7 +30,7 @@ class ScmWrController extends Controller
     public function index(Request $request) : JsonResponse
     {
         try {
-            $scmWr = ScmWr::with('scmWrLines', 'scmWarehouse')
+            $scmWr = ScmWr::with('scmWrLines.scmService', 'scmWarehouse', 'user')
             ->globalSearch($request->all());
 
             return response()->success('Data retrieved successfully.', $scmWr, 200);
@@ -95,7 +95,7 @@ class ScmWrController extends Controller
     public function show(ScmWr $work_requisition): JsonResponse
     {
         // dd('dddd');
-        $work_requisition->load('scmWrLines.scmService', 'scmWarehouse');
+        $work_requisition->load('scmWrLines.scmService', 'scmWarehouse', 'user');
         try
         {
             return response()->success('Data retrieved successfully.', $work_requisition, 200);
@@ -177,6 +177,25 @@ class ScmWrController extends Controller
         {
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+
+    public function getServidByPrIdForCs(Request $request): JsonResponse
+    {
+        $lineData = ScmWrLine::query()
+            ->with('scmMaterial')
+            ->where('scm_wr_id', $request->pr_id)
+            ->whereHas('scmWr', function ($query) {
+                $query->whereIn('status', ['Pending', 'WIP']);
+            })
+            ->get()
+            ->map(function ($item) {
+                $data = $item->scmMaterial;
+                $data['pr_composite_key'] = $item->pr_composite_key;
+                return $data;
+            });
+
+        return response()->success('Search result', $lineData, 200);
     }
 
     // for closing Work Requisition
