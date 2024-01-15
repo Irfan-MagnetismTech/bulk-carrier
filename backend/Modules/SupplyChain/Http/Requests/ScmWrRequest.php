@@ -25,13 +25,13 @@ class ScmWrRequest extends FormRequest
             'scm_warehouse_id' => 'required|integer|exists:scm_warehouses,id',
             'acc_cost_center_id' => 'required|integer',
             'raised_date' => 'required|date',
-            'approved_date' => 'required|date',
+            'approved_date' => 'required|date|after_or_equal:raised_date',
             'attachment' => 'nullable|mimes:xlsx,pdf,jpg,png,jpeg,doc,docx',
             'remarks' => 'max:500',
 
             'scmWrLines.*.scm_service_id' => 'exclude_if:entry_type,1|required|exists:scm_services,id|integer',
             'scmWrLines.*.quantity' => 'exclude_if:entry_type,1|required|numeric|min:1',
-            'scmWrLines.*.required_date' => 'exclude_if:entry_type,1|required|date',
+            'scmWrLines.*.required_date' => 'exclude_if:entry_type,1|required|date|after_or_equal:approved_date',
             'scmWrLines.*.description' => 'max:500',
             'scmWrLines.*.remarks' => 'max:500',
         ];
@@ -54,6 +54,7 @@ class ScmWrRequest extends FormRequest
             'raised_date.date' => 'Approved date must be a date',
             'approved_date.required' => 'Approved date is required',
             'approved_date.date' => 'Approved date must be a date',
+            'approved_date.after_or_equal' => 'Approved date must be greater than or equal to the raised date.',
             'attachment.required' => 'Attachment is required',
             'attachment.mimes' => 'Attachment must be an xlsx,pdf,jpg,png,jpeg,doc,docx',
             'remarks.max' => 'Remarks must be less than 500 characters',
@@ -72,6 +73,7 @@ class ScmWrRequest extends FormRequest
 
             'scmWrLines.*.required_date.required' => 'In row no :position Required date is required',
             'scmWrLines.*.required_date.date' => 'In row no :position Required date must be a date',
+            'scmWrLines.*.required_date.after_or_equal' => 'In row no :position required date must be greater than or equal to the approved date.',
 
         ];
     }
