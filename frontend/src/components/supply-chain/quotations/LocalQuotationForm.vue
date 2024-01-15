@@ -122,18 +122,13 @@
           <input type="text" v-model="form.credit_term" class="form-input" required/>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Terms & Conditions <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.terms_and_condition" class="form-input" required/>
+          <RemarksComponet v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'" isRequired="true"></RemarksComponet>
       </label>
   </div>
 
   <div class="input-group !w-3/4">
     <label class="label-group">
-          <span class="label-item-title">Remarks</span>
-          <textarea
-            v-model="form.remarks"
-            class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
-         
+            <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'" isRequired="true"></RemarksComponet>
     </label>
   </div>  
 
@@ -251,6 +246,7 @@
     import useVendor from '../../../composables/supply-chain/useVendor';
     import useMaterialCs from '../../../composables/supply-chain/useMaterialCs';
     import { useRoute } from 'vue-router';
+    import RemarksComponet from '../../utils/RemarksComponent.vue';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();

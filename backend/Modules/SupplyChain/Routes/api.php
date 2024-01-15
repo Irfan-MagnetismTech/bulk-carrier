@@ -103,6 +103,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::put('quotations/{quotationId}', [ScmCsController::class, "updateQuotation"])->name('quotations.update');
 
     Route::post('close-pr', [ScmPrController::class, "closePr"])->name('closePr');
+    Route::post('close-prline', [ScmPrController::class, "closePrLine"])->name('closePrLine');
     Route::get('get-cs-data/{id}', [ScmCsController::class, "getCsWiseData"])->name('getCsWiseData');
 });
 
