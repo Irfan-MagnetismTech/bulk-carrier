@@ -34,8 +34,8 @@ class ScmWrLine extends Model
     {
         return $this->belongsTo(ScmService::class);
     }
-    
-    public function user(): BelongsTo
+
+    public function closedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'closed_by' , 'id');
     }

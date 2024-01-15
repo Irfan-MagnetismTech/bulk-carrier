@@ -31,7 +31,7 @@ class ScmWrController extends Controller
     public function index(Request $request) : JsonResponse
     {
         try {
-            $scmWr = ScmWr::with('scmWrLines.scmService', 'scmWrLines.user', 'scmWarehouse', 'user')
+            $scmWr = ScmWr::with('scmWrLines.scmService', 'scmWrLines.closedBy', 'scmWarehouse', 'closedBy')
             ->globalSearch($request->all());
 
             return response()->success('Data retrieved successfully.', $scmWr, 200);
@@ -97,15 +97,15 @@ class ScmWrController extends Controller
     {
         // dd('dddd');
         $loggedInUserId = Auth::id();
-        $work_requisition->load('scmWrLines.scmService', 'scmWrLines.user', 'scmWarehouse', 'user');
+        $work_requisition->load('scmWrLines.scmService', 'scmWrLines.closedBy', 'scmWarehouse', 'closedBy');
         $work_requisition->scmWrLines->each(function ($line) use ($loggedInUserId) {
             if ($line->closed_by == $loggedInUserId) {
-                $line->user->name = 'You';
+                $line->closedBy->name = 'You';
             }
         });
 
         if ($work_requisition->closed_by == $loggedInUserId) {
-            $work_requisition->user->name = 'You';
+            $work_requisition->closedBy->name = 'You';
         }
 
         try
