@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Imports\ScmMaterialsImport;
 use App\Services\FileUploadService;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\SupplyChain\Entities\ScmCs;
 use Modules\SupplyChain\Entities\ScmPo;
@@ -112,9 +113,20 @@ class ScmPrController extends Controller
      */
     public function show($id): JsonResponse
     {
+        $loggedInUserId = Auth::id();
         $purchaseRequisition = ScmPr::query()
             ->with('scmPrLines.scmMaterial', 'scmWarehouse', 'scmPrLines.scmStockLedgers', 'closedBy', 'scmPrLines.closedBy')
             ->find($id);
+        
+        $purchaseRequisition->scmPrLines->each(function ($line) use ($loggedInUserId) {
+            if ($line->closed_by == $loggedInUserId) {
+                $line->closedBy?->name = 'You';
+            }
+        });
+
+        if ($purchaseRequisition->closed_by == $loggedInUserId) {
+            $purchaseRequisition->closedBy?->name = 'You';
+        }
 
         $prLines = $purchaseRequisition->scmPrLines->map(function ($scmPrLine) use ($purchaseRequisition) {
 
