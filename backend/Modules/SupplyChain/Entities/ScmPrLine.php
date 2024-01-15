@@ -8,6 +8,7 @@ use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Entities\ScmPoLine;
 use Modules\SupplyChain\Entities\ScmMrrLine;
 use Modules\SupplyChain\Entities\ScmMaterial;
+use Modules\SupplyChain\Entities\ScmCsMaterial;
 use Modules\SupplyChain\Entities\ScmStockLedger;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -56,5 +57,15 @@ class ScmPrLine extends Model
     public function closedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'closed_by', 'id');
+    }
+
+    public function scmCsmaterials(): HasMany
+    {
+        return $this->hasMany(ScmCsMaterial::class, 'pr_composite_key', 'pr_composite_key');
+    }
+
+    public function createdBy(): BelongsTo  
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
     }
 }
