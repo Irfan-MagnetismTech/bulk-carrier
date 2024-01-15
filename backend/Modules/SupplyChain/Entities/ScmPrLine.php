@@ -2,8 +2,10 @@
 
 namespace Modules\SupplyChain\Entities;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmPr;
+use Modules\SupplyChain\Entities\ScmPoLine;
 use Modules\SupplyChain\Entities\ScmMrrLine;
 use Modules\SupplyChain\Entities\ScmMaterial;
 use Modules\SupplyChain\Entities\ScmStockLedger;
@@ -16,7 +18,7 @@ class ScmPrLine extends Model
     use HasFactory;
 
     protected $fillable = [
-        'scm_pr_id', 'scm_material_id', 'unit', 'brand', 'model',  'country_id', 'country_name', 'sample_file', 'drawing_no', 'part_no', 'specification', 'quantity', 'required_date', 'pr_composite_key', 'is_closed', 'closed_by', 'closed_at', 'closing_remarks'
+        'scm_pr_id', 'scm_material_id', 'unit', 'brand', 'model',  'country_id', 'country_name', 'sample_file', 'drawing_no', 'part_no', 'specification', 'quantity', 'required_date', 'pr_composite_key', 'is_closed', 'closed_by', 'closed_at', 'closing_remarks', 'status'
     ];
 
     protected $appends = ['material_name_quantity_unit'];
@@ -49,5 +51,10 @@ class ScmPrLine extends Model
     public function getMaterialNameQuantityUnitAttribute()
     {
         return $this->scmMaterial->name . ' - ' . $this->quantity . ' - ' . $this->unit;
+    }
+
+    public function closedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'closed_by', 'id');
     }
 }

@@ -35,7 +35,7 @@ class ScmCsController extends Controller
     {
         try {
             $scmCs = ScmCs::query()
-                ->with('scmPr', 'scmWarehouse')
+                ->with('scmPr', 'scmWarehouse', 'selectedVendors', 'scmCsMaterials.scmMaterial')
                 ->globalSearch(request()->all());
 
             return response()->success('Data list', $scmCs, 200);

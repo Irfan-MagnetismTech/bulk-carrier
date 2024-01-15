@@ -113,7 +113,7 @@ class ScmPrController extends Controller
     public function show($id): JsonResponse
     {
         $purchaseRequisition = ScmPr::query()
-            ->with('scmPrLines.scmMaterial', 'scmWarehouse', 'scmPrLines.scmStockLedgers')
+            ->with('scmPrLines.scmMaterial', 'scmWarehouse', 'scmPrLines.scmStockLedgers', 'closedBy', 'scmPrLines.closedBy')
             ->find($id);
 
         $prLines = $purchaseRequisition->scmPrLines->map(function ($scmPrLine) use ($purchaseRequisition) {
@@ -134,7 +134,7 @@ class ScmPrController extends Controller
                 'rob' => $currentStock,
                 'quantity' => $scmPrLine->quantity,
                 'is_closed' => $scmPrLine->is_closed,
-                'closed_by' => $scmPrLine->closed_by,
+                'closed_by' => $scmPrLine->closedBy?->name ?? null,
                 'closed_at' => $scmPrLine->closed_at,
                 'closing_remarks' => $scmPrLine->closing_remarks,
                 'required_date' => $scmPrLine->required_date
@@ -156,6 +156,10 @@ class ScmPrController extends Controller
             'purchase_center' => $purchaseRequisition->purchase_center,
             'approved_date' => $purchaseRequisition->approved_date,
             'remarks' => $purchaseRequisition->remarks,
+            'is_closed' => $purchaseRequisition->is_closed,
+            'closed_by' => $purchaseRequisition->closedBy?->name ?? null,
+            'closed_at' => $purchaseRequisition->closed_at,
+            'closing_remarks' => $purchaseRequisition->closing_remarks,
             'scmPrLines' => $prLines,
         ];
 
@@ -354,7 +358,7 @@ class ScmPrController extends Controller
             ->with('scmMaterial')
             ->where('scm_pr_id', $request->pr_id)
             ->whereHas('scmPr', function ($query) {
-                $query->where('is_closed', 0);
+                $query->whereIn('status', ['Pending', 'WIP']);
             })
             ->get()
             ->map(function ($item) {
@@ -371,7 +375,8 @@ class ScmPrController extends Controller
         try {
             $pr = ScmPr::find($request->id);
             $pr->update([
-                'is_closed' => 1,
+                // 'is_closed' => 1,
+                'status' => 'Closed',
                 'closed_by' => auth()->user()->id,
                 'closed_at' => now(),
                 'closing_remarks' => $request->closing_remarks,
@@ -380,7 +385,8 @@ class ScmPrController extends Controller
             $pr->load('scmPrLines');
             foreach ($pr->scmPrLines as $prLine) {
                 $prLine->update([
-                    'is_closed' => 1,
+                    // 'is_closed' => 1,
+                    'status' => 'Closed',
                     'closed_by' => auth()->user()->id,
                     'closed_at' => now(),
                     'closing_remarks' => $request->closing_remarks,
@@ -397,7 +403,8 @@ class ScmPrController extends Controller
         try {
             $prLine = ScmPrLine::find($request->id);
             $prLine->update([
-                'is_closed' => 1,
+                // 'is_closed' => 1,
+                'status' => 'Closed',
                 'closed_by' => auth()->user()->id,
                 'closed_at' => now(),
                 'closing_remarks' => $request->closing_remarks,
@@ -407,18 +414,20 @@ class ScmPrController extends Controller
             $pr->load('scmPrLines');
 
             $prLines = $pr->scmPrLines->count();
-            $sumIsClosed = $pr->scmPrLines->sum('is_closed');
+            // $sumIsClosed = $pr->scmPrLines->sum('is_closed');
+            $sumIsClosed = $pr->scmPrLines->where('status', 'Closed')->count();
 
             if ($prLines === $sumIsClosed) {
                 $pr->update([
-                    'is_closed' => 1,
+                    // 'is_closed' => 1,
+                    'status' => 'Closed',
                     'closed_by' => auth()->user()->id,
                     'closed_at' => now(),
                     'closing_remarks' => "All lines are closed",
                 ]);
             }
 
-            return response()->success('Data updated sucessfully!',[$prLines,$sumIsClosed], 200);
+            return response()->success('Data updated sucessfully!', [$prLines, $sumIsClosed], 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
