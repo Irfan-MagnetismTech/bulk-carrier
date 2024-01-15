@@ -71,7 +71,7 @@ class ScmWrController extends Controller
                 'scmWrLines'
             );
 
-            $work_requisition_info['created_by']=Auth::id();
+            $work_requisition_info['created_by']=auth()->id();
 
             if (count($request->scmWrLines)<1) {
                 $error= [
@@ -87,9 +87,16 @@ class ScmWrController extends Controller
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/work_requisitions');
                 $work_requisition_info['attachment'] = $attachment;
             }
+
+            $modifiedLines = collect($request->scmWrLines)->map(function ($lineData) {
+                $lineData['created_by'] = auth()->id();
+                return $lineData;
+            })->toArray();
+
+
             $work_requisition = ScmWr::create($work_requisition_info);
             
-            $work_requisition->scmWrLines()->createMany($request->scmWrLines);
+            $work_requisition->scmWrLines()->createMany($modifiedLines);
             DB::commit();
             return response()->success('Data added successfully.', $work_requisition, 201);
         }
