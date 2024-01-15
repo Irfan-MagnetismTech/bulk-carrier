@@ -1,0 +1,232 @@
+<script setup>
+import Error from "../Error.vue";
+import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
+import BusinessUnitInput from "../input/BusinessUnitInput.vue";
+import ErrorComponent from '../../components/utils/ErrorComponent.vue';
+import {onMounted, ref, watch, watchEffect} from "vue";
+import Store from "../../store";
+import useVessel from "../../composables/operations/useVessel";
+import useCrewProfile from "../../composables/crew/useCrewProfile";
+import Swal from "sweetalert2";
+const { vessels, searchVessels, getVesselsWithoutPaginate, isLoading } = useVessel();
+const { getVesselAssignedCrews, vesselAssignedCrews } = useCrewCommonApiRequest();
+const { checkValidation } = useCrewProfile();
+const props = defineProps({
+  form: {
+    required: false,
+    default: {}
+  },
+  page: {
+    required: false,
+    default: {}
+  },
+  errors: { type: [Object, Array], required: false },
+});
+const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
+
+watch(() => props.form, (value) => {
+  if(value){
+    props.form.ops_vessel_id = props.form?.ops_vessel_name?.id ?? '';
+    props.form.ops_vessel_imo = props.form?.ops_vessel_name?.imo ?? '';
+    props.form.ops_vessel_flag = props.form?.ops_vessel_name?.flag ?? '';
+  }
+}, {deep: true});
+
+watch(() => props.form.business_unit, (newValue, oldValue) => {
+  businessUnit.value = newValue;
+  if(newValue !== oldValue && oldValue != ''){
+    props.form.ops_vessel_name = null;
+    props.form.ops_vessel_id = '';
+  }
+});
+
+function vesselChanged(){
+  props.form.crwAttendanceLines = [];
+  getVesselAssignedCrews(props.form.ops_vessel_name.id);
+}
+
+watch(() => vesselAssignedCrews.value, (items) => {
+  props.form.total_crews = items.length;
+  items.forEach(function(item){
+    props.form.crwAttendanceLines.push({
+      crwCrewAssignment : item,
+      crw_crew_assignment_id : item.id,
+      crw_crew_assignment_name : item,
+      crw_crew_id : item.crwCrew.id,
+      attendance_line_composite : "BDCGP",
+      present_days : "",
+      absent_days : '',
+      payable_days : 0,
+    })
+  });
+  // console.log(vesselAssignedCrews);
+});
+
+function toggleHourlyRecord(index, event) {
+  let element = document.getElementById('hourly_input_'+index);
+  element.style.backgroundColor = '#a5dc86';
+  event.target.value = props.form.location_type;
+}
+
+onMounted(() => {
+  watchEffect(() => {
+    getVesselsWithoutPaginate(props.form.business_unit);
+  });
+});
+
+</script>
+
+<template>
+  <div class="grid lg:grid-cols-2 gap-2 md:grid-cols-1">
+    <div>
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+        <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Basic Info</legend>
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+          <business-unit-input v-model.trim="form.business_unit"></business-unit-input>
+          <div class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Date<span class="text-red-500">*</span></span>
+            <VueDatePicker v-model="form.issue_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+          </div>
+          <label class="block w-full mt-2 text-sm"></label>
+        </div>
+        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name<span class="text-red-500">*</span></span>
+            <v-select :options="vessels" :loading="isLoading" placeholder="--Choose an option--"  v-model.trim="form.ops_vessel_name" label="name" @update:modelValue="vesselChanged" class="block form-input">
+              <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.ops_vessel_name"
+                    v-bind="attributes"
+                    v-on="events"
+                />
+              </template>
+            </v-select>
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">IMO Number</span>
+            <input type="text" v-model.trim="form.ops_vessel_imo" class="form-input vms-readonly-input" autocomplete="off" readonly/>
+          </label>
+          <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Flag of Ship</span>
+            <input type="text" v-model.trim="form.ops_vessel_flag" class="form-input vms-readonly-input" autocomplete="off" readonly/>
+          </label>
+        </div>
+        <div v-if="form?.crwAttendanceLines?.length" class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+          <table class="w-full whitespace-no-wrap mt-2" id="table1">
+            <thead>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              <th colspan="5">Crew List</th>
+            </tr>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              <th class="px-4 py-3 align-bottom no-wrap">
+                <input type="checkbox" class="text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
+              </th>
+              <th class="px-4 py-3 align-bottom no-wrap">Seafarer</th>
+              <th class="px-4 py-3 align-bottom no-wrap">Position / Rank</th>
+              <th class="px-4 py-3 align-bottom no-wrap">Service Start</th>
+              <th class="px-4 py-3 align-bottom no-wrap">Comment</th>
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+            <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(crwAttendanceLine, index) in form.crwAttendanceLines" :key="crwAttendanceLine.id">
+              <td class="px-1 py-1">
+                <input type="checkbox" class="text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
+              </td>
+              <td class="px-1 py-1">
+                <input type="text" :value="form.crwAttendanceLines[index]?.crwCrewAssignment?.crwCrew?.full_name" class="form-input vms-readonly-input" autocomplete="off" readonly/>
+              </td>
+              <td class="px-1 py-1">
+                <input type="text" :value="form.crwAttendanceLines[index]?.crwCrewAssignment?.position_onboard" class="form-input vms-readonly-input" autocomplete="off" readonly/>
+              </td>
+              <td class="px-1 py-1">
+                <input type="number" v-model.trim="form.crwAttendanceLines[index].present_days" min="0" max="31" class="form-input vms-readonly-input" autocomplete="off" required readonly />
+              </td>
+              <td class="px-1 py-1">
+                <input type="text" placeholder="Comment.." class="form-input" autocomplete="off"/>
+              </td>
+            </tr>
+            </tbody>
+            <tfoot v-if="!form.crwAttendanceLines.length">
+            <tr v-if="isLoading">
+              <td colspan="3">Loading...</td>
+            </tr>
+            <tr v-else-if="!form.crwAttendanceLines.length">
+              <td colspan="3">No data found.</td>
+            </tr>
+            </tfoot>
+          </table>
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+        <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Rest Hour Record</legend>
+        <div v-if="form?.crwAttendanceLines?.length">
+          <div class="grid lg:grid-cols-1 gap-2 md:grid-cols-1">
+            <label class="block w-full mt-2 text-sm">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Location</span>
+              <select class="form-input" v-model.trim="form.location_type">
+                <option value="">Select</option>
+                <option value="X">Periods of Work at Sea (X)</option>
+                <option value="P">Periods of Work in Port (P)</option>
+                <option value="S">Proposed Periods of Work (S)</option>
+              </select>
+            </label>
+          </div>
+
+<!--          <div class="flex items-center">-->
+<!--            <input type="text" class="form-input vms-readonly-input text-center !w-10" autocomplete="off" readonly/>-->
+<!--            <input type="text" class="form-input vms-readonly-input text-center !w-10" autocomplete="off" readonly/>-->
+<!--          </div>-->
+<!--          <div class="flex items-center">-->
+
+<!--          </div>-->
+          <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+            <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Hourly Records</legend>
+          <div class="grid lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-4 gap-1 flex items-center">
+            <div class="!text-center" v-for="(index) in 48">
+              <span>{{index}}</span>
+              <input type="text" :id="'hourly_input_'+index" @click="toggleHourlyRecord(index,$event)" class="form-input vms-readonly-input text-center" autocomplete="off" readonly/>
+            </div>
+          </div>
+          </fieldset>
+
+
+<!--          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">-->
+<!--            <table class="w-full whitespace-no-wrap mt-2" id="table1">-->
+<!--              <thead>-->
+<!--              <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">-->
+<!--                <th colspan="12">Hourly Records</th>-->
+<!--              </tr>-->
+<!--              </thead>-->
+<!--              <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">-->
+<!--              <tr class="text-gray-700 dark-disabled:text-gray-400">-->
+<!--                <td class="px-1 py-1" v-for="(index) in 12" :key="index">{{ index }}<input type="text" class="form-input vms-readonly-input text-center !w-10" :id="'hourly_input_'+index" @click="toggleHourlyRecord(index,$event)" autocomplete="off" readonly/></td>-->
+<!--              </tr>-->
+<!--              <tr class="text-gray-700 dark-disabled:text-gray-400">-->
+<!--                <td class="px-1 py-1" v-for="(index) in 12" :key="index+12">{{ index + 12 }}<input type="text" class="form-input vms-readonly-input text-center !w-10" :id="'hourly_input_'+(index+12)" @click="toggleHourlyRecord(index+12,$event)" autocomplete="off" readonly/></td>-->
+<!--              </tr>-->
+<!--              <tr class="text-gray-700 dark-disabled:text-gray-400">-->
+<!--                <td class="px-1 py-1" v-for="(index) in 12" :key="index+24">{{ index + 24 }}<input type="text" class="form-input vms-readonly-input text-center !w-10" :id="'hourly_input_'+(index+24)" @click="toggleHourlyRecord(index+24,$event)" autocomplete="off" readonly/></td>-->
+<!--              </tr>-->
+<!--              <tr class="text-gray-700 dark-disabled:text-gray-400">-->
+<!--                <td class="px-1 py-1" v-for="(index) in 12" :key="index+36">{{ index + 36 }}<input type="text" class="form-input vms-readonly-input text-center !w-10" :id="'hourly_input_'+(index+36)" @click="toggleHourlyRecord(index+36,$event)" autocomplete="off" readonly/></td>-->
+<!--              </tr>-->
+<!--              </tbody>-->
+<!--            </table>-->
+<!--          </div>-->
+          <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm text-white bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Save</button>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+</template>
+
+<style lang="postcss" scoped>
+#table1 th,tr,td{
+  @apply border border-collapse border-gray-400 text-center text-gray-700 px-1
+}
+
+</style>
