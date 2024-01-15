@@ -6,7 +6,7 @@ import useMaterialCs from "../../../composables/supply-chain/useMaterialCs";
 import MaterialCsForm from "../../../components/supply-chain/material-cs/MaterialCsForm.vue";
 import { useRoute } from 'vue-router';
 
-const { getMaterialCs, showMaterialCs, materialCs, updateMaterialCs,materialObject, errors, isLoading,materialObj,materialList} = useMaterialCs();
+const { getMaterialCs, showMaterialCs, materialCs, updateMaterialCs, errors, isLoading,materialObj,materialList} = useMaterialCs();
 const { getPrWiseMaterialList, prMaterialList } = useMaterialCs();
 
 import useHeroIcon from "../../../assets/heroIcon";

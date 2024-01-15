@@ -15,6 +15,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import FooterComponent from "../../../components/utils/FooterComponent.vue";
 import { formatDate } from "../../../utils/helper.js";
+import RemarksComponent from '../../../components/utils/RemarksComponent.vue';
 
 import { useRouter } from 'vue-router';
 import useIndexUtils from '../../../services/indexUtils';
@@ -85,7 +86,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Material - Code",
+      "label": "Material",
     },
     {
       "relation_name": "scmPrLines.scmMaterial",
@@ -94,7 +95,25 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Qty - Price",
+      "label": "Code",
+    },
+    {
+      "relation_name": "scmPrLines.scmMaterial",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Qty",
+    },
+    {
+      "relation_name": "scmPrLines.scmMaterial",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Unit",
     },
     {
       "relation_name": "scmWarehouse",
@@ -270,7 +289,7 @@ function confirmDelete(id) {
           <tbody>
             <tr v-for="(purchaseRequisition,index) in (purchaseRequisitions?.data ? purchaseRequisitions?.data : purchaseRequisitions)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1}}</td>
-              <td>{{ purchaseRequisition?.ref_no }}</td>
+              <td><nobr>{{ purchaseRequisition?.ref_no }}</nobr></td>
               <td>{{ formatDate(purchaseRequisition?.raised_date) }}</td>
               <td>{{ purchaseRequisition?.purchase_center }}</td>
               <td style="text-align: center !important;">
@@ -279,8 +298,14 @@ function confirmDelete(id) {
                 </span> -->
                 <table class="w-full">
                   <tr v-for="(line,index) in purchaseRequisition?.scmPrLines" :key="index">
-                    <td>{{ line?.scmMaterial.name ?? '' }}</td>
-                    <td>{{ line?.scmMaterial.material_code ?? '' }}</td>
+                    <td><nobr>{{ line?.scmMaterial.name ?? '' }}</nobr></td>
+                  </tr>
+                </table>
+              </td>
+              <td style="text-align: center !important;">
+                <table class="w-full">
+                  <tr v-for="(line,index) in purchaseRequisition?.scmPrLines" :key="index">
+                    <td><nobr>{{ line?.scmMaterial.material_code ?? '' }}</nobr></td>
                   </tr>
                 </table>
               </td>
@@ -290,14 +315,19 @@ function confirmDelete(id) {
                 </span> -->
                 <table class="w-full">
                   <tr v-for="(line,index) in purchaseRequisition?.scmPrLines" :key="index">
-                    <td>{{ line?.quantity ?? '' }}</td>
-                    <td>{{ line?.unit ?? '' }}</td>
+                    <td><nobr>{{ line?.quantity ?? '' }}</nobr></td>
+                  </tr>
+                </table>
+              </td>
+              <td style="text-align: center !important;">
+                <table class="w-full">
+                  <tr v-for="(line,index) in purchaseRequisition?.scmPrLines" :key="index">
+                    <td><nobr>{{ line?.unit ?? '' }}</nobr></td>
                   </tr>
                 </table>
               </td>
               <td>{{ purchaseRequisition?.scmWarehouse?.name?? '' }}</td>
               <td>
-                <!-- <button class="bg-red-600 hover:bg-red-700 hover:outline-black" v-if="purchaseRequisition.is_closed == 0" @click="showModal(purchaseRequisition.id)">close</button> -->
                 <button v-if="purchaseRequisition.is_closed == 0" @click="showModal(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Close</button>
                 <span v-else :class="purchaseRequisition?.is_closed === 0 ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.is_closed === 0 ? 'Open' : 'Closed' }}</span>
               </td>
@@ -307,19 +337,6 @@ function confirmDelete(id) {
               <td>
                 <nobr>
                 <div class="grid grid-flow-col-dense gap-x-2">
-                    <!-- <template v-if="(purchaseRequisition?.scmCss.length > 0) || ((purchaseRequisition?.scmCss.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) && (purchaseRequisition?.scmPos.length <= 0))">
-                     <button @click="navigateToCSCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create CS</button>
-                    </template> -->
-                    <!-- <template v-if="purchaseRequisition?.scmPos.length > 0 || ((purchaseRequisition?.scmCss.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) && (purchaseRequisition?.scmPos.length <= 0))">
-
-                    <button @click="navigateToPOCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
-
-                    </template> -->
-                    <!-- <template v-if="(purchaseRequisition?.scmMrrs.length > 0 && purchaseRequisition?.scmPos.length <= 0 ) || ((purchaseRequisition?.scmCss.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) && (purchaseRequisition?.scmPos.length <= 0))">
-
-                      <button @click="navigateToMRRCreate(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button>
-
-                    </template> -->
                     <template v-if="(purchaseRequisition?.scmPos.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) ">
                       <action-button :action="'edit'" :to="{ name: 'scm.purchase-requisitions.edit', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>
                     </template>
@@ -368,26 +385,26 @@ function confirmDelete(id) {
           </tr>
           </thead>
         </table>
-
         <div class="dt-responsive table-responsive">
           <table id="dataTable" class="w-full table table-striped table-bordered">
             <tbody>
               <tr>
-                <td><textarea v-model="closingRemarks"></textarea></td>
+                <td>
+                <RemarksComponent v-model="closingRemarks" :maxlength="300" :fieldLabel="'Closing Remarks'" isRequired="true" hideLebel="true"></RemarksComponent>
+                </td>
               </tr>
            </tbody>
           </table>
         </div>
-
-        <footer class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark-disabled:bg-gray-800">
-          <button type="button" @click="closePurchaseRequisition" style="color: #1b1e21"
+        <footer class="flex flex-col items-center justify-between px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark-disabled:bg-gray-800">
+          <button type="button" @click="closeModel" style="color: #1b1e21"
                   class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 border border-gray-300 rounded-lg dark-disabled:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
             CLOSE
           </button>
-          <!-- <button type="button" @click="pushBunkerConsumption"
-              class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-            Submit
-          </button> -->
+          <button type="button" @click="closePurchaseRequisition" style="color: #1b1e21"
+                  class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 border border-gray-300 rounded-lg dark-disabled:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
+            CONFIRM
+          </button>
         </footer>
       </div>
     </form>

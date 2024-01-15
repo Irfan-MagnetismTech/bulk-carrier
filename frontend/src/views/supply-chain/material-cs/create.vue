@@ -10,7 +10,7 @@ import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 
 const icons = useHeroIcon();
 
-const { getMaterialCs, materialCs, storeMaterialCs,materialObject, errors, isLoading,getPrWiseCs,materialObj,materialList} = useMaterialCs();
+const { getMaterialCs, materialCs, storeMaterialCs,errors, isLoading,getPrWiseCs,materialObj,materialList} = useMaterialCs();
 const page = ref('create');
 const { setTitle } = Title();
 

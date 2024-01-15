@@ -343,6 +343,32 @@ export default function usePurchaseRequisition() {
 
     }
 
+    async function closePrLines(parent_id,id,closing_remarks) {
+        try {
+            let formData = new FormData();
+            formData.append('id', id);
+            formData.append('parent_id', parent_id);
+            formData.append('closing_remarks', closing_remarks);
+
+            const { data, status } = await Api.post(`/${BASE}/close-prline`, formData);
+            notification.showSuccess(status);
+            await showPurchaseRequisition(parent_id);
+        }
+        catch (error) {
+            if (error.response) {
+                const { data, status ,messege } = error.response;
+                console.log(data,error.response);
+                notification.showError(status);
+            } else {
+                notification.showError("An error occurred. Please check your internet connection.");
+            }
+
+        } finally {
+            // isLoading.value = false;
+        }
+
+    }
+
     return {
         purchaseRequisitions,
         purchaseRequisition,
@@ -358,6 +384,7 @@ export default function usePurchaseRequisition() {
         materialObject,
         searchPr,
         closePr,
+        closePrLines,
         closingData,
         excelExportData,
         isTableLoading,

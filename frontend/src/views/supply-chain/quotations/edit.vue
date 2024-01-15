@@ -9,7 +9,7 @@ import LocalQuotationForm from "../../../components/supply-chain/quotations/Loca
 import useQuotation from "../../../composables/supply-chain/useQuotation";
 import { useRoute } from 'vue-router';
 
-const { getMaterialCs, showMaterialCs, materialCs, updateMaterialCs,materialObject, errors, isLoading } = useMaterialCs();
+const { getMaterialCs, showMaterialCs, materialCs, updateMaterialCs, errors, isLoading } = useMaterialCs();
 const { updateQuotations, quotation, localQuotationLines, foreignQuotationLines,showQuotation } = useQuotation();
 
 import useHeroIcon from "../../../assets/heroIcon";

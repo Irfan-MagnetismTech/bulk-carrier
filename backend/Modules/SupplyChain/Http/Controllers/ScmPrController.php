@@ -121,6 +121,7 @@ class ScmPrController extends Controller
             $currentStock = $scmPrLine->scmStockLedgers->where('scm_warehouse_id', $purchaseRequisition->scm_warehouse_id)->sum('quantity');
 
             $lines = [
+                'id' => $scmPrLine->id,
                 'scm_material_id' => $scmPrLine->scmMaterial->id,
                 'scmMaterial' => $scmPrLine->scmMaterial,
                 'unit' => $scmPrLine->unit,
@@ -132,6 +133,10 @@ class ScmPrController extends Controller
                 'part_no' => $scmPrLine->part_no,
                 'rob' => $currentStock,
                 'quantity' => $scmPrLine->quantity,
+                'is_closed' => $scmPrLine->is_closed,
+                'closed_by' => $scmPrLine->closed_by,
+                'closed_at' => $scmPrLine->closed_at,
+                'closing_remarks' => $scmPrLine->closing_remarks,
                 'required_date' => $scmPrLine->required_date
             ];
             return $lines;
@@ -371,7 +376,49 @@ class ScmPrController extends Controller
                 'closed_at' => now(),
                 'closing_remarks' => $request->closing_remarks,
             ]);
+
+            $pr->load('scmPrLines');
+            foreach ($pr->scmPrLines as $prLine) {
+                $prLine->update([
+                    'is_closed' => 1,
+                    'closed_by' => auth()->user()->id,
+                    'closed_at' => now(),
+                    'closing_remarks' => $request->closing_remarks,
+                ]);
+            }
             return response()->success('Data updated sucessfully!', $pr, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function closePrLine(Request $request): JsonResponse
+    {
+        try {
+            $prLine = ScmPrLine::find($request->id);
+            $prLine->update([
+                'is_closed' => 1,
+                'closed_by' => auth()->user()->id,
+                'closed_at' => now(),
+                'closing_remarks' => $request->closing_remarks,
+            ]);
+
+            $pr = ScmPr::find($request->parent_id);
+            $pr->load('scmPrLines');
+
+            $prLines = $pr->scmPrLines->count();
+            $sumIsClosed = $pr->scmPrLines->sum('is_closed');
+
+            if ($prLines === $sumIsClosed) {
+                $pr->update([
+                    'is_closed' => 1,
+                    'closed_by' => auth()->user()->id,
+                    'closed_at' => now(),
+                    'closing_remarks' => "All lines are closed",
+                ]);
+            }
+
+            return response()->success('Data updated sucessfully!',[$prLines,$sumIsClosed], 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }

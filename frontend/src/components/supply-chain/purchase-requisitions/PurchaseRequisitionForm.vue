@@ -267,8 +267,7 @@ function tytytyasd(indx) {
       </label>
       <label class="label-group">
           <span class="label-item-title">Raised Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.raised_date" required class="form-input" name="raised" :id="'raised'" />
-          <!-- <Error v-if="errors?.raised" :errors="errors.raised"  /> -->
+          <VueDatePicker v-model="form.raised_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
       </label>
       <label class="label-group">
           <span class="label-item-title">Critical Spares<span class="text-red-500">*</span></span>
@@ -301,8 +300,7 @@ function tytytyasd(indx) {
     </label>
       <label class="label-group">
           <span class="label-item-title">Approved Date <span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.approved_date" required class="form-input" name="approved_date" :id="'approved_date'" />
-          <!-- <Error v-if="errors?.approved_date" :errors="errors.approved_date"  /> -->
+          <VueDatePicker v-model="form.approved_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
       </label>
   </div>
 
@@ -500,7 +498,7 @@ function tytytyasd(indx) {
                     </label>
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Required Date <span class="text-red-500">*</span></span>
-                      <input type="date" v-model="form.scmPrLines[index].required_date" required class="form-input">
+                      <VueDatePicker v-model="form.scmPrLines[index].required_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
                     </label>
           </div>
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
