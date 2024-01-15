@@ -123,7 +123,7 @@
   </div>
 
   
-  <div class="input-group">
+  <div class="input-group !w-3/4">
       <label class="label-group">
           <RemarksComponet v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'" isRequired="true"></RemarksComponet>
       </label>
@@ -179,13 +179,16 @@
                       <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].origin" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].stock_type" class="form-input"/>
+                      <!-- <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].stock_type" class="form-input"/> -->
+                      <select v-model="form.scmCsMaterialVendors[indexa][index].stock_type" class="form-input" @change="changeStockType(indexa,index)">
+                        <option v-for="stock_type in stock_types" :value="stock_type">{{ stock_type }}</option>
+                      </select>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].manufacturing_days" class="form-input"/>
+                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].manufacturing_days" class="form-input" :readonly="form.scmCsMaterialVendors[indexa][index].stock_type == 'Ready Stock'" :class="[form.scmCsMaterialVendors[indexa][index].stock_type == 'Ready Stock' ? 'vms-readonly-input' : '',]"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" class="form-input"/>
+                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input" min="1"/>
@@ -341,6 +344,8 @@
 
     }); 
 
+    const stock_types = ['Ready Stock', 'Manufacturing'];
+
     const addLine = () => {
       const line = cloneDeep(props.lineObj);  
       props.form.scmCsMaterialVendors.push(line);
@@ -362,6 +367,12 @@
     function changeMaterial(value,index) {
         props.form.scmCsMaterialVendors[index].unit = value.unit;
         props.form.scmCsMaterialVendors[index].scm_material_id = value.id;
+    }
+
+    function changeStockType(indexa,index) {
+      if(props.form.scmCsMaterialVendors[indexa][index].stock_type == 'Ready Stock'){
+        props.form.scmCsMaterialVendors[indexa][index].manufacturing_days = null
+      }
     }
 
     const route = useRoute();

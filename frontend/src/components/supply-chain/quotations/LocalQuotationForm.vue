@@ -116,23 +116,25 @@
   </div>
 
   
-  <div class="input-group">
+  <div class="input-group !w-1/4">
     <label class="label-group">
         <span class="label-item-title">Credit Term <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.credit_term" class="form-input" required/>
       </label>
-      <label class="label-group">
-          <RemarksComponet v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'" isRequired="true"></RemarksComponet>
-      </label>
   </div>
 
+  <div class="input-group !w-3/4">
+    <label class="label-group">
+            <RemarksComponet v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'" isRequired="true"></RemarksComponet>
+    </label>
+  </div>  
   <div class="input-group !w-3/4">
     <label class="label-group">
             <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'" isRequired="true"></RemarksComponet>
     </label>
   </div>  
 
-  <div id="">
+  <div id="" class="w-full">
     <div id="">
       <div class="table-responsive min-w-screen">
         <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
@@ -145,7 +147,8 @@
               <th class="py-3 align-center">Unit</th>
               <th class="py-3 align-center">Brand</th>
               <th class="py-3 align-center">Model</th>
-              <th class="py-3 align-center">Price</th>
+              <th class="py-3 align-center">Offer Price</th>
+              <th class="py-3 align-center">Negotiated Price</th>
             </tr>
             </thead>
 
@@ -154,11 +157,11 @@
               <template v-for="(lines, indexa) in form.scmCsMaterialVendors" :key="indexa">
                 <template v-for="(scmSrLine, index) in lines" :key="index">
                   <tr v-if="index != 0">
-                    <td>{{ scmSrLine?.scmPr?.ref_no }}</td>
+                    <td><nobr>{{ scmSrLine?.scmPr?.ref_no }}</nobr></td>
                   </tr>
                   <tr class="text-gray-700 dark-disabled:text-gray-400" v-else>
                     <td :rowspan="lines.length">{{ first(values(lines))?.scmMaterial?.name }}</td>
-                    <td>{{ scmSrLine?.scmPr?.ref_no }}</td>
+                    <td><nobr>{{ scmSrLine?.scmPr?.ref_no }}</nobr></td>
                     <td :rowspan="lines.length">{{ scmSrLine?.scmMaterial?.unit }}</td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].brand" class="form-input" required/>
@@ -167,56 +170,12 @@
                       <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].model" class="form-input" required/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input" min="1" required/>
+                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" class="form-input"/>
+                    </td>
+                    <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
+                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input" min="1"/>
                     </td>
                   </tr>
-                  
-                  <!-- <td class="!w-72">
-                    <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmSrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmSrLines[index].scmMaterial,index)"> -->
-                  <!--   <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmCsMaterialVendors[index].scmPr" label="ref_no" class="block form-input" :disabled="true" @update:modelValue="changeMaterial(form.scmCsMaterialVendors[index].scmMaterial,index)">
-                      <template #search="{attributes, events}">
-                          <input
-                              class="vs__search"
-                              :required="!form.scmCsMaterialVendors[index].scmPr"
-                              v-bind="attributes"
-                              v-on="events"
-                              />
-                      </template>
-                  </v-select>
-                  </td>
-                  <td class="!w-72">
-                    <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="form.scmSrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" @change="setMaterialOtherData(form.scmSrLines[index].scmMaterial,index)"> -->
-                   <!--  <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmCsMaterialVendors[index].scmMaterial" label="material_name_and_code" class="block form-input" :disabled="true" @update:modelValue="changeMaterial(form.scmCsMaterialVendors[index].scmMaterial,index)">
-                      <template #search="{attributes, events}">
-                          <input
-                              class="vs__search"
-                              :required="!form.scmCsMaterialVendors[index].scmMaterial"
-                              v-bind="attributes"
-                              v-on="events"
-                              />
-                      </template>
-                  </v-select>
-                  </td>
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <input type="text" readonly v-model="form.scmCsMaterialVendors[index].unit" class=" form-input">
-                    </label>
-                  </td>
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <input type="text" v-model="form.scmCsMaterialVendors[index].brand" class="form-input">
-                    </label>
-                  </td>
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <input type="text" v-model="form.scmCsMaterialVendors[index].model" class="form-input">
-                    </label>
-                  </td>
-                  <td>
-                    <label class="block w-full mt-2 text-sm">
-                      <input type="text" v-model="form.scmCsMaterialVendors[index].negotiated_price" class="form-input">
-                    </label>
-                  </td> -->
                 </template>
               </template>
             </tbody>
@@ -278,6 +237,7 @@
             materialCs.value.scmCsMaterials.map((lines, index) => {
               lines.map((line, index) => {
                 line['negotiated_price'] = null;
+                line['offered_price'] = null;
                 line['brand'] = null;
                 line['model'] = null;
               });
@@ -313,125 +273,11 @@
         props.form.scm_vendor_id = props.form.scmVendor?.id;
       }
 
-// function fetchStoreIssue(search, loading = false) {
-//     // if (search.length > 0) {
-//     //   loading(true);
-//       searchStoreIssue(search, /*loading,*/ props.form.business_unit);
-//     // }
-//   }
-
-// function setStoreIssueOtherData(datas) {
-//       props.form.scm_si_id = datas.id;
-//       props.form.si_no = datas.ref_no;
-//       props.form.acc_cost_center_id = datas.acc_cost_center_id;
-//       props.form.scm_warehouse_id = datas.scm_warehouse_id;
-//       props.form.scmWarehouse = datas.scmWarehouse;
-//       props.form.scm_warehouse_name = datas.scmWarehouse.name;
-//       props.form.scm_department_id = datas.scm_department_id;
-//       getSiWiseSir(datas.id);    
-// }
 
 
 
-// watch(() => props.form.scmSi, (new Val,oldVal) => {
-//       props.form.scm_si_id = newVal?.id;
-//       props.form.si_no = newVal?.ref_no;
-//       props.form.acc_cost_center_id = newVal?.acc_cost_center_id;
-//       props.form.scm_warehouse_id = newVal?.scm_warehouse_id;
-//       props.form.scmWarehouse = newVal?.scmWarehouse;
-//       props.form.scm_department_id = newVal?.scm_department_id;
-//       filteredStoreIssues.value = []; 
-//       getSiWiseSir(newVal?.id);    
-// });
-// watch(() => props.form.scmDepartment, (value) => {
-//   if (value) {
-//     props.form.scm_department_id = value?.id;
-//   }
-// });
 
 
-// watch(() => props.form.scmWarehouse, (value) => {
-//   if (value) {
-//     props.form.scm_warehouse_name = value?.scmWarehouse?.name;
-//   }
-// });
-
-
-
-// watch(() => props.form.scm_si_id, (value) => {
-//   if (value) {
-
-//   }
-// });
-
-// watchEffect filteredStoreIssueReturnLines
-// watchEffect(() => {
-//   props.form.scmSirLines = filteredStoreIssueReturnLines.value;
-// });
-//watch filteredStoreIssueReturnLines
-// watch(() => filteredStoreIssueReturnLines.value, (newVal, oldVal) => {
-//   props.form.scmSirLines = newVal;
-// });
-// function setMaterialOtherData(datas, index) {
-//       props.form.scmSirLines[index].unit = datas.unit;
-//       props.form.scmSirLines[index].scm_material_id = datas.id;
-          
-// }
-
-// const previousLines = ref(cloneDeep(props.form.scmSrLines));
-
-// watch(() => props.form.scmSirLines, (newLines) => {
-//   newLines.forEach((line, index) => {
-//     // const previousLine = previousLines.value[index];
-
-//     if (line.scmMaterial) {
-//       const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
-//       if (selectedMaterial) {
-//         if ( line.scm_material_id !== selectedMaterial.id
-//         ) {
-//           props.form.scmSirLines[index].unit = selectedMaterial.unit;
-//           props.form.scmSirLines[index].scm_material_id = selectedMaterial.id;
-//         }
-//       }
-//     }
-//   });
-//   // previousLines.value = cloneDeep(newLines);
-// }, { deep: true });
-
-
-  //   function fetchMaterials(search, loading) {
-  //   loading(true);
-  //   searchMaterial(search, loading)
-  // }
-
-
-  //   function fetchMaterials(search, loading = false) {
-  //     // loading(true);
-  //     fetchSiWiseMaterials(props.form.scm_si_id);
-  // }
-
-  // watch(() => props.form.scmSi, (newVal, oldVal) => {
-  //   fetchMaterials(newVal?.id)
-  //   props.form.department_id = newVal?.department_id;
-  //   props.form.scm_warehouse_id = newVal?.scm_warehouse_id;
-  //   props.form.scmWarehouse = newVal?.scmWarehouse;
-  // });
-
-//   watch(() => props.form.business_unit, (newValue, oldValue) => {
-//    if(newValue !== oldValue && oldValue != ''){
-//     props.form.scm_warehouse_id = '';
-//     props.form.acc_cost_center_id = '';
-//     props.form.scmWarehouse = null;
-//     props.form.scmSi = null;
-//     props.form.scm_si_id = null;
-//     props.form.si_no = null,
-//     props.form.scmDepartment= null,
-//     props.form.scm_department_id = null,
-//     props.form.scmSirLines = [];
-//     filteredStoreIssues.value = [];
-//    } 
-//      fetchStoreIssue('');
-// });
 
 function tableWidth() {
   setTimeout(function() {
