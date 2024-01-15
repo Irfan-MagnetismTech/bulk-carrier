@@ -27,6 +27,7 @@ setTitle('Update Quotation');
 
 onMounted(() => {
     showQuotation(csId,quotationId);
+    showMaterialCs(csId);
 });
 </script>
 <template>
@@ -37,10 +38,10 @@ onMounted(() => {
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="updateQuotations(quotation, csId, quotationId)">
-            <template v-if="materialCs.purchase_center == 'FOREIGN'">
+            <template v-if="materialCs.purchase_center == 'Foreign'">
                 <foreign-quotation-form v-model:form="quotation" :errors="errors" :page="page" :lineObj="foreignQuotationLines"></foreign-quotation-form>
             </template>
-            <template v-else>
+            <template v-if="materialCs.purchase_center == 'Local' || materialCs.purchase_center == 'Plant'">
                 <local-quotation-form v-model:form="quotation" :errors="errors" :page="page" :lineObj="localQuotationLines"></local-quotation-form>
             </template>
             <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update</button>

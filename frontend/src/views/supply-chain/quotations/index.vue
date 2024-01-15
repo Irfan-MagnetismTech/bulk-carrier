@@ -16,7 +16,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import useQuotation from '../../../composables/supply-chain/useQuotation';
 
-const { getMaterialCs, materialCs, materialCsLists, deleteMaterialCs, isLoading, errors, isTableLoading } = useMaterialCs();
+const { getMaterialCs, materialCs, materialCsLists, deleteMaterialCs, isLoading, errors, isTableLoading,showMaterialCs} = useMaterialCs();
 const {getQuotations,quotations} = useQuotation();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
@@ -47,6 +47,7 @@ onMounted(() => {
         console.error("Error fetching SR:", error);
       });
   });
+  showMaterialCs(CSID);
 });
 
 const tableScrollWidth = ref(null);
@@ -195,6 +196,25 @@ function confirmDelete(id) {
     </div>
   </div>
   <!-- Table -->
+  <div class="input-group mb-10 mt-5">
+    <label class="label-group">
+        <span class="label-item-title">CS Ref<span class="text-red-500"> : </span></span>
+        <span class="label-item-title">{{ materialCs?.ref_no }}</span>  
+    </label>
+    <label class="label-group">
+        <span class="label-item-title">Warehouse<span class="text-red-500"> : </span></span>
+        <span class="label-item-title">{{ materialCs.scmWarehouse?.name }}</span>
+    </label>
+    <label class="label-group">
+        <span class="label-item-title">Effective Date<span class="text-red-500"> : </span></span>
+        <span class="label-item-title">{{ materialCs.effective_date }}</span>
+    </label>
+    <label class="label-group">
+        <span class="label-item-title">Selection Criteria<span class="text-red-500"> : </span></span>
+        <span class="label-item-title">{{ materialCs.selection_ground }}</span>
+    </label>
+  </div>
+  
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
