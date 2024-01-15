@@ -31,8 +31,19 @@ class ScmWrController extends Controller
     public function index(Request $request) : JsonResponse
     {
         try {
-            $scmWr = ScmWr::with('scmWrLines.scmService', 'scmWrLines.closedBy', 'scmWarehouse', 'closedBy')
+            $scmWr = ScmWr::with('scmWrLines.scmService', 'scmWrLines.closedBy', 'scmWrLines.createdBy', 'scmWarehouse', 'closedBy', 'createdBy')
             ->globalSearch($request->all());
+
+            $loggedInUserId = Auth::id();
+
+            $scmWr->each(function ($wr) use ($loggedInUserId) {
+                if ($wr->closed_by == $loggedInUserId) {
+                    $wr->closedBy->name = 'You';
+                }
+                if ($wr->created_by == $loggedInUserId) {
+                    $wr->createdBy->name = 'You';
+                }
+            });
 
             return response()->success('Data retrieved successfully.', $scmWr, 200);
         }
@@ -60,6 +71,8 @@ class ScmWrController extends Controller
                 'scmWrLines'
             );
 
+            $work_requisition_info['created_by']=Auth::id();
+
             if (count($request->scmWrLines)<1) {
                 $error= [
                     'message'=>'Must be add at least one service.',
@@ -75,7 +88,7 @@ class ScmWrController extends Controller
                 $work_requisition_info['attachment'] = $attachment;
             }
             $work_requisition = ScmWr::create($work_requisition_info);
-
+            
             $work_requisition->scmWrLines()->createMany($request->scmWrLines);
             DB::commit();
             return response()->success('Data added successfully.', $work_requisition, 201);
@@ -97,15 +110,22 @@ class ScmWrController extends Controller
     {
         // dd('dddd');
         $loggedInUserId = Auth::id();
-        $work_requisition->load('scmWrLines.scmService', 'scmWrLines.closedBy', 'scmWarehouse', 'closedBy');
+        $work_requisition->load('scmWrLines.scmService', 'scmWrLines.closedBy', 'scmWrLines.createdBy', 'scmWarehouse', 'closedBy', 'createdBy');
         $work_requisition->scmWrLines->each(function ($line) use ($loggedInUserId) {
             if ($line->closed_by == $loggedInUserId) {
                 $line->closedBy->name = 'You';
+            }
+            if ($line->created_by == $loggedInUserId) {
+                $line->createdBy->name = 'You';
             }
         });
 
         if ($work_requisition->closed_by == $loggedInUserId) {
             $work_requisition->closedBy->name = 'You';
+        }
+
+        if ($work_requisition->created_by == $loggedInUserId) {
+            $work_requisition->createdBy->name = 'You';
         }
 
         try
