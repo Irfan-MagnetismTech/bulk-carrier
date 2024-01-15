@@ -2,9 +2,10 @@
 
 namespace Modules\SupplyChain\Entities;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmWrLine extends Model
 {
@@ -32,5 +33,10 @@ class ScmWrLine extends Model
     public function scmService(): BelongsTo
     {
         return $this->belongsTo(ScmService::class);
+    }
+    
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'closed_by' , 'id');
     }
 }

@@ -30,7 +30,7 @@ class ScmWrController extends Controller
     public function index(Request $request) : JsonResponse
     {
         try {
-            $scmWr = ScmWr::with('scmWrLines.scmService', 'scmWarehouse', 'user')
+            $scmWr = ScmWr::with('scmWrLines.scmService', 'scmWrLines.user', 'scmWarehouse', 'user')
             ->globalSearch($request->all());
 
             return response()->success('Data retrieved successfully.', $scmWr, 200);
@@ -95,7 +95,7 @@ class ScmWrController extends Controller
     public function show(ScmWr $work_requisition): JsonResponse
     {
         // dd('dddd');
-        $work_requisition->load('scmWrLines.scmService', 'scmWarehouse', 'user');
+        $work_requisition->load('scmWrLines.scmService', 'scmWrLines.user', 'scmWarehouse', 'user');
         try
         {
             return response()->success('Data retrieved successfully.', $work_requisition, 200);
