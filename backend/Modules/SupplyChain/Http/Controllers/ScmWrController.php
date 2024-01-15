@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Services\FileUploadService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmWr;
 use Modules\SupplyChain\Entities\ScmWrLine;
@@ -95,7 +96,18 @@ class ScmWrController extends Controller
     public function show(ScmWr $work_requisition): JsonResponse
     {
         // dd('dddd');
+        $loggedInUserId = Auth::id();
         $work_requisition->load('scmWrLines.scmService', 'scmWrLines.user', 'scmWarehouse', 'user');
+        $work_requisition->scmWrLines->each(function ($line) use ($loggedInUserId) {
+            if ($line->closed_by == $loggedInUserId) {
+                $line->user->name = 'You';
+            }
+        });
+
+        if ($work_requisition->closed_by == $loggedInUserId) {
+            $work_requisition->user->name = 'You';
+        }
+
         try
         {
             return response()->success('Data retrieved successfully.', $work_requisition, 200);
