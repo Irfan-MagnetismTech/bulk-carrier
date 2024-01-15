@@ -180,23 +180,23 @@ class ScmWrController extends Controller
     }
 
 
-    public function getServidByPrIdForCs(Request $request): JsonResponse
-    {
-        $lineData = ScmWrLine::query()
-            ->with('scmMaterial')
-            ->where('scm_wr_id', $request->pr_id)
-            ->whereHas('scmWr', function ($query) {
-                $query->whereIn('status', ['Pending', 'WIP']);
-            })
-            ->get()
-            ->map(function ($item) {
-                $data = $item->scmMaterial;
-                $data['pr_composite_key'] = $item->pr_composite_key;
-                return $data;
-            });
+    // public function getServidByPrIdForCs(Request $request): JsonResponse
+    // {
+    //     $lineData = ScmWrLine::query()
+    //         ->with('scmService')
+    //         ->where('scm_wr_id', $request->scm_wr_id)
+    //         ->whereHas('scmWr', function ($query) {
+    //             $query->whereIn('status', ['Pending', 'WIP']);
+    //         })
+    //         ->get();
+    //         // ->map(function ($item) {
+    //         //     $data = $item->scmService;
+    //         //     $data['wr_composite_key'] = $item->wr_composite_key;
+    //         //     return $data;
+    //         // });
 
-        return response()->success('Search result', $lineData, 200);
-    }
+    //     return response()->success('Search result', $lineData, 200);
+    // }
 
     // for closing Work Requisition
     public function closeWr(Request $request): JsonResponse
