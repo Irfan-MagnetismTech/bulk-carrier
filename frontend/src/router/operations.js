@@ -726,4 +726,10 @@ export default [
 		component: () => import (`../views/${ViEWBASE}/reports/gross-bunker-report.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
+	{
+		path: `/${BASE}/reports/budget-vs-expense-report`,
+		name: `${BASE}.reports.budget-vs-expense-report`,
+		component: () => import (`../views/${ViEWBASE}/reports/budget-vs-expense-report.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
 ];

@@ -14,6 +14,7 @@ export default function useOperationsReport() {
 	const bulkVoyageReport = ref([]);
 	const vesselBunkerReport = ref([]);
 	const grossBunkerReport = ref([]);
+	const budgetVsExpenseReport = ref([]);
 	const $loading = useLoading();
     const isTableLoading = ref(false);
 	const notification = useNotification();
@@ -121,17 +122,39 @@ export default function useOperationsReport() {
 		}
 	}
 
+	async function getBudgetVsExpenseReport(form) {
+		//NProgress.start();
+		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+		isLoading.value = true;
+
+		try {
+			const { data, status } = await Api.post('/ops/budget-vs-expense-report', form);
+
+			budgetVsExpenseReport.value = data.value;
+			// notification.showSuccess(status);
+		} catch (error) {
+			const { data, status } = error.response;
+			errors.value = notification.showError(status, data);
+		} finally {
+			loader.hide();
+			isLoading.value = false;
+			//NProgress.done();
+		}
+	}
+
 	return {
 		operationsReport,
 		lighterVoyageReport,
 		bulkVoyageReport,
 		vesselBunkerReport,
 		grossBunkerReport,
+		budgetVsExpenseReport,
 		portWiseExpenseReport,
 		getLighterVoyageReport,
 		getBulkVoyageReport,
 		getVesselBunkerReport,
 		getGrossBunkerReport,
+		getBudgetVsExpenseReport,
 		isTableLoading,
 		isLoading,
 		errors,
