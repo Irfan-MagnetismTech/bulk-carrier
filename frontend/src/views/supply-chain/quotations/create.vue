@@ -15,7 +15,7 @@ import { useRouter, useRoute } from 'vue-router';
 const icons = useHeroIcon();
 const route = useRoute();
 const CSID = route.params.csId;
-const { getMaterialCs, materialCs, storeMaterialCs, materialObject, errors, isLoading, getPrWiseCs,showMaterialCs} = useMaterialCs();
+const { getMaterialCs, materialCs, storeMaterialCs, errors, isLoading, getPrWiseCs,showMaterialCs} = useMaterialCs();
 
 
  onMounted(() => {

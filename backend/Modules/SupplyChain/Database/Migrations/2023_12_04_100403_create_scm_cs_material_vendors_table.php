@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('scm_cs_id')->constrained('scm_cs')->onDelete('cascade');
             $table->bigInteger('scm_cs_vendor_id');
+            $table->bigInteger('scm_vendor_id');
+            $table->bigInteger('scm_pr_id');
             $table->bigInteger('scm_cs_material_id');
             $table->bigInteger('scm_material_id');
             $table->string('unit')->nullable();
@@ -29,6 +31,7 @@ return new class extends Migration
             $table->decimal('negotiated_price')->comment('for local it is `Price`')->nullable();
             $table->bigInteger('quantity')->nullable();
             $table->decimal('amount')->nullable();
+            $table->decimal('offer_amount')->nullable();
             $table->timestamps();
         });
     }

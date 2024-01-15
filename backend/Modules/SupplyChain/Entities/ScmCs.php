@@ -16,7 +16,6 @@ class ScmCs extends Model
     use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
-        'scm_pr_id',
         'ref_no',
         'scm_warehouse_id',
         'acc_cost_center_id',

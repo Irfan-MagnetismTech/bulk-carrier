@@ -29,6 +29,10 @@ return new class extends Migration
             $table->decimal('quantity')->nullable();
             $table->date('required_date')->nullable();
             $table->string('pr_composite_key')->nullable();
+            $table->tinyInteger('is_closed')->default(0)->comment('0, 1');
+            $table->integer('closed_by')->nullable();
+            $table->datetime('closed_at')->nullable();
+            $table->string('closing_remarks')->nullable();
             $table->timestamps();
         });
     }

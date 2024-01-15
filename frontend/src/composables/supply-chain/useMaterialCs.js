@@ -7,7 +7,7 @@ import Store from '../../store/index.js';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
 import { merge } from 'lodash';
-
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 export default function useMaterialCs() {
     const BASE = 'scm' 
@@ -15,45 +15,54 @@ export default function useMaterialCs() {
     const materialCsLists = ref([]);
     const filteredMaterialCs = ref([]);
     const quotations = ref([]);
+    const csWiseVendorList = ref([]);
     const filteredMaterialCsLines = ref([]);
     const $loading = useLoading();
     const prMaterialList = ref([]);
     const isTableLoading = ref(false);
     const notification = useNotification();
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const materialCs = ref({
-        ref_no: '',
-        effective_date: '',
-        expire_date: '',
-        priority: '',
-        scmWarehouse: '',
-        scm_warehouse_id: '',
-        scm_warehouse_name: '',
-        acc_cost_center_id: '',
-        scmPr: '',
-        scm_pr_id: '',
-        pr_no: '',
-        special_instructions: '',
-        purchase_center: '',
-        business_unit: '',
-        required_days: '',
+        ref_no: null,
+        effective_date: null,
+        expire_date: null,
+        priority: null,
+        scmWarehouse: null,
+        scm_warehouse_id: null,
+        scm_warehouse_name: null,
+        acc_cost_center_id: null,
+        scmPr: null,
+        scm_pr_id: null,
+        pr_no: null,
+        special_instructions: null,
+        purchase_center: null,
+        business_unit: null,
+        required_days: null,
         scmCsMaterials: [
             {
-                scm_material_id: '',
-                scmMaterial: '',
-                unit : '',
-                quantity : '',
+                scmPr: null,
+                scm_pr_id: null,
+                scm_material_id: null,
+                scmMaterial: null,
+                pr_composite_key: null,
+                unit : null,
+                quantity : null,
             }
         ]
     });
 
     const materialObj = {
-        scm_material_id: '',
-        scmMaterial: '',
-        unit: '',
-        quantity: '',
+                scmPr: null,
+                scm_pr_id: null,
+                scm_material_id: null,
+                scmMaterial: null,
+                pr_composite_key: null,
+                unit : null,
+                quantity : null,
     }
+
+    const materialList = ref([]);
 
 
     const errors = ref('');
@@ -118,7 +127,6 @@ export default function useMaterialCs() {
     }
 
     async function showMaterialCs(materialCsId) {
-        console.log('tag', materialCsId);
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -175,20 +183,34 @@ export default function useMaterialCs() {
         }
     }
 
-    async function searchMaterialCs(searchParam, loading) {
+    // async function searchMaterialCs(searchParam, loading) {
         
 
+    //     try {
+    //         const {data, status} = await Api.get(`/${BASE}/search-material-cs`,searchParam);
+    //         filteredMaterialCs.value = data.value;
+    //     } catch (error) {
+    //         const { data, status } = error.response;
+    //         notification.showError(status);
+    //     } finally {
+    //         loading(false)
+    //     }
+    // }
+
+
+    async function getCsData(id) {
+        //NProgress.start();
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
         try {
-            const {data, status} = await Api.get(`/${BASE}/search-material-cs`,searchParam);
-            filteredMaterialCs.value = data.value;
+            const {data, status} = await Api.get(`/${BASE}/get-cs-data/${id}`);
+            materialCs.value = data.value;
         } catch (error) {
-            const { data, status } = error.response;
-            notification.showError(status);
+            console.log('tag', error)
         } finally {
-            loading(false)
+            //NProgress.done();
         }
     }
-
    
 
 
@@ -235,12 +257,13 @@ export default function useMaterialCs() {
         // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
         try {
-            const {data, status} = await Api.get(`/${BASE}/search-pr-wise-material`,{
+            const {data, status} = await Api.get(`/${BASE}/search-pr-wise-material-for-cs`,{
                 params: {
                     pr_id: prId,
                 },
             });
             prMaterialList.value = data.value;
+            return data.value;
         } catch (error) {
             console.log('tag', error)
         } finally {
@@ -249,11 +272,54 @@ export default function useMaterialCs() {
     }
  
 
+    async function searchCs(business_unit, scm_warehouse_id = null, purchase_center = null, searchParam = '') { 
+        //NProgress.start();
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+        try {
+            const {data, status} = await Api.get(`/${BASE}/search-material-cs`,{
+                params: {
+                    business_unit: business_unit,
+                    scm_warehouse_id: scm_warehouse_id,
+                    purchase_center: purchase_center,
+                    searchParam: searchParam,
+                },
+            });
+            filteredMaterialCs.value = data.value;
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            //NProgress.done();
+        }
+    }
+
+    async function getCsWiseVendorList(csId) {
+        // NProgress.start();
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+        try {
+            const {data, status} = await Api.get(`/${BASE}/cs-wise-vendor-list`,{
+                params: {
+                    cs_id: csId,
+                },
+            });
+            csWiseVendorList.value = data.value;
+            return data.value;
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            // isLoading.value = false;
+            // loader.hide();
+        }
+    }
+
+
+
     return {
         materialCs,
         materialCsLists,
         filteredMaterialCs,
-        searchMaterialCs,
+        searchCs,
         getMaterialCs,
         storeMaterialCs,
         showMaterialCs,
@@ -264,7 +330,11 @@ export default function useMaterialCs() {
         quotations,
         materialObj,
         prMaterialList,
+        materialList,
         getPrWiseMaterialList,
+        getCsData,
+        getCsWiseVendorList,
+        csWiseVendorList,
         // getSiWiseData,
         isTableLoading,
         isLoading,
