@@ -16,7 +16,11 @@ class ScmWrLine extends Model
         'quantity',
         'required_date',
         'description',
-        'remarks'
+        'remarks',
+        'closed_at',
+        'closed_by',
+        'is_closed',
+        'closing_remarks'
     ];
 
     public function scmWr()

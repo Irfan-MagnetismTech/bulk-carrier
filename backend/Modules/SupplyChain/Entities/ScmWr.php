@@ -21,6 +21,10 @@ class ScmWr extends Model
         'attachment',
         'remarks',
         'business_unit',
+        'closed_at',
+        'closed_by',
+        'is_closed',
+        'closing_remarks'
     ];
 
     public function scmWrLines(): HasMany
