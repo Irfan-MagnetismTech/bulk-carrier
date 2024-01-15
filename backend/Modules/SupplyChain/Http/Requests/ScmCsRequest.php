@@ -25,7 +25,7 @@ class ScmCsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'effective_date' => 'required|date|before_or_equal:expire_date',
         ];
     }
 
@@ -37,7 +37,9 @@ class ScmCsRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'effective_date.required' => 'Effective Date is required',
+            'effective_date.date' => 'Effective Date must be a date',
+            'effective_date.before_or_equal' => 'Effective Date must be before or equal to Expire Date',
         ];
     }
 

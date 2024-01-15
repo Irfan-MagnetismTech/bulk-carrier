@@ -2,6 +2,7 @@
 
 namespace Modules\SupplyChain\Entities;
 
+use App\Models\User;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmCs;
@@ -74,4 +75,8 @@ class ScmPr extends Model
     //     return $this->hasMany(ScmCs::class);
     // }
 
+    public function closedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'closed_by', 'id');
+    }
 }

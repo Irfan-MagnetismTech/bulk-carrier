@@ -113,7 +113,7 @@ class ScmPrController extends Controller
     public function show($id): JsonResponse
     {
         $purchaseRequisition = ScmPr::query()
-            ->with('scmPrLines.scmMaterial', 'scmWarehouse', 'scmPrLines.scmStockLedgers')
+            ->with('scmPrLines.scmMaterial', 'scmWarehouse', 'scmPrLines.scmStockLedgers', 'closedBy', 'scmPrLines.closedBy')
             ->find($id);
 
         $prLines = $purchaseRequisition->scmPrLines->map(function ($scmPrLine) use ($purchaseRequisition) {
@@ -134,7 +134,7 @@ class ScmPrController extends Controller
                 'rob' => $currentStock,
                 'quantity' => $scmPrLine->quantity,
                 'is_closed' => $scmPrLine->is_closed,
-                'closed_by' => $scmPrLine->closed_by,
+                'closed_by' => $scmPrLine->closedBy?->name ?? null,
                 'closed_at' => $scmPrLine->closed_at,
                 'closing_remarks' => $scmPrLine->closing_remarks,
                 'required_date' => $scmPrLine->required_date
@@ -156,6 +156,10 @@ class ScmPrController extends Controller
             'purchase_center' => $purchaseRequisition->purchase_center,
             'approved_date' => $purchaseRequisition->approved_date,
             'remarks' => $purchaseRequisition->remarks,
+            'is_closed' => $purchaseRequisition->is_closed,
+            'closed_by' => $purchaseRequisition->closedBy?->name ?? null,
+            'closed_at' => $purchaseRequisition->closed_at,
+            'closing_remarks' => $purchaseRequisition->closing_remarks,
             'scmPrLines' => $prLines,
         ];
 

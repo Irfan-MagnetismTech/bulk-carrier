@@ -59,4 +59,9 @@ class ScmCs extends Model
     {
         return $this->hasMany(ScmCsMaterial::class);
     }
+
+    public function selectedVendors()
+    {
+        return $this->hasMany(ScmCsVendor::class)->where('is_selected', true);
+    }
 }

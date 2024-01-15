@@ -506,23 +506,23 @@ function tytytyasd(indx) {
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Specification </span>
 
-                      <input type="text" v-model="form.scmPrLines[index].specification" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <input type="text" v-model="form.scmPrLines[index].specification" placeholder="" class="form-input" autocomplete="off"/>
                     </label>
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Origin </span>
 
-                      <input type="text" v-model="form.scmPrLines[index].country_name" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <input type="text" v-model="form.scmPrLines[index].country_name" placeholder="" class="form-input" autocomplete="off"/>
                     </label>
                    
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Drawing No </span>
 
-                      <input type="text" v-model="form.scmPrLines[index].drawing_no" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <input type="text" v-model="form.scmPrLines[index].drawing_no" placeholder="" class="form-input" autocomplete="off"/>
                     </label>
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Part No </span>
 
-                      <input type="text" v-model="form.scmPrLines[index].part_no" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <input type="text" v-model="form.scmPrLines[index].part_no" placeholder="" class="form-input" autocomplete="off"/>
                     </label>
                     
           </div>

@@ -78,7 +78,7 @@
               <tr class="w-full">
                 <th>SL</th>
                 <th class="w-36 text-center"><nobr>Material Name</nobr></th>
-                <th class="text-center"><nobr>Unit</nobr></th>
+                <th class="!text-center"><nobr>Unit</nobr></th>
                 <th><nobr>Model</nobr></th>
                 <th><nobr>Brand</nobr></th>
                 <th><nobr>Country Name</nobr></th>
