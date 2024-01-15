@@ -150,6 +150,7 @@
         </div>  
       </fieldset>
     </div>
+    <ErrorComponent :errors="errors"></ErrorComponent> 
 </template>
 
 
@@ -170,6 +171,7 @@
     import useMaterialCs from '../../../composables/supply-chain/useMaterialCs';
     import usePurchaseRequisition from '../../../composables/supply-chain/usePurchaseRequisition';
     import RemarksComponet from '../../utils/RemarksComponent.vue';
+    import ErrorComponent from "../../utils/ErrorComponent.vue";
 
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse ,isLoading:warehouseLoading} = useWarehouse();
@@ -372,7 +374,6 @@ function changePurchaseCenter() {
 function fetchWarehouse(search) {
     searchWarehouse(search, props.form.business_unit);
   }
-const DEPARTMENTS = ['N/A','Store Department', 'Engine Department', 'Provision Department'];
 const purchase_center = ['Local', 'Foreign', 'Plant'];
 
 </script>
