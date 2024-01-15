@@ -9,6 +9,7 @@ use Modules\Operations\Entities\OpsVoyage;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\DB;
 use Modules\Accounts\Entities\AccCashRequisition;
+use Modules\Accounts\Entities\AccCostCenter;
 use Modules\Operations\Entities\OpsExpenseHead;
 use Modules\Operations\Entities\OpsVessel;
 use Modules\Operations\Entities\OpsVesselExpenseHead;
@@ -185,7 +186,8 @@ class OpsExpenseReportController extends Controller
                     ->with('opsVesselBunkers.stockable')
                     ->get();
 
-        $allCashRequisitions = AccCashRequisition::where('acc_cost_center_id', 17)
+        $costCenterId = AccCostCenter::where('ops_vessel_id', $ops_vessel_id)->first()->id;
+        $allCashRequisitions = AccCashRequisition::where('acc_cost_center_id', $costCenterId)
                                 ->whereBetween('applied_date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
                                 ->get();
 
