@@ -163,5 +163,6 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
     Route::post('lighter-voyage-report', [OpsVoyageReportController::class, 'lighterVoyageReport']);
     Route::post('bulk-voyage-report', [OpsVoyageReportController::class, 'bulkVoyageReport']);
     Route::post('budget-vs-expense-report', [OpsOperationReportController::class, 'budgetVsExpenseReport']);
+    Route::post('month-wise-expense-report', [OpsExpenseReportController::class, 'monthWiseExpenseReport']);
 
 });

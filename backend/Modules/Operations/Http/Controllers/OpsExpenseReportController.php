@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Modules\Operations\Entities\OpsVoyage;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\DB;
+use Modules\Accounts\Entities\AccCashRequisition;
 use Modules\Operations\Entities\OpsExpenseHead;
 use Modules\Operations\Entities\OpsVessel;
 use Modules\Operations\Entities\OpsVesselExpenseHead;
@@ -171,5 +172,49 @@ class OpsExpenseReportController extends Controller
         // return Excel::download(new VoyageExpenditure($heads, $filteredVoyage), 'voyage_expenditure_report.xlsx');
     }
 
+    public function monthWiseExpenseReport(Request $request) {
+        $start = date($request->start);
+        $end = date($request->end);
+        $ops_vessel_id = $request->ops_vessel_id;
+
+        $voyages = OpsVoyage::when($ops_vessel_id, function($voyage) use ($ops_vessel_id) {
+                        $voyage->where('ops_vessel_id', $ops_vessel_id);
+                    })
+                    ->whereBetween('sail_date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
+                    // ->with('voyageExpenseEntries.invoice', 'budget.entries.head')
+                    ->with('opsVesselBunkers.stockable')
+                    ->get();
+
+        $allCashRequisitions = AccCashRequisition::where('acc_cost_center_id', 17)
+                                ->whereBetween('applied_date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
+                                ->get();
+
+        $voyageIds = $voyages->pluck('id');
+        $vesselIds = $voyages->pluck('ops_vessel_id')->unique()->values()->toArray();
+
+        
+        $expenseEntries = OpsVoyageExpenditureEntry::with('opsExpenseHead.opsSubHeads')
+                    ->whereIn('ops_voyage_id', $voyageIds)->get();
+        
+        // return $mappingBudgetExpenses;
+        /* Unique Ports */
+        $voyages->map(function($voyage) use($expenseEntries) {
+            $voyage->amount_bdt = $expenseEntries->where('ops_voyage_id', $voyage->id)->sum('amount_bdt');
+            return $voyage;
+        });
+
+        // return response()->json($voyages, 200);
+        return view('operations::reports.month-wise-expense-report', 
+        compact('voyages', 'expenseEntries', 'allCashRequisitions'));
+
+        $view = view('operations::reports.month-wise-expense-report', 
+                    compact('voyages', 'expenseEntries', 'allCashRequisitions'))->render();
+
+        // return $view;
+        return response()->json([
+            'value' => $view
+        ], 200);
+
+    }
     
 }

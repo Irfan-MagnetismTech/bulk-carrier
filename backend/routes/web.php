@@ -21,7 +21,4 @@ use Modules\Operations\Http\Controllers\OpsOperationReportController;
 // Route::get('/test', fn()=> 'hi');
 Route::get('/', fn() => 'BG Torony - Magnetism Tech Limited');
 
-Route::get('budget-vs-expense-report', [OpsOperationReportController::class, 'budgetVsExpenseReport']);
-// Route::get('lighter-voyage-report', [OpsVoyageReportController::class, 'lighterVoyageReportExcelExport']);
-
 Route::get('month-wise-expense-report', [OpsExpenseReportController::class, 'monthWiseExpenseReport']);
