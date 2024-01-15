@@ -354,7 +354,7 @@ class ScmPrController extends Controller
             ->with('scmMaterial')
             ->where('scm_pr_id', $request->pr_id)
             ->whereHas('scmPr', function ($query) {
-                $query->where('is_closed', 0);
+                $query->whereIn('status', ['Pending', 'WIP']);
             })
             ->get()
             ->map(function ($item) {
@@ -423,7 +423,7 @@ class ScmPrController extends Controller
                 ]);
             }
 
-            return response()->success('Data updated sucessfully!',[$prLines,$sumIsClosed], 200);
+            return response()->success('Data updated sucessfully!', [$prLines, $sumIsClosed], 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }

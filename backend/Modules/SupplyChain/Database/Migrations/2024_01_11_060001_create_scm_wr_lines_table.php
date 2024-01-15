@@ -21,12 +21,12 @@ return new class extends Migration
             $table->date('required_date')->nullable();
             $table->text('description')->nullable();
             $table->text('remarks')->nullable();
-            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL', 'ALL'])->nullable();
             $table->tinyInteger('is_closed')->default(0)->comment('0, 1');
             $table->integer('closed_by')->nullable();
             $table->datetime('closed_at')->nullable();
             $table->string('closing_remarks')->nullable();
-            $table->enum('status', ['Pending','WIP','Closed'])->nullable();
+            $table->enum('status', ['Pending', 'WIP', 'Closed'])->default('Pending');
             $table->timestamps();
         });
     }
