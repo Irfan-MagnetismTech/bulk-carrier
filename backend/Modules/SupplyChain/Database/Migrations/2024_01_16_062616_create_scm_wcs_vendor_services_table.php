@@ -19,6 +19,7 @@ return new class extends Migration
             $table->bigInteger('scm_wcs_id')->nullable();
             $table->bigInteger('scm_wr_id')->nullable();
             $table->bigInteger('scm_wcs_vendor_id')->nullable();
+            $table->bigInteger('scm_service_id')->nullable();
             $table->bigInteger('scm_wcs_service_id')->nullable();
             $table->float('rate', 20, 2)->nullable();
             $table->float('quantity', 20, 2)->nullable();

@@ -19,12 +19,12 @@ return new class extends Migration
             $table->bigInteger('scm_warehouse_id')->nullable();
             $table->bigInteger('acc_cost_center_id')->nullable();
             $table->string('ref_no')->nullable();
-            $table->string('requirment_type')->nullable();
             $table->string('special_instruction')->nullable();
             $table->date('effective_date')->nullable();
             $table->date('expire_date')->nullable();
             $table->string('required_days')->nullable();
             $table->text('remarks')->nullable();
+            $table->enum('requirment_type', ['High','Low','Medium'])->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();
             $table->timestamps();
         });

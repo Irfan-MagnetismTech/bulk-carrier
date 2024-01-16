@@ -14,6 +14,7 @@ class ScmWcsVendorService extends Model
         'scm_wcs_id',
         'scm_wr_id',
         'scm_wcs_vendor_id',
+        'scm_service_id',
         'scm_wcs_service_id',
         'rate',
         'quantity',
@@ -45,5 +46,10 @@ class ScmWcsVendorService extends Model
     public function scmWcsService()
     {
         return $this->belongsTo(ScmWcsService::class, 'scm_wcs_service_id', 'id');
+    }
+
+    public function scmService()
+    {
+        return $this->belongsTo(ScmService::class, 'scm_service_id', 'id');
     }
 }

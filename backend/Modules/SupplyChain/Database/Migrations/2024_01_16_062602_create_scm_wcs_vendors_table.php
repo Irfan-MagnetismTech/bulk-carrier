@@ -21,7 +21,7 @@ return new class extends Migration
             $table->date('quotation_date')->nullable();
             $table->string('attachment')->nullable();
             $table->date('validity')->nullable();
-            $table->string('payment_mode')->nullable();
+            $table->enum('payment_mode', ['Cash','Credit','Advance'])->nullable();
             $table->string('creadit_term')->nullable();
             $table->string('vat')->nullable();
             $table->string('ait')->nullable();

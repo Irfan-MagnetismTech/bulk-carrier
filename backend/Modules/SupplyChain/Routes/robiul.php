@@ -11,6 +11,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
         'work-cs' => ScmWcsController::class,
     ]);
 
+    Route::get('work-quotations', [ScmWcsController::class, "getWorkQuotations"])->name('work-quotations.index');
     Route::get('get-wcs-data/{id}', [ScmWcsController::class, "getWcsWiseData"])->name('getWcsWiseData');
     Route::post('close-wr', [ScmWrController::class, "closeWr"])->name('closeWr');
     Route::post('close-wrline', [ScmWrController::class, "closeWrLine"])->name('closeWrLine');

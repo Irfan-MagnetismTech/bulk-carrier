@@ -9,9 +9,12 @@ use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmWcs;
 use Modules\SupplyChain\Services\UniqueId;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\SupplyChain\Entities\ScmWcsVendor;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Entities\ScmWcsService;
 use Modules\SupplyChain\Http\Requests\ScmWcsRequest;
+use Modules\SupplyChain\Entities\ScmWcsVendorService;
+use Modules\SupplyChain\Http\Requests\ScmQuotationRequest;
 
 class ScmWcsController extends Controller
 {
@@ -183,6 +186,78 @@ class ScmWcsController extends Controller
         try {
             return response()->success('Detail data', $scmWcs, 200);
         } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getWorkQuotations(Request $request)
+    {
+        $scmWcs = ScmWcsVendor::query()
+            ->with('scmWcs', 'scmVendor.scmVendorContactPerson', 'scmWcsVendorServices')
+            ->where('scm_wcs_id', $request->scm_wcs_id)
+            ->get();
+
+        return response()->success('Data list', $scmWcs, 200);
+    }
+    
+
+    public function storeQuotation(ScmQuotationRequest $request)
+    {
+        try {
+            // ScmCs::find($request->scm_cs_id)->update(['status' => 'quotation']);
+            $scmWcs = ScmWcs::find($request->scm_wcs_id);
+            $requestData = $request->only(
+                'scm_vendor_id',
+                'scm_wcs_id',
+                'quotation_ref_no',
+                'quotation_date',
+                'attachment',
+                'validity',
+                'payment_mode',
+                'creadit_term',
+                'vat',
+                'ait',
+                'security_money',
+                'adjustment_policy',
+                'is_selected',
+            );
+
+            DB::beginTransaction();
+
+            $scmWcsVendor = ScmWcsVendor::create($requestData);
+            $adadas = [];
+            foreach ($request->scmWcsVendorServices as $key => $values) {
+                $rate = $values[0]['rate'] ?? 0;
+                $quantity = $values[0]['quantity'] ?? 0;
+                $quotation_ref_no = $values[0]['quotation_ref_no'] ?? 0;
+                $quotation_date = $values[0]['quotation_date'] ?? 0;
+        
+                foreach ($values as $key1 => $value) {
+                    $wcsService = ScmWcsService::where([
+                        'scm_wcs_id' => $scmWcs->id,
+                        'scm_service_id' => $value['scm_service_id']
+                    ])->first();
+
+                    ScmWcsVendorService::create(
+                        [
+                            'scm_wcs_id' => $scmWcs->id,
+                            'scm_wcs_vendor_id' => $scmWcsVendor->id ?? null,
+                            'scm_vendor_id' => $scmWcsVendor->scm_vendor_id ?? null,
+                            'scm_wcs_service_id' => $wcsService->id,
+                            'scm_wr_id' => $value['scm_wr_id'] ?? null,
+                            'scm_service_id' => $value['scm_service_id'] ?? null,
+                            'rate' => $rate ?? null,
+                            'quantity' => $quantity ?? null,
+                            'quotation_ref_no' => $quotation_ref_no ?? null,
+                            'quotation_date' =>$quotation_date ?? null,,
+                        ]
+                    );
+                }
+            }
+            DB::commit();
+            return response()->success('Data created succesfully', $scmWcsVendor, 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
