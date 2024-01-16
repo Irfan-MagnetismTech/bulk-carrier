@@ -42,8 +42,9 @@ class ScmCsVendor extends Model
         'is_selected',
         'stock_type',
         'manufacturing_days',
-        'quotations_received_date',
-        'port_of_loading'
+        'quotation_received_date',
+        'port_of_loading',
+        'warranty',
     ];
 
     protected $casts = ['is_selected' => 'boolean'];
