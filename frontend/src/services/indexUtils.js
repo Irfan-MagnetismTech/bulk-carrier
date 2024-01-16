@@ -29,7 +29,7 @@ export default function useIndexUtils(props, filterOptions, dynamicRouteName, ge
           paginatedPage.value = filterOptions.value.page;
           const customDataTable = document.getElementById("customDataTable");
           if (customDataTable) {
-            filterOptions.tableScrollWidth = customDataTable.scrollWidth;
+            tableScrollWidth.value = customDataTable.scrollWidth;
           }
         })
         .catch((error) => {

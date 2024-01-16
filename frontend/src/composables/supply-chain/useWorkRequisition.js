@@ -8,6 +8,7 @@ import Store from './../../store/index.js';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper';
 import { loaderSetting as LoaderConfig} from '../../config/setting.js';
+import Swal from 'sweetalert2';
 
 
 export default function useWorkRequisition() {
@@ -139,6 +140,8 @@ export default function useWorkRequisition() {
     }
     async function storeWorkRequisition(form) {
 
+        if (!checkUniqueArray(form)) return;
+
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -184,6 +187,8 @@ export default function useWorkRequisition() {
     }
 
     async function updateWorkRequisition(form, workRequisitionId) {
+
+        if (!checkUniqueArray(form)) return;
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -304,6 +309,94 @@ export default function useWorkRequisition() {
 
     // }
 
+    async function closeWr(id,closing_remarks) {
+        try {
+            let formData = new FormData();
+            formData.append('id', id);
+            formData.append('closing_remarks', closing_remarks);
+
+            const { data, status } = await Api.post(`/${BASE}/close-wr`, formData);
+            notification.showSuccess(status);
+            await getWorkRequisitions(filterParams.value);
+        }
+        catch (error) {
+            if (error.response) {
+                const { data, status ,messege } = error.response;
+                console.log(data,error.response);
+                notification.showError(status);
+            } else {
+                notification.showError("An error occurred. Please check your internet connection.");
+            }
+
+        } finally {
+            // isLoading.value = false;
+        }
+
+    }
+
+    async function closeWrLines(parent_id,id,closing_remarks) {
+        try {
+            let formData = new FormData();
+            formData.append('id', id);
+            formData.append('parent_id', parent_id);
+            formData.append('closing_remarks', closing_remarks);
+
+            const { data, status } = await Api.post(`/${BASE}/close-wrline`, formData);
+            notification.showSuccess(status);
+            await showWorkRequisition(parent_id);
+        }
+        catch (error) {
+            if (error.response) {
+                const { data, status ,messege } = error.response;
+                console.log(data,error.response);
+                notification.showError(status);
+            } else {
+                notification.showError("An error occurred. Please check your internet connection.");
+            }
+
+        } finally {
+            // isLoading.value = false;
+        }
+
+    }
+
+    function checkUniqueArray(form) {
+        let isHasError = false;
+        const messages = ref([]);
+        const hasDuplicates = form.scmWrLines.some((scmWrLine, index) => {
+            if (form.scmWrLines.filter(val => val.scm_service_id === scmWrLine.scm_service_id)?.length > 1) {
+                let data = `Duplicate Service [Line no: ${index + 1}]`;
+                messages.value.push(data);
+                scmWrLine.isServiceDuplicate = true;
+            } else {
+                scmWrLine.isServiceDuplicate = false;
+            }
+
+        });
+
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
     return {
         workRequisitions,
         workRequisition,
@@ -314,6 +407,8 @@ export default function useWorkRequisition() {
         showWorkRequisition,
         updateWorkRequisition,
         deleteWorkRequisition,
+        closeWr,
+        closeWrLines,
         // getStoreCategoryWiseExcel,
         // searchWarehouseWisePurchaseRequisition,
         // materialObject,
