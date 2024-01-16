@@ -368,7 +368,7 @@ export default function useVoyage() {
                 }
 			}
 			
-            else if(openTab.value === 4){
+            else if(openTab.value === 3){
                 let voyageScheduleFieldStatus = true;
                 props.form.opsVoyagePortSchedules.forEach((value, index) => {
                     if(!props.form.opsVoyagePortSchedules[index][field]){

@@ -13,11 +13,6 @@
       </li>
       <li class="mr-2">
         <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-on:click="toggleTabs(3)" v-bind:class="{'text-purple-600 bg-white': openTab !== 3, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 bg-gray-100': openTab === 3}">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Bunker Information
-        </a>
-      </li>
-      <li class="mr-2">
-        <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-on:click="toggleTabs(4)" v-bind:class="{'text-purple-600 bg-white': openTab !== 4, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 bg-gray-100': openTab === 4}">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Voyage Schedule
         </a>
       </li>
@@ -191,58 +186,6 @@
     </div>
 
     <div v-bind:class="{'hidden': openTab !== 3, 'block': openTab === 3}" class="border border-gray-200 rounded-md my-3 p-2">
-      <div class="min-h-[200px]" >
-        <h4 class="text-md font-semibold uppercase mb-2">Bunker Information</h4>
-        <table class="w-full whitespace-no-wrap" v-show="form.ops_vessel_id">
-          <thead v-once>
-            <tr class="w-full">
-              <th>SL</th>
-              <th class="w-72">Bunker Name</th>
-              <th>Unit</th>
-              <th>Presenet Stock</th>
-              <th>Stock In</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(certificate, index) in form.opsBunkers">
-              <td>
-                {{ index+1 }}
-              </td>
-              <td>
-                <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchBunker"  v-model="form.opsBunkers[index]" label="name" class="block form-input">
-                    <template #search="{attributes, events}">
-                        <input
-                            class="vs__search"
-                            :required="!form.opsBunkers[index]"
-                            v-bind="attributes"
-                            v-on="events"
-                            :reaonly="true"
-                            />
-                    </template>
-                </v-select> -->
-                <span class="show-block !bg-gray-100">{{ form.opsBunkers[index].name }}</span>
-
-              </td>
-              <td>
-                <span class="show-block !justify-center !bg-gray-100" v-if="form.opsBunkers[index]?.unit">{{ form.opsBunkers[index]?.unit }}</span>
-              </td>
-              <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model.trim="form.opsBunkers[index].opening_balance" readonly placeholder="Present Stock" class="form-input text-right bg-gray-100" autocomplete="off" :disabled="formType=='edit'"/>
-                </label>
-              </td>
-              <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="number" v-model.trim="form.opsBunkers[index].quantity" placeholder="Stock In" class="form-input text-right" :class="{ '!bg-gray-100' : formType=='edit' }" autocomplete="off" :disabled="formType=='edit'"/>
-                </label>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div v-bind:class="{'hidden': openTab !== 4, 'block': openTab === 4}" class="border border-gray-200 rounded-md my-3 p-2">
       <div class="">
         <h4 class="text-md font-semibold uppercase mb-2">Voyage Port Schedule</h4>
         
@@ -328,7 +271,7 @@
 
 
 
-    <button v-if="openTab==4" type="submit" :disabled="isLoading" class="flex float-right items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+    <button v-if="openTab==3" type="submit" :disabled="isLoading" class="flex float-right items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
       <span v-if="formType=='create'">Create Voyage</span>
       <span v-else>Update Voyage</span>
     </button>
@@ -410,7 +353,7 @@ const toggleTabs = (tabNumber) => {
       return;
     }
   }
-  else if (openTab.value === 4) {
+  else if (openTab.value === 3) {
     let tab4RequiredFields = ['operation_type', 'port_code'];
     if (!checkValidation(openTab, tabNumber, props, tab4RequiredFields)) {
       return;
