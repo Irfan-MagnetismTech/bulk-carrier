@@ -163,21 +163,23 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(certificate, index) in form.opsVesselCertificates">
+          <tr v-for="(certificate, index) in form.opsVesselCertificates" :key="index">
             <td>
               {{ index+1 }}
             </td>
-            <td>
+            <td class="flex items-center">
               <v-select :options="maritimeCertificates" placeholder="--Choose an option--" v-model="form.opsVesselCertificates[index]" label="name" class="w-full block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.opsVesselCertificates[index].name"
+                        :required="!form.opsVesselCertificates[index]"
                         v-bind="attributes"
                         v-on="events"
                         />
                 </template>
-            </v-select>
+              </v-select>
+              <span v-show="isCertificateDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
+
             </td>
             <td>
               <span class="show-block" v-if="form.opsVesselCertificates[index]?.type">{{ form.opsVesselCertificates[index]?.type }}</span>
@@ -217,11 +219,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(certificate, index) in form.opsBunkers">
+          <tr v-for="(bunker, index) in form.opsBunkers" :key="index">
             <td>
               {{ index+1 }}
             </td>
-            <td>
+            <td class="flex items-center">
               <v-select v-if="!form.opsBunkers[index]?.is_readonly" :options="materials" placeholder="--Choose an option--" v-model="form.opsBunkers[index]" label="name" class="w-full block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -233,6 +235,7 @@
                   </template>
               </v-select>
               <span v-else class="show-block !justify-center !bg-gray-100">{{ form.opsBunkers[index]?.name }}</span>
+              <span v-show="isBunkerDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
 
             </td>
             <td>
@@ -267,6 +270,8 @@ import useMaterial from '../../composables/supply-chain/useMaterial';
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import RemarksComponent from '../../components/utils/RemarksComponent.vue';
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
+import useHeroIcon from "../../assets/heroIcon";
+const icons = useHeroIcon();
 
 const props = defineProps({
     form: {
@@ -282,6 +287,10 @@ const props = defineProps({
 const { maritimeCertificates, getMaritimeCertificateList } = useMaritimeCertificates();
 const { ports, searchPorts } = usePort();
 const { materials, getBunkerList } = useMaterial();
+
+const isCertificateDuplicate = ref(false);
+const isBunkerDuplicate = ref(false);
+
 function addVesselCertificate() {
   // console.log(props.maritimeCertificateObject, "dfdf")
   props.form.opsVesselCertificates.push({... props.maritimeCertificateObject });
@@ -324,6 +333,27 @@ watch(() => props.form.business_unit, (value) => {
   searchPorts("", props.form.business_unit);
 }, { deep : true })
 
+watch(() => props.form.opsVesselCertificates, (value) => {
+  props.form.opsVesselCertificates.some((material, index) => {
+            if (props.form.opsVesselCertificates.filter(val => val.ops_maritime_certification_id === material.ops_maritime_certification_id)?.length > 1) {
+              isCertificateDuplicate.value = true;
+            } else {
+              isCertificateDuplicate.value = false;
+
+            }
+          })
+}, { deep : true })
+
+watch(() => props.form.opsBunkers, (value) => {
+  props.form.opsBunkers.some((material, index) => {
+            if (props.form.opsBunkers.filter(val => val.scm_material_id === material.scm_material_id)?.length > 1) {
+              isBunkerDuplicate.value = true;
+            } else {
+              isBunkerDuplicate.value = false;
+
+            }
+		});
+}, { deep : true })
 
 onMounted(() => {
   getMaritimeCertificateList();
