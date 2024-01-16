@@ -15,9 +15,10 @@ import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import useQuotation from '../../../composables/supply-chain/useQuotation';
+import { formatDate } from '../../../utils/helper';
 
 const { getMaterialCs, materialCs, materialCsLists, deleteMaterialCs, isLoading, errors, isTableLoading,showMaterialCs} = useMaterialCs();
-const {getQuotations,quotations} = useQuotation();
+const {getQuotations,quotations,deleteQuotations} = useQuotation();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -168,7 +169,7 @@ let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 // };
 
 
-function confirmDelete(id) {
+function confirmDelete(cs_id, id) {
         Swal.fire({
           title: 'Are you sure?',
           text: "You want to delete this data!",
@@ -179,7 +180,7 @@ function confirmDelete(id) {
           confirmButtonText: 'Yes'
         }).then((result) => {
           if (result.isConfirmed) {
-            deleteMaterialCs(id);
+            deleteQuotations(cs_id,id);
           }
         })
       }
@@ -208,7 +209,7 @@ function confirmDelete(id) {
       </label>
       <label class="label-group">
           <span class="label-item-title">Effective Date<span class="text-red-500"> : </span></span>
-          <span class="label-item-title">{{ materialCs.effective_date }}</span>
+          <span class="label-item-title">{{ formatDate(materialCs.effective_date) }}</span>
       </label>
       <label class="label-group">
           <span class="label-item-title">Selection Criteria<span class="text-red-500"> : </span></span>
@@ -240,11 +241,11 @@ function confirmDelete(id) {
               <td>{{ quotation?.scmVendor?.scmVendorContactPerson?.name }}</td>
               <td>{{ quotation?.scmVendor?.country_name }}</td>
               <td>{{ quotation?.quotation_ref }}</td>
-              <td>{{ quotation?.quotation_date }}</td>
+              <td>{{ formatDate(quotation?.quotation_date) }}</td>
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">                 
                   <action-button :action="'edit'" :to="{ name: 'scm.quotations.edit', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>
-                  <!-- <action-button @click="confirmDelete(materialCsdata.id)" :action="'delete'"></action-button> -->
+                  <action-button @click="confirmDelete(quotation.scm_cs_id, quotation.id)" :action="'delete'" v-if="!quotation.is_selected"></action-button>
                 </div>
               </td>
             </tr>

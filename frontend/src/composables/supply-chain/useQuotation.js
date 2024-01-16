@@ -50,6 +50,9 @@ export default function useQuotation() {
         mode_of_shipment: null,//foreign
         delivery_term: null,
         terms_and_condition: null,
+        stock_type: null,
+        manufaturing_days: null,
+        warranty: null,
         remarks: null,
         attachment: null,
         scmCsMaterialVendors: [
@@ -174,7 +177,7 @@ export default function useQuotation() {
     }
 
     async function deleteQuotations(csId,quotationId) {
-
+        console.log('tag', quotationId);
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 

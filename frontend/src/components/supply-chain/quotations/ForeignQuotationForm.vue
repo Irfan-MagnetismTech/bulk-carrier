@@ -135,7 +135,7 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Warranty <span class="text-red-500">*</span></span>
-        <input type="number" v-model="form.manufacturing_days" class="form-input" :readonly="form.stock_type == 'Ready Stock'" :class="[form.stock_type == 'Ready Stock' ? 'vms-readonly-input' : '',]"/>
+        <input type="text" v-model="form.warranty" class="form-input"/>
       
       </label>
   </div>
@@ -424,8 +424,6 @@
             line['brand'] = '';
             line['model'] = '';
             line['offered_price'] = '';
-            line['manufacturing_days'] = '';
-            line['stock_type'] = '';
             line['origin'] = '';
           });
         });

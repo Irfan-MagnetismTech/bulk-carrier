@@ -1,47 +1,44 @@
 <template>
 <div class="input-group">
-    <label class="label-group">
-        <span class="label-item-title">PR No<span class="text-red-500"> : </span></span>
-        <span class="label-item-title">{{ form.scmPr?.ref_no }}</span>  
+  <label class="label-group">
+        <span class="label-item-title font-bold">CS Ref<span class="text-red-500"> : </span></span>
+        <span class="label-item-title"> {{ form.ref_no }}</span>
     </label>
     <label class="label-group">
-        <span class="label-item-title">Warehouse<span class="text-red-500"> : </span></span>
-        <span class="label-item-title">{{ form.scmWarehouse?.name }}</span>
+        <span class="label-item-title font-bold">Warehouse<span class="text-red-500"> : </span></span>
+        <span class="label-item-title"> {{ form.scmWarehouse?.name }}</span>
     </label>
     <label class="label-group">
-        <span class="label-item-title">Expire Date<span class="text-red-500"> : </span></span>
-        <span class="label-item-title">{{ form.expire_date }}</span>
-    </label>
-  </div>
-
-  <div class="input-group">
-    <label class="label-group">
-        <span class="label-item-title">CS REF<span class="text-red-500"> : </span></span>
-        <span class="label-item-title">{{ form.ref_no }}</span>
-    </label>
-    <label class="label-group">
-        <span class="label-item-title">Requirement Type<span class="text-red-500"> : </span></span>
-        <span class="label-item-title">{{ form.priority }}</span>
-    </label>
-    <label class="label-group">
-        <span class="label-item-title">Required Days<span class="text-red-500"> : </span></span>
-        <span class="label-item-title">{{ form.required_days }}</span>
+        <span class="label-item-title font-bold">Expire Date<span class="text-red-500"> : </span></span>
+        <span class="label-item-title"> {{ formatDate(form.expire_date) }}</span>
     </label>
   </div>
 
   <div class="input-group">
     <label class="label-group">
-        <span class="label-item-title">Effective Date<span class="text-red-500"> : </span></span>
-        <span class="label-item-title">{{ form.effective_date }}</span>
+        <span class="label-item-title font-bold">Requirement Type<span class="text-red-500"> : </span></span>
+        <span class="label-item-title"> {{ form.priority }}</span>
     </label>
     <label class="label-group">
-        <span class="label-item-title">Special Instruction<span class="text-red-500"> : </span></span>
-        <span class="label-item-title">{{ form.special_instructions }}</span>
+        <span class="label-item-title font-bold">Required Days<span class="text-red-500"> : </span></span>
+        <span class="label-item-title"> {{ form.required_days }}</span>
+    </label>
+    
+    <label class="label-group">
+        <span class="label-item-title font-bold">Effective Date<span class="text-red-500"> : </span></span>
+        <span class="label-item-title"> {{ formatDate(form.effective_date) }}</span>
     </label>
   </div>
 
-<h2 class="py-10">Material Wise Terms</h2>
-<table class="min-w-full divide-y divide-gray-200 dark-disabled:divide-gray-700">
+  <div class="input-group">
+    <label class="label-group">
+        <span class="label-item-title font-bold">Special Instruction<span class="text-red-500"> : </span></span>
+        <span class="label-item-title"> {{ form.special_instructions }}</span>
+    </label>
+  </div>
+
+<table class="min-w-full divide-y divide-gray-200 dark-disabled:divide-gray-700 mt-10">
+  <caption class="border-2 bg-green-400 uppercase">Comparative Statement</caption>
   <thead class="bg-gray-50 dark-disabled:bg-gray-800">
     <tr class="text-gray-600 dark-disabled:text-gray-400 text-sm leading-normal">
       <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
@@ -106,15 +103,12 @@
   </template>
   </tbody>
   </table>  
-  <h2 class="py-10">Other Conditions</h2>
-  <table class="min-w-full divide-y divide-gray-200 dark-disabled:divide-gray-700">
+  <table class="min-w-full divide-y divide-gray-200 dark-disabled:divide-gray-700 mt-10">
+  <caption class="border-2 bg-green-400 uppercase">Other Conditions</caption>
   <thead class="bg-gray-50 dark-disabled:bg-gray-800">
     <tr class="text-gray-600 dark-disabled:text-gray-400 text-sm leading-normal">
-      <th class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
-        Description
-      </th>
-    
-      <th class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (formData?.scmCsVendor)" :key="index">{{ vendorData[0].scmVendor?.name }}</th>       
+      <th class="px-6 py-3 text-center text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">Description</th>
+      <th class="px-6 py-3 text-center text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (formData?.scmCsVendor)" :key="index">{{ vendorData[0].scmVendor?.name }}</th>       
     </tr> 
   </thead>
   <tbody>
@@ -123,8 +117,8 @@
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].quotation_ref }}</td>
     </tr>
     <tr>
-      <td>Quotation Date</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].quotation_date }}</td>
+      <td>Quotation Received Date</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ formatDate(VendoData[0].quotation_received_date) }}</td>
     </tr>
     <tr>
       <td>Quotation Validity</td>
@@ -132,27 +126,27 @@
     </tr>
     <tr>
       <td>Sourcing</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].quotation_ref }}</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].sourcing }}</td>
+    </tr>
+    <tr>
+      <td>PI Date</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ formatDate(VendoData[0].quotation_date) }}</td>
     </tr>
     <tr>
       <td>Date Of RFQ</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].date_of_rfq }}</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ formatDate(VendoData[0].date_of_rfq) }}</td>
     </tr>
     <tr>
-      <td>Vendor Type</td>
+      <td>Product Source Type</td>
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].scmVendor.product_source_type }}</td>
-    </tr>
-    <tr>
-      <td>Quotation Received Date</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].quotations_received_date }}</td>
     </tr>
     <tr v-if="form.purchase_center == 'Foreign'">
       <td>Estimated Shipment Date</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].quotation_shipment_date }}</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ formatDate(VendoData[0].quotation_shipment_date) }}</td>
     </tr>
     <tr v-if="form.purchase_center == 'Foreign'">
-      <td>Port Of Shipment</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].port_of_shipment }}</td>
+      <td>Port Of Loading</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].port_of_loading }}</td>
     </tr>
     <tr v-if="form.purchase_center == 'Foreign'">
       <td>Port Of Discharge</td>
@@ -311,7 +305,7 @@
                 </template>
               </tr>
               <tr>
-                <td>Offered Price</td>
+                <td>Offer Price</td>
                 <template v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
                   <td>{{ details[index] && details[index][0] && details[index][0].offered_price }}</td>
                 </template>
@@ -362,7 +356,8 @@
     import useVendor from '../../../composables/supply-chain/useVendor';
     import useMaterialCs from '../../../composables/supply-chain/useMaterialCs';
     import { useRoute } from 'vue-router';
-    
+    import { formatDate } from '../../../utils/helper';
+
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
     const { searchVendor, vendors, vendor, isLoading: vendorLoading } = useVendor();

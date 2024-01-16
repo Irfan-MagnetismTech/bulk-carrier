@@ -111,7 +111,7 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Warranty <span class="text-red-500">*</span></span>
-        <input type="number" v-model="form.manufacturing_days" class="form-input" :readonly="form.stock_type == 'Ready Stock'" :class="[form.stock_type == 'Ready Stock' ? 'vms-readonly-input' : '',]"/>
+        <input type="text" v-model="form.warranty" class="form-input"/>
       
       </label>
   </div>
@@ -153,8 +153,7 @@
               <th class="py-3 align-center">Unit</th>
               <th class="py-3 align-center">Brand</th>
               <th class="py-3 align-center">Model</th>
-              <th class="py-3 align-center">Offer Price</th>
-              <th class="py-3 align-center">Negotiated Price</th>
+              <th class="py-3 align-center">Price</th>
             </tr>
             </thead>
 
@@ -174,9 +173,6 @@
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].model" class="form-input" required/>
-                    </td>
-                    <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input" min="1"/>
@@ -243,7 +239,6 @@
             materialCs.value.scmCsMaterials.map((lines, index) => {
               lines.map((line, index) => {
                 line['negotiated_price'] = null;
-                line['offered_price'] = null;
                 line['brand'] = null;
                 line['model'] = null;
               });
