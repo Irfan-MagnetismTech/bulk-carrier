@@ -226,7 +226,7 @@ export default function usePurchaseRequisition() {
                 materialArray.push(material_key);
                 form.scmPrLines[scmPrLineIndex].isAspectDuplicate = false;
               } else {
-                let data = `Duplicate Material Name [Material Name: ${scmPrLineIndex + 1}]`;
+                let data = `Duplicate Material Name in Row: ${scmPrLineIndex + 1}]`;
                 messages.value.push(data);
                 form.scmPrLines[scmPrLineIndex].isAspectDuplicate = true;
               }
