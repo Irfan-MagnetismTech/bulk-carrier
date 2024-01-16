@@ -42,6 +42,7 @@ export default function useQuotation() {
         ait: null,//local
         credit_term: null,//local
         quotation_shipment_date: null,
+        quotation_received_date: null,
         estimated_shipment: null,//foreign
         port_of_loading: null,//foreign
         port_of_discharge: null,//foreign

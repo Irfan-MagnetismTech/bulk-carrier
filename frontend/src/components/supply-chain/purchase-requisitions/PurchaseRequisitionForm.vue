@@ -13,7 +13,10 @@
     import {useStore} from "vuex";
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
-    
+    import useHeroIcon from '../../../assets/heroIcon';
+
+
+    const icons = useHeroIcon();
     const { material, materials, getMaterials,searchMaterial,isLoading: materialLoading } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse ,isLoading:warehouseLoading} = useWarehouse();
     const { getMaterialWiseCurrentStock,CurrentStock} =useStockLedger();
@@ -154,13 +157,13 @@
 watch(() => props.form.scmPrLines, (newLines) => {
   let materialArray = [];
   newLines.forEach((line, index) => {
-    let material_key = line.scm_material_id + "-" + line?.brand ?? + "-" + line?.model ?? '';
-    if (materialArray.indexOf(material_key) === -1) {
-      materialArray.push(material_key);
-    } else {
-      alert("Duplicate Material Found");
-      props.form.scmPrLines.splice(index, 1);
-    }
+    // let material_key = line.scm_material_id + "-" + line?.brand ?? + "-" + line?.model ?? '';
+    // if (materialArray.indexOf(material_key) === -1) {
+    //   materialArray.push(material_key);
+    // } else {
+    //   alert("Duplicate Material Found");
+    //   props.form.scmPrLines.splice(index, 1);
+    // }
 
     if (line.scmMaterial) {
       const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
@@ -170,7 +173,6 @@ watch(() => props.form.scmPrLines, (newLines) => {
           props.form.scmPrLines[index].unit = selectedMaterial.unit;
           props.form.scmPrLines[index].scm_material_id = selectedMaterial.id;
           getMaterialWiseCurrentStock(selectedMaterial.id,props.form.scm_warehouse_id).then(() => {
-        
             props.form.scmPrLines[index].rob = CurrentStock ?? 0;
           });
         }
@@ -458,11 +460,11 @@ function tytytyasd(indx) {
         
         <div v-for="(ScmPrLine, index) in form.scmPrLines" :key="index" class="w-full mx-auto p-2 border rounded-mdborder-gray-400 mb-5 shadow-md">
           <label class="block w-1/2 mt-2 text-sm">
-
-          <span class="text-gray-700 dark-disabled:text-gray-300">Material Name <span class="text-red-500">*</span></span>
-         </label>
+          <span class="text-gray-700 dark-disabled:text-gray-300">Material Name <span class="text-red-500">*</span>
+          </span>
+          </label>
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-            <label class="block w-1/2 mt-2 text-sm">
+            <label class="block w-1/2 mt-2 text-sm relative">
               <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -473,8 +475,10 @@ function tytytyasd(indx) {
                           />
                   </template>
               </v-select>
+              <span v-show="form.scmPrLines[index].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 left-[18rem] md:left-[21rem]" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
             </label>
-          <label class="block w-full mt-2 text-sm">
+           
+            <label class="block w-full mt-2 text-sm">
                         <a v-if="form.scmPrLines[index].scmMaterial" :href="env.BASE_API_URL+form.scmPrLines[index].scmMaterial?.sample_photo" target="_blank" rel="noopener noreferrer">
                                   <img :src="env.BASE_API_URL+form.scmPrLines[index].scmMaterial?.sample_photo"  alt="" srcset="" class="w-12 mx-auto">
                           </a>

@@ -14,6 +14,8 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import { formatDate } from '../../../utils/helper';
+
 
 const { getMaterialCs, materialCs,materialCsLists, deleteMaterialCs, isLoading,errors,isTableLoading} = useMaterialCs();
 const { numberFormat } = useHelper();
@@ -243,16 +245,16 @@ function confirmDelete(id) {
           <tbody>
             <tr v-for="(materialCsdata,index) in (materialCsLists?.data ? materialCsLists?.data : materialCsLists)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-              <td>{{ materialCsdata?.ref_no }}</td>
-              <td>{{ materialCsdata?.effective_date }}</td>
-              <td>{{ materialCsdata?.expire_date }}</td>
+              <td><nobr>{{ materialCsdata?.ref_no }}</nobr></td>
+              <td>{{ formatDate(materialCsdata?.effective_date) }}</td>
+              <td>{{ formatDate(materialCsdata?.expire_date) }}</td>
               <td>{{ materialCsdata?.purchase_center }}</td>
               <td>{{ materialCsdata?.selection_ground }}</td>
               <td>
                 <template v-if="materialCsdata.selectedVendors.length">
-                  <div v-for="(vendor,index) in materialCsdata?.selectedVendors" :key="index">
-                    <span>{{ vendor?.name }}</span>
-                  </div>
+                  <ul v-for="(vendor,index) in materialCsdata?.selectedVendors" :key="index">
+                    <li>{{ vendor.scmVendor.name }}</li>
+                  </ul>
                 </template>
                 <template v-else>
                   <span class="text-red-500">No Vendor Selected</span>

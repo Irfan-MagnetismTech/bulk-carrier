@@ -7,6 +7,7 @@ import Store from './../../store/index.js';
 // import useFileDownload from 'vue-composable/dist/vue-composable.esm';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper';
+import Swal from 'sweetalert2';
 import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 
@@ -57,6 +58,7 @@ export default function usePurchaseRequisition() {
     const materialObject = {
         scmMaterial: '',
         scm_material_id: '',
+        isAspectDuplicate: false,
         unit: '',
         brand: '',
         model: '',
@@ -122,6 +124,7 @@ export default function usePurchaseRequisition() {
         }
     }
     async function storePurchaseRequisition(form) {
+        if (!checkUniqueArray(form)) return;
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -168,6 +171,8 @@ export default function usePurchaseRequisition() {
     }
 
     async function updatePurchaseRequisition(form, purchaseRequisitionId) {
+        if (!checkUniqueArray(form)) return;
+
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -210,6 +215,46 @@ export default function usePurchaseRequisition() {
             // isLoading.value = false;
         }
     }
+
+    function checkUniqueArray(form) {
+        let isHasError = false;
+        const messages = ref([]);
+        let materialArray = [];
+        form.scmPrLines.map((scmPrLine, scmPrLineIndex) => {
+            let material_key = scmPrLine.scm_material_id + "-" + scmPrLine?.brand ?? + "-" + scmPrLine?.model ?? '';
+            if (materialArray.indexOf(material_key) === -1) {
+                materialArray.push(material_key);
+                form.scmPrLines[scmPrLineIndex].isAspectDuplicate = false;
+              } else {
+                let data = `Duplicate Aspect Name [Section no: ${scmPrLineIndex + 1} , Aspect no: ${scmPrLineIndex+1}]`;
+                messages.value.push(data);
+                form.scmPrLines[scmPrLineIndex].isAspectDuplicate = true;
+              }
+            });
+
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
 
     // async function searchPurchaseRequisition(searchParam, loading) {
     //     isLoading.value = true;
