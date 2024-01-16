@@ -2,14 +2,15 @@
 
 namespace Modules\SupplyChain\Entities;
 
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Accounts\Entities\AccCostCenter;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Accounts\Entities\AccCostCenter;
 
 class ScmWcs extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
         'scm_wr_id',

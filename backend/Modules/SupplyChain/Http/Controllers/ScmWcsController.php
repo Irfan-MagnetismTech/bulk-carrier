@@ -5,6 +5,7 @@ namespace Modules\SupplyChain\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Services\FileUploadService;
 use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmWcs;
 use Modules\SupplyChain\Services\UniqueId;
@@ -18,12 +19,12 @@ use Modules\SupplyChain\Http\Requests\ScmQuotationRequest;
 
 class ScmWcsController extends Controller
 {
-    function __construct()
+    function __construct(private FileUploadService $fileUpload)
     {
-        //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
-        //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
-        //     $this->middleware('permission:charterer-contract-edit', ['only' => ['update']]);
-        //     $this->middleware('permission:charterer-contract-delete', ['only' => ['destroy']]);
+        //     $this->middleware('permission:work-cs-create|work-cs-edit|work-cs-show|work-cs-delete', ['only' => ['index','show']]);
+        //     $this->middleware('permission:work-cs-create', ['only' => ['store']]);
+        //     $this->middleware('permission:work-cs-edit', ['only' => ['update']]);
+        //     $this->middleware('permission:work-cs-delete', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.
@@ -42,14 +43,6 @@ class ScmWcsController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('supplychain::create');
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -100,15 +93,6 @@ class ScmWcsController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('supplychain::edit');
-    }
 
     /**
      * Update the specified resource in storage.
