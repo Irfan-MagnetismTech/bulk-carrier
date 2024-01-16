@@ -68,7 +68,7 @@
           <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
       </label>
       <label class="label-group">
-        <span class="label-item-title">Vendor Quotation Date <span class="text-red-500">*</span></span>
+        <span class="label-item-title">PI Date <span class="text-red-500">*</span></span>
          <VueDatePicker v-model="form.quotation_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
       </label>
   </div>
@@ -110,13 +110,19 @@
           <input type="text" v-model="form.ait" class="form-input" required/>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Delivery Term <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.delivery_term" class="form-input" required/>
+        <span class="label-item-title">Warranty <span class="text-red-500">*</span></span>
+        <input type="number" v-model="form.manufacturing_days" class="form-input" :readonly="form.stock_type == 'Ready Stock'" :class="[form.stock_type == 'Ready Stock' ? 'vms-readonly-input' : '',]"/>
+      
       </label>
   </div>
 
   
-  <div class="input-group !w-1/4">
+  <div class="input-group !w-2/4">
+    
+    <label class="label-group">
+        <span class="label-item-title">Delivery Term <span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.delivery_term" class="form-input" required/>
+      </label>
     <label class="label-group">
         <span class="label-item-title">Credit Term <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.credit_term" class="form-input" required/>

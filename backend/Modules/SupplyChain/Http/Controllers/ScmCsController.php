@@ -35,7 +35,7 @@ class ScmCsController extends Controller
     {
         try {
             $scmCs = ScmCs::query()
-                ->with('scmPr', 'scmWarehouse', 'selectedVendors.scmVendor', 'scmCsMaterials.scmMaterial','scmCsVendors.scmVendor' ,'scmCsMaterialVendors.scmMaterial', 'scmCsMaterialVendors.scmPr')
+                ->with('scmPr', 'scmWarehouse', 'selectedVendors.scmVendor', 'scmCsMaterials.scmMaterial', 'scmCsVendors.scmVendor', 'scmCsMaterialVendors.scmMaterial', 'scmCsMaterialVendors.scmPr')
                 ->globalSearch(request()->all());
 
             return response()->success('Data list', $scmCs, 200);
@@ -218,6 +218,9 @@ class ScmCsController extends Controller
                 'delivery_term',
                 'terms_and_condition',
                 'remarks',
+                'stock_type',
+                'manufacturing_days',
+                'warranty'
             );
 
             DB::beginTransaction();
@@ -333,6 +336,9 @@ class ScmCsController extends Controller
                 'delivery_term',
                 'terms_and_condition',
                 'remarks',
+                'stock_type',
+                'manufacturing_days',
+                'warranty'
             );
 
             DB::beginTransaction();

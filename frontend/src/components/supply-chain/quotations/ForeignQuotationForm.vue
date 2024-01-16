@@ -74,7 +74,7 @@
           <input type="text" v-model="form.quotation_ref" required class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Vendor Quotation Date <span class="text-red-500">*</span></span>
+        <span class="label-item-title">PI Date <span class="text-red-500">*</span></span>
           <VueDatePicker v-model="form.quotation_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
       </label>
   </div>
@@ -108,7 +108,24 @@
         <span class="label-item-title">Port Of Discharge <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.port_of_discharge" required class="form-input " name="scm_department_id" :id="'scm_department_id'" />
       </label>
+      
+
       <label class="label-group">
+        <span class="label-item-title">Stock Type <span class="text-red-500">*</span></span>
+            <select v-model="form.stock_type" class="form-input" @change="changeStockType()">
+              <option v-for="stock_type in stock_types" :value="stock_type">{{ stock_type }}</option>
+          </select>
+      </label>
+      
+      <label class="label-group">
+        <span class="label-item-title">Manufacturing Days <span class="text-red-500">*</span></span>
+        <input type="number" v-model="form.manufacturing_days" class="form-input" :readonly="form.stock_type == 'Ready Stock'" :class="[form.stock_type == 'Ready Stock' ? 'vms-readonly-input' : '',]"/>
+      
+      </label>
+      
+  </div>
+  <div class="input-group !w-2/4">
+    <label class="label-group">
         <span class="label-item-title">Mode Of Shipment <span class="text-red-500">*</span></span>
           <select v-model="form.mode_of_shipment" class="form-input">
             <option value="Air">Air</option>
@@ -117,12 +134,18 @@
           </select>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Delivery Term <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.delivery_term" required class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
+        <span class="label-item-title">Warranty <span class="text-red-500">*</span></span>
+        <input type="number" v-model="form.manufacturing_days" class="form-input" :readonly="form.stock_type == 'Ready Stock'" :class="[form.stock_type == 'Ready Stock' ? 'vms-readonly-input' : '',]"/>
+      
       </label>
   </div>
 
   
+  <div class="input-group !w-3/4">
+      <label class="label-group">
+          <RemarksComponet v-model="form.delivery_term" :maxlength="300" :fieldLabel="'Delivery Term'" isRequired="true"></RemarksComponet>
+      </label>
+  </div>
   <div class="input-group !w-3/4">
       <label class="label-group">
           <RemarksComponet v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'" isRequired="true"></RemarksComponet>
@@ -150,8 +173,6 @@
               <th class="py-3 align-center">Brand</th>
               <th class="py-3 align-center">Model</th>
               <th class="py-3 align-center">Origin</th>
-              <th class="py-3 align-center">Stock Type</th>
-              <th class="py-3 align-center">Manufacturing Days</th>
               <th class="py-3 align-center">Offer Price</th>
               <th class="py-3 align-center">Negotiated Price</th>
             </tr>
@@ -177,15 +198,6 @@
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].origin" class="form-input"/>
-                    </td>
-                    <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <!-- <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].stock_type" class="form-input"/> -->
-                      <select v-model="form.scmCsMaterialVendors[indexa][index].stock_type" class="form-input" @change="changeStockType(indexa,index)">
-                        <option v-for="stock_type in stock_types" :value="stock_type">{{ stock_type }}</option>
-                      </select>
-                    </td>
-                    <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].manufacturing_days" class="form-input" :readonly="form.scmCsMaterialVendors[indexa][index].stock_type == 'Ready Stock'" :class="[form.scmCsMaterialVendors[indexa][index].stock_type == 'Ready Stock' ? 'vms-readonly-input' : '',]"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" class="form-input"/>
@@ -369,9 +381,9 @@
         props.form.scmCsMaterialVendors[index].scm_material_id = value.id;
     }
 
-    function changeStockType(indexa,index) {
-      if(props.form.scmCsMaterialVendors[indexa][index].stock_type == 'Ready Stock'){
-        props.form.scmCsMaterialVendors[indexa][index].manufacturing_days = null
+    function changeStockType() {
+      if(props.form.stock_type == 'Ready Stock'){
+        props.form.manufacturing_days = null
       }
     }
 
