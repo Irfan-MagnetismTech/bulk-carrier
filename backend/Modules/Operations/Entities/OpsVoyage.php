@@ -64,10 +64,11 @@ class OpsVoyage extends Model
         return $this->hasMany(OpsVoyagePortSchedule::class);
     }
 
-    public function opsBunkers()
-    {
-        return $this->morphMany(OpsBunker::class, 'bunkerable');
-    }
+    // Bunker is Managed independently. So this is not necessary anymore.
+    // public function opsBunkers()
+    // {
+    //     return $this->morphMany(OpsBunker::class, 'bunkerable');
+    // }
 
     public function opsContractAssign() {
         return $this->hasMany(OpsContractAssign::class, 'ops_voyage_id','id');
