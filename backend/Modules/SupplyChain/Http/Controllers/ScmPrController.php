@@ -3,6 +3,7 @@
 namespace Modules\SupplyChain\Http\Controllers;
 
 use Exception;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
@@ -17,9 +18,9 @@ use Modules\SupplyChain\Entities\ScmMrr;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Services\CompositeKey;
+use Modules\SupplyChain\Entities\ScmCsMaterial;
 use Modules\SupplyChain\Http\Requests\ScmPrRequest;
 use Maatwebsite\Excel\Validators\ValidationException;
-use Modules\SupplyChain\Entities\ScmCsMaterial;
 
 class ScmPrController extends Controller
 {
@@ -139,7 +140,7 @@ class ScmPrController extends Controller
                 'rob' => $currentStock,
                 'quantity' => $scmPrLine->quantity,
                 'is_closed' => $scmPrLine->is_closed,
-                'closed_by' => $scmPrLine->closedBy?->name ?? null,
+                'closed_by' => (auth()->user()->id == (int)($scmPrLine->closedBy->id)) ? 'You' : $scmPrLine->closedBy->name,
                 'closed_at' => $scmPrLine->closed_at,
                 'closing_remarks' => $scmPrLine->closing_remarks,
                 'required_date' => $scmPrLine->required_date,
@@ -163,10 +164,11 @@ class ScmPrController extends Controller
             'approved_date' => $purchaseRequisition->approved_date,
             'remarks' => $purchaseRequisition->remarks,
             'is_closed' => $purchaseRequisition->is_closed,
-            'closed_by' => $purchaseRequisition->closedBy?->name ?? null,
+            'closed_by' => User::whoAmI($purchaseRequisition, 'closedBy'),
             'closed_at' => $purchaseRequisition->closed_at,
             'closing_remarks' => $purchaseRequisition->closing_remarks,
             'status' => $purchaseRequisition->status,
+            'created_by' => $purchaseRequisition->createdBy->name,
             'scmPrLines' => $prLines,
         ];
 
