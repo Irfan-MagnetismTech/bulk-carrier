@@ -471,3 +471,24 @@ function confirmDelete(id) {
     </div>
   
 </template>
+
+<style lang="postcss" scoped>
+    ::-webkit-scrollbar:horizontal {
+      height: 0.5rem!important; 
+    }
+  
+    ::-webkit-scrollbar-thumb:horizontal{
+      background-color: rgb(132, 109, 175); 
+      border-radius: 12rem!important;
+      width: 0.5rem!important;
+      height: 0.5rem!important;
+      border-radius: 12rem!important;
+    }
+  
+    ::-webkit-scrollbar-track:horizontal{
+      background: rgb(148, 144, 155)!important; 
+      border-radius: 12rem!important;
+    }
+  
+    
+</style>

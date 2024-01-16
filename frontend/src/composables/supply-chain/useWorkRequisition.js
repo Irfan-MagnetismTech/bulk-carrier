@@ -8,6 +8,7 @@ import Store from './../../store/index.js';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper';
 import { loaderSetting as LoaderConfig} from '../../config/setting.js';
+import Swal from 'sweetalert2';
 
 
 export default function useWorkRequisition() {
@@ -139,6 +140,8 @@ export default function useWorkRequisition() {
     }
     async function storeWorkRequisition(form) {
 
+        if (!checkUniqueArray(form)) return;
+
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -184,6 +187,8 @@ export default function useWorkRequisition() {
     }
 
     async function updateWorkRequisition(form, workRequisitionId) {
+
+        if (!checkUniqueArray(form)) return;
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -353,6 +358,43 @@ export default function useWorkRequisition() {
             // isLoading.value = false;
         }
 
+    }
+
+    function checkUniqueArray(form) {
+        let isHasError = false;
+        const messages = ref([]);
+        const hasDuplicates = form.scmWrLines.some((scmWrLine, index) => {
+            if (form.scmWrLines.filter(val => val.scm_service_id === scmWrLine.scm_service_id)?.length > 1) {
+                let data = `Duplicate Service [Line no: ${index + 1}]`;
+                messages.value.push(data);
+                scmWrLine.isServiceDuplicate = true;
+            } else {
+                scmWrLine.isServiceDuplicate = false;
+            }
+
+        });
+
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
+        }
     }
 
     return {
