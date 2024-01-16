@@ -35,7 +35,7 @@ class ScmCsController extends Controller
     {
         try {
             $scmCs = ScmCs::query()
-                ->with('scmPr', 'scmWarehouse', 'selectedVendors', 'scmCsMaterials.scmMaterial')
+                ->with('scmPr', 'scmWarehouse', 'selectedVendors.scmVendor', 'scmCsMaterials.scmMaterial','scmCsVendors.scmVendor' ,'scmCsMaterialVendors.scmMaterial', 'scmCsMaterialVendors.scmPr')
                 ->globalSearch(request()->all());
 
             return response()->success('Data list', $scmCs, 200);
@@ -198,7 +198,7 @@ class ScmCsController extends Controller
                 'vendor_type',
                 'sourcing',
                 'date_of_rfq',
-                'quotations_received_date',
+                'quotation_received_date',
                 'quotation_ref',
                 'quotation_date',
                 'quotation_validity',
@@ -232,29 +232,14 @@ class ScmCsController extends Controller
                 $model = $values[0]['model'] ?? null;
                 $origin = $values[0]['origin'] ?? null;
                 $stock_type = $values[0]['stock_type'] ?? null;
-                $manufaturing_days = $values[0]['manufaturing_days'] ?? null;
+                $manufacturing_days = $values[0]['manufacturing_days'] ?? null;
 
                 foreach ($values as $key1 => $value) {
                     $csMaterial = ScmCsMaterial::where([
                         'scm_cs_id' => $scmCs->id,
                         'scm_material_id' => $value['scm_material_id']
                     ])->first();
-                    $adadas[] = [
-                        'scm_cs_id' => $scmCs->id,
-                        'scm_cs_vendor_id' => $scmCsVendor->id ?? null,
-                        'scm_vendor_id' => $scmCsVendor->scm_vendor_id ?? null,
-                        'scm_cs_material_id' => $csMaterial->id,
-                        'scm_pr_id' => $value['scm_pr_id'] ?? null,
-                        'scm_material_id' => $value['scm_material_id'] ?? null,
-                        'brand' => $brand ?? null,
-                        'unit' => $unit ?? null,
-                        'model' => $model ?? null,
-                        'origin' => $origin ?? null,
-                        'stock_type' => $stock_type ?? null,
-                        'manufaturing_days' => $manufaturing_days ?? null,
-                        'offered_price' => $offerprice ?? null,
-                        'negotiated_price' => $negotiatedprice ?? null,
-                    ];
+
                     ScmCsMaterialVendor::create(
                         [
                             'scm_cs_id' => $scmCs->id,
@@ -268,7 +253,7 @@ class ScmCsController extends Controller
                             'model' => $model ?? null,
                             'origin' => $origin ?? null,
                             'stock_type' => $stock_type ?? null,
-                            'manufaturing_days' => $manufaturing_days ?? null,
+                            'manufacturing_days' => $manufacturing_days ?? null,
                             'offered_price' => $offerprice ?? null,
                             'negotiated_price' => $negotiatedprice ?? null,
                         ]
@@ -321,13 +306,14 @@ class ScmCsController extends Controller
     public function updateQuotation(ScmQuotationRequest $request, $id)
     {
         try {
+            // return response()->json( $request->all(), 422);
             $scmCsVendor = ScmCsVendor::find($id);
             $requestData = $request->only(
                 'scm_vendor_id',
                 'vendor_type',
                 'sourcing',
                 'date_of_rfq',
-                'quotations_received_date',
+                'quotation_received_date',
                 'quotation_ref',
                 'quotation_date',
                 'quotation_validity',
@@ -391,7 +377,7 @@ class ScmCsController extends Controller
                 $model = $values[0]['model'] ?? null;
                 $origin = $values[0]['origin'] ?? null;
                 $stock_type = $values[0]['stock_type'] ?? null;
-                $manufaturing_days = $values[0]['manufaturing_days'] ?? null;
+                $manufacturing_days = $values[0]['manufacturing_days'] ?? null;
 
                 foreach ($values as $key1 => $value) {
                     $csMaterial = ScmCsMaterial::where([
@@ -411,7 +397,7 @@ class ScmCsController extends Controller
                             'model' => $model ?? null,
                             'origin' => $origin ?? null,
                             'stock_type' => $stock_type ?? null,
-                            'manufaturing_days' => $manufaturing_days ?? null,
+                            'manufacturing_days' => $manufacturing_days ?? null,
                             'offered_price' => $offerprice ?? null,
                             'negotiated_price' => $negotiatedprice ?? null,
                         ]

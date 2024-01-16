@@ -15,7 +15,7 @@ class ScmCsVendor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'scm_cs_id', 'scm_vendor_id', 'quotation_ref', 'quotation_date', 'quotation_attachment', 'quotation_validity', 'payment_method', 'delivery_term', 'sourcing', 'date_of_rfq', 'vendor_type', 'quotation_shipment_date', 'estimated_shipment', 'port_of_shipment', 'port_of_discharge', 'currency', 'mode_of_shipment', 'terms_and_condition', 'remarks', 'credit_term', 'carring_cost_bear_by', 'unloading_cost_bear_by', 'vat', 'ait', 'is_selected', 'stock_type', 'manufacturing_days'
+        'scm_cs_id', 'scm_vendor_id', 'quotation_ref', 'quotation_date', 'quotation_attachment', 'quotation_validity', 'payment_method', 'delivery_term', 'sourcing', 'date_of_rfq', 'vendor_type', 'quotation_shipment_date', 'estimated_shipment', 'port_of_shipment', 'port_of_discharge', 'currency', 'mode_of_shipment', 'terms_and_condition', 'remarks', 'credit_term', 'carring_cost_bear_by', 'unloading_cost_bear_by', 'vat', 'ait', 'is_selected', 'stock_type', 'manufacturing_days', 'quotations_received_date', 'port_of_loading'
     ];
 
     protected $casts = ['is_selected' => 'boolean'];

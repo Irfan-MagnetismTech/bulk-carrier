@@ -129,7 +129,8 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="number" v-model="form.scmCsMaterials[index].quantity" class="form-input" min="1" required>
+                 <input type="number" v-model="form.scmCsMaterials[index].quantity" class="form-input" min="2" required :max="form.scmCsMaterials[index].max_quantity"
+                 :class="{'border-2': form.scmCsMaterials[index].quantity > form.scmCsMaterials[index].max_quantity,'border-red-500 bg-red-100': form.scmCsMaterials[index].quantity > form.scmCsMaterials[index].max_quantity}">
               </label>
             </td>
             <td class="px-1 py-1 text-center">
@@ -229,6 +230,7 @@ function materialChange(index) {
     props.form.scmCsMaterials[index].unit = props.form.scmCsMaterials[index].scmMaterial.unit;
     props.form.scmCsMaterials[index].scm_material_id = props.form.scmCsMaterials[index].scmMaterial.id; 
     props.form.scmCsMaterials[index].pr_composite_key = props.form.scmCsMaterials[index].scmMaterial.pr_composite_key;
+    props.form.scmCsMaterials[index].max_quantity = props.form.scmCsMaterials[index].scmMaterial.max_quantity;
 }
 
 function prChange(index) {
@@ -241,7 +243,7 @@ function prChange(index) {
 function warehouseChange() {
   props.form.scm_warehouse_id = props.form.scmWarehouse.id;
   props.form.acc_cost_center_id = props.form.scmWarehouse.cost_center_id;
-}
+} 
 // watch(() => props.form.scmSi, (new Val,oldVal) => {
 //       props.form.scm_si_id = newVal?.id;
 //       props.form.si_no = newVal?.ref_no;
@@ -367,6 +369,7 @@ onMounted(() => {
     fetchWarehouse('');
   });
 });
+
 
 function changePurchaseCenter() {
   // searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id,props.form.purchase_center, null)

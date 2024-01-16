@@ -60,7 +60,7 @@
         Previous Selected Price
       </th>
       <th colspan="2" scope="col" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (formData?.scmCsVendor)" :key="index">{{ vendorData[0].scmVendor?.name ?? ''}}</th>  
-      <th v-if="form.purchase_center == 'Foreign'">
+      <th rowspan="2">
         Details
       </th>     
     </tr>
@@ -77,14 +77,14 @@
       <tr v-if="index == 0">
         <td :rowspan="Object.keys(materialprData).length">{{ materialData[0].scmMaterial.name }}</td>
         <td>{{ materialData[0].scmPr.ref_no  }}</td>
-        <td>{{ materialData[0].unit }}</td>
+        <td :rowspan="Object.keys(materialprData).length">{{ materialData[0].unit }}</td>
         <td>{{ materialData[0].quantity }}</td>
         <td></td>
         <template v-for="(materialVendorData,index11) in (formData?.scmCsMaterialVendor[index1][name])" :key="index11">
             <td>{{ materialVendorData[0].negotiated_price }}</td>
             <td>{{ materialVendorData[0].negotiated_price * materialData[0].quantity}}</td>
          </template>
-        <td v-if="form.purchase_center == 'Foreign'">
+        <td :rowspan="Object.keys(materialprData).length">
           <a @click="showModal(index1,name)" style="display: inline-block;cursor: pointer" class="relative tooltip">
                     <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
@@ -95,21 +95,12 @@
       </tr>
       <tr v-else>
         <td>{{ materialData[0].scmPr.ref_no  }}</td>
-        <td>{{ materialData[0].unit }}</td>
         <td>{{ materialData[0].quantity }}</td>
         <td></td>
         <template v-for="(materialVendorData,index11) in (formData?.scmCsMaterialVendor[index1][name])" :key="index11">
             <td>{{ materialVendorData[0].negotiated_price }}</td>
             <td>{{ materialVendorData[0].negotiated_price * materialData[0].quantity}}</td>
          </template>
-        <td v-if="form.purchase_center == 'Foreign'">
-          <a @click="showModal(index1,name)" style="display: inline-block;cursor: pointer" class="relative tooltip">
-                    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-                    </svg>
-                    <span class="tooltiptext">Details</span>
-                  </a>
-        </td>
       </tr>
     </template>
   </template>
@@ -149,7 +140,7 @@
     </tr>
     <tr>
       <td>Vendor Type</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].vendor_type }}</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].scmVendor.product_source_type }}</td>
     </tr>
     <tr>
       <td>Quotation Received Date</td>
@@ -301,19 +292,19 @@
                   <td>{{ details[index] && details[index][0] && details[index][0].model }}</td>
                 </template>
               </tr>
-              <tr>
+              <tr v-if="form.purchase_center != 'Foreign'">
                 <td>Origin</td>
                 <template v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
                   <td>{{ details[index] && details[index][0] && details[index][0].origin }}</td>
                 </template>
               </tr>
-              <tr>
+              <tr v-if="form.purchase_center != 'Foreign'">
                 <td>Ready Stock / Manufacturer</td>
                 <template v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
                   <td>{{ details[index] && details[index][0] && details[index][0].stock_type }}</td>
                 </template>
               </tr>
-              <tr>
+              <tr v-if="form.purchase_center != 'Foreign'">
                 <td>Manufacturing Days</td>
                 <template v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
                   <td>{{ details[index] && details[index][0] && details[index][0].manufacturing_days }}</td>
