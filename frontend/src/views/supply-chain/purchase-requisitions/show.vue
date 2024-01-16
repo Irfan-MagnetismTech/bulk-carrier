@@ -49,7 +49,7 @@
                     
                     <tr>
                         <th class="w-40">Requested By </th>
-                        <td>{{ purchaseRequisition?.createdBy?.name }}</td>
+                        <td>{{ purchaseRequisition?.created_by }}</td>
                     </tr>
 
                     <tr>
