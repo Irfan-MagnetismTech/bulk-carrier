@@ -68,7 +68,7 @@
           <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
       </label>
       <label class="label-group">
-        <span class="label-item-title">Vendor Quotation Date <span class="text-red-500">*</span></span>
+        <span class="label-item-title">PI Date <span class="text-red-500">*</span></span>
          <VueDatePicker v-model="form.quotation_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
       </label>
   </div>
@@ -110,13 +110,19 @@
           <input type="text" v-model="form.ait" class="form-input" required/>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Delivery Term <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.delivery_term" class="form-input" required/>
+        <span class="label-item-title">Warranty <span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.warranty" class="form-input"/>
+      
       </label>
   </div>
 
   
-  <div class="input-group !w-1/4">
+  <div class="input-group !w-2/4">
+    
+    <label class="label-group">
+        <span class="label-item-title">Delivery Term <span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.delivery_term" class="form-input" required/>
+      </label>
     <label class="label-group">
         <span class="label-item-title">Credit Term <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.credit_term" class="form-input" required/>
@@ -147,8 +153,7 @@
               <th class="py-3 align-center">Unit</th>
               <th class="py-3 align-center">Brand</th>
               <th class="py-3 align-center">Model</th>
-              <th class="py-3 align-center">Offer Price</th>
-              <th class="py-3 align-center">Negotiated Price</th>
+              <th class="py-3 align-center">Price</th>
             </tr>
             </thead>
 
@@ -168,9 +173,6 @@
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].model" class="form-input" required/>
-                    </td>
-                    <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input" min="1"/>
@@ -237,7 +239,6 @@
             materialCs.value.scmCsMaterials.map((lines, index) => {
               lines.map((line, index) => {
                 line['negotiated_price'] = null;
-                line['offered_price'] = null;
                 line['brand'] = null;
                 line['model'] = null;
               });

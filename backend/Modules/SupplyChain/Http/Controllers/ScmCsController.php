@@ -35,7 +35,7 @@ class ScmCsController extends Controller
     {
         try {
             $scmCs = ScmCs::query()
-                ->with('scmPr', 'scmWarehouse', 'selectedVendors.scmVendor', 'scmCsMaterials.scmMaterial','scmCsVendors.scmVendor' ,'scmCsMaterialVendors.scmMaterial', 'scmCsMaterialVendors.scmPr')
+                ->with('scmPr', 'scmWarehouse', 'selectedVendors.scmVendor', 'scmCsMaterials.scmMaterial', 'scmCsVendors.scmVendor', 'scmCsMaterialVendors.scmMaterial', 'scmCsMaterialVendors.scmPr')
                 ->globalSearch(request()->all());
 
             return response()->success('Data list', $scmCs, 200);
@@ -218,6 +218,9 @@ class ScmCsController extends Controller
                 'delivery_term',
                 'terms_and_condition',
                 'remarks',
+                'stock_type',
+                'manufacturing_days',
+                'warranty'
             );
 
             DB::beginTransaction();
@@ -333,6 +336,9 @@ class ScmCsController extends Controller
                 'delivery_term',
                 'terms_and_condition',
                 'remarks',
+                'stock_type',
+                'manufacturing_days',
+                'warranty'
             );
 
             DB::beginTransaction();
@@ -409,6 +415,27 @@ class ScmCsController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function deleteQuotation($id)
+    {
+        $scmCsVendor = ScmCsVendor::with('scmCsMaterialVendors')->find($id);
+        
+        try {
+            DB::beginTransaction();
+
+            $scmCsVendor->scmCsMaterialVendors->each(function ($item) {
+                $item->delete();
+            });
+            $scmCsVendor->delete();
+
+            DB::commit();
+            return response()->success('Data deleted succesfully', null, 203);
+        } catch (QueryException $e) {
+            DB::rollBack();
+
+            return response()->json($scmCsVendor->preventDeletionIfRelated(), 422);
         }
     }
 

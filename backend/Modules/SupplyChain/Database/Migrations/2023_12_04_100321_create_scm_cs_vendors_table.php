@@ -19,7 +19,7 @@ return new class extends Migration
             $table->bigInteger('scm_vendor_id');
             $table->string('quotation_ref');
             $table->date('quotation_date')->nullable();
-            $table->date('quotations_received_date')->nullable();
+            $table->date('quotation_received_date')->nullable();
             $table->string('quotation_attachment')->nullable();
             $table->string('quotation_validity')->nullable();
             $table->string('payment_method')->comment('cash,credit,lc,advance')->nullable();
@@ -43,6 +43,8 @@ return new class extends Migration
             $table->bigInteger('is_selected')->nullable();
             $table->string('stock_type')->comment('ready_stock,manufacturer')->nullable();
             $table->string('manufacturing_days')->comment('if stock type manufacturer')->nullable();
+            $table->string('port_of_loading')->nullable();
+            $table->string('warranty')->nullable();
             $table->timestamps();
         });
     }
