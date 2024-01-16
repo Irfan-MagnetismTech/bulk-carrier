@@ -42,37 +42,95 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
 });
 
 function vesselChanged(){
-  props.form.crwAttendanceLines = [];
+  props.form.selectedCrews = [];
   getVesselAssignedCrews(props.form.ops_vessel_name.id);
 }
 
 watch(() => vesselAssignedCrews.value, (items) => {
   props.form.total_crews = items.length;
   items.forEach(function(item){
-    props.form.crwAttendanceLines.push({
-      crwCrewAssignment : item,
-      crw_crew_assignment_id : item.id,
-      crw_crew_assignment_name : item,
+    props.form.selectedCrews.push({
+      crw_full_name: item?.crwCrew?.full_name,
+      crw_position_onboard: item?.position_onboard,
       crw_crew_id : item.crwCrew.id,
-      attendance_line_composite : "BDCGP",
-      present_days : "",
-      absent_days : '',
-      payable_days : 0,
+      service_start : '',
+      comment : '',
+      is_checked : false,
     })
   });
-  // console.log(vesselAssignedCrews);
 });
 
-function toggleHourlyRecord(index, event) {
-  let element = document.getElementById('hourly_input_'+index);
-  element.style.backgroundColor = '#a5dc86';
-  event.target.value = props.form.location_type;
+function toggleHourlyRecord(index) {
+  if (props.form.hourlyRecords[index]) {
+    props.form.hourlyRecords[index].hour = index;
+    props.form.hourlyRecords[index].type = props.form.location_type;
+    props.form.hourlyRecords[index].is_selected = !props.form.hourlyRecords[index].is_selected;
+    if(!props.form.hourlyRecords[index].is_selected){
+      props.form.hourlyRecords[index].type = '';
+      props.form.hourlyRecords[index].hour = '';
+    }
+  }
 }
+
+function toggleCrewChecked(index){
+  if (props.form.selectedCrews[index]) {
+    props.form.selectedCrews[index].is_checked = !props.form.selectedCrews[index].is_checked;
+
+    const allChecked = props.form.selectedCrews.every((crew) => crew.is_checked);
+    props.form.is_all_crew_checked = allChecked;
+  }
+}
+
+function toggleAllCrewChecked(e){
+  props.form.is_all_crew_checked = !props.form.is_all_crew_checked;
+  if(props.form.is_all_crew_checked){
+    props.form.selectedCrews.forEach((crew) => {
+      crew.is_checked = true;
+    });
+  } else {
+    props.form.selectedCrews.forEach((crew) => {
+      crew.is_checked = false;
+    });
+  }
+}
+
+let startHour = 0;
+let endHour = 0;
+
+function formatIndex(index) {
+  if(index === 1){
+    return '01';
+  }
+  index = Math.floor(index/2);
+  if(index===0){
+    startHour = String(index).padStart(2, '0');
+    endHour = String(index + 1).padStart(2, '0');
+  } else {
+    startHour = endHour;
+    endHour = String(index + 1).padStart(2, '0');
+  }
+
+  return `${startHour}`;
+}
+
 
 onMounted(() => {
   watchEffect(() => {
     getVesselsWithoutPaginate(props.form.business_unit);
   });
+
+  // props.form.location_type = '';
+  // props.form.is_all_crew_checked = false;
+  // props.form.hourlyRecords = [];
+  for (let index = 0; index < 48; index++) {
+    props.form.hourlyRecords.push(
+        {
+          'is_selected': false,
+          'hour'       : '',
+          'type'       : '',
+        }
+    );
+  }
 });
 
 </script>
@@ -113,7 +171,7 @@ onMounted(() => {
             <input type="text" v-model.trim="form.ops_vessel_flag" class="form-input vms-readonly-input" autocomplete="off" readonly/>
           </label>
         </div>
-        <div v-if="form?.crwAttendanceLines?.length" class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <div v-if="form?.selectedCrews?.length" class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <table class="w-full whitespace-no-wrap mt-2" id="table1">
             <thead>
             <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
@@ -121,7 +179,7 @@ onMounted(() => {
             </tr>
             <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
               <th class="px-4 py-3 align-bottom no-wrap">
-                <input type="checkbox" class="text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
+                <input type="checkbox" @click="toggleAllCrewChecked" v-model.trim="form.is_all_crew_checked" class="text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
               </th>
               <th class="px-4 py-3 align-bottom no-wrap">Seafarer</th>
               <th class="px-4 py-3 align-bottom no-wrap">Position / Rank</th>
@@ -130,29 +188,29 @@ onMounted(() => {
             </tr>
             </thead>
             <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-            <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(crwAttendanceLine, index) in form.crwAttendanceLines" :key="crwAttendanceLine.id">
+            <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(crwAttendanceLine, index) in form.selectedCrews" :key="crwAttendanceLine.id">
               <td class="px-1 py-1">
-                <input type="checkbox" class="text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
+                <input type="checkbox" v-model.trim="form.selectedCrews[index].is_checked" @click="toggleCrewChecked(index)" class="text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray">
               </td>
               <td class="px-1 py-1">
-                <input type="text" :value="form.crwAttendanceLines[index]?.crwCrewAssignment?.crwCrew?.full_name" class="form-input vms-readonly-input" autocomplete="off" readonly/>
+                <input type="text" :value="form.selectedCrews[index].crw_full_name" class="form-input vms-readonly-input" autocomplete="off" readonly/>
               </td>
               <td class="px-1 py-1">
-                <input type="text" :value="form.crwAttendanceLines[index]?.crwCrewAssignment?.position_onboard" class="form-input vms-readonly-input" autocomplete="off" readonly/>
+                <input type="text" :value="form.selectedCrews[index].crw_position_onboard" class="form-input vms-readonly-input" autocomplete="off" readonly/>
               </td>
               <td class="px-1 py-1">
-                <input type="number" v-model.trim="form.crwAttendanceLines[index].present_days" min="0" max="31" class="form-input vms-readonly-input" autocomplete="off" required readonly />
+                <input type="number" v-model.trim="form.selectedCrews[index].service_start" min="0" max="31" class="form-input vms-readonly-input" autocomplete="off" required readonly />
               </td>
               <td class="px-1 py-1">
-                <input type="text" placeholder="Comment.." class="form-input" autocomplete="off"/>
+                <input type="text" v-model.trim="form.selectedCrews[index].comment" placeholder="Comment.." class="form-input" autocomplete="off"/>
               </td>
             </tr>
             </tbody>
-            <tfoot v-if="!form.crwAttendanceLines.length">
+            <tfoot v-if="!form.selectedCrews.length">
             <tr v-if="isLoading">
               <td colspan="3">Loading...</td>
             </tr>
-            <tr v-else-if="!form.crwAttendanceLines.length">
+            <tr v-else-if="!form.selectedCrews.length">
               <td colspan="3">No data found.</td>
             </tr>
             </tfoot>
@@ -163,11 +221,11 @@ onMounted(() => {
     <div>
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Rest Hour Record</legend>
-        <div v-if="form?.crwAttendanceLines?.length">
+        <div v-if="form?.selectedCrews?.length">
           <div class="grid lg:grid-cols-1 gap-2 md:grid-cols-1">
             <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Location</span>
-              <select class="form-input" v-model.trim="form.location_type">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Location <span class="text-red-500">*</span></span>
+              <select class="form-input" v-model.trim="form.location_type" required>
                 <option value="">Select</option>
                 <option value="X">Periods of Work at Sea (X)</option>
                 <option value="P">Periods of Work in Port (P)</option>
@@ -185,10 +243,12 @@ onMounted(() => {
 <!--          </div>-->
           <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
             <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Hourly Records</legend>
-          <div class="grid lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-4 gap-1 flex items-center">
-            <div class="!text-center" v-for="(index) in 48">
-              <span>{{index}}</span>
-              <input type="text" :id="'hourly_input_'+index" @click="toggleHourlyRecord(index,$event)" class="form-input vms-readonly-input text-center" autocomplete="off" readonly/>
+          <div v-if="form.location_type" class="grid lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-3 gap-1 flex items-center">
+            <div class="!text-center" v-for="(data,index) in form.hourlyRecords">
+              <span class="text-sm text-center">{{ formatIndex(index) }}</span>
+              <input type="text" v-model.trim="form.hourlyRecords[index].type" :id="'hourly_input_'+index" @click="toggleHourlyRecord(index)" class="form-input vms-readonly-input text-center"
+                     :class="data.is_selected ? 'active_hour' : ''"
+                     autocomplete="off" readonly/>
             </div>
           </div>
           </fieldset>
@@ -227,6 +287,10 @@ onMounted(() => {
 <style lang="postcss" scoped>
 #table1 th,tr,td{
   @apply border border-collapse border-gray-400 text-center text-gray-700 px-1
+}
+
+.active_hour{
+  background-color: #a5dc86;
 }
 
 </style>
