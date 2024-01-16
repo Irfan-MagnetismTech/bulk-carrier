@@ -418,6 +418,27 @@ class ScmCsController extends Controller
         }
     }
 
+    public function deleteQuotation($id)
+    {
+        $scmCsVendor = ScmCsVendor::with('scmCsMaterialVendors')->find($id);
+        
+        try {
+            DB::beginTransaction();
+
+            $scmCsVendor->scmCsMaterialVendors->each(function ($item) {
+                $item->delete();
+            });
+            $scmCsVendor->delete();
+
+            DB::commit();
+            return response()->success('Data deleted succesfully', null, 203);
+        } catch (QueryException $e) {
+            DB::rollBack();
+
+            return response()->json($scmCsVendor->preventDeletionIfRelated(), 422);
+        }
+    }
+
     public function getCsData($csId)
     {
         $scmCs = ScmCs::with('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmPr', 'scmWarehouse')->find($csId);
