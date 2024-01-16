@@ -20,6 +20,7 @@ class ScmWrLine extends Model
         'remarks',
         'closed_at',
         'closed_by',
+        'created_by',
         'is_closed',
         'closing_remarks',
         'status',
@@ -35,7 +36,7 @@ class ScmWrLine extends Model
         return $this->belongsTo(ScmService::class);
     }
 
-    public function user(): BelongsTo
+    public function closedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'closed_by', 'id');
     }

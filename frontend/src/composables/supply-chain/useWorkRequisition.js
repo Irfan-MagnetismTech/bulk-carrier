@@ -304,6 +304,57 @@ export default function useWorkRequisition() {
 
     // }
 
+    async function closeWr(id,closing_remarks) {
+        try {
+            let formData = new FormData();
+            formData.append('id', id);
+            formData.append('closing_remarks', closing_remarks);
+
+            const { data, status } = await Api.post(`/${BASE}/close-wr`, formData);
+            notification.showSuccess(status);
+            await getWorkRequisitions(filterParams.value);
+        }
+        catch (error) {
+            if (error.response) {
+                const { data, status ,messege } = error.response;
+                console.log(data,error.response);
+                notification.showError(status);
+            } else {
+                notification.showError("An error occurred. Please check your internet connection.");
+            }
+
+        } finally {
+            // isLoading.value = false;
+        }
+
+    }
+
+    async function closeWrLines(parent_id,id,closing_remarks) {
+        try {
+            let formData = new FormData();
+            formData.append('id', id);
+            formData.append('parent_id', parent_id);
+            formData.append('closing_remarks', closing_remarks);
+
+            const { data, status } = await Api.post(`/${BASE}/close-wrline`, formData);
+            notification.showSuccess(status);
+            await showWorkRequisition(parent_id);
+        }
+        catch (error) {
+            if (error.response) {
+                const { data, status ,messege } = error.response;
+                console.log(data,error.response);
+                notification.showError(status);
+            } else {
+                notification.showError("An error occurred. Please check your internet connection.");
+            }
+
+        } finally {
+            // isLoading.value = false;
+        }
+
+    }
+
     return {
         workRequisitions,
         workRequisition,
@@ -314,6 +365,8 @@ export default function useWorkRequisition() {
         showWorkRequisition,
         updateWorkRequisition,
         deleteWorkRequisition,
+        closeWr,
+        closeWrLines,
         // getStoreCategoryWiseExcel,
         // searchWarehouseWisePurchaseRequisition,
         // materialObject,

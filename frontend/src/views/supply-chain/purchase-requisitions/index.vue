@@ -126,16 +126,62 @@ let filterOptions = ref({
       "filter_type": "input"
     }
     ,
+
+    
+    {
+      "relation_name": "createdBy",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Requested By",
+      "filter_type": "input"
+    }
+    ,
+
+
+    // {
+    //   "relation_name": null,
+    //   "field_name": "is_closed",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Status",
+    //   "filter_type": "input"
+    // },
+
     {
       "relation_name": null,
-      "field_name": "is_closed",
+      "field_name": "status",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
       "label": "Status",
-      "filter_type": "input"
-    }
+      "filter_type": "dropdown",
+      "select_options": [
+        {
+          value: '',
+          label: "ALL",
+          defaultSelected : true
+        },
+        {
+          value: "Pending",
+          label: "Pending"
+        },
+        {
+          value: "WIP",
+          label: "WIP"
+        },
+        {
+          value: "Closed",
+          label: "Closed"
+        },
+
+      ]
+    },
   ]
 });
 
@@ -327,22 +373,27 @@ function confirmDelete(id) {
                 </table>
               </td>
               <td>{{ purchaseRequisition?.scmWarehouse?.name?? '' }}</td>
+              <td>{{ purchaseRequisition?.createdBy?.name }}</td>
               <td>
-                <button v-if="purchaseRequisition.is_closed == 0" @click="showModal(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Close</button>
-                <span v-else :class="purchaseRequisition?.is_closed === 0 ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.is_closed === 0 ? 'Open' : 'Closed' }}</span>
+                <!-- <button v-if="purchaseRequisition.is_closed == 0" @click="showModal(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Close</button>
+                <span v-else :class="purchaseRequisition?.is_closed === 0 ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.is_closed === 0 ? 'Open' : 'Closed' }}</span> -->
+                <span :class="purchaseRequisition?.status === 'Pending' ? 'text-yellow-700 bg-yellow-100' : (purchaseRequisition?.status == 'WIP' ? 'text-blue-700 bg-blue-100' : 'text-red-700 bg-red-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.status ?? 'Closed' }}</span>
               </td>
+              
               <td>
                 <span :class="purchaseRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.business_unit }}</span>
               </td>
               <td>
                 <nobr>
-                <div class="grid grid-flow-col-dense gap-x-2">
-                    <template v-if="(purchaseRequisition?.scmPos.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) ">
-                      <action-button :action="'edit'" :to="{ name: 'scm.purchase-requisitions.edit', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>
-                    </template>
+                <div class="">
+                  <action-button v-show="purchaseRequisition.status !== 'Closed'" @click="showModal(purchaseRequisition?.id)" :action="'close'"></action-button>
+                    <!-- <template v-if="(purchaseRequisition?.scmPos.length <= 0) && (purchaseRequisition?.scmMrrs.length <= 0) ">
+                      <action-button :action="'edit'" :to="{ name: 'scm.purchase-requisitions.edit', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>  
+                    </template> -->
                     <action-button :action="'show'" :to="{ name: 'scm.purchase-requisitions.show', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>
+                    <action-button v-show="purchaseRequisition.status === 'Pending'" :action="'edit'" :to="{ name: 'scm.purchase-requisitions.edit', params: { purchaseRequisitionId: purchaseRequisition.id } }"></action-button>
 
-                    <action-button @click="confirmDelete(purchaseRequisition.id)" :action="'delete'"></action-button>
+                    <action-button v-show="purchaseRequisition.status === 'Pending'" @click="confirmDelete(purchaseRequisition.id)" :action="'delete'"></action-button>
                   </div>
                 </nobr>
               </td>

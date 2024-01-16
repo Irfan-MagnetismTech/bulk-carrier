@@ -16,7 +16,8 @@ import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import { formatDate } from '../../../utils/helper';
 
 import { useRouter } from 'vue-router';
-const { getWorkRequisitions, workRequisitions, deleteWorkRequisition, isLoading ,isTableLoading, errors} = useWorkRequisition();
+import RemarksComponent from '../../../components/utils/RemarksComponent.vue';
+const { getWorkRequisitions, workRequisitions, deleteWorkRequisition, closeWr, isLoading ,isTableLoading, errors} = useWorkRequisition();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -28,6 +29,31 @@ const props = defineProps({
     default: 1,
   },
 });
+
+const closingRemarks = ref(null);
+const isModalOpen = ref(0);
+const details = ref([{type: ''}]);
+const currentIndex = ref(null);
+
+
+function showModal(id) {
+  isModalOpen.value = 1
+  currentIndex.value = id;
+}
+
+function closeModel() {
+  isModalOpen.value = 0
+  closingRemarks.value = null;
+  currentIndex.value = null;
+}
+
+function closeWorkRequisition() {
+          closeWr(currentIndex.value,closingRemarks.value).then(() => {
+            closeModel()
+          }).catch((error) => {
+            console.error("Error closing WR:", error);
+          });
+}
 
 // const critical = ['No','Yes'];
 // Code for global search start
@@ -136,6 +162,58 @@ let filterOptions = ref({
       "date_from": null,
       "label": "Approved Date",
       "filter_type": "date"
+    },
+
+    {
+      "relation_name": "createdBy",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Requested By",
+      "filter_type": "input"
+    },
+
+    // {
+    //   "relation_name": null,
+    //   "field_name": "is_closed",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Status",
+    //   "filter_type": "input"
+    // }
+    {
+      "relation_name": null,
+      "field_name": "status",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Status",
+      "filter_type": "dropdown",
+      "select_options": [
+        {
+          value: '',
+          label: "ALL",
+          defaultSelected : true
+        },
+        {
+          value: "Pending",
+          label: "Pending"
+        },
+        {
+          value: "WIP",
+          label: "WIP"
+        },
+        {
+          value: "Closed",
+          label: "Closed"
+        },
+
+      ]
     },
 
   ]
@@ -259,14 +337,25 @@ function confirmDelete(id) {
               <td>{{ workRequisition?.scmWarehouse?.name }}</td>
               <td>{{ formatDate(workRequisition?.raised_date) }}</td>
               <td>{{ formatDate(workRequisition?.approved_date) }}</td>
+              <td>{{ workRequisition?.createdBy?.name }}</td>
+              <td>
+                <!-- <button v-if="workRequisition.is_closed == 0" @click="showModal(workRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Close</button>
+                <span v-else :class="workRequisition?.is_closed === 0 ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ workRequisition?.is_closed === 0 ? 'Open' : 'Closed' }}</span> -->
+                <!-- <span :class="workRequisition?.status === 'Pending' ? 'text-yellow-700 bg-yellow-100' : 'text-red-700 bg-red-100' " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ workRequisition?.status ?? 'Closed' }}</span> -->
+
+                <span :class="workRequisition?.status === 'Pending' ? 'text-yellow-700 bg-yellow-100' : (workRequisition?.status == 'WIP' ? 'text-blue-700 bg-blue-100' : 'text-red-700 bg-red-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ workRequisition?.status ?? 'Closed' }}</span>
+              </td>
               <td>
                 <span :class="workRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ workRequisition?.business_unit }}</span>
               </td>
               <td>
                 <nobr>
+                  <action-button v-show="workRequisition.status !== 'Closed'" @click="showModal(workRequisition?.id)" :action="'close'"></action-button>
+                  
                   <action-button :action="'show'" :to="{ name: 'scm.work-requisitions.show', params: { workRequisitionId: workRequisition?.id } }"></action-button>
-                  <action-button :action="'edit'" :to="{ name: 'scm.work-requisitions.edit', params: { workRequisitionId: workRequisition?.id } }"></action-button>
-                  <action-button @click="confirmDelete(workRequisition?.id)" :action="'delete'"></action-button>
+
+                  <action-button v-show="workRequisition.status === 'Pending'" :action="'edit'" :to="{ name: 'scm.work-requisitions.edit', params: { workRequisitionId: workRequisition?.id } }"></action-button>
+                  <action-button v-show="workRequisition.status === 'Pending'" @click="confirmDelete(workRequisition?.id)" :action="'delete'"></action-button>
                 </nobr>
               </td>
               <!-- <td>{{ purchaseRequisition?.ref_no }}</td>
@@ -330,5 +419,55 @@ function confirmDelete(id) {
   
   
   <ErrorComponent :errors="errors"></ErrorComponent> 
+
+  <div v-show="isModalOpen" class="fixed inset-0 z-30 flex items-end overflow-y-auto bg-black bg-opacity-50 sm:items-center sm:justify-center">
+    <!-- Modal -->
+    <form @submit.prevent="" style="position: absolute;top: 0;">
+      <div class="w-full px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark-disabled:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
+        <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
+        <header class="flex justify-end">
+          <button type="button"
+                  class="inline-flex items-center justify-center w-6 h-6 mb-2 text-gray-400 transition-colors duration-150 rounded dark-disabled:hover:text-gray-200 hover: hover:text-gray-700"
+                  aria-label="close" @click="closeModel">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" role="img" aria-hidden="true">
+              <path
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd" fill-rule="evenodd"></path>
+            </svg>
+          </button>
+        </header>
+        <!-- Modal body -->
+        <table class="w-full mb-2 whitespace-no-wrap border-collapse contract-assign-table table2">
+          <thead v-once>
+          <tr style="background-color: #04AA6D;color: white"
+              class="text-xs font-semibold tracking-wide text-gray-500 uppercase border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+            <th colspan="5">Remarks</th>
+          </tr>
+          </thead>
+        </table>
+        <div class="dt-responsive table-responsive">
+          <table id="dataTable" class="w-full table table-striped table-bordered">
+            <tbody>
+              <tr>
+                <td>
+                <RemarksComponent v-model="closingRemarks" :maxlength="300" :fieldLabel="'Closing Remarks'" isRequired="true" hideLebel="true"></RemarksComponent>
+                </td>
+              </tr>
+           </tbody>
+          </table>
+        </div>
+        <footer class="flex flex-col items-center justify-between px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark-disabled:bg-gray-800">
+          <button type="button" @click="closeModel" style="color: #1b1e21"
+                  class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 border border-gray-300 rounded-lg dark-disabled:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
+            CLOSE
+          </button>
+          <button type="button" @click="closeWorkRequisition" style="color: #1b1e21"
+                  class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 border border-gray-300 rounded-lg dark-disabled:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
+            CONFIRM
+          </button>
+        </footer>
+      </div>
+    </form>
+    </div>
   
 </template>
