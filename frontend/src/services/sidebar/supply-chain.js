@@ -226,6 +226,20 @@ export default [
                 subSubMenu: []
             },
 
+            
+            {
+                route: `${BASE}.work-cs.index`,
+                label: 'Work Cs',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+
+
+
 
         ]
     },

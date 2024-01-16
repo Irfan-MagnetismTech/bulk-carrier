@@ -316,7 +316,7 @@ export default function usePurchaseRequisition() {
             const { data, status } = error.response;
             notification.showError(status);
         } finally {
-            loader.hide();
+            // loader.hide();
             isLoading.value = false;
             //NProgress.done();
         }
