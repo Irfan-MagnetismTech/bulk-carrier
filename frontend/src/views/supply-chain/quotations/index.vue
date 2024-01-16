@@ -15,9 +15,10 @@ import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import useQuotation from '../../../composables/supply-chain/useQuotation';
+import { formatDate } from '../../../utils/helper';
 
 const { getMaterialCs, materialCs, materialCsLists, deleteMaterialCs, isLoading, errors, isTableLoading,showMaterialCs} = useMaterialCs();
-const {getQuotations,quotations} = useQuotation();
+const {getQuotations,quotations,deleteQuotations} = useQuotation();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -168,7 +169,7 @@ let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 // };
 
 
-function confirmDelete(id) {
+function confirmDelete(cs_id, id) {
         Swal.fire({
           title: 'Are you sure?',
           text: "You want to delete this data!",
@@ -179,7 +180,7 @@ function confirmDelete(id) {
           confirmButtonText: 'Yes'
         }).then((result) => {
           if (result.isConfirmed) {
-            deleteMaterialCs(id);
+            deleteQuotations(cs_id,id);
           }
         })
       }
@@ -196,35 +197,39 @@ function confirmDelete(id) {
     </div>
   </div>
   <!-- Table -->
-  <div class="input-group mb-10 mt-5">
-    <label class="label-group">
-        <span class="label-item-title">CS Ref<span class="text-red-500"> : </span></span>
-        <span class="label-item-title">{{ materialCs?.ref_no }}</span>  
-    </label>
-    <label class="label-group">
-        <span class="label-item-title">Warehouse<span class="text-red-500"> : </span></span>
-        <span class="label-item-title">{{ materialCs.scmWarehouse?.name }}</span>
-    </label>
-    <label class="label-group">
-        <span class="label-item-title">Effective Date<span class="text-red-500"> : </span></span>
-        <span class="label-item-title">{{ materialCs.effective_date }}</span>
-    </label>
-    <label class="label-group">
-        <span class="label-item-title">Selection Criteria<span class="text-red-500"> : </span></span>
-        <span class="label-item-title">{{ materialCs.selection_ground }}</span>
-    </label>
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
+    <div class="input-group mb-10 mt-5">
+      <label class="label-group">
+          <span class="label-item-title">CS Ref<span class="text-red-500"> : </span></span>
+          <span class="label-item-title">{{ materialCs?.ref_no }}</span>  
+      </label>
+      <label class="label-group">
+          <span class="label-item-title">Warehouse<span class="text-red-500"> : </span></span>
+          <span class="label-item-title">{{ materialCs.scmWarehouse?.name }}</span>
+      </label>
+      <label class="label-group">
+          <span class="label-item-title">Effective Date<span class="text-red-500"> : </span></span>
+          <span class="label-item-title">{{ formatDate(materialCs.effective_date) }}</span>
+      </label>
+      <label class="label-group">
+          <span class="label-item-title">Selection Criteria<span class="text-red-500"> : </span></span>
+          <span class="label-item-title">{{ materialCs.selection_ground }}</span>
+      </label>
+    </div>
   </div>
-  
-  <div id="customDataTable">
+ 
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
+    <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
+            <th>Vendor Name</th>
+            <th>Contact Person</th>
+            <th>Origin</th>
             <th>Quotation No</th>
             <th>Date</th>
-            <th>Vendor Name</th>
-            <th>Vendor Contact</th>
             <th>Action</th>
           </tr>
           </thead>
@@ -232,20 +237,21 @@ function confirmDelete(id) {
           <tbody>
             <tr v-for="(quotation,index) in (quotations?.data ? quotations?.data : quotations)" :key="index">
               <td>{{ index + 1 }}</td>
-              <td>{{ quotation?.quotation_ref }}</td>
-              <td>{{ quotation?.quotation_date }}</td>
               <td>{{ quotation?.scmVendor?.name }}</td>
-              <td>{{ quotation?.scmVendor?.scmVendorContactPerson?.phone }}</td>
+              <td>{{ quotation?.scmVendor?.scmVendorContactPerson?.name }}</td>
+              <td>{{ quotation?.scmVendor?.country_name }}</td>
+              <td>{{ quotation?.quotation_ref }}</td>
+              <td>{{ formatDate(quotation?.quotation_date) }}</td>
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">                 
                   <action-button :action="'edit'" :to="{ name: 'scm.quotations.edit', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>
-                  <!-- <action-button @click="confirmDelete(materialCsdata.id)" :action="'delete'"></action-button> -->
+                  <action-button @click="confirmDelete(quotation.scm_cs_id, quotation.id)" :action="'delete'" v-if="!quotation.is_selected"></action-button>
                 </div>
               </td>
             </tr>
             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && quotations?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!quotations?.data?.length" class="relative h-[250px]">
+          <!-- <tfoot v-if="!quotations?.data?.length" class="relative h-[250px]">
               <tr v-if="isLoading">
               </tr>
               <tr v-else-if="isTableLoading">
@@ -256,11 +262,13 @@ function confirmDelete(id) {
               <tr v-else-if="!quotations?.data?.length">
                 <td colspan="7">No Data found.</td>
               </tr>
-          </tfoot>
+          </tfoot> -->
       </table>
     </div>
     <Paginate :data="quotations" to="scm.quotations-cs.index" :page="page"></Paginate>
   </div>
+  </div>
+ 
   <!-- Heading -->
   
   
