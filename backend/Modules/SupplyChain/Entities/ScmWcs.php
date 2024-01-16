@@ -20,7 +20,7 @@ class ScmWcs extends Model
         'special_instruction',
         'effective_date',
         'expire_date',
-        'required_date',
+        'required_days',
         'remarks',
         'business_unit',
     ];

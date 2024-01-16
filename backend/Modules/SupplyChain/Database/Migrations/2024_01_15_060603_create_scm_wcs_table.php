@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('special_instruction')->nullable();
             $table->date('effective_date')->nullable();
             $table->date('expire_date')->nullable();
-            $table->date('required_date')->nullable();
+            $table->string('required_days')->nullable();
             $table->text('remarks')->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();
             $table->timestamps();
