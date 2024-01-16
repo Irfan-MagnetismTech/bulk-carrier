@@ -14,6 +14,7 @@
     import {useStore} from "vuex";
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
+import useHeroIcon from '../../../assets/heroIcon';
     
     const { material, materials, getMaterials,searchMaterial,isLoading: materialLoading } = useMaterial();
     const { services, searchService, isLoading:serviceLoading } = useService();
@@ -36,6 +37,8 @@
     });
 
     const customDataTableirf = ref(null);
+    const icons = useHeroIcon();
+
     
     const purchase_center = ['Local', 'Foreign', 'Plant'];
     function addMaterial() {
@@ -365,7 +368,8 @@ function tytytyasd(indx) {
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-2 ">
                   <label class="block w-full mt-2 text-sm">
                     <span class="text-gray-700 dark-disabled:text-gray-300">Service Name <span class="text-red-500">*</span></span>
-                    <v-select :options="services" placeholder="--Choose an option--" :loading="serviceLoading" v-model="scmWrLine.scmService" label="name" class="block form-input" @update:modelValue="scmServiceChange(scmWrLine)">
+                    <div class="relative">
+                      <v-select :options="services" placeholder="--Choose an option--" :loading="serviceLoading" v-model="scmWrLine.scmService" label="name" class="block form-input" @update:modelValue="scmServiceChange(scmWrLine)">
                       <template #search="{attributes, events}">
                           <input
                             class="vs__search"
@@ -375,6 +379,8 @@ function tytytyasd(indx) {
                             />
                       </template>
                     </v-select>
+                    <span v-show="scmWrLine.isServiceDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-10" title="Duplicate Service" v-html="icons.ExclamationTriangle"></span>
+                    </div>
                   </label>
                 
                   <label class="block w-full mt-2 text-sm">
@@ -652,11 +658,11 @@ function tytytyasd(indx) {
  
 
  
-    #customDataTable::-webkit-scrollbar:horizontal {
+    ::-webkit-scrollbar:horizontal {
       height: 1rem!important; 
     }
   
-    #customDataTable::-webkit-scrollbar-thumb:horizontal{
+    ::-webkit-scrollbar-thumb:horizontal{
       background-color: rgb(132, 109, 175); 
       border-radius: 12rem!important;
       width: 0.5rem!important;
@@ -664,12 +670,12 @@ function tytytyasd(indx) {
       border-radius: 12rem!important;
     }
   
-    #customDataTable::-webkit-scrollbar-track:horizontal{
+    ::-webkit-scrollbar-track:horizontal{
       background: rgb(148, 144, 155)!important; 
       border-radius: 12rem!important;
     }
   
-    #customDataTable::-webkit-scrollbar-button:horizontal {
+    ::-webkit-scrollbar-button:horizontal {
       background-color: rgb(0, 0, 0); 
       border-radius: 12rem!important;
       width: 1.3rem!important;
