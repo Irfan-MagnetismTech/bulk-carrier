@@ -30,6 +30,7 @@ export default function useWorkRequisition() {
         acc_cost_center_id: '',
         raised_date: '',
         approved_date: '',
+        purchase_center: '',
         entry_type: "0",
         attachment: null,
         remarks: '',
