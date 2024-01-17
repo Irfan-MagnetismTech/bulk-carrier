@@ -15,6 +15,7 @@ use Modules\SupplyChain\Entities\ScmWarehouse;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class ScmPo extends Model
 {
@@ -44,10 +45,10 @@ class ScmPo extends Model
         return $this->belongsTo(ScmWarehouse::class);
     }
 
-    public function scmPr(): BelongsTo
-    {
-        return $this->belongsTo(ScmPr::class);
-    }
+    // public function scmPr(): BelongsTo
+    // {
+    //     return $this->belongsTo(ScmPr::class);
+    // }
 
     public function scmCs(): BelongsTo
     {
@@ -62,5 +63,10 @@ class ScmPo extends Model
     public function scmMrrs(): HasMany
     {
         return $this->hasMany(ScmMrr::class);
+    }
+
+    public function scmPoItems(): HasOneThrough
+    {
+        return $this->hasOneThrough(ScmPoItem::class, ScmPoLine::class);
     }
 }

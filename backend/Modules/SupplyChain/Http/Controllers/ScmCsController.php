@@ -509,6 +509,8 @@ class ScmCsController extends Controller
 
     public function searchMaterialCs(Request $request)
     {
+        $cs = [];
+
         if (isset($request->searchParam)) {
             $cs = ScmCs::query()
                 ->with('scmCsVendors', 'scmCsMaterials', 'scmCsMaterialVendors')
@@ -522,7 +524,7 @@ class ScmCsController extends Controller
                 })
                 ->orderByDesc('ref_no')
                 ->get();
-        } else {
+        } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center)) {
             $cs = ScmCs::query()
                 ->with('scmCsVendors', 'scmCsMaterials', 'scmCsMaterialVendors')
                 ->whereHas('scmCsMaterials.scmPr', function ($query) use ($request) {
