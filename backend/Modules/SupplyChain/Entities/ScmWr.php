@@ -16,6 +16,7 @@ class ScmWr extends Model
     protected $fillable = [
         'scm_warehouse_id',
         'acc_cost_center_id',
+        'purchase_center',
         'ref_no',
         'raised_date',
         'raised_date',

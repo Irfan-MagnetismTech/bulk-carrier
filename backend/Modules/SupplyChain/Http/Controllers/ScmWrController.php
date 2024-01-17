@@ -276,7 +276,8 @@ class ScmWrController extends Controller
                 ->where(function ($query) use ($request) {
                     $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
                         ->where('business_unit', $request->business_unit)
-                        ->where('scm_warehouse_id', $request->scm_warehouse_id);
+                        ->where('scm_warehouse_id', $request->scm_warehouse_id)
+                        ->where('purchase_center', $request->purchase_center);
                 })
                 ->orderByDesc('ref_no')
                 // ->limit(10)
@@ -287,7 +288,8 @@ class ScmWrController extends Controller
                 ->where('is_closed', 0)
                 ->where(function ($query) use ($request) {
                     $query->where('business_unit', $request->business_unit)
-                        ->where('scm_warehouse_id', $request->scm_warehouse_id);
+                        ->where('scm_warehouse_id', $request->scm_warehouse_id)
+                        ->where('purchase_center', $request->purchase_center);
                 })
                 ->whereHas('scmWcsService', function ($query) use ($request) {
                     $query->where('scm_wcs_id', $request->scm_wcs_id);
@@ -301,7 +303,8 @@ class ScmWrController extends Controller
                 ->where('is_closed', 0)
                 ->where(function ($query) use ($request) {
                     $query->where('business_unit', $request->business_unit)
-                        ->where('scm_warehouse_id', $request->scm_warehouse_id);
+                        ->where('scm_warehouse_id', $request->scm_warehouse_id)
+                        ->where('purchase_center', $request->purchase_center);
                 })
                 ->orderByDesc('ref_no')
                 // ->limit(10)
