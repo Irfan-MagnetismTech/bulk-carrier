@@ -65,6 +65,34 @@ export default [
         },
 
         /* Work Requisition Route end */
+        /* Work Cs start */
+
+        {
+            path: `/${BASE}/work-cs`,
+            name: `${BASE}.work-cs.index`,
+            component: () => import(`../views/${PATH_BASE}/work-cs/index.vue`),
+            meta: { requiresAuth: true, role: ROLE, permission: 'work-cs-index' },
+            props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+        },
+        {
+            path: `/${BASE}/work-cs/create`,
+            name: `${BASE}.work-cs.create`,
+            component: () => import(`../views/${PATH_BASE}/work-cs/create.vue`),
+            meta: { requiresAuth: true, role: ROLE, permission: 'work-cs-create' },
+        },
+        {
+            path: `/${BASE}/work-cs/:workCsId/edit`,
+            name: `${BASE}.work-cs.edit`,
+            component: () => import(`../views/${PATH_BASE}/work-cs/edit.vue`),
+            meta: { requiresAuth: true, role: ROLE, permission: 'work-cs-edit' },
+        },
+        {
+            path: `/${BASE}/work-cs/:workCsId`,
+            name: `${BASE}.work-cs.show`,
+            component: () => import(`../views/${PATH_BASE}/work-cs/show.vue`),
+            meta: { requiresAuth: true, role: ROLE, permission: 'work-cs-show'  },
+        },
+    /* Work Cs end */
 
 
     

@@ -63,8 +63,8 @@ class User extends Authenticatable
      * @param mixed $by    The attribute to identify the user.
      * @return string
      */
-    public static function whoAmI($model, $by): string
-    {
-        return (string) (auth()->user()->id == (int)($model->{$by}->id)) ? 'You' : $model->{$by}?->name ?? null;
-    }
+    // public static function whoAmI($model, $by): string
+    // {
+    //     return (string) (auth()->user()->id == (int)($model->{$by}->id)) ? 'You' : $model->{$by}?->name ?? null;
+    // }
 }

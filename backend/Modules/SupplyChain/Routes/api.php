@@ -102,6 +102,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('quotations', [ScmCsController::class, "getQuotations"])->name('quotations.index');
     Route::get('quotations/{quotationId}', [ScmCsController::class, "showQuotation"])->name('quotations.show');
     Route::put('quotations/{quotationId}', [ScmCsController::class, "updateQuotation"])->name('quotations.update');
+    Route::delete('quotations/{quotationId}', [ScmCsController::class, "deleteQuotation"])->name('quotations.delete');
 
     Route::post('close-pr', [ScmPrController::class, "closePr"])->name('closePr');
     Route::post('close-prline', [ScmPrController::class, "closePrLine"])->name('closePrLine');

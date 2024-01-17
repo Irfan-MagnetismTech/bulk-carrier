@@ -266,6 +266,7 @@ function tytytyasd(indx) {
 <template>
 
   <!-- Basic information -->
+  
     <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2 ">
         <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
 
