@@ -49,8 +49,7 @@ class ScmWcsController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
-
+    public function store(ScmWcsRequest $request)
     {
         $requestData = $request->except('ref_no','scmWcsServices');
         $requestData['ref_no'] = UniqueId::generate(ScmWcs::class, 'WCS');
@@ -186,65 +185,65 @@ class ScmWcsController extends Controller
     }
 
 
-    public function storeQuotation(ScmQuotationRequest $request)
-    {
-        try {
-            // ScmCs::find($request->scm_cs_id)->update(['status' => 'quotation']);
-            $scmWcs = ScmWcs::find($request->scm_wcs_id);
-            $requestData = $request->only(
-                'scm_vendor_id',
-                'scm_wcs_id',
-                'quotation_ref_no',
-                'quotation_date',
-                'attachment',
-                'validity',
-                'payment_mode',
-                'creadit_term',
-                'vat',
-                'ait',
-                'security_money',
-                'adjustment_policy',
-                'is_selected',
-            );
+    // public function storeQuotation(ScmQuotationRequest $request)
+    // {
+    //     try {
+    //         // ScmCs::find($request->scm_cs_id)->update(['status' => 'quotation']);
+    //         $scmWcs = ScmWcs::find($request->scm_wcs_id);
+    //         $requestData = $request->only(
+    //             'scm_vendor_id',
+    //             'scm_wcs_id',
+    //             'quotation_ref_no',
+    //             'quotation_date',
+    //             'attachment',
+    //             'validity',
+    //             'payment_mode',
+    //             'creadit_term',
+    //             'vat',
+    //             'ait',
+    //             'security_money',
+    //             'adjustment_policy',
+    //             'is_selected',
+    //         );
 
-            DB::beginTransaction();
+    //         DB::beginTransaction();
 
-            $scmWcsVendor = ScmWcsVendor::create($requestData);
-            $adadas = [];
-            foreach ($request->scmWcsVendorServices as $key => $values) {
-                $rate = $values[0]['rate'] ?? 0;
-                $quantity = $values[0]['quantity'] ?? 0;
-                $quotation_ref_no = $values[0]['quotation_ref_no'] ?? 0;
-                $quotation_date = $values[0]['quotation_date'] ?? 0;
+    //         $scmWcsVendor = ScmWcsVendor::create($requestData);
+    //         $adadas = [];
+    //         foreach ($request->scmWcsVendorServices as $key => $values) {
+    //             $rate = $values[0]['rate'] ?? 0;
+    //             $quantity = $values[0]['quantity'] ?? 0;
+    //             $quotation_ref_no = $values[0]['quotation_ref_no'] ?? 0;
+    //             $quotation_date = $values[0]['quotation_date'] ?? 0;
 
-                foreach ($values as $key1 => $value) {
-                    $wcsService = ScmWcsService::where([
-                        'scm_wcs_id' => $scmWcs->id,
-                        'scm_service_id' => $value['scm_service_id']
-                    ])->first();
+    //             foreach ($values as $key1 => $value) {
+    //                 $wcsService = ScmWcsService::where([
+    //                     'scm_wcs_id' => $scmWcs->id,
+    //                     'scm_service_id' => $value['scm_service_id']
+    //                 ])->first();
 
-                    ScmWcsVendorService::create(
-                        [
-                            'scm_wcs_id' => $scmWcs->id,
-                            'scm_wcs_vendor_id' => $scmWcsVendor->id ?? null,
-                            'scm_vendor_id' => $scmWcsVendor->scm_vendor_id ?? null,
-                            'scm_wcs_service_id' => $wcsService->id,
-                            'scm_wr_id' => $value['scm_wr_id'] ?? null,
-                            'scm_service_id' => $value['scm_service_id'] ?? null,
-                            'rate' => $rate ?? null,
-                            'quantity' => $quantity ?? null,
-                            'quotation_ref_no' => $quotation_ref_no ?? null,
-                            'quotation_date' =>$quotation_date ?? null,,
-                        ]
-                    );
-                }
-            }
-            DB::commit();
-            return response()->success('Data created succesfully', $scmWcsVendor, 201);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->error($e->getMessage(), 500);
-        }
-    }
+    //                 ScmWcsVendorService::create(
+    //                     [
+    //                         'scm_wcs_id' => $scmWcs->id,
+    //                         'scm_wcs_vendor_id' => $scmWcsVendor->id ?? null,
+    //                         'scm_vendor_id' => $scmWcsVendor->scm_vendor_id ?? null,
+    //                         'scm_wcs_service_id' => $wcsService->id,
+    //                         'scm_wr_id' => $value['scm_wr_id'] ?? null,
+    //                         'scm_service_id' => $value['scm_service_id'] ?? null,
+    //                         'rate' => $rate ?? null,
+    //                         'quantity' => $quantity ?? null,
+    //                         'quotation_ref_no' => $quotation_ref_no ?? null,
+    //                         'quotation_date' =>$quotation_date ?? null,,
+    //                     ]
+    //                 );
+    //             }
+    //         }
+    //         DB::commit();
+    //         return response()->success('Data created succesfully', $scmWcsVendor, 201);
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         return response()->error($e->getMessage(), 500);
+    //     }
+    // }
 
 }

@@ -10,7 +10,7 @@ class ScmWcsRequest extends FormRequest
         protected function prepareForValidation(): void
         {
             $data =  request('data');
-            $dataArray = json_decode($data, true);
+            $dataArray = json_decode($data, true);            
     
             // $mergeData = array_merge($dataArray, ['attachment' => request('attachment'), 'excel' => request('excel')]);
     
