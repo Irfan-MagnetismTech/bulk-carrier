@@ -22,11 +22,11 @@ class OpsContractAssignRequest extends FormRequest
         return [
             'ops_vessel_id'             => ['required', 'max:20'],
             'ops_voyage_id'             => ['required', 'max:20',Rule::unique('ops_contract_assigns')->ignore($this->route('contract_assign'), 'id')],
-            'ops_charterer_contract_id' => 'required_if:business_unit,==,PSML|nullable|max:20',
-            'ops_charterer_profile_id'  => 'required_if:business_unit,==,PSML|nullable|max:20',
-            'ops_customer_id'           => 'required_if:business_unit,==,TSLL|nullable|max:20',
+            'ops_charterer_contract_id' => 'required_if:contract_assign_type,==,Charterer|nullable|max:20',
+            'ops_charterer_profile_id'  => 'required_if:contract_assign_type,==,Charterer|nullable|max:20',
+            'ops_customer_id'           => 'required_if:contract_assign_type,==,Customer|nullable|max:20',
             'assign_date'               => ['required'],
-            'opsVoyage.opsContractTariffs.*.ops_cargo_tariff_id'    =>  'required_if:business_unit,==,TSLL|nullable|max:20',
+            'opsVoyage.opsContractTariffs.*.ops_cargo_tariff_id'    =>  'required_if:contract_assign_type,==,Customer|nullable|max:20',
         ];
     }
 

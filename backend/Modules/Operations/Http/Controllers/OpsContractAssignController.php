@@ -60,7 +60,7 @@ class OpsContractAssignController extends Controller
         try {
             DB::beginTransaction();
 
-            if($request->business_unit== 'TSLL'){
+            if($request->contract_assign_type== 'Customer'){
                 $tariffs = collect($request->opsVoyage['opsContractTariffs'])->map(function($item) use($request) {
                     $item['ops_voyage_sector_id'] = $item['id'];
                     $item['ops_vessel_id'] = $request->ops_vessel_id;
@@ -75,7 +75,7 @@ class OpsContractAssignController extends Controller
             $info['pol_pod'] = $request->loading_point.'-'.$request->unloading_point;
 
             $contract_assigns = OpsContractAssign::create($info);
-            if($request->business_unit== 'TSLL'){
+            if($request->contract_assign_type== 'Customer'){
                 $contract_assigns->opsContractTariffs()->createMany($tariffs);
             }
             DB::commit();   

@@ -3,7 +3,7 @@
       <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700">Contract Type </span>
-          <select v-model="form.contract_type" class="form-input">
+          <select v-model="form.contract_assign_type" class="form-input">
             <option value="" selected disabled>Select Type</option>
             <option value="Customer">Customer</option>
             <option value="Charterer">Charterer</option>
@@ -52,7 +52,7 @@
       </label>
     </div>
 
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.contract_type=='Customer'">
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.contract_assign_type=='Customer'">
       <!-- <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Tarrif <span class="text-red-500">*</span></span>
               <v-select :options="cargoTariffs" placeholder="--Choose an option--" v-model="form.opsCargoTariff" label="tariff_name" class="block form-input">
@@ -81,7 +81,7 @@
       </label>
     </div>
 
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.contract_type=='Charterer'">
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.contract_assign_type=='Charterer'">
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Charterer <span class="text-red-500">*</span></span>
               <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name" class="block form-input">
@@ -107,10 +107,9 @@
                           />
                   </template>
               </v-select>
-              <input type="hidden" v-model="form.ops_voyage_id" />
       </label>
     </div>
-    <div v-if="form.contract_type=='Customer' && form.opsVoyage">
+    <div v-if="form.opsVoyage && form.contract_type=='Voyage Wise'">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Sector <span class="text-red-500">*</span></legend>
         <table class="w-full whitespace-no-wrap" id="table">
@@ -221,9 +220,9 @@ watch(() => props.form.business_unit, (value) => {
 if(props?.formType != 'edit') {
   cleanThings()
 
-  if(props.form.contract_type == 'Charterer') {
+  if(props.form.contract_assign_type == 'Charterer') {
       getChartererByBusinessUnit(props.form.business_unit);
-    } else if(props.form.contract_type == 'Customer') {
+    } else if(props.form.contract_assign_type == 'Customer') {
       getCustomersByBusinessUnit(props.form.business_unit);
     }
 }
@@ -232,7 +231,7 @@ getVesselList(props.form.business_unit);
 
 }, { deep : true })
 
-watch(() => props.form.contract_type, (value) => {
+watch(() => props.form.contract_assign_type, (value) => {
 
   if(props.form.business_unit == '' || props.form.business_unit =='ALL' || props.form.business_unit == null) {
     Swal.fire({
@@ -247,9 +246,9 @@ watch(() => props.form.contract_type, (value) => {
   if(props?.formType != 'edit') {
     cleanThings()
 
-    if(props.form.contract_type == 'Charterer') {
+    if(props.form.contract_assign_type == 'Charterer') {
       getChartererByBusinessUnit(props.form.business_unit);
-    } else if(props.form.contract_type == 'Customer') {
+    } else if(props.form.contract_assign_type == 'Customer') {
       getCustomersByBusinessUnit(props.form.business_unit);
     }
   }
@@ -269,6 +268,8 @@ function cleanThings() {
   props.form.ops_customer_id = null;
   props.form.opsCargoTariff = null;
   props.form.ops_cargo_tariff_id = null;
+  props.form.opsChartererProfile = null;
+  props.form.ops_charterer_profile_id = null;
 }
 
 onMounted(() => {
