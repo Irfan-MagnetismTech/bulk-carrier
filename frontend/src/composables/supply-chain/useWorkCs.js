@@ -8,6 +8,7 @@ import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
 import { merge } from 'lodash';
 import { loaderSetting as LoaderConfig} from '../../config/setting.js';
+import Swal from 'sweetalert2';
 
 export default function useWorkCs() {
     const BASE = 'scm' 
@@ -33,7 +34,7 @@ export default function useWorkCs() {
         required_days: null,
         purchase_center: '',
         business_unit: null,
-        special_instructions: null,
+        special_instruction: null,
         
         // priority: null,
         // scm_warehouse_name: null,
@@ -111,7 +112,7 @@ export default function useWorkCs() {
         }
     }
     async function storeWorkCs(form) {
-
+        if (!checkUniqueArray(form)) return;
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -151,6 +152,8 @@ export default function useWorkCs() {
     }
 
     async function updateWorkCs(form, workCsId) {
+
+        if (!checkUniqueArray(form)) return;
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -208,6 +211,45 @@ export default function useWorkCs() {
             //NProgress.done();
         }
     }
+//            let material_key = scmCsMaterial?.scm_material_id ?? '' + "-" + scmCsMaterial?.scm_pr_id ?? '';
+
+    function checkUniqueArray(form) {
+        let isHasError = false;
+        const messages = ref([]);
+        const hasDuplicates = form.scmWcsServices.some((scmWcsService, index) => {
+            if (form.scmWcsServices.filter(val => ((val?.scm_service_id ?? '' + "-" + val?.scm_wr_id ?? '') === (scmWcsService?.scm_service_id ?? '' + "-" + scmWcsService?.scm_wr_id ?? '')))?.length > 1) {
+                let data = `Duplicate Service [Line no: ${index + 1}]`;
+                messages.value.push(data);
+                scmWcsService.isServiceDuplicate = true;
+            } else {
+                scmWcsService.isServiceDuplicate = false;
+            }
+
+        });
+
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
 
     
 

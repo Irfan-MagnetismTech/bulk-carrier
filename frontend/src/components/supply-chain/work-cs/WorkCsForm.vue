@@ -27,7 +27,7 @@
             </v-select>
         </label>
         <label class="label-group">
-          <span class="label-item-title">Date <span class="text-red-500">*</span></span>
+          <span class="label-item-title">Effective Date <span class="text-red-500">*</span></span>
           <VueDatePicker v-model="form.effective_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
       </label>
       <label class="label-group">
@@ -73,18 +73,18 @@
             <input type="number" v-model="form.required_days" placeholder="Required Days" required class="form-input" min=1/>
         </label>
 
-        <RemarksComponet class="col-span-4" v-model="form.special_instructions" :maxlength="300" :fieldLabel="'Special Instruction'" isRequired="true"></RemarksComponet>
+        <RemarksComponet class="col-span-1 md:col-span-3 lg:col-span-4" v-model="form.special_instruction" :maxlength="300" :fieldLabel="'Special Instruction'" isRequired="true"></RemarksComponet>
 
     </div>
-    <div class="grid grid-cols-1 mt-2">
-      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+    <!-- <div class="grid grid-cols-1 mt-2"> -->
+      <fieldset class=" grid grid-cols-1 px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400 ">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Services</legend>
-        <table class="w-full whitespace-no-wrap" id="table">
+        <table class="w-full whitespace-no-wrap " id="table">
           <thead>
             <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
                 <th class="w-3/12 px-4 align-center">WR No</th>
-                <th class="w-4/12 px-4 align-center">Service Name</th>
-                <th class="w-3/12 px-4 align-center">Quantity</th>
+                <th class="w-5/12 px-4 align-center">Service Name</th>
+                <th class="w-2/12 px-4 align-center">Quantity</th>
                 <th class="w-2/12 px-4 align-center text-center">Action</th>
             </tr>
           </thead>
@@ -103,7 +103,8 @@
                 </v-select>
               </td>
               <td class="px-1 py-1">
-                <v-select :options="serviceList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="scmWcsService.scmService" label="service_name_and_code" class="block form-input" @update:modelValue="serviceChange(index)">
+                <div class="relative">
+                  <v-select :options="serviceList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="scmWcsService.scmService" label="service_name_and_code" class="block form-input" @update:modelValue="serviceChange(index)">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -113,6 +114,8 @@
                           />
                   </template>
                 </v-select>
+                <span v-show="scmWcsService.isServiceDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-10" title="Duplicate Service" v-html="icons.ExclamationTriangle"></span>
+                </div>
               </td>
               <td class="px-1 py-1">
                 <label class="block w-full mt-2 text-sm">
@@ -135,7 +138,7 @@
           </tbody>
         </table>
       </fieldset>
-    </div>
+    <!-- </div> -->
 
 
 
@@ -316,6 +319,7 @@
       import ErrorComponent from "../../utils/ErrorComponent.vue";
       import useWorkRequisition from '../../../composables/supply-chain/useWorkRequisition';
 import useWorkCs from '../../../composables/supply-chain/useWorkCs';
+import useHeroIcon from '../../../assets/heroIcon';
   
       const { material, materials, getMaterials,searchMaterial } = useMaterial();
       const { warehouses,warehouse,getWarehouses,searchWarehouse ,isLoading:warehouseLoading} = useWarehouse();
@@ -332,6 +336,7 @@ import useWorkCs from '../../../composables/supply-chain/useWorkCs';
         serviceList: { type: Array, required: false },
       }); 
   
+      const icons = useHeroIcon();
       const PRIORITY = ['High', 'Medium', 'Low']
       const form = toRefs(props).form;
       
@@ -550,7 +555,7 @@ import useWorkCs from '../../../composables/supply-chain/useWorkCs';
     // searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id,props.form.purchase_center, null)
   }
   function fetchWarehouse(search) {
-    console.log("fetchWarehouse");
+
       searchWarehouse(search, props.form.business_unit);
     }
   const purchase_center = ['Local', 'Foreign', 'Plant'];
