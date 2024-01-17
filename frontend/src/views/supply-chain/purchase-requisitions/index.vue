@@ -87,33 +87,37 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Material",
+      "filter_type": "input"
     },
     {
       "relation_name": "scmPrLines.scmMaterial",
-      "field_name": "name",
+      "field_name": "code",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
       "label": "Code",
+      "filter_type": "input"
     },
     {
-      "relation_name": "scmPrLines.scmMaterial",
-      "field_name": "name",
+      "relation_name": "scmPrLines",
+      "field_name": "quantity",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
       "label": "Qty",
+      "filter_type": "input"
     },
     {
-      "relation_name": "scmPrLines.scmMaterial",
-      "field_name": "name",
+      "relation_name": "scmPrLines",
+      "field_name": "unit",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
       "label": "Unit",
+      "filter_type": "input"
     },
     {
       "relation_name": "scmWarehouse",

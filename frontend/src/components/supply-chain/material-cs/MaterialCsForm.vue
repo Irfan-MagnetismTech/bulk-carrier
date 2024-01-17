@@ -26,21 +26,6 @@
         <VueDatePicker v-model="form.expire_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
     </label>
       <label class="label-group">
-        <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" class="block form-input" @update:modelValue="warehouseChange">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.scmWarehouse"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
-      </label>  
-  </div>
-  <div class="input-group">
-      <label class="label-group">
           <span class="label-item-title">Purchase Center <span class="text-red-500">*</span></span>
           <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input" @update:modelValue="changePurchaseCenter">
             <template #search="{attributes, events}">
@@ -53,31 +38,29 @@
             </template>        
           </v-select>
       </label>
-      <label class="label-group">
-        <span class="label-item-title">Prioity <span class="text-red-500">*</span></span>
-          <v-select
-            :options="PRIORITY"
-            placeholder="--Choose an option--"
-            v-model="form.priority"
-            label="name"
-            class="block form-input">
-            <template #search="{attributes, events}">
-                <input
-                    class="vs__search"
-                    :required="!form.priority"
-                    v-bind="attributes"
-                    v-on="events"
-                    />
-            </template>
+  </div>
+  <div class="input-group !w-2/3">
+      
+    <label class="label-group">
+        <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
+          <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" class="block form-input" @update:modelValue="warehouseChange">
+          <template #search="{attributes, events}">
+              <input
+                  class="vs__search"
+                  :required="!form.scmWarehouse"
+                  v-bind="attributes"
+                  v-on="events"
+              />
+          </template>
           </v-select>
-      </label>
+      </label>  
       <label class="label-group">
         <span class="label-item-title">Required Days <span class="text-red-500">*</span></span>
           <input type="number" v-model="form.required_days" required class="form-input" min=1/>
       </label>
   </div>
 
-  <div class="input-group !w-3/4">
+  <div class="input-group !w-2/3">
     <label class="label-group">
             <RemarksComponet v-model="form.special_instructions" :maxlength="300" :fieldLabel="'Special Instruction'" isRequired="true"></RemarksComponet>
     </label>
@@ -98,7 +81,7 @@
           </thead>
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmCsMaterial, index) in form.scmCsMaterials" :key="index">
-            <td class="!w-72">
+            <td class="!w-72 relative">
               <v-select :options="filteredPurchaseRequisitions" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmCsMaterials[index].scmPr" label="ref_no" class="block form-input" @update:modelValue="prChange(index)">
                 <template #search="{attributes, events}">
                     <input
@@ -109,8 +92,9 @@
                         />
                 </template>
               </v-select>
+              <span v-show="form.scmCsMaterials[index].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 left-[18rem] md:left-[21rem]" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
             </td>
-            <td class="!w-72">
+            <td class="!w-72 relative">
               <v-select :options="materialList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmCsMaterials[index].scmMaterial" label="material_name_and_code" class="block form-input" @update:modelValue="materialChange(index)">
                 <template #search="{attributes, events}">
                     <input
@@ -121,6 +105,7 @@
                         />
                 </template>
               </v-select>
+              <span v-show="form.scmCsMaterials[index].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 left-[18rem] md:left-[21rem]" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
@@ -173,6 +158,10 @@
     import usePurchaseRequisition from '../../../composables/supply-chain/usePurchaseRequisition';
     import RemarksComponet from '../../utils/RemarksComponent.vue';
     import ErrorComponent from "../../utils/ErrorComponent.vue";
+    import useHeroIcon from '../../../assets/heroIcon';
+
+
+    const icons = useHeroIcon();
 
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse ,isLoading:warehouseLoading} = useWarehouse();
@@ -368,6 +357,19 @@ onMounted(() => {
     searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id,props.form.purchase_center, null)
     fetchWarehouse('');
   });
+  
+  if(props.formType == 'edit'){
+    const watchBusinessUnit = watch(() => props.form, (newVal, oldVal) => {
+      newVal.scmCsMaterials.forEach((item, index) => {
+        props.materialList.push([]);
+          getPrWiseMaterialList(item.scm_pr_id).then((res) => {
+            props.materialList[index] = res;
+          });
+      });
+      watchBusinessUnit();
+    });
+  }
+  
 });
 
 

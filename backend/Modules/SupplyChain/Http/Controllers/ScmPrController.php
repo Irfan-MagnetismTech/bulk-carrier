@@ -187,7 +187,7 @@ class ScmPrController extends Controller
      */
     public function update(ScmPrRequest $request, ScmPr $purchase_requisition): JsonResponse
     {
-        $requestData = $request->except('ref_no', 'pr_composite_key');
+        $requestData = $request->except('ref_no', 'pr_composite_key','created_by');
 
         $linesData = CompositeKey::generateArray($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
 
@@ -281,11 +281,16 @@ class ScmPrController extends Controller
         if (isset($request->searchParam)) {
             $purchase_requisition = ScmPr::query()
                 ->with('scmPrLines')
+                ->whereNot('status', 'Closed')
                 ->where(function ($query) use ($request) {
                     $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
                         ->where('business_unit', $request->business_unit)
-                        ->where('scm_warehouse_id', $request->scm_warehouse_id)
-                        ->where('purchase_center', $request->purchase_center);
+                        ->when($request->scm_warehouse_id, function ($query) use ($request) {
+                            $query->where('scm_warehouse_id', $request->scm_warehouse_id);
+                        })
+                        ->when($request->purchase_center, function ($query) use ($request) {
+                            $query->where('purchase_center', $request->purchase_center);
+                        });
                 })
                 // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
@@ -294,11 +299,15 @@ class ScmPrController extends Controller
         } elseif (isset($request->cs_id)) {
             $purchase_requisition = ScmPr::query()
                 ->with('scmPrLines')
-                ->where('is_closed', 0)
+                ->whereNot('status', 'Closed')
                 ->where(function ($query) use ($request) {
                     $query->where('business_unit', $request->business_unit)
-                        ->where('scm_warehouse_id', $request->scm_warehouse_id)
-                        ->where('purchase_center', $request->purchase_center);
+                            ->when($request->scm_warehouse_id, function ($query) use ($request) {
+                                $query->where('scm_warehouse_id', $request->scm_warehouse_id);
+                            })
+                            ->when($request->purchase_center, function ($query) use ($request) {
+                                $query->where('purchase_center', $request->purchase_center);
+                            });
                 })
                 ->whereHas('scmCsMaterial', function ($query) use ($request) {
                     $query->where('scm_cs_id', $request->cs_id);
@@ -309,11 +318,15 @@ class ScmPrController extends Controller
         } else {
             $purchase_requisition = ScmPr::query()
                 ->with('scmPrLines')
-                ->where('is_closed', 0)
+                ->whereNot('status', 'Closed')
                 ->where(function ($query) use ($request) {
                     $query->where('business_unit', $request->business_unit)
-                        ->where('scm_warehouse_id', $request->scm_warehouse_id)
-                        ->where('purchase_center', $request->purchase_center);
+                        ->when($request->scm_warehouse_id, function ($query) use ($request) {
+                            $query->where('scm_warehouse_id', $request->scm_warehouse_id);
+                        })
+                        ->when($request->purchase_center, function ($query) use ($request) {
+                            $query->where('purchase_center', $request->purchase_center);
+                        });
                 })
                 ->orderByDesc('ref_no')
                 // ->limit(10)
@@ -366,6 +379,7 @@ class ScmPrController extends Controller
         $lineData = ScmPrLine::query()
             ->with('scmMaterial')
             ->where('scm_pr_id', $request->pr_id)
+            ->whereNot('status', 'Closed')
             ->whereHas('scmPr', function ($query) {
                 $query->whereIn('status', ['Pending', 'WIP']);
             })
@@ -394,6 +408,9 @@ class ScmPrController extends Controller
 
             $pr->load('scmPrLines');
             foreach ($pr->scmPrLines as $prLine) {
+                if ($prLine->status === 'Closed') {
+                    continue;
+                }
                 $prLine->update([
                     // 'is_closed' => 1,
                     'status' => 'Closed',
