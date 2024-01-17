@@ -303,12 +303,24 @@ function tytytyasd(indx) {
             <!-- <input type="date" v-model="form.raised_date" required class="form-input" name="raised" :id="'raised'" /> -->
             <VueDatePicker v-model="form.raised_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
             <Error v-if="errors?.raised_date" :errors="errors.raised_date"  />
-        </label>
-        
+        </label>    
         <label class="label-group">
             <span class="label-item-title">Approved Date<span class="text-red-500">*</span></span>
             <VueDatePicker v-model="form.approved_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :min-date="form.raised_date"></VueDatePicker>
             <Error v-if="errors?.approved_date" :errors="errors.approved_date"  />
+        </label>
+        <label class="label-group">
+          <span class="label-item-title">Purchase Center <span class="text-red-500">*</span></span>
+          <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.purchase_center"
+                    v-bind="attributes"
+                    v-on="events"
+                />  
+            </template>        
+          </v-select>
         </label>
         <label class="label-group">
             <span class="label-item-title">Attachment 

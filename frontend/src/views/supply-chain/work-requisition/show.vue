@@ -93,6 +93,14 @@ onMounted(() => {
 
               
               <tr>
+                <th class="w-40">Purchase Center</th>
+                <td>{{ workRequisition?.purchase_center }}</td>
+              </tr>
+
+
+
+              
+              <tr>
                 <th class="w-40">Attachment</th>
                 <td>
                     <a type="button" v-if="typeof workRequisition?.attachment === 'string'" class="text-green-800" target="_blank" :href="env.BASE_API_URL+'/'+workRequisition?.attachment">

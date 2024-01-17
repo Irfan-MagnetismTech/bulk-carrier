@@ -164,6 +164,20 @@ let filterOptions = ref({
       "filter_type": "date"
     },
 
+    
+    {
+      "relation_name": null,
+      "field_name": "purchase_center",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Purchase Center",
+      "filter_type": "input"
+    },
+
+
+
     {
       "relation_name": "createdBy",
       "field_name": "name",
@@ -337,6 +351,7 @@ function confirmDelete(id) {
               <td>{{ workRequisition?.scmWarehouse?.name }}</td>
               <td>{{ formatDate(workRequisition?.raised_date) }}</td>
               <td>{{ formatDate(workRequisition?.approved_date) }}</td>
+              <td>{{ workRequisition?.purchase_center }}</td>
               <td>{{ workRequisition?.createdBy?.name }}</td>
               <td>
                 <!-- <button v-if="workRequisition.is_closed == 0" @click="showModal(workRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Close</button>
