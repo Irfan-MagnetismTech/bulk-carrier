@@ -153,7 +153,8 @@
               <th class="py-3 align-center">Unit</th>
               <th class="py-3 align-center">Brand</th>
               <th class="py-3 align-center">Model</th>
-              <th class="py-3 align-center">Price</th>
+              <th class="py-3 align-center">Offer Price</th>
+              <th class="py-3 align-center">Negotiated Price</th>
             </tr>
             </thead>
 
@@ -173,6 +174,9 @@
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].model" class="form-input" required/>
+                    </td>
+                    <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
+                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input" min="1"/>

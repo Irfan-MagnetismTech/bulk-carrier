@@ -282,19 +282,19 @@
                   <td>{{ details[index] && details[index][0] && details[index][0].model }}</td>
                 </template>
               </tr>
-              <tr v-if="form.purchase_center != 'Foreign'">
+              <tr v-if="form.purchase_center == 'Foreign'">
                 <td>Origin</td>
                 <template v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
                   <td>{{ details[index] && details[index][0] && details[index][0].origin }}</td>
                 </template>
               </tr>
-              <tr v-if="form.purchase_center != 'Foreign'">
+              <tr v-if="form.purchase_center == 'Foreign'">
                 <td>Ready Stock / Manufacturer</td>
                 <template v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
                   <td>{{ details[index] && details[index][0] && details[index][0].stock_type }}</td>
                 </template>
               </tr>
-              <tr v-if="form.purchase_center != 'Foreign'">
+              <tr v-if="form.purchase_center == 'Foreign'">
                 <td>Manufacturing Days</td>
                 <template v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
                   <td>{{ details[index] && details[index][0] && details[index][0].manufacturing_days }}</td>
