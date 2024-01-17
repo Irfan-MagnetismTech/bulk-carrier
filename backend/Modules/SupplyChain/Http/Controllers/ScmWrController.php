@@ -10,6 +10,7 @@ use App\Services\FileUploadService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmWr;
+use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmWrLine;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Http\Requests\ScmWrRequest;
@@ -305,11 +306,11 @@ class ScmWrController extends Controller
     }
 
 
-    public function searchPr(Request $request): JsonResponse
+    public function searchWr(Request $request): JsonResponse
     {
         if (isset($request->searchParam)) {
-            $purchase_requisition = ScmPr::query()
-                ->with('scmPrLines')
+            $work_requisition = ScmWr::query()
+                ->with('scmWrLines')
                 ->where(function ($query) use ($request) {
                     $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
                         ->where('business_unit', $request->business_unit)
@@ -320,8 +321,8 @@ class ScmWrController extends Controller
                 ->limit(10)
                 ->get();
         } else {
-            $purchase_requisition = ScmPr::query()
-                ->with('scmPrLines')
+            $work_requisition = ScmWr::query()
+                ->with('scmWrLines')
                 ->where(function ($query) use ($request) {
                     $query->where('business_unit', $request->business_unit)
                         ->where('acc_cost_center_id', $request->cost_center_id);
@@ -331,32 +332,30 @@ class ScmWrController extends Controller
                 ->get();
         }
 
-        return response()->success('Search result', $purchase_requisition, 200);
+        return response()->success('Search result', $work_requisition, 200);
     }
 
 
     public function searchWorkRequisitions(Request $request): JsonResponse
     {
         if (isset($request->searchParam)) {
-            $purchase_requisition = ScmWr::query()
+            $work_requisition = ScmWr::query()
                 ->with('scmWrLines')
                 ->where(function ($query) use ($request) {
                     $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
                         ->where('business_unit', $request->business_unit)
                         ->where('scm_warehouse_id', $request->scm_warehouse_id);
                 })
-                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
                 // ->limit(10)
                 ->get();
         } elseif (isset($request->cs_id)) {
-            $purchase_requisition = ScmWr::query()
+            $work_requisition = ScmWr::query()
                 ->with('scmWrLines')
                 ->where('is_closed', 0)
                 ->where(function ($query) use ($request) {
                     $query->where('business_unit', $request->business_unit)
-                        ->where('scm_warehouse_id', $request->scm_warehouse_id)
-                        // ->where('purchase_center', $request->purchase_center);
+                        ->where('scm_warehouse_id', $request->scm_warehouse_id);
                 })
                 ->whereHas('scmWcsService', function ($query) use ($request) {
                     $query->where('scm_wcs_id', $request->scm_wcs_id);
@@ -365,20 +364,19 @@ class ScmWrController extends Controller
                 // ->limit(10)
                 ->get();
         } else {
-            $purchase_requisition = ScmWr::query()
+            $work_requisition = ScmWr::query()
                 ->with('scmWrLines')
                 ->where('is_closed', 0)
                 ->where(function ($query) use ($request) {
                     $query->where('business_unit', $request->business_unit)
                         ->where('scm_warehouse_id', $request->scm_warehouse_id);
-                        // ->where('purchase_center', $request->purchase_center);
                 })
                 ->orderByDesc('ref_no')
                 // ->limit(10)
                 ->get();
         }
 
-        return response()->success('Search result', $purchase_requisition, 200);
+        return response()->success('Search result', $work_requisition, 200);
     }
 
 }
