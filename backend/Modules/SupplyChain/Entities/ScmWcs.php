@@ -13,7 +13,6 @@ class ScmWcs extends Model
     use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
-        'scm_wr_id',
         'scm_warehouse_id',
         'acc_cost_center_id',
         'ref_no',
@@ -26,13 +25,6 @@ class ScmWcs extends Model
         'remarks',
         'business_unit',
     ];
-
-
-
-    public function scmWr()
-    {
-        return $this->belongsTo(ScmWr::class, 'scm_wr_id', 'id');
-    }
 
     public function scmWarehouse()
     {
