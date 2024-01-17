@@ -223,87 +223,19 @@ class ScmWrController extends Controller
     }
 
 
-    // public function getServidByPrIdForCs(Request $request): JsonResponse
-    // {
-    //     $lineData = ScmWrLine::query()
-    //         ->with('scmService')
-    //         ->where('scm_wr_id', $request->scm_wr_id)
-    //         ->whereHas('scmWr', function ($query) {
-    //             $query->whereIn('status', ['Pending', 'WIP']);
-    //         })
-    //         ->get();
-    //         // ->map(function ($item) {
-    //         //     $data = $item->scmService;
-    //         //     $data['wr_composite_key'] = $item->wr_composite_key;
-    //         //     return $data;
-    //         // });
-
-    //     return response()->success('Search result', $lineData, 200);
-    // }
-
-    // for closing Work Requisition
-    public function closeWr(Request $request): JsonResponse
+    public function getServiceByWrIdForWcs(Request $request): JsonResponse
     {
-        try {
-            $work_requisition = ScmWr::find($request->id);
-            $work_requisition->update([
-                // 'is_closed' => 1,
-                'status' => 'Closed',
-                'closed_by' => auth()->user()->id,
-                'closed_at' => now(),
-                'closing_remarks' => $request->closing_remarks,
-            ]);
+        $lineData = ScmWrLine::query()
+            ->with('scmService')
+            ->where('scm_wr_id', $request->scm_wr_id)
+            ->whereHas('scmWr', function ($query) {
+                $query->whereIn('status', ['Pending', 'WIP']);
+            })
+            ->get();
 
-            $work_requisition->load('scmWrLines');
-            foreach ($work_requisition->scmWrLines as $wrLine) {
-                $wrLine->update([
-                    // 'is_closed' => 1,
-                    'status' => 'Closed',
-                    'closed_by' => auth()->user()->id,
-                    'closed_at' => now(),
-                    'closing_remarks' => $request->closing_remarks,
-                ]);
-            }
-            return response()->success('Data updated sucessfully!', $work_requisition, 200);
-        } catch (\Exception $e) {
-            return response()->error($e->getMessage(), 500);
-        }
+        return response()->success('Search result', $lineData, 200);
     }
 
-    public function closeWrLine(Request $request): JsonResponse
-    {
-        try {
-            $wrLine = ScmWrLine::find($request->id);
-            $wrLine->update([
-                // 'is_closed' => 1,
-                'status' => 'Closed',
-                'closed_by' => auth()->user()->id,
-                'closed_at' => now(),
-                'closing_remarks' => $request->closing_remarks,
-            ]);
-
-            $work_requisition = ScmWr::find($request->parent_id);
-            $work_requisition->load('scmWrLines');
-
-            $wrLines = $work_requisition->scmWrLines->count();            
-            // $sumIsClosed = $pr->scmWrLines->sum('is_closed');
-            $sumIsClosed = $work_requisition->scmWrLines->where('status', 'Closed')->count();
-
-            if ($wrLines === $sumIsClosed) {
-                $work_requisition->update([
-                    // 'is_closed' => 1,
-                    'status' => 'Closed',
-                    'closed_by' => auth()->user()->id,
-                    'closed_at' => now(),
-                    'closing_remarks' => "All lines are closed",
-                ]);
-            }
-
-            return response()->success('Data updated sucessfully!',[$wrLines,$sumIsClosed], 200);
-        } catch (\Exception $e) {
-            return response()->error($e->getMessage(), 500);
-        }
-    }
 
 
     public function searchWr(Request $request): JsonResponse
@@ -379,4 +311,68 @@ class ScmWrController extends Controller
         return response()->success('Search result', $work_requisition, 200);
     }
 
+
+    // for closing Work Requisition
+    public function closeWr(Request $request): JsonResponse
+    {
+        try {
+            $work_requisition = ScmWr::find($request->id);
+            $work_requisition->update([
+                // 'is_closed' => 1,
+                'status' => 'Closed',
+                'closed_by' => auth()->user()->id,
+                'closed_at' => now(),
+                'closing_remarks' => $request->closing_remarks,
+            ]);
+
+            $work_requisition->load('scmWrLines');
+            foreach ($work_requisition->scmWrLines as $wrLine) {
+                $wrLine->update([
+                    // 'is_closed' => 1,
+                    'status' => 'Closed',
+                    'closed_by' => auth()->user()->id,
+                    'closed_at' => now(),
+                    'closing_remarks' => $request->closing_remarks,
+                ]);
+            }
+            return response()->success('Data updated sucessfully!', $work_requisition, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function closeWrLine(Request $request): JsonResponse
+    {
+        try {
+            $wrLine = ScmWrLine::find($request->id);
+            $wrLine->update([
+                // 'is_closed' => 1,
+                'status' => 'Closed',
+                'closed_by' => auth()->user()->id,
+                'closed_at' => now(),
+                'closing_remarks' => $request->closing_remarks,
+            ]);
+
+            $work_requisition = ScmWr::find($request->parent_id);
+            $work_requisition->load('scmWrLines');
+
+            $wrLines = $work_requisition->scmWrLines->count();            
+            // $sumIsClosed = $pr->scmWrLines->sum('is_closed');
+            $sumIsClosed = $work_requisition->scmWrLines->where('status', 'Closed')->count();
+
+            if ($wrLines === $sumIsClosed) {
+                $work_requisition->update([
+                    // 'is_closed' => 1,
+                    'status' => 'Closed',
+                    'closed_by' => auth()->user()->id,
+                    'closed_at' => now(),
+                    'closing_remarks' => "All lines are closed",
+                ]);
+            }
+
+            return response()->success('Data updated sucessfully!',[$wrLines,$sumIsClosed], 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }
