@@ -54,7 +54,7 @@
           </v-select>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Prioity <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Priority <span class="text-red-500">*</span></span>
           <v-select
             :options="PRIORITY"
             placeholder="--Choose an option--"
@@ -98,7 +98,7 @@
           </thead>
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmCsMaterial, index) in form.scmCsMaterials" :key="index">
-            <td class="!w-72">
+            <td class="!w-72 relative">
               <v-select :options="filteredPurchaseRequisitions" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmCsMaterials[index].scmPr" label="ref_no" class="block form-input" @update:modelValue="prChange(index)">
                 <template #search="{attributes, events}">
                     <input
@@ -109,8 +109,9 @@
                         />
                 </template>
               </v-select>
+              <span v-show="form.scmCsMaterials[index].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 left-[18rem] md:left-[21rem]" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
             </td>
-            <td class="!w-72">
+            <td class="!w-72 relative">
               <v-select :options="materialList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmCsMaterials[index].scmMaterial" label="material_name_and_code" class="block form-input" @update:modelValue="materialChange(index)">
                 <template #search="{attributes, events}">
                     <input
@@ -121,6 +122,7 @@
                         />
                 </template>
               </v-select>
+              <span v-show="form.scmCsMaterials[index].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 left-[18rem] md:left-[21rem]" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
@@ -173,6 +175,10 @@
     import usePurchaseRequisition from '../../../composables/supply-chain/usePurchaseRequisition';
     import RemarksComponet from '../../utils/RemarksComponent.vue';
     import ErrorComponent from "../../utils/ErrorComponent.vue";
+    import useHeroIcon from '../../../assets/heroIcon';
+
+
+    const icons = useHeroIcon();
 
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse ,isLoading:warehouseLoading} = useWarehouse();
@@ -367,6 +373,15 @@ onMounted(() => {
   watchEffect(() => {
     searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id,props.form.purchase_center, null)
     fetchWarehouse('');
+  });
+  const watchBusinessUnit = watch(() => props.form, (newVal, oldVal) => {
+    newVal.scmCsMaterials.forEach((item, index) => {
+      props.materialList.push([]);
+        getPrWiseMaterialList(item.scm_pr_id).then((res) => {
+          props.materialList[index] = res;
+        });
+    });
+    watchBusinessUnit();
   });
 });
 

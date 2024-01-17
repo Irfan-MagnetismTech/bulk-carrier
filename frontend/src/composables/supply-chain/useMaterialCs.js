@@ -8,6 +8,7 @@ import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
 import { merge } from 'lodash';
 import { loaderSetting as LoaderConfig} from '../../config/setting.js';
+import Swal from 'sweetalert2';
 
 export default function useMaterialCs() {
     const BASE = 'scm' 
@@ -107,6 +108,7 @@ export default function useMaterialCs() {
         }
     }
     async function storeMaterialCs(form) {
+        if (!checkUniqueArray(form)) return;
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -146,6 +148,8 @@ export default function useMaterialCs() {
     }
 
     async function updateMaterialCs(form, materialCsId) {
+        if (!checkUniqueArray(form)) return;
+
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -253,6 +257,46 @@ export default function useMaterialCs() {
             loader.hide();
         }
     }
+
+    function checkUniqueArray(form) {
+        let isHasError = false;
+        const messages = ref([]);
+        let materialArray = [];
+        form.scmCsMaterials.map((scmCsMaterial, scmCsMaterialIndex) => {
+            let material_key = scmCsMaterial?.scm_material_id ?? '' + "-" + scmCsMaterial?.scm_pr_id ?? '';
+            if (materialArray.indexOf(material_key) === -1) {
+                materialArray.push(material_key);
+                form.scmCsMaterials[scmCsMaterialIndex].isAspectDuplicate = false;
+              } else {
+                let data = `Duplicate Material Name In Row ${scmCsMaterialIndex + 1}`;
+                messages.value.push(data);
+                form.scmCsMaterials[scmCsMaterialIndex].isAspectDuplicate = true;
+              }
+            });
+
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
 
     async function getPrWiseMaterialList(prId) {
         //NProgress.start();
