@@ -227,7 +227,9 @@ class ScmWrController extends Controller
     {
         $lineData = ScmWrLine::query()
             ->with('scmService')
-            ->where('scm_wr_id', $request->scm_wr_id)
+            ->when($request->scm_wr_id, function ($query) use ($request) {
+                $query->where('scm_wr_id', $request->scm_wr_id);
+            })
             ->whereHas('scmWr', function ($query) {
                 $query->whereIn('status', ['Pending', 'WIP']);
             })
