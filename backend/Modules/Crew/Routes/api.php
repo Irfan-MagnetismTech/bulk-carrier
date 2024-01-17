@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Crew\Entities\CrwCrewDocumentRenewal;
+use Modules\Crew\Entities\CrwRestHourEntry;
 use Modules\Crew\Http\Controllers\AppraisalFormController;
 use Modules\Crew\Http\Controllers\AppraisalRecordController;
 use Modules\Crew\Http\Controllers\CrwAgencyBillController;
@@ -23,6 +24,7 @@ use Modules\Crew\Http\Controllers\CrwPayrollBatchController;
 use Modules\Crew\Http\Controllers\CrwPolicyController;
 use Modules\Crew\Http\Controllers\CrwRankController;
 use Modules\Crew\Http\Controllers\CrwRecruitmentApprovalController;
+use Modules\Crew\Http\Controllers\CrwRestHourEntryController;
 use Modules\Crew\Http\Controllers\CrwSalaryStructureController;
 use Modules\Crew\Http\Controllers\CrwVesselRequiredCrewController;
 
@@ -63,6 +65,7 @@ Route::middleware(['auth:api'])->prefix('crw')->as('crw.')->group(function ()
     Route::apiResource('crw-payroll-batches', CrwPayrollBatchController::class);
     Route::apiResource('appraisal-forms', AppraisalFormController::class);
     Route::apiResource('appraisal-records', AppraisalRecordController::class);
+    Route::apiResource('crw-rest-hour-entries', CrwRestHourEntryController::class);
 
     //Additional Routes
     Route::get('crw-crew-document-renew-schedules', [CrwCrewDocumentController::class, 'renewScehdules']);

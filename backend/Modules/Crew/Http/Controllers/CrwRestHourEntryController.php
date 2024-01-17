@@ -35,12 +35,17 @@ class CrwRestHourEntryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CrwRestHourEntryRequest $request)
+    public function store(Request $request)
     {
         try {
             DB::transaction(function () use ($request)
             {
                 $crwRestHourEntryData = $request->only('ops_vessel_id', 'record_date', 'business_unit');
+
+                $crwRestHourEntryLines = $request->crwRestHourEntryLines->map(function($q){
+                    
+                }); 
+
                 $crwRestHourEntry     = CrwRestHourEntry::create($crwRestHourEntryData);
                 $crwRestHourEntry->crwRestHourEntryLines()->createMany($request->crwRestHourEntryLines);
             });
