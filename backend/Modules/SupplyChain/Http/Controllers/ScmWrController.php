@@ -67,10 +67,12 @@ class ScmWrController extends Controller
             DB::beginTransaction();
             $work_requisition_info = $request->except(
                 '_token',
+                'ref_no',
                 'attachment',
                 'scmWrLines'
             );
 
+            $work_requisition_info['ref_no'] = UniqueId::generate(ScmWr::class, 'WR');
             $work_requisition_info['created_by']=auth()->id();
 
             if (count($request->scmWrLines)<1) {
@@ -159,6 +161,7 @@ class ScmWrController extends Controller
             DB::beginTransaction();
             $work_requisition_info = $request->except(
                 '_token',
+                'ref_no',
                 'attachment',
                 'scmWrLines'
             );
@@ -299,6 +302,83 @@ class ScmWrController extends Controller
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+
+    public function searchPr(Request $request): JsonResponse
+    {
+        if (isset($request->searchParam)) {
+            $purchase_requisition = ScmPr::query()
+                ->with('scmPrLines')
+                ->where(function ($query) use ($request) {
+                    $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+                        ->where('business_unit', $request->business_unit)
+                        ->where('acc_cost_center_id', $request->cost_center_id);
+                })
+                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                ->orderByDesc('ref_no')
+                ->limit(10)
+                ->get();
+        } else {
+            $purchase_requisition = ScmPr::query()
+                ->with('scmPrLines')
+                ->where(function ($query) use ($request) {
+                    $query->where('business_unit', $request->business_unit)
+                        ->where('acc_cost_center_id', $request->cost_center_id);
+                })
+                ->orderByDesc('ref_no')
+                ->limit(10)
+                ->get();
+        }
+
+        return response()->success('Search result', $purchase_requisition, 200);
+    }
+
+
+    public function searchWorkRequisitions(Request $request): JsonResponse
+    {
+        if (isset($request->searchParam)) {
+            $purchase_requisition = ScmWr::query()
+                ->with('scmWrLines')
+                ->where(function ($query) use ($request) {
+                    $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+                        ->where('business_unit', $request->business_unit)
+                        ->where('scm_warehouse_id', $request->scm_warehouse_id);
+                })
+                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        } elseif (isset($request->cs_id)) {
+            $purchase_requisition = ScmWr::query()
+                ->with('scmWrLines')
+                ->where('is_closed', 0)
+                ->where(function ($query) use ($request) {
+                    $query->where('business_unit', $request->business_unit)
+                        ->where('scm_warehouse_id', $request->scm_warehouse_id)
+                        // ->where('purchase_center', $request->purchase_center);
+                })
+                ->whereHas('scmWcsService', function ($query) use ($request) {
+                    $query->where('scm_wcs_id', $request->scm_wcs_id);
+                })
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        } else {
+            $purchase_requisition = ScmWr::query()
+                ->with('scmWrLines')
+                ->where('is_closed', 0)
+                ->where(function ($query) use ($request) {
+                    $query->where('business_unit', $request->business_unit)
+                        ->where('scm_warehouse_id', $request->scm_warehouse_id);
+                        // ->where('purchase_center', $request->purchase_center);
+                })
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        }
+
+        return response()->success('Search result', $purchase_requisition, 200);
     }
 
 }
