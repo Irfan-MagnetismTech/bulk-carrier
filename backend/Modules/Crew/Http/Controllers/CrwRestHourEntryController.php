@@ -2,11 +2,11 @@
 
 namespace Modules\Crew\Http\Controllers;
 
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Crew\Entities\CrwRestHourEntry;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use Modules\Crew\Entities\CrwRestHourEntry;
 use Modules\Crew\Http\Requests\CrwRestHourEntryRequest;
 
 class CrwRestHourEntryController extends Controller
@@ -42,13 +42,23 @@ class CrwRestHourEntryController extends Controller
             {
                 $crwRestHourEntryData = $request->only('ops_vessel_id', 'record_date', 'business_unit');
 
-                $crwRestHourEntryLines = $request->crwRestHourEntryLines->map(function($q){
-                    
-                }); 
+                $crwRestHourEntryLines = collect($request->selectedCrews)->map(function ($selectedCrew) use ($request)
+                {
+                    $workHours                                   = count($request->hourlyRecords);
+                    $selectedCrew['hourly_records']              = $request->hourlyRecords;
+                    $selectedCrew['work_hours']                  = ($workHours * 30) / 60;
+                    $selectedCrew['rest_hours']                  = 24 - $workHours;
+                    $selectedCrew['overtime_hours']              = $workHours > 8 ? ($workHours - 8) : 0.00;
+                    $selectedCrew['applicable_rest_hour_daily']  = 14;
+                    $selectedCrew['applicable_rest_hour_weekly'] = 164;
 
-                $crwRestHourEntry     = CrwRestHourEntry::create($crwRestHourEntryData);
-                $crwRestHourEntry->crwRestHourEntryLines()->createMany($request->crwRestHourEntryLines);
+                    return $selectedCrew;
+                })->all();
+
+                $crwRestHourEntry = CrwRestHourEntry::create($crwRestHourEntryData);
+                $crwRestHourEntry->crwRestHourEntryLines()->createMany($crwRestHourEntryLines);
             });
+
             return response()->success('Created Succesfully', [], 201);
         }
         catch (QueryException $e)
@@ -65,9 +75,11 @@ class CrwRestHourEntryController extends Controller
      */
     public function show(CrwRestHourEntry $crwRestHourEntry)
     {
+        // dd($crwRestHourEntry); 
+
         try {
-            return response()->success('Retrieved succesfully', 
-            $crwRestHourEntry->load('opsVessel:id,name', 'crwRestHourEntryLines.crwCrew:id,full_name,pre_mobile_no', 'crwRestHourEntryLines.crwCrewAssignment'), 200);
+            return response()->success('Retrieved succesfully',
+                $crwRestHourEntry->load('opsVessel:id,name', 'crwRestHourEntryLines.crwCrew:id,full_name,pre_mobile_no', 'crwRestHourEntryLines.crwCrewAssignment'), 200);
         }
         catch (QueryException $e)
         {
@@ -92,6 +104,7 @@ class CrwRestHourEntryController extends Controller
                 $crwRestHourEntry->crwRestHourEntryLines()->delete();
                 $crwRestHourEntry->crwRestHourEntryLines()->createMany($request->crwRestHourEntryLines);
             });
+
             return response()->success('Updated succesfully', $crwRestHourEntry, 202);
 
         }

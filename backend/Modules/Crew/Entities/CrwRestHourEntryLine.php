@@ -11,6 +11,8 @@ class CrwRestHourEntryLine extends Model
 
     protected $fillable = ['crw_rest_hour_entry_id', 'crw_crew_id', 'crw_crew_assignment_id', 'work_hours', 'rest_hours', 'overtime_hours', 'applicable_rest_hour_daily', 'applicable_rest_hour_weekly', 'comments', 'hourly_records'];
 
+    protected $casts = ['hourly_records' => 'array'];    
+
     public function crwCrew()
     {
         return $this->belongsTo(CrwCrewProfile::class, 'crw_crew_id', 'id');
