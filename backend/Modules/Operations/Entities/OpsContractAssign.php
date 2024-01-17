@@ -19,6 +19,7 @@ class OpsContractAssign extends Model
         'ops_charterer_contract_id',
         'assign_date',
         'remarks',
+        'contract_assign_type',
         'business_unit',
     ];
 

@@ -3,7 +3,7 @@
       <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700">Assignment Type </span>
-          <select v-model="form.contract_assign_type" class="form-input">
+          <select v-model="form.contract_assign_type" class="form-input" :disabled="formType=='edit'">
             <option value="" selected disabled>Select Type</option>
             <option value="Customer">Customer</option>
             <option value="Charterer">Charterer</option>
@@ -68,7 +68,7 @@
       </label> -->
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Customer <span class="text-red-500">*</span></span>
-              <v-select :options="customers" placeholder="--Choose an option--" v-model="form.opsCustomer" label="name_code" class="block form-input">
+              <v-select :options="customers" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsCustomer" label="name_code" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -84,7 +84,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.contract_assign_type=='Charterer'">
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Charterer <span class="text-red-500">*</span></span>
-              <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name" class="block form-input">
+              <v-select :options="chartererProfiles" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
