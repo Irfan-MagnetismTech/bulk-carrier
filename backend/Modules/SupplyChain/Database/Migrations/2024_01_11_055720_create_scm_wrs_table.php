@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('scm_warehouse_id')->nullable();
             $table->bigInteger('acc_cost_center_id')->nullable();
+            $table->string('ref_no')->nullable();
             $table->date('raised_date')->nullable();
             $table->date('approved_date')->nullable();
             $table->string('attachment')->nullable();

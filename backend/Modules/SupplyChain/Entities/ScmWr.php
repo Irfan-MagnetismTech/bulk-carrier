@@ -16,6 +16,7 @@ class ScmWr extends Model
     protected $fillable = [
         'scm_warehouse_id',
         'acc_cost_center_id',
+        'ref_no',
         'raised_date',
         'raised_date',
         'approved_date',
@@ -48,5 +49,15 @@ class ScmWr extends Model
     public function createdBy(): BelongsTo  
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+
+    public function scmWcsService(): HasMany
+    {
+        return $this->hasMany(ScmWcsService::class);
+    }
+
+    public function scmWcsVendorService(): HasMany
+    {
+        return $this->hasMany(ScmWcsVendorService::class);
     }
 }

@@ -10,6 +10,7 @@ use App\Services\FileUploadService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmWr;
+use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmWrLine;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Http\Requests\ScmWrRequest;
@@ -67,10 +68,12 @@ class ScmWrController extends Controller
             DB::beginTransaction();
             $work_requisition_info = $request->except(
                 '_token',
+                'ref_no',
                 'attachment',
                 'scmWrLines'
             );
 
+            $work_requisition_info['ref_no'] = UniqueId::generate(ScmWr::class, 'WR');
             $work_requisition_info['created_by']=auth()->id();
 
             if (count($request->scmWrLines)<1) {
@@ -159,6 +162,7 @@ class ScmWrController extends Controller
             DB::beginTransaction();
             $work_requisition_info = $request->except(
                 '_token',
+                'ref_no',
                 'attachment',
                 'scmWrLines'
             );
@@ -299,6 +303,80 @@ class ScmWrController extends Controller
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+
+    public function searchWr(Request $request): JsonResponse
+    {
+        if (isset($request->searchParam)) {
+            $work_requisition = ScmWr::query()
+                ->with('scmWrLines')
+                ->where(function ($query) use ($request) {
+                    $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+                        ->where('business_unit', $request->business_unit)
+                        ->where('acc_cost_center_id', $request->cost_center_id);
+                })
+                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                ->orderByDesc('ref_no')
+                ->limit(10)
+                ->get();
+        } else {
+            $work_requisition = ScmWr::query()
+                ->with('scmWrLines')
+                ->where(function ($query) use ($request) {
+                    $query->where('business_unit', $request->business_unit)
+                        ->where('acc_cost_center_id', $request->cost_center_id);
+                })
+                ->orderByDesc('ref_no')
+                ->limit(10)
+                ->get();
+        }
+
+        return response()->success('Search result', $work_requisition, 200);
+    }
+
+
+    public function searchWorkRequisitions(Request $request): JsonResponse
+    {
+        if (isset($request->searchParam)) {
+            $work_requisition = ScmWr::query()
+                ->with('scmWrLines')
+                ->where(function ($query) use ($request) {
+                    $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+                        ->where('business_unit', $request->business_unit)
+                        ->where('scm_warehouse_id', $request->scm_warehouse_id);
+                })
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        } elseif (isset($request->cs_id)) {
+            $work_requisition = ScmWr::query()
+                ->with('scmWrLines')
+                ->where('is_closed', 0)
+                ->where(function ($query) use ($request) {
+                    $query->where('business_unit', $request->business_unit)
+                        ->where('scm_warehouse_id', $request->scm_warehouse_id);
+                })
+                ->whereHas('scmWcsService', function ($query) use ($request) {
+                    $query->where('scm_wcs_id', $request->scm_wcs_id);
+                })
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        } else {
+            $work_requisition = ScmWr::query()
+                ->with('scmWrLines')
+                ->where('is_closed', 0)
+                ->where(function ($query) use ($request) {
+                    $query->where('business_unit', $request->business_unit)
+                        ->where('scm_warehouse_id', $request->scm_warehouse_id);
+                })
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        }
+
+        return response()->success('Search result', $work_requisition, 200);
     }
 
 }
