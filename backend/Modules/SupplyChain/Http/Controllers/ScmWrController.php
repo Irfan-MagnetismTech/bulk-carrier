@@ -245,7 +245,7 @@ class ScmWrController extends Controller
                 ->with('scmWrLines')
                 ->where(function ($query) use ($request) {
                     $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
-                        ->where('business_unit', $request->business_unit)                    
+                        ->where('business_unit', $request->business_unit)
                         ->when($request->cost_center_id, function ($query) use ($request) {
                             $query->where('acc_cost_center_id', $request->cost_center_id);
                         });
@@ -378,7 +378,7 @@ class ScmWrController extends Controller
             $work_requisition = ScmWr::find($request->parent_id);
             $work_requisition->load('scmWrLines');
 
-            $wrLines = $work_requisition->scmWrLines->count();            
+            $wrLines = $work_requisition->scmWrLines->count();
             // $sumIsClosed = $pr->scmWrLines->sum('is_closed');
             $sumIsClosed = $work_requisition->scmWrLines->where('status', 'Closed')->count();
 
