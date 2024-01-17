@@ -75,7 +75,7 @@
 
   <div class="input-group">
       <label class="label-group">
-        <span class="label-item-title">Quotation Validity <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Quotation Validity (days) <span class="text-red-500">*</span></span>
           <input type="number" v-model="form.quotation_validity" class="form-input" name="scm_department_id" :id="'scm_department_id'" required/>
       </label>
       <label class="label-group">

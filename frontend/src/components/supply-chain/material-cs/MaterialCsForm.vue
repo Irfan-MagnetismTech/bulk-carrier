@@ -26,21 +26,6 @@
         <VueDatePicker v-model="form.expire_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
     </label>
       <label class="label-group">
-        <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-          <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" class="block form-input" @update:modelValue="warehouseChange">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.scmWarehouse"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
-      </label>  
-  </div>
-  <div class="input-group">
-      <label class="label-group">
           <span class="label-item-title">Purchase Center <span class="text-red-500">*</span></span>
           <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input" @update:modelValue="changePurchaseCenter">
             <template #search="{attributes, events}">
@@ -53,31 +38,29 @@
             </template>        
           </v-select>
       </label>
-      <label class="label-group">
-        <span class="label-item-title">Priority <span class="text-red-500">*</span></span>
-          <v-select
-            :options="PRIORITY"
-            placeholder="--Choose an option--"
-            v-model="form.priority"
-            label="name"
-            class="block form-input">
-            <template #search="{attributes, events}">
-                <input
-                    class="vs__search"
-                    :required="!form.priority"
-                    v-bind="attributes"
-                    v-on="events"
-                    />
-            </template>
+  </div>
+  <div class="input-group !w-2/3">
+      
+    <label class="label-group">
+        <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
+          <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" class="block form-input" @update:modelValue="warehouseChange">
+          <template #search="{attributes, events}">
+              <input
+                  class="vs__search"
+                  :required="!form.scmWarehouse"
+                  v-bind="attributes"
+                  v-on="events"
+              />
+          </template>
           </v-select>
-      </label>
+      </label>  
       <label class="label-group">
         <span class="label-item-title">Required Days <span class="text-red-500">*</span></span>
           <input type="number" v-model="form.required_days" required class="form-input" min=1/>
       </label>
   </div>
 
-  <div class="input-group !w-3/4">
+  <div class="input-group !w-2/3">
     <label class="label-group">
             <RemarksComponet v-model="form.special_instructions" :maxlength="300" :fieldLabel="'Special Instruction'" isRequired="true"></RemarksComponet>
     </label>
@@ -374,15 +357,19 @@ onMounted(() => {
     searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id,props.form.purchase_center, null)
     fetchWarehouse('');
   });
-  const watchBusinessUnit = watch(() => props.form, (newVal, oldVal) => {
-    newVal.scmCsMaterials.forEach((item, index) => {
-      props.materialList.push([]);
-        getPrWiseMaterialList(item.scm_pr_id).then((res) => {
-          props.materialList[index] = res;
-        });
+  
+  if(props.formType == 'edit'){
+    const watchBusinessUnit = watch(() => props.form, (newVal, oldVal) => {
+      newVal.scmCsMaterials.forEach((item, index) => {
+        props.materialList.push([]);
+          getPrWiseMaterialList(item.scm_pr_id).then((res) => {
+            props.materialList[index] = res;
+          });
+      });
+      watchBusinessUnit();
     });
-    watchBusinessUnit();
-  });
+  }
+  
 });
 
 

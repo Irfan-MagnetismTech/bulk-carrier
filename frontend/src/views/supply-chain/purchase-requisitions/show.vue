@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Purchase Requistion Details</h2>
-    <default-button :title="'Store Requistion List'" :to="{ name: 'scm.purchase-requisitions.index' }" :icon="icons.DataBase"></default-button>
+    <default-button :title="'Purchase Requistion List'" :to="{ name: 'scm.purchase-requisitions.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
     <div class="flex md:gap-4">
@@ -37,11 +37,17 @@
                         <th class="w-40">Critical</th>
                         <td>{{ critical[purchaseRequisition?.is_critical ?? 0]  }}</td>
                     </tr>
-                    
-                    <!-- <tr>
-                        <th class="w-40">Requisition Date</th>
-                        <td>{{ purchaseRequisition?.is_closed }}</td>
-                    </tr> -->
+                    <tr>
+                      <th class="w-40">Attachment</th>
+                      <td>
+                          <a type="button" v-if="typeof purchaseRequisition?.attachment === 'string'" class="text-green-800" target="_blank" :href="env.BASE_API_URL+'/'+purchaseRequisition?.attachment">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" data-slot="icon" class="w-4 h-4">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
+                        </svg>
+                      </a>
+                      <a v-else>---</a>    
+                      </td>
+                    </tr>
                     <tr>
                         <th class="w-40">Remarks </th>
                         <td>{{ purchaseRequisition?.remarks }}</td>
@@ -57,7 +63,6 @@
                         <!-- <td>{{ status[purchaseRequisition?.is_closed] }}</td> -->
                         
                         <td>
-                          <!-- {{ workRequisition?.status }} -->
                           <span :class="purchaseRequisition?.status === 'Pending' ? 'text-yellow-700 bg-yellow-100' : (purchaseRequisition?.status == 'WIP' ? 'text-blue-700 bg-blue-100' : 'text-red-700 bg-red-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.status ?? 'Closed' }}</span>
                         </td>
                     </tr>
