@@ -147,25 +147,25 @@
       }
 
     watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
-      let total = 0.0;
-      let materialArray = [];
-      newVal?.forEach((line, index) => {
-        let material_key = line.scm_material_id + "-" + line?.brand ?? '' + "-" + line?.model ?? '';
-        console.log('material', material_key, 'index', index);
-        if (materialArray.indexOf(material_key) === -1) {
-          materialArray.push(material_key);
-          props.form.scmPoLines[index].total_price = parseFloat((line?.rate * line?.quantity).toFixed(2));
-          total += parseFloat(props.form.scmPoLines[index].total_price);
-          setMaterialOtherData(line, index);
-          props.form.sub_total = parseFloat(total.toFixed(2));
-          calculateNetAmount();
-        } else {
-          alert("Duplicate Material Found");
-          // props.form.scmPoLines.splice(index, 1);
-        }  
+      // let total = 0.0;
+      // let materialArray = [];
+      // newVal?.forEach((line, index) => {
+      //   let material_key = line.scm_material_id + "-" + line?.brand ?? '' + "-" + line?.model ?? '';
+      //   console.log('material', material_key, 'index', index);
+      //   if (materialArray.indexOf(material_key) === -1) {
+      //     materialArray.push(material_key);
+      //     props.form.scmPoLines[index].total_price = parseFloat((line?.rate * line?.quantity).toFixed(2));
+      //     total += parseFloat(props.form.scmPoLines[index].total_price);
+      //     setMaterialOtherData(line, index);
+      //     props.form.sub_total = parseFloat(total.toFixed(2));
+      //     calculateNetAmount();
+      //   } else {
+      //     alert("Duplicate Material Found");
+      //     // props.form.scmPoLines.splice(index, 1);
+      //   }  
        
          
-      });
+      // });
     }, { deep: true });
 
     function changePurchaseCenter() { 
@@ -217,7 +217,11 @@
     onMounted(() => {
       watchEffect(() => {
         searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, null,null);
+      });
+      watchEffect(() => {
         searchCs(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, null);
+      });
+      watchEffect(() => {
         fetchWarehouse('');
       });
     });
@@ -230,7 +234,7 @@
             props.form.scmPoLines[0].scmPoMaterial.push(cloneDeep(props.materialObject));
       });
         
-      watch(() => props.form.business_unit, (newValue, oldValue) => {
+    watch(() => props.form.business_unit, (newValue, oldValue) => {
       if(newValue !== oldValue && oldValue != ''){
         props.form.scmWarehouse = null;
       }
@@ -253,6 +257,19 @@
       </label>
     </div>
   <div class="input-group">
+    <label class="label-group">
+        <span class="label-item-title">Purchase Center <span class="text-red-500">*</span></span>
+        <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input" @update:modelValue="changePurchaseCenter">
+          <template #search="{attributes, events}">
+              <input
+                  class="vs__search"
+                  :required="!form.purchase_center"
+                  v-bind="attributes"
+                  v-on="events"
+              />  
+          </template>        
+        </v-select>
+    </label>
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
          <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" class="block form-input">
@@ -264,19 +281,6 @@
                   v-on="events"
               />
           </template>
-          </v-select>
-      </label>
-      <label class="label-group">
-          <span class="label-item-title">Purchase Center <span class="text-red-500">*</span></span>
-          <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input" @update:modelValue="changePurchaseCenter">
-            <template #search="{attributes, events}">
-                <input
-                    class="vs__search"
-                    :required="!form.purchase_center"
-                    v-bind="attributes"
-                    v-on="events"
-                />  
-            </template>        
           </v-select>
       </label>
       <label class="label-group">
@@ -391,8 +395,8 @@
                   <tr class="w-full" v-if="itemIndex==0">
                     <th class="py-3 align-center">Material Details <br/> <span class="!text-[8px]"></span></th>
                     <th class="py-3 align-center">Required Date</th>
-                    <th class="py-3 align-center">PR Qty</th>
-                    <th class="py-3 align-center">Remaining Qty</th>
+                    <th class="py-3 align-center">Other Info</th>
+                    <th class="py-3 align-center">Tolarence</th>
                     <th class="py-3 align-center">Order Details</th>
                     <th class="py-3 align-cente">Total Price</th>
                     <th>
@@ -446,7 +450,20 @@
                       <input type="date" v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].required_date" class="form-input">
                     </td>
                     <td>
-                      <input type="text" readonly :value="form.scmPoLines[index]?.scmPoMaterial[itemIndex].max_quantity" min=1 class="form-input">
+                      <table>
+                        <tr>
+                          <td>PR Qty</td>
+                          <td>
+                             <input type="number" required v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].quantity" min=1 class="form-input" :max="form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity" :class="{'border-2': form.scmPoLines[index].scmPoMaterial[itemIndex].quantity > form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].scmPoMaterial[itemIndex].quantity > form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity}">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Remaining Qty</td>
+                          <td>
+                            <input type="number" required v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].rate" min=1 class="form-input">
+                          </td>
+                        </tr>
+                      </table>
                     </td>
                     <td>
                       <input type="text" readonly :value="form.scmPoLines[index]?.scmPoMaterial[itemIndex].max_quantity" min=1 class="form-input">  
