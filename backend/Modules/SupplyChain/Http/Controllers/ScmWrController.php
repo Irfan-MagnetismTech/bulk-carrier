@@ -233,7 +233,11 @@ class ScmWrController extends Controller
             ->whereHas('scmWr', function ($query) {
                 $query->whereIn('status', ['Pending', 'WIP']);
             })
-            ->get();
+            ->get()
+            ->map(function ($item) {
+                $data = $item->scmMaterial;
+                return $data;
+            });
 
         return response()->success('Search result', $lineData, 200);
     }
