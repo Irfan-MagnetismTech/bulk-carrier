@@ -232,13 +232,16 @@ onMounted(() => {
           </div>
           <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
             <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Hourly Records</legend>
-          <div class="grid lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-3 gap-1 flex items-center">
-            <div class="!text-center" v-for="(data,index) in form.hourlyRecords">
-              <span class="text-sm text-center">{{ formatIndex(index) }}</span>
-              <input type="text" v-model.trim="form.hourlyRecords[index].type" :id="'hourly_input_'+index" @click="toggleHourlyRecord(index)" class="form-input vms-readonly-input text-center"
-                     :class="data.is_selected ? 'active_hour' : ''"
-                     autocomplete="off" readonly/>
-            </div>
+          <div class="grid lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-3 flex items-center">
+            <template v-for="(data,index) in form.hourlyRecords">
+              <div class="!text-center" :class="{ 'mr-1': (index+1)%2===0 }">
+                <span class="text-sm text-center">{{ formatIndex(index) }}</span>
+                <hr class="border-t-2 border-gray-900">
+                <input type="text" v-model.trim="form.hourlyRecords[index].type" :id="'hourly_input_'+index" @click="toggleHourlyRecord(index)" class="form-input vms-readonly-input text-center"
+                       :class="data.is_selected ? 'active_hour' : ''"
+                       autocomplete="off" readonly/>
+              </div>
+            </template>
           </div>
           </fieldset>
           <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm text-white bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Save</button>
@@ -255,6 +258,12 @@ onMounted(() => {
 
 .active_hour{
   background-color: #a5dc86;
+}
+
+.form-input:focus{
+  outline: none !important;
+  box-shadow: none;
+  border-color: #707275;
 }
 
 </style>

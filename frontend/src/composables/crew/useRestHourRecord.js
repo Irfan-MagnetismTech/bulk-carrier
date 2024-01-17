@@ -38,7 +38,7 @@ export default function useRestHourRecord() {
         // isLoading.value = true;
         //
         // try {
-        //     const { data, status } = await Api.post('/crw/rest-hour-records', form);
+        //     const { data, status } = await Api.post('/crw/crw-rest-hour-entries', form);
         //     restHourRecord.value = data.value;
         //     notification.showSuccess(status);
         //     await router.push({ name: "crw.rest-hour-records.index" });
@@ -55,21 +55,21 @@ export default function useRestHourRecord() {
 
         console.log("Data:" , form);
 
-        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        // isLoading.value = true;
-        //
-        // try {
-        //     const { data, status } = await Api.post('/crw/rest-hour-records', form);
-        //     restHourRecord.value = data.value;
-        //     notification.showSuccess(status);
-        //     await router.push({ name: "crw.rest-hour-records.index" });
-        // } catch (error) {
-        //     const { data, status } = error.response;
-        //     errors.value = notification.showError(status, data);
-        // } finally {
-        //     loader.hide();
-        //     isLoading.value = false;
-        // }
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.post('/crw/crw-rest-hour-entries', form);
+            restHourRecord.value = data.value;
+            notification.showSuccess(status);
+            await router.push({ name: "crw.rest-hour-records.index" });
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
     }
 
     async function showRestHourRecord(restHourRecordId) {
