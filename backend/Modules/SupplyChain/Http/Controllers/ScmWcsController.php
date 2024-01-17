@@ -3,6 +3,7 @@
 namespace Modules\SupplyChain\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Services\FileUploadService;
@@ -81,13 +82,12 @@ class ScmWcsController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(ScmWcs $work_c): JsonResponse
     {
-        $serviceWcs = ScmWcs::find($id);
-        $serviceWcs->load('scmWcsServices.scmService', 'scmWcsServices.scmWr', 'scmWarehouse');
+        $work_c->load('scmWcsServices.scmService', 'scmWcsServices.scmWr', 'scmWarehouse');
 
         try {
-            return response()->success('Detail data', $serviceWcs, 200);
+            return response()->success('Detail data', $work_c, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
@@ -100,9 +100,9 @@ class ScmWcsController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(ScmWcsRequest $request, $id)
+    public function update(ScmWcsRequest $request, ScmWcs $work_c)
     {
-        $scmWcs = ScmWcs::find($id);
+        // $scmWcs = ScmWcs::find($id);
         $requestData = $request->except('ref_no','scmWcsServices');
         try {
             DB::beginTransaction();
@@ -117,13 +117,13 @@ class ScmWcsController extends Controller
                 return response()->json($error, 422);
             }
 
-            $scmWcs->update($requestData);
-            $scmWcs->scmWcsServices()->delete();
-            $scmWcs->scmWcsServices()->createMany($request->scmWcsServices);
+            $work_c->update($requestData);
+            $work_c->scmWcsServices()->delete();
+            $work_c->scmWcsServices()->createMany($request->scmWcsServices);
 
 
             DB::commit();
-            return response()->success('Data updated succesfully', $scmWcs, 202);
+            return response()->success('Data updated succesfully', $work_c, 202);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->error($e->getMessage(), 500);
@@ -135,18 +135,18 @@ class ScmWcsController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(ScmWcs $work_c)
     {
-        $scmWcs = ScmWcs::find($id);
+        // $scmWcs = ScmWcs::find($id);
         try {
             DB::beginTransaction();
-            $scmWcs->scmWcsServices()->delete();
-            $scmWcs->delete();
+            $work_c->scmWcsServices()->delete();
+            $work_c->delete();
             DB::commit();
             return response()->success('Data deleted succesfully', null, 203);
         } catch (QueryException $e) {
             DB::rollBack();
-            return response()->json($scmWcs->preventDeletionIfRelated(), 422);
+            return response()->json($work_c->preventDeletionIfRelated(), 422);
         }
     }
 
