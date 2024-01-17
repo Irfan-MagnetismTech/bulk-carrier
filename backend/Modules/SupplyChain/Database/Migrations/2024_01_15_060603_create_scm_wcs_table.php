@@ -24,7 +24,7 @@ return new class extends Migration
             $table->date('expire_date')->nullable();
             $table->string('required_days')->nullable();
             $table->text('remarks')->nullable();
-            $table->enum('requirment_type', ['High','Low','Medium'])->nullable();
+            $table->enum('priority', ['High','Low','Medium'])->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();
             $table->timestamps();
         });

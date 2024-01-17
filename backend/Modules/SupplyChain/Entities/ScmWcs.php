@@ -17,7 +17,7 @@ class ScmWcs extends Model
         'acc_cost_center_id',
         'ref_no',
         'purchase_center',
-        'requirment_type',
+        'priority',
         'special_instruction',
         'effective_date',
         'expire_date',
