@@ -34,16 +34,16 @@ class ScmWrController extends Controller
             $scmWr = ScmWr::with('scmWrLines.scmService', 'scmWrLines.closedBy', 'scmWrLines.createdBy', 'scmWarehouse', 'closedBy', 'createdBy')
             ->globalSearch($request->all());
 
-            $loggedInUserId = Auth::id();
+            // $loggedInUserId = Auth::id();
 
-            $scmWr->each(function ($wr) use ($loggedInUserId) {
-                if ($wr->closed_by == $loggedInUserId) {
-                    $wr->closedBy->name = 'You';
-                }
-                if ($wr->created_by == $loggedInUserId) {
-                    $wr->createdBy->name = 'You';
-                }
-            });
+            // $scmWr->each(function ($wr) use ($loggedInUserId) {
+            //     if ($wr->closed_by == $loggedInUserId) {
+            //         $wr->closedBy->name = 'You';
+            //     }
+            //     if ($wr->created_by == $loggedInUserId) {
+            //         $wr->createdBy->name = 'You';
+            //     }
+            // });
 
             return response()->success('Data retrieved successfully.', $scmWr, 200);
         }
@@ -116,24 +116,24 @@ class ScmWrController extends Controller
     public function show(ScmWr $work_requisition): JsonResponse
     {
         // dd('dddd');
-        $loggedInUserId = Auth::id();
+        // $loggedInUserId = Auth::id();
         $work_requisition->load('scmWrLines.scmService', 'scmWrLines.closedBy', 'scmWrLines.createdBy', 'scmWarehouse', 'closedBy', 'createdBy');
-        $work_requisition->scmWrLines->each(function ($line) use ($loggedInUserId) {
-            if ($line->closed_by == $loggedInUserId) {
-                $line->closedBy->name = 'You';
-            }
-            if ($line->created_by == $loggedInUserId) {
-                $line->createdBy->name = 'You';
-            }
-        });
+        // $work_requisition->scmWrLines->each(function ($line) use ($loggedInUserId) {
+        //     if ($line->closed_by == $loggedInUserId) {
+        //         $line->closedBy->name = 'You';
+        //     }
+        //     if ($line->created_by == $loggedInUserId) {
+        //         $line->createdBy->name = 'You';
+        //     }
+        // });
 
-        if ($work_requisition->closed_by == $loggedInUserId) {
-            $work_requisition->closedBy->name = 'You';
-        }
+        // if ($work_requisition->closed_by == $loggedInUserId) {
+        //     $work_requisition->closedBy->name = 'You';
+        // }
 
-        if ($work_requisition->created_by == $loggedInUserId) {
-            $work_requisition->createdBy->name = 'You';
-        }
+        // if ($work_requisition->created_by == $loggedInUserId) {
+        //     $work_requisition->createdBy->name = 'You';
+        // }
 
         try
         {
