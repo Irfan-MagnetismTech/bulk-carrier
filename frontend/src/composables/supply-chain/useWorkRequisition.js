@@ -233,6 +233,32 @@ export default function useWorkRequisition() {
         }
     }
 
+    async function searchWorkRequisition(business_unit, warehouse_id = null,purchase_center = null, cs_id = null ,searchParam = null) {
+        //NProgress.start();
+        //const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/search-work-requisitions`,{
+                params: {
+                    business_unit: business_unit,
+                    searchParam: searchParam,
+                    scm_warehouse_id: warehouse_id,
+                    purchase_center: purchase_center,
+                    scm_wcs_id: cs_id,
+                },
+            });
+            filteredWorkRequisitions.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
     // async function searchPurchaseRequisition(searchParam, loading) {
     //     isLoading.value = true;
 
@@ -403,6 +429,7 @@ export default function useWorkRequisition() {
         workRequisition,
         // filteredPurchaseRequisitions,
         // searchPurchaseRequisition,
+        filteredWorkRequisitions,
         getWorkRequisitions,
         storeWorkRequisition,
         showWorkRequisition,
@@ -410,6 +437,7 @@ export default function useWorkRequisition() {
         deleteWorkRequisition,
         closeWr,
         closeWrLines,
+        searchWorkRequisition,
         // getStoreCategoryWiseExcel,
         // searchWarehouseWisePurchaseRequisition,
         // materialObject,

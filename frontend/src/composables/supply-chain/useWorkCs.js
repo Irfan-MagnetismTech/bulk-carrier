@@ -18,7 +18,7 @@ export default function useWorkCs() {
     const csWiseVendorList = ref([]);
     const filteredWorkCsLines = ref([]);
     const $loading = useLoading();
-    const prWorkList = ref([]);
+    const wrServiceList = ref([]);
     const isTableLoading = ref(false);
     const notification = useNotification();
     // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
@@ -29,8 +29,9 @@ export default function useWorkCs() {
         scm_warehouse_id: null,
         effective_date: null,
         expire_date: null,
-        requirment_type: "",
+        // requirment_type: "",
         required_days: null,
+        purchase_center: '',
         business_unit: null,
         special_instructions: null,
         
@@ -41,7 +42,7 @@ export default function useWorkCs() {
         // scm_pr_id: null,
         // pr_no: null,
         // purchase_center: null,
-        scmCsWorks: [
+        scmWcsServices: [
             {
                 scmWr: null,
                 scm_wr_id: null,
@@ -56,7 +57,7 @@ export default function useWorkCs() {
         ]
     });
 
-    const workObj = {
+    const serviceObj = {
                 scmWr: null,
                 scm_wr_id: null,
                 scm_service_id: null,
@@ -67,7 +68,7 @@ export default function useWorkCs() {
                 // unit : null,
     }
 
-    const workList = ref([]);
+    const serviceList = ref([]);
 
 
     const errors = ref('');
@@ -123,6 +124,7 @@ export default function useWorkCs() {
             notification.showSuccess(status);
             router.push({ name: `${BASE}.work-cs.index` });
         } catch (error) {
+            console.log(error);
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
         } finally {
@@ -188,6 +190,25 @@ export default function useWorkCs() {
         }
     }
 
+    async function getWrWiseServiceList(wrId) {
+        //NProgress.start();
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+        try {
+            const {data, status} = await Api.get(`/${BASE}/search-wr-wise-service-for-wcs`,{
+                params: {
+                    scm_wr_id: wrId,
+                },
+            });
+            wrServiceList.value = data.value;
+            return data.value;
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            //NProgress.done();
+        }
+    }
+
     
 
 
@@ -200,8 +221,10 @@ export default function useWorkCs() {
         showWorkCs,
         updateWorkCs,
         deleteWorkCs,
-        workObj,
-        workList,
+        getWrWiseServiceList,
+        serviceObj,
+        serviceList,
+        wrServiceList,
         // getSiWiseData,
         isTableLoading,
         isLoading,

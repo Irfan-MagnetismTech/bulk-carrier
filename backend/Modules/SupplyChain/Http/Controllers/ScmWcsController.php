@@ -49,7 +49,8 @@ class ScmWcsController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(ScmWcsRequest $request)
+    public function store(Request $request)
+
     {
         $requestData = $request->except('ref_no','scmWcsServices');
         $requestData['ref_no'] = UniqueId::generate(ScmWcs::class, 'WCS');
@@ -120,8 +121,8 @@ class ScmWcsController extends Controller
             $scmWcs->update($requestData);
             $scmWcs->scmWcsServices()->delete();
             $scmWcs->scmWcsServices()->createMany($request->scmWcsServices);
-            
-          
+
+
             DB::commit();
             return response()->success('Data updated succesfully', $scmWcs, 202);
         } catch (\Exception $e) {
@@ -183,7 +184,7 @@ class ScmWcsController extends Controller
 
         return response()->success('Data list', $scmWcs, 200);
     }
-    
+
 
     public function storeQuotation(ScmQuotationRequest $request)
     {
@@ -215,7 +216,7 @@ class ScmWcsController extends Controller
                 $quantity = $values[0]['quantity'] ?? 0;
                 $quotation_ref_no = $values[0]['quotation_ref_no'] ?? 0;
                 $quotation_date = $values[0]['quotation_date'] ?? 0;
-        
+
                 foreach ($values as $key1 => $value) {
                     $wcsService = ScmWcsService::where([
                         'scm_wcs_id' => $scmWcs->id,
