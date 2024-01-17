@@ -243,7 +243,7 @@ function confirmDelete(id) {
           </thead> -->
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
-            <tr v-for="(materialCsdata,index) in (materialCsLists?.data ? materialCsLists?.data : materialCsLists)" :key="index">
+            <tr v-for="(materialCsdata,index) in (materialCsLists?.data)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td><nobr>{{ materialCsdata?.ref_no }}</nobr></td>
               <td>{{ formatDate(materialCsdata?.effective_date) }}</td>

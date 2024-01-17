@@ -70,20 +70,20 @@
     }
 
     function changePr(index) {
-      props.form.scmPoLines[index].scm_pr_id = props.form.scmPoLines[index].scmPr.id;
-      getMaterialList(props.form.scmPoLines[index].scmPr.id).then((res) => {
-        props.materialList[index] = res;
-      });
-      if (props.form.scm_cs_id != null) {
-        getLineData(props.form.scmPoLines[index].scm_pr_id,props.form.scm_cs_id).then((res) => {
-          props.form.scmPoLines[index] = res;
+        props.form.scmPoLines[index].scm_pr_id = props.form.scmPoLines[index].scmPr.id;
+        getMaterialList(props.form.scmPoLines[index].scmPr.id).then((res) => {
+          props.materialList[index] = res;
         });
-      } else { 
-        getLineData(props.form.scmPoLines[index].scm_pr_id).then((res) => {
-        props.form.scmPoLines[index] = res;
-      });
-      }
-      
+        if (props.form.scm_cs_id != null) {
+          getLineData(props.form.scmPoLines[index].scm_pr_id,props.form.scm_cs_id).then((res) => {
+            props.form.scmPoLines[index] = res;
+          });
+        } else { 
+          getLineData(props.form.scmPoLines[index].scm_pr_id).then((res) => {
+          props.form.scmPoLines[index].scmPoMaterial = res;
+        });
+        }
+        
     }
 
     const purchase_center = ['Local', 'Foreign', 'Plant'];
@@ -390,9 +390,8 @@
         <div class="relative my-3">
           <div class="dt-responsive table-responsive">
             <table class="w-full whitespace-no-wrap" >
-              <tbody v-if="form.scmPoLines[index]?.scmPoMaterial?.length > 0">
-                <template v-for="(lineItem, itemIndex) in form.scmPoLines[index].scmPoMaterial" :key="itemIndex">
-                  <tr class="w-full" v-if="itemIndex==0">
+              <tbody>
+                <tr class="w-full">
                     <th class="py-3 align-center">Material Details <br/> <span class="!text-[8px]"></span></th>
                     <th class="py-3 align-center">Required Date</th>
                     <th class="py-3 align-center">Other Info</th>
@@ -407,6 +406,7 @@
                       </button>
                     </th>
                   </tr>
+                <template v-for="(lineItem, itemIndex) in form.scmPoLines[index].scmPoMaterial" :key="itemIndex">
                   <tr class="table_tr">
                     <td class="">
                       <table>
@@ -454,19 +454,19 @@
                         <tr>
                           <td>PR Qty</td>
                           <td>
-                             <input type="number" required v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].quantity" min=1 class="form-input" :max="form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity" :class="{'border-2': form.scmPoLines[index].scmPoMaterial[itemIndex].quantity > form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].scmPoMaterial[itemIndex].quantity > form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity}">
+                             <input type="number" required v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].pr_quantity" min=1 class="form-input">
                           </td>
                         </tr>
                         <tr>
                           <td>Remaining Qty</td>
                           <td>
-                            <input type="number" required v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].rate" min=1 class="form-input">
+                            <input type="number" required v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity" min=1 class="form-input">
                           </td>
                         </tr>
                       </table>
                     </td>
                     <td>
-                      <input type="text" readonly :value="form.scmPoLines[index]?.scmPoMaterial[itemIndex].max_quantity" min=1 class="form-input">  
+                      <input type="text" readonly :value="form.scmPoLines[index]?.scmPoMaterial[itemIndex].tolarence_level" min=1 class="form-input">  
                     </td>
                     <td>
                       <table>
