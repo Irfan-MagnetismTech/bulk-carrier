@@ -421,7 +421,7 @@ class ScmCsController extends Controller
     public function deleteQuotation($id)
     {
         $scmCsVendor = ScmCsVendor::with('scmCsMaterialVendors')->find($id);
-        
+
         try {
             DB::beginTransaction();
 
@@ -439,21 +439,45 @@ class ScmCsController extends Controller
         }
     }
 
-    public function getCsData($csId)
+    /**
+     * Retrieves the data for a specific CS ID.
+     *
+     * @param int $csId The id of the cs.
+     * @throws Some_Exception_Class If the csId is not found.
+     * @return JsonResponse
+     */
+    public function getCsData($csId): JsonResponse
     {
-        $scmCs = ScmCs::with('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmPr', 'scmWarehouse')->find($csId);
-        $CsVendor = ScmCsVendor::with('scmVendor')->where('scm_cs_id', $csId)->get()->groupBy('scm_vendor_id');
-        $scmCs['scmCsVendor'] = $CsVendor;
-        $csVendorMaterial = ScmCsMaterialVendor::with('scmCsMaterial.scmMaterial', 'scmCsMaterial.scmPr')->where('scm_cs_id', $csId)->get()->groupBy(['scm_material_id', 'scm_pr_id', 'scm_vendor_id']);
-        $scmCs['scmCsMaterialVendor'] = $csVendorMaterial;
-        $csMaterial = ScmCsMaterial::with('scmMaterial', 'scmPr')->where('scm_cs_id', $csId)->get()->groupBy(['scm_material_id', 'scm_pr_id']);
-        $scmCs['scmCsMaterial'] = $csMaterial;
+        $scmCs = ScmCs::query()
+            ->with('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmPr', 'scmWarehouse')
+            ->find($csId);
 
-        try {
-            return response()->success('Detail data', $scmCs, 200);
-        } catch (\Exception $e) {
-            return response()->error($e->getMessage(), 500);
-        }
+        $scmCs['scmCsVendor'] = ScmCsVendor::query()
+            ->with('scmVendor')
+            ->where('scm_cs_id', $csId)
+            ->get()
+            ->groupBy('scm_vendor_id');
+
+        $scmCs['scmCsMaterialVendor'] = ScmCsMaterialVendor::query()
+            ->with('scmCsMaterial.scmMaterial', 'scmCsMaterial.scmPr')
+            ->where('scm_cs_id', $csId)
+            ->get()
+            ->groupBy(['scm_material_id', 'scm_pr_id', 'scm_vendor_id']);
+
+        $scmCs['scmCsMaterial'] = ScmCsMaterial::query()
+            ->with('scmMaterial', 'scmPr')
+            ->where('scm_cs_id', $csId)
+            ->get()
+            ->groupBy(['scm_material_id', 'scm_pr_id'])
+            ->map(function ($items) {
+                return $items->map(function ($data) {
+                    $data[0]['sum_quantity'] = $data->sum('quantity');
+
+                    return $data;
+                });
+            });
+
+        return response()->success('Detail data', $scmCs, 200);
     }
 
     public function selectedSupplierstore(SupplierSelectionRequest $request)
