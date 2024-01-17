@@ -19,6 +19,7 @@ return new class extends Migration
             $table->bigInteger('scm_warehouse_id')->nullable();
             $table->bigInteger('acc_cost_center_id')->nullable();
             $table->string('ref_no')->nullable();
+            $table->enum('purchase_center', ['Local', 'Foreign','Plant'])->nullable();
             $table->string('special_instruction')->nullable();
             $table->date('effective_date')->nullable();
             $table->date('expire_date')->nullable();

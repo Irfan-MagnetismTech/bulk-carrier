@@ -17,6 +17,7 @@ class ScmWcs extends Model
         'scm_warehouse_id',
         'acc_cost_center_id',
         'ref_no',
+        'purchase_center',
         'requirment_type',
         'special_instruction',
         'effective_date',
