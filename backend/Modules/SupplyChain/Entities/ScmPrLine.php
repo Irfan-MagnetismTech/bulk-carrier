@@ -39,15 +39,15 @@ class ScmPrLine extends Model
         return $this->hasMany(ScmStockLedger::class, 'scm_material_id', 'scm_material_id');
     }
 
-    public function scmPoLines(): HasMany
+    public function scmPoItems(): HasMany
     {
-        return $this->hasMany(ScmPoLine::class, 'pr_composite_key', 'pr_composite_key');
+        return $this->hasMany(ScmPoItem::class, 'pr_composite_key', 'pr_composite_key');
     }
 
-    public function scmMrrLines(): HasMany
-    {
-        return $this->hasMany(ScmMrrLine::class, 'pr_composite_key', 'pr_composite_key');
-    }
+    // public function scmMrrLines(): HasMany
+    // {
+    //     return $this->hasMany(ScmMrrLine::class, 'pr_composite_key', 'pr_composite_key');
+    // }
 
     public function getMaterialNameQuantityUnitAttribute()
     {
@@ -64,7 +64,7 @@ class ScmPrLine extends Model
         return $this->hasMany(ScmCsMaterial::class, 'pr_composite_key', 'pr_composite_key');
     }
 
-    public function createdBy(): BelongsTo  
+    public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
     }
