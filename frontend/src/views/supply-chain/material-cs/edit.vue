@@ -27,12 +27,7 @@ onMounted(() => {
 
 watch(() => materialCs, (val) => {
     //foreach materialCS.scmCsMaterials
-    val.scmCsMaterials.forEach((item, index) => {
-        materialList.push([]);
-        getPrWiseMaterialList(item.scm_pr_id).then((res) => {
-            materialList[index] = res;
-        });
-    });
+    
 });
 </script>
 <template>

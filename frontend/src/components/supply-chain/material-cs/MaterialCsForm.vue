@@ -374,6 +374,15 @@ onMounted(() => {
     searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id,props.form.purchase_center, null)
     fetchWarehouse('');
   });
+  const watchBusinessUnit = watch(() => props.form, (newVal, oldVal) => {
+    newVal.scmCsMaterials.forEach((item, index) => {
+      props.materialList.push([]);
+        getPrWiseMaterialList(item.scm_pr_id).then((res) => {
+          props.materialList[index] = res;
+        });
+    });
+    watchBusinessUnit();
+  });
 });
 
 
