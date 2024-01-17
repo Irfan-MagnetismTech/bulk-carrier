@@ -158,9 +158,7 @@ class ScmWcsController extends Controller
     public function getWcsWiseData($id)
     {
         $scmWcs = ScmWcs::find($id);
-        // $scmWcs->load('scmPr', 'scmWarehouse');
-        $scmWcs->load('scmWcsServices.scmService', 'scmWr', 'scmWcsServices.scmWr', 'scmWarehouse');
-        //scmCsMaterials groupBy ['scm_material_id','scm_pr_id']
+        $scmWcs->load('scmWcsServices.scmService', 'scmWcsServices.scmWr', 'scmWarehouse');
         $data = $scmWcs->scmWcsServices->groupBy(['scm_service_id'])->values()->all();
         data_forget($scmWcs, 'scmWcsServices');
 
