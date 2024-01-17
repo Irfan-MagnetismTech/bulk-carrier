@@ -24,7 +24,7 @@ export default function useWorkRequisition() {
     // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const workRequisition = ref( {
-        // ref_no: '',
+        ref_no: '',
         scmWarehouse: '',
         scm_warehouse_id: '',
         acc_cost_center_id: '',

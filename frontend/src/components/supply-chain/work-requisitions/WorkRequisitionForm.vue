@@ -270,7 +270,19 @@ function tytytyasd(indx) {
     <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2 ">
         <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
 
-        <label class="label-group col-start-1">
+        <label class="label-group col-start-1" v-show="page === 'edit'">
+            <span class="label-item-title">WR Ref</span>
+            <input
+              type="text"
+              readonly
+              v-model="form.ref_no"
+              required
+              class="form-input vms-readonly-input"
+              name="ref_no"
+              :id="'ref_no'" />
+        </label>
+
+        <label class="label-group" :class="{'col-start-1' : page === 'create'}">
             <span class="label-item-title">Warehouse Name <span class="text-red-500">*</span></span>
             <!-- <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse" v-model="form.scmWarehouse" label="name" class="block form-input"> -->
             <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" @update:modelValue="warehouseChange" class="block form-input">
