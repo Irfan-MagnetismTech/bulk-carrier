@@ -2,7 +2,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700">Contract Type </span>
+          <span class="text-gray-700">Assignment Type </span>
           <select v-model="form.contract_assign_type" class="form-input">
             <option value="" selected disabled>Select Type</option>
             <option value="Customer">Customer</option>
@@ -109,7 +109,7 @@
               </v-select>
       </label>
     </div>
-    <div v-if="form.opsVoyage && form.contract_type=='Voyage Wise'">
+    <div v-if="(form.opsVoyage && form.contract_assign_type=='Customer')">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Sector <span class="text-red-500">*</span></legend>
         <table class="w-full whitespace-no-wrap" id="table">
