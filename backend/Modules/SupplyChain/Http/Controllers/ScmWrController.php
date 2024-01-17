@@ -164,7 +164,8 @@ class ScmWrController extends Controller
                 '_token',
                 'ref_no',
                 'attachment',
-                'scmWrLines'
+                'scmWrLines',
+                'created_by'
             );
 
             if (count($request->scmWrLines)<1) {
@@ -230,6 +231,7 @@ class ScmWrController extends Controller
             ->when($request->scm_wr_id, function ($query) use ($request) {
                 $query->where('scm_wr_id', $request->scm_wr_id);
             })
+            ->whereNot('status', 'Closed')
             ->whereHas('scmWr', function ($query) {
                 $query->whereIn('status', ['Pending', 'WIP']);
             })
