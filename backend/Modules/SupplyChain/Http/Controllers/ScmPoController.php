@@ -323,6 +323,7 @@ class ScmPoController extends Controller
         $prMaterials = ScmPrLine::query()
             ->with('scmMaterial', 'scmPoLines')
             ->where('scm_pr_id', request()->pr_id)
+            ->whereNot('status', 'Closed')
             ->get()
             ->map(function ($item) {
                 $data = $item->scmMaterial;
@@ -379,5 +380,26 @@ class ScmPoController extends Controller
         }
 
         return response()->success('Search result', $scmPo, 200);
+    }
+
+    public function getPoLineDatas()
+    {
+        $scmPr = ScmPrLine::query()
+            ->where('scm_pr_id', request()->pr_id)
+            ->whereNot('status', 'Closed')
+            ->get()
+            ->map(function ($item) {
+                $data['scm_material_id'] = $item->scmMaterial->id;
+                $data['scmMaterial'] = $item->scmMaterial;
+                $data['brand'] = $item->brand;
+                $data['model'] = $item->model;
+                $data['pr_composite_key'] = $item->pr_composite_key;
+                $data['pr_quantity'] = $item->quantity;
+                $data['remaining_quantity'] = $item->quantity - $item->scmPoLines->sum('quantity');
+                $data['max_quantity'] = $item->quantity - $item->scmPoLines->sum('quantity');
+                return $data;
+            });
+
+        return response()->success('data', $scmPr, 200);
     }
 }
