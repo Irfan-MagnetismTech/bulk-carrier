@@ -119,9 +119,6 @@ onMounted(() => {
     getVesselsWithoutPaginate(props.form.business_unit);
   });
 
-  // props.form.location_type = '';
-  // props.form.is_all_crew_checked = false;
-  // props.form.hourlyRecords = [];
   for (let index = 0; index < 48; index++) {
     props.form.hourlyRecords.push(
         {
@@ -233,17 +230,9 @@ onMounted(() => {
               </select>
             </label>
           </div>
-
-<!--          <div class="flex items-center">-->
-<!--            <input type="text" class="form-input vms-readonly-input text-center !w-10" autocomplete="off" readonly/>-->
-<!--            <input type="text" class="form-input vms-readonly-input text-center !w-10" autocomplete="off" readonly/>-->
-<!--          </div>-->
-<!--          <div class="flex items-center">-->
-
-<!--          </div>-->
           <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
             <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Hourly Records</legend>
-          <div v-if="form.location_type" class="grid lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-3 gap-1 flex items-center">
+          <div class="grid lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-3 gap-1 flex items-center">
             <div class="!text-center" v-for="(data,index) in form.hourlyRecords">
               <span class="text-sm text-center">{{ formatIndex(index) }}</span>
               <input type="text" v-model.trim="form.hourlyRecords[index].type" :id="'hourly_input_'+index" @click="toggleHourlyRecord(index)" class="form-input vms-readonly-input text-center"
@@ -252,31 +241,6 @@ onMounted(() => {
             </div>
           </div>
           </fieldset>
-
-
-<!--          <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">-->
-<!--            <table class="w-full whitespace-no-wrap mt-2" id="table1">-->
-<!--              <thead>-->
-<!--              <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">-->
-<!--                <th colspan="12">Hourly Records</th>-->
-<!--              </tr>-->
-<!--              </thead>-->
-<!--              <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">-->
-<!--              <tr class="text-gray-700 dark-disabled:text-gray-400">-->
-<!--                <td class="px-1 py-1" v-for="(index) in 12" :key="index">{{ index }}<input type="text" class="form-input vms-readonly-input text-center !w-10" :id="'hourly_input_'+index" @click="toggleHourlyRecord(index,$event)" autocomplete="off" readonly/></td>-->
-<!--              </tr>-->
-<!--              <tr class="text-gray-700 dark-disabled:text-gray-400">-->
-<!--                <td class="px-1 py-1" v-for="(index) in 12" :key="index+12">{{ index + 12 }}<input type="text" class="form-input vms-readonly-input text-center !w-10" :id="'hourly_input_'+(index+12)" @click="toggleHourlyRecord(index+12,$event)" autocomplete="off" readonly/></td>-->
-<!--              </tr>-->
-<!--              <tr class="text-gray-700 dark-disabled:text-gray-400">-->
-<!--                <td class="px-1 py-1" v-for="(index) in 12" :key="index+24">{{ index + 24 }}<input type="text" class="form-input vms-readonly-input text-center !w-10" :id="'hourly_input_'+(index+24)" @click="toggleHourlyRecord(index+24,$event)" autocomplete="off" readonly/></td>-->
-<!--              </tr>-->
-<!--              <tr class="text-gray-700 dark-disabled:text-gray-400">-->
-<!--                <td class="px-1 py-1" v-for="(index) in 12" :key="index+36">{{ index + 36 }}<input type="text" class="form-input vms-readonly-input text-center !w-10" :id="'hourly_input_'+(index+36)" @click="toggleHourlyRecord(index+36,$event)" autocomplete="off" readonly/></td>-->
-<!--              </tr>-->
-<!--              </tbody>-->
-<!--            </table>-->
-<!--          </div>-->
           <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm text-white bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Save</button>
         </div>
       </fieldset>

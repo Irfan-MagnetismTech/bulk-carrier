@@ -30,46 +30,25 @@ export default function useRestHourRecord() {
     const isLoading = ref(false);
     const isTableLoading = ref(false);
 
-    async function getRestHourRecords(filterOptions) {
+    async function getRestHourRecords(form) {
 
-        let loader = null;
+        console.log("Data:" , form);
 
-        if (!filterOptions.isFilter) {
-            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-            isLoading.value = true;
-            isTableLoading.value = false;
-        }
-        else {
-            isTableLoading.value = true;
-            isLoading.value = false;
-            loader?.hide();
-        }
-
-        filterParams.value = filterOptions;
-
-        try {
-            const {data, status} = await Api.get('/crw/rest-hour-records',{
-                params: {
-                    page: filterOptions.page,
-                    items_per_page: filterOptions.items_per_page,
-                    data: JSON.stringify(filterOptions)
-                },
-            });
-            restHourRecords.value = data.value;
-            notification.showSuccess(status);
-        } catch (error) {
-            const { data, status } = error.response;
-            notification.showError(status);
-        } finally {
-            if (!filterOptions.isFilter) {
-                loader?.hide();
-                isLoading.value = false;
-            }
-            else {
-                isTableLoading.value = false;
-                loader?.hide();
-            }
-        }
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        // isLoading.value = true;
+        //
+        // try {
+        //     const { data, status } = await Api.post('/crw/rest-hour-records', form);
+        //     restHourRecord.value = data.value;
+        //     notification.showSuccess(status);
+        //     await router.push({ name: "crw.rest-hour-records.index" });
+        // } catch (error) {
+        //     const { data, status } = error.response;
+        //     errors.value = notification.showError(status, data);
+        // } finally {
+        //     loader.hide();
+        //     isLoading.value = false;
+        // }
     }
 
     async function storeRestHourRecord(form) {

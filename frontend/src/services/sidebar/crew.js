@@ -275,8 +275,6 @@ export default [
                 permissionKey: '',
                 subSubMenu: [],
             },
-
-            
             {
                 route: 'crw.appraisal-records.index',
                 label: 'Appraisal Records',
@@ -288,7 +286,26 @@ export default [
                 subSubMenu: [],
             },
 
-
+            {
+                route: 'crw.rest-hour-records.create',
+                label: 'Rest Hour',
+                preIcon: '',
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: [],
+            },
+            {
+                route: 'crw.rest-hour-records.report',
+                label: 'Rest Hour Records',
+                preIcon: '',
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: [],
+            },
         ]
     },
 ];
