@@ -237,7 +237,7 @@ class ScmWrController extends Controller
             })
             ->get()
             ->map(function ($item) {
-                $data = $item->scmMaterial;
+                $data = $item->scmService;
                 return $data;
             });
 
