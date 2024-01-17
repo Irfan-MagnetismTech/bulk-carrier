@@ -194,7 +194,6 @@ class ScmPrController extends Controller
         try {
             DB::beginTransaction();
 
-
             $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs', $purchase_requisition->attachment);
             $requestData['attachment'] = $attachment;
 

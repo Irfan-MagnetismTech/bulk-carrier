@@ -512,26 +512,27 @@ class ScmCsController extends Controller
         if (isset($request->searchParam)) {
             $cs = ScmCs::query()
                 ->with('scmCsVendors', 'scmCsMaterials', 'scmCsMaterialVendors')
-                ->where(function ($query) use ($request) {
-                    $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
-                        ->where('business_unit', $request->business_unit)
-                        ->where('scm_warehouse_id', $request->scm_warehouse_id)
-                        ->where('purchase_center', $request->purchase_center);
+                ->whereHas('scmCsMaterials.scmPr', function ($query) use ($request) {
+                    $query->where(function ($query) use ($request) {
+                        $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+                            ->where('business_unit', $request->business_unit)
+                            ->where('scm_warehouse_id', $request->scm_warehouse_id)
+                            ->where('purchase_center', $request->purchase_center);
+                    });
                 })
-                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
-                // ->limit(10)
                 ->get();
         } else {
             $cs = ScmCs::query()
                 ->with('scmCsVendors', 'scmCsMaterials', 'scmCsMaterialVendors')
-                ->where(function ($query) use ($request) {
-                    $query->where('business_unit', $request->business_unit)
-                        ->where('scm_warehouse_id', $request->scm_warehouse_id)
-                        ->where('purchase_center', $request->purchase_center);
+                ->whereHas('scmCsMaterials.scmPr', function ($query) use ($request) {
+                    $query->where(function ($query) use ($request) {
+                        $query->where('business_unit', $request->business_unit)
+                            ->where('scm_warehouse_id', $request->scm_warehouse_id)
+                            ->where('purchase_center', $request->purchase_center);
+                    });
                 })
                 ->orderByDesc('ref_no')
-                // ->limit(10)
                 ->get();
         }
 
