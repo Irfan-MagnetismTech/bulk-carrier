@@ -177,7 +177,7 @@ const navigateToMRRCreate = (purchaseOrderId) => {
  
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Purchase Order List</h2>
-    <!-- <default-button :title="'Create Purchase Order'" :to="{ name: 'scm.purchase-orders.create' }" :icon="icons.AddIcon"></default-button> -->
+    <default-button :title="'Create Purchase Order'" :to="{ name: 'scm.purchase-orders.create' }" :icon="icons.AddIcon"></default-button>
   </div>
  
   <!-- Table -->
@@ -213,7 +213,7 @@ const navigateToMRRCreate = (purchaseOrderId) => {
               <td>
                 <nobr>
                 <div class="grid grid-flow-col-dense gap-x-2">
-                  <button @click="navigateToMRRCreate(purchaseOrder.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button>
+                  <!-- <button @click="navigateToMRRCreate(purchaseOrder.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
                   <action-button :action="'show'" :to="{ name: 'scm.purchase-orders.show', params: { purchaseOrderId: purchaseOrder.id } }"></action-button>
                   <template v-if="(purchaseOrder?.scmMrrs.length <= 0)">
                     <action-button :action="'edit'" :to="{ name: 'scm.purchase-orders.edit', params: { purchaseOrderId: purchaseOrder.id } }"></action-button>

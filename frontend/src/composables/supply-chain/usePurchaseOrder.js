@@ -48,17 +48,27 @@ export default function usePurchaseOrder() {
         business_unit: '',
         scmPoLines: [
             {
-                scmMaterial: '',
-                scm_material_id: '',
-                unit: '',
-                brand: '',
-                model: '',
-                required_date: null,
-                quantity: 0.0,
-                rate: 0.0,
-                total_price: 0.0,
-                pr_composite_key: '',
-                max_quantity: 0.0,
+                scmPr: '',
+                scm_pr_id: '',
+                scmPoMaterial: [
+                    {
+                        scmMaterial: '',
+                        scm_material_id: '',
+                        unit: '',
+                        brand: '',
+                        model: '',
+                        required_date: null,
+                        tolerence: 0.0,
+                        pr_composite_key: '',
+                        cs_composite_key: '',
+                        pr_quantity: 0.0,
+                        remaining_quantity: 0.0,
+                        max_quantity: 0.0,
+                        quantity: 0.0,
+                        rate: 0.0,
+                        total_price: 0.0,
+                    }
+                ]
             }
         ],
         scmPoTerms: [
@@ -76,12 +86,45 @@ export default function usePurchaseOrder() {
                 brand: '',
                 model: '',
                 required_date: null,
+                tolerence: 0.0,
+                pr_composite_key: '',
+                cs_composite_key: '',
+                pr_quantity: 0.0,
+                remaining_quantity: 0.0,
+                max_quantity: 0.0,
                 quantity: 0.0,
                 rate: 0.0,
                 total_price: 0.0,
-                pr_composite_key: '',
-                max_quantity: 0.0,
+             }
+
+    const poLineObject = 
+        {
+            scmPr: '',
+            scm_pr_id: '',
+            scmPoMaterial: [
+                {
+                    scmMaterial: '',
+                    scm_material_id: '',
+                    unit: '',
+                    brand: '',
+                    model: '',
+                    required_date: null,
+                    tolerence: 0.0,
+                    pr_composite_key: '',
+                    cs_composite_key: '',
+                    pr_quantity: 0.0,
+                    remaining_quantity: 0.0,
+                    max_quantity: 0.0,
+                    quantity: 0.0,
+                    rate: 0.0,
+                    total_price: 0.0,
+                }
+            ]
     }
+    
+    const materialList = ref([
+        [],
+    ]);
 
     const termsObject =  {
         description: ''
@@ -273,6 +316,7 @@ export default function usePurchaseOrder() {
                 },
             });
             prMaterialList.value = data.value;
+            return data.value;
             console.log('prMaterialList', prMaterialList.value);    
         } catch (error) {
             const { data, status } = error.response;
@@ -281,6 +325,25 @@ export default function usePurchaseOrder() {
             isLoading.value = false;
         }
     }
+
+    async function getLineData(prId, csId = null) { 
+        isLoading.value = true;
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-po-line-datas`,{
+                params: {
+                    pr_id: prId,
+                    cs_id: csId,
+                },
+            });
+            return data.value;  
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            isLoading.value = false;
+        }
+    }
+        
 
     return {
         purchaseOrders,
@@ -296,9 +359,12 @@ export default function usePurchaseOrder() {
         searchPurchaseOrderForLc,
         getMaterialList,
         prMaterialList,
+        getLineData,
         materialObject,
+        poLineObject,
         termsObject,
         isTableLoading,
+        materialList,
         isLoading,
         errors,
     };

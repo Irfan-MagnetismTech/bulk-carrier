@@ -42,7 +42,7 @@
   <div class="input-group !w-2/3">
       
     <label class="label-group">
-        <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Warehouse </span>
           <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" class="block form-input" @update:modelValue="warehouseChange">
           <template #search="{attributes, events}">
               <input
