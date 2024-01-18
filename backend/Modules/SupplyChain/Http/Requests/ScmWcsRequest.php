@@ -27,7 +27,6 @@ class ScmWcsRequest extends FormRequest
         return [
             'effective_date' => 'required|date|before_or_equal:expire_date',
             'scmWcsServices.*.scm_wr_id' => ['required','exists:scm_wrs,id','integer', Rule::unique('scm_wcs_services')->ignore($this->route('work_c'), 'id'),],
-
         ];
     }
 
