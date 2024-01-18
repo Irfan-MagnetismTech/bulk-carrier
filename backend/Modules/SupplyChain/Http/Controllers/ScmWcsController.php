@@ -195,18 +195,23 @@ class ScmWcsController extends Controller
                 'scm_wcs_id',
                 'quotation_ref_no',
                 'quotation_date',
-                'attachment',
-                'validity',
+                'quotation_validity',
                 'payment_mode',
-                'creadit_term',
+                'credit_term',
                 'vat',
                 'ait',
+                'currency',
                 'security_money',
                 'adjustment_policy',
                 'is_selected',
             );
 
             DB::beginTransaction();
+
+            if(isset($request->attachment)){
+                $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/work_cs/quotations');
+                $requestData['attachment'] = $attachment;
+            }
 
             $scmWcsVendor = ScmWcsVendor::create($requestData);
             $adadas = [];
