@@ -183,7 +183,7 @@ class OpsChartererContractController extends Controller
             $charterer = OpsChartererContract::query()->with('opsVessel','opsChartererProfile','opsChartererContractsFinancialTerms.opsCargoTariff.opsCargoType','opsChartererContractsFinancialTerms.opsVoyage',
             'opsChartererContractsLocalAgents.opsPort','opsChartererInvoices','dayWiseInvoices')
             ->when(isset(request()->ops_charterer_profile_id), function ($query) {
-                    $query->where('ops_charterer_profile_id',request()->charterer_profile_id);
+                    $query->where('ops_charterer_profile_id',request()->ops_charterer_profile_id);
             })
             ->get();            
             // $charterer->load('opsChartererProfile');

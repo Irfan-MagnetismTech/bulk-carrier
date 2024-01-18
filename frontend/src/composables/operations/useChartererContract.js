@@ -237,7 +237,7 @@ export default function useChartererContract() {
 
 	async function getChartererContractsByCharterOwner(chartererProfileId) {
 		try {
-			const { data, status } = await Api.get(`/ops/get-charterer-contract-by-profile?charterer_profile_id=${chartererProfileId}`);
+			const { data, status } = await Api.get(`/ops/get-charterer-contract-by-profile?ops_charterer_profile_id=${chartererProfileId}`);
 			chartererContracts.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
