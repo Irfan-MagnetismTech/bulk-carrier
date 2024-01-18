@@ -27,14 +27,28 @@
             </v-select>
         </label>
         <label class="label-group">
-          <span class="label-item-title">Date <span class="text-red-500">*</span></span>
+          <span class="label-item-title">Effective Date <span class="text-red-500">*</span></span>
           <VueDatePicker v-model="form.effective_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
       </label>
       <label class="label-group">
           <span class="label-item-title">Expire Date <span class="text-red-500">*</span></span>
           <VueDatePicker v-model="form.expire_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
       </label>
-      
+
+      <label class="label-group">
+            <span class="label-item-title">Purchase Center <span class="text-red-500">*</span></span>
+            <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input" @update:modelValue="changePurchaseCenter">
+              <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      :required="!form.purchase_center"
+                      v-bind="attributes"
+                      v-on="events"
+                  />  
+              </template>        
+            </v-select>
+        </label>
+
       <label class="label-group">
           <span class="label-item-title">Prioity <span class="text-red-500">*</span></span>
             <v-select
@@ -59,9 +73,74 @@
             <input type="number" v-model="form.required_days" placeholder="Required Days" required class="form-input" min=1/>
         </label>
 
-        <RemarksComponet class="col-span-4" v-model="form.special_instructions" :maxlength="300" :fieldLabel="'Special Instruction'" isRequired="true"></RemarksComponet>
+        <RemarksComponet class="col-span-1 md:col-span-3 lg:col-span-4" v-model="form.special_instruction" :maxlength="300" :fieldLabel="'Special Instruction'" isRequired="true"></RemarksComponet>
 
     </div>
+    <!-- <div class="grid grid-cols-1 mt-2"> -->
+      <fieldset class=" grid grid-cols-1 px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400 ">
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Services</legend>
+        <table class="w-full whitespace-no-wrap " id="table">
+          <thead>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+                <th class="w-3/12 px-4 align-center">WR No</th>
+                <th class="w-5/12 px-4 align-center">Service Name</th>
+                <th class="w-2/12 px-4 align-center">Quantity</th>
+                <th class="w-2/12 px-4 align-center text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+            <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmWcsService, index) in form.scmWcsServices" :key="index">
+              <td class="px-1 py-1">
+                <v-select :options="filteredWorkRequisitions" placeholder="--Choose an option--" :loading="isWorkRequisitionLoading" v-model="scmWcsService.scmWr" label="ref_no" class="block form-input" @update:modelValue="wrChange(index)">
+                  <template #search="{attributes, events}">
+                      <input
+                          class="vs__search"
+                          :required="!scmWcsService.scmWr"
+                          v-bind="attributes"
+                          v-on="events"
+                          />
+                  </template>
+                </v-select>
+              </td>
+              <td class="px-1 py-1">
+                <div class="relative">
+                  <v-select :options="serviceList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="scmWcsService.scmService" label="service_name_and_code" class="block form-input" @update:modelValue="serviceChange(index)">
+                  <template #search="{attributes, events}">
+                      <input
+                          class="vs__search"
+                          :required="!scmWcsService.scmService"
+                          v-bind="attributes"
+                          v-on="events"
+                          />
+                  </template>
+                </v-select>
+                <span v-show="scmWcsService.isServiceDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-10" title="Duplicate Service" v-html="icons.ExclamationTriangle"></span>
+                </div>
+              </td>
+              <td class="px-1 py-1">
+                <label class="block w-full mt-2 text-sm">
+                   <input type="number" placeholder="Quantity" v-model="scmWcsService.quantity" class="form-input" min="1" required 
+                   >
+                </label>
+              </td>
+              
+              <!-- <td class="px-1 py-1"><input type="text" class="form-input" required v-model.trim="des.value" placeholder="Value" /></td> -->
+
+              <td class="px-1 py-1"> 
+                <button type="button" v-if="index == 0" class="bg-green-600 text-white px-3 py-2 rounded-md" @click="addWork"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                    </svg></button>
+                <button type="button" v-else class="bg-red-600 text-white px-3 py-2 rounded-md" @click="removeWork(index)" ><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                    </svg></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </fieldset>
+    <!-- </div> -->
+
+
 
 
     <!-- <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
@@ -238,22 +317,26 @@
       import usePurchaseRequisition from '../../../composables/supply-chain/usePurchaseRequisition';
       import RemarksComponet from '../../utils/RemarksComponent.vue';
       import ErrorComponent from "../../utils/ErrorComponent.vue";
+      import useWorkRequisition from '../../../composables/supply-chain/useWorkRequisition';
+import useWorkCs from '../../../composables/supply-chain/useWorkCs';
+import useHeroIcon from '../../../assets/heroIcon';
   
       const { material, materials, getMaterials,searchMaterial } = useMaterial();
       const { warehouses,warehouse,getWarehouses,searchWarehouse ,isLoading:warehouseLoading} = useWarehouse();
       const { filteredStoreIssues, searchStoreIssue , fetchSiWiseMaterials, siWiseMaterials} = useStoreIssue();
       const { getSiWiseSir, filteredStoreIssueReturnLines } = useStoreIssueReturn();
-      const { getPrWiseMaterialList, prMaterialList } = useMaterialCs();
-      const { searchPurchaseRequisition, filteredPurchaseRequisitions } = usePurchaseRequisition();
+      const { getWrWiseServiceList, wrServiceList } = useWorkCs();
+      const { searchWorkRequisition, filteredWorkRequisitions, isLoading:isWorkRequisitionLoading } = useWorkRequisition();
       const props = defineProps({
         form: { type: Object, required: true },
         errors: { type: [Object, Array], required: false },
         formType: { type: String, required : false },
         page: { required: false, default: {} },
-        materialObj: { type: Object, required: false },
-        materialList: { type: Array, required: false },
+        serviceObj: { type: Object, required: false },
+        serviceList: { type: Array, required: false },
       }); 
   
+      const icons = useHeroIcon();
       const PRIORITY = ['High', 'Medium', 'Low']
       const form = toRefs(props).form;
       
@@ -265,13 +348,27 @@
       function addMaterial() {
         const clonedObj = cloneDeep(props.materialObj);
         props.form.scmCsMaterials.push(clonedObj);
-        props.materialList.push([]);
+        props.serviceList.push([]);
       }
   
       function removeMaterial(index){
         props.form.scmCsMaterials.splice(index, 1);
-        props.materialList.splice(index, 1);
+        props.serviceList.splice(index, 1);
       }
+
+      
+      function addWork() {
+        const clonedObj = cloneDeep(props.serviceObj);
+        props.form.scmWcsServices.push(clonedObj);
+        props.serviceList.push([]);
+      }
+  
+      function removeWork(index){
+        props.form.scmWcsServices.splice(index, 1);
+        props.serviceList.splice(index, 1);
+      }
+
+
       
   // function fetchStoreIssue(search, loading = false) {
   //     // if (search.length > 0) {
@@ -297,6 +394,10 @@
       props.form.scmCsMaterials[index].pr_composite_key = props.form.scmCsMaterials[index].scmMaterial.pr_composite_key;
       props.form.scmCsMaterials[index].max_quantity = props.form.scmCsMaterials[index].scmMaterial.max_quantity;
   }
+
+  function serviceChange(index){
+    props.form.scmWcsServices[index].scm_service_id = props.form.scmWcsServices[index].scmService.id;
+  }
   
   function prChange(index) {
     props.form.scmCsMaterials[index].scm_pr_id = props.form.scmCsMaterials[index].scmPr.id;
@@ -309,6 +410,14 @@
     props.form.scm_warehouse_id = props.form.scmWarehouse.id;
     props.form.acc_cost_center_id = props.form.scmWarehouse.cost_center_id;
   } 
+
+  function wrChange(index) {
+    props.form.scmWcsServices[index].scm_wr_id = props.form.scmWcsServices[index].scmWr.id;
+    getWrWiseServiceList(props.form.scmWcsServices[index].scm_wr_id).then((res) => {
+      props.serviceList[index] = res;
+    });
+  }
+
   // watch(() => props.form.scmSi, (new Val,oldVal) => {
   //       props.form.scm_si_id = newVal?.id;
   //       props.form.si_no = newVal?.ref_no;
@@ -430,9 +539,15 @@
   
   onMounted(() => {
     watchEffect(() => {
-      searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id,props.form.purchase_center, null)
+      searchWorkRequisition(props.form.business_unit, props.form.scm_warehouse_id,props.form.purchase_center, null)
+      // fetchWarehouse('');
+    });
+    
+    watchEffect(() => {
+      // searchWorkRequisition(props.form.business_unit, props.form.scm_warehouse_id,props.form.purchase_center, null)
       fetchWarehouse('');
     });
+
   });
   
   
@@ -440,6 +555,7 @@
     // searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id,props.form.purchase_center, null)
   }
   function fetchWarehouse(search) {
+
       searchWarehouse(search, props.form.business_unit);
     }
   const purchase_center = ['Local', 'Foreign', 'Plant'];

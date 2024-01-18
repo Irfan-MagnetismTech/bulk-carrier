@@ -20,11 +20,12 @@ return new class extends Migration
             $table->string('quotation_ref_no')->nullable();
             $table->date('quotation_date')->nullable();
             $table->string('attachment')->nullable();
-            $table->date('validity')->nullable();
-            $table->enum('payment_mode', ['Cash','Credit','Advance'])->nullable();
-            $table->string('creadit_term')->nullable();
+            $table->date('quotation_validity')->nullable();
+            $table->enum('payment_mode', ['Cash','Credit','Advance','Bank'])->nullable();
+            $table->string('credit_term')->nullable();
             $table->string('vat')->nullable();
             $table->string('ait')->nullable();
+            $table->string('currency')->nullable();
             $table->float('security_money', 20, 2)->nullable();
             $table->string('adjustment_policy')->nullable();
             $table->bigInteger('is_selected')->nullable();
