@@ -18,7 +18,7 @@ class ScmWcsVendor extends Model
         'attachment',
         'validity',
         'payment_mode',
-        'creadit_term',
+        'credit_term',
         'vat',
         'ait',
         'security_money',

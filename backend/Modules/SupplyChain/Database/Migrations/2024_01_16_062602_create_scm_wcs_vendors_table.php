@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('attachment')->nullable();
             $table->date('validity')->nullable();
             $table->enum('payment_mode', ['Cash','Credit','Advance','Bank'])->nullable();
-            $table->string('creadit_term')->nullable();
+            $table->string('credit_term')->nullable();
             $table->string('vat')->nullable();
             $table->string('ait')->nullable();
             $table->float('security_money', 20, 2)->nullable();
