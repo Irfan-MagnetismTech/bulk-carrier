@@ -172,7 +172,7 @@ class ScmWcsController extends Controller
         }
     }
 
-    public function getWorkQuotations(Request $request)
+    public function getWcsQuotations(Request $request)
     {
         $scmWcs = ScmWcsVendor::query()
             ->with('scmWcs', 'scmVendor.scmVendorContactPerson', 'scmWcsVendorServices')
@@ -185,7 +185,7 @@ class ScmWcsController extends Controller
     }
 
 
-    public function storeQuotation(ScmQuotationRequest $request)
+    public function storeWcsQuotation(ScmQuotationRequest $request)
     {
         try {
             // ScmCs::find($request->scm_cs_id)->update(['status' => 'quotation']);
@@ -212,7 +212,7 @@ class ScmWcsController extends Controller
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/work_cs/quotations');
                 $requestData['attachment'] = $attachment;
             }
-
+            
             $scmWcsVendor = ScmWcsVendor::create($requestData);
             $adadas = [];
             foreach ($request->scmWcsVendorServices as $key => $values) {
@@ -250,7 +250,7 @@ class ScmWcsController extends Controller
     }
 
 
-    public function showQuotation($id)
+    public function showWcsQuotation($id)
     {
         $scmWcsVendor = ScmWcsVendor::with('scmWcs', 'scmVendor.scmVendorContactPerson', 'scmWcsVendorServices.scmService', 'scmWcsVendorServices.scmWr')->find($id);
         $scmWcsVendorServices = $scmWcsVendor->scmWcsVendorServices->groupBy(['scm_service_id'])->values()->all();
@@ -264,7 +264,7 @@ class ScmWcsController extends Controller
     }
 
     // update quotation
-    public function updateQuotation(ScmQuotationRequest $request, $id)
+    public function updateWcsQuotation(ScmQuotationRequest $request, $id)
     {
         try {
             // return response()->json( $request->all(), 422);
@@ -287,6 +287,9 @@ class ScmWcsController extends Controller
 
             DB::beginTransaction();
 
+            $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/work_cs/quotations', $scmWcsVendor->attachment);
+            $requestData['attachment'] = $attachment;
+
             $scmWcsVendor->update($requestData);
             $scmWcsVendor->scmWcsVendorServices->each(function ($item) {
                 $item->delete();
@@ -299,7 +302,7 @@ class ScmWcsController extends Controller
 
                 foreach ($values as $key1 => $value) {
                     $wcsService = ScmWcsService::where([
-                        'scm_wcs_id' => $scmWcsVendor->id,
+                        'scm_wcs_id' => $scmWcsVendor->scm_wcs_id,
                         'scm_service_id' => $value['scm_service_id']
                     ])->first();
 
@@ -324,6 +327,31 @@ class ScmWcsController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->error($e->getMessage(), 500);
+        }
+    }
+
+
+    public function deleteWcsQuotation($id)
+    {
+        $scmWcsVendor = ScmWcsVendor::with('scmWcsVendorServices')->find($id);
+
+        try {
+            DB::beginTransaction();
+
+            $scmWcsVendor->scmWcsVendorServices->each(function ($item) {
+                $item->delete();
+            });
+            if(isset($scmWcsVendor->attachment)){
+                $this->fileUpload->deleteFile($scmWcsVendor->attachment);
+            }
+            $scmWcsVendor->delete();
+
+            DB::commit();
+            return response()->success('Data deleted succesfully', null, 203);
+        } catch (QueryException $e) {
+            DB::rollBack();
+
+            return response()->json($scmWcsVendor->preventDeletionIfRelated(), 422);
         }
     }
 
