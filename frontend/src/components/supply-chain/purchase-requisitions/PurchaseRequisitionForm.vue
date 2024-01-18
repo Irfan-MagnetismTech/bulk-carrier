@@ -203,11 +203,15 @@ watch(() => props.form.scmPrLines, (newLines) => {
     }
   });
 
-  watch(() => props.form.scmWarehouse, (value) => {
-        props.form.scm_warehouse_id = value?.id ?? null;
-        props.form.acc_cost_center_id = value?.cost_center_id;
-  });
+  // watch(() => props.form.scmWarehouse, (value) => {
+  //       props.form.scm_warehouse_id = value?.id ?? null;
+  //       props.form.acc_cost_center_id = value?.cost_center_id;
+  // });
     
+  function changeWarehouse(value) {
+    props.form.scm_warehouse_id = value?.id ?? null;
+    props.form.acc_cost_center_id = value?.cost_center_id;
+  }
   watch(() => props.form.business_unit, (newValue, oldValue) => {
    if(newValue !== oldValue && oldValue != ''){
     props.form.scmWarehouse = null;
@@ -215,9 +219,9 @@ watch(() => props.form.scmPrLines, (newLines) => {
 });
 
 
-function tytyty(indx) {
-  console.log(indx)
-}
+// function tytyty(indx) {
+//   console.log(indx)
+// }
 
 
 
@@ -255,7 +259,7 @@ function tytytyasd(indx) {
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
           <!-- <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse" v-model="form.scmWarehouse" label="name" class="block form-input"> -->
-          <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" class="block form-input">
+          <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" class="block form-input" @update:modelValue="changeWarehouse(form.scmWarehouse)">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"

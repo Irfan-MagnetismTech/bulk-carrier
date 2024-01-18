@@ -293,7 +293,7 @@ class ScmPrController extends Controller
                 ->orderByDesc('ref_no')
                 // ->limit(10)
                 ->get();
-        } elseif (isset($request->cs_id)) {
+        } elseif (isset($request->cs_id) && isset($request->scm_warehouse_id) && isset($request->purchase_center) && isset($request->business_unit)) {
             $purchase_requisition = ScmPr::query()
                 ->with('scmPrLines')
                 ->whereNot('status', 'Closed')
@@ -308,7 +308,7 @@ class ScmPrController extends Controller
                 ->orderByDesc('ref_no')
                 // ->limit(10)
                 ->get();
-        } elseif (isset($request->scm_warehouse_id)) {
+        } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center) && isset($request->business_unit)) {
             $purchase_requisition = ScmPr::query()
                 ->with('scmPrLines')
                 ->whereNot('status', 'Closed')
@@ -324,6 +324,56 @@ class ScmPrController extends Controller
 
         return response()->success('Search result', $purchase_requisition, 200);
     }
+
+    public function searchPurchaseRequisitionsForCs(Request $request): JsonResponse
+    {
+        $purchase_requisition = [];
+        if (isset($request->searchParam)) {
+            $purchase_requisition = ScmPr::query()
+                ->with('scmPrLines')
+                ->whereNot('status', 'Closed')
+                ->where(function ($query) use ($request) {
+                    $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+                        ->where('business_unit', $request->business_unit)
+                        ->when($request->scm_warehouse_id, function ($query) use ($request) {
+                            $query->where('scm_warehouse_id', $request->scm_warehouse_id)
+                                ->where('purchase_center', $request->purchase_center);
+                        });
+                })
+                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center) && isset($request->business_unit)) {
+            $purchase_requisition = ScmPr::query()
+                ->with('scmPrLines')
+                ->whereNot('status', 'Closed')
+                ->when($request->scm_warehouse_id, function ($query) use ($request) {
+                    $query->where('scm_warehouse_id', $request->scm_warehouse_id)
+                        ->where('business_unit', $request->business_unit)
+                        ->where('purchase_center', $request->purchase_center);
+                })
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        }elseif(isset($request->business_unit) && isset($request->purchase_center)){
+            $purchase_requisition = ScmPr::query()
+                ->with('scmPrLines')
+                ->whereNot('status', 'Closed')
+                ->where(function ($query) use ($request) {
+                    $query->when($request->purchase_center, function ($query) use ($request) {
+                        $query->where('purchase_center', $request->purchase_center)
+                        ->where('business_unit', $request->business_unit);
+                    });
+                })
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        }
+
+        return response()->success('Search result', $purchase_requisition, 200);
+    }
+
 
 
     // public function searchMrr(Request $request): JsonResponse

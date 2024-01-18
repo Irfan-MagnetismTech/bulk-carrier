@@ -73,6 +73,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('search-mrr', [ScmMrrController::class, "searchMrr"])->name('searchMrr');
     Route::get('search-pr', [ScmPrController::class, "searchPr"])->name('searchPr');
     Route::get('search-purchase-requisitions', [ScmPrController::class, "searchPurchaseRequisitions"])->name('search-purchase-requisitions');
+    Route::get('search-purchase-requisitions-for-cs', [ScmPrController::class, "searchPurchaseRequisitionsForCs"])->name('search-purchase-requisitions');
     Route::get('get-po-line-datas', [ScmPoController::class, "getPoLineDatas"])->name('get-po-line-datas');
     Route::get('cs-wise-vendor-list', [ScmCsController::class, "csWiseVendorList"])->name('cs-wise-vendor-list');
     Route::get('search-mmr', [ScmMmrController::class, "searchMmr"])->name('searchMmr');

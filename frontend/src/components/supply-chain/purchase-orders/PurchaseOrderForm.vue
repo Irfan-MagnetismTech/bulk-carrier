@@ -174,7 +174,7 @@
 
     function changeCs() {
       props.form.cs_no = props.form?.scmCs?.ref_no ?? null;
-      searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, props.form.scmCs.id);
+      searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, props.form.scmCs?.id ?? null,null);
       getCsWiseVendorList(props.form.scmCs.id);
     }
 
@@ -182,6 +182,17 @@
     function calculateNetAmount(){
       props.form.total_amount = parseFloat((props.form.sub_total - props.form.discount).toFixed(2));
       props.form.net_amount = parseFloat((props.form.total_amount + parseFloat(props.form.vat)).toFixed(2));
+    }
+
+    function changeMaterial(index,itemIndex) {
+      props.form.scmPoLines[index].scmPoMaterial[itemIndex].scm_material_id = props.form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial.id;
+      props.form.scmPoLines[index].scmPoMaterial[itemIndex].unit = props.form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial.unit;
+      props.form.scmPoLines[index].scmPoMaterial[itemIndex].brand = props.form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial.brand;
+      props.form.scmPoLines[index].scmPoMaterial[itemIndex].model = props.form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial.model;
+      props.form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity = props.form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial.max_quantity;
+      props.form.scmPoLines[index].scmPoMaterial[itemIndex].quantity = props.form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial.quantity;
+      props.form.scmPoLines[index].scmPoMaterial[itemIndex].pr_composite_key = props.form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial.pr_composite_key;
+      
     }
  
     watch(() => props?.form?.discount, (newVal, oldVal) => {
@@ -208,11 +219,11 @@
         props.form.scm_vendor_id = newVal.id;
       }
     });
-    watch(() => props?.form?.scmPr, (newVal, oldVal) => {
-      if(newVal){
-        props.form.pr_no = newVal.ref_no;
-      }
-    });
+    // watch(() => props?.form?.scmPr, (newVal, oldVal) => {
+    //   if(newVal){
+    //     props.form.pr_no = newVal.ref_no;
+    //   }
+    // });
 
     onMounted(() => {
       watchEffect(() => {
@@ -224,15 +235,19 @@
       watchEffect(() => {
         fetchWarehouse('');
       });
+      watch(() => filteredPurchaseRequisitions.value, () => {
+            props.form.scmPoLines = [];
+            props.form.scmPoLines.push(cloneDeep(props.poLineObject));
+            props.form.scmPoLines[0].scmPoMaterial = [];
+            props.form.scmPoLines[0].scmPoMaterial.push(cloneDeep(props.materialObject));
+      });
     });
 
     watch(() => props.form.scmWarehouse, (value) => {
             props.form.scm_warehouse_id = value?.id ?? null;
             props.form.acc_cost_center_id = value?.cost_center_id;
-            props.form.scmPoLines = [];
-            props.form.scmPoLines.push(cloneDeep(props.poLineObject));
-            props.form.scmPoLines[0].scmPoMaterial.push(cloneDeep(props.materialObject));
       });
+     
         
     watch(() => props.form.business_unit, (newValue, oldValue) => {
       if(newValue !== oldValue && oldValue != ''){
@@ -413,7 +428,7 @@
                         <tr>
                           <td>Material - Code</td>
                           <td>
-                            <v-select :options="materialList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial" label="material_name_and_code" class="block form-input" :menu-props="{ minWidth: '250px', minHeight: '400px' }">
+                            <v-select :options="materialList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial" label="material_name_and_code" class="block form-input" :menu-props="{ minWidth: '250px', minHeight: '400px' }" @update:modelValue="changeMaterial(index,itemIndex)">
                               <template #search="{attributes, events}">
                                   <input
                                       class="vs__search"

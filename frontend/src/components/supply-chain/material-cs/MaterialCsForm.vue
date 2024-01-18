@@ -47,7 +47,6 @@
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
-                  :required="!form.scmWarehouse"
                   v-bind="attributes"
                   v-on="events"
               />
@@ -168,7 +167,7 @@
     const { filteredStoreIssues, searchStoreIssue , fetchSiWiseMaterials, siWiseMaterials} = useStoreIssue();
     const { getSiWiseSir, filteredStoreIssueReturnLines } = useStoreIssueReturn();
     const { getPrWiseMaterialList, prMaterialList } = useMaterialCs();
-    const { searchPurchaseRequisition, filteredPurchaseRequisitions } = usePurchaseRequisition();
+    const { searchPurchaseRequisitionForCs, filteredPurchaseRequisitions } = usePurchaseRequisition();
     const props = defineProps({
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
@@ -230,8 +229,8 @@ function prChange(index) {
 }
 
 function warehouseChange() {
-  props.form.scm_warehouse_id = props.form.scmWarehouse.id;
-  props.form.acc_cost_center_id = props.form.scmWarehouse.cost_center_id;
+  props.form.scm_warehouse_id = props.form?.scmWarehouse?.id ?? null;
+  props.form.acc_cost_center_id = props.form?.scmWarehouse?.cost_center_id ?? null;
 } 
 // watch(() => props.form.scmSi, (new Val,oldVal) => {
 //       props.form.scm_si_id = newVal?.id;
@@ -354,10 +353,12 @@ onMounted(() => {
 
 onMounted(() => {
   watchEffect(() => {
-    searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id,props.form.purchase_center, null)
+    searchPurchaseRequisitionForCs(props.form.business_unit, props.form.scm_warehouse_id,props.form.purchase_center, null)
+    
+  });
+  watchEffect(() => {
     fetchWarehouse('');
   });
-  
   if(props.formType == 'edit'){
     const watchBusinessUnit = watch(() => props.form, (newVal, oldVal) => {
       newVal.scmCsMaterials.forEach((item, index) => {

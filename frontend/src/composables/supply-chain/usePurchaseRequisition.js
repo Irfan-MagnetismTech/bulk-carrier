@@ -321,7 +321,32 @@ export default function usePurchaseRequisition() {
             //NProgress.done();
         }
     }
+    async function searchPurchaseRequisitionForCs(business_unit, warehouse_id = null,purchase_center = null, cs_id = null ,searchParam = null) {
+        //NProgress.start();
+        //const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
 
+        try {
+            const {data, status} = await Api.get(`/${BASE}/search-purchase-requisitions-for-cs`,{
+                params: {
+                    business_unit: business_unit,
+                    seearchParam: searchParam,
+                    scm_warehouse_id: warehouse_id,
+                    purchase_center: purchase_center,
+                    cs_id: cs_id,
+                },
+            });
+            filteredPurchaseRequisitions.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+    
 
     async function searchWarehouseWisePurchaseRequisition(scm_warehouse_id,searchParam, loading) {
         isLoading.value = true;
@@ -425,6 +450,7 @@ export default function usePurchaseRequisition() {
         updatePurchaseRequisition,
         deletePurchaseRequisition,
         getStoreCategoryWiseExcel,
+        searchPurchaseRequisitionForCs,
         searchWarehouseWisePurchaseRequisition,
         materialObject,
         searchPr,
