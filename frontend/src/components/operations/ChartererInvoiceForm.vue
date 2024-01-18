@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <business-unit-input v-model="form.business_unit" :page="'edit'"></business-unit-input>
+      <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
@@ -142,7 +142,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(sector, index) in form.opsChartererInvoiceVoyages">
+            <tr v-for="(sector, index) in form.opsChartererInvoiceVoyages" :key="index">
               <td class="!w-1/4">
                 <label class="block w-full mt-2 text-sm">
                   <!-- <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceVoyages[index].opsVoyage" placeholder="Quantity" class="form-input text-right" autocomplete="off" /> -->
@@ -764,16 +764,26 @@ watch(() => props?.form?.discounted_amount, (newVal, oldVal) => {
 //   searchVoyages(searchParam, props.form.business_unit, loading)
 // }
 
-// watch(() => props.form.business_unit, (value) => {
-//   // if(props?.formType != 'edit') {
-//   //   props.form.opsVoyage = null;
-//   //   vessel.value = null;
-//   //   props.form.opsVoyageSectors = null;
-//   //   props.form.vessel_name = null;
-//   //   props.form.ops_voyage_id = null;
-//   // }
-//   getAllChartererProfiles(value);
-// })
+watch(() => props.form.business_unit, (value) => {
+  if(props?.formType != 'edit') {
+  //   props.form.opsVoyage = null;
+  //   vessel.value = null;
+  //   props.form.opsVoyageSectors = null;
+  //   props.form.vessel_name = null;
+  //   props.form.ops_voyage_id = null;
+  props.form.opsChartererProfile = null;
+  props.form.ops_charterer_profile_id = null;
+  props.form.opsChartererContract = null;
+  props.form.ops_charterer_contract_id = null;
+  chartererProfiles.value = [];
+  chartererContracts.value = [];
+  props.form.contract_type = null;
+  props.form.opsChartererInvoiceVoyages = []
+  getAllChartererProfiles(props.form.business_unit);
+
+  }
+
+}, { deep: true })
 
 
 // watch(() => props.form.opsChartererProfile, (value) => {
@@ -800,8 +810,11 @@ function chartererContractChange() {
   props.form.ops_charterer_contract_id = val?.id ?? null;
   props.form.contract_type = val?.contract_type ?? null;
   if(val.contract_type == 'Voyage Wise') {
-    getContractWiseVoyage(val.id);
-    props.form.opsChartererInvoiceVoyages[0].rate_per_mt = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_ton_charge
+    getContractWiseVoyage(val.id).then(() => {
+      if(props.form.opsChartererInvoiceVoyages.length) {
+        props.form.opsChartererInvoiceVoyages[0].rate_per_mt = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_ton_charge
+      }
+    })
   } else {
     props.form.bill_from = props.form.opsChartererContract?.dayWiseInvoices[0]?.bill_till ? moment(props.form.opsChartererContract?.dayWiseInvoices[0]?.bill_till).add(1, 'days').format('YYYY-MM-DD') : moment(props.form.opsChartererContract.opsChartererContractsFinancialTerms.valid_from).format('YYYY-MM-DD');
     props.form.per_day_charge = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_day_charge;
@@ -823,7 +836,6 @@ watch(() => props.form.opsChartererContract, (value) => {
 onMounted(() => {
   // getAllChartererProfiles();
   getCurrencies();
-  getAllChartererProfiles(props.form.business_unit);
 
 })
 
