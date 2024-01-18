@@ -21,6 +21,7 @@ class ScmWcsVendor extends Model
         'credit_term',
         'vat',
         'ait',
+        'currency',
         'security_money',
         'adjustment_policy',
         'is_selected',
