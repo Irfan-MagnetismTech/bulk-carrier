@@ -176,7 +176,9 @@ class ScmWcsController extends Controller
     {
         $scmWcs = ScmWcsVendor::query()
             ->with('scmWcs', 'scmVendor.scmVendorContactPerson', 'scmWcsVendorServices')
-            ->where('scm_wcs_id', $request->scm_wcs_id)
+            ->when($request->scm_wcs_id, function ($query) use ($request) {
+                $query->where('scm_wcs_id', $request->scm_wcs_id);
+            })
             ->get();
 
         return response()->success('Data list', $scmWcs, 200);
