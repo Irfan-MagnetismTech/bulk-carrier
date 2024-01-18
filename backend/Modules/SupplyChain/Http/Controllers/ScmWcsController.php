@@ -263,4 +263,68 @@ class ScmWcsController extends Controller
         }
     }
 
+    // update quotation
+    public function updateQuotation(ScmQuotationRequest $request, $id)
+    {
+        try {
+            // return response()->json( $request->all(), 422);
+            $scmWcsVendor = ScmWcsVendor::find($id);
+            $requestData = $request->only(
+                'scm_vendor_id',
+                'scm_wcs_id',
+                'quotation_ref_no',
+                'quotation_date',
+                'quotation_validity',
+                'payment_mode',
+                'credit_term',
+                'vat',
+                'ait',
+                'currency',
+                'security_money',
+                'adjustment_policy',
+                'is_selected',
+            );
+
+            DB::beginTransaction();
+
+            $scmWcsVendor->update($requestData);
+            $scmWcsVendor->scmWcsVendorServices->each(function ($item) {
+                $item->delete();
+            });
+
+
+            foreach ($request->scmWcsVendorServices as $key => $values) {
+                $rate = $values[0]['rate'] ?? 0;
+                $quantity = $values[0]['quantity'] ?? 0;
+
+                foreach ($values as $key1 => $value) {
+                    $wcsService = ScmWcsService::where([
+                        'scm_wcs_id' => $scmWcsVendor->id,
+                        'scm_service_id' => $value['scm_service_id']
+                    ])->first();
+
+                    ScmWcsVendorService::create(
+                        [
+                            'scm_wcs_id' => $scmWcsVendor->scm_wcs_id,
+                            'scm_wcs_vendor_id' => $scmWcsVendor->id ?? null,
+                            'scm_vendor_id' => $scmWcsVendor->scm_vendor_id ?? null,
+                            'scm_wcs_service_id' => $wcsService->id,
+                            'scm_wr_id' => $value['scm_wr_id'] ?? null,
+                            'scm_service_id' => $value['scm_service_id'] ?? null,
+                            'rate' => $rate ?? null,
+                            'quantity' => $quantity ?? null,
+                            'quotation_ref_no' => $request->quotation_ref_no ?? null,
+                            'quotation_date' =>$request->quotation_date ?? null,
+                        ]
+                    );
+                }
+            }
+            DB::commit();
+            return response()->success('Data updated succesfully', $scmWcsVendor, 202);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
 }
