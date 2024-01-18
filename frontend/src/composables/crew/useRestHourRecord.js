@@ -30,30 +30,55 @@ export default function useRestHourRecord() {
     const isLoading = ref(false);
     const isTableLoading = ref(false);
 
-    async function getRestHourRecords(form) {
+    async function getRestHourRecords(filterOptions) {
 
-        console.log("Data:" , form);
+        let loader = null;
 
-        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        // isLoading.value = true;
-        //
-        // try {
-        //     const { data, status } = await Api.post('/crw/crw-rest-hour-entries', form);
-        //     restHourRecord.value = data.value;
-        //     notification.showSuccess(status);
-        //     await router.push({ name: "crw.rest-hour-records.index" });
-        // } catch (error) {
-        //     const { data, status } = error.response;
-        //     errors.value = notification.showError(status, data);
-        // } finally {
-        //     loader.hide();
-        //     isLoading.value = false;
-        // }
+        if (!filterOptions.isFilter) {
+            loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
+            isTableLoading.value = false;
+        } else {
+            isTableLoading.value = true;
+            isLoading.value = false;
+            loader?.hide();
+        }
+
+        filterParams.value = filterOptions;
+
+        try {
+            const {data, status} = await Api.get('/crw/crw-rest-hour-entries',{
+                params: {
+                    page: filterOptions.page,
+                    items_per_page: filterOptions.items_per_page,
+                    data: JSON.stringify(filterOptions)
+                },
+            });
+            restHourRecords.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+
+            if (!filterOptions.isFilter) {
+                loader?.hide();
+                isLoading.value = false;
+            }
+            else {
+                isTableLoading.value = false;
+                loader?.hide();
+            }
+        }
     }
 
     async function storeRestHourRecord(form) {
 
-        console.log("Data:" , form);
+
+
+        const selectedHourlyRecords = form.hourlyRecords.filter(record => record.is_selected === true);
+        form.hourlyRecords = [];
+        form.hourlyRecords = selectedHourlyRecords;
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
@@ -78,7 +103,7 @@ export default function useRestHourRecord() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/crw/rest-hour-records/${restHourRecordId}`);
+            const { data, status } = await Api.get(`/crw/crw-rest-hour-entries/${restHourRecordId}`);
             restHourRecord.value = data.value;
             notification.showSuccess(status);
         } catch (error) {

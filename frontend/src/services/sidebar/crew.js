@@ -287,7 +287,7 @@ export default [
             },
 
             {
-                route: 'crw.rest-hour-records.create',
+                route: 'crw.rest-hour-records.index',
                 label: 'Rest Hour',
                 preIcon: '',
                 postIcon: icons.DownArrow,
