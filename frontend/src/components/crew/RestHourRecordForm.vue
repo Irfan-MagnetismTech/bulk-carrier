@@ -52,6 +52,7 @@ watch(() => vesselAssignedCrews.value, (items) => {
     props.form.selectedCrews.push({
       crw_full_name: item?.crwCrew?.full_name,
       crw_position_onboard: item?.position_onboard,
+      crw_crew_assignment_id : item.id,
       crw_crew_id : item.crwCrew.id,
       service_start : '',
       comment : '',
@@ -140,8 +141,8 @@ onMounted(() => {
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <business-unit-input v-model.trim="form.business_unit"></business-unit-input>
           <div class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Date<span class="text-red-500">*</span></span>
-            <VueDatePicker v-model="form.issue_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Record Date<span class="text-red-500">*</span></span>
+            <VueDatePicker v-model="form.record_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
           </div>
           <label class="block w-full mt-2 text-sm"></label>
         </div>
@@ -223,7 +224,6 @@ onMounted(() => {
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Location <span class="text-red-500">*</span></span>
               <select class="form-input" v-model.trim="form.location_type" required>
-                <option value="">Select</option>
                 <option value="X">Periods of Work at Sea (X)</option>
                 <option value="P">Periods of Work in Port (P)</option>
                 <option value="S">Proposed Periods of Work (S)</option>

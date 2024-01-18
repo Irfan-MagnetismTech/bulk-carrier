@@ -15,10 +15,10 @@ export default function useRestHourRecord() {
 
     const restHourRecord = ref({
         business_unit: '',
-        date: '',
+        record_date: '',
         ops_vessel_id: '',
         ops_vessel_name: null,
-        location_type: '',
+        location_type: 'X',
         is_all_crew_checked: false,
         hourlyRecords: [],
         selectedCrews: [],
@@ -77,8 +77,13 @@ export default function useRestHourRecord() {
 
 
         const selectedHourlyRecords = form.hourlyRecords.filter(record => record.is_selected === true);
+        const selectedCrews = form.selectedCrews.filter(record => record.is_checked === true);
         form.hourlyRecords = [];
+        form.selectedCrews = [];
         form.hourlyRecords = selectedHourlyRecords;
+        form.selectedCrews = selectedCrews;
+
+        //console.log(form);
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
