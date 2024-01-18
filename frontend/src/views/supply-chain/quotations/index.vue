@@ -230,6 +230,8 @@ function confirmDelete(cs_id, id) {
             <th>Origin</th>
             <th>Quotation No</th>
             <th>Date</th>
+            <th>Offer Value</th>
+            <th>Negotiated Value</th>
             <th>Action</th>
           </tr>
           </thead>
@@ -242,6 +244,8 @@ function confirmDelete(cs_id, id) {
               <td>{{ quotation?.scmVendor?.country_name }}</td>
               <td>{{ quotation?.quotation_ref }}</td>
               <td>{{ formatDate(quotation?.quotation_date) }}</td>
+              <td></td>
+              <td></td>
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">                 
                   <action-button :action="'edit'" :to="{ name: 'scm.quotations.edit', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>

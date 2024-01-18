@@ -321,19 +321,20 @@ class ScmPoController extends Controller
     public function getMaterialByPrId(): JsonResponse
     {
         $prMaterials = ScmPrLine::query()
-            ->with('scmMaterial', 'scmPoLines')
+            ->with('scmMaterial')
             ->where('scm_pr_id', request()->pr_id)
+            ->whereNot('status', 'Closed')
             ->get()
             ->map(function ($item) {
                 $data = $item->scmMaterial;
                 $data['brand'] = $item->brand;
                 $data['model'] = $item->model;
                 if (request()->po_id) {
-                    $data['po_quantity'] = $item->scmPoLines->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
+                    $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
                 } else {
                     $data['po_quantity'] = 0;
                 }
-                $data['max_quantity'] = $item->quantity - $item->scmPoLines->sum('quantity') + $data['po_quantity'];
+                $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
                 $data['po_quantity'] = $data['po_quantity'] ?? 0;
                 return $data;
             });
@@ -379,5 +380,35 @@ class ScmPoController extends Controller
         }
 
         return response()->success('Search result', $scmPo, 200);
+    }
+
+    public function getPoLineDatas()
+    {
+        $scmPr = ScmPrLine::query()
+            ->where('scm_pr_id', request()->pr_id)
+            ->whereNot('status', 'Closed')
+            ->get()
+            ->map(function ($item) {
+                $data['scm_material_id'] = $item->scmMaterial->id;
+                $data['scmMaterial'] = $item->scmMaterial;
+                $data['brand'] = $item->brand;
+                $data['model'] = $item->model;
+                $data['pr_composite_key'] = $item->pr_composite_key;
+                $data['pr_quantity'] = $item->quantity;
+                $data['quantity'] = $item->quantity;
+
+                if (request()->po_id) {
+                    $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
+                } else {
+                    $data['po_quantity'] = 0;
+                }
+                $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
+                $data['po_quantity'] = $data['po_quantity'] ?? 0;
+
+                $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity');
+                return $data;
+            });
+
+        return response()->success('data', $scmPr, 200);
     }
 }
