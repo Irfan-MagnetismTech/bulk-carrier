@@ -165,11 +165,11 @@ onMounted(() => {
 });
 // Code for global search end here
 
-const navigateToQuotation = (csId) => {
+const navigateToQuotation = (wcsId) => {
   const routeOptions = {
-    name: 'scm.quotations.index',
+    name: 'scm.wcs-quotations.index',
     params: {
-      csId: csId
+      wcsId: wcsId
     }
   };
   router.push(routeOptions);
@@ -263,10 +263,10 @@ function confirmDelete(id) {
 
               
               <td>
-                <div class="grid grid-flow-col-dense gap-x-2">
-                  <!-- <button @click="navigateToPOCreate(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Create PO</nobr></button>
-                  <button @click="navigateToQuotation(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Quotations</nobr></button>
-                  <button @click="navigateSupplierSelection(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700" v-if="materialCsdata?.scmCsVendors?.length"><nobr>Select Supplier</nobr></button> -->
+                <div class="flex items-center justify-center gap-2">
+                  <!-- <button @click="navigateToPOCreate(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Create PO</nobr></button> -->
+                  <button @click="navigateToQuotation(workCs.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Quotations</nobr></button>
+                  <!-- <button @click="navigateSupplierSelection(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700" v-if="materialCsdata?.scmCsVendors?.length"><nobr>Select Supplier</nobr></button> -->
                   <action-button :action="'edit'" :to="{ name: 'scm.work-cs.edit', params: { workCsId: workCs.id } }"></action-button>
                   <action-button @click="confirmDelete(workCs.id)" :action="'delete'"></action-button>
                 </div>

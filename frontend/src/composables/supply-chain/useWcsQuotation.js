@@ -128,7 +128,7 @@ export default function useWcsQuotation() {
         try {
             const {data, status} = await Api.get(`/${BASE}/wcs-quotations`,{
                 params: {
-                    wcs_id: wcsId,
+                    scm_wcs_id: wcsId,
                 },
             });
             wcsQuotations.value = data.value;
