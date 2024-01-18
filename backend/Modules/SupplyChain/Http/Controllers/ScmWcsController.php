@@ -249,4 +249,18 @@ class ScmWcsController extends Controller
         }
     }
 
+
+    public function showQuotation($id)
+    {
+        $scmWcsVendor = ScmWcsVendor::with('scmWcs', 'scmVendor.scmVendorContactPerson', 'scmWcsVendorServices.scmService', 'scmWcsVendorServices.scmWr')->find($id);
+        $scmWcsVendorServices = $scmWcsVendor->scmWcsVendorServices->groupBy(['scm_service_id'])->values()->all();
+        data_forget($scmWcsVendor, 'scmWcsVendorServices');
+        $scmWcsVendor['scmWcsVendorServices'] = $scmWcsVendorServices;
+        try {
+            return response()->success('Detail data', $scmWcsVendor, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
 }
