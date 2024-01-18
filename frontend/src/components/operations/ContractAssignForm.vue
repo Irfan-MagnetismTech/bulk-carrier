@@ -219,6 +219,7 @@ const props = defineProps({
 watch(() => props.form.business_unit, (value) => {
 if(props?.formType != 'edit') {
   cleanThings()
+  vessels.value = [];
 
   if(props.form.contract_assign_type == 'Charterer') {
       getChartererByBusinessUnit(props.form.business_unit);
@@ -320,23 +321,34 @@ function opsVesselChange() {
     showVessel(value?.id, loadStatus);
     getVoyageList(props.form.business_unit, props.form.ops_vessel_id);
     // getCargoTariffsByVessel(props.form.ops_vessel_id);
+    chartererContracts.value = []
+
+    getChartererContract()
   }
 }
 
 
 watch(() => props.form.opsChartererProfile, (value) => {
     props.form.ops_charterer_profile_id = value?.id;
+    chartererContracts.value = []
+    getChartererContract()
 })
 
 
+function getChartererContract() {
+  // if(props.form.ops_charterer_profile_id == null || props.form.ops_vessel_id == null) {
+  //   Swal.fire({
+  //                   icon: "",
+  //                   title: "Correct Please!",
+  //                   html: "Please add business unit first",
+  //                   customClass: "swal-width",
+  //               });
+  //               return false;
+  // }
 
-watch(() => props.form.opsChartererProfile, (value) => {
-    props.form.ops_charterer_profile_id = value?.id;
-    getChartererContractsByCharterOwner(value?.id);
-})
+  getChartererContractsByCharterOwner(props.form.ops_charterer_profile_id, props.form.ops_vessel_id);
 
-
-
+}
 
 
 // watch(() => props.form.ops_charterer_profile_id, (value) => {

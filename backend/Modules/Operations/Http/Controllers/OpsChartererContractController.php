@@ -185,6 +185,9 @@ class OpsChartererContractController extends Controller
             ->when(isset(request()->ops_charterer_profile_id), function ($query) {
                     $query->where('ops_charterer_profile_id',request()->ops_charterer_profile_id);
             })
+            ->when(isset(request()->ops_vessel_id), function($q) {
+                $q->where('ops_vessel_id', request()->ops_vessel_id);
+            })
             ->get();            
             // $charterer->load('opsChartererProfile');
 
