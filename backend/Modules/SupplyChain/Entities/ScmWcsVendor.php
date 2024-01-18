@@ -16,7 +16,7 @@ class ScmWcsVendor extends Model
         'quotation_ref_no',
         'quotation_date',
         'attachment',
-        'validity',
+        'quotation_validity',
         'payment_mode',
         'credit_term',
         'vat',

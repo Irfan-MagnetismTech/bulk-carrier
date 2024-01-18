@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('quotation_ref_no')->nullable();
             $table->date('quotation_date')->nullable();
             $table->string('attachment')->nullable();
-            $table->date('validity')->nullable();
+            $table->date('quotation_validity')->nullable();
             $table->enum('payment_mode', ['Cash','Credit','Advance','Bank'])->nullable();
             $table->string('credit_term')->nullable();
             $table->string('vat')->nullable();
