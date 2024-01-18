@@ -50,7 +50,7 @@ export default function usePurchaseOrder() {
             {
                 scmPr: '',
                 scm_pr_id: '',
-                scmPoMaterial: [
+                scmPoItems: [
                     {
                         scmMaterial: '',
                         scm_material_id: '',
@@ -101,7 +101,7 @@ export default function usePurchaseOrder() {
         {
             scmPr: '',
             scm_pr_id: '',
-            scmPoMaterial: [
+            scmPoItems: [
                 {
                     scmMaterial: '',
                     scm_material_id: '',

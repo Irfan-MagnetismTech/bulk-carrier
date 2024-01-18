@@ -38,12 +38,12 @@
     function addMaterial(index) {
       const clonedObj = cloneDeep(props.materialObject);
       // props.form.scmPoLines.push(clonedObj);
-      props.form.scmPoLines[index].scmPoMaterial.push(clonedObj);
+      props.form.scmPoLines[index].scmPoItems.push(clonedObj);
       // setMinHeight();
     }
 
     function removeMaterial(index,itemIndex){
-      props.form.scmPoLines[index].scmPoMaterial.splice(itemIndex, 1);
+      props.form.scmPoLines[index].scmPoItems.splice(itemIndex, 1);
       // setMinHeight();
     }
 
@@ -80,7 +80,7 @@
           });
         } else { 
           getLineData(props.form.scmPoLines[index].scm_pr_id).then((res) => {
-          props.form.scmPoLines[index].scmPoMaterial = res;
+          props.form.scmPoLines[index].scmPoItems = res;
         });
         }
         
@@ -147,25 +147,22 @@
       }
 
     watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
-      // let total = 0.0;
-      // let materialArray = [];
-      // newVal?.forEach((line, index) => {
-      //   let material_key = line.scm_material_id + "-" + line?.brand ?? '' + "-" + line?.model ?? '';
-      //   console.log('material', material_key, 'index', index);
-      //   if (materialArray.indexOf(material_key) === -1) {
-      //     materialArray.push(material_key);
-      //     props.form.scmPoLines[index].total_price = parseFloat((line?.rate * line?.quantity).toFixed(2));
-      //     total += parseFloat(props.form.scmPoLines[index].total_price);
-      //     setMaterialOtherData(line, index);
-      //     props.form.sub_total = parseFloat(total.toFixed(2));
-      //     calculateNetAmount();
-      //   } else {
-      //     alert("Duplicate Material Found");
-      //     // props.form.scmPoLines.splice(index, 1);
-      //   }  
-       
-         
-      // });
+      let total = 0.0;
+      newVal?.forEach((lines, index) => {
+        console.log(lines);
+        lines.scmPoItems.forEach((line, itemIndex) => {
+          props.form.scmPoLines[index].scmPoItems[itemIndex].total_price = parseFloat(((line?.rate ?? 0) * (line?.quantity ?? 0)).toFixed(2));
+          total += parseFloat(props.form.scmPoLines[index].scmPoItems[itemIndex].total_price);
+          // setMaterialOtherData(line, index);
+          });
+        // if(lines?.scmPoItems?.length == 0){
+        //   lines?.scmPoItems?.push(cloneDeep(props.materialObject));
+        // }
+        // 
+      });
+      
+      props.form.sub_total = parseFloat(total.toFixed(2));
+      calculateNetAmount();
     }, { deep: true });
 
     function changePurchaseCenter() { 
@@ -185,13 +182,13 @@
     }
 
     function changeMaterial(index,itemIndex) {
-      props.form.scmPoLines[index].scmPoMaterial[itemIndex].scm_material_id = props.form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial.id;
-      props.form.scmPoLines[index].scmPoMaterial[itemIndex].unit = props.form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial.unit;
-      props.form.scmPoLines[index].scmPoMaterial[itemIndex].brand = props.form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial.brand;
-      props.form.scmPoLines[index].scmPoMaterial[itemIndex].model = props.form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial.model;
-      props.form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity = props.form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial.max_quantity;
-      props.form.scmPoLines[index].scmPoMaterial[itemIndex].quantity = props.form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial.quantity;
-      props.form.scmPoLines[index].scmPoMaterial[itemIndex].pr_composite_key = props.form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial.pr_composite_key;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].scm_material_id = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.id;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].unit = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.unit;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].brand = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.brand;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].model = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.model;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].max_quantity = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.max_quantity;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].quantity = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.quantity;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].pr_composite_key = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.pr_composite_key;
       
     }
  
@@ -238,8 +235,8 @@
       watch(() => filteredPurchaseRequisitions.value, () => {
             props.form.scmPoLines = [];
             props.form.scmPoLines.push(cloneDeep(props.poLineObject));
-            props.form.scmPoLines[0].scmPoMaterial = [];
-            props.form.scmPoLines[0].scmPoMaterial.push(cloneDeep(props.materialObject));
+            props.form.scmPoLines[0].scmPoItems = [];
+            props.form.scmPoLines[0].scmPoItems.push(cloneDeep(props.materialObject));
       });
     });
 
@@ -304,7 +301,6 @@
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
-                    :required="!form.scmCs"
                     v-bind="attributes"
                     v-on="events"
                 />  
@@ -366,6 +362,10 @@
         <span class="label-item-title">Convertion Rate( Foreign To BDT )<span class="text-red-500">*</span></span>
         <input type="text" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
     </label>
+    <label class="label-group" v-if="(form.currency != 'USD' && form.currency != 'BDT')">
+        <span class="label-item-title">Convertion Rate( Foreign To USD )<span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
+    </label>
   </div>
 
   <div class="input-group !w-3/4">
@@ -398,7 +398,7 @@
           </label>
           <label class="block w-1/4 mt-2 text-sm">
               <span class="text-gray-700">PR Date<span class="text-red-500">*</span></span>
-              <input type="text" class="form-input" />
+              <input type="text" class="form-input vms-readonly-input" readonly :value="form.scmPoLines[index]?.scmPr?.raised_date"/>
           </label>
         </div>
 
@@ -412,7 +412,7 @@
                     <th class="py-3 align-center">Other Info</th>
                     <th class="py-3 align-center">Tolarence</th>
                     <th class="py-3 align-center">Order Details</th>
-                    <th class="py-3 align-cente">Total Price</th>
+                    <th class="py-3 align-center">Total Price</th>
                     <th>
                       <button type="button" @click="addMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
@@ -421,18 +421,18 @@
                       </button>
                     </th>
                   </tr>
-                <template v-for="(lineItem, itemIndex) in form.scmPoLines[index].scmPoMaterial" :key="itemIndex">
+                <template v-for="(lineItem, itemIndex) in form.scmPoLines[index].scmPoItems" :key="itemIndex">
                   <tr class="table_tr">
                     <td class="">
                       <table>
                         <tr>
                           <td>Material - Code</td>
                           <td>
-                            <v-select :options="materialList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial" label="material_name_and_code" class="block form-input" :menu-props="{ minWidth: '250px', minHeight: '400px' }" @update:modelValue="changeMaterial(index,itemIndex)">
+                            <v-select :options="materialList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial" label="material_name_and_code" class="block form-input" :menu-props="{ minWidth: '250px', minHeight: '400px' }" @update:modelValue="changeMaterial(index,itemIndex)">
                               <template #search="{attributes, events}">
                                   <input
                                       class="vs__search"
-                                      :required="!form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial"
+                                      :required="!form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial"
                                       v-bind="attributes"
                                       v-on="events"
                                       />
@@ -444,63 +444,63 @@
                         <tr>
                           <td>Unit</td>
                           <td>
-                            <input type="text" readonly v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].unit" class="vms-readonly-input form-input">
+                            <input type="text" readonly v-model="form.scmPoLines[index].scmPoItems[itemIndex].unit" class="vms-readonly-input form-input">
                           </td>
                         </tr>
                         <tr>
                           <td>Brand</td>
                           <td>
-                            <input type="text" v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].brand" class="form-input">
+                            <input type="text" v-model="form.scmPoLines[index].scmPoItems[itemIndex].brand" class="form-input">
                           </td>
                         </tr>
                         <tr>
                           <td>Model</td>
                           <td>
-                              <input type="text" v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].model" class="form-input">
+                              <input type="text" v-model="form.scmPoLines[index].scmPoItems[itemIndex].model" class="form-input">
                           </td>
                         </tr>
                       </table>
                     </td>
                     <td>
-                      <input type="date" v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].required_date" class="form-input">
+                      <input type="date" v-model="form.scmPoLines[index].scmPoItems[itemIndex].required_date" class="form-input">
                     </td>
                     <td>
                       <table>
                         <tr>
                           <td>PR Qty</td>
                           <td>
-                             <input type="number" required v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].pr_quantity" min=1 class="form-input">
+                             <input type="number" required v-model="form.scmPoLines[index].scmPoItems[itemIndex].pr_quantity" min=1 class="form-input">
                           </td>
                         </tr>
                         <tr>
                           <td>Remaining Qty</td>
                           <td>
-                            <input type="number" required v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity" min=1 class="form-input">
+                            <input type="number" required v-model="form.scmPoLines[index].scmPoItems[itemIndex].max_quantity" min=1 class="form-input">
                           </td>
                         </tr>
                       </table>
                     </td>
                     <td>
-                      <input type="text" readonly :value="form.scmPoLines[index]?.scmPoMaterial[itemIndex].tolarence_level" min=1 class="form-input">  
+                      <input type="number" v-model="form.scmPoLines[index].scmPoItems[itemIndex].tolarence_level" min=1 class="form-input">  
                     </td>
                     <td>
                       <table>
                         <tr>
                           <td>Qty</td>
                           <td>
-                             <input type="number" required v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].quantity" min=1 class="form-input" :max="form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity" :class="{'border-2': form.scmPoLines[index].scmPoMaterial[itemIndex].quantity > form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].scmPoMaterial[itemIndex].quantity > form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity}">
+                             <input type="number" required v-model="form.scmPoLines[index].scmPoItems[itemIndex].quantity" min=1 class="form-input" :max="form.scmPoLines[index].scmPoItems[itemIndex].max_quantity" :class="{'border-2': form.scmPoLines[index].scmPoItems[itemIndex].quantity > form.scmPoLines[index].scmPoItems[itemIndex].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].scmPoItems[itemIndex].quantity > form.scmPoLines[index].scmPoItems[itemIndex].max_quantity}">
                           </td>
                         </tr>
                         <tr>
                           <td>Rate</td>
                           <td>
-                            <input type="number" required v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].rate" min=1 class="form-input">
+                            <input type="number" required v-model="form.scmPoLines[index].scmPoItems[itemIndex].rate" min=1 class="form-input">
                           </td>
                         </tr>
                       </table>
                     </td>
                     <td>
-                      <input type="number" readonly v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].total_price" class="form-input vms-readonly-input">
+                      <input type="number" readonly v-model="form.scmPoLines[index].scmPoItems[itemIndex].total_price" class="form-input vms-readonly-input">
                     </td>
                     <td class="px-1 py-1 text-center">
                       <button type="button" @click="removeMaterial(index,itemIndex)" class="remove_button">
