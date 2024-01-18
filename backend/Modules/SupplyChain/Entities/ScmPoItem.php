@@ -17,7 +17,21 @@ class ScmPoItem extends Model
     use HasFactory;
 
     protected $fillable = [
-        'scm_po_id', 'scm_po_line_id', 'scm_material_id', 'unit', 'brand', 'model', 'required_date', 'quantity', 'rate', 'total_price', 'net_rate', 'po_composite_key', 'pr_composite_key', 'cs_composite_key', 'tolarence_level'
+        'scm_po_id',
+        'scm_po_line_id',
+        'scm_material_id',
+        'unit',
+        'brand',
+        'model',
+        'required_date',
+        'quantity',
+        'rate',
+        'total_price',
+        'net_rate',
+        'po_composite_key',
+        'pr_composite_key',
+        'cs_composite_key',
+        'tolarence_level'
     ];
 
     public function scmMaterial(): BelongsTo

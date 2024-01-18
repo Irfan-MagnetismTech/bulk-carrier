@@ -14,6 +14,7 @@ use Modules\SupplyChain\Entities\ScmCs;
 use Modules\SupplyChain\Entities\ScmPo;
 use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Services\UniqueId;
+use Modules\SupplyChain\Entities\ScmPoItem;
 use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Entities\ScmVendor;
 use Modules\SupplyChain\Services\CompositeKey;
@@ -37,7 +38,7 @@ class ScmPoController extends Controller
     {
         try {
             $scmWarehouses = ScmPo::query()
-                ->with('scmPoLines', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPr', 'scmMrrs')
+                ->with('scmPoLines.scmPoItems', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPoItems')
                 ->globalSearch($request->all());
 
             return response()->success('Data list', $scmWarehouses, 200);
@@ -54,14 +55,45 @@ class ScmPoController extends Controller
     {
         $requestData = $request->except('ref_no');
         $requestData['ref_no'] = UniqueId::generate(ScmPo::class, 'PO');
+        $requestData['created_by'] = auth()->id();
 
         try {
             DB::beginTransaction();
             $scmPo = ScmPo::create($requestData);
             // $linesData = CompositeKey::generateArray($request->scmPoLines, $scmPo->id, 'scm_material_id', 'po');
-            $data = $this->addNetRateToRequestData($request, $scmPo->id);
-            $scmPo->scmPoLines()->createUpdateOrDelete($data->scmPoLines);
-            $scmPo->scmPoTerms()->createUpdateOrDelete($request->scmPoTerms);
+            // $data = $this->addNetRateToRequestData($request, $scmPo->id);
+
+            foreach ($request->scmPoLines as $key => $values) {
+                $scmPoLine = $scmPo->scmPoLines()->create([
+                    'scm_po_id' => $scmPo->id,
+                    'scm_pr_id' => $values['scm_pr_id'],
+                ]);
+
+                foreach ($values['scmPoItems'] as $index => $value) {
+
+                    ScmPoItem::create([
+                        'scm_po_line_id' => $scmPoLine->id,
+                        'scm_po_id' => $scmPo->id,
+                        'scm_po_line_id' => $scmPoLine->id,
+                        'scm_material_id'   => $value['scm_material_id'],
+                        'unit' => $value['unit'],
+                        'brand' => $value['brand'],
+                        'model' => $value['model'],
+                        'required_date' => $value['required_date'],
+                        'quantity' => $value['quantity'],
+                        'rate' => $value['rate'],
+                        'total_price' => $value['total_price'],
+                        'cs_composite_key' => $value['cs_composite_key'] ?? null,
+                        'tolarence_level ' => $value['tolarence_level'],
+                        'net_rate' => $value['total_price'] / $request['sub_total'] * $request['net_amount'] / $value['quantity'],
+                        'po_composite_key' => CompositeKey::generate($index, $scmPo->id, 'po', $value['scm_material_id'], $scmPoLine->id),
+                        'pr_composite_key' => $value['pr_composite_key'],
+                    ]);
+                }
+            }
+
+            $scmPo->scmPoTerms()->createMany($request->scmPoTerms);
+
             DB::commit();
             return response()->success('Data created successfully', $scmPo, 201);
         } catch (\Exception $e) {
@@ -391,6 +423,7 @@ class ScmPoController extends Controller
             ->map(function ($item) {
                 $data['scm_material_id'] = $item->scmMaterial->id;
                 $data['scmMaterial'] = $item->scmMaterial;
+                $data['unit'] = $item->scmMaterial->unit;
                 $data['brand'] = $item->brand;
                 $data['model'] = $item->model;
                 $data['pr_composite_key'] = $item->pr_composite_key;

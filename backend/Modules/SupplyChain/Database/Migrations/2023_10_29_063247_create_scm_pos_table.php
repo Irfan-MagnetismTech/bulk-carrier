@@ -33,7 +33,7 @@ return new class extends Migration
             $table->decimal('total_amount')->nullable();
             $table->decimal('net_amount')->nullable();
             $table->date('pr_date')->nullable();
-            $table->bigInteger('purchase_center')->nullable();
+            $table->string('purchase_center')->nullable();
             $table->string('remarks')->nullable();
             $table->tinyInteger('is_closed')->default(0)->comment('0, 1');
             $table->integer('closed_by')->nullable();
