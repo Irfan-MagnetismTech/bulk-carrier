@@ -18,11 +18,11 @@ return new class extends Migration
             $table->foreignId('scm_cs_id')->constrained('scm_cs')->onDelete('cascade');
             $table->bigInteger('scm_vendor_id');
             $table->string('quotation_ref');
-            $table->date('quotation_date')->nullable();
+            $table->date('quotation_date')->nullable()->comment('pi received date');
             $table->date('quotation_received_date')->nullable();
             $table->string('quotation_attachment')->nullable();
-            $table->string('quotation_validity')->nullable();
-            $table->string('payment_method')->comment('cash,credit,lc,advance')->nullable();
+            $table->string('quotation_validity')->nullable()->comment('offer validity');
+            $table->string('payment_method')->comment('as payment condition => cash,credit,lc,advance')->nullable();
             $table->string('delivery_term')->nullable();
             $table->string('sourcing')->comment('existing,new')->nullable();
             $table->date('date_of_rfq')->nullable();
@@ -47,7 +47,7 @@ return new class extends Migration
             $table->string('warranty')->nullable();
             $table->bigInteger('delivery_time')->nullable();
             $table->double('total_negotiated_price')->nullable();
-            $table->double('tatal_offered_price')->nullable();
+            $table->double('total_offered_price')->nullable();
             $table->timestamps();
         });
     }
