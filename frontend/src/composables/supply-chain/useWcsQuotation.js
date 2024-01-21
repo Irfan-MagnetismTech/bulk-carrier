@@ -41,6 +41,8 @@ export default function useWcsQuotation() {
         security_money: null,
         adjustment_policy: null,
         attachment: null,
+        terms_and_condition: null,
+        remarks: null,
 
 
         // vendor_type: null,
@@ -59,11 +61,9 @@ export default function useWcsQuotation() {
         // port_of_shipment: null,//foreign
         // mode_of_shipment: null,//foreign
         // delivery_term: null,
-        // terms_and_condition: null,
         // stock_type: null,
         // manufaturing_days: null,
         // warranty: null,
-        // remarks: null,
         scmWcsVendorServices: [
             {
                 scmWr: null,

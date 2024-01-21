@@ -94,6 +94,8 @@
             <input type="file" class="form-input" @change="handleAttachmentChange" />
             <Error v-if="errors?.attachment" :errors="errors.attachment"  />
         </label>
+        <RemarksComponent class="col-span-1 md:col-span-3 lg:col-span-4" v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'" isRequired="true"></RemarksComponent>
+        <RemarksComponent class="col-span-1 md:col-span-3 lg:col-span-4" v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'" isRequired="true"></RemarksComponent>
   </div>
 
   <fieldset class=" grid grid-cols-1 px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400 ">
@@ -299,12 +301,12 @@
 
   <div class="input-group !w-3/4">
     <label class="label-group">
-            <RemarksComponet v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'" isRequired="true"></RemarksComponet>
+            <RemarksComponent v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'" isRequired="true"></RemarksComponent>
     </label>
   </div>  
   <div class="input-group !w-3/4">
     <label class="label-group">
-            <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'" isRequired="true"></RemarksComponet>
+            <RemarksComponent v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'" isRequired="true"></RemarksComponent>
     </label>
   </div>  
 
@@ -380,7 +382,7 @@
     import useMaterialCs from '../../../composables/supply-chain/useMaterialCs';
     import useWorkCs from '../../../composables/supply-chain/useWorkCs';
     import { useRoute } from 'vue-router';
-    import RemarksComponet from '../../utils/RemarksComponent.vue';
+    import RemarksComponent from '../../utils/RemarksComponent.vue';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
