@@ -9,108 +9,129 @@ import useHelper from '../useHelper.js';
 import { merge } from 'lodash';
 import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
-export default function useQuotation() {
+export default function useWcsQuotation() {
     const BASE = 'scm' 
     const router = useRouter();
-    const materialCsLists = ref([]);
-    const filteredMaterialCs = ref([]);
-    const filteredQuotations = ref([]);
-    const quotations = ref([]);
-    const filteredMaterialCsLines = ref([]);
+    const workCsLists = ref([]);
+    const filteredWorkCs = ref([]);
+    const filteredWcsQuotations = ref([]);
+    const wcsQuotations = ref([]);
+    const filteredWorkCsLines = ref([]);
     const $loading = useLoading();
     const isTableLoading = ref(false);
     const notification = useNotification();
     // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
-    const quotation = ref({
-        scmCs: null,
-        scm_cs_id: null,
+    const wcsQuotation = ref({
+        scmWcs: null,
+        scm_wcs_id: null,
+
         scm_vendor_id: null,
         scmVendor: null,
-        vendor_type: null,
-        sourcing: null,
-        date_of_rfq: null,
-        quotations_received_date: null,
-        quotation_ref: null,
+
+        quotation_ref_no: null,
         quotation_date: null,
         quotation_validity: null,
+
         payment_method: null,
-        currency: null,
-        carring_cost_bear_by: null,//local
-        unloading_cost_bear_by: null,//local
+        credit_term: null,
         vat: null,//local
         ait: null,//local
-        credit_term: null,//local
-        quotation_shipment_date: null,
-        quotation_received_date: null,
-        estimated_shipment: null,//foreign
-        port_of_loading: null,//foreign
-        port_of_discharge: null,//foreign
-        port_of_shipment: null,//foreign
-        mode_of_shipment: null,//foreign
-        delivery_term: null,
-        terms_and_condition: null,
-        stock_type: null,
-        manufaturing_days: null,
-        warranty: null,
-        remarks: null,
-        total_negotiated_price: null,
-        total_offered_price: null,
-        freight: null,
-        grand_total_negotiated_price: null,
-        grand_total_offered_price: null,
+        currency: null,
+        security_money: null,
+        adjustment_policy: null,
         attachment: null,
-        scmCsMaterialVendors: [
+        terms_and_condition: null,
+        remarks: null,
+
+
+        // vendor_type: null,
+        // sourcing: null,
+        // date_of_rfq: null,
+        // quotations_received_date: null,
+        // currency: null,
+        // carring_cost_bear_by: null,//local
+        // unloading_cost_bear_by: null,//local
+        // credit_term: null,//local
+        // quotation_shipment_date: null,
+        // quotation_received_date: null,
+        // estimated_shipment: null,//foreign
+        // port_of_loading: null,//foreign
+        // port_of_discharge: null,//foreign
+        // port_of_shipment: null,//foreign
+        // mode_of_shipment: null,//foreign
+        // delivery_term: null,
+        // stock_type: null,
+        // manufaturing_days: null,
+        // warranty: null,
+        scmWcsVendorServices: [
             {
-                scmMaterial: null,
-                scm_material_id: null,
-                brand: null,
-                model: null,
-                origin: null,
-                stock_type: null,
-                manufaturing_days: null,
-                unit: null,
-                offered_price: null,
-                negotiated_price: null,
+                scmWr: null,
+                scm_wr_id: null,
+                scmService: null,
+                scm_service_id: null,
+                quantity: null,
+                rate: '',  
+
+                // brand: null,
+                // model: null,
+                // origin: null,
+                // stock_type: null,
+                // manufaturing_days: null,
+                // unit: null,
+                // offered_price: null,
+                // negotiated_price: null,
             },
         ],
     });
 
-    const localQuotationLines = {
-        scmMaterial: null,
-        scm_material_id: null,
-        brand: null,
-        model: null,
-        unit: null,
-        negotiated_price: null,
+    const wcsQuotationLines = {
+        scmWr: null,
+        scm_wr_id: null,
+        scmService: null,
+        scm_service_id: null,
+        quantity: null,
+        rate: '',  
     } 
 
-    const foreignQuotationLines = {
-        scmMaterial: null,
-        scm_material_id: null,
-        brand: null,
-        model: null,
-        origin: null,
-        stock_type: null,
-        manufaturing_days: null,
-        unit: null,
-        offered_price: null,
-        negotiated_price: null,
-    } 
+    
+    // const localQuotationLines = {
+    //     scmMaterial: null,
+    //     scm_material_id: null,
+    //     brand: null,
+    //     model: null,
+    //     unit: null,
+    //     negotiated_price: null,
+    // } 
+
+
+
+    // const foreignQuotationLines = {
+    //     scmMaterial: null,
+    //     scm_material_id: null,
+    //     brand: null,
+    //     model: null,
+    //     origin: null,
+    //     stock_type: null,
+    //     manufaturing_days: null,
+    //     unit: null,
+    //     offered_price: null,
+    //     negotiated_price: null,
+    // } 
     const errors = ref('');
     const isLoading = ref(false);
     const filterParams = ref(null);
 
-    async function getQuotations(csId) {
+    async function getWcsQuotations(wcsId) {
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
         try {
-            const {data, status} = await Api.get(`/${BASE}/quotations`,{
+            const {data, status} = await Api.get(`/${BASE}/wcs-quotations`,{
                 params: {
-                    cs_id: csId,
+                    scm_wcs_id: wcsId,
                 },
             });
-            quotations.value = data.value;
+            wcsQuotations.value = data.value;
         } catch (error) {
             console.log('tag', error)
         } finally {
@@ -119,19 +140,22 @@ export default function useQuotation() {
         }
     }
     
-    async function storeQuotations(form,csId) {
+    async function storeWcsQuotations(form,wcsId) {
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         let formData = new FormData();
+        if(form.attachment){
+            formData.append('attachment', form.attachment);
+        }
         formData.append('data', JSON.stringify(form));
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/quotations`, formData);
+            const { data, status } = await Api.post(`/${BASE}/wcs-quotations`, formData);
             // materialCs.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.quotations.index` , params: { csId: csId }});
+            router.push({ name: `${BASE}.wcs-quotations.index` , params: { wcsId: wcsId }});
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -141,13 +165,13 @@ export default function useQuotation() {
         }
     }
 
-    async function showQuotation(csId,quotationId) {
+    async function showWcsQuotation(wcsId,wcsQuotationId) {
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/${BASE}/quotations/${quotationId}`);
-            quotation.value = data.value;
+            const { data, status } = await Api.get(`/${BASE}/wcs-quotations/${wcsQuotationId}`);
+            wcsQuotation.value = data.value;
 
         } catch (error) {
             const { data, status } = error.response;
@@ -158,19 +182,23 @@ export default function useQuotation() {
         }
     }
 
-    async function updateQuotations(form, csId,quotationId) {
+    async function updateWcsQuotations(form, wcsId,wcsQuotationId) {
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         let formData = new FormData();
+        if(form.attachment){
+            // console.log("object");
+            formData.append('attachment', form.attachment);
+        }
         formData.append('data', JSON.stringify(form));
         formData.append('_method', 'PUT');
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/quotations/${quotationId}`, formData);
-            quotation.value = data.value;
+            const { data, status } = await Api.post(`/${BASE}/wcs-quotations/${wcsQuotationId}`, formData);
+            wcsQuotation.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.quotations.index` , params: { csId: csId }});
+            router.push({ name: `${BASE}.wcs-quotations.index` , params: { wcsId: wcsId }});
         } catch (error) {
             console.log('tag', error)
             // const { data, status } = error.response;
@@ -181,15 +209,15 @@ export default function useQuotation() {
         }
     }
 
-    async function deleteQuotations(csId,quotationId) {
-        console.log('tag', quotationId);
+    async function deleteWcsQuotations(wcsId,wcsQuotationId) {
+        // console.log('tag', quotationId);
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/${BASE}/quotations/${quotationId}`);
+            const { data, status } = await Api.delete( `/${BASE}/wcs-quotations/${wcsQuotationId}`);
             notification.showSuccess(status);
-            await getQuotations(csId);
+            await getWcsQuotations(wcsId);
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -256,20 +284,21 @@ export default function useQuotation() {
  
 
     return {
-        materialCsLists,
-        filteredMaterialCs,
-        storeQuotations,
-        showQuotation,
-        updateQuotations,
-        deleteQuotations,
-        filteredQuotations,
-        getQuotations,
-        quotations,
-        localQuotationLines,
-        foreignQuotationLines,
+        workCsLists,
+        filteredWorkCs,
+        storeWcsQuotations,
+        showWcsQuotation,
+        updateWcsQuotations,
+        deleteWcsQuotations,
+        filteredWcsQuotations,
+        getWcsQuotations,
+        wcsQuotations,
+        wcsQuotationLines,
+        // localQuotationLines,
+        // foreignQuotationLines,
         // getSiWiseData,
         isTableLoading,
-        quotation,
+        wcsQuotation,
         isLoading,
         errors,
     };

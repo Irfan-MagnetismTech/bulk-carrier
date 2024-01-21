@@ -1,7 +1,178 @@
 <template>
   <!-- Basic information -->
-  <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
-    <!-- <business-unit-input :page="{edit}" v-model="form.business_unit"></business-unit-input> -->
+  <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 md:gap-2 ">
+    <label class="label-group">
+          <span class="label-item-title">WCS Ref</span>
+          <input
+            type="text"
+            readonly
+            :value="form.scmWcs?.ref_no"
+            required
+            class="form-input vms-readonly-input"
+          />
+      </label>
+      
+    <label class="label-group">
+          <span class="label-item-title">Quotation Ref. No</span>
+          <input
+            type="text"
+            v-model="form.quotation_ref_no"
+            required
+            class="form-input"
+          />
+      </label>
+
+      <label class="label-group">
+        <span class="label-item-title">Quotation Date <span class="text-red-500">*</span></span>
+          <VueDatePicker v-model="form.quotation_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+      </label>
+
+      <label class="label-group">
+        <span class="label-item-title">Quotation Validity <span class="text-red-500">*</span></span>
+          <!-- <input type="number" v-model="form.quotation_validity" class="form-input" name="scm_department_id" :id="'scm_department_id'" required/> -->
+          <VueDatePicker v-model="form.quotation_validity" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+      </label>
+
+      <label class="label-group">
+        <span class="label-item-title">Supplier <span class="text-red-500">*</span></span>
+          <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoading" v-model="form.scmVendor" label="name" class="block form-input" @update:modelValue="setVendorOtherData(form.scmVendor)">
+              <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      :required="!form.scmVendor"
+                      v-bind="attributes"
+                      v-on="events"
+                      />
+              </template>
+          </v-select>
+    </label>
+
+    <label class="label-group">
+        <span class="label-item-title">Payment Method <span class="text-red-500">*</span></span>
+         <select v-model="form.payment_mode" class="form-input" required>
+            <option value="Cash">Cash</option>
+            <option value="Credit">Credit</option>
+            <option value="Advance">Advance</option>
+            <option value="Bank">Bank</option>
+        </select>
+      </label>
+      <label class="label-group">
+        <span class="label-item-title">Currency <span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.currency" class="form-input" required/>
+      </label>
+      <label class="label-group">
+        <span class="label-item-title">Credit Term <span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.credit_term" class="form-input" required/>
+      </label>
+      <label class="label-group">
+        <span class="label-item-title">VAT <span class="text-red-500">*</span></span>
+          <input type="number" step="0.01" v-model="form.vat" class="form-input" required/>
+      </label>
+      <label class="label-group">
+        <span class="label-item-title">AIT <span class="text-red-500">*</span></span>
+          <input type="number" step="0.01" v-model="form.ait" class="form-input" required/>
+      </label>
+      
+      <label class="label-group">
+        <span class="label-item-title">Security Money <span class="text-red-500">*</span></span>
+          <input type="number" step="0.01" min="0" v-model="form.security_money" class="form-input" required/>
+      </label>
+      <label class="label-group">
+        <span class="label-item-title">Adjustment Policy <span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.adjustment_policy" class="form-input" required/>
+      </label>
+
+      <label class="label-group">
+            <span class="label-item-title">Attachment 
+              <template v-if="form.attachment">
+                    <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+form?.attachment">{{
+                        (typeof $props.form?.attachment === 'string')
+                            ? '('+$props.form?.attachment.split('/').pop()+')'
+                            : ''
+                    }}</a>
+              </template></span>
+            <input type="file" class="form-input" @change="handleAttachmentChange" />
+            <Error v-if="errors?.attachment" :errors="errors.attachment"  />
+        </label>
+        <RemarksComponent class="col-span-1 md:col-span-3 lg:col-span-4" v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'" isRequired="true"></RemarksComponent>
+        <RemarksComponent class="col-span-1 md:col-span-3 lg:col-span-4" v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'" isRequired="true"></RemarksComponent>
+  </div>
+
+  <fieldset class=" grid grid-cols-1 px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400 ">
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Services</legend>
+        <table class="w-full whitespace-no-wrap " id="table">
+          <thead>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              <th class="w-5/12 px-4 align-center">Service Name</th>
+                <th class="w-3/12 px-4 align-center">WR No</th>
+                <th class="w-2/12 px-4 align-center">Rate</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+            <template v-for="(lines, indexa) in form.scmWcsVendorServices" :key="indexa">
+                <template v-for="(scmSrLine, index) in lines" :key="index">
+                  <tr v-if="index != 0">
+                    <td><nobr>{{ scmSrLine?.scmWr?.ref_no }}</nobr></td>
+                  </tr>
+                  <tr class="text-gray-700 dark-disabled:text-gray-400" v-else>
+                    <td :rowspan="lines.length">{{ first(values(lines))?.scmService?.name }}</td>
+                    <td><nobr>{{ scmSrLine?.scmWr?.ref_no }}</nobr></td>
+                    <td v-if="form.scmWcsVendorServices[indexa][index]" :rowspan="lines.length">
+                      <input type="number" v-model="form.scmWcsVendorServices[indexa][index].rate" class="form-input" min="1"/>
+                    </td>
+                  </tr>
+                </template>
+              </template>
+            <!-- <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmWcsVendorService, index) in form.scmWcsVendorServices" :key="index">
+              <td class="px-1 py-1">
+                <v-select :options="filteredWorkRequisitions" placeholder="--Choose an option--" :loading="isWorkRequisitionLoading" v-model="scmWcsService.scmWr" label="ref_no" class="block form-input" @update:modelValue="wrChange(index)">
+                  <template #search="{attributes, events}">
+                      <input
+                          class="vs__search"
+                          :required="!scmWcsService.scmWr"
+                          v-bind="attributes"
+                          v-on="events"
+                          />
+                  </template>
+                </v-select>
+              </td>
+              <td class="px-1 py-1">
+                <div class="relative">
+                  <v-select :options="serviceList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="scmWcsService.scmService" label="service_name_and_code" class="block form-input" @update:modelValue="serviceChange(index)">
+                  <template #search="{attributes, events}">
+                      <input
+                          class="vs__search"
+                          :required="!scmWcsService.scmService"
+                          v-bind="attributes"
+                          v-on="events"
+                          />
+                  </template>
+                </v-select>
+                <span v-show="scmWcsService.isServiceDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-10" title="Duplicate Service" v-html="icons.ExclamationTriangle"></span>
+                </div>
+              </td>
+              <td class="px-1 py-1">
+                <label class="block w-full mt-2 text-sm">
+                   <input type="number" placeholder="Quantity" v-model="scmWcsService.quantity" class="form-input" min="1" required 
+                   >
+                </label>
+              </td>
+              
+
+              <td class="px-1 py-1"> 
+                <button type="button" v-if="index == 0" class="bg-green-600 text-white px-3 py-2 rounded-md" @click="addWork"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                    </svg></button>
+                <button type="button" v-else class="bg-red-600 text-white px-3 py-2 rounded-md" @click="removeWork(index)" ><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                    </svg></button>
+              </td>
+            </tr> -->
+          </tbody>
+        </table>
+      </fieldset>
+
+  <!-- <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
   </div>
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
  
@@ -39,14 +210,14 @@
           class="form-input vms-readonly-input" readonly />
     </label>
     <label class="label-group">
-        <span class="label-item-title">Party Type <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Product Source Type <span class="text-red-500">*</span></span>
         <input
           type="text"
           :value="form.scmVendor?.product_source_type"
           class="form-input vms-readonly-input" readonly/>
     </label>
     <label class="label-group">
-        <span class="label-item-title">Sourcing History <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Sourcing <span class="text-red-500">*</span></span>
         <select v-model="form.sourcing" class="form-input" required>
             <option value="Existing">Existing</option>
             <option value="New">New</option>
@@ -65,7 +236,6 @@
       <label class="label-group">
         <span class="label-item-title">Vendor Quotation No <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.quotation_ref" class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
-          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">PI Date <span class="text-red-500">*</span></span>
@@ -75,8 +245,8 @@
 
   <div class="input-group">
       <label class="label-group">
-        <span class="label-item-title">Offer Validity <span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.quotation_validity" class="form-input" name="scm_department_id" :id="'scm_department_id'" required/>
+        <span class="label-item-title">Quotation Validity (days) <span class="text-red-500">*</span></span>
+          <input type="number" v-model="form.quotation_validity" class="form-input" name="scm_department_id" :id="'scm_department_id'" required/>
       </label>
       <label class="label-group">
         <span class="label-item-title">Payment Method <span class="text-red-500">*</span></span>
@@ -117,13 +287,10 @@
   </div>
 
   
-  <div class="input-group">
+  <div class="input-group !w-2/4">
+    
     <label class="label-group">
-        <span class="label-item-title">Delivery Time (Days) <span class="text-red-500">*</span></span>
-          <input type="number" v-model="form.delivery_time" required class="form-input " name="scm_department_id" :id="'scm_department_id'" />
-      </label>
-    <label class="label-group">
-        <span class="label-item-title">Inco-term <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Delivery Term <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.delivery_term" class="form-input" required/>
       </label>
     <label class="label-group">
@@ -134,12 +301,12 @@
 
   <div class="input-group !w-3/4">
     <label class="label-group">
-            <RemarksComponet v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'" isRequired="true"></RemarksComponet>
+            <RemarksComponent v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'" isRequired="true"></RemarksComponent>
     </label>
   </div>  
   <div class="input-group !w-3/4">
     <label class="label-group">
-            <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'" isRequired="true"></RemarksComponet>
+            <RemarksComponent v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'" isRequired="true"></RemarksComponent>
     </label>
   </div>  
 
@@ -156,8 +323,6 @@
               <th class="py-3 align-center">Unit</th>
               <th class="py-3 align-center">Brand</th>
               <th class="py-3 align-center">Model</th>
-              <th class="py-3 align-center">Warranty Period</th>
-              <th class="py-3 align-center">Quantity</th>
               <th class="py-3 align-center">Offer Price</th>
               <th class="py-3 align-center">Negotiated Price</th>
             </tr>
@@ -181,12 +346,6 @@
                       <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].model" class="form-input" required/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].warranty_period" class="form-input" required/>
-                    </td>
-                    <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].quantity" class="form-input" required readonly/>
-                    </td>
-                    <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
@@ -196,46 +355,11 @@
                 </template>
               </template>
             </tbody>
-            <tfoot>
-              <tr>
-                <td colspan="8" class="text-right">
-                  Total
-                </td>
-                <td class="text-right">
-                  <input type="text" v-model="form.total_negotiated_price" class="form-input" required/>
-                </td>
-                <td class="text-right">
-                  <input type="text" v-model="form.total_offered_price" class="form-input" required/>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="8" class="text-right">
-                  Freight
-                </td>
-                <td class="text-right">
-                  <input type="text" v-model="form.freight" class="form-input" required/>
-                </td>
-                <td class="text-right">
-                  <input type="text" :aria-valuenow="form.freight" class="form-input" required/>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="8" class="text-right">
-                  Grand Total
-                </td>
-                <td class="text-right">
-                  <input type="text" v-model="form.grand_total_negotiated_price" class="form-input" required/>
-                </td>
-                <td class="text-right">
-                  <input type="text" v-model="form.grand_total_offered_price" class="form-input" required/>
-                </td>
-              </tr>
-            </tfoot>
           </table>
         </fieldset>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 
 
@@ -256,13 +380,15 @@
     import useStoreIssueReturn from '../../../composables/supply-chain/useStoreIssueReturn';
     import useVendor from '../../../composables/supply-chain/useVendor';
     import useMaterialCs from '../../../composables/supply-chain/useMaterialCs';
+    import useWorkCs from '../../../composables/supply-chain/useWorkCs';
     import { useRoute } from 'vue-router';
-    import RemarksComponet from '../../utils/RemarksComponent.vue';
+    import RemarksComponent from '../../utils/RemarksComponent.vue';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
     const { searchVendor, vendors, vendor, isLoading: vendorLoading } = useVendor();
     const { materialCs, showMaterialCs, getCsData } = useMaterialCs();
+    const { workCs, showWorkCs, getWcsData } = useWorkCs();
     
     const props = defineProps({
       form: { type: Object, required: true },
@@ -277,7 +403,7 @@
     }); 
 
     const route = useRoute();
-    const CSID = route.params.csId;
+    const WCSID = route.params.wcsId;
 
     watch(() => materialCs.value, (newVal, oldVal) => {
           props.form.scmCs = newVal;
@@ -289,7 +415,6 @@
             materialCs.value.scmCsMaterials.map((lines, index) => {
               lines.map((line, index) => {
                 line['negotiated_price'] = null;
-                line['warranty_period'] = null;
                 line['brand'] = null;
                 line['model'] = null;
               });
@@ -297,6 +422,27 @@
             props.form.scmCsMaterialVendors = materialCs.value.scmCsMaterials;
           }
       });
+
+    
+    watch(() => workCs.value, (newVal, oldVal) => {
+          props.form.scmWcs = newVal;
+          props.form.scm_wcs_id = newVal?.id;//** */
+
+          if (props.formType != 'edit') {
+            // props.form.scmWcsVendorServices = [];
+          
+            // materialCs.value.scmCsMaterials.map((lines, index) => {
+            //   lines.map((line, index) => {
+            //     line['negotiated_price'] = null;
+            //     line['brand'] = null;
+            //     line['model'] = null;
+            //   });
+            // });
+            props.form.scmWcsVendorServices = workCs.value.scmWcsServices;
+          }
+      });
+
+    
 
 
     const addLine = () => {
@@ -325,6 +471,11 @@
         props.form.scm_vendor_id = props.form.scmVendor?.id;
       }
 
+      function handleAttachmentChange(e) {
+      let fileData = e.target.files[0];
+      props.form.attachment = fileData;
+    }
+
 
 
 
@@ -347,7 +498,8 @@ onMounted(() => {
   tableWidth();
   searchVendor('');
   searchMaterial('');
-  getCsData(CSID);
+  // getCsData(CSID);
+  getWcsData(WCSID)
 });
 
 

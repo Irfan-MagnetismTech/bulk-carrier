@@ -10,7 +10,14 @@ class ScmService extends Model
 {
     use HasFactory, GlobalSearchTrait;
 
+    protected $appends = ['service_name_and_code'];
+
     protected $fillable = [
         'name', 'short_code', 'description'
     ];
+
+    public function getServiceNameAndCodeAttribute(): string
+    {
+        return $this->name . ' - ' . $this->short_code;
+    }
 }

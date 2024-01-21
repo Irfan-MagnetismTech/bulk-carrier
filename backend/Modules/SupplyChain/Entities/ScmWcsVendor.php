@@ -16,16 +16,21 @@ class ScmWcsVendor extends Model
         'quotation_ref_no',
         'quotation_date',
         'attachment',
-        'validity',
+        'quotation_validity',
         'payment_mode',
-        'creadit_term',
+        'credit_term',
         'vat',
         'ait',
+        'currency',
         'security_money',
         'adjustment_policy',
         'is_selected',
+        'terms_and_condition',
+        'remarks',
     ];
 
+    protected $casts = ['is_selected' => 'boolean'];
+    
     public function scmWcsVendorServices(): HasMany
     {
         return $this->hasMany(ScmWcsVendorService::class)->latest();

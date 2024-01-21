@@ -3,7 +3,7 @@
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
     <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
   </div>
-  <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
+  <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2" v-if="formType == 'edit'">
     <label class="label-group">
           <span class="label-item-title">CS Ref</span>
           <input

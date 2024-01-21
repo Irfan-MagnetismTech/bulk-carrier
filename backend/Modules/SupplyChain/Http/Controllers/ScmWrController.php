@@ -10,6 +10,7 @@ use App\Services\FileUploadService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmWr;
+use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmWrLine;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Http\Requests\ScmWrRequest;
@@ -67,10 +68,12 @@ class ScmWrController extends Controller
             DB::beginTransaction();
             $work_requisition_info = $request->except(
                 '_token',
+                'ref_no',
                 'attachment',
                 'scmWrLines'
             );
 
+            $work_requisition_info['ref_no'] = UniqueId::generate(ScmWr::class, 'WR');
             $work_requisition_info['created_by']=auth()->id();
 
             if (count($request->scmWrLines)<1) {
@@ -159,8 +162,10 @@ class ScmWrController extends Controller
             DB::beginTransaction();
             $work_requisition_info = $request->except(
                 '_token',
+                'ref_no',
                 'attachment',
-                'scmWrLines'
+                'scmWrLines',
+                'created_by'
             );
 
             if (count($request->scmWrLines)<1) {
@@ -219,23 +224,120 @@ class ScmWrController extends Controller
     }
 
 
-    // public function getServidByPrIdForCs(Request $request): JsonResponse
-    // {
-    //     $lineData = ScmWrLine::query()
-    //         ->with('scmService')
-    //         ->where('scm_wr_id', $request->scm_wr_id)
-    //         ->whereHas('scmWr', function ($query) {
-    //             $query->whereIn('status', ['Pending', 'WIP']);
-    //         })
-    //         ->get();
-    //         // ->map(function ($item) {
-    //         //     $data = $item->scmService;
-    //         //     $data['wr_composite_key'] = $item->wr_composite_key;
-    //         //     return $data;
-    //         // });
+    public function getServiceByWrIdForWcs(Request $request): JsonResponse
+    {
+        $lineData = ScmWrLine::query()
+            ->with('scmService')
+            ->when($request->scm_wr_id, function ($query) use ($request) {
+                $query->where('scm_wr_id', $request->scm_wr_id);
+            })
+            ->whereNot('status', 'Closed')
+            ->whereHas('scmWr', function ($query) {
+                $query->whereIn('status', ['Pending', 'WIP']);
+            })
+            ->get()
+            ->map(function ($item) {
+                $data = $item->scmService;
+                return $data;
+            });
 
-    //     return response()->success('Search result', $lineData, 200);
-    // }
+        return response()->success('Search result', $lineData, 200);
+    }
+
+
+
+    public function searchWr(Request $request): JsonResponse
+    {
+        if (isset($request->searchParam)) {
+            $work_requisition = ScmWr::query()
+                ->with('scmWrLines')
+                ->where(function ($query) use ($request) {
+                    $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+                        ->where('business_unit', $request->business_unit)
+                        ->when($request->cost_center_id, function ($query) use ($request) {
+                            $query->where('acc_cost_center_id', $request->cost_center_id);
+                        });
+                })
+                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                ->orderByDesc('ref_no')
+                ->limit(10)
+                ->get();
+        } else {
+            $work_requisition = ScmWr::query()
+                ->with('scmWrLines')
+                ->where(function ($query) use ($request) {
+                    $query->where('business_unit', $request->business_unit)
+                    ->when($request->cost_center_id, function ($query) use ($request) {
+                        $query->where('acc_cost_center_id', $request->cost_center_id);
+                    });
+                })
+                ->orderByDesc('ref_no')
+                ->limit(10)
+                ->get();
+        }
+
+        return response()->success('Search result', $work_requisition, 200);
+    }
+
+
+    public function searchWorkRequisitions(Request $request): JsonResponse
+    {
+        if (isset($request->searchParam)) {
+            $work_requisition = ScmWr::query()
+                ->with('scmWrLines')
+                ->where(function ($query) use ($request) {
+                    $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+                        ->where('business_unit', $request->business_unit)
+                        ->when($request->scm_warehouse_id, function ($query) use ($request) {
+                            $query->where('scm_warehouse_id', $request->scm_warehouse_id);
+                        })
+                        ->when($request->purchase_center, function ($query) use ($request) {
+                            $query->where('purchase_center', $request->purchase_center);
+                        });
+                })
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        } elseif (isset($request->scm_wcs_id)) {
+            $work_requisition = ScmWr::query()
+                ->with('scmWrLines')
+                ->where('is_closed', 0)
+                ->where(function ($query) use ($request) {
+                    $query->where('business_unit', $request->business_unit)
+                    ->when($request->scm_warehouse_id, function ($query) use ($request) {
+                        $query->where('scm_warehouse_id', $request->scm_warehouse_id);
+                    })
+                    ->when($request->purchase_center, function ($query) use ($request) {
+                        $query->where('purchase_center', $request->purchase_center);
+                    });
+                })
+                ->whereHas('scmWcsService', function ($query) use ($request) {
+                    $query->where('scm_wcs_id', $request->scm_wcs_id);
+                })
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        } else {
+            $work_requisition = ScmWr::query()
+                ->with('scmWrLines')
+                ->where('is_closed', 0)
+                ->where(function ($query) use ($request) {
+                    $query->where('business_unit', $request->business_unit)
+                    ->when($request->scm_warehouse_id, function ($query) use ($request) {
+                        $query->where('scm_warehouse_id', $request->scm_warehouse_id);
+                    })
+                    ->when($request->purchase_center, function ($query) use ($request) {
+                        $query->where('purchase_center', $request->purchase_center);
+                    });
+                })
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        }
+
+        return response()->success('Search result', $work_requisition, 200);
+    }
+
 
     // for closing Work Requisition
     public function closeWr(Request $request): JsonResponse
@@ -252,6 +354,9 @@ class ScmWrController extends Controller
 
             $work_requisition->load('scmWrLines');
             foreach ($work_requisition->scmWrLines as $wrLine) {
+                if ($wrLine->status === 'Closed') {
+                    continue;
+                }
                 $wrLine->update([
                     // 'is_closed' => 1,
                     'status' => 'Closed',
@@ -281,7 +386,7 @@ class ScmWrController extends Controller
             $work_requisition = ScmWr::find($request->parent_id);
             $work_requisition->load('scmWrLines');
 
-            $wrLines = $work_requisition->scmWrLines->count();            
+            $wrLines = $work_requisition->scmWrLines->count();
             // $sumIsClosed = $pr->scmWrLines->sum('is_closed');
             $sumIsClosed = $work_requisition->scmWrLines->where('status', 'Closed')->count();
 
@@ -300,5 +405,4 @@ class ScmWrController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
-
 }
