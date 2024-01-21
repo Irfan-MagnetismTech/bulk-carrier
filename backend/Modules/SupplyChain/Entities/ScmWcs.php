@@ -22,6 +22,9 @@ class ScmWcs extends Model
         'effective_date',
         'expire_date',
         'required_days',
+        'selection_ground',
+        'auditor_remarks_date',
+        'auditor_remarks',
         'remarks',
         'business_unit',
     ];

@@ -29,6 +29,8 @@ return new class extends Migration
             $table->float('security_money', 20, 2)->nullable();
             $table->string('adjustment_policy')->nullable();
             $table->bigInteger('is_selected')->nullable();
+            $table->string('terms_and_condition')->nullable();
+            $table->string('remarks')->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();
             $table->timestamps();
         });

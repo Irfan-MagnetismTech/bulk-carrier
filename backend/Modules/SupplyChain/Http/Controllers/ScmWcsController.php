@@ -16,7 +16,8 @@ use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Entities\ScmWcsService;
 use Modules\SupplyChain\Http\Requests\ScmWcsRequest;
 use Modules\SupplyChain\Entities\ScmWcsVendorService;
-use Modules\SupplyChain\Http\Requests\ScmQuotationRequest;
+use Modules\SupplyChain\Http\Requests\ScmWcsQuotationRequest;
+use Modules\SupplyChain\Http\Requests\WcsSupplierSelectionRequest;
 
 class ScmWcsController extends Controller
 {
@@ -185,7 +186,7 @@ class ScmWcsController extends Controller
     }
 
 
-    public function storeWcsQuotation(ScmQuotationRequest $request)
+    public function storeWcsQuotation(ScmWcsQuotationRequest $request)
     {
         try {
             // ScmCs::find($request->scm_cs_id)->update(['status' => 'quotation']);
@@ -204,6 +205,8 @@ class ScmWcsController extends Controller
                 'security_money',
                 'adjustment_policy',
                 'is_selected',
+                'terms_and_condition',
+                'remarks',
             );
 
             DB::beginTransaction();
@@ -264,7 +267,7 @@ class ScmWcsController extends Controller
     }
 
     // update quotation
-    public function updateWcsQuotation(ScmQuotationRequest $request, $id)
+    public function updateWcsQuotation(ScmWcsQuotationRequest $request, $id)
     {
         try {
             // return response()->json( $request->all(), 422);
@@ -283,6 +286,8 @@ class ScmWcsController extends Controller
                 'security_money',
                 'adjustment_policy',
                 'is_selected',
+                'terms_and_condition',
+                'remarks',
             );
 
             DB::beginTransaction();
@@ -355,4 +360,119 @@ class ScmWcsController extends Controller
         }
     }
 
+
+
+        /**
+     * Retrieves the data for a specific WCS ID.
+     *
+     * @param int $wcsId The id of the wcs.
+     * @throws Some_Exception_Class If the wcsId is not found.
+     * @return JsonResponse
+     */
+    public function getWcsData($wcsId): JsonResponse
+    {
+        $scmWcs = ScmWcs::query()
+            ->with('scmWcsServices.scmService', 'scmWcsServices.scmWr', 'scmWarehouse')
+            ->find($wcsId);
+
+        $scmWcs['scmWcsVendor'] = ScmWcsVendor::query()
+            ->with('scmVendor')
+            ->where('scm_wcs_id', $wcsId)
+            ->get()
+            ->groupBy('scm_vendor_id');
+
+        $scmWcs['scmWcsVendorService'] = ScmWcsVendorService::query()
+            ->with('scmWcsService.scmService', 'scmWcsService.scmWr')
+            ->where('scm_wcs_id', $wcsId)
+            ->get()
+            ->groupBy(['scm_service_id', 'scm_wr_id', 'scm_vendor_id']);
+
+        $scmWcs['scmWcsService'] = ScmWcsService::query()
+            ->with('scmService', 'scmWr')
+            ->where('scm_wcs_id', $wcsId)
+            ->get()
+            ->groupBy(['scm_service_id', 'scm_wr_id'])
+            ->map(function ($items) {
+                return $items->map(function ($data) {
+                    $data[0]['sum_quantity'] = $data->sum('quantity');
+                    return $data;
+                });
+            });
+
+        return response()->success('Detail data', $scmWcs, 200);
+    }
+
+
+    public function WcsSelectedSupplierstore(WcsSupplierSelectionRequest $request)
+    {
+
+        $data = $request->only('id', 'selection_ground', 'auditor_remarks_date', 'auditor_remarks', 'scmWcsVendor');
+
+        try {
+            $wcs = ScmWcs::find($data['id']);
+            $wcs->update(
+                [
+                    'selection_ground' => $data['selection_ground'],
+                    'auditor_remarks_date' => $data['auditor_remarks_date'],
+                    'auditor_remarks' => $data['auditor_remarks'],
+                ]
+            );
+            foreach ($data['scmWcsVendor'] as $key => $value) {
+                $wcsVendor = ScmWcsVendor::find($value[0]['id']);
+                $wcsVendor->update(['is_selected' => $value[0]['is_selected']]);
+            }
+
+            return response()->success('Data updated succesfully', $data, 202);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function searchServiceWcs(Request $request)
+    {
+        $wcs = [];
+
+        if (isset($request->searchParam)) {
+            $wcs = ScmWcs::query()
+                ->with('scmWsVendors', 'scmWsServices', 'scmWcsVendorServices')
+                ->whereHas('scmWsServices.scmWr', function ($query) use ($request) {
+                    $query->where(function ($query) use ($request) {
+                        $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+                            ->where('business_unit', $request->business_unit)
+                            ->where('scm_warehouse_id', $request->scm_warehouse_id)
+                            ->where('purchase_center', $request->purchase_center);
+                    });
+                })
+                ->orderByDesc('ref_no')
+                ->get();
+        } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center)) {
+            $wcs = ScmWcs::query()
+                ->with('scmWsVendors', 'scmWsServices', 'scmWcsVendorServices')
+                ->whereHas('scmWsServices.scmWr', function ($query) use ($request) {
+                    $query->where(function ($query) use ($request) {
+                        $query->where('business_unit', $request->business_unit)
+                            ->where('scm_warehouse_id', $request->scm_warehouse_id)
+                            ->where('purchase_center', $request->purchase_center);
+                    });
+                })
+                ->orderByDesc('ref_no')
+                ->get();
+        }
+
+        return response()->success('Search result', $wcs, 200);
+    }
+
+    public function wcsWiseVendorList(Request $request)
+    {
+        $wcsVendor = ScmWcsVendor::query()
+            ->with('scmVendor')
+            ->where('scm_wcs_id', $request->scm_wcs_id)
+            ->get()
+            ->map(function ($item) {
+                return $item->scmVendor;
+            });
+        return response()->success('Search result', $wcsVendor, 200);
+    }
 }
