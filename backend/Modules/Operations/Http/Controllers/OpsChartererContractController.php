@@ -179,13 +179,14 @@ class OpsChartererContractController extends Controller
     }
 
     public function getChartererContractByProfile(Request $request){
+       
         try {
             $charterer = OpsChartererContract::query()->with('opsVessel','opsChartererProfile','opsChartererContractsFinancialTerms.opsCargoTariff.opsCargoType','opsChartererContractsFinancialTerms.opsVoyage',
             'opsChartererContractsLocalAgents.opsPort','opsChartererInvoices','dayWiseInvoices')
-            ->when(isset(request()->ops_charterer_profile_id), function ($query) {
+            ->when(is_numeric(request()->ops_charterer_profile_id), function ($query) {
                     $query->where('ops_charterer_profile_id',request()->ops_charterer_profile_id);
             })
-            ->when(isset(request()->ops_vessel_id), function($q) {
+            ->when(is_numeric(request()->ops_vessel_id), function($q) {
                 $q->where('ops_vessel_id', request()->ops_vessel_id);
             })
             ->get();            

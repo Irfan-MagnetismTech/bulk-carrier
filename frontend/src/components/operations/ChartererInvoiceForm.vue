@@ -796,8 +796,8 @@ function profileChanged() {
 }
 
 
-
 watch(() => props.form.ops_charterer_profile_id, (value) => {
+    chartererContracts.value = []
     if (editInitiated.value) {
       props.form.ops_charterer_contract_id = '';
       props.form.opsChartererContract = null;
