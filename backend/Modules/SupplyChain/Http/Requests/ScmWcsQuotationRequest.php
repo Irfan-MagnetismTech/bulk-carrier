@@ -12,10 +12,10 @@ class ScmWcsQuotationRequest extends FormRequest
     {
         $data =  request('data');
         $dataArray = json_decode($data, true);
+        $attachment = is_object(request('attachment')) ? request('attachment') : null;
+        $mergeData = array_merge($dataArray, ['attachment' => $attachment]);
 
-        // $mergeData = array_merge($dataArray, ['attachment' => request('attachment'), 'excel' => request('excel')]);
-
-        $this->replace($dataArray);
+        $this->replace($mergeData);
     }
     /**
      * Get the validation rules that apply to the request.
@@ -26,6 +26,7 @@ class ScmWcsQuotationRequest extends FormRequest
     {
         return [
             //
+            'attachment' => 'nullable|mimes:xlsx,pdf,jpg,png,jpeg,doc,docx',
         ];
     }
 
@@ -38,6 +39,9 @@ class ScmWcsQuotationRequest extends FormRequest
     {
         return [
             //
+            'attachment.required' => 'Attachment is required',
+            'attachment.mimes' => 'Attachment must be an xlsx,pdf,jpg,png,jpeg,doc,docx',
+
         ];
     }
 

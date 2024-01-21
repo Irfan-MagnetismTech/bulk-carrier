@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Services\FileUploadService;
 use Illuminate\Database\QueryException;
+use Modules\SupplyChain\Entities\ScmWr;
 use Modules\SupplyChain\Entities\ScmWcs;
 use Modules\SupplyChain\Services\UniqueId;
 use Illuminate\Contracts\Support\Renderable;
@@ -66,6 +67,23 @@ class ScmWcsController extends Controller
                         ]
                     ];
                 return response()->json($error, 422);
+            }
+
+            foreach($request->scmWcsServices as $service){
+                $work_requisition = ScmWr::find($service->scm_wr_id);
+                $work_requisition->update([
+                    'status' => 'WIP',
+                ]);
+                
+                $work_requisition->load('scmWrLines');
+                foreach ($work_requisition->scmWrLines as $wrLine) {
+                    if ($wrLine->status === 'WIP') {
+                        continue;
+                    }
+                    $wrLine->update([
+                        'status' => 'WIP'
+                    ]);
+                }
             }
 
             $scmWcs = ScmWcs::create($requestData);
@@ -403,7 +421,7 @@ class ScmWcsController extends Controller
     }
 
 
-    public function WcsSelectedSupplierstore(WcsSupplierSelectionRequest $request)
+    public function wcsSelectedSupplierstore(WcsSupplierSelectionRequest $request)
     {
 
         $data = $request->only('id', 'selection_ground', 'auditor_remarks_date', 'auditor_remarks', 'scmWcsVendor');
