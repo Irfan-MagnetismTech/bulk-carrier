@@ -383,4 +383,38 @@ class ScmWcsController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    public function searchServiceWcs(Request $request)
+    {
+        $wcs = [];
+
+        if (isset($request->searchParam)) {
+            $wcs = ScmWcs::query()
+                ->with('scmWsVendors', 'scmWsServices', 'scmWcsVendorServices')
+                ->whereHas('scmWsServices.scmWr', function ($query) use ($request) {
+                    $query->where(function ($query) use ($request) {
+                        $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+                            ->where('business_unit', $request->business_unit)
+                            ->where('scm_warehouse_id', $request->scm_warehouse_id)
+                            ->where('purchase_center', $request->purchase_center);
+                    });
+                })
+                ->orderByDesc('ref_no')
+                ->get();
+        } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center)) {
+            $wcs = ScmWcs::query()
+                ->with('scmWsVendors', 'scmWsServices', 'scmWcsVendorServices')
+                ->whereHas('scmWsServices.scmWr', function ($query) use ($request) {
+                    $query->where(function ($query) use ($request) {
+                        $query->where('business_unit', $request->business_unit)
+                            ->where('scm_warehouse_id', $request->scm_warehouse_id)
+                            ->where('purchase_center', $request->purchase_center);
+                    });
+                })
+                ->orderByDesc('ref_no')
+                ->get();
+        }
+
+        return response()->success('Search result', $wcs, 200);
+    }
 }
