@@ -17,6 +17,7 @@ use Modules\SupplyChain\Entities\ScmWcsService;
 use Modules\SupplyChain\Http\Requests\ScmWcsRequest;
 use Modules\SupplyChain\Entities\ScmWcsVendorService;
 use Modules\SupplyChain\Http\Requests\ScmQuotationRequest;
+use Modules\SupplyChain\Http\Requests\WorkSupplierSelectionRequest;
 
 class ScmWcsController extends Controller
 {
@@ -355,4 +356,31 @@ class ScmWcsController extends Controller
         }
     }
 
+
+    public function WcsSelectedSupplierstore(WorkSupplierSelectionRequest $request)
+    {
+
+        $data = $request->only('id', 'selection_ground', 'auditor_remarks_date', 'auditor_remarks', 'scmWcsVendor');
+
+        try {
+            $wcs = ScmWcs::find($data['id']);
+            $wcs->update(
+                [
+                    'selection_ground' => $data['selection_ground'],
+                    'auditor_remarks_date' => $data['auditor_remarks_date'],
+                    'auditor_remarks' => $data['auditor_remarks'],
+                ]
+            );
+            foreach ($data['scmWcsVendor'] as $key => $value) {
+                $wcsVendor = ScmWcsVendor::find($value[0]['id']);
+                $wcsVendor->update(['is_selected' => $value[0]['is_selected']]);
+            }
+
+            return response()->success('Data updated succesfully', $data, 202);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }

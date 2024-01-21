@@ -23,6 +23,9 @@ return new class extends Migration
             $table->date('effective_date')->nullable();
             $table->date('expire_date')->nullable();
             $table->string('required_days')->nullable();
+            $table->string('selection_ground')->nullable();
+            $table->date('auditor_remarks_date')->nullable();
+            $table->string('auditor_remarks')->nullable();
             $table->text('remarks')->nullable();
             $table->enum('priority', ['High','Low','Medium'])->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();

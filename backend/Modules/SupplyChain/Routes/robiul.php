@@ -19,6 +19,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('wcs-quotations', [ScmWcsController::class, "getWcsQuotations"])->name('wcs-quotations.index');
     Route::put('wcs-quotations/{quotationId}', [ScmWcsController::class, "updateWcsQuotation"])->name('wcs-quotations.update');
     Route::delete('wcs-quotations/{quotationId}', [ScmWcsController::class, "deleteWcsQuotation"])->name('quotations.delete');
+    Route::post('selected-work-supplier', [ScmWcsController::class, "WcsSelectedSupplierstore"])->name('selectedWcsSupplier.store');
 
     Route::get('get-wcs-data/{id}', [ScmWcsController::class, "getWcsWiseData"])->name('getWcsWiseData');
     Route::post('close-wr', [ScmWrController::class, "closeWr"])->name('closeWr');
