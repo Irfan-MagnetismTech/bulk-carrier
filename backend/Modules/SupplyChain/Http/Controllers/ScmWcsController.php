@@ -357,6 +357,47 @@ class ScmWcsController extends Controller
     }
 
 
+
+        /**
+     * Retrieves the data for a specific WCS ID.
+     *
+     * @param int $wcsId The id of the wcs.
+     * @throws Some_Exception_Class If the wcsId is not found.
+     * @return JsonResponse
+     */
+    public function getWcsData($wcsId): JsonResponse
+    {
+        $scmWcs = ScmWcs::query()
+            ->with('scmWcsServices.scmService', 'scmWcsServices.scmWr', 'scmWarehouse')
+            ->find($wcsId);
+
+        $scmWcs['scmWcsVendor'] = ScmWcsVendor::query()
+            ->with('scmVendor')
+            ->where('scm_wcs_id', $wcsId)
+            ->get()
+            ->groupBy('scm_vendor_id');
+
+        $scmWcs['scmWcsVendorService'] = ScmWcsVendorService::query()
+            ->with('scmWcsService.scmService', 'scmWcsService.scmWr')
+            ->where('scm_wcs_id', $wcsId)
+            ->get()
+            ->groupBy(['scm_service_id', 'scm_wr_id', 'scm_vendor_id']);
+
+        $scmWcs['scmWcsVendor'] = ScmWcsService::query()
+            ->with('scmService', 'scmWr')
+            ->where('scm_wcs_id', $wcsId)
+            ->get()
+            ->groupBy(['scm_service_id', 'scm_wr_id'])
+            ->map(function ($items) {
+                return $items->map(function ($data) {
+                    return $data;
+                });
+            });
+
+        return response()->success('Detail data', $scmWcs, 200);
+    }
+
+
     public function WcsSelectedSupplierstore(WorkSupplierSelectionRequest $request)
     {
 
@@ -416,5 +457,17 @@ class ScmWcsController extends Controller
         }
 
         return response()->success('Search result', $wcs, 200);
+    }
+
+    public function wcsWiseVendorList(Request $request)
+    {
+        $wcsVendor = ScmWcsVendor::query()
+            ->with('scmVendor')
+            ->where('scm_wcs_id', $request->scm_wcs_id)
+            ->get()
+            ->map(function ($item) {
+                return $item->scmVendor;
+            });
+        return response()->success('Search result', $wcsVendor, 200);
     }
 }
