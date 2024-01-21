@@ -45,6 +45,9 @@ return new class extends Migration
             $table->string('manufacturing_days')->comment('if stock type manufacturer')->nullable();
             $table->string('port_of_loading')->nullable();
             $table->string('warranty')->nullable();
+            $table->bigInteger('delivery_time')->nullable();
+            $table->double('total_negotiated_price')->nullable();
+            $table->double('tatal_offered_price')->nullable();
             $table->timestamps();
         });
     }

@@ -31,6 +31,7 @@ class ScmCsMaterialVendor extends Model
         'negotiated_price',
         'quantity',
         'amount',
+        'warranty_period',
     ];
 
     public function scmCs()
