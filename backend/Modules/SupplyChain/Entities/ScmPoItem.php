@@ -44,14 +44,14 @@ class ScmPoItem extends Model
         return $this->belongsTo(ScmPrLine::class, 'pr_composite_key', 'pr_composite_key');
     }
 
-    public function scmMrrLines(): HasMany
-    {
-        return $this->hasMany(ScmMrrLine::class, 'po_composite_key', 'po_composite_key');
-    }
+    // public function scmMrrLines(): HasMany
+    // {
+    //     return $this->hasMany(ScmMrrLine::class, 'po_composite_key', 'po_composite_key');
+    // }
 
-    public function scmCsMaterials(): HasMany
+    public function scmCsMaterial(): BelongsTo
     {
-        return $this->hasMany(ScmCsMaterial::class, 'cs_composite_key', 'cs_composite_key');
+        return $this->belongsTo(ScmCsMaterial::class, 'cs_composite_key', 'cs_composite_key');
     }
 
     public function scmPoLine(): BelongsTo

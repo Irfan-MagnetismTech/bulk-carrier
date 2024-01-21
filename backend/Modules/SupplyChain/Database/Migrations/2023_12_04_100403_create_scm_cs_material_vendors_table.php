@@ -32,6 +32,7 @@ return new class extends Migration
             $table->bigInteger('quantity')->nullable();
             $table->decimal('amount')->nullable();
             $table->decimal('offer_amount')->nullable();
+            $table->string('warranty_period')->nullable();
             $table->timestamps();
         });
     }
