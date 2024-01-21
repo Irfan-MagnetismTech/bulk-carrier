@@ -394,6 +394,7 @@ class ScmWcsController extends Controller
             ->groupBy(['scm_service_id', 'scm_wr_id'])
             ->map(function ($items) {
                 return $items->map(function ($data) {
+                    $data[0]['sum_quantity'] = $data->sum('quantity');
                     return $data;
                 });
             });

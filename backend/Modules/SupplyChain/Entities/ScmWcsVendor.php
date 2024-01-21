@@ -29,6 +29,8 @@ class ScmWcsVendor extends Model
         'remarks',
     ];
 
+    protected $casts = ['is_selected' => 'boolean'];
+    
     public function scmWcsVendorServices(): HasMany
     {
         return $this->hasMany(ScmWcsVendorService::class)->latest();
