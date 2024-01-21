@@ -6,8 +6,7 @@ import usePurchaseOrder from "../../../composables/supply-chain/usePurchaseOrder
 import PurchaseOrderForm from "../../../components/supply-chain/purchase-orders/PurchaseOrderForm.vue";
 import { useRoute } from 'vue-router';
 
-const { getPurchaseOrder, showPurchaseOrder, purchaseOrder, updatePurchaseOrder,materialObject, errors, isLoading,termsObject,materialList} = usePurchaseOrder();
-
+const { getPurchaseOrder, showPurchaseOrder, purchaseOrder, updatePurchaseOrder,materialObject,poLineObject,errors, isLoading,termsObject,materialList} = usePurchaseOrder();
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 

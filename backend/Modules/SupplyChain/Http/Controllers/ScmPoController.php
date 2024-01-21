@@ -38,7 +38,7 @@ class ScmPoController extends Controller
     {
         try {
             $scmWarehouses = ScmPo::query()
-                ->with('scmPoLines.scmPoItems', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPoItems')
+                ->with('scmPoLines.scmPoItems.scmMaterial', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPoItems')
                 ->globalSearch($request->all());
 
             return response()->success('Data list', $scmWarehouses, 200);
@@ -110,33 +110,77 @@ class ScmPoController extends Controller
     public function show(ScmPo $purchaseOrder): JsonResponse
     {
         try {
-            $purchaseOrder->load('scmPoLines.scmMaterial', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPr');
+            $purchaseOrder->load('scmPoLines.scmPoItems.scmMaterial',"scmPoLines.scmPr", 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPoItems');
             // po line fillable  protected $fillable = [
             //     'scm_po_id', 'scm_material_id', 'unit', 'brand', 'model', 'required_date', 'quantity', 'rate', 'total_price', 'net_rate', 'po_composite_key', 'pr_composite_key',
             // ];
 
-            $scmPoLines = $purchaseOrder->scmPoLines->map(function ($item) {
-                $data = [
-                    'scm_material_id' => $item->scmMaterial->id,
-                    'scmMaterial' => $item->scmMaterial,
-                    'unit' => $item->unit,
-                    'brand' => $item->brand,
-                    'model' => $item->model,
-                    'required_date' => $item->required_date,
-                    'quantity' => $item->quantity,
-                    'rate' => $item->rate ?? 0,
-                    'total_price' => $item->total_price,
-                    'net_rate' => $item->net_rate,
-                    'po_composite_key' => $item->po_composite_key,
-                    'pr_composite_key' => $item->pr_composite_key,
-                    'max_quantity' => $item->scmPrLine->quantity - $item->scmPrLine->scmPoLines->sum('quantity') + $item->quantity,
-                ];
+            $scmPoLines = $purchaseOrder->scmPoLines->map(function ($items) {
+                $datas = $items;
 
-                return $data;
+                $adas = $items->scmPoItems->map(function ($item) {
+                        return [
+                            'scm_material_id' => $item['scm_material_id'],
+                            'scmMaterial' => $item['scmMaterial'],
+                            'unit' => $item['unit'],
+                            'brand' => $item['brand'],
+                            'model' => $item['model'],
+                            'required_date' => $item['required_date'],
+                            'quantity' => $item['quantity'],
+                            'tolerance_level' => $item['tolerance_level'],
+                            'rate' => $item['rate'],
+                            'total_price' => $item['total_price'],
+                            'net_rate' => $item['net_rate'],
+                            'po_composite_key' => $item['po_composite_key'],
+                            'pr_composite_key' => $item['pr_composite_key'],
+                            'cs_composite_key' => $item['cs_composite_key'],
+                            'max_quantity' => $item['max_quantity'],
+                            'pr_quantity' => $item['quantity'],
+                        ];
+                });
+                //data_forget scmPoItems
+
+                data_forget($items,'scmPoItems');
+                $datas['scmPoItems'] = $adas;
+
+                // $data = [
+                //     'scm_material_id' => $item->scmMaterial->id,
+                //     'scmMaterial' => $item->scmMaterial,
+                //     'unit' => $item->unit,
+                //     'brand' => $item->brand,
+                //     'model' => $item->model,
+                //     'required_date' => $item->required_date,
+                //     'quantity' => $item->quantity,
+                //     'rate' => $item->rate ?? 0,
+                //     'total_price' => $item->total_price,
+                //     'net_rate' => $item->net_rate,
+                //     'po_composite_key' => $item->po_composite_key,
+                //     'pr_composite_key' => $item->pr_composite_key,
+                //     'max_quantity' => $item->scmPrLine->quantity - $item->scmPrLine->scmPoLines->sum('quantity') + $item->quantity,
+                // ];
+
+                // return $data;
+
+                return $datas;
             });
-            data_forget($purchaseOrder, 'scmPoLines');
 
-            $purchaseOrder->scmPoLines = $scmPoLines;
+            // return response()->json($scmPoLines, 422);
+
+            // data_forget($purchaseOrder, 'scmPoLines');
+
+            // $purchaseOrder->scmPoLines = $scmPoLines;
+
+            // data forget scmPolines.scmPoItems and data set
+            // $purchaseOrder->scmPoLines->map(function ($item) {
+            //     $item->scmPoItems->map(function ($item) {
+            //
+            //         return $item;
+            //     });
+            //     return $item;
+            // });
+
+
+
             return response()->success('data', $purchaseOrder, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);

@@ -20,15 +20,12 @@ export default function usePurchaseOrder() {
     // use lodash
 
     const purchaseOrder = ref( {
-        ref_no: '',
-        scmWarehouse: '',
-        scm_warehouse_id: '',
+        ref_no: null,
+        scmWarehouse: null,
+        scm_warehouse_id: null,
         acc_cost_center_id: null,
-        date: '',
-        pr_no: null,
-        scm_pr_id: null,
-        scmPr: null,
-        date: '',
+        date: null,
+        date: null,
         cs_no: null,
         purchase_center: null,
         scm_cs_id: null,
@@ -36,31 +33,31 @@ export default function usePurchaseOrder() {
         scmVendor: null,
         scm_vendor_id: null,
         vendor_name: null,
-        currency: '',
+        currency: null,
         foreign_to_bdt: 0,
         foreign_to_usd: 0,
-        remarks: '',
+        remarks: null,
         sub_total: 0.0,
         discount: 0.0,
         total_amount: 0.0,
         vat: 0.0,
         net_amount: 0.0,
-        business_unit: '',
+        business_unit: null,
         scmPoLines: [
             {
-                scmPr: '',
-                scm_pr_id: '',
+                scmPr: null,
+                scm_pr_id: null,
                 scmPoItems: [
                     {
-                        scmMaterial: '',
-                        scm_material_id: '',
-                        unit: '',
-                        brand: '',
-                        model: '',
+                        scmMaterial: null,
+                        scm_material_id: null,
+                        unit: null,
+                        brand: null,
+                        model: null,
                         required_date: null,
                         tolarence_level: 0.0,
-                        pr_composite_key: '',
-                        cs_composite_key: '',
+                        pr_composite_key: null,
+                        cs_composite_key: null,
                         pr_quantity: 0.0,
                         remaining_quantity: 0.0,
                         max_quantity: 0.0,
@@ -73,22 +70,22 @@ export default function usePurchaseOrder() {
         ],
         scmPoTerms: [
                         {
-                            description: ''
+                            description: null
                         }
                     ],  
     });
     
     const prMaterialList = ref([]);
     const materialObject = {
-                scmMaterial: '',
-                scm_material_id: '',
-                unit: '',
-                brand: '',
-                model: '',
+                scmMaterial: null,
+                scm_material_id: null,
+                unit: null,
+                brand: null,
+                model: null,
                 required_date: null,
                 tolarence_level: 0.0,
-                pr_composite_key: '',
-                cs_composite_key: '',
+                pr_composite_key: null,
+                cs_composite_key: null,
                 pr_quantity: 0.0,
                 remaining_quantity: 0.0,
                 max_quantity: 0.0,
@@ -99,19 +96,19 @@ export default function usePurchaseOrder() {
 
     const poLineObject = 
         {
-            scmPr: '',
-            scm_pr_id: '',
+            scmPr: null,
+            scm_pr_id: null,
             scmPoItems: [
                 {
-                    scmMaterial: '',
-                    scm_material_id: '',
-                    unit: '',
-                    brand: '',
-                    model: '',
+                    scmMaterial: null,
+                    scm_material_id: null,
+                    unit: null,
+                    brand: null,
+                    model: null,
                     required_date: null,
                     tolerence: 0.0,
-                    pr_composite_key: '',
-                    cs_composite_key: '',
+                    pr_composite_key: null,
+                    cs_composite_key: null,
                     pr_quantity: 0.0,
                     remaining_quantity: 0.0,
                     max_quantity: 0.0,
@@ -122,15 +119,13 @@ export default function usePurchaseOrder() {
             ]
     }
     
-    const materialList = ref([
-        [],
-    ]);
+    const materialList = ref([[],]);
 
     const termsObject =  {
-        description: ''
+        description: null
     }
 
-    const errors = ref('');
+    const errors = ref(null);
     const isLoading = ref(false);
     const filterParams = ref(null);
 

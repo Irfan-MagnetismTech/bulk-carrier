@@ -37,14 +37,11 @@
     
     function addMaterial(index) {
       const clonedObj = cloneDeep(props.materialObject);
-      // props.form.scmPoLines.push(clonedObj);
       props.form.scmPoLines[index].scmPoItems.push(clonedObj);
-      // setMinHeight();
     }
 
     function removeMaterial(index,itemIndex){
       props.form.scmPoLines[index].scmPoItems.splice(itemIndex, 1);
-      // setMinHeight();
     }
 
     function addBlock() {
@@ -52,12 +49,10 @@
       const clonedObj = cloneDeep(props.poLineObject);
       props.form.scmPoLines.push(clonedObj);
       props.materialList.push([]);
-      // setMinHeight();
     }
 
     function removeBlock(index) {
       props.form.scmPoLines.splice(index, 1);
-      // setMinHeight();
     }
 
     function addTerms() {
@@ -70,13 +65,14 @@
     }
 
     function changePr(index) {
-        props.form.scmPoLines[index].scm_pr_id = props.form.scmPoLines[index].scmPr.id;
+        props.materialList[index] = [];
+        props.form.scmPoLines[index].scm_pr_id = props.form.scmPoLines[index].scmPr?.id ?? null;
         getMaterialList(props.form.scmPoLines[index].scmPr.id).then((res) => {
           props.materialList[index] = res;
         });
         if (props.form.scm_cs_id != null) {
           getLineData(props.form.scmPoLines[index].scm_pr_id,props.form.scm_cs_id).then((res) => {
-            props.form.scmPoLines[index] = res;
+            props.form.scmPoLines[index].scmPoItems = res;
           });
         } else { 
           getLineData(props.form.scmPoLines[index].scm_pr_id).then((res) => {
@@ -86,18 +82,21 @@
         
     }
 
+    function changeWarehouse() {
+      props.form.scm_warehouse_id = props.form.scmWarehouse?.id ?? null;
+      props.form.acc_cost_center_id = props.form.scmWarehouse?.cost_center_id ?? null;
+      props.form.scmVendor = null;
+      props.form.scm_vendor_id = null;
+      getPr();
+      getCs();
+    }
+
     const purchase_center = ['Local', 'Foreign', 'Plant'];
 
     const customDataTableirf = ref(null);
     const dynamicMinHeight = ref(0);
 
-// const setMinHeight = () => {
-//   dynamicMinHeight.value = customDataTableirf.value.offsetHeight + 100;
-// };
 
-// onMounted(() => {
-//   setMinHeight();
-// });
 
     // function setMaterialOtherData(index){
     //   let material = materials.value.find((material) => material.id === props.form.materials[index].material_id);
@@ -149,16 +148,12 @@
     watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
       let total = 0.0;
       newVal?.forEach((lines, index) => {
-        console.log(lines);
-        lines.scmPoItems.forEach((line, itemIndex) => {
+        if(lines?.scmPoItems?.length == 0){
+          lines.scmPoItems.forEach((line, itemIndex) => {
           props.form.scmPoLines[index].scmPoItems[itemIndex].total_price = parseFloat(((line?.rate ?? 0) * (line?.quantity ?? 0)).toFixed(2));
           total += parseFloat(props.form.scmPoLines[index].scmPoItems[itemIndex].total_price);
-          // setMaterialOtherData(line, index);
           });
-        // if(lines?.scmPoItems?.length == 0){
-        //   lines?.scmPoItems?.push(cloneDeep(props.materialObject));
-        // }
-        // 
+        }
       });
       
       props.form.sub_total = parseFloat(total.toFixed(2));
@@ -166,13 +161,23 @@
     }, { deep: true });
 
     function changePurchaseCenter() { 
-  
+      props.form.scmVendor = null;
+      props.form.scm_vendor_id = null;
+      getCs();
+      getPr();
+
     }
 
     function changeCs() {
       props.form.cs_no = props.form?.scmCs?.ref_no ?? null;
-      searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, props.form.scmCs?.id ?? null,null);
-      getCsWiseVendorList(props.form.scmCs.id);
+      props.form.scm_cs_id = props.form?.scmCs?.id ?? null;
+      props.form.scm_vendor_id = null;
+      props.form.scmVendor = null;
+      csWiseVendorList.value = [];
+      getPr();
+      if(props.form.scm_cs_id){
+        getCsWiseVendorList(props.form.scmCs.id);
+      }
     }
 
     
@@ -198,47 +203,93 @@
     watch(() => props?.form?.vat, (newVal, oldVal) => {
       calculateNetAmount();
     });
-    onMounted(() => {
-      getCurrencies()
-      watch(() => props?.form?.scm_pr_id, (newVal, oldVal) => {
-      // if (props.formType == 'edit') {
-      //   getMaterialList(props.form.scm_pr_id,props.form.id);
-      // } else {
-      // getMaterialList(props.form.scm_pr_id);
-      // }
-      });
-      fetchVendor('');
+    watch(() => props?.form?.scmCs, (newVal, oldVal) => {
+      if(newVal){
+        props.form.scm_cs_id = newVal.id;
+        props.form.cs_no = newVal.ref_no;
+      }
     }); 
+    onMounted(() => {
+      getCurrencies();
+      fetchVendor('');
+      watchEffect(() => {
+        fetchWarehouse('');
+      });
+    
+      if(props.formType == 'edit'){
+        const editDatas = watch(()=> [props.form.business_unit,props.form.scm_warehouse_id,props.form.purchase_center,props.form.scm_cs_id,props.form.scmPoLines], (newVal, oldVal) => {
+        searchCs(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, null);
+        if(props.form.scm_cs_id){
+          getCsWiseVendorList(props.form.scm_cs_id);
+        }
+        searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, props.form.scm_cs_id,null);
+        
+        props.materialList.splice(0,props.materialList.length);
+        props.materialList.push([]);
+        props.form.scmPoLines.forEach((line, index) => {
+          props.materialList[index] = [];
+          if (line.scmPr) {
+            getMaterialList(line.scmPr.id).then((res) => {
+              props.materialList[index] = res;
+            });
+          }
+        });
+        console.log('asd');
+        editDatas();
+      });
 
-    //watch scmVendor to change scm_vendor_id
+      }
+     
+    });
+
     watch(() => props?.form?.scmVendor, (newVal, oldVal) => {
+      console.log('scm vendor watch called');
       if(newVal){
         props.form.scm_vendor_id = newVal.id;
       }
     });
-    // watch(() => props?.form?.scmPr, (newVal, oldVal) => {
-    //   if(newVal){
-    //     props.form.pr_no = newVal.ref_no;
-    //   }
-    // });
 
+    function getPr(){
+      props.materialList.splice(0,props.materialList.length)
+      props.materialList.push([]);
+      filteredPurchaseRequisitions.value = [];
+      props.form.scmPoLines = [];
+       props.form.scmPoLines.push(cloneDeep(props.poLineObject));
+      props.form.scmPoLines[0].scmPoItems = [];
+      props.form.scmPoLines[0].scmPoItems.push(cloneDeep(props.materialObject));
+      searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, props.form.scm_cs_id,null);
+    } 
+
+    function getCs(){
+      props.form.scmCs = null;
+      props.form.scm_cs_id = null;
+      props.form.cs_no = null;
+      csWiseVendorList.value = [];
+      searchCs(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, null);
+    }
     onMounted(() => {
-      watchEffect(() => {
-        searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, null,null);
-      });
-      watchEffect(() => {
-        searchCs(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, null);
-      });
-      watchEffect(() => {
-        fetchWarehouse('');
-      });
-      watch(() => filteredPurchaseRequisitions.value, () => {
-            props.form.scmPoLines = [];
-            props.form.scmPoLines.push(cloneDeep(props.poLineObject));
-            props.form.scmPoLines[0].scmPoItems = [];
-            props.form.scmPoLines[0].scmPoItems.push(cloneDeep(props.materialObject));
-      });
-    });
+      watch(() => props.form.business_unit, (newValue, oldValue) => {
+      if(newValue !== oldValue && oldValue != '' && oldValue != null){
+        console.log(oldValue);
+        props.form.scmWarehouse = null;
+        props.form.scmVendor = null;
+        props.form.scm_vendor_id = null;
+        props.form.scmPoTerms = [];
+        props.form.scmPoTerms.push(cloneDeep(props.termsObject));
+        getCs();
+        getPr();
+      }
+    }
+    
+    );
+
+  watchEffect(() => {
+    fetchWarehouse('');
+  });
+
+  
+});
+
 
     watch(() => props.form.scmWarehouse, (value) => {
             props.form.scm_warehouse_id = value?.id ?? null;
@@ -246,11 +297,7 @@
       });
      
         
-    watch(() => props.form.business_unit, (newValue, oldValue) => {
-      if(newValue !== oldValue && oldValue != ''){
-        props.form.scmWarehouse = null;
-      }
-    });
+   
 </script>
 <template>
 
@@ -284,7 +331,7 @@
     </label>
       <label class="label-group">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-         <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" class="block form-input">
+         <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" class="block form-input" @update:modelValue="changeWarehouse">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -358,7 +405,9 @@
           </template>
           </v-select>
     </label>
-    <label class="label-group" v-if="form.currency == 'USD'">
+  </div>
+  <div class="input-group !w-1/2">
+  <label class="label-group" v-if="form.currency == 'USD'">
         <span class="label-item-title">Convertion Rate( Foreign To BDT )<span class="text-red-500">*</span></span>
         <input type="text" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
     </label>
@@ -367,7 +416,6 @@
         <input type="text" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
     </label>
   </div>
-
   <div class="input-group !w-3/4">
     <label class="label-group">
          <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
@@ -383,7 +431,7 @@
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-1/4 mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">PR No. <span class="text-red-500">*</span></span>
-            <v-select :options="filteredPurchaseRequisitions" placeholder="--Choose an option--" :loading="bunkerLoader"  v-model="form.scmPoLines[index].scmPr" label="ref_no" class="block form-input"
+            <v-select :options="filteredPurchaseRequisitions" placeholder="--Choose an option--" v-model="form.scmPoLines[index].scmPr" label="ref_no" class="block form-input"
             @update:modelValue="changePr(index)"
             >
               <template #search="{attributes, events}">

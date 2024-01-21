@@ -263,7 +263,8 @@ export default function useMaterialCs() {
         const messages = ref([]);
         let materialArray = [];
         form.scmCsMaterials.map((scmCsMaterial, scmCsMaterialIndex) => {
-            let material_key = scmCsMaterial?.scm_material_id ?? '' + "-" + scmCsMaterial?.scm_pr_id ?? '';
+            let material_key = (scmCsMaterial?.scm_material_id ?? '') + "-" + (scmCsMaterial?.scm_pr_id ?? '');
+            console.log(material_key,scmCsMaterial);
             if (materialArray.indexOf(material_key) === -1) {
                 materialArray.push(material_key);
                 form.scmCsMaterials[scmCsMaterialIndex].isAspectDuplicate = false;
