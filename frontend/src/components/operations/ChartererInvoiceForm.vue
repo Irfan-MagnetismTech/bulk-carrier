@@ -138,7 +138,13 @@
                 <nobr>Total Amount</nobr>
               </th>
               <th>Details</th>
-              <th class="py-3 text-center align-center">Action</th>
+              <th class="py-3 text-center align-center">
+                <button type="button" @click="addVoyage()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -196,16 +202,12 @@
                 </a>
               </td>
               <td class="px-1 py-1 text-center">
-                <button v-if="index!=0" type="button" @click="removeVoyage(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <button type="button" @click="removeVoyage(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                   </svg>
                 </button>
-                <button v-else type="button" @click="addVoyage()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                  </svg>
-                </button>
+                
               </td>
             </tr>
           </tbody>
@@ -809,6 +811,8 @@ function chartererContractChange() {
   let val = props.form.opsChartererContract ?? null;
   props.form.ops_charterer_contract_id = val?.id ?? null;
   props.form.contract_type = val?.contract_type ?? null;
+  voyages.value = [];
+
   if(val.contract_type == 'Voyage Wise') {
     getContractWiseVoyage(val.id).then(() => {
       if(props.form.opsChartererInvoiceVoyages.length) {
@@ -823,14 +827,14 @@ function chartererContractChange() {
 
 }
 
-watch(() => props.form.opsChartererContract, (value) => {
-  if(value?.contract_type == 'Voyage Wise') {
-    getContractWiseVoyage(value.id);
-  } else {  
-    voyages.value = [];
-    }
-    editInitiated.value = true;
-})
+// watch(() => props.form.opsChartererContract, (value) => {
+//   if(value?.contract_type == 'Voyage Wise') {
+//     getContractWiseVoyage(value.id);
+//   } else {  
+//     voyages.value = [];
+//     }
+//     editInitiated.value = true;
+// })
 
 
 onMounted(() => {
