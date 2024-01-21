@@ -54,6 +54,11 @@ export default function useQuotation() {
         manufaturing_days: null,
         warranty: null,
         remarks: null,
+        total_negotiated_price: null,
+        total_offered_price: null,
+        freight: null,
+        grand_total_negotiated_price: null,
+        grand_total_offered_price: null,
         attachment: null,
         scmCsMaterialVendors: [
             {

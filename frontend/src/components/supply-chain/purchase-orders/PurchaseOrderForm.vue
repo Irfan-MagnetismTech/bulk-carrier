@@ -148,7 +148,7 @@
     watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
       let total = 0.0;
       newVal?.forEach((lines, index) => {
-        if(lines?.scmPoItems?.length == 0){
+        if(lines?.scmPoItems?.length != 0){
           lines.scmPoItems.forEach((line, itemIndex) => {
           props.form.scmPoLines[index].scmPoItems[itemIndex].total_price = parseFloat(((line?.rate ?? 0) * (line?.quantity ?? 0)).toFixed(2));
           total += parseFloat(props.form.scmPoLines[index].scmPoItems[itemIndex].total_price);
@@ -309,7 +309,7 @@
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
     <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
   </div>
-  <div class="input-group !w-1/4">
+  <div class="input-group !w-1/4" v-if="formType == 'edit'">
       <label class="label-group">
           <span class="label-item-title">Po Ref<span class="text-red-500">*</span></span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
@@ -455,13 +455,13 @@
             <table class="w-full whitespace-no-wrap" >
               <tbody>
                 <tr class="w-full">
-                    <th class="py-3 align-center">Material Details <br/> <span class="!text-[8px]"></span></th>
-                    <th class="py-3 align-center">Required Date</th>
-                    <th class="py-3 align-center">Other Info</th>
-                    <th class="py-3 align-center">Tolarence</th>
-                    <th class="py-3 align-center">Order Details</th>
-                    <th class="py-3 align-center">Total Price</th>
-                    <th>
+                    <th class="py-3 align-center !w-3/12">Material Details <br/> <span class="!text-[8px]"></span></th>
+                    <th class="py-3 align-center !w-1/12">Required Date</th>
+                    <th class="py-3 align-center !w-2/12">Other Info</th>
+                    <th class="py-3 align-center !w-1/12">Tolarence</th>
+                    <th class="py-3 align-center !w-2/12">Order Details</th>
+                    <th class="py-3 align-center !w-2/12">Total Price</th>
+                    <th class="!w-1/12">
                       <button type="button" @click="addMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                           <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
@@ -575,45 +575,46 @@
       </div>
     </div>
 
-  <div id="customDataTableMat" ref="customDataTableirf" class="pb-20 !max-w-screen" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
+  <div id="customDataTableMat" ref="customDataTableirf" class="!max-w-screen" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
     <div class="table-responsive">
       <fieldset class="form-fieldset">
-        <legend class="form-legend">Materials <span class="text-red-500">*</span></legend>
+        <legend class="form-legend">---</legend>
+       
         <table class="w-full" id="table">
           <tbody class="table_body">
           <tr>
-            <td>Sub Total</td>
+            <td class="!w-9/12 text-right">Sub Total</td>
             <td class="text-right">
               <input type="text" readonly class="vms-readonly-input form-input" v-model="form.sub_total">
             </td>
           </tr>
           <tr>
-            <td>Less: Discount</td>
+            <td class="!w-9/12 text-right">Less: Discount</td>
             <td class="text-right">
               <input type="text" class="form-input" v-model="form.discount">
             </td>
           </tr>
           <tr>
-            <td>Total Amount</td>
+            <td class="!w-9/12 text-right">Total Amount</td>
             <td class="text-right">
               <input type="text" readonly class="vms-readonly-input form-input" v-model="form.total_amount">
             </td>
           </tr>
           <tr>
-            <td>Add: VAT</td>
+            <td class="!w-9/12 text-right">Add: VAT</td>
             <td class="text-right">
               <input type="text" class="form-input" v-model="form.vat">
             </td>
           </tr>
           <tr>
-            <td>Net Amount</td>
+            <td class="!w-9/12 text-right">Net Amount</td>
             <td class="text-right">
               <input type="text" readonly class="vms-readonly-input form-input" v-model="form.net_amount">
             </td>
           </tr>
           </tbody>
         </table>
-      </fieldset>
+      </fieldset> 
     </div>
   </div> 
 

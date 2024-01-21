@@ -123,24 +123,24 @@
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ formatDate(VendoData[0].quotation_received_date) }}</td>
     </tr>
     <tr>
-      <td>Quotation Validity</td>
+      <td>Offer Validity</td>
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].quotation_validity }}</td>
     </tr>
     <tr>
-      <td>Sourcing</td>
+      <td>Sourcing History</td>
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].sourcing }}</td>
-    </tr>
-    <tr>
-      <td>PI Date</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ formatDate(VendoData[0].quotation_date) }}</td>
     </tr>
     <tr>
       <td>Date Of RFQ</td>
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ formatDate(VendoData[0].date_of_rfq) }}</td>
     </tr>
     <tr>
-      <td>Product Source Type</td>
+      <td>Party Type</td>
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].scmVendor.product_source_type }}</td>
+    </tr>
+    <tr>
+      <td>Delivery Time</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].scmVendor.delivery_time }}</td>
     </tr>
     <tr v-if="form.purchase_center == 'Foreign'">
       <td>Estimated Shipment Date</td>
@@ -183,11 +183,19 @@
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].payment_method }}</td>
     </tr>
     <tr v-if="form.purchase_center != 'Foreign'">
+      <td>Inventory Type</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].stock_type }}</td>
+    </tr>
+    <tr v-if="form.purchase_center != 'Foreign'">
+      <td>Manufacturing Days</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].manufacturing_days }}</td>
+    </tr>
+    <tr v-if="form.purchase_center != 'Foreign'">
       <td>Credit Term</td>
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].credit_term }}</td>
     </tr>
-    <tr v-if="form.purchase_center != 'Foreign'">
-      <td>Delivery Term</td>
+    <tr>
+      <td>Inco-term</td>
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].delivery_term }}</td>
     </tr> 
     <tr v-if="form.purchase_center != 'Foreign'">
@@ -288,22 +296,16 @@
                   <td>{{ details[index] && details[index][0] && details[index][0].origin }}</td>
                 </template>
               </tr>
-              <tr v-if="form.purchase_center == 'Foreign'">
-                <td>Ready Stock / Manufacturer</td>
-                <template v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
-                  <td>{{ details[index] && details[index][0] && details[index][0].stock_type }}</td>
-                </template>
-              </tr>
-              <tr v-if="form.purchase_center == 'Foreign'">
-                <td>Manufacturing Days</td>
-                <template v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
-                  <td>{{ details[index] && details[index][0] && details[index][0].manufacturing_days }}</td>
-                </template>
-              </tr>
               <tr>
                 <td>Offer Price</td>
                 <template v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
                   <td>{{ details[index] && details[index][0] && details[index][0].offered_price }}</td>
+                </template>
+              </tr>
+              <tr>
+                <td>Warranty Period</td>
+                <template v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
+                  <td>{{ details[index] && details[index][0] && details[index][0].warranty_period }}</td>
                 </template>
               </tr>
               <tr>
