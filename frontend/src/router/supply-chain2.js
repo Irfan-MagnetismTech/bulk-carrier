@@ -93,6 +93,42 @@ export default [
             meta: { requiresAuth: true, role: ROLE, permission: 'work-cs-show'  },
         },
     /* Work Cs end */
+    /* Quotation Start */
+    {
+        path: `/${BASE}/wcs-quotations/:wcsId/create`,
+        name: `${BASE}.wcs-quotations.create`,
+        component: () => import(`../views/${PATH_BASE}/wcs-quotations/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'wcs-quotations-create' },
+        props: (route) => ({
+            wcs_id: route.query.wcs_id ?? null
+        })
+    },
+    {
+        path: `/${BASE}/wcs-quotations/:wcsId/:wcsQuotationId/edit`,
+        name: `${BASE}.wcs-quotations.edit`,
+        component: () => import(`../views/${PATH_BASE}/wcs-quotations/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'wcs-quotations-edit' },
+    },
+    {
+        path: `/${BASE}/wcs-quotations/:wcsId/:wcsQuotationId/show`,
+        name: `${BASE}.wcs-quotations.show`,
+        component: () => import(`../views/${PATH_BASE}/wcs-quotations/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'wcs-quotations-show'  },
+    },
+    {
+        path: `/${BASE}/wcs-quotations/:wcsId/index`,
+        name: `${BASE}.wcs-quotations.index`,
+        component: () => import(`../views/${PATH_BASE}/wcs-quotations/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'wcs-quotations-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/work-cs/:wcsId/supplier-selection`,
+        name: `${BASE}.wcs-supplier-selection`,
+        component: () => import(`../views/${PATH_BASE}/wcs-supplier-selection/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'wcs-supplier-selection' },
+    },
+    /* Quotation End */
 
 
     

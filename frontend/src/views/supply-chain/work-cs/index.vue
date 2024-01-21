@@ -2,7 +2,7 @@
 import {onMounted, watchEffect,watch,ref, watchPostEffect} from 'vue';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
-import useMaterialCs from "../../../composables/supply-chain/useMaterialCs";
+import useWorkCs from "../../../composables/supply-chain/useWorkCs";
 import useHelper from "../../../composables/useHelper.js";
 import Title from "../../../services/title";
 import useDebouncedRef from '../../../composables/useDebouncedRef';
@@ -17,7 +17,7 @@ import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import { formatDate } from '../../../utils/helper';
 
 
-const { getMaterialCs, materialCs,materialCsLists, deleteMaterialCs, isLoading,errors,isTableLoading} = useMaterialCs();
+const { getWorkCs, workCs, workCsLists, deleteWorkCs, isLoading,errors,isTableLoading} = useWorkCs();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -36,7 +36,7 @@ const icons = useHeroIcon();
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
-setTitle('Material CS');
+setTitle('Work CS');
 
 
 let filterOptions = ref({
@@ -77,54 +77,54 @@ let filterOptions = ref({
     },
     {
       "relation_name": null,
-      "field_name": "purchase_center",
+      "field_name": "supplier",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Purchase Center",
+      "label": "Supplier",
       "filter_type": "input" 
     },
-    {
-      "relation_name": null,
-      "field_name": "selection_ground",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Selection Ground",
-      "filter_type": "input"
-    },
-    {
-      "relation_name": "selectedVendors",
-      "field_name": "name",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Selected Vendors",
-      "filter_type": "input"
-    },
-    {
-      "relation_name": "scmCsMaterials",
-      "field_name": "scmMaterial.name",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Material",
-      "filter_type": "input"
-    },
-    {
-      "relation_name": "scmWarehouse",
-      "field_name": "name",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Warehouse",
-      "filter_type": "input" 
-    }
+    // {
+    //   "relation_name": null,
+    //   "field_name": "selection_ground",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Selection Ground",
+    //   "filter_type": "input"
+    // },
+    // {
+    //   "relation_name": "selectedVendors",
+    //   "field_name": "name",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Selected Vendors",
+    //   "filter_type": "input"
+    // },
+    // {
+    //   "relation_name": "scmCsMaterials",
+    //   "field_name": "scmMaterial.name",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Material",
+    //   "filter_type": "input"
+    // },
+    // {
+    //   "relation_name": "scmWarehouse",
+    //   "field_name": "name",
+    //   "search_param": "",
+    //   "action": null,
+    //   "order_by": null,
+    //   "date_from": null,
+    //   "label": "Warehouse",
+    //   "filter_type": "input" 
+    // }
   ]
 });
 
@@ -141,7 +141,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      router.push({ name: 'scm.material-cs.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'scm.work-cs.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -149,7 +149,7 @@ onMounted(() => {
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
-    getMaterialCs(filterOptions.value)
+    getWorkCs(filterOptions.value)
       .then(() => {
         paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
@@ -158,18 +158,18 @@ onMounted(() => {
       }
     })
     .catch((error) => {
-      console.error("Error fetching SR:", error);
+      console.error("Error fetching work cs:", error);
     });
 });
 
 });
 // Code for global search end here
 
-const navigateToQuotation = (csId) => {
+const navigateToQuotation = (wcsId) => {
   const routeOptions = {
-    name: 'scm.quotations.index',
+    name: 'scm.wcs-quotations.index',
     params: {
-      csId: csId
+      wcsId: wcsId
     }
   };
   router.push(routeOptions);
@@ -213,7 +213,7 @@ function confirmDelete(id) {
           confirmButtonText: 'Yes'
         }).then((result) => {
           if (result.isConfirmed) {
-            deleteMaterialCs(id);
+            deleteWorkCs(id);
           }
         })
       }
@@ -223,8 +223,8 @@ function confirmDelete(id) {
   <!-- Heading -->
  
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Material CS List</h2>
-    <default-button :title="'Create CS'" :to="{ name: 'scm.material-cs.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Work CS List</h2>
+    <default-button :title="'Create CS'" :to="{ name: 'scm.work-cs.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <!-- Table -->
   <div id="customDataTable">
@@ -243,51 +243,38 @@ function confirmDelete(id) {
           </thead> -->
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
-            <tr v-for="(materialCsdata,index) in (materialCsLists?.data ? materialCsLists?.data : materialCsLists)" :key="index">
+            <tr v-for="(workCs,index) in workCsLists?.data" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-              <td><nobr>{{ materialCsdata?.ref_no }}</nobr></td>
-              <td>{{ formatDate(materialCsdata?.effective_date) }}</td>
-              <td>{{ formatDate(materialCsdata?.expire_date) }}</td>
-              <td>{{ materialCsdata?.purchase_center }}</td>
-              <td>{{ materialCsdata?.selection_ground }}</td>
+              <td><nobr>{{ workCs?.ref_no }}</nobr></td>
+              <td><nobr>{{ formatDate(workCs?.effective_date) }}</nobr></td>
+              <td><nobr>{{ formatDate(workCs?.expire_date) }}</nobr></td>
               <td>
-                <template v-if="materialCsdata.selectedVendors.length">
-                  <ul v-for="(vendor,index) in materialCsdata?.selectedVendors" :key="index">
+                <template v-if="workCs?.selectedSuppliers?.length">
+                  <!-- <ul v-for="(vendor,index) in materialCsdata?.selectedVendors" :key="index">
                     <li>{{ vendor.scmVendor.name }}</li>
-                  </ul>
+                  </ul> -->
                 </template>
                 <template v-else>
-                  <span class="text-red-500">No Vendor Selected</span>
+                  <span class="text-red-500">No Supplier Selected</span>
                 </template>
               </td>
+
+              <td><span :class="workCs?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ workCs?.business_unit }}</span></td>
+
+              
               <td>
-                <template v-if="materialCsdata.scmCsMaterials.length">
-                  <table class="w-full">
-                    <tr v-for="(material,index) in materialCsdata?.scmCsMaterials" :key="index">
-                      <td>
-                        {{ material.scmMaterial.name  }}
-                      </td>
-                    </tr>
-                  </table>
-                </template>
-              </td>
-              <td>{{ materialCsdata?.scmWarehouse?.name?? '' }}</td>
-              <td>
-                <span :class="materialCsdata?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialCsdata?.business_unit }}</span>
-              </td>
-              <td>
-                <div class="grid grid-flow-col-dense gap-x-2">
-                  <button @click="navigateToPOCreate(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Create PO</nobr></button>
-                  <button @click="navigateToQuotation(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Quotations</nobr></button>
-                  <button @click="navigateSupplierSelection(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700" v-if="materialCsdata?.scmCsVendors?.length"><nobr>Select Supplier</nobr></button>
-                  <action-button :action="'edit'" :to="{ name: 'scm.material-cs.edit', params: { materialCsId: materialCsdata.id } }"></action-button>
-                  <action-button @click="confirmDelete(materialCsdata.id)" :action="'delete'"></action-button>
+                <div class="flex items-center justify-center gap-2">
+                  <!-- <button @click="navigateToPOCreate(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Create PO</nobr></button> -->
+                  <button @click="navigateToQuotation(workCs.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Quotations</nobr></button>
+                  <!-- <button @click="navigateSupplierSelection(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700" v-if="materialCsdata?.scmCsVendors?.length"><nobr>Select Supplier</nobr></button> -->
+                  <action-button :action="'edit'" :to="{ name: 'scm.work-cs.edit', params: { workCsId: workCs.id } }"></action-button>
+                  <action-button @click="confirmDelete(workCs.id)" :action="'delete'"></action-button>
                 </div>
               </td>
             </tr>
-            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && materialCs?.data?.length"></LoaderComponent>
+            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && workCsLists?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!materialCsLists?.data?.length" class="relative h-[250px]">
+          <tfoot v-if="!workCsLists?.data?.length" class="relative h-[250px]">
               <tr v-if="isLoading">
               </tr>
               <tr v-else-if="isTableLoading">
@@ -295,13 +282,13 @@ function confirmDelete(id) {
                     <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
                   </td>
               </tr>
-              <tr v-else-if="!materialCsLists?.data?.length">
+              <tr v-else-if="!workCsLists?.data?.length">
                 <td colspan="7">No Data found.</td>
               </tr>
           </tfoot>
       </table>
     </div>
-    <Paginate :data="materialCsLists" to="scm.material-cs.index" :page="page"></Paginate>
+    <Paginate :data="workCsLists" to="scm.work-cs.index" :page="page"></Paginate>
   </div>
   <!-- Heading -->
   

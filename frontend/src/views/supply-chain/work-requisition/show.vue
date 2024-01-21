@@ -65,9 +65,15 @@ onMounted(() => {
           <table class="w-full">
             <tbody>
               <tr>
-                <th class="w-80">Business Unit</th>
+                <th class="w-40">Business Unit</th>
                 <td><span :class="workRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ workRequisition?.business_unit }}</span></td>
               </tr>
+              
+              <tr>
+                <th class="w-40">WR Ref</th>
+                <td>{{ workRequisition?.ref_no }}</td>
+              </tr>
+
               <tr>
                 <th class="w-40">Warehouse Name</th>
                 <td>{{ workRequisition?.scmWarehouse?.name }}</td>
@@ -84,6 +90,14 @@ onMounted(() => {
                 <th class="w-40">Approved Date</th>
                 <td>{{ formatDate(workRequisition?.approved_date) }}</td>
               </tr>
+
+              
+              <tr>
+                <th class="w-40">Purchase Center</th>
+                <td>{{ workRequisition?.purchase_center }}</td>
+              </tr>
+
+
 
               
               <tr>

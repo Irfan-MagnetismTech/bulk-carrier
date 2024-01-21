@@ -13,25 +13,21 @@ class ScmWcs extends Model
     use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
-        'scm_wr_id',
         'scm_warehouse_id',
         'acc_cost_center_id',
         'ref_no',
-        'requirment_type',
+        'purchase_center',
+        'priority',
         'special_instruction',
         'effective_date',
         'expire_date',
         'required_days',
+        'selection_ground',
+        'auditor_remarks_date',
+        'auditor_remarks',
         'remarks',
         'business_unit',
     ];
-
-
-
-    public function scmWr()
-    {
-        return $this->belongsTo(ScmWr::class, 'scm_wr_id', 'id');
-    }
 
     public function scmWarehouse()
     {
