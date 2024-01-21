@@ -16,8 +16,8 @@ use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Entities\ScmWcsService;
 use Modules\SupplyChain\Http\Requests\ScmWcsRequest;
 use Modules\SupplyChain\Entities\ScmWcsVendorService;
-use Modules\SupplyChain\Http\Requests\ScmQuotationRequest;
-use Modules\SupplyChain\Http\Requests\WorkSupplierSelectionRequest;
+use Modules\SupplyChain\Http\Requests\ScmWcsQuotationRequest;
+use Modules\SupplyChain\Http\Requests\WcsSupplierSelectionRequest;
 
 class ScmWcsController extends Controller
 {
@@ -186,7 +186,7 @@ class ScmWcsController extends Controller
     }
 
 
-    public function storeWcsQuotation(ScmQuotationRequest $request)
+    public function storeWcsQuotation(ScmWcsQuotationRequest $request)
     {
         try {
             // ScmCs::find($request->scm_cs_id)->update(['status' => 'quotation']);
@@ -265,7 +265,7 @@ class ScmWcsController extends Controller
     }
 
     // update quotation
-    public function updateWcsQuotation(ScmQuotationRequest $request, $id)
+    public function updateWcsQuotation(ScmWcsQuotationRequest $request, $id)
     {
         try {
             // return response()->json( $request->all(), 422);
@@ -398,7 +398,7 @@ class ScmWcsController extends Controller
     }
 
 
-    public function WcsSelectedSupplierstore(WorkSupplierSelectionRequest $request)
+    public function WcsSelectedSupplierstore(WcsSupplierSelectionRequest $request)
     {
 
         $data = $request->only('id', 'selection_ground', 'auditor_remarks_date', 'auditor_remarks', 'scmWcsVendor');

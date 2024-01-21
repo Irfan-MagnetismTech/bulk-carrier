@@ -4,7 +4,7 @@ namespace Modules\SupplyChain\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class WorkSupplierSelectionRequest extends FormRequest
+class WcsSupplierSelectionRequest extends FormRequest
 {
 
     //preparefor validation
