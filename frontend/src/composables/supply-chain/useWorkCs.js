@@ -213,6 +213,20 @@ export default function useWorkCs() {
     }
 //            let material_key = scmCsMaterial?.scm_material_id ?? '' + "-" + scmCsMaterial?.scm_pr_id ?? '';
 
+    async function getWcsData(id) {
+        //NProgress.start();
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-wcs-data/${id}`);
+            workCs.value = data.value;
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            //NProgress.done();
+        }
+    }
+
     function checkUniqueArray(form) {
         let isHasError = false;
         const messages = ref([]);
@@ -264,6 +278,7 @@ export default function useWorkCs() {
         updateWorkCs,
         deleteWorkCs,
         getWrWiseServiceList,
+        getWcsData,
         serviceObj,
         serviceList,
         wrServiceList,

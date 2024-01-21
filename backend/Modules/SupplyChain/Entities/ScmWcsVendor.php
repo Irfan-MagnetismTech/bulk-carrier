@@ -25,8 +25,12 @@ class ScmWcsVendor extends Model
         'security_money',
         'adjustment_policy',
         'is_selected',
+        'terms_and_condition',
+        'remarks',
     ];
 
+    protected $casts = ['is_selected' => 'boolean'];
+    
     public function scmWcsVendorServices(): HasMany
     {
         return $this->hasMany(ScmWcsVendorService::class)->latest();
