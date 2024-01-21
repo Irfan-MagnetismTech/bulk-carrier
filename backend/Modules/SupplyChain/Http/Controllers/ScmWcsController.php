@@ -383,7 +383,7 @@ class ScmWcsController extends Controller
             ->get()
             ->groupBy(['scm_service_id', 'scm_wr_id', 'scm_vendor_id']);
 
-        $scmWcs['scmWcsVendor'] = ScmWcsService::query()
+        $scmWcs['scmWcsService'] = ScmWcsService::query()
             ->with('scmService', 'scmWr')
             ->where('scm_wcs_id', $wcsId)
             ->get()
