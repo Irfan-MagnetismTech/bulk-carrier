@@ -205,6 +205,8 @@ class ScmWcsController extends Controller
                 'security_money',
                 'adjustment_policy',
                 'is_selected',
+                'terms_and_condition',
+                'remarks',
             );
 
             DB::beginTransaction();
@@ -284,6 +286,8 @@ class ScmWcsController extends Controller
                 'security_money',
                 'adjustment_policy',
                 'is_selected',
+                'terms_and_condition',
+                'remarks',
             );
 
             DB::beginTransaction();

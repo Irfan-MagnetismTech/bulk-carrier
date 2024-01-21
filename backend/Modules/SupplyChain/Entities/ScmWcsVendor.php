@@ -25,6 +25,8 @@ class ScmWcsVendor extends Model
         'security_money',
         'adjustment_policy',
         'is_selected',
+        'terms_and_condition',
+        'remarks',
     ];
 
     public function scmWcsVendorServices(): HasMany
