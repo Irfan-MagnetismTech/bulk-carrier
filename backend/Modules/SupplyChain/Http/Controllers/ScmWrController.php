@@ -14,6 +14,7 @@ use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmWrLine;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Http\Requests\ScmWrRequest;
+use Modules\SupplyChain\Services\CompositeKey;
 
 class ScmWrController extends Controller
 {
@@ -29,11 +30,11 @@ class ScmWrController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function index(Request $request) : JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
             $scmWr = ScmWr::with('scmWrLines.scmService', 'scmWrLines.closedBy', 'scmWrLines.createdBy', 'scmWarehouse', 'closedBy', 'createdBy')
-            ->globalSearch($request->all());
+                ->globalSearch($request->all());
 
             // $loggedInUserId = Auth::id();
 
@@ -47,9 +48,7 @@ class ScmWrController extends Controller
             // });
 
             return response()->success('Data retrieved successfully.', $scmWr, 200);
-        }
-        catch (QueryException $e)
-        {
+        } catch (QueryException $e) {
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -60,7 +59,7 @@ class ScmWrController extends Controller
      *
      * @param ScmWrRequest $request
      * @return JsonResponse
-    */
+     */
     public function store(ScmWrRequest $request): JsonResponse
     {
         // dd($request);
@@ -74,37 +73,43 @@ class ScmWrController extends Controller
             );
 
             $work_requisition_info['ref_no'] = UniqueId::generate(ScmWr::class, 'WR');
-            $work_requisition_info['created_by']=auth()->id();
+            $work_requisition_info['created_by'] = auth()->id();
 
-            if (count($request->scmWrLines)<1) {
-                $error= [
-                    'message'=>'Must be add at least one service.',
-                    'errors'=>[
-                        'service'=>['Must be add at least one service.']
-                        ]
-                    ];
+            if (count($request->scmWrLines) < 1) {
+                $error = [
+                    'message' => 'Must be add at least one service.',
+                    'errors' => [
+                        'service' => ['Must be add at least one service.']
+                    ]
+                ];
                 return response()->json($error, 422);
             }
 
-            if(isset($request->attachment)){
+            if (isset($request->attachment)) {
                 $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/work_requisitions');
                 $work_requisition_info['attachment'] = $attachment;
             }
 
-            $modifiedLines = collect($request->scmWrLines)->map(function ($lineData) {
-                $lineData['created_by'] = auth()->id();
-                return $lineData;
-            })->toArray();
+
+
+
+
+            // $modifiedLines = collect($request->scmWrLines)->map(function ($lineData) {
+            //     $lineData['created_by'] = auth()->id();
+            //     $lineData['wr_composite_key'] = CompositeKey::generate(ScmWrLine::class, 'WR', $lineData['scm_wr_id'], $lineData['scm_service_id']);
+            //     return $lineData;
+            // })->toArray();
 
 
             $work_requisition = ScmWr::create($work_requisition_info);
-            
-            $work_requisition->scmWrLines()->createMany($modifiedLines);
+
+            $linesData = CompositeKey::generateArray($request->scmWrLines, $work_requisition->id, 'scm_material_id', 'wr');
+
+            $work_requisition->scmWrLines()->createMany($linesData);
+
             DB::commit();
             return response()->success('Data added successfully.', $work_requisition, 201);
-        }
-        catch (QueryException $e)
-        {
+        } catch (QueryException $e) {
             DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
@@ -138,15 +143,11 @@ class ScmWrController extends Controller
         //     $work_requisition->createdBy->name = 'You';
         // }
 
-        try
-        {
+        try {
             return response()->success('Data retrieved successfully.', $work_requisition, 200);
-        }
-        catch (QueryException $e)
-        {
+        } catch (QueryException $e) {
             return response()->error($e->getMessage(), 500);
         }
-
     }
 
     /**
@@ -168,20 +169,20 @@ class ScmWrController extends Controller
                 'created_by'
             );
 
-            if (count($request->scmWrLines)<1) {
-                $error= [
-                    'message'=>'Must be add at least one service.',
-                    'errors'=>[
-                        'service'=>['Must be add at least one service.']
-                        ]
-                    ];
+            if (count($request->scmWrLines) < 1) {
+                $error = [
+                    'message' => 'Must be add at least one service.',
+                    'errors' => [
+                        'service' => ['Must be add at least one service.']
+                    ]
+                ];
                 return response()->json($error, 422);
             }
 
             // if(isset($request->attachment)){
-                // $this->fileUpload->deleteFile($work_requisition->attachment);
-                $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/work_requisitions', $work_requisition->attachment);
-                $work_requisition_info['attachment'] = $attachment;
+            // $this->fileUpload->deleteFile($work_requisition->attachment);
+            $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/work_requisitions', $work_requisition->attachment);
+            $work_requisition_info['attachment'] = $attachment;
             // }
 
             $work_requisition->update($work_requisition_info);
@@ -189,9 +190,7 @@ class ScmWrController extends Controller
             $work_requisition->scmWrLines()->createMany($request->scmWrLines);
             DB::commit();
             return response()->success('Data updated successfully.', $work_requisition, 202);
-        }
-        catch (QueryException $e)
-        {
+        } catch (QueryException $e) {
             DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
@@ -205,9 +204,8 @@ class ScmWrController extends Controller
      */
     public function destroy(ScmWr $work_requisition): JsonResponse
     {
-        try
-        {
-            if(isset($work_requisition->attachment)){
+        try {
+            if (isset($work_requisition->attachment)) {
                 $this->fileUpload->deleteFile($work_requisition->attachment);
             }
             $work_requisition->scmWrLines()->delete();
@@ -216,9 +214,7 @@ class ScmWrController extends Controller
             return response()->json([
                 'message' => 'Data deleted successfully.',
             ], 204);
-        }
-        catch (QueryException $e)
-        {
+        } catch (QueryException $e) {
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -267,9 +263,9 @@ class ScmWrController extends Controller
                 ->with('scmWrLines')
                 ->where(function ($query) use ($request) {
                     $query->where('business_unit', $request->business_unit)
-                    ->when($request->cost_center_id, function ($query) use ($request) {
-                        $query->where('acc_cost_center_id', $request->cost_center_id);
-                    });
+                        ->when($request->cost_center_id, function ($query) use ($request) {
+                            $query->where('acc_cost_center_id', $request->cost_center_id);
+                        });
                 })
                 ->orderByDesc('ref_no')
                 ->limit(10)
@@ -304,12 +300,12 @@ class ScmWrController extends Controller
                 ->where('is_closed', 0)
                 ->where(function ($query) use ($request) {
                     $query->where('business_unit', $request->business_unit)
-                    ->when($request->scm_warehouse_id, function ($query) use ($request) {
-                        $query->where('scm_warehouse_id', $request->scm_warehouse_id);
-                    })
-                    ->when($request->purchase_center, function ($query) use ($request) {
-                        $query->where('purchase_center', $request->purchase_center);
-                    });
+                        ->when($request->scm_warehouse_id, function ($query) use ($request) {
+                            $query->where('scm_warehouse_id', $request->scm_warehouse_id);
+                        })
+                        ->when($request->purchase_center, function ($query) use ($request) {
+                            $query->where('purchase_center', $request->purchase_center);
+                        });
                 })
                 ->whereHas('scmWcsService', function ($query) use ($request) {
                     $query->where('scm_wcs_id', $request->scm_wcs_id);
@@ -323,12 +319,12 @@ class ScmWrController extends Controller
                 ->where('is_closed', 0)
                 ->where(function ($query) use ($request) {
                     $query->where('business_unit', $request->business_unit)
-                    ->when($request->scm_warehouse_id, function ($query) use ($request) {
-                        $query->where('scm_warehouse_id', $request->scm_warehouse_id);
-                    })
-                    ->when($request->purchase_center, function ($query) use ($request) {
-                        $query->where('purchase_center', $request->purchase_center);
-                    });
+                        ->when($request->scm_warehouse_id, function ($query) use ($request) {
+                            $query->where('scm_warehouse_id', $request->scm_warehouse_id);
+                        })
+                        ->when($request->purchase_center, function ($query) use ($request) {
+                            $query->where('purchase_center', $request->purchase_center);
+                        });
                 })
                 ->orderByDesc('ref_no')
                 // ->limit(10)
@@ -400,7 +396,7 @@ class ScmWrController extends Controller
                 ]);
             }
 
-            return response()->success('Data updated sucessfully!',[$wrLines,$sumIsClosed], 200);
+            return response()->success('Data updated sucessfully!', [$wrLines, $sumIsClosed], 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
