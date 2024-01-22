@@ -130,6 +130,40 @@ export default [
     },
     /* Quotation End */
 
+    /* Work Order start */
+
+    {
+        path: `/${BASE}/work-orders`,
+        name: `${BASE}.work-orders.index`,
+        component: () => import(`../views/${PATH_BASE}/work-orders/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'work-orders-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/work-orders/create`,
+        name: `${BASE}.work-orders.create`,
+        component: () => import(`../views/${PATH_BASE}/work-orders/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'work-orders-create' },
+        props: (route) => ({
+            wr_id: route.query.wr_id,
+            wcs_id: route.query.wcs_id || null // Set to null if cs_id is not provided
+        })
+    },
+    {
+        path: `/${BASE}/work-orders/:workOrderId/edit`,
+        name: `${BASE}.work-orders.edit`,
+        component: () => import(`../views/${PATH_BASE}/work-orders/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'work-orders-edit' },
+    },
+    {
+        path: `/${BASE}/work-orders/:workOrderId`,
+        name: `${BASE}.work-orders.show`,
+        component: () => import(`../views/${PATH_BASE}/work-orders/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'work-orders-show'  },
+    },
+
+    /* Work Order end */
+
 
     
 ];
