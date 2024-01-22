@@ -69,22 +69,22 @@ class ScmWcsController extends Controller
                 return response()->json($error, 422);
             }
 
-            foreach($request->scmWcsServices as $service){
-                $work_requisition = ScmWr::find($service->scm_wr_id);
-                $work_requisition->update([
-                    'status' => 'WIP',
-                ]);
+            // foreach($request->scmWcsServices as $service){
+            //     $work_requisition = ScmWr::find($service->scm_wr_id);
+            //     $work_requisition->update([
+            //         'status' => 'WIP',
+            //     ]);
                 
-                $work_requisition->load('scmWrLines');
-                foreach ($work_requisition->scmWrLines as $wrLine) {
-                    if ($wrLine->status === 'WIP') {
-                        continue;
-                    }
-                    $wrLine->update([
-                        'status' => 'WIP'
-                    ]);
-                }
-            }
+            //     $work_requisition->load('scmWrLines');
+            //     foreach ($work_requisition->scmWrLines as $wrLine) {
+            //         if ($wrLine->status === 'WIP') {
+            //             continue;
+            //         }
+            //         $wrLine->update([
+            //             'status' => 'WIP'
+            //         ]);
+            //     }
+            // }
 
             $scmWcs = ScmWcs::create($requestData);
             $scmWcs->scmWcsServices()->createMany($request->scmWcsServices);
