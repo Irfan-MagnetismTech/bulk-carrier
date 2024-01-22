@@ -15,8 +15,7 @@ return new class extends Migration
     {
         Schema::create('wo_terms', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('scm_wo_id');
-            $table->unsignedBigInteger('scm_wo_id');
+            $table->unsignedBigInteger('scm_wo_id')->nullable();
             $table->string('description')->nullable();
             $table->timestamps();
         });

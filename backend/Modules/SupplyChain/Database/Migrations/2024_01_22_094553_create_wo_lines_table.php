@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('scm_wr_id')->nullable();
             $table->unsignedBigInteger('scm_wo_id')->nullable();
-            $table->unsignedBigInteger('scm_wo_id')->nullable();
             $table->timestamps();
         });
     }
