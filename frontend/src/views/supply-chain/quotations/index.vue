@@ -253,7 +253,7 @@ function confirmDelete(cs_id, id) {
                 </div>
               </td>
             </tr>
-            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && quotations?.data?.length"></LoaderComponent>
+            <LoaderComponent :isLoading="isTableLoading" v-if="isTableLoading && quotations?.data?.length"></LoaderComponent>
           </tbody>
           <!-- <tfoot v-if="!quotations?.data?.length" class="relative h-[250px]">
               <tr v-if="isLoading">
