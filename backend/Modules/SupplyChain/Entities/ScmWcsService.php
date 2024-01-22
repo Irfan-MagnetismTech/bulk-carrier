@@ -14,6 +14,8 @@ class ScmWcsService extends Model
         'scm_wcs_id',
         'scm_service_id',
         'quantity',
+        'wcs_composite_key',
+        'wr_composite_key'
     ];
 
     public function scmWr()

@@ -19,6 +19,8 @@ return new class extends Migration
             $table->bigInteger('scm_wcs_id')->nullable();
             $table->bigInteger('scm_service_id')->nullable();
             $table->float('quantity', 20, 2)->nullable();
+            $table->string('wcs_composite_key')->nullable();
+            $table->string('wr_composite_key')->nullable();
             $table->timestamps();
         });
     }
