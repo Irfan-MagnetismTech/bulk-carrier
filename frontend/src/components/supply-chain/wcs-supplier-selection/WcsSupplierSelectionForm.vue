@@ -37,7 +37,8 @@
     </label>
   </div>
 
-<table class="min-w-full divide-y divide-gray-200 dark-disabled:divide-gray-700 mt-10">
+  <div class="grid grid-cols-1 overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 dark-disabled:divide-gray-700 mt-10">
   <caption class="border-2 bg-green-400 uppercase">Comparative Statement</caption>
   <thead class="bg-gray-50 dark-disabled:bg-gray-800">
     <tr class="text-gray-600 dark-disabled:text-gray-400 text-sm leading-normal">
@@ -107,7 +108,10 @@
   </template>
   </tbody>
   </table>  
-  <table class="min-w-full divide-y divide-gray-200 dark-disabled:divide-gray-700 mt-10">
+  </div>
+  
+  <div class="grid grid-cols-1 overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 dark-disabled:divide-gray-700 mt-10">
   <caption class="border-2 bg-green-400 uppercase">Other Conditions</caption>
   <thead class="bg-gray-50 dark-disabled:bg-gray-800">
     <tr class="text-gray-600 dark-disabled:text-gray-400 text-sm leading-normal">
@@ -225,7 +229,8 @@
       </td>
     </tr>
   </tbody>
-  </table>  
+  </table> 
+  </div>
   <div class="input-group">
     <label class="label-group">
         <span class="label-item-title">Selection Ground<span class="text-red-500">*</span></span>
@@ -467,6 +472,21 @@ function closeModel() {
         @apply text-red-400 font-semibold
     }
 
- 
-
+    ::-webkit-scrollbar:horizontal {
+      height: 0.5rem!important; 
+    }
+  
+    ::-webkit-scrollbar-thumb:horizontal{
+      background-color: rgb(132, 109, 175); 
+      border-radius: 12rem!important;
+      width: 0.5rem!important;
+      height: 0.5rem!important;
+      border-radius: 12rem!important;
+    }
+  
+    ::-webkit-scrollbar-track:horizontal{
+      background: rgb(148, 144, 155)!important; 
+      border-radius: 12rem!important;
+    }
+  
 </style>

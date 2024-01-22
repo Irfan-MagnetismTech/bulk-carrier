@@ -119,7 +119,7 @@
               </td>
               <td class="px-1 py-1">
                 <label class="block w-full mt-2 text-sm">
-                   <input type="number" placeholder="Quantity" v-model="scmWcsService.quantity" class="form-input" min="1" required 
+                   <input type="number" placeholder="Quantity" v-model="scmWcsService.quantity" class="form-input" min="1" required :max="scmWcsService?.max_quantity ?? 0"
                    >
                 </label>
               </td>
@@ -397,6 +397,8 @@ import useHeroIcon from '../../../assets/heroIcon';
 
   function serviceChange(index){
     props.form.scmWcsServices[index].scm_service_id = props.form.scmWcsServices[index]?.scmService?.id;
+    props.form.scmWcsServices[index].wr_composite_key = props.form.scmWcsServices[index]?.scmService?.wr_composite_key;
+    props.form.scmWcsServices[index].max_quantity = props.form.scmWcsServices[index]?.scmService?.max_quantity;
   }
   
   function prChange(index) {
