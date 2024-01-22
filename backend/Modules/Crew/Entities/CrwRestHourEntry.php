@@ -16,9 +16,13 @@ class CrwRestHourEntry extends Model
 	public function crwRestHourEntryLines(){
 		return $this->hasMany(CrwRestHourEntryLine::class);
 	}
+
+	public function crwRestHourEntryLine(){
+		return $this->hasOne(CrwRestHourEntryLine::class);
+	}
     
 	public function opsVessel()
     {
         return $this->belongsTo(OpsVessel::class);
-    }    
+    }
 }

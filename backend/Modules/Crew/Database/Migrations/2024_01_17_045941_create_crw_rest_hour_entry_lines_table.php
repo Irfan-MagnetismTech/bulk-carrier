@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('crw_rest_hour_entry_lines', function (Blueprint $table) {
             $table->id();
-			$table->unsignedBigInteger('crw_rest_hour_entry_id');
+			$table->foreignId('crw_rest_hour_entry_id')->constrained('crw_rest_hour_entries', 'id')->cascadeOnDelete();
 			$table->unsignedBigInteger('crw_crew_id');
 			$table->unsignedBigInteger('crw_crew_assignment_id');
             $table->decimal('work_hours', 4, 2); 

@@ -66,6 +66,7 @@ Route::middleware(['auth:api'])->prefix('crw')->as('crw.')->group(function ()
     Route::apiResource('appraisal-forms', AppraisalFormController::class);
     Route::apiResource('appraisal-records', AppraisalRecordController::class);
     Route::apiResource('crw-rest-hour-entries', CrwRestHourEntryController::class);
+    Route::post('crw-rest-hour-report', [CrwRestHourEntryController::class, 'crwRestHourReport']);
 
     //Additional Routes
     Route::get('crw-crew-document-renew-schedules', [CrwCrewDocumentController::class, 'renewScehdules']);
