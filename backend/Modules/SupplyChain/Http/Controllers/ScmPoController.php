@@ -37,9 +37,6 @@ class ScmPoController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-
-        return response()->json(php_sapi_name(), 422);
-
         try {
             $scmWarehouses = ScmPo::query()
                 ->with('scmPoLines.scmPoItems.scmMaterial', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPoItems')
@@ -236,7 +233,7 @@ class ScmPoController extends Controller
      */
     public function destroy(ScmPo $purchaseOrder)
     {
-        try {            
+        try {
             DB::beginTransaction();
 
             $purchaseOrder->scmPoLines()->delete();
