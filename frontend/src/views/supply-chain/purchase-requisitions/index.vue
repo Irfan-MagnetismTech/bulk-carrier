@@ -91,7 +91,7 @@ let filterOptions = ref({
     },
     {
       "relation_name": "scmPrLines.scmMaterial",
-      "field_name": "code",
+      "field_name": "material_code",
       "search_param": "",
       "action": null,
       "order_by": null,

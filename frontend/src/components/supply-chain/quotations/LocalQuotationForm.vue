@@ -158,8 +158,9 @@
               <th class="py-3 align-center">Model</th>
               <th class="py-3 align-center">Warranty Period</th>
               <th class="py-3 align-center">Quantity</th>
-              <th class="py-3 align-center">Offer Price</th>
-              <th class="py-3 align-center">Negotiated Price</th>
+              <!-- <th class="py-3 align-center">Offer Price</th> -->
+              <th class="py-3 align-center">Price</th>
+              <th class="py-3 align-center">Amount </th>
             </tr>
             </thead>
 
@@ -186,18 +187,21 @@
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].quantity" class="form-input" required readonly/>
                     </td>
-                    <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
+                    <!-- <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" class="form-input"/>
-                    </td>
+                    </td> -->
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input" min="1"/>
+                    </td>
+                    <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
+                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_amount" class="form-input" min="1"/>
                     </td>
                   </tr>
                 </template>
               </template>
             </tbody>
             <tfoot>
-              <tr>
+              <!-- <tr>
                 <td colspan="8" class="text-right">
                   Total
                 </td>
@@ -218,7 +222,7 @@
                 <td class="text-right">
                   <input type="text" :aria-valuenow="form.freight" class="form-input" required/>
                 </td>
-              </tr>
+              </tr> -->
               <tr>
                 <td colspan="8" class="text-right">
                   Grand Total
@@ -226,9 +230,9 @@
                 <td class="text-right">
                   <input type="text" v-model="form.grand_total_negotiated_price" class="form-input" required/>
                 </td>
-                <td class="text-right">
+                <!-- <td class="text-right">
                   <input type="text" v-model="form.grand_total_offered_price" class="form-input" required/>
-                </td>
+                </td> -->
               </tr>
             </tfoot>
           </table>
