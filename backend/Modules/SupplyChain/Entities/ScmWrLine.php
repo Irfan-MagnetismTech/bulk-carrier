@@ -38,9 +38,14 @@ class ScmWrLine extends Model
         return $this->belongsTo(ScmService::class);
     }
 
+    // public function scmWcsServices(): HasMany
+    // {
+    //     return $this->hasMany(ScmWcsService::class, 'scm_wr_id', 'scm_wr_id');
+    // }
+
     public function scmWcsServices(): HasMany
     {
-        return $this->hasMany(ScmWcsService::class, 'scm_wr_id', 'scm_wr_id');
+        return $this->hasMany(ScmWcsService::class, 'wr_composite_key', 'wr_composite_key');
     }
 
     public function closedBy(): BelongsTo

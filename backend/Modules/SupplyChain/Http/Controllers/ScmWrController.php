@@ -90,16 +90,11 @@ class ScmWrController extends Controller
                 $work_requisition_info['attachment'] = $attachment;
             }
 
-
-
-
-
             // $modifiedLines = collect($request->scmWrLines)->map(function ($lineData) {
             //     $lineData['created_by'] = auth()->id();
             //     $lineData['wr_composite_key'] = CompositeKey::generate(ScmWrLine::class, 'WR', $lineData['scm_wr_id'], $lineData['scm_service_id']);
             //     return $lineData;
             // })->toArray();
-
 
             $work_requisition = ScmWr::create($work_requisition_info);
 
@@ -159,6 +154,8 @@ class ScmWrController extends Controller
      */
     public function update(ScmWrRequest $request, ScmWr $work_requisition): JsonResponse
     {
+        $linesData = CompositeKey::generateArray($request->scmWrLines, $work_requisition->id, 'scm_material_id', 'pr');
+
         try {
             DB::beginTransaction();
             $work_requisition_info = $request->except(
@@ -187,7 +184,7 @@ class ScmWrController extends Controller
 
             $work_requisition->update($work_requisition_info);
             $work_requisition->scmWrLines()->delete();
-            $work_requisition->scmWrLines()->createMany($request->scmWrLines);
+            $work_requisition->scmWrLines()->createMany($linesData);
             DB::commit();
             return response()->success('Data updated successfully.', $work_requisition, 202);
         } catch (QueryException $e) {
@@ -234,6 +231,8 @@ class ScmWrController extends Controller
             ->get()
             ->map(function ($item) {
                 $data = $item->scmService;
+                $data['wr_composite_key'] = $item->wr_composite_key;
+                $data['max_quantity'] = $item->quantity - $item->scmWcsServices->sum('quantity');
                 return $data;
             });
 
