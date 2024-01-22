@@ -50,9 +50,9 @@ export default function useWorkCs() {
                 scm_service_id: null,
                 scmService: null,
                 quantity : null,
+                wr_composite_key: null,
 
                 // max_quantity: null,
-                // pr_composite_key: null,
                 // unit : null,
             }
         ]
@@ -64,8 +64,8 @@ export default function useWorkCs() {
                 scm_service_id: null,
                 scmService: null,
                 quantity : null,
+                wr_composite_key: null,
                 // max_quantity: null,
-                // pr_composite_key: null,
                 // unit : null,
     }
 
