@@ -172,7 +172,7 @@ const navigateToQuotation = (wcsId) => {
       wcsId: wcsId
     }
   };
-  router.push(routeOptions);
+  if(wcsId) router.push(routeOptions);
 };  
 
 const navigateSupplierSelection = (wcsId) => {
@@ -185,7 +185,7 @@ const navigateSupplierSelection = (wcsId) => {
     //   csId: csId
     // }
   };
-  router.push(routeOptions);
+  if(wcsId) router.push(routeOptions);
 };
 
 const navigateToPOCreate = (csId) => {
@@ -265,10 +265,10 @@ function confirmDelete(id) {
               <td>
                 <div class="flex items-center justify-center gap-2">
                   <!-- <button @click="navigateToPOCreate(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Create PO</nobr></button> -->
-                  <button @click="navigateToQuotation(workCs.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Quotations</nobr></button>
-                  <button @click="navigateSupplierSelection(workCs.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700" v-if="workCs?.scmWcsVendors?.length && !workCs?.scmWcsVendors?.find(scmWcsVendor => scmWcsVendor.is_selected == 1)"><nobr>Select Supplier</nobr></button>
-                  <action-button :action="'edit'" :to="{ name: 'scm.work-cs.edit', params: { workCsId: workCs.id } }"></action-button>
-                  <action-button @click="confirmDelete(workCs.id)" :action="'delete'"></action-button>
+                  <button @click="navigateToQuotation(workCs?.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Quotations</nobr></button>
+                  <button @click="navigateSupplierSelection(workCs?.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700" v-if="workCs?.scmWcsVendors?.length && !workCs?.scmWcsVendors?.find(scmWcsVendor => scmWcsVendor.is_selected == 1)"><nobr>Select Supplier</nobr></button>
+                  <action-button :action="'edit'" :to="{ name: 'scm.work-cs.edit', params: { workCsId: workCs?.id } }"></action-button>
+                  <action-button @click="confirmDelete(workCs?.id)" :action="'delete'"></action-button>
                 </div>
               </td>
             </tr>

@@ -112,7 +112,7 @@
             <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
               <th class="w-5/12 px-4 align-center">Service Name</th>
                 <th class="w-3/12 px-4 align-center">WR No</th>
-                <th class="w-2/12 px-4 align-center">Rate</th>
+                <th class="w-2/12 px-4 align-center">Rate <span class="text-red-500">*</span></th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
@@ -125,7 +125,7 @@
                     <td :rowspan="lines.length">{{ first(values(lines))?.scmService?.name }}</td>
                     <td><nobr>{{ scmSrLine?.scmWr?.ref_no }}</nobr></td>
                     <td v-if="form.scmWcsVendorServices[indexa][index]" :rowspan="lines.length">
-                      <input type="number" v-model="form.scmWcsVendorServices[indexa][index].rate" class="form-input" min="1"/>
+                      <input type="number" v-model="form.scmWcsVendorServices[indexa][index].rate" class="form-input" min="1" required/>
                     </td>
                   </tr>
                 </template>
@@ -412,7 +412,7 @@ import ErrorComponent from '../../utils/ErrorComponent.vue';
     }); 
 
     const route = useRoute();
-    const WCSID = route.params.wcsId;
+    const WCSID = route.params?.wcsId;
 
     watch(() => materialCs.value, (newVal, oldVal) => {
           props.form.scmCs = newVal;

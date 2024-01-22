@@ -38,7 +38,7 @@ const props = defineProps({
   },
 });
 // Code for global search start
-const WCSID = route.params.wcsId;
+const WCSID = route.params?.wcsId;
 const icons = useHeroIcon();
 onMounted(() => {
   watchPostEffect(() => {
