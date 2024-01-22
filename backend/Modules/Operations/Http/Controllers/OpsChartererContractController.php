@@ -193,6 +193,7 @@ class OpsChartererContractController extends Controller
 
             return response()->success('Data retrieved successfully.', $charterer, 200);
         } catch (QueryException $e){
+            
             return response()->error($e->getMessage(), 500);
         }
     }

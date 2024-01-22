@@ -29,10 +29,10 @@
                 <th class="w-32">Vessel</th>
                 <td>{{ voyage?.opsVessel?.name }}</td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <th class="w-32">Customer Name</th>
                 <td>{{ voyage?.opsCustomer?.name }}</td>
-              </tr>
+              </tr> -->
               <tr>
                 <th class="w-32">Cargo Type</th>
                 <td>{{ voyage?.opsCargoType?.cargo_type }}</td>

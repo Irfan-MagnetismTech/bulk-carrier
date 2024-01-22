@@ -13,7 +13,7 @@ class OpsVoyage extends Model
     use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
-        'ops_customer_id',
+        // 'ops_customer_id',
         'ops_vessel_id',
         'mother_vessel',
         'ops_cargo_type_id',

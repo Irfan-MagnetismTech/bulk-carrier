@@ -27,7 +27,7 @@
           
           <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Customer Name <span class="text-red-500">*</span></span>
+            <!-- <span class="text-gray-700 dark-disabled:text-gray-300">Customer Name <span class="text-red-500">*</span></span>
             <v-select :options="customers" placeholder="--Choose an option--" :loading="isCustomerLoading"   v-model="form.ops_customer_name" label="name" class="block form-input" >
                 <template #search="{attributes, events}">
                     <input
@@ -38,7 +38,7 @@
                         />
                 </template>
             </v-select>
-            <input type="hidden" v-model="form.ops_customer_id">
+            <input type="hidden" v-model="form.ops_customer_id"> -->
           </label>
         </div>
 
@@ -330,7 +330,7 @@ const openTab = ref(1);
 const toggleTabs = (tabNumber) => {
   console.log("object "+ tabNumber);
   if (openTab.value === 1) {
-    let tab1RequiredFields = ['business_unit', 'ops_customer_id', 'mother_vessel', 'ops_vessel_id', 'voyage_no', 'voyage_sequence', 'route', 'ops_cargo_type_id',
+    let tab1RequiredFields = ['business_unit', 'mother_vessel', 'ops_vessel_id', 'voyage_no', 'voyage_sequence', 'route', 'ops_cargo_type_id',
       'sail_date', 'transit_date'];
 
       if (props.form.business_unit === 'PSML' && !tab1RequiredFields.includes('load_port_distance')) {
@@ -378,9 +378,9 @@ function fetchCargoTypes(search, loading) {
       searchCargoTypes(search, loading)
 }
 
-watch(() => props.form.ops_customer_name, (value) => {
-  props.form.ops_customer_id = value?.id;
-});
+// watch(() => props.form.ops_customer_name, (value) => {
+//   props.form.ops_customer_id = value?.id;
+// });
 
 watch(() => props.form.ops_vessel_name, (value) => {
   props.form.ops_vessel_id = value?.id;
@@ -402,7 +402,7 @@ watch(() => props.form.voyage_no, (value) => {
 
 watch(() => props.form.business_unit, (value) => {
   if((props?.formType == 'edit' && editInitiated.value == true) || (props.formType != 'edit')){
-    props.form.ops_customer_name = null;
+    // props.form.ops_customer_name = null;
     props.form.ops_vessel_name = null;
 
     props.form.opsVoyageSectors = [];
@@ -461,7 +461,7 @@ watch(() => props.form, (value) => {
     // customers.value = [props?.form?.opsCustomer]
     // vessels.value = [props?.form?.opsVessel]
     // cargoTypes.value = [props?.form?.opsCargoType]
-    props.form.ops_customer_name = value?.opsCustomer;
+    // props.form.ops_customer_name = value?.opsCustomer;
     props.form.ops_vessel_name = value?.opsVessel;
     props.form.ops_cargo_type_name = value?.opsCargoType;
 
