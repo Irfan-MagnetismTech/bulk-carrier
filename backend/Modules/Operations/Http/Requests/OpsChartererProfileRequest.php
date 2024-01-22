@@ -21,7 +21,7 @@ class OpsChartererProfileRequest extends FormRequest
             'name'                  => ['required', 'string', 'max:255'],
             'owner_code'            => ['required', 'string', 'max:20', Rule::unique('ops_charterer_profiles')->ignore($this->route('charterer_profile'), 'id')],
             'country'               => ['required', 'string', 'max:255'],
-            'contact_no'            => ['required', 'numeric', 'digits_between:10,15'],
+            'contact_no'            => ['required', 'string', 'digits_between:10,15'],
             'address'               => ['required', 'string', 'max:255'],
             'billing_address'       => ['required', 'string', 'max:255'],
             'billing_email'         => ['required', 'email', 'max:255'],
