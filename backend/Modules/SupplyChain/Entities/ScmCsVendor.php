@@ -46,8 +46,12 @@ class ScmCsVendor extends Model
         'port_of_loading',
         'warranty',
         'delivery_time',
+        'warranty_period',
         'total_negotiated_price',
         'total_offered_price',
+        'grand_total_negotiated_price',
+        'grand_total_offered_price',
+        'freight'
     ];
 
     protected $casts = ['is_selected' => 'boolean'];

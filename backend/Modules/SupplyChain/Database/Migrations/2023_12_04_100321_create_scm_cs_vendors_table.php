@@ -38,6 +38,7 @@ return new class extends Migration
             $table->string('credit_term')->nullable();
             $table->string('carring_cost_bear_by')->nullable();
             $table->string('unloading_cost_bear_by')->nullable();
+            $table->string('warranty_period')->nullable();
             $table->string('vat')->nullable();
             $table->string('ait')->nullable();
             $table->bigInteger('is_selected')->nullable();
@@ -48,6 +49,9 @@ return new class extends Migration
             $table->bigInteger('delivery_time')->nullable();
             $table->double('total_negotiated_price')->nullable();
             $table->double('total_offered_price')->nullable();
+            $table->double('freight')->nullable();
+            $table->double('grand_total_negotiated_price')->nullable();
+            $table->double('grand_total_offered_price')->nullable();
             $table->timestamps();
         });
     }

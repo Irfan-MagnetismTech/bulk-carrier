@@ -216,11 +216,17 @@ class ScmCsController extends Controller
                 'port_of_shipment',
                 'mode_of_shipment',
                 'delivery_term',
+                'delivery_time',
                 'terms_and_condition',
                 'remarks',
                 'stock_type',
                 'manufacturing_days',
-                'warranty'
+                'warranty',
+                'freight',
+                'total_negotiated_price',
+                'total_offered_price',
+                'grand_total_negotiated_price',
+                'grand_total_offered_price'
             );
 
             DB::beginTransaction();
@@ -234,7 +240,10 @@ class ScmCsController extends Controller
                 $unit = $values[0]['unit'] ?? null;
                 $model = $values[0]['model'] ?? null;
                 $origin = $values[0]['origin'] ?? null;
+                $installation_and_commission = $values[0]['installation_and_commission'] ?? null;
+                $certification = $values[0]['certification'] ?? null;
                 $stock_type = $values[0]['stock_type'] ?? null;
+                $warranty_period = $values[0]['warranty_period'] ?? null;
                 $manufacturing_days = $values[0]['manufacturing_days'] ?? null;
 
                 foreach ($values as $key1 => $value) {
@@ -255,7 +264,10 @@ class ScmCsController extends Controller
                             'unit' => $unit ?? null,
                             'model' => $model ?? null,
                             'origin' => $origin ?? null,
+                            'installation_and_commission' => $installation_and_commission ?? null,
+                            'certification' => $certification ?? null,
                             'stock_type' => $stock_type ?? null,
+                            'warranty_period' => $warranty_period ?? null,
                             'manufacturing_days' => $manufacturing_days ?? null,
                             'offered_price' => $offerprice ?? null,
                             'negotiated_price' => $negotiatedprice ?? null,
@@ -295,7 +307,13 @@ class ScmCsController extends Controller
     public function showQuotation($id)
     {
         $scmCsVendor = ScmCsVendor::with('scmCs', 'scmVendor.scmVendorContactPerson', 'scmCsMaterialVendors.scmMaterial', 'scmCsMaterialVendors.scmPr')->find($id);
-        $scmCsMaterialVendors = $scmCsVendor->scmCsMaterialVendors->groupBy(['scm_material_id'])->values()->all();
+        $scmCsMaterialVendors = $scmCsVendor->scmCsMaterialVendors->map(function($item)
+        {
+            $data = $item;
+            $data['quantity'] = ScmCsMaterial::where(['scm_cs_id' => $item->scm_cs_id, 'scm_material_id' => $item->scm_material_id])->sum('quantity');
+            return $data;
+        })->groupBy(['scm_material_id'])->values()->all();
+
         data_forget($scmCsVendor, 'scmCsMaterialVendors');
         $scmCsVendor['scmCsMaterialVendors'] = $scmCsMaterialVendors;
         try {
@@ -334,11 +352,17 @@ class ScmCsController extends Controller
                 'port_of_shipment',
                 'mode_of_shipment',
                 'delivery_term',
+                'delivery_time',
                 'terms_and_condition',
                 'remarks',
                 'stock_type',
                 'manufacturing_days',
-                'warranty'
+                'warranty',
+                'freight',
+                'total_negotiated_price',
+                'total_offered_price',
+                'grand_total_negotiated_price',
+                'grand_total_offered_price'
             );
 
             DB::beginTransaction();
@@ -382,7 +406,10 @@ class ScmCsController extends Controller
                 $unit = $values[0]['unit'] ?? null;
                 $model = $values[0]['model'] ?? null;
                 $origin = $values[0]['origin'] ?? null;
+                $installation_and_commission = $values[0]['installation_and_commission'] ?? null;
+                $certification = $values[0]['certification'] ?? null;
                 $stock_type = $values[0]['stock_type'] ?? null;
+                $warranty_period = $values[0]['warranty_period'] ?? null;
                 $manufacturing_days = $values[0]['manufacturing_days'] ?? null;
 
                 foreach ($values as $key1 => $value) {
@@ -402,8 +429,11 @@ class ScmCsController extends Controller
                             'unit' => $unit ?? null,
                             'model' => $model ?? null,
                             'origin' => $origin ?? null,
+                            'installation_and_commission' => $installation_and_commission ?? null,
+                            'certification' => $certification ?? null,
                             'stock_type' => $stock_type ?? null,
                             'manufacturing_days' => $manufacturing_days ?? null,
+                            'warranty_period' => $warranty_period ?? null,
                             'offered_price' => $offerprice ?? null,
                             'negotiated_price' => $negotiatedprice ?? null,
                         ]

@@ -73,13 +73,13 @@
         <span class="label-item-title">Vendor Quotation No <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.quotation_ref" required class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
       </label>
+      <label class="label-group">
+        <span class="label-item-title">Offer Validity <span class="text-red-500">*</span></span>
+          <VueDatePicker v-model="form.quotation_validity" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+      </label>
   </div>
 
   <div class="input-group">
-      <label class="label-group">
-        <span class="label-item-title">Offer Validity <span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.quotation_validity" required class="form-input " name="scm_department_id" :id="'scm_department_id'" />
-      </label>
       <label class="label-group">
         <span class="label-item-title">Payment Method <span class="text-red-500">*</span></span>
          <input type="text" v-model="form.payment_method" required readonly class="form-input " name="scm_department_id" :id="'scm_department_id'" />
@@ -92,14 +92,14 @@
         <span class="label-item-title">Estimated Shipment Date <span class="text-red-500">*</span></span>
           <VueDatePicker v-model="form.quotation_shipment_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
       </label>
-  </div>
-
-  
-  <div class="input-group">
       <label class="label-group">
         <span class="label-item-title">Port Of Loading <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.port_of_loading" required class="form-input " name="scm_department_id" :id="'scm_department_id'" />
       </label>
+  </div>
+
+  
+  <div class="input-group">
       <label class="label-group">
         <span class="label-item-title">Port Of Discharge <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.port_of_discharge" required class="form-input " name="scm_department_id" :id="'scm_department_id'" />
@@ -118,17 +118,17 @@
         <input type="number" v-model="form.manufacturing_days" class="form-input" :readonly="form.stock_type == 'Ready Stock'" :class="[form.stock_type == 'Ready Stock' ? 'vms-readonly-input' : '',]"/>
       
       </label>
+      <label class="label-group">
+          <span class="label-item-title">Mode Of Shipment <span class="text-red-500">*</span></span>
+            <select v-model="form.mode_of_shipment" class="form-input">
+              <option value="Air">Air</option>
+              <option value="Sea">Sea</option>
+              <option value="Road">Road</option>
+            </select>
+        </label>
       
   </div>
-  <div class="input-group">
-    <label class="label-group">
-        <span class="label-item-title">Mode Of Shipment <span class="text-red-500">*</span></span>
-          <select v-model="form.mode_of_shipment" class="form-input">
-            <option value="Air">Air</option>
-            <option value="Sea">Sea</option>
-            <option value="Road">Road</option>
-          </select>
-      </label>
+  <div class="input-group !w-3/4">
       <label class="label-group">
         <span class="label-item-title">Warranty <span class="text-red-500">*</span></span>
         <input type="text" v-model="form.warranty" class="form-input"/>
@@ -140,7 +140,7 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Inco-term <span class="text-red-500">*</span></span>
-          <input type="number" v-model="form.delivery_term" required class="form-input" />
+          <input type="text" v-model="form.delivery_term" required class="form-input" />
       </label>
   </div>
 
@@ -171,6 +171,8 @@
               <th class="py-3 align-center" rowspan="2">Brand</th>
               <th class="py-3 align-center" rowspan="2">Model</th>
               <th class="py-3 align-center" rowspan="2">Origin</th>
+              <th class="py-3 align-center" rowspan="2">Installation & Commission</th>
+              <th class="py-3 align-center" rowspan="2">Certificate</th>
               <th class="py-3 align-center" rowspan="2">Warranty Period</th>
               <th class="py-3 align-center" rowspan="2">Quantity</th>
               <th class="py-3 align-center" colspan="2">Offer Price</th>
@@ -203,6 +205,12 @@
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].origin" class="form-input"/>
+                    </td>
+                    <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
+                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].installation_and_commission" class="form-input"/>
+                    </td>
+                    <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
+                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].certification" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].warranty_period" class="form-input"/>
@@ -332,7 +340,7 @@
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="8" class="text-right">
+                <td colspan="10" class="text-right">
                   Total
                 </td>
                 <td></td>
@@ -345,7 +353,7 @@
                 </td>
               </tr>
               <tr>
-                <td colspan="8" class="text-right">
+                <td colspan="10" class="text-right">
                   Freight
                 </td>
                 <td></td>
@@ -358,7 +366,7 @@
                 </td>
               </tr>
               <tr>
-                <td colspan="8" class="text-right">
+                <td colspan="10" class="text-right">
                   Grand Total
                 </td>
                 <td></td>
@@ -485,7 +493,8 @@
             line['model'] = null;
             line['offered_price'] = null;
             line['origin'] = null;
-            
+            line['installation_and_commission'] = null;
+            line['certification'] = null;
           });
         });
         props.form.scmCsMaterialVendors = materialCs.value.scmCsMaterials;

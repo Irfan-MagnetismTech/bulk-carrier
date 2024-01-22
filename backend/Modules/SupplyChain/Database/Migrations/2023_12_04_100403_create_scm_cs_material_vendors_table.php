@@ -33,6 +33,8 @@ return new class extends Migration
             $table->decimal('amount')->nullable();
             $table->decimal('offer_amount')->nullable();
             $table->string('warranty_period')->nullable();
+            $table->string('installation_and_commission')->nullable();
+            $table->string('certification')->nullable();
             $table->timestamps();
         });
     }

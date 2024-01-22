@@ -66,18 +66,15 @@
         <span class="label-item-title">Vendor Quotation No <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.quotation_ref" class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
           <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
-      </label>
-      <label class="label-group">
-        <span class="label-item-title">PI Date <span class="text-red-500">*</span></span>
-         <VueDatePicker v-model="form.quotation_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
-      </label>
-  </div>
+        </label>
+        <label class="label-group">
+          <span class="label-item-title">Offer Validity <span class="text-red-500">*</span></span>
+            <VueDatePicker v-model="form.quotation_validity" class="form-input" required auto-apply :enable-time-picker="false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+        </label>
+        
+      </div>
 
   <div class="input-group">
-      <label class="label-group">
-        <span class="label-item-title">Offer Validity <span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.quotation_validity" class="form-input" name="scm_department_id" :id="'scm_department_id'" required/>
-      </label>
       <label class="label-group">
         <span class="label-item-title">Payment Method <span class="text-red-500">*</span></span>
          <select v-model="form.payment_method" class="form-input" required>
@@ -93,14 +90,14 @@
         <span class="label-item-title">Carrying Charge Bear By <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.carring_cost_bear_by" class="form-input" required/>
       </label>
-  </div>
-
-  
-  <div class="input-group">
       <label class="label-group">
         <span class="label-item-title">Unloading Charge Bear By <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.unloading_cost_bear_by" class="form-input" required/>
       </label>
+  </div>
+
+  
+  <div class="input-group">
       <label class="label-group">
         <span class="label-item-title">VAT <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.vat" class="form-input" required/>
@@ -114,14 +111,14 @@
         <input type="text" v-model="form.warranty" class="form-input"/>
       
       </label>
+      <label class="label-group">
+          <span class="label-item-title">Delivery Time (Days) <span class="text-red-500">*</span></span>
+            <input type="number" v-model="form.delivery_time" required class="form-input " name="scm_department_id" :id="'scm_department_id'" />
+        </label>
   </div>
 
   
-  <div class="input-group">
-    <label class="label-group">
-        <span class="label-item-title">Delivery Time (Days) <span class="text-red-500">*</span></span>
-          <input type="number" v-model="form.delivery_time" required class="form-input " name="scm_department_id" :id="'scm_department_id'" />
-      </label>
+  <div class="input-group !w-1/2">
     <label class="label-group">
         <span class="label-item-title">Inco-term <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.delivery_term" class="form-input" required/>
@@ -157,10 +154,8 @@
               <th class="py-3 align-center">Brand</th>
               <th class="py-3 align-center">Model</th>
               <th class="py-3 align-center">Warranty Period</th>
-              <th class="py-3 align-center">Quantity</th>
-              <!-- <th class="py-3 align-center">Offer Price</th> -->
-              <th class="py-3 align-center">Price</th>
-              <th class="py-3 align-center">Amount </th>
+              <th class="py-3 align-center">Offer Price</th>
+              <th class="py-3 align-center">Negotiated Price</th>
             </tr>
             </thead>
 
@@ -185,17 +180,12 @@
                       <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].warranty_period" class="form-input" required/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].quantity" class="form-input" required readonly/>
-                    </td>
-                    <!-- <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" class="form-input"/>
-                    </td> -->
+                    </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input" min="1"/>
                     </td>
-                    <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_amount" class="form-input" min="1"/>
-                    </td>
+              
                   </tr>
                 </template>
               </template>
@@ -223,6 +213,7 @@
                   <input type="text" :aria-valuenow="form.freight" class="form-input" required/>
                 </td>
               </tr> -->
+              <!-- <td class="text-right">
               <tr>
                 <td colspan="8" class="text-right">
                   Grand Total
@@ -230,10 +221,9 @@
                 <td class="text-right">
                   <input type="text" v-model="form.grand_total_negotiated_price" class="form-input" required/>
                 </td>
-                <!-- <td class="text-right">
                   <input type="text" v-model="form.grand_total_offered_price" class="form-input" required/>
-                </td> -->
-              </tr>
+                </tr>
+              </td> -->
             </tfoot>
           </table>
         </fieldset>

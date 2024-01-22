@@ -32,6 +32,8 @@ class ScmCsMaterialVendor extends Model
         'quantity',
         'amount',
         'warranty_period',
+        'installation_and_commission',
+        'certification',
     ];
 
     public function scmCs()

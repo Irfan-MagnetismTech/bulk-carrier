@@ -172,7 +172,7 @@ const navigateToQuotation = (csId) => {
       csId: csId
     }
   };
-  router.push(routeOptions);
+  if(csId) router.push(routeOptions);
 };  
 
 const navigateSupplierSelection = (csId) => {
@@ -185,7 +185,7 @@ const navigateSupplierSelection = (csId) => {
     //   csId: csId
     // }
   };
-  router.push(routeOptions);
+  if(csId) router.push(routeOptions);
 };
 
 const navigateToPOCreate = (csId) => {
