@@ -163,7 +163,7 @@ class ScmPrController extends Controller
             'approved_date' => $purchaseRequisition->approved_date,
             'remarks' => $purchaseRequisition->remarks,
             'is_closed' => $purchaseRequisition->is_closed,
-            'closed_by' => User::whoAmI($purchaseRequisition, 'closedBy'),
+            'closed_by' => (auth()->user()->id == (int)($purchaseRequisition->closedBy->id)) ? 'You' : $purchaseRequisition->closedBy->name,
             'closed_at' => $purchaseRequisition->closed_at,
             'closing_remarks' => $purchaseRequisition->closing_remarks,
             'status' => $purchaseRequisition->status,
