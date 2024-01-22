@@ -22,7 +22,26 @@ class ScmPo extends Model
     use HasFactory, GlobalSearchTrait, DeletableModel;
 
     protected $fillable = [
-        'ref_no', 'scm_pr_id', 'scm_cs_id', 'date', 'scm_vendor_id', 'scm_warehouse_id', 'acc_cost_center_id', 'currency', 'foreign_to_bdt', 'discount', 'vat', 'business_unit', 'created_by', 'sub_total', 'total_amount', 'net_amount', 'foreign_to_usd', 'pr_date', 'purchase_center', 'remarks',
+        'ref_no',
+        'scm_pr_id',
+        'scm_cs_id',
+        'date',
+        'scm_vendor_id',
+        'scm_warehouse_id',
+        'acc_cost_center_id',
+        'currency',
+        'foreign_to_bdt',
+        'discount',
+        'vat',
+        'business_unit',
+        'created_by',
+        'sub_total',
+        'total_amount',
+        'net_amount',
+        'foreign_to_usd',
+        'pr_date',
+        'purchase_center',
+        'remarks',
     ];
 
     public function scmPoLines(): HasMany
