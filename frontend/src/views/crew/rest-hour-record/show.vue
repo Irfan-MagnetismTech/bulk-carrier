@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue';
+import {computed, onMounted, watch} from 'vue';
 import { useRoute } from 'vue-router';
 import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
@@ -34,6 +34,16 @@ function formatIndex(index) {
 
   return `${startHour}`;
 }
+
+const timeRangeHeaders = computed(() => {
+  const headers = [];
+  for (let i = 0; i < 24; i++) {
+    const startHour = i.toString().padStart(2, '0');
+    const endHour = (i + 1).toString().padStart(2, '0');
+    headers.push({ startHour, endHour });
+  }
+  return headers;
+});
 
 onMounted(() => {
   showRestHourRecord(restHourRecordId);
@@ -74,27 +84,36 @@ onMounted(() => {
         <table class="w-full mt-2 table2">
           <thead>
           <tr>
-            <th colspan="5">Crew List</th>
+            <th colspan="55">Crew List</th>
           </tr>
           <tr>
-            <th>SL.</th>
-            <th>Seafarer</th>
-            <th>Service Start</th>
-            <th>Comment</th>
-            <th>Hourly Records</th>
+            <th rowspan="2">SL.</th>
+            <th rowspan="2">Seafarer</th>
+            <th rowspan="2">Service Start</th>
+            <th rowspan="2">Comment</th>
+            <th colspan="48">Hourly Records</th>
+          </tr>
+          <tr>
+            <th class="time-range-header" v-for="(header, index) in timeRangeHeaders" :key="index" colspan="2">
+              <nobr><span class="">{{ header.startHour }} - {{ header.endHour }}</span></nobr>
+<!--              <nobr>-->
+<!--                <span class="start-time">{{ header.startHour }}</span>-->
+<!--                <span class="hyphen"> - </span>-->
+<!--                <span class="end-time">{{ header.endHour }}</span>-->
+<!--              </nobr>-->
+            </th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="(entryLine,index) in restHourRecord?.crwRestHourEntryLines" :key="index">
-            <td>{{ index + 1 }}</td>
+            <td class="text-center">{{ index + 1 }}</td>
             <td>{{ entryLine?.crwCrew?.full_name }}</td>
-            <td>???</td>
+            <td class="text-center">{{ formatDate(entryLine?.crwCrewAssignment?.joining_date) }}</td>
             <td>{{ entryLine?.comments }}</td>
-            <td>
-              <div class="w-full flex">
-                <div class="w-6 h-5 rest_hour_div text-center" :class="{ 'active_hour': hourRecord?.is_selected, 'inactive_hour': !hourRecord?.is_selected, 'mr-1': (hourRecordIndex+1)%2===0 }" v-for="(hourRecord,hourRecordIndex) in entryLine?.hourly_records" :key="hourRecordIndex">
-                  {{ formatIndex(hourRecordIndex) }}
-                </div>
+            <td :class="{ 'active_hour': entryLine?.hourly_records.find(record => record.hour === hourRecordIndex),
+                     'inactive_hour': !entryLine?.hourly_records.find(record => record.hour === hourRecordIndex) }" v-for="(data,hourRecordIndex) in 48" :key="hourRecordIndex">
+              <div class="w-6 h-5 rest_hour_div text-center">
+                {{ entryLine?.hourly_records.find(record => record.hour === hourRecordIndex)?.type }}
               </div>
             </td>
           </tr>
@@ -124,6 +143,10 @@ onMounted(() => {
     white-space: nowrap;
   }
 
+  tbody tr,td{
+    padding: 0rem;
+  }
+
   .table2 th{
     @apply text-center bg-gray-300;
   }
@@ -132,9 +155,6 @@ onMounted(() => {
   }
   .inactive_hour{
     background-color: #c7c6c6;
-  }
-  .rest_hour_div{
-    border: 1px solid #6e6e6e;
   }
 
   ::-webkit-scrollbar:horizontal {
@@ -150,6 +170,18 @@ onMounted(() => {
   ::-webkit-scrollbar-track:horizontal{
     background: rgb(148, 144, 155)!important;
     border-radius: 2rem !important;
+  }
+
+  .start-time {
+    float: left;
+  }
+
+  .dash {
+    margin: 0; /* Adjust margin for spacing */
+  }
+
+  .end-time {
+    float: right;
   }
 
 </style>
