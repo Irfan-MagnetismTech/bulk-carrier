@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('wo_lines', function (Blueprint $table) {
             $table->id();
-            
+            $table->unsignedBigInteger('scm_wr_id')->nullable();
+            $table->unsignedBigInteger('scm_wo_id')->nullable();
+            $table->unsignedBigInteger('scm_wo_id')->nullable();
             $table->timestamps();
         });
     }
