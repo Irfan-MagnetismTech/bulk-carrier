@@ -25,6 +25,7 @@ class ScmWrLine extends Model
         'is_closed',
         'closing_remarks',
         'status',
+        'wr_composite_key',
     ];
 
     public function scmWr()
