@@ -82,9 +82,9 @@
         <table class="w-full whitespace-no-wrap " id="table">
           <thead>
             <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-                <th class="w-3/12 px-4 align-center">WR No</th>
-                <th class="w-5/12 px-4 align-center">Service Name</th>
-                <th class="w-2/12 px-4 align-center">Quantity</th>
+                <th class="w-3/12 px-4 align-center">WR No <span class="text-red-500">*</span></th>
+                <th class="w-5/12 px-4 align-center">Service Name <span class="text-red-500">*</span></th>
+                <th class="w-2/12 px-4 align-center">Quantity <span class="text-red-500">*</span></th>
                 <th class="w-2/12 px-4 align-center text-center">Action</th>
             </tr>
           </thead>
@@ -412,7 +412,7 @@ import useHeroIcon from '../../../assets/heroIcon';
   } 
 
   function wrChange(index) {
-    props.form.scmWcsServices[index].scm_wr_id = props.form.scmWcsServices[index].scmWr.id;
+    props.form.scmWcsServices[index].scm_wr_id = props.form.scmWcsServices[index]?.scmWr?.id;
     getWrWiseServiceList(props.form.scmWcsServices[index].scm_wr_id).then((res) => {
       props.serviceList[index] = res;
     });

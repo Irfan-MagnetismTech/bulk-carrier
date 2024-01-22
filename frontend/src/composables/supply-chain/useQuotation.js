@@ -54,11 +54,12 @@ export default function useQuotation() {
         manufaturing_days: null,
         warranty: null,
         remarks: null,
-        total_negotiated_price: null,
-        total_offered_price: null,
-        freight: null,
-        grand_total_negotiated_price: null,
-        grand_total_offered_price: null,
+
+        total_negotiated_price: 0,
+        total_offered_price: 0,
+        freight: 0,
+        grand_total_negotiated_price: 0,
+        grand_total_offered_price: 0,
         attachment: null,
         scmCsMaterialVendors: [
             {
@@ -70,8 +71,8 @@ export default function useQuotation() {
                 stock_type: null,
                 manufaturing_days: null,
                 unit: null,
-                offered_price: null,
-                negotiated_price: null,
+                offered_price: 0,
+                negotiated_price: 0,
             },
         ],
     });

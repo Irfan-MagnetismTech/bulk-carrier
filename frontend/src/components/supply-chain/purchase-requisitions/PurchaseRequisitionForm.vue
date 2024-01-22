@@ -247,16 +247,17 @@ function tytytyasd(indx) {
 <template>
 
   <!-- Basic information -->
-  <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
-    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
-  </div>
-  <div class="input-group">
-      <label class="label-group">
+  <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2">
+    <div>
+      <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
+    </div>
+  
+      <label class="label-group col-start-1" v-show="page === 'edit'">
           <span class="label-item-title">PR Ref <span class="text-red-500">*</span></span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
           <!-- <Error v-if="errors?.ref_no" :errors="errors.ref_no"  /> -->
       </label>
-      <label class="label-group">
+      <label class="label-group col-start-1">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
           <!-- <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse" v-model="form.scmWarehouse" label="name" class="block form-input"> -->
           <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" class="block form-input" @update:modelValue="changeWarehouse(form.scmWarehouse)">
@@ -283,8 +284,6 @@ function tytytyasd(indx) {
           </select>
           <!-- <Error v-if="errors?.is_critical" :errors="errors.is_critical"  /> -->
       </label>
-  </div>
-  <div class="input-group !w-3/4">
     <label class="label-group">
         <span class="label-item-title">Attachment</span>
         <input type="file" class="form-input" @change="handleAttachmentChange" />
@@ -308,18 +307,13 @@ function tytytyasd(indx) {
           <span class="label-item-title">Approved Date <span class="text-red-500">*</span></span>
           <VueDatePicker v-model="form.approved_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
       </label>
-  </div>
+      <div class="md:col-span-2">
 
-  <div class="input-group !w-3/4">
-    <label class="label-group">
-          <!-- <span class="label-item-title">Remarks </span> -->
-          <!-- <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea> -->
-          <!-- <Error v-if="errors?.remarks" :errors="errors.remarks" /> -->
-          <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
-    </label>
-  </div>
+        <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
+      </div>
+  
 
-  <div class="flex items-center w-full" v-if="formType != 'edit'">
+  <div class="flex items-center w-full md:col-span-3" v-if="formType != 'edit'">
     <div class="label-group">
           <div class="my-3 flex gap-6">
                 <div class="flex items-center">
@@ -333,7 +327,7 @@ function tytytyasd(indx) {
             </div>
         </div>
   </div>
-  <div id="" v-if="form?.entry_type == '0' || formType == 'edit'">
+  <div id="" v-if="form?.entry_type == '0' || formType == 'edit'"  class="md:col-span-3">
 <!-- 
     <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll pb-20"> 
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
@@ -562,25 +556,26 @@ function tytytyasd(indx) {
   </div>
 
 
-  <div v-else>
-    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Download Excel <span class="text-red-500">*</span></legend>
-        <div class="input-group !w-1/2">
-                <label class="label-group">
-                    <span class="label-item-title">Store Category<span class="text-red-500">*</span></span>
-                    <v-select name="user" v-model="excelExportData.store_category_name" placeholder="--Choose an option--" label="Store Category" :options="store_category" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
-                    </v-select>
-                    <!-- <Error v-if="errors?.store_category" :errors="errors.store_category" /> -->
-                </label>
-                <label class="label-group">
-                <button type="button" @click.prevent="downloadExcel" class="flex items-center justify-center px-4 py-2 mt-6 ml-6 text-sm leading-4 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium active:bg-purple-600  hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Download </button>
-                </label>
-            </div>
-      </fieldset>
-      <hr class="my-4"/>
+    <div v-else class="md:col-span-3">
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+          <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Download Excel <span class="text-red-500">*</span></legend>
+          <div class="input-group !w-1/2">
+                  <label class="label-group">
+                      <span class="label-item-title">Store Category<span class="text-red-500">*</span></span>
+                      <v-select name="user" v-model="excelExportData.store_category_name" placeholder="--Choose an option--" label="Store Category" :options="store_category" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+                      </v-select>
+                      <!-- <Error v-if="errors?.store_category" :errors="errors.store_category" /> -->
+                  </label>
+                  <label class="label-group">
+                  <button type="button" @click.prevent="downloadExcel" class="flex items-center justify-center px-4 py-2 mt-6 ml-6 text-sm leading-4 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium active:bg-purple-600  hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Download </button>
+                  </label>
+              </div>
+        </fieldset>
+        <hr class="my-4"/>
 
-      <DropZoneV2 :form="form" :page="page"></DropZoneV2>
-  </div>
+        <DropZoneV2 :form="form" :page="page"></DropZoneV2>
+    </div>
+  </div>  
   <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 

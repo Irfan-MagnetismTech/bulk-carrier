@@ -188,7 +188,6 @@
                 
               <template v-for="(lines, indexa) in form.scmCsMaterialVendors" :key="indexa">
                 <template v-for="(scmSrLine, index) in lines" :key="index">
-                  
                   <tr v-if="index != 0">
                     <td><nobr>{{ scmSrLine?.scmPr?.ref_no }}</nobr></td>
                   </tr>
@@ -209,19 +208,19 @@
                       <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].warranty_period" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].quantity" class="form-input" readonly/>
+                      <input type="text" :value="form.scmCsMaterialVendors[indexa][index].quantity" class="form-input" readonly/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].total_offered_price" class="form-input"/>
+                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].offer_amount" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input" min="1"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].total_negotiated_price" class="form-input" min="1"/>
+                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_amount" class="form-input" min="1"/>
                     </td>
                   </tr>
                   
@@ -338,11 +337,11 @@
                 </td>
                 <td></td>
                 <td class="text-right">
-                  <input type="text" v-model="form.total_negotiated_price" class="form-input" required/>
+                  <input type="text" v-model="form.total_offered_price" class="form-input" required/>
                 </td>
                 <td></td>
                 <td class="text-right">
-                  <input type="text" v-model="form.total_offered_price" class="form-input" required/>
+                  <input type="text" v-model="form.total_negotiated_price" class="form-input" required/>
                 </td>
               </tr>
               <tr>
@@ -364,12 +363,13 @@
                 </td>
                 <td></td>
                 <td class="text-right">
-                  <input type="text" v-model="form.grand_total_negotiated_price" class="form-input" required/>
+                  <input type="text" v-model="form.grand_total_offered_price" class="form-input" required/>
                 </td>
                 <td></td>
                 <td class="text-right">
-                  <input type="text" v-model="form.grand_total_offered_price" class="form-input" required/>
+                  <input type="text" v-model="form.grand_total_negotiated_price" class="form-input" required/>
                 </td>
+                
               </tr>
             </tfoot>
           </table>
@@ -495,6 +495,29 @@
     function setVendorOtherData(){
       props.form.scm_vendor_id = props.form.scmVendor?.id ?? null;
     }
+
+   // watch form.scmCsMaterialVendors
+    watch(() => [props.form.scmCsMaterialVendors,props.form.freight], () => {
+      let total_negotiated_price = 0;
+      let total_offered_price = 0;
+      let grand_total_negotiated_price = 0;
+      let grand_total_offered_price = 0;
+      props.form.scmCsMaterialVendors.forEach((lines, index) => {
+        lines.forEach((line, index) => {
+          line.negotiated_amount = line.negotiated_price * line.quantity;
+          total_negotiated_price += line.negotiated_amount; 
+          line.offer_amount = line.offered_price * line.quantity;
+          total_offered_price += line.offer_amount;
+        });
+      });
+      grand_total_negotiated_price = total_negotiated_price + props.form.freight;
+      grand_total_offered_price = total_offered_price + props.form.freight;
+      props.form.total_negotiated_price = total_negotiated_price;
+      props.form.total_offered_price = total_offered_price;
+      props.form.grand_total_negotiated_price = grand_total_negotiated_price;
+      props.form.grand_total_offered_price = grand_total_offered_price;
+    }, { deep: true });
+
 
 
 
