@@ -104,7 +104,7 @@
               </td>
               <td class="px-1 py-1">
                 <div class="relative">
-                  <v-select :options="serviceList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="scmWcsService.scmService" label="service_name_and_code" class="block form-input" @update:modelValue="serviceChange(index)">
+                  <v-select :options="serviceList[index]" placeholder="--Choose an option--" :loading="iswrServiceListLoading" v-model="scmWcsService.scmService" label="service_name_and_code" class="block form-input" @update:modelValue="serviceChange(index)">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -325,7 +325,7 @@ import useHeroIcon from '../../../assets/heroIcon';
       const { warehouses,warehouse,getWarehouses,searchWarehouse ,isLoading:warehouseLoading} = useWarehouse();
       const { filteredStoreIssues, searchStoreIssue , fetchSiWiseMaterials, siWiseMaterials} = useStoreIssue();
       const { getSiWiseSir, filteredStoreIssueReturnLines } = useStoreIssueReturn();
-      const { getWrWiseServiceList, wrServiceList } = useWorkCs();
+      const { getWrWiseServiceList, wrServiceList, isLoading:iswrServiceListLoading } = useWorkCs();
       const { searchWorkRequisition, filteredWorkRequisitions, isLoading:isWorkRequisitionLoading } = useWorkRequisition();
       const props = defineProps({
         form: { type: Object, required: true },
@@ -396,19 +396,19 @@ import useHeroIcon from '../../../assets/heroIcon';
   }
 
   function serviceChange(index){
-    props.form.scmWcsServices[index].scm_service_id = props.form.scmWcsServices[index].scmService.id;
+    props.form.scmWcsServices[index].scm_service_id = props.form.scmWcsServices[index]?.scmService?.id;
   }
   
   function prChange(index) {
-    props.form.scmCsMaterials[index].scm_pr_id = props.form.scmCsMaterials[index].scmPr.id;
+    props.form.scmCsMaterials[index].scm_pr_id = props.form.scmCsMaterials[index]?.scmPr?.id;
     getPrWiseMaterialList(props.form.scmCsMaterials[index].scm_pr_id).then((res) => {
       props.materialList[index] = res;
     });
   }
   
   function warehouseChange() {
-    props.form.scm_warehouse_id = props.form.scmWarehouse.id;
-    props.form.acc_cost_center_id = props.form.scmWarehouse.cost_center_id;
+    props.form.scm_warehouse_id = props.form.scmWarehouse?.id;
+    props.form.acc_cost_center_id = props.form.scmWarehouse?.cost_center_id;
   } 
 
   function wrChange(index) {

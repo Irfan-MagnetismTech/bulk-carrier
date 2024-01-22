@@ -35,8 +35,8 @@ export default function useWorkCs() {
         purchase_center: '',
         business_unit: null,
         special_instruction: null,
+        priority: null,
         
-        // priority: null,
         // scm_warehouse_name: null,
         // acc_cost_center_id: null,
         // scmPr: null,
@@ -196,7 +196,7 @@ export default function useWorkCs() {
     async function getWrWiseServiceList(wrId) {
         //NProgress.start();
         // const loader = $loading.show(LoaderConfig);
-        // isLoading.value = true;
+        isLoading.value = true;
         try {
             const {data, status} = await Api.get(`/${BASE}/search-wr-wise-service-for-wcs`,{
                 params: {
@@ -209,6 +209,7 @@ export default function useWorkCs() {
             console.log('tag', error)
         } finally {
             //NProgress.done();
+            isLoading.value = false;
         }
     }
 //            let material_key = scmCsMaterial?.scm_material_id ?? '' + "-" + scmCsMaterial?.scm_pr_id ?? '';
