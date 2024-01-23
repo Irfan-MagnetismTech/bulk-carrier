@@ -307,8 +307,7 @@ class ScmCsController extends Controller
     public function showQuotation($id)
     {
         $scmCsVendor = ScmCsVendor::with('scmCs', 'scmVendor.scmVendorContactPerson', 'scmCsMaterialVendors.scmMaterial', 'scmCsMaterialVendors.scmPr')->find($id);
-        $scmCsMaterialVendors = $scmCsVendor->scmCsMaterialVendors->map(function($item)
-        {
+        $scmCsMaterialVendors = $scmCsVendor->scmCsMaterialVendors->map(function ($item) {
             $data = $item;
             $data['quantity'] = ScmCsMaterial::where(['scm_cs_id' => $item->scm_cs_id, 'scm_material_id' => $item->scm_material_id])->sum('quantity');
             return $data;
@@ -580,6 +579,15 @@ class ScmCsController extends Controller
             ->map(function ($item) {
                 return $item->scmVendor;
             });
+        return response()->success('Search result', $csVendor, 200);
+    }
+
+    public function selectedVendors(): JsonResponse
+    {
+        $csVendor = ScmCs::query()
+            ->with('selectedVendors.scmVendor', 'selectedVendors.scmCsLandedCost', 'selectedVendors.scmCsPaymentInfo')
+            ->find(request()->scm_cs_id);
+
         return response()->success('Search result', $csVendor, 200);
     }
 }
