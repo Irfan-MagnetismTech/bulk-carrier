@@ -226,4 +226,33 @@ class ScmWoController extends Controller
 
         return response()->success('Search result', $scmWo, 200);
     }
+
+
+    public function getWoLineDatas()
+    {
+        $scmWr = ScmWrLine::query()
+            ->where('scm_wr_id', request()->scm_wr_id)
+            ->whereNot('status', 'Closed')
+            ->get()
+            ->map(function ($item) {
+                $data['scm_service_id'] = $item->scmService->id;
+                $data['scmService'] = $item->scmService;
+                $data['wr_composite_key'] = $item->wr_composite_key;
+                $data['wr_quantity'] = $item->quantity;
+                $data['quantity'] = $item->quantity;
+
+                if (request()->scm_wo_id) {
+                    $data['wo_quantity'] = $item->scmWoItems->where('scm_wo_id', request()->scm_wo_id)->where('pwr_composite_key', $item->wr_composite_key)->first()->quantity;
+                } else {
+                    $data['wo_quantity'] = 0;
+                }
+                $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
+                $data['wo_quantity'] = $data['wo_quantity'] ?? 0;
+
+                $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity');
+                return $data;
+            });
+
+        return response()->success('data', $scmWr, 200);
+    }
 }
