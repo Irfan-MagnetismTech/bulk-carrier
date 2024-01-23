@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('wo_items', function (Blueprint $table) {
+        Schema::create('scm_wo_items', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('scm_wo_line_id')->nullable();
             $table->bigInteger('scm_service_id')->nullable();

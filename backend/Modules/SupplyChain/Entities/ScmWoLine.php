@@ -5,9 +5,12 @@ namespace Modules\SupplyChain\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Wo extends Model
+class ScmWoLine extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'scm_wr_id',
+        'scm_wo_id',
+    ];
 }
