@@ -466,7 +466,7 @@ class ScmWcsController extends Controller
         }
     }
 
-    public function searchServiceWcs(Request $request)
+    public function searchWorkCs(Request $request)
     {
         $wcs = [];
 

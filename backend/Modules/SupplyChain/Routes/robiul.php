@@ -22,13 +22,14 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::put('wcs-quotations/{quotationId}', [ScmWcsController::class, "updateWcsQuotation"])->name('wcs-quotations.update');
     Route::delete('wcs-quotations/{quotationId}', [ScmWcsController::class, "deleteWcsQuotation"])->name('quotations.delete');
 
-    Route::get('search-service-wcs', [ScmWcsController::class, "searchServiceWcs"])->name('searchServiceWcs');
+    Route::get('search-work-cs', [ScmWcsController::class, "searchWorkCs"])->name('searchWorkCs');
     Route::post('wcs-selected-supplier', [ScmWcsController::class, "wcsSelectedSupplierstore"])->name('wcsselectedSupplier.store');
     Route::get('wcs-wise-vendor-list', [ScmWcsController::class, "wcsWiseVendorList"])->name('wcs-wise-vendor-list');
     Route::get('get-wcs-data/{id}', [ScmWcsController::class, "getWcsWiseData"])->name('getWcsWiseData');
     Route::get('getWcsData/{csId}', [ScmWcsController::class, "getWcsData"])->name('getWcsData');
 
 
+    
     Route::get('get-wo-line-datas', [ScmWoController::class, "getWoLineDatas"])->name('get-wo-line-datas');
     Route::get('search-wr-wise-service', [ScmWoController::class, "getServiceByWrId"])->name('getServiceByWrId');
     Route::get('search-wo', [ScmWoController::class, "searchWo"])->name('searchWo');
