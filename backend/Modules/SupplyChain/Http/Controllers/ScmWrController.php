@@ -202,17 +202,20 @@ class ScmWrController extends Controller
     public function destroy(ScmWr $work_requisition): JsonResponse
     {
         try {
+            DB::beginTransaction();
             if (isset($work_requisition->attachment)) {
                 $this->fileUpload->deleteFile($work_requisition->attachment);
             }
             $work_requisition->scmWrLines()->delete();
             $work_requisition->delete();
-
+            DB::commit();
+            
             return response()->json([
                 'message' => 'Data deleted successfully.',
             ], 204);
         } catch (QueryException $e) {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($work_requisition->preventDeletionIfRelated(), 422);
         }
     }
 

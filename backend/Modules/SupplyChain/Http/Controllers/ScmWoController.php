@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmWo;
 use Modules\SupplyChain\Entities\ScmWr;
 use Modules\SupplyChain\Entities\ScmWcs;
@@ -135,16 +136,6 @@ class ScmWoController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('supplychain::edit');
-    }
-
-    /**
      * Update the specified resource in storage.
      * @param Request $request
      * @param ScmWo $workOrder
@@ -206,26 +197,30 @@ class ScmWoController extends Controller
             'wr_composite_key' => $value['wr_composite_key'],
         ]);
     }
-    /**
+
+        /**
      * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
+     * @param ScmWo $workOrder
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(ScmWo $workOrder)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $workOrder->scmWoLines()->delete();
+            $workOrder->scmWoItems()->delete();
+            $workOrder->scmWoTerms()->delete();
+            $workOrder->delete();
+
+            DB::commit();
+
+            return response()->success('Data deleted sucessfully!', null,  204);
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return response()->json($workOrder->preventDeletionIfRelated(), 422);
+        }
     }
-
-    // public function addNetRateToRequestData($request, $wo_id): mixed
-    // {
-    //     $scmWoLines = $request['scmWoLines'];
-    //     foreach ($scmWoLines as $key => $value) {
-    //         $scmWoLines[$key]['wo_composite_key'] = CompositeKey::generate($key, $wo_id, 'wo', $value['scm_service_id']);
-    //     }
-    //     $request['scmWoLines'] = $scmWoLines;
-
-    //     return $request;
-    // }
 
 
     public function getWoOrWoWcsWiseWrData(Request $request): JsonResponse
