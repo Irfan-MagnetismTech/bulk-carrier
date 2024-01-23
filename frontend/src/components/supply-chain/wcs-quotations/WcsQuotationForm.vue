@@ -13,11 +13,12 @@
       </label>
       
     <label class="label-group">
-          <span class="label-item-title">Quotation Ref. No</span>
+          <span class="label-item-title">Quotation Ref. No <span class="text-red-500">*</span></span>
           <input
             type="text"
             v-model="form.quotation_ref_no"
             required
+            placeholder="Quotation Ref. No"
             class="form-input"
           />
       </label>
@@ -30,7 +31,7 @@
       <label class="label-group">
         <span class="label-item-title">Quotation Validity <span class="text-red-500">*</span></span>
           <!-- <input type="number" v-model="form.quotation_validity" class="form-input" name="scm_department_id" :id="'scm_department_id'" required/> -->
-          <VueDatePicker v-model="form.quotation_validity" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+          <VueDatePicker v-model="form.quotation_validity" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.quotation_date"></VueDatePicker>
       </label>
 
       <label class="label-group">
@@ -49,7 +50,8 @@
 
     <label class="label-group">
         <span class="label-item-title">Payment Method <span class="text-red-500">*</span></span>
-         <select v-model="form.payment_mode" class="form-input" required>
+         <select v-model="form.payment_mode" class="form-input" required >
+            <option value="" disabled selected>Select</option>
             <option value="Cash">Cash</option>
             <option value="Credit">Credit</option>
             <option value="Advance">Advance</option>
@@ -58,11 +60,16 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Currency <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.currency" class="form-input" required/>
+          <!-- <input type="text" v-model="form.currency" class="form-input" required/> -->
+          <select class="form-input" v-model.trim="form.currency" required>
+          <option value="" disabled selected>Select</option>
+          <option value="BDT">BDT</option>
+          <option value="USD">USD</option>
+        </select>
       </label>
       <label class="label-group">
         <span class="label-item-title">Credit Term <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.credit_term" class="form-input" required/>
+          <input type="text" v-model="form.credit_term" class="form-input" required placeholder="Credit Term"/>
       </label>
       <label class="label-group">
         <span class="label-item-title">VAT <span class="text-red-500">*</span></span>
@@ -79,7 +86,7 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Adjustment Policy <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.adjustment_policy" class="form-input" required/>
+          <input type="text" v-model="form.adjustment_policy" class="form-input" placeholder="Adjustment Policy" required/>
       </label>
 
       <label class="label-group">
@@ -105,7 +112,7 @@
             <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
               <th class="w-5/12 px-4 align-center">Service Name</th>
                 <th class="w-3/12 px-4 align-center">WR No</th>
-                <th class="w-2/12 px-4 align-center">Rate</th>
+                <th class="w-2/12 px-4 align-center">Rate <span class="text-red-500">*</span></th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
@@ -118,7 +125,7 @@
                     <td :rowspan="lines.length">{{ first(values(lines))?.scmService?.name }}</td>
                     <td><nobr>{{ scmSrLine?.scmWr?.ref_no }}</nobr></td>
                     <td v-if="form.scmWcsVendorServices[indexa][index]" :rowspan="lines.length">
-                      <input type="number" v-model="form.scmWcsVendorServices[indexa][index].rate" class="form-input" min="1"/>
+                      <input type="number" v-model="form.scmWcsVendorServices[indexa][index].rate" class="form-input" min="1" required/>
                     </td>
                   </tr>
                 </template>
@@ -360,6 +367,7 @@
       </div>
     </div>
   </div> -->
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 
 
@@ -383,6 +391,7 @@
     import useWorkCs from '../../../composables/supply-chain/useWorkCs';
     import { useRoute } from 'vue-router';
     import RemarksComponent from '../../utils/RemarksComponent.vue';
+import ErrorComponent from '../../utils/ErrorComponent.vue';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
@@ -403,7 +412,7 @@
     }); 
 
     const route = useRoute();
-    const WCSID = route.params.wcsId;
+    const WCSID = route.params?.wcsId;
 
     watch(() => materialCs.value, (newVal, oldVal) => {
           props.form.scmCs = newVal;

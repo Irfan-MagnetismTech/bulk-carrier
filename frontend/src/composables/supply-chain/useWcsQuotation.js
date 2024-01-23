@@ -33,12 +33,12 @@ export default function useWcsQuotation() {
         quotation_date: null,
         quotation_validity: null,
 
-        payment_method: null,
+        payment_mode: "",
         credit_term: null,
-        vat: null,//local
-        ait: null,//local
-        currency: null,
-        security_money: null,
+        vat: 0,//local
+        ait: 0,//local
+        currency: '',
+        security_money: 0,
         adjustment_policy: null,
         attachment: null,
         terms_and_condition: null,
@@ -71,7 +71,7 @@ export default function useWcsQuotation() {
                 scmService: null,
                 scm_service_id: null,
                 quantity: null,
-                rate: '',  
+                rate: 0,  
 
                 // brand: null,
                 // model: null,
@@ -91,7 +91,7 @@ export default function useWcsQuotation() {
         scmService: null,
         scm_service_id: null,
         quantity: null,
-        rate: '',  
+        rate: 0,  
     } 
 
     

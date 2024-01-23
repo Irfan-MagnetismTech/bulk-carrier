@@ -38,7 +38,7 @@ const props = defineProps({
   },
 });
 // Code for global search start
-const WCSID = route.params.wcsId;
+const WCSID = route.params?.wcsId;
 const icons = useHeroIcon();
 onMounted(() => {
   watchPostEffect(() => {
@@ -198,8 +198,9 @@ function confirmDelete(wcs_id, id) {
     <h2 class="text-2xl font-semibold text-gray-700">Quotations List</h2>
     <div class="flex gap-3">
       <default-button :title="'WCS List'" :to="{ name: 'scm.work-cs.index' }" :icon="icons.DataBase"></default-button>
-      <default-button :title="'Create Quotation'" :to="{ name: 'scm.wcs-quotations.create', params: { wcsId: WCSID }  }" :icon="icons.AddIcon"></default-button>
+      <default-button v-if="!workCs?.scmWcsVendors?.find(scmWcsVendor => scmWcsVendor.is_selected == 1)" :title="'Create Quotation'" :to="{ name: 'scm.wcs-quotations.create', params: { wcsId: WCSID }  }" :icon="icons.AddIcon"></default-button>
     </div>
+
   </div>
   <!-- Table -->
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">

@@ -76,8 +76,8 @@ let filterOptions = ref({
       "filter_type": "input"
     },
     {
-      "relation_name": null,
-      "field_name": "supplier",
+      "relation_name": "selectedVendors.scmVendor",
+      "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,
@@ -172,20 +172,20 @@ const navigateToQuotation = (wcsId) => {
       wcsId: wcsId
     }
   };
-  router.push(routeOptions);
+  if(wcsId) router.push(routeOptions);
 };  
 
-const navigateSupplierSelection = (csId) => {
+const navigateSupplierSelection = (wcsId) => {
   const routeOptions = {
-    name: 'scm.supplier-selection',
+    name: 'scm.wcs-supplier-selection',
     params: {
-      csId: csId
+      wcsId: wcsId
     }
     // query: {
     //   csId: csId
     // }
   };
-  router.push(routeOptions);
+  if(wcsId) router.push(routeOptions);
 };
 
 const navigateToPOCreate = (csId) => {
@@ -249,10 +249,10 @@ function confirmDelete(id) {
               <td><nobr>{{ formatDate(workCs?.effective_date) }}</nobr></td>
               <td><nobr>{{ formatDate(workCs?.expire_date) }}</nobr></td>
               <td>
-                <template v-if="workCs?.selectedSuppliers?.length">
-                  <!-- <ul v-for="(vendor,index) in materialCsdata?.selectedVendors" :key="index">
+                <template v-if="workCs?.selectedVendors?.length">
+                  <ul v-for="(vendor,index) in workCs?.selectedVendors" :key="index">
                     <li>{{ vendor.scmVendor.name }}</li>
-                  </ul> -->
+                  </ul>
                 </template>
                 <template v-else>
                   <span class="text-red-500">No Supplier Selected</span>
@@ -265,10 +265,10 @@ function confirmDelete(id) {
               <td>
                 <div class="flex items-center justify-center gap-2">
                   <!-- <button @click="navigateToPOCreate(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Create PO</nobr></button> -->
-                  <button @click="navigateToQuotation(workCs.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Quotations</nobr></button>
-                  <!-- <button @click="navigateSupplierSelection(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700" v-if="materialCsdata?.scmCsVendors?.length"><nobr>Select Supplier</nobr></button> -->
-                  <action-button :action="'edit'" :to="{ name: 'scm.work-cs.edit', params: { workCsId: workCs.id } }"></action-button>
-                  <action-button @click="confirmDelete(workCs.id)" :action="'delete'"></action-button>
+                  <button @click="navigateToQuotation(workCs?.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Quotations</nobr></button>
+                  <button @click="navigateSupplierSelection(workCs?.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700" v-if="workCs?.scmWcsVendors?.length && !workCs?.scmWcsVendors?.find(scmWcsVendor => scmWcsVendor.is_selected == 1)"><nobr>Select Supplier</nobr></button>
+                  <action-button :action="'edit'" :to="{ name: 'scm.work-cs.edit', params: { workCsId: workCs?.id } }"></action-button>
+                  <action-button @click="confirmDelete(workCs?.id)" :action="'delete'"></action-button>
                 </div>
               </td>
             </tr>
