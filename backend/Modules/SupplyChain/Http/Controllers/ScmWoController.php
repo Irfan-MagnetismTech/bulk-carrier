@@ -13,6 +13,7 @@ use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmWrLine;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Services\CompositeKey;
+use Modules\SupplyChain\Entities\ScmWcsService;
 use Modules\SupplyChain\Http\Requests\ScmWoRequest;
 
 class ScmWoController extends Controller
@@ -57,7 +58,7 @@ class ScmWoController extends Controller
             $scmWo = ScmWo::create($requestData);
             // $linesData = CompositeKey::generateArray($request->scmPoLines, $scmPo->id, 'scm_material_id', 'po');
             // $data = $this->addNetRateToRequestData($request, $scmWo->id);
-            // $linesData = CompositeKey::generateArray($request->scmWrLines, $scmWo->id, 'scm_service_id', 'wo');
+            // $linesData = CompositeKey::generateArray($request->scmWoLines, $scmWo->id, 'scm_service_id', 'wo');
             // $scmWo->scmWoLines()->createUpdateOrDelete($linesData);
             $scmWo->scmWoTerms()->createUpdateOrDelete($request->scmWoTerms);
             DB::commit();
@@ -230,28 +231,54 @@ class ScmWoController extends Controller
 
     public function getWoLineDatas()
     {
-        $scmWr = ScmWrLine::query()
-            ->where('scm_wr_id', request()->scm_wr_id)
-            ->whereNot('status', 'Closed')
-            ->get()
-            ->map(function ($item) {
-                $data['scm_service_id'] = $item->scmService->id;
-                $data['scmService'] = $item->scmService;
-                $data['wr_composite_key'] = $item->wr_composite_key;
-                $data['wr_quantity'] = $item->quantity;
-                $data['quantity'] = $item->quantity;
+        if (!request()->has('scm_wcs_id')) {
+            $scmWr = ScmWrLine::query()
+                ->where('scm_pr_id', request()->scm_pr_id)
+                ->whereNot('status', 'Closed')
+                ->get()
+                ->map(function ($item) {
+                    $data['scm_service_id'] = $item->scmService->id;
+                    $data['scmService'] = $item->scmService;
+                    $data['wr_composite_key'] = $item->wr_composite_key;
+                    $data['wr_quantity'] = $item->quantity;
+                    $data['quantity'] = $item->quantity;
 
-                if (request()->scm_wo_id) {
-                    $data['wo_quantity'] = $item->scmWoItems->where('scm_wo_id', request()->scm_wo_id)->where('pwr_composite_key', $item->wr_composite_key)->first()->quantity;
-                } else {
-                    $data['wo_quantity'] = 0;
-                }
-                $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
-                $data['wo_quantity'] = $data['wo_quantity'] ?? 0;
+                    if (request()->scm_wo_id) {
+                        $data['wo_quantity'] = $item->scmWoItems->where('scm_wo_id', request()->scm_wo_id)->where('wr_composite_key', $item->wr_composite_key)->first()->quantity;
+                    } else {
+                        $data['wo_quantity'] = 0;
+                    }
+                    $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
+                    $data['wo_quantity'] = $data['wo_quantity'] ?? 0;
 
-                $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity');
-                return $data;
-            });
+                    return $data;
+                });
+        } else {
+            $scmWr = ScmWcsService::query()
+                ->where([
+                    'scm_wcs_id' => request()->scm_wcs_id,
+                    'scm_wr_id' => request()->scm_wr_id
+                ])
+                ->get()
+                ->map(function ($item) {
+                    $data['scm_service_id'] = $item->scmService->id;
+                    $data['scmService'] = $item->scmService;
+                    $data['quantity'] = $item->quantity;
+                    $data['wcs_composite_key'] = $item->wcs_composite_key;
+                    $data['wr_composite_key'] = $item->wr_composite_key;
+                    $data['wr_quantity'] = $item->scmWrLine->quantity;
+                    $data['quantity'] = $item->quantity;
+                    if (request()->scm_wo_id) {
+                        $data['wo_quantity'] = $item->scmWoItems->where('wcs_composite_key', $item->wcs_composite_key)->sum('quantity');
+                    } else {
+                        $data['wo_quantity'] = 0;
+                    }
+                    $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity');
+
+                    return $data;
+                });
+        }
+
 
         return response()->success('data', $scmWr, 200);
     }
