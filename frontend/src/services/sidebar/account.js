@@ -276,6 +276,16 @@ export default [
                         permissionKey: '',
                         subSubMenu: [],
                     },
+                    {
+                        route: 'acc.ais-reports.cost-center-breakup',
+                        label: 'Cost Center Breakup',
+                        preIcon: '',
+                        postIcon: icons.DownArrow,
+                        is_active: false,
+                        is_open: false,
+                        permissionKey: '',
+                        subSubMenu: [],
+                    },
                     // {
                     //     route: 'crw.vesselRequiredCrews.index',
                     //     label: 'Cost Center Breakup',
