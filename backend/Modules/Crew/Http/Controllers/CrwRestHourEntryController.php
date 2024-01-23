@@ -151,12 +151,18 @@ class CrwRestHourEntryController extends Controller
             $dailyRecords = CrwRestHourEntry::where('ops_vessel_id', $vesselId)->whereBetween('record_date', [$from, $till])
                 ->with(['crwRestHourEntryLine' => fn($q) => $q->where('crw_crew_id', $crewId)])->get();
 
-            $crwCrewAssignmentId = $dailyRecords->first()->crwRestHourEntryLine->crw_crew_assignment_id; 
+            $crwCrewAssignmentId = $dailyRecords->first()->crwRestHourEntryLine->crw_crew_assignment_id;
 
-            $restHourRecords                  = [];
-            $restHourRecords['crw_profile']   = CrwCrewProfile::with('crwCurrentRank')->where('id', $crewId)->first(['id', 'full_name', 'pre_mobile_no']);
-            $restHourRecords['vessel']        = OpsVessel::where('id', $vesselId)->first(['vessel_type', 'name', 'short_code', 'flag', 'imo']);
-            $restHourRecords['assignment']    = CrwCrewAssignment::where('id', $crwCrewAssignmentId)->first();
+            $restHourRecords                       = [];
+            $restHourRecords['crw_profile']        = CrwCrewProfile::with('crwCurrentRank')->where('id', $crewId)->first(['id', 'full_name', 'pre_mobile_no']);
+            $restHourRecords['vessel']             = OpsVessel::where('id', $vesselId)->first(['vessel_type', 'name', 'short_code', 'flag', 'imo']);
+            $restHourRecords['assignment']         = CrwCrewAssignment::where('id', $crwCrewAssignmentId)->first();
+            $restHourRecords['ttl_work_hours']     = $dailyRecords->pluck('crwRestHourEntryLine')->sum('work_hours');
+            $restHourRecords['ttl_rest_hours']     = $dailyRecords->pluck('crwRestHourEntryLine')->sum('rest_hours');
+            $restHourRecords['ttl_overtime_hours'] = $dailyRecords->pluck('crwRestHourEntryLine')->sum('overtime_hours');
+            $restHourRecords['fixed_overtime']     = 0;
+            $restHourRecords['extra_overtime']     = $restHourRecords['ttl_overtime_hours'] > $restHourRecords['fixed_overtime'] ?  $restHourRecords['ttl_overtime_hours'] - $restHourRecords['fixed_overtime'] : 0.00;
+
             $restHourRecords['daily_records'] = $dailyRecords->map(function ($q)
             {
                 $q->day = Carbon::parse($q->record_date)->day;
