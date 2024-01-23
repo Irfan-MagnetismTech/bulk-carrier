@@ -1,14 +1,13 @@
 <script setup>
-import useTransaction from '../../../composables/accounts/useTransaction';
 import Title from "../../../services/title";
 import {onMounted, ref, watchEffect} from "vue";
 import useAisReport from "../../../composables/accounts/useAisReport";
 import useAccountCommonApiRequest from "../../../composables/accounts/useAccountCommonApiRequest";
 import Store from "../../../store";
+const { balanceIncomeLineLists, getBalanceIncomeLineLists } = useAccountCommonApiRequest();
 
-const { trialBalances, getTrialBalance, isLoading} = useAisReport();
-const { bgColor, allAccount, getAccount } = useTransaction();
-const { allCostCenterLists, getCostCenter } = useAccountCommonApiRequest();
+const { costCenterSummaries, getCostCenterSummary, isLoading} = useAisReport();
+const { allAccountLists, getAccount } = useAccountCommonApiRequest();
 
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const { setTitle } = Title();
@@ -16,7 +15,8 @@ const { setTitle } = Title();
 setTitle('AIS Report - Cost Center Summary');
 
 const searchParams = ref({
-  acc_cost_center_id: '',
+  acc_balance_income_line_id: '',
+  acc_account_id: '',
   from_date: '',
   till_date: '',
 });
@@ -59,7 +59,8 @@ function fetchAccounts(search, loading) {
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 onMounted(() => {
   watchEffect(() => {
-    getCostCenter(null,businessUnit.value);
+    getBalanceIncomeLineLists(businessUnit.value);
+    getAccount(null,businessUnit.value);
   });
 });
 </script>
@@ -67,15 +68,23 @@ onMounted(() => {
 <template>
   <!-- Table -->
   <!--  <button type="button"> Click Me </button>-->
-  <form @submit.prevent="getTrialBalance(searchParams)">
+  <form @submit.prevent="getCostCenterSummary(searchParams)">
     <div class="w-full flex items-center justify-between mb-2 my-2 select-none">
-      <fieldset class="w-full grid grid-cols-4 gap-1 px-2 pb-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+      <fieldset class="w-full grid grid-cols-5 gap-1 px-2 pb-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Cost Center Summary</legend>
         <div>
-          <label for="" class="text-xs" style="margin-left: .01rem">Cost Center <span class="text-red-500">*</span></label>
-          <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="searchParams.acc_cost_center_id" label="name" :reduce="allCostCenterLists=>allCostCenterLists.id" class="block w-full rounded form-input">
+          <label for="" class="text-xs" style="margin-left: .01rem">Balance Income Line <span class="text-red-500">*</span></label>
+          <v-select :options="balanceIncomeLineLists" :loading="isLoading" placeholder="--Choose an option--" v-model="searchParams.acc_balance_income_line_id" label="line_text"  class="block w-full rounded form-input">
             <template #search="{attributes, events}">
-              <input class="vs__search w-full" style="width: 50%" :required="!searchParams.acc_cost_center_id" v-bind="attributes" v-on="events"/>
+              <input class="vs__search w-full" style="width: 50%" :required="!searchParams.acc_balance_income_line_id" v-bind="attributes" v-on="events"/>
+            </template>
+          </v-select>
+        </div>
+        <div>
+          <label for="" class="text-xs" style="margin-left: .01rem">Account Name<span class="text-red-500">*</span></label>
+          <v-select :options="allAccountLists" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="searchParams.acc_account_id" label="account_name"  class="block w-full rounded form-input">
+            <template #search="{attributes, events}">
+              <input class="vs__search w-full" style="width: 50%" :required="!searchParams.acc_account_id" v-bind="attributes" v-on="events"/>
             </template>
           </v-select>
         </div>
@@ -111,7 +120,7 @@ onMounted(() => {
         </tr>
         </thead>
         <tbody class="bg-white dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-        <template v-for="(trialBalanceData, trialBalanceDataIndex) in trialBalances" :key="trialBalanceDataIndex">
+        <template v-for="(trialBalanceData, trialBalanceDataIndex) in costCenterSummaries" :key="trialBalanceDataIndex">
           <template v-for="(trialBalanceDataLine, trialBalanceDataLineIndex) in trialBalanceData.lines">
             <tr class="text-gray-700 dark-disabled:text-gray-400" style="background-color: #DBECDB" v-if="trialBalanceDataLineIndex === 0">
               <td class="text-sm balance_header" :id="trialBalanceData?.line_id">{{ trialBalanceData?.line_text }}</td>
