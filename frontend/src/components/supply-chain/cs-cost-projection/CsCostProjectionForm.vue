@@ -145,9 +145,12 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
           <!-- <Error v-if="errors?.lc_date" :errors="errors.lc_date"  /> -->
       </label>
   </div>
-
-  <div id="customDataTable">
-    <div  class="table-responsive">
+ 
+  <fieldset>
+  <div class="grid md:grid-cols-2 gap-2">
+  <div class="p-2 border-2 mt-7 bg-gray-400 text w-full col-span-2 text-center">Bank Payment Details</div>
+  <div id="col-start-1">
+    <div class="table-responsive">
         <table class="w-full whitespace-no-wrap" id="table">
           <caption class="table_caption p-2 border-2 mt-7 bg-gray-400 text">Bank Payment Details</caption>
           <tbody>
@@ -177,12 +180,6 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
 
               </td>
             </tr>
-            <!-- <tr class="text-center" v-for="(scmLcRecordLine,index) in form.scmLcRecordLines" :key="index">
-                <td class="align-center font-bold bg-gray-100">{{scmLcRecordLine.particular}}</td>
-                <td class="align-center">
-                  <input type="number" v-model="form.scmLcRecordLines[index].amount" required class="form-input text-center" :name="`lines`[index]"/>
-                </td>
-              </tr>    -->
             <tr class="text-center">
                 <td class="align-center font-bold bg-gray-100">Bank Commission (a)</td>
                 <td class="align-center">
@@ -240,6 +237,127 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
       <!-- </fieldset> -->
     </div>
   </div>
+  <div id="customDataTable">
+    <div  class="table-responsive">
+        <table class="w-full whitespace-no-wrap" id="table">
+          <caption class="table_caption p-2 border-2 mt-7 bg-gray-400 text">Landed Cost</caption>
+          <tbody>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100 !w-3/4">HS Codes <span class="text-red-500">*</span></td>
+              <td class="align-center text-center !w-1/4">
+                <input type="text" v-model="form.lc_type" required class="form-input text-center" name="lc_type" :id="'lc_type'" />
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100 !w-3/4">Currency Rate <span class="text-red-500">*</span></td>
+              <td class="align-center text-center !w-1/4">
+                <input type="text" v-model="form.lc_type" required class="form-input text-center" name="lc_type" :id="'lc_type'" />
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100 !w-3/4">Product Price as Per PI <span class="text-red-500">*</span></td>
+              <td class="align-center text-center !w-1/4">
+                <input type="text" readonly v-model="form.lc_type" required class="form-input text-center vms-readonly-input" name="lc_type" :id="'lc_type'" />
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100 !w-3/4">CFR / CPT Value <span class="text-red-500">*</span></td>
+              <td class="align-center text-center !w-1/4">
+                <input type="text" v-model="form.lc_type" required class="form-input text-center" name="lc_type" :id="'lc_type'" />
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100 !w-3/4">Add : Insurance <span class="text-red-500">*</span></td>
+              <td class="align-center text-center !w-1/4">
+                <input type="text" v-model="form.lc_type" required class="form-input text-center" name="lc_type" :id="'lc_type'" />
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100 !w-3/4">Assesable Value Before Landing <span class="text-red-500">*</span></td>
+              <td class="align-center text-center !w-1/4">
+                <input type="text" v-model="form.lc_type" readonly class="form-input text-center vms-readonly-input" name="lc_type" :id="'lc_type'" />
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100 !w-3/4">Add : Landing Charge <span class="text-red-500">*</span></td>
+              <td class="align-center text-center !w-1/4">
+                <input type="text" v-model="form.lc_type" required class="form-input text-center" name="lc_type" :id="'lc_type'" />
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100 !w-3/4">Assesable Value (A)<span class="text-red-500">*</span></td>
+              <td class="align-center text-center !w-1/4">
+                <input type="text" v-model="form.lc_type" readonly class="form-input text-center vms-readonly-input" name="lc_type" :id="'lc_type'" />
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100 !w-3/4">CD <span class="text-red-500">*</span></td>
+              <td class="align-center text-center !w-1/4">
+                <input type="text" v-model="form.lc_type" required class="form-input text-center" name="lc_type" :id="'lc_type'" />
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100 !w-3/4">RD <span class="text-red-500">*</span></td>
+              <td class="align-center !w-1/4">
+                <input type="text" v-model="form.bank_name" required class="form-input text-center" name="bank_name" :id="'bank_name'" />
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100">SD <span class="text-red-500">*</span></td>
+              <td class="align-center">
+                <input type="number" v-model="form.cfr_value" required class="form-input text-center" name="cfr_value" :id="'cfr_value'" min="1"/>
+
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100">VAT <span class="text-red-500">*</span></td>
+              <td class="align-center">
+                <input type="number" v-model="form.lc_margin" required class="form-input text-center" name="lc_margin" :id="'lc_margin'" min="1"/>
+
+              </td>
+            </tr>
+            <tr class="text-center">
+                <td class="align-center font-bold bg-gray-100">AIT </td>
+                <td class="align-center">
+                  <input type="number" v-model="form.bank_commission" required class="form-input text-center"/>
+                </td>
+              </tr>
+            <tr class="text-center">
+                <td class="align-center font-bold bg-gray-100">AT</td>
+                <td class="align-center">
+                  <input type="number" v-model="form.vat" required class="form-input text-center"/>
+                </td>
+              </tr>
+            <tr class="text-center">
+                <td class="align-center font-bold bg-gray-100">Total Duty & Taxes (B)</td>
+                <td class="align-center">
+                  <input type="number" v-model="form.others" readonly class="form-input text-center vms-readonly-input"/>
+                </td>
+              </tr>
+            <tr class="text-center">
+                <td class="align-center font-bold bg-gray-100">Other Charge (C)</td>
+                <td class="align-center">
+                  <input type="number" v-model="form.insurence_premium" required class="form-input text-center"/>
+                </td>
+              </tr>
+            <tr class="text-right">
+              <td class="align-right font-bold bg-gray-100">Landed Cost (A + B + C)</td>
+              <td class="align-center">
+                <input type="number" v-model="form.total_cost" readonly class="form-input text-center vms-readonly-input" name="total_cost" :id="'total_cost'" />
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      <!-- </fieldset> -->
+    </div>
+  </div>
+</div>
+</fieldset>
+
+
+ 
+  
   <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 

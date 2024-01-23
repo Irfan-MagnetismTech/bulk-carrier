@@ -27,11 +27,64 @@ export default function useMaterialCsCost() {
     const materialCs = ref({
         scmCs: null,
         scm_cs_id: null,
+        scmCsSelectedVendors: [
+            { 
+              scmVendor: null,
+              scm_vendor_id: null,
+              scmCsLandedCost:
+              {
+                scmCs: null,
+                scm_cs_id: null,
+                scmVendor: null,
+                scm_vendor_id: null,
+                scmCsVendor: null,
+                scm_cs_vendor_id: null,
+                hs_codes: null,
+                exchange_rate: 0.0,
+                product_price: 0.0,
+                freight_charge: 0.0,
+                cfr_value: 0.0,
+                insurance: 0.0,
+                assesable_value_b: 0.0,
+                landing_charge: 0.0,
+                assesable_value_a: 0.0,
+                cd: 0.0,
+              },
+              scmCsPaymentDetails: {
+                scmCs: null,
+                scm_cs_id: null,
+                scmVendor: null,
+                scm_vendor_id: null,
+                scmCsVendor: null,
+                scm_cs_vendor_id: null,
+                type: null,
+                status: null,
+                total_cost: 0.0,
+                market_rate: 0.0,
+                name_of_bank: null,
+                cfr_value:0.00,
+                lc_margin:0.00,
+                bank_commission:0.00,
+                vat:0.00,
+                others:0.00,
+                insurence_premium:0.00,
+                document_value:0.00,
+                exchange_rate:0.00,
+                insurence_company: null,
+              }
+            }
+        ],
+       
+        business_unit: null,
+    });
+
+    const paymentObj = {
+        scmCs: null,
+        scm_cs_id: null,
         scmVendor: null,
         scm_vendor_id: null,
         scmCsVendor: null,
         scm_cs_vendor_id: null,
-        business_unit: null,
         type: null,
         status: null,
         total_cost: 0.0,
@@ -46,18 +99,29 @@ export default function useMaterialCsCost() {
         document_value:0.00,
         exchange_rate:0.00,
         insurence_company: null,
-        business_unit: null,
-    });
+    }
 
-    const materialObj = {
-                scmPr: null,
-                scm_pr_id: null,
-                scm_material_id: null,
-                scmMaterial: null,
-                max_quantity: null,
-                pr_composite_key: null,
-                unit : null,
-                quantity : null,
+    const LandedCostObj = {
+        scmCs: null,
+        scm_cs_id: null,
+        scmVendor: null,
+        scm_vendor_id: null,
+        scmCsVendor: null,
+        scm_cs_vendor_id: null,
+        type: null,
+        status: null,
+        total_cost: 0.0,
+        market_rate: 0.0,
+        name_of_bank: null,
+        cfr_value:0.00,
+        lc_margin:0.00,
+        bank_commission:0.00,
+        vat:0.00,
+        others:0.00,
+        insurence_premium:0.00,
+        document_value:0.00,
+        exchange_rate:0.00,
+        insurence_company: null,
     }
 
     const materialList = ref([]);
@@ -370,7 +434,8 @@ export default function useMaterialCsCost() {
         getPrWiseCs,
         getQuotations,
         quotations,
-        materialObj,
+        paymentObj,
+        LandedCostObj,
         prMaterialList,
         materialList,
         getPrWiseMaterialList,
