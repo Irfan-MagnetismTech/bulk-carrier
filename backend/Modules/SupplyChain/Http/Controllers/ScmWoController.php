@@ -10,6 +10,7 @@ use Modules\SupplyChain\Entities\ScmWo;
 use Modules\SupplyChain\Entities\ScmWr;
 use Modules\SupplyChain\Entities\ScmWcs;
 use Modules\SupplyChain\Services\UniqueId;
+use Modules\SupplyChain\Entities\ScmWrLine;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Http\Requests\ScmWoRequest;
@@ -120,7 +121,7 @@ class ScmWoController extends Controller
     // }
 
 
-    public function getWoOrWoCsWiseWrData(Request $request): JsonResponse
+    public function getWoOrWoWcsWiseWrData(Request $request): JsonResponse
     {
         try {
             if ($request->scm_wcs_id == null) {
@@ -177,6 +178,31 @@ class ScmWoController extends Controller
     }
 
 
+        /**
+     * Retrieves the materials associated with a given purchase requisition ID.
+     *
+     * @return JsonResponse
+     */
+    public function getServiceByWrId(): JsonResponse
+    {
+        $wrServices = ScmWrLine::query()
+            ->with('scmService')
+            ->where('scm_wr_id', request()->scm_wr_id)
+            ->whereNot('status', 'Closed')
+            ->get()
+            ->map(function ($item) {
+                $data = $item->scmService;
+                if (request()->scm_wo_id) {
+                    $data['wo_quantity'] = $item->scmWoItems->where('scm_wo_id', request()->scm_wo_id)->where('wr_composite_key', $item->wr_composite_key)->first()->quantity;
+                } else {
+                    $data['wo_quantity'] = 0;
+                }
+                $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
+                $data['wo_quantity'] = $data['wo_quantity'] ?? 0;
+                return $data;
+            });
+        return response()->success('data list', $wrServices, 200);
+    }
     
     /**
      * Search for a WO based on the given request parameters.
