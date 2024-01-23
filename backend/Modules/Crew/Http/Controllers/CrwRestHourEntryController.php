@@ -2,12 +2,16 @@
 
 namespace Modules\Crew\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\Crew\Entities\CrwCrewAssignment;
+use Modules\Crew\Entities\CrwCrewProfile;
 use Modules\Crew\Entities\CrwRestHourEntry;
 use Modules\Crew\Http\Requests\CrwRestHourEntryRequest;
+use Modules\Operations\Entities\OpsVessel;
 
 class CrwRestHourEntryController extends Controller
 {
@@ -75,7 +79,7 @@ class CrwRestHourEntryController extends Controller
      */
     public function show(CrwRestHourEntry $crwRestHourEntry)
     {
-        // dd($crwRestHourEntry); 
+        // dd($crwRestHourEntry);
 
         try {
             return response()->success('Retrieved succesfully',
@@ -131,5 +135,41 @@ class CrwRestHourEntryController extends Controller
         {
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function crwRestHourReport(Request $request)
+    {
+        try {
+            $crewId       = $request->crw_crew_id;
+            $vesselId     = $request->ops_vessel_id;
+            $from         = Carbon::parse($request->year_month)->startOfMonth()->format('Y-m-d');
+            $till         = Carbon::parse($request->year_month)->endOfMonth()->format('Y-m-d');
+            $dailyRecords = CrwRestHourEntry::where('ops_vessel_id', $vesselId)->whereBetween('record_date', [$from, $till])
+                ->with(['crwRestHourEntryLine' => fn($q) => $q->where('crw_crew_id', $crewId)])->get();
+
+            $crwCrewAssignmentId = $dailyRecords->first()->crwRestHourEntryLine->crw_crew_assignment_id; 
+
+            $restHourRecords                  = [];
+            $restHourRecords['crw_profile']   = CrwCrewProfile::with('crwCurrentRank')->where('id', $crewId)->first(['id', 'full_name', 'pre_mobile_no']);
+            $restHourRecords['vessel']        = OpsVessel::where('id', $vesselId)->first(['vessel_type', 'name', 'short_code', 'flag', 'imo']);
+            $restHourRecords['assignment']    = CrwCrewAssignment::where('id', $crwCrewAssignmentId)->first();
+            $restHourRecords['daily_records'] = $dailyRecords->map(function ($q)
+            {
+                $q->day = Carbon::parse($q->record_date)->day;
+
+                return $q;
+            });
+
+            return response()->success('Retrieved Succesfully', $restHourRecords, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+
     }
 }
