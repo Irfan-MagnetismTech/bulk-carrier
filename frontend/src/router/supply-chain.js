@@ -643,4 +643,36 @@ export default [
         component: () => import(`../views/${PATH_BASE}/supplier-selection/create.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'supplier-selection' },
     },
+     /* Material Cs end */
+    
+     {
+        path: `/${BASE}/cs-cost-projection/:csId/:quotationId/create`,
+        name: `${BASE}.cs-cost-projection.create`,
+        component: () => import(`../views/${PATH_BASE}/cs-cost-projection/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'cs-cost-projection-create' },
+        props: (route) => ({
+            cs_id: route.query.cs_id ?? null
+            ,quotation_id: route.query.quotation_id ?? null
+        })
+    },
+    {
+        path: `/${BASE}/cs-cost-projection/:csId/:quotationId/edit`,
+        name: `${BASE}.cs-cost-projection.edit`,
+        component: () => import(`../views/${PATH_BASE}/cs-cost-projection/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'cs-cost-projection-edit' },
+    },
+    {
+        path: `/${BASE}/cs-cost-projection/:csId/:quotationId/show`,
+        name: `${BASE}.cs-cost-projection.show`,
+        component: () => import(`../views/${PATH_BASE}/cs-cost-projection/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'cs-cost-projection-show'  },
+    },
+    // {
+    //     path: `/${BASE}/quotations/:csId/index`,
+    //     name: `${BASE}.quotations.index`,
+    //     component: () => import(`../views/${PATH_BASE}/quotations/index.vue`),
+    //     meta: { requiresAuth: true, role: ROLE, permission: 'quotations-index' },
+    //     props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    // },
+   
 ];

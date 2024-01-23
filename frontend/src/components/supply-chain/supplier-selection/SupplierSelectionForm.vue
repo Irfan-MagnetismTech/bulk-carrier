@@ -430,7 +430,7 @@ onMounted(() => {
 
 
 const isModalOpen = ref(0);
-const details = ref(null);
+const details = ref([]);
 const currentIndex = ref(null);
 
 
@@ -440,14 +440,14 @@ function showModal(index1,name) {
   if(props.formData?.scmCsMaterialVendor[index1][name]) {
     details.value = cloneDeep(props.formData?.scmCsMaterialVendor[index1][name])
   } else {
-    details.value = null;
+    details.value = []
   }
   console.log(details.value);
 }
 
 function closeModel() {
   isModalOpen.value = 0
-  details.value = null;
+  details.value = []
 }
 
 

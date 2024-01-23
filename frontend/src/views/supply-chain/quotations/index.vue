@@ -168,6 +168,19 @@ let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 //   router.push(routeOptions);
 // };
 
+const navigateSupplierSelection = (csId) => {
+  const routeOptions = {
+    name: 'scm.supplier-selection',
+    params: {
+      csId: csId
+    }
+    // query: {
+    //   csId: csId
+    // }
+  };
+  if(csId) router.push(routeOptions);
+};
+
 
 function confirmDelete(cs_id, id) {
         Swal.fire({
@@ -194,6 +207,8 @@ function confirmDelete(cs_id, id) {
     <div class="flex gap-3">
       <default-button :title="'CS List'" :to="{ name: 'scm.material-cs.index' }" :icon="icons.DataBase"></default-button>
       <default-button :title="'Create Quotation'" :to="{ name: 'scm.quotations.create', params: { csId: CSID }  }" :icon="icons.AddIcon"></default-button>
+      <default-button :title="'Select Supplier'" :to="{ name: 'scm.supplier-selection', params: { csId: CSID }  }" :icon="icons.AddIcon"></default-button>
+     
     </div>
   </div>
   <!-- Table -->
@@ -249,6 +264,7 @@ function confirmDelete(cs_id, id) {
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">                 
                   <action-button :action="'edit'" :to="{ name: 'scm.quotations.edit', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>
+                  <action-button :action="'edit'" :to="{ name: 'scm.cs-cost-projection.create', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>
                   <action-button @click="confirmDelete(quotation.scm_cs_id, quotation.id)" :action="'delete'" v-if="!quotation.is_selected"></action-button>
                 </div>
               </td>
