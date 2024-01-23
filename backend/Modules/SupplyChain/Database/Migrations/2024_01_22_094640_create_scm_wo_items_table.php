@@ -13,16 +13,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('wo_items', function (Blueprint $table) {
+        Schema::create('scm_wo_items', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('scm_wo_line_id')->nullable();
             $table->bigInteger('scm_service_id')->nullable();
-            $table->bigInteger('description')->nullable();
-            $table->bigInteger('received_date')->nullable();
-            $table->bigInteger('quantity')->nullable();
-            $table->bigInteger('rate')->nullable();
-            $table->bigInteger('total')->nullable();
             $table->bigInteger('scm_wo_id')->nullable();
+            $table->text('description')->nullable();
+            $table->date('received_date')->nullable();
+            $table->float('quantity', 20, 2)->nullable();
+            $table->float('rate', 20, 2)->nullable();
+            $table->float('total', 20, 2)->nullable();
+            $table->string('wr_composite_key')->nullable();
+            $table->string('wo_composite_key')->nullable();
+            $table->string('wcs_composite_key')->nullable();
             $table->timestamps();
         });
     }

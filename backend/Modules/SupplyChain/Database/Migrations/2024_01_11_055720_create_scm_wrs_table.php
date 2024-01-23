@@ -21,7 +21,7 @@ return new class extends Migration
             $table->date('raised_date')->nullable();
             $table->date('approved_date')->nullable();
             $table->string('attachment')->nullable();
-            $table->text('remarks')->nullable();            
+            $table->text('remarks')->nullable();
             $table->enum('purchase_center', ['Local', 'Foreign','Plant'])->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();
             $table->tinyInteger('is_closed')->default(0)->comment('0, 1');

@@ -98,7 +98,7 @@ class ScmWrController extends Controller
 
             $work_requisition = ScmWr::create($work_requisition_info);
 
-            $linesData = CompositeKey::generateArray($request->scmWrLines, $work_requisition->id, 'scm_material_id', 'wr');
+            $linesData = CompositeKey::generateArray($request->scmWrLines, $work_requisition->id, 'scm_service_id', 'wr');
 
             $work_requisition->scmWrLines()->createMany($linesData);
 
