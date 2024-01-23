@@ -148,7 +148,6 @@ class ScmWoController extends Controller
                             'quantity' => $item->quantity,
                             'wr_composite_key' => $item->wr_composite_key,
                             'max_quantity' => $item->quantity - $item->scmWoLines->sum('quantity'),
-                            'rate' => 0,
                             // 'total_price' => $item->total_price
                         ];
                     })
