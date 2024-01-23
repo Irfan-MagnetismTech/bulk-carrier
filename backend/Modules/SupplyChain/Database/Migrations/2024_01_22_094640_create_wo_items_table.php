@@ -13,14 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('scm_wcs_services', function (Blueprint $table) {
+        Schema::create('wo_items', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('scm_wr_id')->nullable();
-            $table->bigInteger('scm_wcs_id')->nullable();
+            $table->bigInteger('scm_wo_line_id')->nullable();
             $table->bigInteger('scm_service_id')->nullable();
-            $table->float('quantity', 20, 2)->nullable();
-            $table->string('wcs_composite_key')->nullable();
-            $table->string('wr_composite_key')->nullable();
+            $table->bigInteger('description')->nullable();
+            $table->bigInteger('received_date')->nullable();
+            $table->bigInteger('quantity')->nullable();
+            $table->bigInteger('rate')->nullable();
+            $table->bigInteger('total')->nullable();
+            $table->bigInteger('scm_wo_id')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scm_wcs_services');
+        Schema::dropIfExists('wo_items');
     }
 };

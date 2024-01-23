@@ -37,7 +37,7 @@ return new class extends Migration
             $table->enum('status', ['Pending', 'WIP', 'Closed'])->default('Pending');
             $table->timestamps();
         });
-    }
+    } 
 
     /**
      * Reverse the migrations.
