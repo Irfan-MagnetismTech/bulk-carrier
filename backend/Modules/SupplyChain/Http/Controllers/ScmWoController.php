@@ -233,7 +233,7 @@ class ScmWoController extends Controller
     {
         if (!request()->has('scm_wcs_id')) {
             $scmWr = ScmWrLine::query()
-                ->where('scm_pr_id', request()->scm_pr_id)
+                ->where('scm_wr_id', request()->scm_wr_id)
                 ->whereNot('status', 'Closed')
                 ->get()
                 ->map(function ($item) {
