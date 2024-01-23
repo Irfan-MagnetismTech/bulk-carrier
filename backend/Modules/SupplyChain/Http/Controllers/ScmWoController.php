@@ -10,6 +10,7 @@ use Modules\SupplyChain\Entities\ScmWo;
 use Modules\SupplyChain\Entities\ScmWr;
 use Modules\SupplyChain\Entities\ScmWcs;
 use Modules\SupplyChain\Services\UniqueId;
+use Modules\SupplyChain\Entities\ScmWoItem;
 use Modules\SupplyChain\Entities\ScmWrLine;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Services\CompositeKey;
@@ -52,15 +53,15 @@ class ScmWoController extends Controller
     {
         $requestData = $request->except('ref_no');
         $requestData['ref_no'] = UniqueId::generate(ScmWo::class, 'WO');
+        $requestData['created_by'] = auth()->id();
 
         try {
             DB::beginTransaction();
             $scmWo = ScmWo::create($requestData);
-            // $linesData = CompositeKey::generateArray($request->scmPoLines, $scmPo->id, 'scm_material_id', 'po');
-            // $data = $this->addNetRateToRequestData($request, $scmWo->id);
-            // $linesData = CompositeKey::generateArray($request->scmWoLines, $scmWo->id, 'scm_service_id', 'wo');
-            // $scmWo->scmWoLines()->createUpdateOrDelete($linesData);
-            $scmWo->scmWoTerms()->createUpdateOrDelete($request->scmWoTerms);
+
+            $this->createScmWoLinesAndItems($request, $scmWo);
+            $scmWo->scmWoTerms()->createMany($request->scmWoTerms);
+
             DB::commit();
             return response()->success('Data created successfully', $scmWo, 201);
         } catch (\Exception $e) {
@@ -69,14 +70,68 @@ class ScmWoController extends Controller
         }
     }
 
-    /**
+   /**
      * Show the specified resource.
-     * @param int $id
-     * @return Renderable
+     * @param ScmWo $workOrder
+     * @return JsonResponse
      */
-    public function show($id)
+    public function show(ScmWo $workOrder): JsonResponse
     {
-        return view('supplychain::show');
+        try {
+            $workOrder->load('scmWoLines.scmWoItems.scmService', "scmWoLines.scmWr", 'scmWoTerms', 'scmVendor', 'scmWarehouse', 'scmWoItems', 'scmWcs', 'scmWoLines.scmWoItems.scmWcsService.scmService', 'scmWoLines.scmWoItems.scmWrLine.scmService');
+
+            $scmWoLines = $workOrder->scmWoLines->map(function ($items) {
+                $datas = $items;
+
+                $adas = $items->scmWoItems->map(function ($item) {
+                    if (isset($item['wcs_composite_key'])) {
+                        $max_quantity = $item->scmWcsService->quantity -  $item->scmWcsService->scmWoItems->sum('quantity') + $item->quantity;
+                    } else {
+                        $max_quantity =  $item->scmWrLine->quantity -  $item->scmWrLine->scmWoItems->sum('quantity') + $item->quantity;
+                    }
+                    return [
+                        'scm_service_id' => $item['scm_service_id'],
+                        'scmService' => $item['scmService'],
+                        'required_date' => $item['required_date'],
+                        'quantity' => $item['quantity'],
+                        'rate' => $item['rate'],
+                        'total' => $item['total'],
+                        'description' => $item['description'],
+                        'wo_composite_key' => $item['wo_composite_key'],
+                        'wr_composite_key' => $item['wr_composite_key'],
+                        'wcs_composite_key' => $item['wcs_composite_key'],
+                        'max_quantity' => $max_quantity,
+                        'wr_quantity' => $item['quantity'],
+                    ];
+                });
+                //data_forget scmPoItems
+
+                data_forget($items, 'scmWoItems');
+                $datas['scmWoItems'] = $adas;
+
+                return $datas;
+            });
+
+            // return response()->json($scmPoLines, 422);
+
+            // data_forget($workOrder, 'scmPoLines');
+
+            // $workOrder->scmPoLines = $scmPoLines;
+
+            // data forget scmPolines.scmPoItems and data set
+            // $workOrder->scmPoLines->map(function ($item) {
+            //     $item->scmPoItems->map(function ($item) {
+            //
+            //         return $item;
+            //     });
+            //     return $item;
+            // });
+
+
+            return response()->success('data', $workOrder, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
@@ -92,14 +147,65 @@ class ScmWoController extends Controller
     /**
      * Update the specified resource in storage.
      * @param Request $request
-     * @param int $id
-     * @return Renderable
+     * @param ScmWo $workOrder
+     * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(ScmWoRequest $request, ScmWo $workOrder): JsonResponse
     {
-        //
+        $requestData = $request->except('ref_no');
+
+        try {
+            DB::beginTransaction();
+
+            $workOrder->update($requestData);
+            $workOrder->scmWoLines()->delete();
+            $workOrder->scmWoItems()->delete();
+            $workOrder->scmWoTerms()->delete();
+
+            $this->createScmWoLinesAndItems($request, $workOrder);
+
+            $workOrder->scmWoTerms()->createMany($request->scmWoTerms);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
+
+        return response()->success('Data updated successfully!',  $workOrder, 202);
     }
 
+
+    private function createScmWoLinesAndItems($request, $workOrder)
+    {
+        foreach ($request->scmWoLines as $key => $values) {
+            $scmWoLine = $workOrder->scmWoLines()->create([
+                'scm_wo_id' => $workOrder->id,
+                'scm_wr_id' => $values['scm_wr_id'],
+            ]);
+
+            foreach ($values['scmWoItems'] as $index => $value) {
+                $this->createScmWoItem($request, $scmWoLine, $workOrder, $value, $index);
+            }
+        }
+    }
+
+    private function createScmWoItem($request, $scmWoLine, $workOrder, $value, $index)
+    {
+        ScmWoItem::create([
+            'scm_wo_line_id' => $scmWoLine->id,
+            'scm_wo_id' => $workOrder->id,
+            'scm_service_id'   => $value['scm_service_id'],
+            'received_date' => $value['received_date'],
+            'quantity' => $value['quantity'],
+            'rate' => $value['rate'],
+            'total' => $value['total'],
+            'description' => $value['description'],
+            'wcs_composite_key' => $value['wcs_composite_key'] ?? null,
+            'wo_composite_key' => CompositeKey::generate($index, $workOrder->id, 'wo', $value['scm_service_id'], $scmWoLine->id),
+            'wr_composite_key' => $value['wr_composite_key'],
+        ]);
+    }
     /**
      * Remove the specified resource from storage.
      * @param int $id

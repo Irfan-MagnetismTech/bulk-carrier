@@ -3,6 +3,7 @@
 namespace Modules\SupplyChain\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmWoItem extends Model
@@ -21,4 +22,24 @@ class ScmWoItem extends Model
         'wo_composite_key',
         'wcs_composite_key',
     ];
+
+    public function scmService(): BelongsTo
+    {
+        return $this->belongsTo(ScmService::class);
+    }
+
+    public function scmWrLine(): BelongsTo
+    {
+        return $this->belongsTo(ScmWrLine::class, 'wr_composite_key', 'wr_composite_key');
+    }
+
+    public function scmWcsService(): BelongsTo
+    {
+        return $this->belongsTo(ScmWcsService::class, 'wcs_composite_key', 'wcs_composite_key');
+    }
+
+    public function scmWoLine(): BelongsTo
+    {
+        return $this->belongsTo(ScmWoLine::class);
+    }
 }
