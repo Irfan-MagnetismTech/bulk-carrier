@@ -411,7 +411,7 @@
         <span class="label-item-title">Convertion Rate( Foreign To BDT )<span class="text-red-500">*</span></span>
         <input type="text" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
     </label>
-    <label class="label-group" v-if="(form.currency != 'USD' && form.currency != 'BDT' && form.currency != '' && form.currency != null)">
+    <label class="label-group" v-if="(form.currency != 'USD' && form.currency != 'BDT' && form.currency != '' && form.currency != nu)">
         <span class="label-item-title">Convertion Rate( Foreign To USD )<span class="text-red-500">*</span></span>
         <input type="text" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
     </label>
