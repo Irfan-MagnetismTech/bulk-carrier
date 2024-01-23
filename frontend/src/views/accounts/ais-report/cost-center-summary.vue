@@ -74,7 +74,7 @@ onMounted(() => {
         <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Cost Center Summary</legend>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">Balance Income Line <span class="text-red-500">*</span></label>
-          <v-select :options="balanceIncomeLineLists" :loading="isLoading" placeholder="--Choose an option--" v-model="searchParams.acc_balance_income_line_id" label="line_text"  class="block w-full rounded form-input">
+          <v-select :options="balanceIncomeLineLists" :loading="isLoading" placeholder="--Choose an option--" v-model="searchParams.acc_balance_income_line_id" label="line_text" :reduce="balanceIncomeLineLists => balanceIncomeLineLists.id" class="block w-full rounded form-input">
             <template #search="{attributes, events}">
               <input class="vs__search w-full" style="width: 50%" :required="!searchParams.acc_balance_income_line_id" v-bind="attributes" v-on="events"/>
             </template>
@@ -82,7 +82,7 @@ onMounted(() => {
         </div>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">Account Name<span class="text-red-500">*</span></label>
-          <v-select :options="allAccountLists" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="searchParams.acc_account_id" label="account_name"  class="block w-full rounded form-input">
+          <v-select :options="allAccountLists" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="searchParams.acc_account_id" label="account_name" :reduce="allAccountLists => allAccountLists.id"  class="block w-full rounded form-input">
             <template #search="{attributes, events}">
               <input class="vs__search w-full" style="width: 50%" :required="!searchParams.acc_account_id" v-bind="attributes" v-on="events"/>
             </template>
