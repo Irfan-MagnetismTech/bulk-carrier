@@ -16,6 +16,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('search-wr-wise-service-for-wcs', [ScmWrController::class, "getServiceByWrIdForWcs"])->name('getServiceByWrIdForWcs');
     Route::get('search-wr', [ScmWrController::class, "searchWr"])->name('searchWr');
     Route::get('search-work-requisitions', [ScmWrController::class, "searchWorkRequisitions"])->name('search-work-requisitions');
+    Route::get('search-work-requisitions-for-wcs', [ScmWrController::class, "searchWorkRequisitionsForWcs"])->name('search-work-requisitions-wcs');
     Route::post('wcs-quotations', [ScmWcsController::class, "storeWcsQuotation"])->name('wcs-quotations.create');
     Route::get('wcs-quotations/{quotationId}', [ScmWcsController::class, "showWcsQuotation"])->name('wcs-quotations.show');
     Route::get('wcs-quotations', [ScmWcsController::class, "getWcsQuotations"])->name('wcs-quotations.index');
