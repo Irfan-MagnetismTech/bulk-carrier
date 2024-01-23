@@ -11,6 +11,8 @@ const { getVesselAssignedCrews, vesselAssignedCrews } = useCrewCommonApiRequest(
 const { vessels, searchVessels, getVesselsWithoutPaginate, isLoading } = useVessel();
 const { restHourRecords, getRestHourRecords, getRestHourReport, restHourReport  } = useRestHourRecord();
 import { formatMonthYear, formatDate } from "../../../utils/helper.js";
+import useTableExportExcel from "../../../services/tableExportExcel";
+const { tableToExcel } = useTableExportExcel();
 
 const icons = useHeroIcon();
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
@@ -68,10 +70,7 @@ onMounted(() => {
 </script>
 
 <template>
-<!--  <div class="flex items-center justify-between w-full my-3" v-once>-->
-<!--    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Appraisal Record Details</h2>-->
-<!--    <default-button :title="'Create rest hour record'" :to="{ name: 'crw.rest-hour-records.create' }" :icon="icons.AddIcon"></default-button>-->
-<!--  </div>-->
+
   <form @submit.prevent="getRestHourReport(searchParams)">
     <div class="w-full flex items-center justify-between mb-2 my-2 select-none">
       <fieldset class="w-full grid grid-cols-4 gap-1 px-2 pb-3 border border-gray-700 rounded dark-disabled:border-gray-400">
@@ -92,7 +91,7 @@ onMounted(() => {
           </select>
         </div>
         <div>
-          <label for="" class="text-xs" style="margin-left: .01rem">Date <span class="text-red-500">*</span></label>
+          <label for="" class="text-xs" style="margin-left: .01rem">Month Year <span class="text-red-500">*</span></label>
           <VueDatePicker v-model.trim="searchParams.year_month" month-picker class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="mm/yyyy" format="yyyy/MMMM" model-type="yyyy-MM" :text-input="{ format: dateFormat }"></VueDatePicker>
         </div>
         <div>
@@ -102,8 +101,13 @@ onMounted(() => {
       </fieldset>
     </div>
   </form>
-  <div v-if="restHourReport?.daily_records?.length" class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-x-auto">
-      <div class="w-full overflow-hidden">
+  <div v-if="restHourReport?.daily_records?.length" class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-x-auto relative">
+<!--    <div class="absolute top-0 right-0 mt-2 mr-2">-->
+<!--      <button @click="tableToExcel('rest-hour-table','rest-hour-record-'+searchParams.year_month)" class="w-full px-1 py-1 text-sm font-medium leading-2 text-white bg-gray-600 border border-transparent rounded-lg active:bg-gray-500 hover:bg-gray-500 focus:outline-none focus:shadow-outline-purple">-->
+<!--        Download Excel-->
+<!--      </button>-->
+<!--    </div>-->
+    <div class="w-full overflow-hidden">
         <div class="grid grid-cols-3 gap-4">
           <div class="text-sm">
             <strong>Name of Ship :</strong>
@@ -137,13 +141,22 @@ onMounted(() => {
             <strong>Month and Year :</strong>
             <span class="ml-1 uppercase">{{ formatMonthYear(searchParams?.year_month) }}</span>
           </div>
-          <div class="text-sm">
+          <div class="text-sm flex items-center">
             <strong>Watchkeeper :</strong>
-            <span class="ml-1"> ??????? </span>
+            <span class="ml-1 flex items-center">
+              <label class="inline-flex items-center text-gray-600 dark:text-gray-400 mr-2">
+                    <input type="radio" :checked="restHourReport?.assignment?.is_watchkeeper" class="text-purple-600 w-3 h-3 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="accountType" value="personal">
+                    <span class="ml-1">Yes</span>
+              </label>
+              <label class="inline-flex items-center text-gray-600 dark:text-gray-400">
+                    <input type="radio" :checked="!restHourReport?.assignment?.is_watchkeeper" class="text-purple-600 w-3 h-3 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="accountType" value="personal">
+                    <span class="ml-1">No</span>
+              </label>
+            </span>
           </div>
           <div class="text-sm">
             <strong>Rule :</strong>
-            <span class="ml-1"> ?????? </span>
+            <span class="ml-1">IMO STCW 10</span>
           </div>
         </div>
         <hr class="mb-1">
@@ -158,9 +171,34 @@ onMounted(() => {
           <div>
             <label class="text-xs border border-gray-300 px-1 font-bold">S</label><span class="text-xs ml-1">Proposed Periods of Work</span>
           </div>
+          <div class="flex items-center">
+            <label>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+            </label>
+            <span class="text-xs ml-1">24 Hours Exception</span>
+          </div>
+          <div class="flex items-center">
+            <label>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+              </svg>
+            </label>
+            <span class="text-xs ml-1">7 Days Exception</span>
+          </div>
+          <div>
+            <label class="text-xs text-green-500 border border-gray-300 bg-green-500 px-1 font-bold">P</label><span class="text-xs ml-1">Hours in Compliance</span>
+          </div>
+          <div>
+            <label class="text-xs bg-yellow-500 border border-gray-30 text-yellow-500 px-1 font-bold">P</label><span class="text-xs ml-1">Future Hours out of Compliance</span>
+          </div>
+          <div>
+            <label class="text-xs bg-yellow-300 border border-gray-30 text-yellow-300 px-1 font-bold">P</label><span class="text-xs ml-1">Hours out of Compliance (OPA 90)</span>
+          </div>
         </fieldset>
         <div class="w-full overflow-x-auto">
-          <table class="w-full whitespace-no-wrap mt-2" id="table1">
+          <table class="w-full whitespace-no-wrap mt-2" id="rest-hour-table">
             <caption class="bg-green-600 text-white !text-sm font-semibold uppercase mb-2 text-center py-1">RECORD OF HOURS OF WORK / REST</caption>
             <thead>
             <tr>
@@ -173,9 +211,9 @@ onMounted(() => {
               <th class="align-middle" rowspan="2">Comments</th>
             </tr>
             <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-              <th class="align-bottom no-wrap">Day</th>
-              <th class="align-bottom no-wrap">Date</th>
-              <th v-for="(header, index) in timeRangeHeaders" :key="index" colspan="2">
+              <th class="align-middle no-wrap">Day</th>
+              <th class="align-middle no-wrap">Date</th>
+              <th class="align-middle" v-for="(header, index) in timeRangeHeaders" :key="index" colspan="2">
                 <nobr><span class="">{{ header.startHour }} - {{ header.endHour }}</span></nobr>
               </th>
             </tr>
@@ -216,8 +254,35 @@ onMounted(() => {
                 {{restHourReport?.daily_records?.find(hourlyRecord => hourlyRecord.day === day.dayNumber)?.crwRestHourEntryLine?.comments}}
               </td>
             </tr>
+            <tr>
+              <td class="!text-right font-bold" colspan="50">Total Hours of Work/Rest/Actual OverTime: &nbsp;</td>
+              <td>{{restHourReport?.ttl_work_hours}}</td>
+              <td>{{restHourReport?.ttl_rest_hours}}</td>
+              <td>{{restHourReport?.ttl_overtime_hours}}</td>
+            </tr>
+            <tr>
+              <td class="!text-right font-bold" colspan="50">Fixed OverTime: &nbsp;</td>
+              <td></td>
+              <td></td>
+              <td>{{restHourReport?.fixed_overtime}}</td>
+            </tr>
+            <tr>
+              <td class="!text-right font-bold" colspan="50">Extra OverTime: &nbsp;</td>
+              <td></td>
+              <td></td>
+              <td>{{restHourReport?.extra_overtime}}</td>
+            </tr>
             </tbody>
           </table>
+          <div class="w-full">
+            <p class="mt-2">The following national laws, regulations and/or collective agreement governing limitations on working hours or minimum rest periods apply to this ship: MLC 2006/STCW 2010/CBA</p>
+            <p>ILO Maritime Labour Convention, 2006 and with any applicable collective agreement registered or authorized in accordance with that convention with the STCW 1978 Convention, as amended.</p>
+            <hr class="border border-gray-800 mb-1 mt-1">
+            <p class="font-bold">I agree that this record is an accurate reflection of the hours of work or rest of the seafarer concerned.</p>
+            <p>Name of master or person authorized by master to sign this record __________________________________________________________</p>
+            <p>Signature of master or authorized person _____________________________________ Signature of seafarer ____________________________________________</p>
+            <p class="mb-2">A copy of this record is to be given to the seafarer. This form is subject to examination and endorsement under procedures established by ______________________________________ (name of competent authority)</p>
+          </div>
         </div>
       </div>
   </div>
@@ -231,6 +296,10 @@ table th,tr,td{
   font-size: 10px;
   padding: 0;
   text-align: center;
+}
+
+p {
+  font-size: 10px;
 }
 
 #profileDetailTable th{
@@ -271,18 +340,21 @@ tbody tr,td{
 }
 
   ::-webkit-scrollbar:horizontal {
-    height: 0.3rem !important;
+    height: 1rem !important;
+    cursor: pointer;
   }
 
   ::-webkit-scrollbar-thumb:horizontal{
     background-color: rgba(126, 58, 242);
     border-radius: 2rem !important;
-    width: 2rem !important;
+    width: 1rem !important;
+    cursor: pointer;
   }
 
   ::-webkit-scrollbar-track:horizontal{
     background: rgb(148, 144, 155)!important;
-    border-radius: 2rem !important;
+    border-radius: 1rem !important;
+    cursor: pointer;
   }
 
 </style>
