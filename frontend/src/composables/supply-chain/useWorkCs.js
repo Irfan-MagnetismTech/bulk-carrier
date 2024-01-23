@@ -16,7 +16,7 @@ export default function useWorkCs() {
     const workCsLists = ref([]);
     const filteredWorkCs = ref([]);
     const quotations = ref([]);
-    const csWiseVendorList = ref([]);
+    const wcsWiseVendorList = ref([]);
     const filteredWorkCsLines = ref([]);
     const $loading = useLoading();
     const wrServiceList = ref([]);
@@ -228,6 +228,48 @@ export default function useWorkCs() {
         }
     }
 
+    async function getWcsWiseVendorList(wcsId) {
+        // NProgress.start();
+        // const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+        try {
+            const {data, status} = await Api.get(`/${BASE}/wcs-wise-vendor-list`,{
+                params: {
+                    wcs_id: wcsId,
+                },
+            });
+            wcsWiseVendorList.value = data.value;
+            return data.value;
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            isLoading.value = false;
+            // loader.hide();
+        }
+    }
+
+    async function searchWcs(business_unit, scm_warehouse_id = null, purchase_center = null, searchParam = '') { 
+        //NProgress.start();
+        // const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+        try {
+            const {data, status} = await Api.get(`/${BASE}/search-work-cs`,{
+                params: {
+                    business_unit: business_unit,
+                    scm_warehouse_id: scm_warehouse_id,
+                    purchase_center: purchase_center,
+                    searchParam: searchParam,
+                },
+            });
+            filteredWorkCs.value = data.value;
+        } catch (error) {
+            console.log('tag', error)
+        } finally {
+            //NProgress.done();
+            isLoading.value = false;
+        }
+    }
+
     function checkUniqueArray(form) {
         let isHasError = false;
         const messages = ref([]);
@@ -280,6 +322,9 @@ export default function useWorkCs() {
         deleteWorkCs,
         getWrWiseServiceList,
         getWcsData,
+        getWcsWiseVendorList,
+        searchWcs,
+        wcsWiseVendorList,
         serviceObj,
         serviceList,
         wrServiceList,
