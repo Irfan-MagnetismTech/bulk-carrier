@@ -22,12 +22,13 @@ export default function useMaterialCsCost() {
     const prMaterialList = ref([]);
     const isTableLoading = ref(false);
     const notification = useNotification();
+    const csVendor = ref([]);
     // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
-    const materialCs = ref({
+    const materialCsCost = ref({
         scmCs: null,
         scm_cs_id: null,
-        scmCsSelectedVendors: [
+        selectedVendors: [
             { 
               scmVendor: null,
               scm_vendor_id: null,
@@ -49,8 +50,16 @@ export default function useMaterialCsCost() {
                 landing_charge: 0.0,
                 assesable_value_a: 0.0,
                 cd: 0.0,
+                rd: 0.0,
+                sd: 0.0,
+                vat: 0.0,
+                at: 0.0,
+                ait: 0.0,
+                total_duty: 0.0,
+                others: 0.0,
+                total_landed_cost: 0.0,
               },
-              scmCsPaymentDetails: {
+              scmCsPaymentInfo: {
                 scmCs: null,
                 scm_cs_id: null,
                 scmVendor: null,
@@ -261,7 +270,27 @@ export default function useMaterialCsCost() {
     //         loading(false)
     //     }
     // }
+    async function getSelectedVendorInfo(materialCsId) {
 
+        const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`/${BASE}/selected-vendors`,{
+                params: {
+                    scm_cs_id: materialCsId,
+                },
+            });
+            csVendor.value = data.value;
+            return data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
+    }
 
     async function getCsData(id) {
         //NProgress.start();
@@ -422,7 +451,6 @@ export default function useMaterialCsCost() {
 
 
     return {
-        materialCs,
         materialCsLists,
         filteredMaterialCs,
         searchCs,
@@ -444,6 +472,9 @@ export default function useMaterialCsCost() {
         csWiseVendorList,
         // getSiWiseData,
         isTableLoading,
+        getSelectedVendorInfo,
+        csVendor,
+        materialCsCost,
         isLoading,
         errors,
     };

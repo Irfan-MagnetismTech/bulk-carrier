@@ -15,7 +15,7 @@ import CsCostProjectionVue from "../../../components/supply-chain/cs-cost-projec
 const icons = useHeroIcon();
 const route = useRoute();
 
-const { getLcRecord, materialCs, storeLcRecord,materialObject,termsObject, errors, isLoading } = useMaterialCsCost();
+const { csVendor,materialCsCost, getSelectedVendorInfo,isLoading:csVendorLoader, errors, isLoading } = useMaterialCsCost();
 
 const page = ref('create');
 const { setTitle } = Title();
@@ -34,7 +34,7 @@ setTitle('Create LC Record');
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
         <form @submit.prevent="storeLcRecord(lcRecord)">
-          <cs-cost-projection-form v-model:form="materialCs" :errors="errors" :page="page"></cs-cost-projection-form>
+          <cs-cost-projection-form v-model:form="materialCsCost" :errors="errors" :page="page"></cs-cost-projection-form>
             <!-- Submit button -->
             <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm text-white bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
         </form>
