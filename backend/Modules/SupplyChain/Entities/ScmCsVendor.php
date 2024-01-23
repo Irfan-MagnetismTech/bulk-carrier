@@ -5,6 +5,10 @@ namespace Modules\SupplyChain\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmCs;
 use Modules\SupplyChain\Entities\ScmVendor;
+use Modules\SupplyChain\Entities\ScmCsMaterial;
+use Modules\SupplyChain\Entities\ScmCsLandedCost;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Modules\SupplyChain\Entities\ScmCsPaymentInfo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\SupplyChain\Entities\ScmCsMaterialVendor;
@@ -75,5 +79,15 @@ class ScmCsVendor extends Model
     // {
     //     return $this->hasOne(ScmCsMaterial::class);
     // }
+
+    public function scmCsLandedCost(): HasOne
+    {
+        return $this->hasOne(ScmCsLandedCost::class);
+    }
+
+    public function scmCsPaymentInfo(): HasOne
+    {
+        return $this->hasOne(ScmCsPaymentInfo::class);
+    }
 
 }

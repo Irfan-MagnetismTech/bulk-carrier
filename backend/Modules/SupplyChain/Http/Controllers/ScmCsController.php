@@ -2,21 +2,23 @@
 
 namespace Modules\SupplyChain\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmCs;
-use Modules\SupplyChain\Entities\ScmCsMaterial;
-use Modules\SupplyChain\Entities\ScmCsMaterialVendor;
+use Modules\SupplyChain\Services\UniqueId;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmCsVendor;
+use Modules\SupplyChain\Services\CompositeKey;
+use Modules\SupplyChain\Entities\ScmCsMaterial;
+use Modules\SupplyChain\Entities\ScmCsLandedCost;
+use Modules\SupplyChain\Entities\ScmCsPaymentInfo;
 use Modules\SupplyChain\Http\Requests\ScmCsRequest;
+use Modules\SupplyChain\Entities\ScmCsMaterialVendor;
 use Modules\SupplyChain\Http\Requests\ScmQuotationRequest;
 use Modules\SupplyChain\Http\Requests\SupplierSelectionRequest;
-use Modules\SupplyChain\Services\CompositeKey;
-use Modules\SupplyChain\Services\UniqueId;
 
 class ScmCsController extends Controller
 {
@@ -307,8 +309,7 @@ class ScmCsController extends Controller
     public function showQuotation($id)
     {
         $scmCsVendor = ScmCsVendor::with('scmCs', 'scmVendor.scmVendorContactPerson', 'scmCsMaterialVendors.scmMaterial', 'scmCsMaterialVendors.scmPr')->find($id);
-        $scmCsMaterialVendors = $scmCsVendor->scmCsMaterialVendors->map(function($item)
-        {
+        $scmCsMaterialVendors = $scmCsVendor->scmCsMaterialVendors->map(function ($item) {
             $data = $item;
             $data['quantity'] = ScmCsMaterial::where(['scm_cs_id' => $item->scm_cs_id, 'scm_material_id' => $item->scm_material_id])->sum('quantity');
             return $data;
@@ -581,5 +582,33 @@ class ScmCsController extends Controller
                 return $item->scmVendor;
             });
         return response()->success('Search result', $csVendor, 200);
+    }
+
+    public function selectedVendors(): JsonResponse
+    {
+        $csVendor = ScmCs::query()
+            ->with('selectedVendors.scmVendor', 'selectedVendors.scmCsLandedCost', 'selectedVendors.scmCsPaymentInfo')
+            ->find(request()->scm_cs_id);
+
+        return response()->success('Search result', $csVendor, 200);
+    }
+
+    public function createCsLandedCost(Request $request): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+
+            foreach ($request->selectedVendors as $vendor) {
+                ScmCsLandedCost::create($vendor['scmCsLadnedCost']);
+                ScmCsPaymentInfo::create($vendor['scmCsPaymentInfo']);
+            }
+
+            DB::commit();
+
+            return response()->success('Data created succesfully', null, 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }

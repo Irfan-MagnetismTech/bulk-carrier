@@ -83,6 +83,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse');
     Route::get('getCsData/{csId}', [ScmCsController::class, "getCsData"])->name('getCsData');
     Route::post('selected-supplier', [ScmCsController::class, "selectedSupplierstore"])->name('selectedSupplier.store');
+    Route::get('selected-vendors', [ScmCsController::class, "selectedVendors"])->name('selectedVendors');
 
     //Business Info Apis
     Route::get('store-categories', fn () => config('businessinfo.store_category'));
@@ -108,6 +109,8 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::post('close-pr', [ScmPrController::class, "closePr"])->name('closePr');
     Route::post('close-prline', [ScmPrController::class, "closePrLine"])->name('closePrLine');
     Route::get('get-cs-data/{id}', [ScmCsController::class, "getCsWiseData"])->name('getCsWiseData');
+
+    Route::post('create-cs-landed-cost', [ScmCsController::class, "createCsLandedCost"])->name('createCsLandedCost');
 });
 
 require __DIR__ . '/robiul.php';

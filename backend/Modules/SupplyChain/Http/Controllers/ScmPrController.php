@@ -251,10 +251,11 @@ class ScmPrController extends Controller
                 ->with('scmPrLines')
                 ->where(function ($query) use ($request) {
                     $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
-                        ->where('business_unit', $request->business_unit)
-                        ->where('acc_cost_center_id', $request->cost_center_id);
+                        ->where([
+                            'business_unit' => $request->business_unit,
+                            'acc_cost_center_id' => $request->cost_center_id
+                        ]);
                 })
-                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
                 ->limit(10)
                 ->get();
@@ -262,8 +263,10 @@ class ScmPrController extends Controller
             $purchase_requisition = ScmPr::query()
                 ->with('scmPrLines')
                 ->where(function ($query) use ($request) {
-                    $query->where('business_unit', $request->business_unit)
-                        ->where('acc_cost_center_id', $request->cost_center_id);
+                    $query->where([
+                        'business_unit' => $request->business_unit,
+                        'acc_cost_center_id' => $request->cost_center_id
+                    ]);
                 })
                 ->orderByDesc('ref_no')
                 ->limit(10)
@@ -285,13 +288,13 @@ class ScmPrController extends Controller
                     $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
                         ->where('business_unit', $request->business_unit)
                         ->when($request->scm_warehouse_id, function ($query) use ($request) {
-                            $query->where('scm_warehouse_id', $request->scm_warehouse_id)
-                                ->where('purchase_center', $request->purchase_center);
+                            $query->where([
+                                'scm_warehouse_id' => $request->scm_warehouse_id,
+                                'purchase_center' => $request->purchase_center
+                            ]);
                         });
                 })
-                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
-                // ->limit(10)
                 ->get();
         } elseif (isset($request->cs_id) && isset($request->scm_warehouse_id) && isset($request->purchase_center) && isset($request->business_unit)) {
             $purchase_requisition = ScmPr::query()
@@ -299,26 +302,28 @@ class ScmPrController extends Controller
                 ->whereNot('status', 'Closed')
                 ->when($request->scm_warehouse_id, function ($query) use ($request) {
                     $query->where('scm_warehouse_id', $request->scm_warehouse_id)
-                    ->where('business_unit', $request->business_unit)
-                    ->where('purchase_center', $request->purchase_center);
+                        ->where([
+                            'business_unit' => $request->business_unit,
+                            'purchase_center' => $request->purchase_center
+                        ]);
                 })
                 ->whereHas('scmCsMaterial', function ($query) use ($request) {
                     $query->where('scm_cs_id', $request->cs_id);
                 })
                 ->orderByDesc('ref_no')
-                // ->limit(10)
                 ->get();
         } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center) && isset($request->business_unit)) {
             $purchase_requisition = ScmPr::query()
                 ->with('scmPrLines')
                 ->whereNot('status', 'Closed')
                 ->when($request->scm_warehouse_id, function ($query) use ($request) {
-                    $query->where('scm_warehouse_id', $request->scm_warehouse_id)
-                        ->where('business_unit', $request->business_unit)
-                        ->where('purchase_center', $request->purchase_center);
+                    $query->where([
+                        'scm_warehouse_id' => $request->scm_warehouse_id,
+                        'business_unit' => $request->business_unit,
+                        'purchase_center' => $request->purchase_center
+                    ]);
                 })
                 ->orderByDesc('ref_no')
-                // ->limit(10)
                 ->get();
         }
 
@@ -336,38 +341,40 @@ class ScmPrController extends Controller
                     $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
                         ->where('business_unit', $request->business_unit)
                         ->when($request->scm_warehouse_id, function ($query) use ($request) {
-                            $query->where('scm_warehouse_id', $request->scm_warehouse_id)
-                                ->where('purchase_center', $request->purchase_center);
+                            $query->where([
+                                'scm_warehouse_id' => $request->scm_warehouse_id,
+                                'purchase_center' => $request->purchase_center
+                            ]);
                         });
                 })
-                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
-                // ->limit(10)
                 ->get();
         } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center) && isset($request->business_unit)) {
             $purchase_requisition = ScmPr::query()
                 ->with('scmPrLines')
                 ->whereNot('status', 'Closed')
                 ->when($request->scm_warehouse_id, function ($query) use ($request) {
-                    $query->where('scm_warehouse_id', $request->scm_warehouse_id)
-                        ->where('business_unit', $request->business_unit)
-                        ->where('purchase_center', $request->purchase_center);
+                    $query->where([
+                        'scm_warehouse_id' => $request->scm_warehouse_id,
+                        'business_unit' => $request->business_unit,
+                        'purchase_center' => $request->purchase_center
+                    ]);
                 })
                 ->orderByDesc('ref_no')
-                // ->limit(10)
                 ->get();
-        }elseif(isset($request->business_unit) && isset($request->purchase_center)){
+        } elseif (isset($request->business_unit) && isset($request->purchase_center)) {
             $purchase_requisition = ScmPr::query()
                 ->with('scmPrLines')
                 ->whereNot('status', 'Closed')
                 ->where(function ($query) use ($request) {
                     $query->when($request->purchase_center, function ($query) use ($request) {
-                        $query->where('purchase_center', $request->purchase_center)
-                        ->where('business_unit', $request->business_unit);
+                        $query->where([
+                            'business_unit' => $request->business_unit,
+                            'purchase_center' => $request->purchase_center
+                        ]);
                     });
                 })
                 ->orderByDesc('ref_no')
-                // ->limit(10)
                 ->get();
         }
 
