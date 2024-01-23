@@ -4,7 +4,7 @@ import {onMounted, ref, watchEffect} from "vue";
 import useAisReport from "../../../composables/accounts/useAisReport";
 import useAccountCommonApiRequest from "../../../composables/accounts/useAccountCommonApiRequest";
 import Store from "../../../store";
-const { balanceIncomeLineLists, getBalanceIncomeLineLists } = useAccountCommonApiRequest();
+const { balanceIncomeLineLists, getBalanceIncomeLineLists, balanceIncomeAccountLists, getBalanceIncomeAccountLists } = useAccountCommonApiRequest();
 
 const { costCenterSummaries, getCostCenterSummary, isLoading} = useAisReport();
 const { allAccountLists, getAccount } = useAccountCommonApiRequest();
@@ -15,7 +15,7 @@ const { setTitle } = Title();
 setTitle('AIS Report - Cost Center Summary');
 
 const searchParams = ref({
-  acc_balance_income_line_id: '',
+  acc_balance_and_income_line_id: '',
   acc_account_id: '',
   from_date: '',
   till_date: '',
@@ -60,7 +60,8 @@ const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 onMounted(() => {
   watchEffect(() => {
     getBalanceIncomeLineLists(businessUnit.value);
-    getAccount(null,businessUnit.value);
+    //getAccount(null,businessUnit.value);
+    getBalanceIncomeAccountLists(businessUnit.value,searchParams.value.acc_balance_and_income_line_id);
   });
 });
 </script>
@@ -74,15 +75,15 @@ onMounted(() => {
         <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Cost Center Summary</legend>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">Balance Income Line <span class="text-red-500">*</span></label>
-          <v-select :options="balanceIncomeLineLists" :loading="isLoading" placeholder="--Choose an option--" v-model="searchParams.acc_balance_income_line_id" label="line_text" :reduce="balanceIncomeLineLists => balanceIncomeLineLists.id" class="block w-full rounded form-input">
+          <v-select :options="balanceIncomeLineLists" :loading="isLoading" placeholder="--Choose an option--" v-model="searchParams.acc_balance_and_income_line_id" label="line_text" :reduce="balanceIncomeLineLists => balanceIncomeLineLists.id" class="block w-full rounded form-input">
             <template #search="{attributes, events}">
-              <input class="vs__search w-full" style="width: 50%" :required="!searchParams.acc_balance_income_line_id" v-bind="attributes" v-on="events"/>
+              <input class="vs__search w-full" style="width: 50%" :required="!searchParams.acc_balance_and_income_line_id" v-bind="attributes" v-on="events"/>
             </template>
           </v-select>
         </div>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">Account Name<span class="text-red-500">*</span></label>
-          <v-select :options="allAccountLists" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="searchParams.acc_account_id" label="account_name" :reduce="allAccountLists => allAccountLists.id"  class="block w-full rounded form-input">
+          <v-select :options="balanceIncomeAccountLists" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="searchParams.acc_account_id" label="account_name" :reduce="balanceIncomeAccountLists => balanceIncomeAccountLists.id"  class="block w-full rounded form-input">
             <template #search="{attributes, events}">
               <input class="vs__search w-full" style="width: 50%" :required="!searchParams.acc_account_id" v-bind="attributes" v-on="events"/>
             </template>
