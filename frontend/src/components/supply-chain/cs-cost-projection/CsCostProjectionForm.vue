@@ -240,6 +240,101 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
       <!-- </fieldset> -->
     </div>
   </div>
+  <div id="customDataTable">
+    <div  class="table-responsive">
+        <table class="w-full whitespace-no-wrap" id="table">
+          <caption class="table_caption p-2 border-2 mt-7 bg-gray-400 text">Bank Payment Details</caption>
+          <tbody>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100 !w-3/4">LC Status / Type <span class="text-red-500">*</span></td>
+              <td class="align-center text-center !w-1/4">
+                <input type="text" v-model="form.lc_type" required class="form-input text-center" name="lc_type" :id="'lc_type'" />
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100 !w-3/4">Name of Bank <span class="text-red-500">*</span></td>
+              <td class="align-center !w-1/4">
+                <input type="text" v-model="form.bank_name" required class="form-input text-center" name="bank_name" :id="'bank_name'" />
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100">CFR Value (BDT) <span class="text-red-500">*</span></td>
+              <td class="align-center">
+                <input type="number" v-model="form.cfr_value" required class="form-input text-center" name="cfr_value" :id="'cfr_value'" min="1"/>
+
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100">LC Margin (BDT) <span class="text-red-500">*</span></td>
+              <td class="align-center">
+                <input type="number" v-model="form.lc_margin" required class="form-input text-center" name="lc_margin" :id="'lc_margin'" min="1"/>
+
+              </td>
+            </tr>
+            <!-- <tr class="text-center" v-for="(scmLcRecordLine,index) in form.scmLcRecordLines" :key="index">
+                <td class="align-center font-bold bg-gray-100">{{scmLcRecordLine.particular}}</td>
+                <td class="align-center">
+                  <input type="number" v-model="form.scmLcRecordLines[index].amount" required class="form-input text-center" :name="`lines`[index]"/>
+                </td>
+              </tr>    -->
+            <tr class="text-center">
+                <td class="align-center font-bold bg-gray-100">Bank Commission (a)</td>
+                <td class="align-center">
+                  <input type="number" v-model="form.bank_commission" required class="form-input text-center"/>
+                </td>
+              </tr>
+            <tr class="text-center">
+                <td class="align-center font-bold bg-gray-100">VAT (b)</td>
+                <td class="align-center">
+                  <input type="number" v-model="form.vat" required class="form-input text-center"/>
+                </td>
+              </tr>
+            <tr class="text-center">
+                <td class="align-center font-bold bg-gray-100">Others (c)</td>
+                <td class="align-center">
+                  <input type="number" v-model="form.others" required class="form-input text-center"/>
+                </td>
+              </tr>
+            <tr class="text-center">
+                <td class="align-center font-bold bg-gray-100">Insurence Premium (d)</td>
+                <td class="align-center">
+                  <input type="number" v-model="form.insurence_premium" required class="form-input text-center"/>
+                </td>
+              </tr>
+            <tr class="text-right">
+              <td class="align-right font-bold bg-gray-100">Total Costs Relating To LC ( a + b + c + d)</td>
+              <td class="align-center">
+                <input type="number" v-model="form.total_cost" required readonly class="form-input text-center vms-readonly-input" name="total_cost" :id="'total_cost'" />
+
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100">Documents Value (CFR - Margin) (BDT)</td>
+              <td class="align-center">
+                <input type="number" v-model="form.document_value" readonly required class="form-input text-center vms-readonly-input" name="document_value" :id="'document_value'" />
+
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100">Exchange Rate (BDT/USD) <span class="text-red-500">*</span></td>
+              <td class="align-center">
+                <input type="number" v-model="form.exchange_rate" required class="form-input text-center" name="exchange_rate" :id="'exchange_rate'"  min="1"/>
+
+              </td>
+            </tr>
+            <tr class="text-center">
+              <td class="align-center font-bold bg-gray-100">Market Rate (BDT/USD) <span class="text-red-500">*</span></td>
+              <td class="align-center">
+                <input type="number" v-model="form.market_rate" required class="form-input text-center" name="market_rate" :id="'market_rate'"  min="1"/>
+
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      <!-- </fieldset> -->
+    </div>
+  </div>
+  
   <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 
