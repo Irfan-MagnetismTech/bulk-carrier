@@ -9,12 +9,15 @@ use Illuminate\Support\Facades\DB;
 use App\Services\FileUploadService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
+use Modules\SupplyChain\Entities\ScmWo;
 use Modules\SupplyChain\Entities\ScmWr;
 use Modules\SupplyChain\Services\UniqueId;
+use Modules\SupplyChain\Entities\ScmWoLine;
 use Modules\SupplyChain\Entities\ScmWrLine;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\SupplyChain\Http\Requests\ScmWrRequest;
 use Modules\SupplyChain\Services\CompositeKey;
+use Modules\SupplyChain\Entities\ScmWcsService;
+use Modules\SupplyChain\Http\Requests\ScmWrRequest;
 
 class ScmWrController extends Controller
 {
@@ -203,6 +206,20 @@ class ScmWrController extends Controller
     {
         try {
             DB::beginTransaction();
+            
+            $woCount = ScmWoLine::where('scm_wr_id', $work_requisition->id)->count();
+            $wcsCount = ScmWcsService::where('scm_wr_id', $work_requisition->id)->count();
+
+            if ($woCount + $wcsCount > 0) {
+                $error = array(
+                    "message" => "Data could not be deleted!",
+                    "errors" => [
+                        "id" => ["This data could not be deleted as it has references in other table!"]
+                    ]
+                );
+                return response()->json($error, 422);
+            }
+
             if (isset($work_requisition->attachment)) {
                 $this->fileUpload->deleteFile($work_requisition->attachment);
             }
@@ -283,31 +300,27 @@ class ScmWrController extends Controller
         if (isset($request->searchParam)) {
             $work_requisition = ScmWr::query()
                 ->with('scmWrLines')
+                ->whereNot('status', 'Closed')
                 ->where(function ($query) use ($request) {
                     $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
                         ->where('business_unit', $request->business_unit)
                         ->when($request->scm_warehouse_id, function ($query) use ($request) {
-                            $query->where('scm_warehouse_id', $request->scm_warehouse_id);
-                        })
-                        ->when($request->purchase_center, function ($query) use ($request) {
-                            $query->where('purchase_center', $request->purchase_center);
+                            $query->where('scm_warehouse_id', $request->scm_warehouse_id)
+                                ->where('purchase_center', $request->purchase_center);
                         });
                 })
+                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
                 // ->limit(10)
                 ->get();
-        } elseif (isset($request->scm_wcs_id)) {
+        } elseif (isset($request->scm_wcs_id) && isset($request->scm_warehouse_id) && isset($request->purchase_center) && isset($request->business_unit)) {
             $work_requisition = ScmWr::query()
                 ->with('scmWrLines')
-                ->where('is_closed', 0)
-                ->where(function ($query) use ($request) {
-                    $query->where('business_unit', $request->business_unit)
-                        ->when($request->scm_warehouse_id, function ($query) use ($request) {
-                            $query->where('scm_warehouse_id', $request->scm_warehouse_id);
-                        })
-                        ->when($request->purchase_center, function ($query) use ($request) {
-                            $query->where('purchase_center', $request->purchase_center);
-                        });
+                ->whereNot('status', 'Closed')
+                ->when($request->scm_warehouse_id, function ($query) use ($request) {
+                    $query->where('scm_warehouse_id', $request->scm_warehouse_id)
+                    ->where('business_unit', $request->business_unit)
+                    ->where('purchase_center', $request->purchase_center);
                 })
                 ->whereHas('scmWcsService', function ($query) use ($request) {
                     $query->where('scm_wcs_id', $request->scm_wcs_id);
@@ -315,18 +328,14 @@ class ScmWrController extends Controller
                 ->orderByDesc('ref_no')
                 // ->limit(10)
                 ->get();
-        } else {
+        } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center) && isset($request->business_unit)) {
             $work_requisition = ScmWr::query()
                 ->with('scmWrLines')
-                ->where('is_closed', 0)
-                ->where(function ($query) use ($request) {
-                    $query->where('business_unit', $request->business_unit)
-                        ->when($request->scm_warehouse_id, function ($query) use ($request) {
-                            $query->where('scm_warehouse_id', $request->scm_warehouse_id);
-                        })
-                        ->when($request->purchase_center, function ($query) use ($request) {
-                            $query->where('purchase_center', $request->purchase_center);
-                        });
+                ->whereNot('status', 'Closed')
+                ->when($request->scm_warehouse_id, function ($query) use ($request) {
+                    $query->where('scm_warehouse_id', $request->scm_warehouse_id)
+                        ->where('business_unit', $request->business_unit)
+                        ->where('purchase_center', $request->purchase_center);
                 })
                 ->orderByDesc('ref_no')
                 // ->limit(10)
