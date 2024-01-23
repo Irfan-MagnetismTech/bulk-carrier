@@ -9,5 +9,27 @@ class ScmCsLandedCost extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $fillable = [
+        'scm_cs_id',
+        'scm_cs_vendor_id',
+        'scm_vendor_id',
+        'hs_codes',
+        'exchange_rate',
+        'product_price',
+        'freight_charge',
+        'cfr_value',
+        'insurance',
+        'assesable_value_b',
+        'landing_charge',
+        'assesable_value_a',
+        'cd',
+        'rd',
+        'sd',
+        'vat',
+        'ait',
+        'at',
+        'total_duty',
+        'others',
+        'total_landed_cost',
+    ];
 }
