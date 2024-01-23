@@ -14,7 +14,7 @@ setTitle('Create Rest Hour Record');
 <template>
     <div class="flex flex-col items-center justify-between w-full my-3 sm:flex-row" v-once>
         <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Create New Rest Hour Record</h2>
-        <default-button :title="'Rest Hour Records'" :to="{ name: 'crw.rest-hour-records.report' }" :icon="icons.DataBase"></default-button>
+        <default-button :title="'Rest Hour Records'" :to="{ name: 'crw.rest-hour-records.index' }" :icon="icons.DataBase"></default-button>
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="storeRestHourRecord(restHourRecord)">
