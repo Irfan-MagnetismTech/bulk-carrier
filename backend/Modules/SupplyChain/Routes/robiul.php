@@ -29,7 +29,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('getWcsData/{csId}', [ScmWcsController::class, "getWcsData"])->name('getWcsData');
 
 
-
+    Route::get('search-wo', [ScmWoController::class, "searchWo"])->name('searchWo');
     Route::get('get-wr-wcs-wise-wo-data', [ScmWoController::class, "getWoOrWoCsWiseWrData"]);
 
     Route::post('close-wr', [ScmWrController::class, "closeWr"])->name('closeWr');

@@ -175,4 +175,29 @@ class ScmWoController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+
+    
+    /**
+     * Search for a WO based on the given request parameters.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function searchWo(Request $request): JsonResponse
+    {
+        if ($request->business_unit != 'ALL') {
+            $scmWo = ScmWo::query()
+                ->with('scmWoLines', 'scmWoTerms', 'scmVendor')
+                ->whereBusinessUnit($request->business_unit)
+                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        } else {
+            $scmWo = [];
+        }
+
+        return response()->success('Search result', $scmWo, 200);
+    }
 }
