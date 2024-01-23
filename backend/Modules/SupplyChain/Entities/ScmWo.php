@@ -2,6 +2,8 @@
 
 namespace Modules\SupplyChain\Entities;
 
+use App\Traits\DeletableModel;
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class ScmWo extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalSearchTrait, DeletableModel;
 
     protected $fillable = [
         'scm_wcs_id',

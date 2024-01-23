@@ -209,7 +209,7 @@ class ScmWrController extends Controller
             $work_requisition->scmWrLines()->delete();
             $work_requisition->delete();
             DB::commit();
-            
+
             return response()->json([
                 'message' => 'Data deleted successfully.',
             ], 204);
@@ -336,6 +336,54 @@ class ScmWrController extends Controller
         return response()->success('Search result', $work_requisition, 200);
     }
 
+    public function searchWorkRequisitionsForWcs(Request $request): JsonResponse
+    {
+        $work_requisition = [];
+        if (isset($request->searchParam)) {
+            $work_requisition = ScmWr::query()
+                ->with('scmWrLines')
+                ->whereNot('status', 'Closed')
+                ->where(function ($query) use ($request) {
+                    $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+                        ->where('business_unit', $request->business_unit)
+                        ->when($request->scm_warehouse_id, function ($query) use ($request) {
+                            $query->where('scm_warehouse_id', $request->scm_warehouse_id)
+                                ->where('purchase_center', $request->purchase_center);
+                        });
+                })
+                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center) && isset($request->business_unit)) {
+            $work_requisition = ScmWr::query()
+                ->with('scmWrLines')
+                ->whereNot('status', 'Closed')
+                ->when($request->scm_warehouse_id, function ($query) use ($request) {
+                    $query->where('scm_warehouse_id', $request->scm_warehouse_id)
+                        ->where('business_unit', $request->business_unit)
+                        ->where('purchase_center', $request->purchase_center);
+                })
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        }elseif(isset($request->business_unit) && isset($request->purchase_center)){
+            $work_requisition = ScmWr::query()
+                ->with('scmWrLines')
+                ->whereNot('status', 'Closed')
+                ->where(function ($query) use ($request) {
+                    $query->when($request->purchase_center, function ($query) use ($request) {
+                        $query->where('purchase_center', $request->purchase_center)
+                        ->where('business_unit', $request->business_unit);
+                    });
+                })
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        }
+
+        return response()->success('Search result', $work_requisition, 200);
+    }
 
     // for closing Work Requisition
     public function closeWr(Request $request): JsonResponse
