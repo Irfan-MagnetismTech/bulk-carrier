@@ -138,7 +138,7 @@ class ScmWoController extends Controller
                     'wr_no' => $scmWr->ref_no,
                     'scm_wr_id' => $scmWr->id,
                     'scmWr' => $scmWr,
-                    'pr_date' => $scmWr->raised_date,
+                    'wr_date' => $scmWr->raised_date,
                     'business_unit' => $scmWr->business_unit,
                     'purchase_center' => $scmWr->purchase_center,
                     'scmWoLines' => $scmWr->scmWrLines->map(function ($item) {
