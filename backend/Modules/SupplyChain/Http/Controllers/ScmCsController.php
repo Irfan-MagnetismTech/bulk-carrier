@@ -17,6 +17,7 @@ use Modules\SupplyChain\Entities\ScmCsLandedCost;
 use Modules\SupplyChain\Entities\ScmCsPaymentInfo;
 use Modules\SupplyChain\Http\Requests\ScmCsRequest;
 use Modules\SupplyChain\Entities\ScmCsMaterialVendor;
+use Modules\SupplyChain\Http\Requests\CsLandedCostRequest;
 use Modules\SupplyChain\Http\Requests\ScmQuotationRequest;
 use Modules\SupplyChain\Http\Requests\SupplierSelectionRequest;
 
@@ -88,7 +89,7 @@ class ScmCsController extends Controller
     {
         $materialCs = ScmCs::find($id);
         // $materialCs->load('scmPr', 'scmWarehouse');
-        $materialCs->load('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmWarehouse');
+        $materialCs->load('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmWarehouse','selectedVendors.scmVendor','selectedVendors.scmCsPaymentInfo','selectedVendors.scmCsLandedCost');
         try {
             return response()->success('Detail data', $materialCs, 200);
         } catch (\Exception $e) {
@@ -593,13 +594,13 @@ class ScmCsController extends Controller
         return response()->success('Search result', $csVendor, 200);
     }
 
-    public function createCsLandedCost(Request $request): JsonResponse
+    public function createCsLandedCost(CsLandedCostRequest $request): JsonResponse
     {
         try {
             DB::beginTransaction();
 
             foreach ($request->selectedVendors as $vendor) {
-                ScmCsLandedCost::create($vendor['scmCsLadnedCost']);
+                ScmCsLandedCost::create($vendor['scmCsLandedCost']);
                 ScmCsPaymentInfo::create($vendor['scmCsPaymentInfo']);
             }
 

@@ -29,59 +29,6 @@ export default function useMaterialCsCost() {
         scmCs: null,
         scm_cs_id: null,
         selectedVendors: [
-            { 
-              scmVendor: null,
-              scm_vendor_id: null,
-              scmCsLandedCost:
-              {
-                scmCs: null,
-                scm_cs_id: null,
-                scmVendor: null,
-                scm_vendor_id: null,
-                scmCsVendor: null,
-                scm_cs_vendor_id: null,
-                hs_codes: null,
-                exchange_rate: 0.0,
-                product_price: 0.0,
-                freight_charge: 0.0,
-                cfr_value: 0.0,
-                insurance: 0.0,
-                assesable_value_b: 0.0,
-                landing_charge: 0.0,
-                assesable_value_a: 0.0,
-                cd: 0.0,
-                rd: 0.0,
-                sd: 0.0,
-                vat: 0.0,
-                at: 0.0,
-                ait: 0.0,
-                total_duty: 0.0,
-                others: 0.0,
-                total_landed_cost: 0.0,
-              },
-              scmCsPaymentInfo: {
-                scmCs: null,
-                scm_cs_id: null,
-                scmVendor: null,
-                scm_vendor_id: null,
-                scmCsVendor: null,
-                scm_cs_vendor_id: null,
-                type: null,
-                status: null,
-                total_cost: 0.0,
-                market_rate: 0.0,
-                name_of_bank: null,
-                cfr_value:0.00,
-                lc_margin:0.00,
-                bank_commission:0.00,
-                vat:0.00,
-                others:0.00,
-                insurence_premium:0.00,
-                document_value:0.00,
-                exchange_rate:0.00,
-                insurence_company: null,
-              }
-            }
         ],
        
         business_unit: null,
@@ -175,8 +122,8 @@ export default function useMaterialCsCost() {
             }
         }
     }
-    async function storeMaterialCs(form) {
-        if (!checkUniqueArray(form)) return;
+    async function storeCostProjection(form,csId) {
+        // if (!checkUniqueArray(form)) return;
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -185,10 +132,9 @@ export default function useMaterialCsCost() {
         formData.append('data', JSON.stringify(form));
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/material-cs`, formData);
-            materialCs.value = data.value;
+            const { data, status } = await Api.post(`/${BASE}/create-cs-landed-cost`, formData);
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.material-cs.index` });
+            router.push({ name: `${BASE}.quotations.index` , params: { csId: csId }});
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -198,14 +144,17 @@ export default function useMaterialCsCost() {
         }
     }
 
-    async function showMaterialCs(materialCsId) {
+    async function showCostProjection(materialCsId) {
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/${BASE}/material-cs/${materialCsId}`);
-            materialCs.value = data.value;
-
+            const { data, status } = await Api.get(`/${BASE}/selected-vendors`,{
+                params: {
+                    scm_cs_id: materialCsId,
+                },
+            });
+            materialCsCost.value = data.value;
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -455,8 +404,7 @@ export default function useMaterialCsCost() {
         filteredMaterialCs,
         searchCs,
         getMaterialCs,
-        storeMaterialCs,
-        showMaterialCs,
+        showCostProjection,
         updateMaterialCs,
         deleteMaterialCs,
         getPrWiseCs,
@@ -475,6 +423,7 @@ export default function useMaterialCsCost() {
         getSelectedVendorInfo,
         csVendor,
         materialCsCost,
+        storeCostProjection,
         isLoading,
         errors,
     };

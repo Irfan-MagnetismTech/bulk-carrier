@@ -181,7 +181,26 @@ const navigateSupplierSelection = (csId) => {
   if(csId) router.push(routeOptions);
 };
 
-
+function navigateCostProjection(csId) {
+  if(materialCs.value.selectedVendors.length && materialCs.value.selectedVendors[0].scmCsPaymentInfo){
+    const routeOptions1 = {
+      name: 'scm.cs-cost-projection.edit',
+      params: {
+        csId: csId
+      }
+    };
+    if(csId) router.push(routeOptions1);
+  }else{
+      const routeOptions2 = {
+      name: 'scm.cs-cost-projection.create',
+      params: {
+        csId: csId
+      }
+    };
+    if(csId) router.push(routeOptions2);
+  }
+  
+}
 function confirmDelete(cs_id, id) {
         Swal.fire({
           title: 'Are you sure?',
@@ -231,6 +250,16 @@ function confirmDelete(cs_id, id) {
           <span class="label-item-title">{{ materialCs.selection_ground }}</span>
       </label>
     </div>
+    <div>
+      <!-- <div class="flex items-center justify-between w-full my-3" v-once>
+        <h2 class="text-2xl font-semibold text-gray-700">Cost Projection</h2>
+        <div class="flex gap-3">
+          <default-button :title="'Create Cost Projection'" :to="{ name: 'scm.cs-cost-projection.create', params: { csId: CSID }  }" :icon="icons.AddIcon"></default-button>
+        </div>
+        </div>  -->
+          <button @click="navigateCostProjection(CSID)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Cost Projection</nobr></button> 
+       
+    </div>
   </div>
  
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
@@ -264,7 +293,7 @@ function confirmDelete(cs_id, id) {
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">                 
                   <action-button :action="'edit'" :to="{ name: 'scm.quotations.edit', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>
-                  <action-button :action="'edit'" :to="{ name: 'scm.cs-cost-projection.create', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>
+                  <!-- <action-button :action="'edit'" :to="{ name: 'scm.cs-cost-projection.create', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button> -->
                   <action-button @click="confirmDelete(quotation.scm_cs_id, quotation.id)" :action="'delete'" v-if="!quotation.is_selected"></action-button>
                 </div>
               </td>

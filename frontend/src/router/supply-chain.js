@@ -646,20 +646,22 @@ export default [
      /* Material Cs end */
     
      {
-        path: `/${BASE}/cs-cost-projection/:csId/:quotationId/create`,
+        path: `/${BASE}/cs-cost-projection/:csId/create`,
         name: `${BASE}.cs-cost-projection.create`,
         component: () => import(`../views/${PATH_BASE}/cs-cost-projection/create.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'cs-cost-projection-create' },
         props: (route) => ({
             cs_id: route.query.cs_id ?? null
-            ,quotation_id: route.query.quotation_id ?? null
         })
     },
     {
-        path: `/${BASE}/cs-cost-projection/:csId/:quotationId/edit`,
+        path: `/${BASE}/cs-cost-projection/:csId/edit`,
         name: `${BASE}.cs-cost-projection.edit`,
         component: () => import(`../views/${PATH_BASE}/cs-cost-projection/edit.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'cs-cost-projection-edit' },
+        props: (route) => ({
+            cs_id: route.query.cs_id ?? null
+        })
     },
     {
         path: `/${BASE}/cs-cost-projection/:csId/:quotationId/show`,
