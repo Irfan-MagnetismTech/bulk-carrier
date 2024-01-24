@@ -56,6 +56,7 @@ class ScmWoController extends Controller
         $requestData['ref_no'] = UniqueId::generate(ScmWo::class, 'WO');
         $requestData['created_by'] = auth()->id();
 
+        
         try {
             DB::beginTransaction();
             $scmWo = ScmWo::create($requestData);

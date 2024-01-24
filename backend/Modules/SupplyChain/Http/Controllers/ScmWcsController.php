@@ -257,6 +257,7 @@ class ScmWcsController extends Controller
             foreach ($request->scmWcsVendorServices as $key => $values) {
                 $rate = $values[0]['rate'] ?? 0;
                 $quantity = $values[0]['quantity'] ?? 0;
+                
 
                 foreach ($values as $key1 => $value) {
                     $wcsService = ScmWcsService::where([
