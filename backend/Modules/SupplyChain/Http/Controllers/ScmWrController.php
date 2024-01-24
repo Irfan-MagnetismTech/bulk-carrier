@@ -297,6 +297,7 @@ class ScmWrController extends Controller
 
     public function searchWorkRequisitions(Request $request): JsonResponse
     {
+        $work_requisition =[];
         if (isset($request->searchParam)) {
             $work_requisition = ScmWr::query()
                 ->with('scmWrLines')
