@@ -220,16 +220,19 @@ class OpsVesselController extends Controller
     {
         try
         {
+            DB::beginTransaction();
             $vessel->opsVesselCertificates()->delete();
             // $vessel->opsBunkers()->delete();
-            $vessel->delete();
+            $vessel->delete();            
+            DB::commit();
             return response()->json([
                 'message' => 'Data deleted successfully.',
             ], 204);
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($vessel->preventDeletionIfRelated(), 422);
         }
     }
 

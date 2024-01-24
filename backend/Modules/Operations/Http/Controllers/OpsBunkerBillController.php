@@ -251,6 +251,7 @@ class OpsBunkerBillController extends Controller
     {
         try
         {
+            DB::beginTransaction();            
             if(isset($bunker_bill->attachment)){                
                 $this->fileUpload->deleteFile($bunker_bill->attachment);
             }
@@ -260,6 +261,7 @@ class OpsBunkerBillController extends Controller
             $bunker_bill->opsBunkerBillLines()->delete();
             $bunker_bill->opsBunkerBillLineItems()->delete();
             $bunker_bill->delete();
+            DB::commit();
 
             return response()->json([
                 'message' => 'Data deleted successfully.',
@@ -267,7 +269,8 @@ class OpsBunkerBillController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($bunker_bill->preventDeletionIfRelated(), 422);
         }
     }
 

@@ -152,10 +152,13 @@ class OpsChartererContractController extends Controller
     {        
         try
         {
+            DB::beginTransaction();            
             $charterer_contract->opsChartererContractsFinancialTerms()->delete();
             $charterer_contract->opsChartererContractsLocalAgents()->delete();
             $this->fileUpload->deleteFile($charterer_contract->attachment);
             $charterer_contract->delete();
+            DB::commit();
+
 
             return response()->json([
                 'message' => 'Data deleted successfully.',
@@ -163,7 +166,8 @@ class OpsChartererContractController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($charterer_contract->preventDeletionIfRelated(), 422);  
         }
     }
 

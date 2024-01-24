@@ -147,8 +147,10 @@ class OpsHandoverTakeoverController extends Controller
     {
         try
         {
+            DB::beginTransaction();            
             $handover_takeover->opsBunkers()->delete();
             $handover_takeover->delete();
+            DB::commit();
 
             return response()->json([
                 'message' => 'Data deleted successfully.',
@@ -156,7 +158,8 @@ class OpsHandoverTakeoverController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($handover_takeover->preventDeletionIfRelated(), 422);
         }
     }
 

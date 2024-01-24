@@ -111,7 +111,9 @@ class OpsCashRequisitionController extends Controller
     public function destroy(OpsCashRequisition $cash_requisition): JsonResponse
     {
         try {
+            DB::beginTransaction();            
             $cash_requisition->delete($cash_requisition);
+            DB::commit();
 
             return response()->json([
                 'message' => 'Data deleted successfully.'
@@ -119,7 +121,8 @@ class OpsCashRequisitionController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($cash_requisition->preventDeletionIfRelated(), 422); 
         }
     }
 

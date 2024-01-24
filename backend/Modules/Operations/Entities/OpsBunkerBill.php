@@ -2,6 +2,7 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmVendor;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsBunkerBill extends Model
 {
-    use HasFactory, GlobalSearchTrait;
+    use HasFactory, GlobalSearchTrait, DeletableModel;
 
     protected $fillable = [
         'date',

@@ -200,6 +200,7 @@ class OpsVoyageBoatNoteController extends Controller
     {
         try
         {
+            DB::beginTransaction();            
             $voyage_boat_note->load('opsVoyageBoatNoteLines');
             foreach($voyage_boat_note->opsVoyageBoatNoteLines as $boat_note_line){
                 $this->fileUpload->deleteFile($boat_note_line->attachment);
@@ -207,14 +208,16 @@ class OpsVoyageBoatNoteController extends Controller
 
             $voyage_boat_note->opsVoyageBoatNoteLines()->delete();
             $voyage_boat_note->delete();
-
+            DB::commit();
+            
             return response()->json([
                 'message' => 'Data deleted successfully.',
             ], 204);
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($voyage_boat_note->preventDeletionIfRelated(), 422);
         }
     }
 

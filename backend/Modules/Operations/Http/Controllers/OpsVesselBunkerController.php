@@ -184,15 +184,18 @@ class OpsVesselBunkerController extends Controller
     {
         try
         {
+            DB::beginTransaction();
             $vessel_bunker->opsBunkers()->delete();
             $vessel_bunker->delete();
+            DB::commit();
             return response()->json([
                 'message' => 'Data deleted successfully.',
             ], 204);
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($vessel_bunker->preventDeletionIfRelated(), 422);
         }
     }
 }

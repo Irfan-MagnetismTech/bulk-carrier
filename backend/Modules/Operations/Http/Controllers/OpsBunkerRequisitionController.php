@@ -163,9 +163,11 @@ class OpsBunkerRequisitionController extends Controller
     public function destroy(OpsBunkerRequisition $bunker_requisition): JsonResponse
     {
         try
-        {
+        {      
+            DB::beginTransaction();   
             $bunker_requisition->opsBunkers()->delete();
             $bunker_requisition->delete();
+            DB::commit();
 
             return response()->json([
                 'message' => 'Data deleted successfully.',
@@ -173,7 +175,8 @@ class OpsBunkerRequisitionController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($bunker_requisition->preventDeletionIfRelated(), 422);
         }
     }
 

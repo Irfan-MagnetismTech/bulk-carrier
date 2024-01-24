@@ -191,10 +191,12 @@ class OpsChartererInvoiceController extends Controller
     {
         try
         {
+            DB::beginTransaction();            
             $charterer_invoice->opsChartererInvoiceVoyages()->delete();
             $charterer_invoice->opsChartererInvoiceOthers()->delete();
             $charterer_invoice->opsChartererInvoiceServices()->delete();
             $charterer_invoice->delete();
+            DB::commit();
 
             return response()->json([
                 'message' => 'Data deleted successfully.',
@@ -202,7 +204,8 @@ class OpsChartererInvoiceController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($charterer_invoice->preventDeletionIfRelated(), 422);  
         }
     }
      

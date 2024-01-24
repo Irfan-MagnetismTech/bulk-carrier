@@ -2,6 +2,7 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Operations\Entities\OpsPort;
@@ -12,7 +13,7 @@ use Modules\Maintenance\Entities\MntCriticalVesselItem;
 
 class OpsVessel extends Model
 {
-    use HasFactory, GlobalSearchTrait, StockLedger;
+    use HasFactory, GlobalSearchTrait, StockLedger, DeletableModel;
     /**
      * The attributes that are mass assignable.
      *

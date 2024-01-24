@@ -191,8 +191,11 @@ class OpsContractAssignController extends Controller
     public function destroy(OpsContractAssign $contract_assign): JsonResponse
     {
         try {
+
+            DB::beginTransaction();            
             $contract_assign->delete($contract_assign);
             $contract_assign->opsContractTariffs()->delete();
+            DB::commit();
 
             return response()->json([
                 'value' => '',
@@ -201,7 +204,8 @@ class OpsContractAssignController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);        
+            DB::rollBack();
+            return response()->json($contract_assign->preventDeletionIfRelated(), 422);     
         }
     }
 
