@@ -484,6 +484,7 @@ class ScmWcsController extends Controller
                 })
                 ->orderByDesc('ref_no')
                 ->get();
+                
         } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center)) {
             $wcs = ScmWcs::query()
                 ->with('scmWcsVendors', 'scmWcsServices', 'scmWcsVendorServices')
