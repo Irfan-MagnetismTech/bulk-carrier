@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('wo_lines', function (Blueprint $table) {
+        Schema::create('scm_wo_terms', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('scm_wr_id')->nullable();
             $table->unsignedBigInteger('scm_wo_id')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('wo_lines');
+        Schema::dropIfExists('wo_terms');
     }
 };

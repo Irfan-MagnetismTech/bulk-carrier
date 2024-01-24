@@ -3,15 +3,16 @@
 namespace Modules\SupplyChain\Entities;
 
 use App\Models\User;
+use App\Traits\DeletableModel;
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmWr extends Model
 {
-    use HasFactory, GlobalSearchTrait;
+    use HasFactory, GlobalSearchTrait, DeletableModel;
 
     protected $fillable = [
         'scm_warehouse_id',

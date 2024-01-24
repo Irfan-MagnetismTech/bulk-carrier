@@ -157,8 +157,26 @@ class ScmWcsController extends Controller
     public function destroy(ScmWcs $work_c)
     {
         // $scmWcs = ScmWcs::find($id);
+        $work_c->load('scmWcsServices');
         try {
             DB::beginTransaction();
+            // foreach($work_c->scmWcsServices as $service){
+            //     $work_requisition = ScmWr::find($service->scm_wr_id);
+            //     $work_requisition->update([
+            //         'status' => 'Pending',
+            //     ]);
+                
+            //     $work_requisition->load('scmWrLines');
+            //     foreach ($work_requisition->scmWrLines as $wrLine) {
+            //         if ($wrLine->status === 'Pending') {
+            //             continue;
+            //         }
+            //         $wrLine->update([
+            //             'status' => 'Pending'
+            //         ]);
+            //     }
+            // }
+
             $work_c->scmWcsServices()->delete();
             $work_c->delete();
             DB::commit();
@@ -194,7 +212,7 @@ class ScmWcsController extends Controller
     public function getWcsQuotations(Request $request)
     {
         $scmWcs = ScmWcsVendor::query()
-            ->with('scmWcs', 'scmVendor.scmVendorContactPerson', 'scmWcsVendorServices')
+            ->with('scmWcs.scmWcsVendors', 'scmVendor.scmVendorContactPerson', 'scmWcsVendorServices')
             ->when($request->scm_wcs_id, function ($query) use ($request) {
                 $query->where('scm_wcs_id', $request->scm_wcs_id);
             })
@@ -448,7 +466,7 @@ class ScmWcsController extends Controller
         }
     }
 
-    public function searchServiceWcs(Request $request)
+    public function searchWorkCs(Request $request)
     {
         $wcs = [];
 
