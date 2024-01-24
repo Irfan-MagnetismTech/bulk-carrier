@@ -440,4 +440,11 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: '' },
         props: (route) => ({ page: parseInt(route.query.page) || 1 }),
     },
+    {
+        path: `/${BASE}/ais-reports/receipt-payment-statement`,
+        name: `${BASE}.ais-reports.receipt-payment-statement`,
+        component: () => import(`../views/${VIEW_BASE}/ais-report/receipt-payment-statement.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
 ];
