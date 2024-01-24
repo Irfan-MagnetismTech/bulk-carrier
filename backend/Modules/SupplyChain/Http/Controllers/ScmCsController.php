@@ -89,7 +89,7 @@ class ScmCsController extends Controller
     {
         $materialCs = ScmCs::find($id);
         // $materialCs->load('scmPr', 'scmWarehouse');
-        $materialCs->load('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmWarehouse','selectedVendors.scmVendor','selectedVendors.scmCsPaymentInfo','selectedVendors.scmCsLandedCost');
+        $materialCs->load('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmWarehouse', 'selectedVendors.scmVendor', 'selectedVendors.scmCsPaymentInfo', 'selectedVendors.scmCsLandedCost');
         try {
             return response()->success('Detail data', $materialCs, 200);
         } catch (\Exception $e) {
@@ -594,7 +594,7 @@ class ScmCsController extends Controller
         return response()->success('Search result', $csVendor, 200);
     }
 
-    public function createCsLandedCost(CsLandedCostRequest $request): JsonResponse
+    public function storeCsLandedCost(CsLandedCostRequest $request): JsonResponse
     {
         try {
             DB::beginTransaction();
@@ -607,6 +607,39 @@ class ScmCsController extends Controller
             DB::commit();
 
             return response()->success('Data created succesfully', null, 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function updateCsLandedCost(CsLandedCostRequest $request): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+
+            foreach ($request->selectedVendors as $vendor) {
+                if (isset($vendor['scm_cs_id'])) {
+                    $scmCsLandedCost = ScmCsLandedCost::where('scm_cs_id', $request->scm_cs_id)
+                        ->where('scm_vendor_id', $vendor['scm_vendor_id'])
+                        ->first();
+
+                    $scmCsLandedCost->update($vendor['scmCsLandedCost']);
+
+                    $scmCsPaymentInfo = ScmCsPaymentInfo::where('scm_cs_id', $request->scm_cs_id)
+                        ->where('scm_vendor_id', $vendor['scm_vendor_id'])
+                        ->first();
+
+                    $scmCsPaymentInfo->update($vendor['scmCsPaymentInfo']);
+                } else {
+                    ScmCsLandedCost::create($vendor['scmCsLandedCost']);
+                    ScmCsPaymentInfo::create($vendor['scmCsPaymentInfo']);
+                }
+            }
+
+            DB::commit();
+
+            return response()->success('Data updated succesfully', null, 202);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->error($e->getMessage(), 500);
