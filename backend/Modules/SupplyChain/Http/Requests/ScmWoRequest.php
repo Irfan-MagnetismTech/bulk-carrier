@@ -4,7 +4,7 @@ namespace Modules\SupplyChain\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class WoRequest extends FormRequest
+class ScmWoRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.

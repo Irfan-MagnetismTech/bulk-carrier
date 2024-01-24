@@ -257,7 +257,7 @@ function confirmDelete(cs_id, id) {
           <default-button :title="'Create Cost Projection'" :to="{ name: 'scm.cs-cost-projection.create', params: { csId: CSID }  }" :icon="icons.AddIcon"></default-button>
         </div>
         </div>  -->
-          <button @click="navigateCostProjection(CSID)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Cost Projection</nobr></button> 
+          <button v-if="materialCs.purchase_center == 'Foreign'" @click="navigateCostProjection(CSID)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Cost Projection</nobr></button> 
        
     </div>
   </div>
@@ -266,7 +266,7 @@ function confirmDelete(cs_id, id) {
     <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
+          <thead>
           <tr class="w-full">
             <th>#</th>
             <th>Vendor Name</th>
@@ -274,8 +274,8 @@ function confirmDelete(cs_id, id) {
             <th>Origin</th>
             <th>Quotation No</th>
             <th>Date</th>
-            <th>Offer Value</th>
-            <th>Negotiated Value</th>
+            <th v-if="materialCs.purchase_center == 'Foreign'">Offer Value</th>
+            <th v-if="materialCs.purchase_center == 'Foreign'">Negotiated Value</th>
             <th>Action</th>
           </tr>
           </thead>
@@ -287,9 +287,9 @@ function confirmDelete(cs_id, id) {
               <td>{{ quotation?.scmVendor?.scmVendorContactPerson?.name }}</td>
               <td>{{ quotation?.scmVendor?.country_name }}</td>
               <td>{{ quotation?.quotation_ref }}</td>
-              <td>{{ formatDate(quotation?.quotation_date) }}</td>
-              <td></td>
-              <td></td>
+              <td>{{ formatDate(quotation?.date) }}</td>
+              <td v-if="materialCs.purchase_center == 'Foreign'">{{ quotation?.total_offered_price }}</td>
+              <td v-if="materialCs.purchase_center == 'Foreign'">{{ quotation?.total_negotiated_price }}</td>
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">                 
                   <action-button :action="'edit'" :to="{ name: 'scm.quotations.edit', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>

@@ -10,13 +10,12 @@
     import usePurchaseOrder from '../../../composables/supply-chain/usePurchaseOrder';
     import useQuotation from '../../../composables/supply-chain/useQuotation'; 
     import useMaterialCsCost from '../../../composables/supply-chain/useMaterialCsCost'; 
+    import SupplierSelectionForm from '../supplier-selection/SupplierSelectionForm.vue';
 
     const { vendors, searchVendor } = useVendor();
     const { getLcCostHeads,lc_cost_heads } = useBusinessInfo();
     const { updateQuotations, quotation, localQuotationLines, foreignQuotationLines,showQuotation } = useQuotation();
     import { useRoute } from 'vue-router';
-import SupplierSelectionForm from '../supplier-selection/SupplierSelectionForm.vue';
-import { parse } from 'bytes';
     const { filteredPurchaseOrders, searchPurchaseOrderForLc,isLoading} = usePurchaseOrder();
     const { csVendor, getSelectedVendorInfo,isLoading:csVendorLoader} = useMaterialCsCost();
 
@@ -62,17 +61,17 @@ onMounted(() => {
 
     
 onMounted(() => {
-  if (props.formType != 'edit') {
+  if(props.formType != 'edit'){
     getSelectedVendorInfo(csId);
   }
- 
 });
 
 
 
 
   watch(() => csVendor.value, (newVal, oldVal) => {
-    if (newVal) {
+    // if(props.formType != 'edit'){
+      if (newVal) {
       props.form.scmCs = newVal;
       props.form.scm_cs_id = newVal.id;
       // props.form.selectedVendors.splice(0, props.form.selectedVendors.length);
@@ -114,8 +113,8 @@ onMounted(() => {
                 scm_vendor_id: vendor.scmVendor.id,
                 scmCsVendor: vendor,
                 scm_cs_vendor_id: vendor.id,
-                type: null,
-                status: null,
+                payment_type: null,
+                payment_status: null,
                 total_cost: 0.0,
                 market_rate: 0.0,
                 name_of_bank: null,
@@ -132,9 +131,76 @@ onMounted(() => {
             }
         props.form.selectedVendors.push(data);
       });
-
       }
+    // }
+    
     });
+
+  // let createWatch = watch(()=> props.form.selectedVendors, (newVal, oldVal) => {
+  //   if (props.formType == 'edit') {
+  //     props.form.selectedVendors.forEach((vendor,index) => {
+  //       if(vendor.scmCsLandedCost == null){
+
+        
+  //       let data = { 
+  //             scmVendor: vendor.scmVendor,
+  //             scm_vendor_id: vendor.scmVendor.id,
+  //             scmCsLandedCost:
+  //             {
+  //               scmCs: newVal,
+  //               scm_cs_id: newVal.id,
+  //               scmVendor: vendor.scmVendor,
+  //               scm_vendor_id: vendor.scmVendor.id,
+  //               scmCsVendor: vendor,
+  //               scm_cs_vendor_id: vendor.id,
+  //               hs_codes: null,
+  //               exchange_rate: 0.0,
+  //               product_price: 0.0,
+  //               freight_charge: 0.0,
+  //               cfr_value: vendor.total_negotiated_price,
+  //               insurance: 0.0,
+  //               assesable_value_b: 0.0,
+  //               landing_charge: 0.0,
+  //               assesable_value_a: 0.0,
+  //               cd: 0.0,
+  //               rd: 0.0,
+  //               sd: 0.0,
+  //               vat: 0.0,
+  //               at: 0.0,
+  //               ait: 0.0,
+  //               total_duty: 0.0,
+  //               others: 0.0,
+  //               total_landed_cost: 0.0,
+  //             },
+  //             scmCsPaymentInfo: {
+  //               scmCs: newVal,
+  //               scm_cs_id: newVal.id,
+  //               scmVendor: vendor.scmVendor,
+  //               scm_vendor_id: vendor.scmVendor.id,
+  //               scmCsVendor: vendor,
+  //               scm_cs_vendor_id: vendor.id,
+  //               type: null,
+  //               status: null,
+  //               total_cost: 0.0,
+  //               market_rate: 0.0,
+  //               name_of_bank: null,
+  //               cfr_value:vendor.total_negotiated_price,
+  //               lc_margin:0.00,
+  //               bank_commission:0.00,
+  //               vat:0.00,
+  //               others:0.00,
+  //               insurence_premium:0.00,
+  //               document_value:0.00,
+  //               exchange_rate:0.00,
+  //               insurence_company: null,
+  //             }
+  //           }
+  //       props.form.selectedVendors.push(data);
+  //     }
+  //     });
+  //   }
+  //   createWatch();
+  // });
   watchPostEffect(() => {
       props.form.document_value = props.form.cfr_value - props.form.lc_margin;
   });
@@ -144,7 +210,6 @@ onMounted(() => {
   watch(() => props.form.selectedVendors, (newVal, oldVal) => {
     if (newVal) {
       newVal.forEach((vendor,index) => {
-        parseFloat(props.form.selectedVendors[index].scmCsPaymentInfo.cfr_value);
         props.form.selectedVendors[index].scmCsPaymentInfo.document_value =  parseFloat(props.form.selectedVendors[index].scmCsPaymentInfo.cfr_value) -  parseFloat(props.form.selectedVendors[index].scmCsPaymentInfo.lc_margin);
         props.form.selectedVendors[index].scmCsPaymentInfo.total_cost = parseFloat(props.form.selectedVendors[index].scmCsPaymentInfo.others) + parseFloat(props.form.selectedVendors[index].scmCsPaymentInfo.insurence_premium) + parseFloat(props.form.selectedVendors[index].scmCsPaymentInfo.vat) + parseFloat(props.form.selectedVendors[index].scmCsPaymentInfo.bank_commission);
 
@@ -175,15 +240,21 @@ onMounted(() => {
                     <caption class="table_caption p-2 border-2 mt-7 bg-gray-400 text">Bank Payment Details</caption>
                     <tbody>
                       <tr class="text-center">
-                        <td class="align-center font-bold bg-gray-100 !w-3/4">LC Status / Type</td>
+                        <td class="align-center font-bold bg-gray-100 !w-3/4">Payment Type</td>
                         <td class="align-center text-center !w-1/4">
-                          <input type="text" v-model="form.selectedVendors[index].scmCsPaymentInfo.lc_type" required class="form-input text-center" name="lc_type" :id="'lc_type'" />
+                          <input type="text" v-model="form.selectedVendors[index].scmCsPaymentInfo.payment_type" required class="form-input text-center" name="lc_type" :id="'lc_type'" />
+                        </td>
+                      </tr>
+                      <tr class="text-center">
+                        <td class="align-center font-bold bg-gray-100 !w-3/4">Payment Status</td>
+                        <td class="align-center text-center !w-1/4">
+                          <input type="text" v-model="form.selectedVendors[index].scmCsPaymentInfo.payment_status" required class="form-input text-center" name="lc_type" :id="'lc_type'" />
                         </td>
                       </tr>
                       <tr class="text-center">
                         <td class="align-center font-bold bg-gray-100 !w-3/4">Name of Bank</td>
                         <td class="align-center !w-1/4">
-                          <input type="text" v-model="form.selectedVendors[index].scmCsPaymentInfo.bank_name" required class="form-input text-center" name="bank_name" :id="'bank_name'" />
+                          <input type="text" v-model="form.selectedVendors[index].scmCsPaymentInfo.name_of_bank " required class="form-input text-center" name="bank_name" :id="'bank_name'" />
                         </td>
                       </tr>
                       <tr class="text-center">

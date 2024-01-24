@@ -252,18 +252,18 @@ export default function useWorkOrder() {
         }
     }
 
-    // async function searchPurchaseOrder(searchParam, business_unit) {
-    //     isLoading.value = true;
-    //     try {
-    //     const { data, status } = await Api.get(`${BASE}/search-po`, {params: {searchParam: searchParam, business_unit: business_unit}});
-    //         filteredPurchaseOrders.value = data.value;
-    //     } catch (error) {
-    //         const { data, status } = error.response;
-    //         notification.showError(status);
-    //     } finally {
-    //         isLoading.value = false;
-    //     }
-    // }
+    async function searchWorkOrder(searchParam, business_unit) {
+        isLoading.value = true;
+        try {
+        const { data, status } = await Api.get(`${BASE}/search-wo`, {params: {searchParam: searchParam, business_unit: business_unit}});
+            filteredWorkOrders.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            isLoading.value = false;
+        }
+    }
 
     // async function searchPurchaseOrderForLc(searchParam, business_unit) {
     //     isLoading.value = true;
@@ -279,66 +279,65 @@ export default function useWorkOrder() {
     // }
     
     
-    // async function getPrAndCsWisePurchaseOrder(prId, csId) {
-    //     const loader = $loading.show(LoaderConfig);
-    //     isLoading.value = true;
+    async function getWrAndWcsWiseWorkOrder(wrId, wcsId) {
+        // const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
 
-    //     try {
-    //         const {data, status} = await Api.get(`/${BASE}/get-pr-cs-wise-po-data`,{
-    //             params: {
-    //                 pr_id: prId,
-    //                 cs_id: csId,
-    //             },
-    //         });
-    //         purchaseOrder.value = merge(purchaseOrder.value, data.value);
-    //         notification.showSuccess(status);
-    //     } catch (error) {
-    //         const { data, status } = error.response;
-    //         notification.showError(status);
-    //     } finally {
-    //         loader.hide();
-    //         isLoading.value = false;
-    //     }
-    // }
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-wr-wcs-wise-wo-data`,{
+                params: {
+                    scm_wr_id: wrId,
+                    scm_wcs_id: wcsId,
+                },
+            });
+            workOrder.value = merge(workOrder.value, data.value);
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            isLoading.value = false;
+        }
+    }
 
     
-    // async function getMaterialList(prId,poId = null) {
-    //     isLoading.value = true;
-    //     try {
-    //         const {data, status} = await Api.get(`/${BASE}/search-pr-wise-material`,{
-    //             params: {
-    //                 pr_id: prId,
-    //                 po_id: poId,
-    //             },
-    //         });
-    //         prMaterialList.value = data.value;
-    //         return data.value;
-    //         console.log('prMaterialList', prMaterialList.value);    
-    //     } catch (error) {
-    //         const { data, status } = error.response;
-    //         notification.showError(status);
-    //     } finally {
-    //         isLoading.value = false;
-    //     }
-    // }
+    async function getServiceList(wrId,woId = null) {
+        isLoading.value = true;
+        try {
+            const {data, status} = await Api.get(`/${BASE}/search-wr-wise-service`,{
+                params: {
+                    scm_wr_id: wrId,
+                    scm_wo_id: woId,
+                },
+            });
+            wrServiceList.value = data.value;
+            return data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            isLoading.value = false;
+        }
+    }
 
-    // async function getLineData(prId, csId = null) { 
-    //     isLoading.value = true;
-    //     try {
-    //         const {data, status} = await Api.get(`/${BASE}/get-po-line-datas`,{
-    //             params: {
-    //                 pr_id: prId,
-    //                 cs_id: csId,
-    //             },
-    //         });
-    //         return data.value;  
-    //     } catch (error) {
-    //         const { data, status } = error.response;
-    //         notification.showError(status);
-    //     } finally {
-    //         isLoading.value = false;
-    //     }
-    // }
+    async function getLineData(wrId, wcsId = null) { 
+        isLoading.value = true;
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-wo-line-datas`,{
+                params: {
+                    scm_wr_id: wrId,
+                    scm_wcs_id: wcsId,
+                },
+            });
+            return data.value;  
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            isLoading.value = false;
+        }
+    }
         
 
     return {
@@ -346,17 +345,19 @@ export default function useWorkOrder() {
         workOrder,
         filteredWorkOrders,
         // searchPurchaseOrder,
+        searchWorkOrder,
         getWorkOrders,
         storeWorkOrder,
         showWorkOrder,
         updateWorkOrder,
         deleteWorkOrder,
-        // getPrAndCsWisePurchaseOrder,
+        getWrAndWcsWiseWorkOrder,
         // searchPurchaseOrderForLc,
         // getMaterialList,
         // prMaterialList,
+        getServiceList,
         wrServiceList,
-        // getLineData,
+        getLineData,
         serviceObject,
         woLineObject,
         termsObject,
