@@ -15,4 +15,9 @@ class AccCostCenter extends Model
      */
     protected $fillable = ['name', 'short_name', 'business_unit', 'type'];
 
+    public function ledgers()
+    {
+        return $this->hasMany(AccLedgerEntry::class);
+    }
+
 }
