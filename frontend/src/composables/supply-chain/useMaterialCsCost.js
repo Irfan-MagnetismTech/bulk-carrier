@@ -64,8 +64,8 @@ export default function useMaterialCsCost() {
         scm_vendor_id: null,
         scmCsVendor: null,
         scm_cs_vendor_id: null,
-        type: null,
-        status: null,
+        payment_type: null,
+        payment_status: null,
         total_cost: 0.0,
         market_rate: 0.0,
         name_of_bank: null,
@@ -154,31 +154,91 @@ export default function useMaterialCsCost() {
                     scm_cs_id: materialCsId,
                 },
             });
-            materialCsCost.value = data.value;
+            const datas = data.value;
+            console.log('materialCsCost.value.selectedVendors DASD',datas);
+            // console.log('materialCsCost.value.selectedVendors before',datas.selectedVendors);
+            datas.scmCs = {ref_no:datas.ref_no};
+            datas.scm_cs_id = datas.id;
+            datas.selectedVendors.forEach((vendor,index) => {
+                console.log('vendor',vendor.scmCsLandedCost);
+                if(vendor.scmCsLandedCost == null){
+                let data = { 
+                        scmVendor: vendor.scmVendor,
+                        scm_vendor_id: vendor.scmVendor.id,
+                        scmCsLandedCost:
+                        {
+                        scm_cs_id: datas.id,
+                        scmVendor: vendor.scmVendor,
+                        scm_vendor_id: vendor.scmVendor.id,
+                        scmCsVendor: vendor,
+                        scm_cs_vendor_id: vendor.id,
+                        hs_codes: null,
+                        exchange_rate: 0.0,
+                        product_price: 0.0,
+                        freight_charge: 0.0,
+                        cfr_value: vendor.total_negotiated_price,
+                        insurance: 0.0,
+                        assesable_value_b: 0.0,
+                        landing_charge: 0.0,
+                        assesable_value_a: 0.0,
+                        cd: 0.0,
+                        rd: 0.0,
+                        sd: 0.0,
+                        vat: 0.0,
+                        at: 0.0,
+                        ait: 0.0,
+                        total_duty: 0.0,
+                        others: 0.0,
+                        total_landed_cost: 0.0,
+                      },
+                      scmCsPaymentInfo: {
+                        scm_cs_id: datas.id,
+                        scmVendor: vendor.scmVendor,
+                        scm_vendor_id: vendor.scmVendor.id,
+                        scmCsVendor: vendor,
+                        scm_cs_vendor_id: vendor.id,
+                        payment_type: null,
+                        payment_status: null,
+                        total_cost: 0.0,
+                        market_rate: 0.0,
+                        name_of_bank: null,
+                        cfr_value:vendor.total_negotiated_price,
+                        lc_margin:0.00,
+                        bank_commission:0.00,
+                        vat:0.00,
+                        others:0.00,
+                        insurence_premium:0.00,
+                        document_value:0.00,
+                        exchange_rate:0.00,
+                        insurence_company: null,
+                    }
+                }
+                datas.selectedVendors[index] = data;
+            }
+        });
+        // console.log('materialCsCost.value.selectedVendors after',datas);
+        materialCsCost.value = datas;
+        // console.log('data',materialCsCost.value);
         } catch (error) {
-            const { data, status } = error.response;
-            notification.showError(status);
+            console.log('tag', error);
+            // const { data, status } = error.response;
+            // notification.showError(status);
         } finally {
             loader.hide();
             isLoading.value = false;
         }
     }
 
-    async function updateMaterialCs(form, materialCsId) {
-        if (!checkUniqueArray(form)) return;
-
+    async function updateCostProjection(form,csId) {
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         let formData = new FormData();
         formData.append('data', JSON.stringify(form));
-        formData.append('_method', 'PUT');
-
         try {
-            const { data, status } = await Api.post(`/${BASE}/material-cs/${materialCsId}`, formData);
-            materialCs.value = data.value;
+            const { data, status } = await Api.post(`/${BASE}/update-cs-landed-cost`, formData);
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.material-cs.index` });
+            router.push({ name: `${BASE}.quotations.index` , params: { csId: csId }});
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -405,7 +465,6 @@ export default function useMaterialCsCost() {
         searchCs,
         getMaterialCs,
         showCostProjection,
-        updateMaterialCs,
         deleteMaterialCs,
         getPrWiseCs,
         getQuotations,
@@ -421,6 +480,7 @@ export default function useMaterialCsCost() {
         // getSiWiseData,
         isTableLoading,
         getSelectedVendorInfo,
+        updateCostProjection,
         csVendor,
         materialCsCost,
         storeCostProjection,
