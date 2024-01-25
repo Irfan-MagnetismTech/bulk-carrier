@@ -98,7 +98,7 @@ class ScmWcsController extends Controller
                     'quantity' => $value['quantity'],
                 ]);
             }
-            // $scmWcs->scmWcsServices()->createMany($request->scmWcsServices);
+            
             DB::commit();
             return response()->success('Data created succesfully', $scmWcs, 201);
         } catch (\Exception $e) {
@@ -160,8 +160,6 @@ class ScmWcsController extends Controller
                     'quantity' => $value['quantity'],
                 ]);
             }
-            // $work_c->scmWcsServices()->createMany($request->scmWcsServices);
-
 
             DB::commit();
             return response()->success('Data updated succesfully', $work_c, 202);
