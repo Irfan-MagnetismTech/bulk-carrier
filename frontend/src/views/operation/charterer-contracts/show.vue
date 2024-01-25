@@ -197,23 +197,23 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                <tr v-if="chartererContract.contract_type == 'Day Wise'">
                     <th class="w-40">Per Day Charge</th>
                     <td>{{ chartererContract.opsChartererContractsFinancialTerms.per_day_charge }}</td>
                 </tr>
-                <tr>
+                <tr v-else>
                     <th class="w-40">Per MT Charge</th>
                     <td>{{ chartererContract.opsChartererContractsFinancialTerms.per_ton_charge }}</td>
                 </tr>
-                <tr v-if="chartererContract.contract_type == 'Voyage Wise'">
+                <tr>
                     <th class="w-40">Cleaning Fee</th>
                     <td>{{ chartererContract.opsChartererContractsFinancialTerms.cleaning_fee }}</td>
                 </tr>
-                <tr v-if="chartererContract.contract_type == 'Voyage Wise'">
+                <tr>
                     <th class="w-40">Cancellation Fee <small>(%)</small></th>
                     <td>{{ chartererContract.opsChartererContractsFinancialTerms.cancellation_fee }}</td>
                 </tr>
-                <tr v-if="chartererContract.contract_type == 'Voyage Wise'">
+                <tr>
                     <th class="w-40">Others Fee</th>
                     <td>{{ chartererContract.opsChartererContractsFinancialTerms.others_fee }}</td>
                 </tr>
