@@ -80,10 +80,10 @@
             <span class="text-gray-700 dark-disabled:text-gray-300"> </span>
             <input type="checkbox" v-model="form.has_run_hour" :disabled="page === 'edit' && form.mntJobs?.length" /> Enable Regular Running Hour Entry
           <Error v-if="errors?.has_run_hour" :errors="errors.has_run_hour" />
-        </label>        
+        </label>
     </div>
 
-    <ErrorComponent :errors="errors"></ErrorComponent>   
+    <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import Error from "../../Error.vue";
@@ -127,7 +127,7 @@ watch(() => props.form.mnt_ship_department_name, (newValue, oldValue) => {
 
 watch(() => props.form.mnt_item_group_name, (newValue, oldValue) => {
   props.form.mnt_item_group_id = props.form.mnt_item_group_name?.id;
-  
+
   if((oldValue !== '' || props.page !== 'edit') && props.form.mnt_item_group_id){
     // fetchItemCode();
     props.form.item_code = '';
@@ -173,7 +173,7 @@ onMounted(() => {
     if(businessUnit.value && businessUnit.value != 'ALL'){
       getShipDepartmentsWithoutPagination(businessUnit.value);
     }
-      
+
   });
 });
 

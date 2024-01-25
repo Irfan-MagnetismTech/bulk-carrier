@@ -12,7 +12,7 @@ const { allAccountLists, getAccount } = useAccountCommonApiRequest();
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const { setTitle } = Title();
 
-setTitle('AIS Report - Cost Center Summary');
+setTitle('AIS Report - Receipt & Payment');
 
 const searchParams = ref({
   acc_balance_and_income_line_id: '',
@@ -78,23 +78,7 @@ onMounted(() => {
   <form @submit.prevent="getCostCenterSummary(searchParams)">
     <div class="w-full flex items-center justify-between mb-2 my-2 select-none">
       <fieldset class="w-full grid grid-cols-5 gap-1 px-2 pb-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Cost Center Summary</legend>
-        <div>
-          <label for="" class="text-xs" style="margin-left: .01rem">Balance Income Line <span class="text-red-500">*</span></label>
-          <v-select :options="balanceIncomeLineLists" :loading="isLoading" placeholder="--Choose an option--" v-model="searchParams.acc_balance_and_income_line_id" label="line_text" :reduce="balanceIncomeLineLists => balanceIncomeLineLists.id" class="block w-full rounded form-input">
-            <template #search="{attributes, events}">
-              <input class="vs__search w-full" style="width: 50%" :required="!searchParams.acc_balance_and_income_line_id" v-bind="attributes" v-on="events"/>
-            </template>
-          </v-select>
-        </div>
-        <div>
-          <label for="" class="text-xs" style="margin-left: .01rem">Account Name<span class="text-red-500">*</span></label>
-          <v-select :options="balanceIncomeAccountLists" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="searchParams.acc_account_id" label="account_name" :reduce="balanceIncomeAccountLists => balanceIncomeAccountLists.id"  class="block w-full rounded form-input">
-            <template #search="{attributes, events}">
-              <input class="vs__search w-full" style="width: 50%" :required="!searchParams.acc_account_id" v-bind="attributes" v-on="events"/>
-            </template>
-          </v-select>
-        </div>
+        <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Receipt & Payment</legend>
         <div>
           <label for="" class="text-xs" style="margin-left: .01rem">From Date <span class="text-red-500">*</span></label>
           <VueDatePicker v-model.trim="searchParams.from_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
