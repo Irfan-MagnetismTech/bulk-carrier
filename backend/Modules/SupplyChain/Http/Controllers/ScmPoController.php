@@ -476,7 +476,7 @@ class ScmPoController extends Controller
                     } else {
                         $data['po_quantity'] = 0;
                     }
-                    $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity');
+                    $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
 
                     return $data;
                 });
