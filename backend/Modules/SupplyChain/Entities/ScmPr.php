@@ -4,6 +4,7 @@ namespace Modules\SupplyChain\Entities;
 
 use App\Models\User;
 use App\Traits\GlobalSearchTrait;
+use App\Traits\UniqueKeyGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmCs;
 use Modules\SupplyChain\Entities\ScmPo;
@@ -18,11 +19,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmPr extends Model
 {
-    use HasFactory, GlobalSearchTrait;
+    use HasFactory, GlobalSearchTrait, UniqueKeyGenerator;
 
     protected $fillable = [
         'ref_no', 'scm_warehouse_id', 'acc_cost_center_id', 'attachment', 'raised_date', 'remarks', 'purchase_center', 'is_critical', 'approved_date', 'business_unit', 'created_by', 'closed_at', 'closed_by', 'is_closed', 'closing_remarks', 'status'
     ];
+
+    protected $refKeyPrefix = 'PR';
 
     public function scmPrLines(): HasMany
     {

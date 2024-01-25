@@ -53,7 +53,7 @@ class ScmWoController extends Controller
     public function store(ScmWoRequest $request): JsonResponse
     {
         $requestData = $request->except('ref_no');
-        $requestData['ref_no'] = UniqueId::generate(ScmWo::class, 'WO');
+        // $requestData['ref_no'] = UniqueId::generate(ScmWo::class, 'WO');
         $requestData['created_by'] = auth()->id();
 
         try {

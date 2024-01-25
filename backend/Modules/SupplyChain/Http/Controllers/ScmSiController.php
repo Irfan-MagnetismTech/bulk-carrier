@@ -53,7 +53,7 @@ class ScmSiController extends Controller
     {
         $requestData = $request->except('ref_no', 'sr_composite_key');
 
-        $requestData['ref_no'] = UniqueId::generate(ScmSi::class, 'SI');
+        // $requestData['ref_no'] = UniqueId::generate(ScmSi::class, 'SI');
 
         try {
             DB::beginTransaction();

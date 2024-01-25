@@ -58,7 +58,7 @@ class ScmMiController extends Controller
     {
         $requestData = $request->except('ref_no', 'mi_composite_key');
 
-        $requestData['ref_no'] = UniqueId::generate(ScmMi::class, 'MI');
+        // $requestData['ref_no'] = UniqueId::generate(ScmMi::class, 'MI');
 
         try {
             DB::beginTransaction();

@@ -57,7 +57,7 @@ class ScmMmrController extends Controller
     {
         $requestData = $request->except('ref_no', 'mmr_composite_key');
 
-        $requestData['ref_no'] = UniqueId::generate(ScmMmr::class, 'MMR');
+        // $requestData['ref_no'] = UniqueId::generate(ScmMmr::class, 'MMR');
 
         try {
             DB::beginTransaction();

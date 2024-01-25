@@ -50,7 +50,7 @@ class ScmSirController extends Controller
     {
         $requestData = $request->except('ref_no', 'sr_composite_key');
 
-        $requestData['ref_no'] = UniqueId::generate(ScmSir::class, 'SIR');
+        // $requestData['ref_no'] = UniqueId::generate(ScmSir::class, 'SIR');
 
         $dataForStockLedger = [];
 
