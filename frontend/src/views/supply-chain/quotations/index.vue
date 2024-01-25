@@ -182,7 +182,7 @@ const navigateSupplierSelection = (csId) => {
 };
 
 function navigateCostProjection(csId) {
-  if(materialCs.value.selectedVendors.length && materialCs.value.selectedVendors[0].scmCsPaymentInfo){
+  if(materialCs?.value?.selectedVendors?.length && materialCs?.value?.selectedVendors[0]?.scmCsPaymentInfo){
     const routeOptions1 = {
       name: 'scm.cs-cost-projection.edit',
       params: {
@@ -201,6 +201,17 @@ function navigateCostProjection(csId) {
   }
   
 }
+
+function supplierSelection(csId) {
+  const routeOptions = {
+    name: 'scm.supplier-selection',
+    params: {
+      csId: csId
+    }
+  };
+  if(csId) router.push(routeOptions);
+}
+
 function confirmDelete(cs_id, id) {
         Swal.fire({
           title: 'Are you sure?',
@@ -226,9 +237,7 @@ function confirmDelete(cs_id, id) {
     <div class="flex gap-3">
       <default-button :title="'CS List'" :to="{ name: 'scm.material-cs.index' }" :icon="icons.DataBase"></default-button>
       <default-button :title="'Create Quotation'" :to="{ name: 'scm.quotations.create', params: { csId: CSID }  }" :icon="icons.AddIcon"></default-button>
-      <default-button :title="'Select Supplier'" :to="{ name: 'scm.supplier-selection', params: { csId: CSID }  }" :icon="icons.AddIcon"></default-button>
-     
-    </div>
+     </div>
   </div>
   <!-- Table -->
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
@@ -251,15 +260,10 @@ function confirmDelete(cs_id, id) {
       </label>
     </div>
     <div>
-      <!-- <div class="flex items-center justify-between w-full my-3" v-once>
-        <h2 class="text-2xl font-semibold text-gray-700">Cost Projection</h2>
-        <div class="flex gap-3">
-          <default-button :title="'Create Cost Projection'" :to="{ name: 'scm.cs-cost-projection.create', params: { csId: CSID }  }" :icon="icons.AddIcon"></default-button>
-        </div>
-        </div>  -->
-          <button v-if="materialCs.purchase_center == 'Foreign'" @click="navigateCostProjection(CSID)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Cost Projection</nobr></button> 
-       
-    </div>
+          <button @click="supplierSelection(CSID)" class="text-xs px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Supplier Selection</nobr></button> 
+         <button v-if="materialCs.purchase_center == 'Foreign'" @click="navigateCostProjection(CSID)" class="text-xs px-2 py-1 ml-2 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Cost Projection</nobr></button> 
+         
+     </div>
   </div>
  
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
@@ -287,7 +291,7 @@ function confirmDelete(cs_id, id) {
               <td>{{ quotation?.scmVendor?.scmVendorContactPerson?.name }}</td>
               <td>{{ quotation?.scmVendor?.country_name }}</td>
               <td>{{ quotation?.quotation_ref }}</td>
-              <td>{{ formatDate(quotation?.date) }}</td>
+              <td>{{ formatDate(quotation?.quotation_received_date) }}</td>
               <td v-if="materialCs.purchase_center == 'Foreign'">{{ quotation?.total_offered_price }}</td>
               <td v-if="materialCs.purchase_center == 'Foreign'">{{ quotation?.total_negotiated_price }}</td>
               <td>

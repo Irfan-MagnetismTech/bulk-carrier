@@ -422,7 +422,8 @@ class ScmPrController extends Controller
 
     public function getMaterialByPrIdForCs(Request $request): JsonResponse
     {
-        $lineData = ScmPrLine::query()
+        if($request->isNotFilled('scm_cs_id')) {
+            $lineData = ScmPrLine::query()
             ->with('scmMaterial')
             ->where('scm_pr_id', $request->pr_id)
             ->whereNot('status', 'Closed')
@@ -433,9 +434,36 @@ class ScmPrController extends Controller
             ->map(function ($item) {
                 $data = $item->scmMaterial;
                 $data['pr_composite_key'] = $item->pr_composite_key;
+                $data['pr_quantity'] = $item->quantity;
                 $data['max_quantity'] = $item->quantity - $item->scmCsmaterials->sum('quantity');
                 return $data;
             });
+
+            return response()->success('Search result', $lineData, 200);
+        }else{
+            $lineData = ScmPrLine::query()
+            ->with('scmMaterial')
+            ->where('scm_pr_id', $request->pr_id)
+            ->whereNot('status', 'Closed')
+            ->whereHas('scmPr', function ($query) {
+                $query->whereIn('status', ['Pending', 'WIP']);
+            })
+            ->get()
+            ->map(function ($item) use($request){
+                $data = $item->scmMaterial;
+                $material = ScmCsMaterial::query()->where(['scm_material_id' => $item->scm_material_id, 'scm_pr_id' => $request->pr_id,'scm_cs_id'=> $request->scm_cs_id])->first();
+                $data['pr_composite_key'] = $item->pr_composite_key;
+                if($material){
+                    $max_quantity = $item->quantity - $item->scmCsmaterials->sum('quantity') + $material->quantity;
+                }else{
+                    $max_quantity = $item->quantity - $item->scmCsmaterials->sum('quantity');
+                }
+                $data['max_quantity'] = $max_quantity;
+                $data['pr_quantity'] = $item->quantity;
+                return $data;
+            });
+        }
+
 
         return response()->success('Search result', $lineData, 200);
     }

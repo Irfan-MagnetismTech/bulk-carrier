@@ -74,6 +74,8 @@
             <th style="" class="py-3 align-center">PR </th>
             <th style="" class="py-3 align-center">Material Name </th>
             <th style="" class="py-3 align-center">Unit</th>
+            <th class="py-3 align-center">PR Qty</th>
+            <th class="py-3 align-center">Remaining Qty</th>
             <th class="py-3 align-center">Quantity</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>
@@ -110,6 +112,16 @@
               <label class="block w-full mt-2 text-sm">
                  <input type="text" readonly v-model="form.scmCsMaterials[index].unit" class="vms-readonly-input form-input">
                </label>
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                 <input type="number" v-model="form.scmCsMaterials[index].pr_quantity" readonly class="form-input vms-readonly-input" min="2" required>
+              </label>
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                 <input type="number" v-model="form.scmCsMaterials[index].max_quantity" readonly class="form-input vms-readonly-input" min="2" required>
+              </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
@@ -219,13 +231,20 @@ function materialChange(index) {
     props.form.scmCsMaterials[index].scm_material_id = props.form.scmCsMaterials[index].scmMaterial.id; 
     props.form.scmCsMaterials[index].pr_composite_key = props.form.scmCsMaterials[index].scmMaterial.pr_composite_key;
     props.form.scmCsMaterials[index].max_quantity = props.form.scmCsMaterials[index].scmMaterial.max_quantity;
+    props.form.scmCsMaterials[index].pr_quantity = props.form.scmCsMaterials[index].scmMaterial.pr_quantity;
 }
 
 function prChange(index) {
   props.form.scmCsMaterials[index].scm_pr_id = props.form.scmCsMaterials[index].scmPr.id;
-  getPrWiseMaterialList(props.form.scmCsMaterials[index].scm_pr_id).then((res) => {
+  if(props.formType == 'edit'){
+    getPrWiseMaterialList(props.form.scmCsMaterials[index].scm_pr_id,props.form.id).then((res) => {
+    props.materialList[index] = res;
+  })
+  }else{
+    getPrWiseMaterialList(props.form.scmCsMaterials[index].scm_pr_id).then((res) => {
     props.materialList[index] = res;
   });
+  }
 }
 
 function warehouseChange() {
@@ -363,7 +382,7 @@ onMounted(() => {
     const watchBusinessUnit = watch(() => props.form, (newVal, oldVal) => {
       newVal.scmCsMaterials.forEach((item, index) => {
         props.materialList.push([]);
-          getPrWiseMaterialList(item.scm_pr_id).then((res) => {
+          getPrWiseMaterialList(item.scm_pr_id,props.form.id).then((res) => {
             props.materialList[index] = res;
           });
       });
