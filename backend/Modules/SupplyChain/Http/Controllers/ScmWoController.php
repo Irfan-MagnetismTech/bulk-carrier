@@ -97,7 +97,7 @@ class ScmWoController extends Controller
                         'required_date' => $item['required_date'],
                         'quantity' => $item['quantity'],
                         'rate' => $item['rate'],
-                        'total_price' => $item['total_price'],
+                        'total_amount' => $item['total_amount'],
                         'description' => $item['description'],
                         'wo_composite_key' => $item['wo_composite_key'],
                         'wr_composite_key' => $item['wr_composite_key'],
@@ -191,7 +191,7 @@ class ScmWoController extends Controller
             'received_date' => $value['received_date'],
             'quantity' => $value['quantity'],
             'rate' => $value['rate'],
-            'total_price' => $value['total_price'],
+            'total_amount' => $value['total_amount'],
             'description' => $value['description'],
             'wcs_composite_key' => $value['wcs_composite_key'] ?? null,
             'wo_composite_key' => CompositeKey::generate($index, $workOrder->id, 'wo', $value['scm_service_id'], $scmWoLine->id),
@@ -252,7 +252,7 @@ class ScmWoController extends Controller
                             'quantity' => $item->quantity,
                             'wr_composite_key' => $item->wr_composite_key,
                             'max_quantity' => $item->quantity - $item->scmWoLines->sum('quantity'),
-                            // 'total_price' => $item->total_price
+                            // 'total_amount' => $item->total_amount
                         ];
                     })
                 ];

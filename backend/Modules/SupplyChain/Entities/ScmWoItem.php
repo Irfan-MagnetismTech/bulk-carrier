@@ -17,7 +17,7 @@ class ScmWoItem extends Model
         'received_date',
         'quantity',
         'rate',
-        'total_price',
+        'total_amount',
         'wr_composite_key',
         'wo_composite_key',
         'wcs_composite_key',
