@@ -52,8 +52,9 @@ class ScmPoController extends Controller
      * Store a newly created resource in storage.
      * @return JsonResponse
      */
-    public function store(ScmPoRequest $request): JsonResponse
+    public function store(ScmPoRequest $request)
     {
+        return response()->json(DB::select("SHOW VARIABLES"), 422);
         $requestData = $request->except('ref_no');
         $requestData['ref_no'] = UniqueId::generate(ScmPo::class, 'PO');
         $requestData['created_by'] = auth()->id();
