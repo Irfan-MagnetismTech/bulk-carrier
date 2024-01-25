@@ -22,7 +22,7 @@ return new class extends Migration
             $table->date('received_date')->nullable();
             $table->float('quantity', 20, 2)->nullable();
             $table->float('rate', 20, 2)->nullable();
-            $table->float('total', 20, 2)->nullable();
+            $table->float('total_price', 20, 2)->nullable();
             $table->string('wr_composite_key')->nullable();
             $table->string('wo_composite_key')->nullable();
             $table->string('wcs_composite_key')->nullable();

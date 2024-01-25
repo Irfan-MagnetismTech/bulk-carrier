@@ -32,7 +32,7 @@ class ScmWoRequest extends FormRequest
             // 'exchange_rate' => 'required|numeric',
             'usd_to_bdt' => 'required_if:currency,!=,BDT|numeric',
             'foreign_to_usd' => 'required_if:currency,!=,BDT,USD|numeric',
-            'total' => 'required|numeric',
+            'total_price' => 'required|numeric',
             'remarks' => 'nullable|max:255',
             'date' => 'required|date',
             'scmWoLine.*.scmWoItems.*.scm_service_id' => 'required|exists:scm_services,id|integer',
@@ -66,7 +66,9 @@ class ScmWoRequest extends FormRequest
 
             'date.required' => 'Date is required',
             'date.date' => 'Date must be a date',
-
+            
+            'total_price.required' => 'Date is required',
+            
             'remarks.max' => 'Remarks must be less than 255 characters',
 
             // 'purchase_center.required' => 'Purchase center is required',
