@@ -600,7 +600,7 @@ class ScmCsController extends Controller
             DB::beginTransaction();
 
             foreach ($request->selectedVendors as $vendor) {
-                ScmCsLandedCost::create($vendor['scmCsLandedCost']);
+                $data = ScmCsLandedCost::create($vendor['scmCsLandedCost']);
                 ScmCsPaymentInfo::create($vendor['scmCsPaymentInfo']);
             }
 
