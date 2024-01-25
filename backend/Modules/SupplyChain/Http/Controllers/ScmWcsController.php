@@ -98,7 +98,7 @@ class ScmWcsController extends Controller
                     'quantity' => $value['quantity'],
                 ]);
             }
-            
+
             DB::commit();
             return response()->success('Data created succesfully', $scmWcs, 201);
         } catch (\Exception $e) {
@@ -114,7 +114,18 @@ class ScmWcsController extends Controller
      */
     public function show(ScmWcs $work_c): JsonResponse
     {
-        $work_c->load('scmWcsServices.scmService', 'scmWcsServices.scmWr', 'scmWarehouse');
+        $work_c->load('scmWcsServices.scmService', 'scmWcsServices.scmWr','scmWcsServices.scmWrLine', 'scmWarehouse');
+
+        $data = $work_c->scmWcsServices->map(function($service){
+            $service['wr_quantity']= $service->scmWrLine->quantity;
+            $service['max_quantity']= $service->scmWrLine->quantity - $service->scmWrLine->scmWcsServices->sum('quantity') + $service->quantity;
+
+            return $service;
+        });
+
+        data_forget($work_c, 'scmWcsServices');
+        $work_c['scmWcsServices']= $data;
+
 
         try {
             return response()->success('Detail data', $work_c, 200);
