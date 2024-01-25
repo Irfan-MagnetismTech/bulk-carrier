@@ -258,6 +258,7 @@ class ScmWcsController extends Controller
                 $rate = $values[0]['rate'] ?? 0;
                 $quantity = $values[0]['quantity'] ?? 0;
 
+
                 foreach ($values as $key1 => $value) {
                     $wcsService = ScmWcsService::where([
                         'scm_wcs_id' => $scmWcs->id,
@@ -472,8 +473,8 @@ class ScmWcsController extends Controller
 
         if (isset($request->searchParam)) {
             $wcs = ScmWcs::query()
-                ->with('scmWsVendors', 'scmWsServices', 'scmWcsVendorServices')
-                ->whereHas('scmWsServices.scmWr', function ($query) use ($request) {
+                ->with('scmWcsVendors', 'scmWcsServices', 'scmWcsVendorServices')
+                ->whereHas('scmWcsServices.scmWr', function ($query) use ($request) {
                     $query->where(function ($query) use ($request) {
                         $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
                             ->where('business_unit', $request->business_unit)
@@ -483,10 +484,11 @@ class ScmWcsController extends Controller
                 })
                 ->orderByDesc('ref_no')
                 ->get();
+                
         } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center)) {
             $wcs = ScmWcs::query()
-                ->with('scmWsVendors', 'scmWsServices', 'scmWcsVendorServices')
-                ->whereHas('scmWsServices.scmWr', function ($query) use ($request) {
+                ->with('scmWcsVendors', 'scmWcsServices', 'scmWcsVendorServices')
+                ->whereHas('scmWcsServices.scmWr', function ($query) use ($request) {
                     $query->where(function ($query) use ($request) {
                         $query->where('business_unit', $request->business_unit)
                             ->where('scm_warehouse_id', $request->scm_warehouse_id)
