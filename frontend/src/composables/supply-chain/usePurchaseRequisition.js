@@ -7,6 +7,7 @@ import Store from './../../store/index.js';
 // import useFileDownload from 'vue-composable/dist/vue-composable.esm';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper';
+import Swal from 'sweetalert2';
 import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 
@@ -57,6 +58,7 @@ export default function usePurchaseRequisition() {
     const materialObject = {
         scmMaterial: '',
         scm_material_id: '',
+        isAspectDuplicate: false,
         unit: '',
         brand: '',
         model: '',
@@ -71,6 +73,12 @@ export default function usePurchaseRequisition() {
     }
     const excelExportData = ref( {
         store_category_name: ''
+    });
+
+    const closingData = ref({
+        closing_date: null,
+        closing_remarks: null,
+        scm_pr_id: null,
     });
 
     const errors = ref('');
@@ -116,6 +124,7 @@ export default function usePurchaseRequisition() {
         }
     }
     async function storePurchaseRequisition(form) {
+        if (!checkUniqueArray(form)) return;
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -162,6 +171,8 @@ export default function usePurchaseRequisition() {
     }
 
     async function updatePurchaseRequisition(form, purchaseRequisitionId) {
+        if (!checkUniqueArray(form)) return;
+
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -205,20 +216,60 @@ export default function usePurchaseRequisition() {
         }
     }
 
-    async function searchPurchaseRequisition(searchParam, loading) {
-        isLoading.value = true;
+    function checkUniqueArray(form) {
+        let isHasError = false;
+        const messages = ref([]);
+        let materialArray = [];
+        form.scmPrLines.map((scmPrLine, scmPrLineIndex) => {
+            let material_key = scmPrLine.scm_material_id + "-" + scmPrLine?.brand ?? + "-" + scmPrLine?.model ?? '';
+            if (materialArray.indexOf(material_key) === -1) {
+                materialArray.push(material_key);
+                form.scmPrLines[scmPrLineIndex].isAspectDuplicate = false;
+              } else {
+                let data = `Duplicate Material Name in Row: ${scmPrLineIndex + 1}]`;
+                messages.value.push(data);
+                form.scmPrLines[scmPrLineIndex].isAspectDuplicate = true;
+              }
+            });
 
-        try {
-            const {data, status} = await Api.get(`/${BASE}/search-purchase-requisitions`,searchParam);
-            filteredPurchaseRequisitions.value = data.value;
-        } catch (error) {
-            const { data, status } = error.response;
-            notification.showError(status);
-        } finally {
-            loading(false)
-            isLoading.value = false;
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
         }
     }
+
+
+    // async function searchPurchaseRequisition(searchParam, loading) {
+    //     isLoading.value = true;
+
+    //     try {
+    //         const {data, status} = await Api.get(`/${BASE}/search-purchase-requisitions`,searchParam);
+    //         filteredPurchaseRequisitions.value = data.value;
+    //     } catch (error) {
+    //         const { data, status } = error.response;
+    //         notification.showError(status);
+    //     } finally {
+    //         loading(false)
+    //         isLoading.value = false;
+    //     }
+    // }
 
     async function searchPr(business_unit, cost_center_id = null, searchParam = '') {
         //NProgress.start();
@@ -244,6 +295,58 @@ export default function usePurchaseRequisition() {
         }
     }
 
+
+    async function searchPurchaseRequisition(business_unit, warehouse_id = null,purchase_center = null, cs_id = null ,searchParam = null) {
+        //NProgress.start();
+        //const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/search-purchase-requisitions`,{
+                params: {
+                    business_unit: business_unit,
+                    searchParam: searchParam,
+                    scm_warehouse_id: warehouse_id,
+                    purchase_center: purchase_center,
+                    cs_id: cs_id,
+                },
+            });
+            filteredPurchaseRequisitions.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+    async function searchPurchaseRequisitionForCs(business_unit, warehouse_id = null,purchase_center = null, cs_id = null ,searchParam = null) {
+        //NProgress.start();
+        //const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/search-purchase-requisitions-for-cs`,{
+                params: {
+                    business_unit: business_unit,
+                    seearchParam: searchParam,
+                    scm_warehouse_id: warehouse_id,
+                    purchase_center: purchase_center,
+                    cs_id: cs_id,
+                },
+            });
+            filteredPurchaseRequisitions.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+    
 
     async function searchWarehouseWisePurchaseRequisition(scm_warehouse_id,searchParam, loading) {
         isLoading.value = true;
@@ -285,6 +388,57 @@ export default function usePurchaseRequisition() {
 
     }
 
+    async function closePr(id,closing_remarks) {
+        try {
+            let formData = new FormData();
+            formData.append('id', id);
+            formData.append('closing_remarks', closing_remarks);
+
+            const { data, status } = await Api.post(`/${BASE}/close-pr`, formData);
+            notification.showSuccess(status);
+            await getPurchaseRequisitions(filterParams.value);
+        }
+        catch (error) {
+            if (error.response) {
+                const { data, status ,messege } = error.response;
+                console.log(data,error.response);
+                notification.showError(status);
+            } else {
+                notification.showError("An error occurred. Please check your internet connection.");
+            }
+
+        } finally {
+            // isLoading.value = false;
+        }
+
+    }
+
+    async function closePrLines(parent_id,id,closing_remarks) {
+        try {
+            let formData = new FormData();
+            formData.append('id', id);
+            formData.append('parent_id', parent_id);
+            formData.append('closing_remarks', closing_remarks);
+
+            const { data, status } = await Api.post(`/${BASE}/close-prline`, formData);
+            notification.showSuccess(status);
+            await showPurchaseRequisition(parent_id);
+        }
+        catch (error) {
+            if (error.response) {
+                const { data, status ,messege } = error.response;
+                console.log(data,error.response);
+                notification.showError(status);
+            } else {
+                notification.showError("An error occurred. Please check your internet connection.");
+            }
+
+        } finally {
+            // isLoading.value = false;
+        }
+
+    }
+
     return {
         purchaseRequisitions,
         purchaseRequisition,
@@ -296,9 +450,13 @@ export default function usePurchaseRequisition() {
         updatePurchaseRequisition,
         deletePurchaseRequisition,
         getStoreCategoryWiseExcel,
+        searchPurchaseRequisitionForCs,
         searchWarehouseWisePurchaseRequisition,
         materialObject,
         searchPr,
+        closePr,
+        closePrLines,
+        closingData,
         excelExportData,
         isTableLoading,
         isLoading,

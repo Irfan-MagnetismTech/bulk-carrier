@@ -15,10 +15,9 @@ return new class extends Migration
     {
         Schema::create('scm_cs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('scm_pr_id');
             $table->string('ref_no')->nullable();
-            $table->unsignedBigInteger('scm_warehouse_id');
-            $table->unsignedBigInteger('acc_cost_center_id');
+            $table->unsignedBigInteger('scm_warehouse_id')->nullable();
+            $table->unsignedBigInteger('acc_cost_center_id')->nullable();
             $table->date('effective_date');
             $table->date('expire_date');
             $table->text('special_instructions')->nullable();

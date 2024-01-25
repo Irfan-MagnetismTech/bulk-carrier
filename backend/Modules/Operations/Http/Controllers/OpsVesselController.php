@@ -81,7 +81,6 @@ class OpsVesselController extends Controller
 
             // create cost center
             $costCenter= [
-                'ops_vessel_id'=>$vessel->id,
                 'name'=>$request->name,
                 'short_name'=>$request->short_code,
                 'type'=>$request->vessel_type,
