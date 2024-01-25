@@ -47,6 +47,7 @@ export default function useMaterialCs() {
                 scm_material_id: null,
                 scmMaterial: null,
                 max_quantity: null,
+                pr_quantity: null,
                 pr_composite_key: null,
                 unit : null,
                 quantity : null,
@@ -60,6 +61,7 @@ export default function useMaterialCs() {
                 scm_material_id: null,
                 scmMaterial: null,
                 max_quantity: null,
+                pr_quantity: null,
                 pr_composite_key: null,
                 unit : null,
                 quantity : null,
@@ -299,7 +301,7 @@ export default function useMaterialCs() {
     }
 
 
-    async function getPrWiseMaterialList(prId) {
+    async function getPrWiseMaterialList(prId,csId = null) {
         //NProgress.start();
         // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
@@ -307,6 +309,7 @@ export default function useMaterialCs() {
             const {data, status} = await Api.get(`/${BASE}/search-pr-wise-material-for-cs`,{
                 params: {
                     pr_id: prId,
+                    scm_cs_id: csId,
                 },
             });
             prMaterialList.value = data.value;
