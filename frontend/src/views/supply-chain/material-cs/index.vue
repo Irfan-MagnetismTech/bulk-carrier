@@ -249,7 +249,14 @@ function confirmDelete(id) {
               <td>{{ formatDate(materialCsdata?.effective_date) }}</td>
               <td>{{ formatDate(materialCsdata?.expire_date) }}</td>
               <td>{{ materialCsdata?.purchase_center }}</td>
-              <td>{{ materialCsdata?.selection_ground }}</td>
+              <td>
+                <template v-if="materialCsdata.selectedVendors.length">
+                  {{ materialCsdata?.selection_ground }}
+                </template>
+                <template v-else>
+                  <span class="text-red-500">No Vendor Selected</span>
+                </template>
+                {{ materialCsdata?.selection_ground }}</td>
               <td>
                 <template v-if="materialCsdata.selectedVendors.length">
                   <ul v-for="(vendor,index) in materialCsdata?.selectedVendors" :key="index">

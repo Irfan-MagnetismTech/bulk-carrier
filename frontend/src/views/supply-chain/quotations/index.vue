@@ -182,7 +182,7 @@ const navigateSupplierSelection = (csId) => {
 };
 
 function navigateCostProjection(csId) {
-  if(materialCs.value.selectedVendors.length && materialCs.value.selectedVendors[0].scmCsPaymentInfo){
+  if(materialCs?.value?.selectedVendors?.length && materialCs?.value?.selectedVendors[0]?.scmCsPaymentInfo){
     const routeOptions1 = {
       name: 'scm.cs-cost-projection.edit',
       params: {
@@ -260,8 +260,9 @@ function confirmDelete(cs_id, id) {
       </label>
     </div>
     <div>
-         <button v-if="materialCs.purchase_center == 'Foreign'" @click="navigateCostProjection(CSID)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Cost Projection</nobr></button> 
-         <button @click="supplierSelection(CSID)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Supplier Selection</nobr></button> 
+          <button @click="supplierSelection(CSID)" class="text-xs px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Supplier Selection</nobr></button> 
+         <button v-if="materialCs.purchase_center == 'Foreign'" @click="navigateCostProjection(CSID)" class="text-xs px-2 py-1 ml-2 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Cost Projection</nobr></button> 
+         
      </div>
   </div>
  

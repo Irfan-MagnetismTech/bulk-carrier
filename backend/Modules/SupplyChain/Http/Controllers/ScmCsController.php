@@ -89,7 +89,15 @@ class ScmCsController extends Controller
     {
         $materialCs = ScmCs::find($id);
         // $materialCs->load('scmPr', 'scmWarehouse');
-        $materialCs->load('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmWarehouse', 'selectedVendors.scmVendor', 'selectedVendors.scmCsPaymentInfo', 'selectedVendors.scmCsLandedCost');
+        $materialCs->load('scmCsMaterials.scmMaterial','scmPr','scmCsMaterials.scmPr','scmCsMaterials.scmPrLine', 'scmWarehouse');
+        $data = $materialCs->scmCsMaterials->map(function ($item) {
+            $item['pr_quantity'] = $item->scmPrLine->quantity;
+            $item['max_quantity'] = $item->scmPrLine->quantity - $item->scmPrLine->scmCsmaterials->sum('quantity') + $item->quantity;
+            return $item;
+        });
+        data_forget($materialCs, 'scmCsMaterials');
+
+        $materialCs['scmCsMaterials'] = $data;
         try {
             return response()->success('Detail data', $materialCs, 200);
         } catch (\Exception $e) {
