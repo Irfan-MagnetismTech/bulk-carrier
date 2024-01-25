@@ -43,6 +43,6 @@ class ScmWcsService extends Model
 
     public function scmWoItems(): HasMany
     {
-        return $this->hasMany(ScmWoItem::class, 'wr_composite_key', 'wr_composite_key');
+        return $this->hasMany(ScmWoItem::class, 'wcs_composite_key', 'wcs_composite_key');
     }
 }
