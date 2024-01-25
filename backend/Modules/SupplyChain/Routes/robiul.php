@@ -33,6 +33,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     
     Route::get('get-wo-line-datas', [ScmWoController::class, "getWoLineDatas"])->name('get-wo-line-datas');
     Route::get('search-wr-wise-service', [ScmWoController::class, "getServiceByWrId"])->name('getServiceByWrId');
+    // Route::get('search-pr-wise-material', [ScmWoController::class, "getServiceByWrId"])->name('getServiceByWrId');
     Route::get('search-wo', [ScmWoController::class, "searchWo"])->name('searchWo');
     Route::get('get-wr-wcs-wise-wo-data', [ScmWoController::class, "getWoOrWoWcsWiseWrData"]);
 
