@@ -87,7 +87,18 @@ class ScmWcsController extends Controller
             // }
 
             $scmWcs = ScmWcs::create($requestData);
-            $scmWcs->scmWcsServices()->createMany($request->scmWcsServices);
+
+            foreach ($request->scmWcsServices as $key => $value) {
+                ScmWcsService::create([
+                    'scm_wcs_id' => $scmWcs->id,
+                    'scm_wr_id' => $value['scm_wr_id'],
+                    'scm_service_id' => $value['scm_service_id'],
+                    'wcs_composite_key' => CompositeKey::generate(null, $scmWcs->id, 'wcs', $value['scm_service_id'], $value['scm_wr_id']),
+                    'wr_composite_key' => $value['wr_composite_key'],
+                    'quantity' => $value['quantity'],
+                ]);
+            }
+            // $scmWcs->scmWcsServices()->createMany($request->scmWcsServices);
             DB::commit();
             return response()->success('Data created succesfully', $scmWcs, 201);
         } catch (\Exception $e) {
@@ -138,7 +149,18 @@ class ScmWcsController extends Controller
 
             $work_c->update($requestData);
             $work_c->scmWcsServices()->delete();
-            $work_c->scmWcsServices()->createMany($request->scmWcsServices);
+
+            foreach ($request->scmWcsServices as $key => $value) {
+                ScmWcsService::create([
+                    'scm_wcs_id' => $work_c->id,
+                    'scm_wr_id' => $value['scm_wr_id'],
+                    'scm_service_id' => $value['scm_service_id'],
+                    'wcs_composite_key' => CompositeKey::generate(null, $work_c->id, 'wcs', $value['scm_service_id'], $value['scm_wr_id']),
+                    'wr_composite_key' => $value['wr_composite_key'],
+                    'quantity' => $value['quantity'],
+                ]);
+            }
+            // $work_c->scmWcsServices()->createMany($request->scmWcsServices);
 
 
             DB::commit();

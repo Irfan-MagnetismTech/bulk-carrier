@@ -240,21 +240,30 @@ class ScmWrController extends Controller
     public function getServiceByWrIdForWcs(Request $request): JsonResponse
     {
         $lineData = ScmWrLine::query()
-            ->with('scmService')
-            ->when($request->scm_wr_id, function ($query) use ($request) {
-                $query->where('scm_wr_id', $request->scm_wr_id);
-            })
-            ->whereNot('status', 'Closed')
-            ->whereHas('scmWr', function ($query) {
-                $query->whereIn('status', ['Pending', 'WIP']);
-            })
-            ->get()
-            ->map(function ($item) {
-                $data = $item->scmService;
-                $data['wr_composite_key'] = $item->wr_composite_key;
-                $data['max_quantity'] = $item->quantity - $item->scmWcsServices->sum('quantity');
-                return $data;
-            });
+        ->with('scmService')
+        ->when($request->scm_wr_id, function ($query) use ($request) {
+            $query->where('scm_wr_id', $request->scm_wr_id);
+        })
+        ->whereNot('status', 'Closed')
+        ->whereHas('scmWr', function ($query) {
+            $query->whereIn('status', ['Pending', 'WIP']);
+        })
+        ->get()
+        ->map(function ($item) use ($request){
+            $data = $item->scmService;
+            $data['wr_composite_key'] = $item->wr_composite_key;
+            $scmWcsService =null;
+            if(isset($request->scm_wcs_id)){
+                $scmWcsService = ScmWcsService::where(['scm_wr_id'=>$request->scm_wr_id,'scm_wcs_id'=>$request->scm_wcs_id, 'scm_service_id'=>$item->scm_service_id])->first();
+            }
+            if($scmWcsService){
+                $max = $item->quantity - $item->scmWcsServices->sum('quantity') + $scmWcsService->quantity;
+            }else{
+                $max = $item->quantity - $item->scmWcsServices->sum('quantity');
+            }
+            $data['max_quantity'] = $max;
+            return $data;
+        });
 
         return response()->success('Search result', $lineData, 200);
     }

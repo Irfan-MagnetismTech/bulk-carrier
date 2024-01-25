@@ -300,7 +300,7 @@ class ScmWoController extends Controller
                 } else {
                     $data['wo_quantity'] = 0;
                 }
-                $data['max_quantity'] = $item->quantity - $item->scmWoItems?->sum('quantity') + $data['wo_quantity'];
+                $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
                 $data['wo_quantity'] = $data['wo_quantity'] ?? 0;
                 return $data;
             });
