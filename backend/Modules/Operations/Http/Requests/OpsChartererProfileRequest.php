@@ -2,6 +2,7 @@
 
 namespace Modules\Operations\Http\Requests;
 
+use App\Rules\PhoneNumber;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -21,7 +22,7 @@ class OpsChartererProfileRequest extends FormRequest
             'name'                  => ['required', 'string', 'max:255'],
             'owner_code'            => ['required', 'string', 'max:20', Rule::unique('ops_charterer_profiles')->ignore($this->route('charterer_profile'), 'id')],
             'country'               => ['required', 'string', 'max:255'],
-            'contact_no'            => ['required', 'string', 'digits_between:10,15'],
+            'contact_no'            => ['required', 'min:10', 'max:15', new PhoneNumber],
             'address'               => ['required', 'string', 'max:255'],
             'billing_address'       => ['required', 'string', 'max:255'],
             'billing_email'         => ['required', 'email', 'max:255'],

@@ -133,7 +133,7 @@
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Currency <span class="text-red-500">*</span></span>
                 <select v-model="form.currency" class="form-input" required>
-                  <option value="">Select Currency</option>
+                  <option value="" selected disabled>Select Currency</option>
                   <option v-for="currency in currencies">{{ currency }}</option>
                 </select>
         </label>
@@ -179,11 +179,10 @@
     <div id="contract-validity">
       <h4 class="text-md font-semibold mt-4">Contract Validity and Billing</h4>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm" v-if="form.contract_type == 'Day Wise'" >
+        <label class="block w-full mt-2 text-sm" >
               <span class="text-gray-700 dark-disabled:text-gray-300">Credit Days</span>
               <input type="number" v-model.trim="form.opsChartererContractsFinancialTerms.credit_days" placeholder="Credit Days" class="form-input" autocomplete="off" />
         </label>
-        <label v-else class="block w-full mt-2 text-sm"></label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Billing Cycle </span>
               <input type="text" v-model.trim="form.opsChartererContractsFinancialTerms.billing_cycle" placeholder="Billing Cycle" class="form-input" autocomplete="off" />
@@ -218,9 +217,9 @@
         
             <label class="block mt-2 text-sm w-1/2">
 
-              <span class="text-gray-700 dark-disabled:text-gray-300"> Status</span>
-                <select v-model="form.status" class="form-input">
-                  <option value="">Select Status</option>
+              <span class="text-gray-700 dark-disabled:text-gray-300"> Status <span class="text-red-500">*</span></span>
+                <select v-model="form.status" class="form-input" required>
+                  <option value="" selected disabled>Select Status</option>
 				          <option>Active</option>
 				          <option>Inactive</option>
 				        </select>

@@ -20,3 +20,5 @@ use Modules\Operations\Http\Controllers\OpsOperationReportController;
 // Route::get('login', [UserController::class, 'index']);
 // Route::get('/test', fn()=> 'hi');
 Route::get('/', fn() => 'BG Torony - Magnetism Tech Limited');
+
+Route::get('/phone', fn() => (preg_match('/^(\+\d+|\d+)$/', '+8801824502831')) ? "Yes" : "No" );

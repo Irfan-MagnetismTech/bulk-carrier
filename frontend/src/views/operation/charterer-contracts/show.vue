@@ -63,7 +63,7 @@
                   </tr>
                   <tr>
                       <th class="w-40">Attachment</th>
-                      <td> <a download :href="env.BASE_API_URL+chartererContract.attachment" target="_blank" class="mt-1 inline bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
+                      <td> <a download  v-if="chartererContract.attachment" :href="env.BASE_API_URL+chartererContract.attachment" target="_blank" class="mt-1 inline bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
                         Download Attachment
                         <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
