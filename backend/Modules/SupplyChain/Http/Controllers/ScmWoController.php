@@ -101,7 +101,7 @@ class ScmWoController extends Controller
                         'quantity' => $item['quantity'],
                         'rate' => $item['rate'],
                         'total_price' => $item['total_price'],
-                        'description' => $item['description'],
+                        // 'description' => $item['description']?$item['description']:'',
                         'wo_composite_key' => $item['wo_composite_key'],
                         'wr_composite_key' => $item['wr_composite_key'],
                         'wcs_composite_key' => $item['wcs_composite_key'],
@@ -195,7 +195,7 @@ class ScmWoController extends Controller
             'quantity' => $value['quantity'],
             'rate' => $value['rate'],
             'total_price' => $value['total_price'],
-            'description' => $value['description'],
+            // 'description' => $value['description'],
             'wcs_composite_key' => $value['wcs_composite_key'] ?? null,
             'wo_composite_key' => CompositeKey::generate($index, $workOrder->id, 'wo', $value['scm_service_id'], $scmWoLine->id),
             'wr_composite_key' => $value['wr_composite_key'],
@@ -291,8 +291,9 @@ class ScmWoController extends Controller
      */
     public function getServiceByWrId(): JsonResponse
     {
+        // return response()->json(request()->all(),422);
         $wrServices = ScmWrLine::query()
-            ->with('scmService')
+            ->with('scmService','scmWoItems')
             ->where('scm_wr_id', request()->scm_wr_id)
             ->whereNot('status', 'Closed')
             ->get()
@@ -378,7 +379,7 @@ class ScmWoController extends Controller
                     } else {
                         $data['wo_quantity'] = 0;
                     }
-                    $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity');
+                    $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
 
                     return $data;
                 });

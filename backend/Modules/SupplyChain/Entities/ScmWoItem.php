@@ -13,6 +13,7 @@ class ScmWoItem extends Model
     protected $fillable = [
         'scm_wo_line_id',
         'scm_service_id',
+        'scm_wo_id',
         'description',
         'required_date',
         'quantity',
