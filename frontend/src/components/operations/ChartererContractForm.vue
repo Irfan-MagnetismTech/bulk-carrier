@@ -360,11 +360,15 @@ watch(() => props.form, (value) => {
 }, {deep: true});
 
 
-watch(() => props.form.opsChartererContractsLocalAgents[0].opsPort, (value) => {
+watch(() => props.form.opsChartererContractsLocalAgents[0]?.opsPort, (value) => {
   if(value) {
     props.form.opsChartererContractsLocalAgents[0].port_code = value?.code
   } else {
-    props.form.opsChartererContractsLocalAgents[0].port_code = null
+    if(props.form.opsChartererContractsLocalAgents.length) {
+      props.form.opsChartererContractsLocalAgents[0].port_code = null
+    } else {
+      props.form.opsChartererContractsLocalAgents.push({})
+    }
   }
 }, { deep: true})
 
@@ -417,8 +421,8 @@ function replaceThings(value) {
     if(value?.opsChartererBankAccounts) {
       props.form.bank_name = value?.opsChartererBankAccounts[0]?.bank_name
       props.form.bank_branch_name = value?.opsChartererBankAccounts[0]?.bank_branch_name
-      props.form.bank_account_no = value?.opsChartererBankAccounts[0]?.bank_account_no
-      props.form.bank_account_name = value?.opsChartererBankAccounts[0]?.bank_account_name
+      props.form.bank_account_no = value?.opsChartererBankAccounts[0]?.account_no
+      props.form.bank_account_name = value?.opsChartererBankAccounts[0]?.account_name
       props.form.swift_code = value?.opsChartererBankAccounts[0]?.swift_code
       props.form.routing_no = value?.opsChartererBankAccounts[0]?.routing_no
       props.form.currency = value?.opsChartererBankAccounts[0]?.currency

@@ -90,7 +90,7 @@ class OpsChartererContractController extends Controller
         */
     public function show(OpsChartererContract $charterer_contract): JsonResponse
     {
-        $charterer_contract->load('opsVessel','opsChartererProfile','opsChartererContractsFinancialTerms.opsCargoTariff',
+        $charterer_contract->load('opsVessel','opsChartererProfile','opsChartererContractsFinancialTerms',
         'opsChartererContractsLocalAgents.opsPort');
         try
         {

@@ -158,7 +158,7 @@
                     <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="2">Contract Validity and Billing</td>
                 </tr>
             </thead>
-            <tbody v-if="chartererContract.contract_type == 'Day Wise'">
+            <tbody>
                 <tr>
                     <th class="w-40">Credit Days</th>
                     <td>{{ chartererContract.opsChartererContractsFinancialTerms.credit_days }}</td>
@@ -174,9 +174,7 @@
                 <tr>
                     <th class="w-40">Valid Till</th>
                     <td>{{ formatDate(chartererContract.opsChartererContractsFinancialTerms.valid_till) }}</td>
-                </tr>                               
-            </tbody>
-            <tbody v-else>
+                </tr>         
                 <tr>
                     <th class="w-40">Status</th>
                     <td>{{ chartererContract.status }}</td>
