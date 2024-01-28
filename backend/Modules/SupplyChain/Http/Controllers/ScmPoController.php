@@ -364,7 +364,8 @@ class ScmPoController extends Controller
      */
     public function getMaterialByPrId(): JsonResponse
     {
-        $prMaterials = ScmPrLine::query()
+        if (!request()->has('cs_id')) {
+            $prMaterials = ScmPrLine::query()
             ->with('scmMaterial')
             ->where('scm_pr_id', request()->pr_id)
             ->whereNot('status', 'Closed')
@@ -373,15 +374,48 @@ class ScmPoController extends Controller
                 $data = $item->scmMaterial;
                 $data['brand'] = $item->brand;
                 $data['model'] = $item->model;
+                $data['unit'] = $item->scmMaterial->unit;
+                $data['pr_composite_key'] = $item->pr_composite_key;
+                $data['pr_quantity'] = $item->quantity;
+                $data['quantity'] = $item->quantity;
                 if (request()->po_id) {
                     $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
                 } else {
                     $data['po_quantity'] = 0;
                 }
                 $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
-                $data['po_quantity'] = $data['po_quantity'] ?? 0;
                 return $data;
             });
+        } else {
+            $prMaterials = ScmCsMaterial::query()
+                ->where([
+                    'scm_cs_id' => request()->cs_id,
+                    'scm_pr_id' => request()->pr_id
+                ])
+                ->get()
+                ->map(function ($item) {
+                    $data['scm_material_id'] = $item->scmMaterial->id;
+                    $data['scmMaterial'] = $item->scmMaterial;
+                    $data['unit'] = $item->scmMaterial->unit;
+                    $data['brand'] = $item->brand;
+                    $data['model'] = $item->model;
+                    $data['quantity'] = $item->quantity;
+                    $data['cs_composite_key'] = $item->cs_composite_key;
+                    $data['pr_composite_key'] = $item->pr_composite_key;
+                    $data['pr_quantity'] = $item->scmPrLine->quantity;
+                    $data['quantity'] = $item->quantity;
+                    if (request()->po_id) {
+                        $data['po_quantity'] = $item->scmPoItems->where('scm_po_id',request()->po_id)->where('cs_composite_key', $item->cs_composite_key)->first()->quantity;
+                    } else {
+                        $data['po_quantity'] = 0;
+                    }
+                    $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
+
+                    return $data;
+                });
+        }
+
+
         return response()->success('data list', $prMaterials, 200);
     }
 
@@ -472,7 +506,7 @@ class ScmPoController extends Controller
                     $data['pr_quantity'] = $item->scmPrLine->quantity;
                     $data['quantity'] = $item->quantity;
                     if (request()->po_id) {
-                        $data['po_quantity'] = $item->scmPoItems->where('cs_composite_key', $item->cs_composite_key)->sum('quantity');
+                        $data['po_quantity'] = $item->scmPoItems->where("scm_po_id",request()->po_id)->where('cs_composite_key', $item->cs_composite_key)->first()->quantity;
                     } else {
                         $data['po_quantity'] = 0;
                     }
