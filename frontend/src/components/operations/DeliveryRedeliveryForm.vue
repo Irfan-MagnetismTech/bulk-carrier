@@ -11,7 +11,7 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Note Type <span class="text-red-500">*</span></span>
-              <select v-model="form.note_type" required class="form-input">
+              <select v-model="form.note_type" required class="form-input" :disabled="formType == 'edit'">
                 <option value="">Select Type</option>
                 <option>Delivery</option>
                 <option>Re-delivery</option>
@@ -211,6 +211,9 @@ watch(() => props.form.opsVessel, (value) => {
     props.form.owner_name = value?.owner_name
     props.form.capacity = value?.capacity
   
+    if((props?.formType == 'edit' && editInitiated.value == true) || props.formType == 'create') {
+      props.form.opsBunkers = []
+    }
     let loadStatus = false;
     showVessel(value?.id, loadStatus);
   } else {
@@ -295,12 +298,12 @@ watch(() => props.form.currency, (value) => {
   console.log("currency change ")
 
   if(value) {
-    props.form.exchange_rate_bdt = null;
-    props.form.exchange_rate_usd = null;
+    
 
 
     if(props?.formType == 'edit' && editInitiated.value == true) {
-
+      props.form.exchange_rate_bdt = null;
+      props.form.exchange_rate_usd = null;
       if(props.form.opsBunkers) {
         // for(const bunker of props.form.opsBunkers) {
         //   bunker.rate = 0;
@@ -314,7 +317,8 @@ watch(() => props.form.currency, (value) => {
     }
 
     if(props?.formType == 'create') {
-
+      props.form.exchange_rate_bdt = null;
+      props.form.exchange_rate_usd = null;
       if(props.form.opsBunkers) {
         // for(const bunker of props.form.opsBunkers) {
         //   bunker.rate = 0;
