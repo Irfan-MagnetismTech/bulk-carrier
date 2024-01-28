@@ -322,13 +322,14 @@ export default function usePurchaseOrder() {
         }
     }
 
-    async function getLineData(prId, csId = null) { 
+    async function getLineData(prId, csId=null,poId = null) { 
         isLoading.value = true;
         try {
             const {data, status} = await Api.get(`/${BASE}/get-po-line-datas`,{
                 params: {
                     pr_id: prId,
                     cs_id: csId,
+                    po_id: poId,
                 },
             });
             return data.value;  

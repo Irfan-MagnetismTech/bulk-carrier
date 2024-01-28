@@ -35,7 +35,7 @@ onMounted(() => {
         quotation.value = value;
         quotation.value.supplier_selection = [];
         Object.entries(value.scmCsVendor).forEach(([key, data]) => {
-            quotation.value.supplier_selection.push({ 'is_selected': false, 'scm_cs_vendor_id': data[0].id, 'scm_vendor_id': data[0].scm_vendor_id});
+            quotation.value.supplier_selection.push({ 'is_selected': false,'technical_acceptance': null, 'scm_cs_vendor_id': data[0].id, 'scm_vendor_id': data[0].scm_vendor_id});
         });
     }
   });
