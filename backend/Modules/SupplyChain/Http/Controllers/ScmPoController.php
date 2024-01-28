@@ -393,8 +393,8 @@ class ScmPoController extends Controller
                 ])
                 ->get()
                 ->map(function ($item) {
+                    $data = $item->scmMaterial;
                     $data['scm_material_id'] = $item->scmMaterial->id;
-                    $data['scmMaterial'] = $item->scmMaterial;
                     $data['unit'] = $item->scmMaterial->unit;
                     $data['brand'] = $item->brand;
                     $data['model'] = $item->model;
