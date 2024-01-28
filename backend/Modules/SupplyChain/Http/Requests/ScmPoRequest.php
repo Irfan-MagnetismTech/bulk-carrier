@@ -12,10 +12,10 @@ class ScmPoRequest extends FormRequest
         $dataArray = json_decode($data, true);
 
         // $mergeData = array_merge($dataArray, ['attachment' => request('attachment'), 'excel' => request('excel')]);
-        
+
         $this->replace($dataArray);
     }
-    
+
     /**
      * Get the validation rules that apply to the request.
      *
