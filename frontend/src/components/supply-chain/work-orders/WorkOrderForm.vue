@@ -106,28 +106,50 @@
     }
 
     
+    // function changeWr(index) {
+    //     props.serviceList[index] = [];
+    //     props.form.scmWoLines[index].scm_wr_id = props.form.scmWoLines[index].scmWr?.id ?? null;
+    //     if(props.page == 'create')
+    //     {
+    //       getServiceList(props.form.scmWoLines[index].scmWr?.id).then((res) => {
+    //         props.serviceList[index] = res;
+    //       });
+    //     }
+    //     else{
+    //         getServiceList(props.form.scmWoLines[index].scmWr?.id, props.form.id).then((res) => {
+    //         props.serviceList[index] = res;
+    //       });
+    //     }
+    //     if (props.form.scm_wcs_id != null) {
+    //       getLineData(props.form.scmWoLines[index].scm_wr_id,props.form.scm_wcs_id).then((res) => {
+    //         props.form.scmWoLines[index].scmWoItems = res;
+    //       });
+    //     } else { 
+    //       getLineData(props.form.scmWoLines[index].scm_wr_id).then((res) => {
+    //       props.form.scmWoLines[index].scmWoItems = res;
+    //     });
+    //     }
+        
+    // }
+
     function changeWr(index) {
         props.serviceList[index] = [];
         props.form.scmWoLines[index].scm_wr_id = props.form.scmWoLines[index].scmWr?.id ?? null;
-        if(props.page == 'create')
-        {
-          getServiceList(props.form.scmWoLines[index].scmWr?.id).then((res) => {
-            props.serviceList[index] = res;
-          });
-        }
-        else{
-            getServiceList(props.form.scmWoLines[index].scmWr?.id, props.form.id).then((res) => {
-            props.serviceList[index] = res;
-          });
-        }
-        if (props.form.scm_wcs_id != null) {
-          getLineData(props.form.scmWoLines[index].scm_wr_id,props.form.scm_wcs_id).then((res) => {
+        
+        if (props.formType != 'edit') {
+          getLineData(props.form.scmWoLines[index].scm_wr_id, props.form.scm_wcs_id).then((res) => {
             props.form.scmWoLines[index].scmWoItems = res;
           });
+          getServiceList(props.form.scmWoLines[index].scmWr?.id,props.form.scm_wcs_id).then((res) => {
+          props.serviceList[index] = res;
+          });
         } else { 
-          getLineData(props.form.scmWoLines[index].scm_wr_id).then((res) => {
-          props.form.scmWoLines[index].scmWoItems = res;
-        });
+          getLineData(props.form.scmWoLines[index].scm_wr_id, props.form.scm_wcs_id, props.form.id).then((res) => {
+            props.form.scmWoLines[index].scmWoItems = res;
+          });
+          getServiceList(props.form.scmWoLines[index].scmWr?.id, props.form.scm_wcs_id, props.form.id).then((res) => {
+          props.serviceList[index] = res;
+          });
         }
         
     }
@@ -353,9 +375,12 @@
         props.form.scmWoLines.forEach((line, index) => {
           props.serviceList[index] = [];
           if (line.scmWr) {
-            getServiceList(line.scmWr.id, props.form.id).then((res) => {
+            // getServiceList(line.scmWr.id, props.form.id).then((res) => {
+            //   props.serviceList[index] = res;
+            // });
+            getServiceList(line.scmWr.id,props.form.scm_wcs_id,props.form.id).then((res) => {
               props.serviceList[index] = res;
-            });
+            }); 
           }
         });
         console.log('asd');
@@ -554,7 +579,7 @@
         <span class="label-item-title">Convertion Rate( Foreign To USD ) <span class="text-red-500">*</span></span>
         <input type="number" step="0.01" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
     </label>
-    <label class="label-group" v-if="form.currency != 'BDT'">
+    <label class="label-group" v-if="form.currency != 'BDT' && form.currency != ''">
         <span class="label-item-title">Convertion Rate( USD To BDT ) <span class="text-red-500">*</span></span>
         <input type="number" step="0.01" v-model="form.usd_to_bdt" required class="form-input" name="approved_date" :id="'usd_to_bdt'" />
     </label>
@@ -594,11 +619,11 @@
           <table class="w-full whitespace-no-wrap" >
             <tbody>
               <tr class="w-full">
-                  <th class="py-3 align-center !w-3/12">Service Details <br/> <span class="!text-[8px]"></span></th>
-                  <th class="py-3 align-center !w-2/12">Required Date <span class="text-red-500">*</span></th>
+                  <th class="py-3 align-center !w-4/12">Service Details <br/> <span class="!text-[8px]"></span></th>
+                  <!-- <th class="py-3 align-center !w-2/12">Required Date <span class="text-red-500">*</span></th> -->
                   <th class="py-3 align-center !w-2/12">Other Info</th>
                   <!-- <th class="py-3 align-center !w-1/12">Tolarence</th> -->
-                  <th class="py-3 align-center !w-2/12">Order Details</th>
+                  <th class="py-3 align-center !w-3/12">Order Details</th>
                   <th class="py-3 align-center !w-2/12">Total Price</th>
                   <th class="!w-1/12">
                     <button type="button" @click="addService(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -613,7 +638,7 @@
                   <td class="">
                     <table class="w-full">
                       <tr>
-                        <td class="w-1/4">Service - Code <span class="text-red-500">*</span></td>
+                        <th class="w-1/4">Service - Code <span class="text-red-500">*</span></th>
                         <td class="w-3/4">
                           <v-select :options="serviceList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="scmWoItem.scmService" label="service_name_and_code" class="block form-input w-full" :menu-props="{ minWidth: '250px', minHeight: '400px' }" @update:modelValue="changeService(index,itemIndex)">
                             <template #search="{attributes, events}">
@@ -628,6 +653,15 @@
                         </td>
                         
                       </tr>
+                      
+                      <tr>
+                        <th class="w-1/4">Required Date <span class="text-red-500">*</span></th>
+                        <td class="w-3/4">
+                          <VueDatePicker v-model="scmWoItem.required_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd"  required></VueDatePicker>
+                        </td>
+                        
+                      </tr>
+
                       <!-- <tr>
                         <td>Unit</td>
                         <td>
@@ -648,22 +682,21 @@
                       </tr> -->
                     </table>
                   </td>
-                  <td>
-                    <!-- <input type="date" v-model="scmWoItem.required_date" class="form-input"> -->
+                  <!-- <td>
                     <VueDatePicker v-model="scmWoItem.required_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd"  required></VueDatePicker>
-                  </td>
+                  </td> -->
                   <td>
                     <table>
                       <tr>
                         <td>WR Qty</td>
                         <td>
-                          <input type="number" required v-model="scmWoItem.wr_quantity" min=1 class="form-input">
+                          <input type="text" readonly v-model="scmWoItem.wr_quantity" min=1 class="form-input text-right vms-readonly-input">
                         </td>
                       </tr>
                       <tr>
                         <td>Remaining Qty</td>
                         <td>
-                          <input type="number" required v-model="scmWoItem.max_quantity" min=1 class="form-input">
+                          <input type="text" readonly v-model="scmWoItem.max_quantity" min=1 class="form-input text-right vms-readonly-input">
                         </td>
                       </tr>
                     </table>
@@ -676,19 +709,20 @@
                       <tr>
                         <td>Qty</td>
                         <td>
-                          <input type="number" required v-model="scmWoItem.quantity" min=1 class="form-input" :max="scmWoItem.max_quantity" :class="{'border-2': scmWoItem.quantity > scmWoItem.max_quantity,'border-red-500 bg-red-100': scmWoItem.quantity > scmWoItem.max_quantity}">
+                          
+                          <input type="number" required v-model="scmWoItem.quantity" min=1 step="0.01" class="form-input text-right" :max="scmWoItem.max_quantity" :class="{'border-2': scmWoItem.quantity > scmWoItem.max_quantity,'border-red-500 bg-red-100': scmWoItem.quantity > scmWoItem.max_quantity}">
                         </td>
                       </tr>
                       <tr>
-                        <td>Rate</td>
+                        <td>Rate <span class="text-red-500">*</span></td>
                         <td>
-                          <input type="number" required v-model="scmWoItem.rate" min=1 class="form-input">
+                          <input type="number" required v-model="scmWoItem.rate" step="0.01" min=1 class="form-input text-right">
                         </td>
                       </tr>
                     </table>
                   </td>
                   <td>
-                    <input type="number" readonly v-model="scmWoItem.total_price" class="form-input vms-readonly-input">
+                    <input type="text" readonly v-model="scmWoItem.total_price" class="form-input vms-readonly-input text-right">
                   </td>
                   <td class="px-1 py-1 text-center">
                     <button type="button" @click="removeService(index,itemIndex)" class="remove_button">
@@ -726,7 +760,7 @@
           <tr>
             <td class="!w-9/12 text-right">Sub Total</td>
             <td class="text-right !w-3/12">
-              <input type="number" readonly class="vms-readonly-input form-input" v-model="form.sub_total">
+              <input type="text" readonly class="vms-readonly-input form-input text-right" v-model="form.sub_total">
             </td>
           </tr>
           <!-- <tr>
@@ -738,7 +772,7 @@
           <tr>
             <td class="!w-9/12 text-right">Total Amount</td>
             <td class="text-right !w-3/12">
-              <input type="number" readonly class="vms-readonly-input form-input" v-model="form.total_amount">
+              <input type="text" readonly class="vms-readonly-input form-input text-right" v-model="form.total_amount">
             </td>
           </tr>
           <!-- <tr>
@@ -750,7 +784,7 @@
           <tr>
             <td class="!w-9/12 text-right">Net Amount</td>
             <td class="text-right !w-3/12">
-              <input type="text" readonly class="vms-readonly-input form-input" v-model="form.net_amount">
+              <input type="text" readonly class="vms-readonly-input form-input text-right" v-model="form.net_amount">
             </td>
           </tr>
           </tbody>

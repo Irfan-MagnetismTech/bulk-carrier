@@ -8,7 +8,7 @@ import PurchaseOrderForm from "../../../components/supply-chain/purchase-orders/
 import WorkOrderForm from "../../../components/supply-chain/work-orders/WorkOrderForm.vue";
 import { useRoute } from 'vue-router';
 
-const { getWorkOrders, showWorkOrder, workOrder, updateWorkOrder,serviceObject, errors, isLoading,termsObject, serviceList} = useWorkOrder();
+const { getWorkOrders, showWorkOrder, workOrder, updateWorkOrder,serviceObject, errors, isLoading,termsObject, serviceList, woLineObject} = useWorkOrder();
 
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';

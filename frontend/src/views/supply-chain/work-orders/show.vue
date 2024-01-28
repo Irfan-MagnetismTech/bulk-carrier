@@ -140,20 +140,20 @@ onMounted(() => {
                 <template v-for="(scmWoItem, itemIndex) in scmWoLine?.scmWoItems" :key="itemIndex">
                   <tr>
                     <td :rowspan="(scmWoLine?.length ?? 1)*2" v-if="itemIndex == 0">{{ scmWoLine?.scmWr?.ref_no }}</td>
-                    <td :rowspan="(scmWoLine?.length ?? 1)*2" v-if="itemIndex == 0">{{ formatDate(scmWoLine.scmWr.raised_date) }}</td>
+                    <td class="!text-center" :rowspan="(scmWoLine?.length ?? 1)*2" v-if="itemIndex == 0">{{ formatDate(scmWoLine.scmWr.raised_date) }}</td>
                     <td rowspan="2">{{ scmWoItem?.scmService?.service_name_and_code }}</td>
-                    <td rowspan="2">{{ formatDate(scmWoItem?.required_date) }}</td>
-                    <th>WR Qty</th>
+                    <td class="!text-center" rowspan="2">{{ formatDate(scmWoItem?.required_date) }}</td>
+                    <th class="!text-center">WR Qty</th>
                     <td class="!text-right">{{ numberFormat(scmWoItem?.wr_quantity) }}</td>
-                    <th>Qty</th>
+                    <th class="!text-center">Qty</th>
                     <td class="!text-right">{{ numberFormat(scmWoItem?.quantity) }}</td>
                     <td rowspan="2" class="!text-right">{{ numberFormat(scmWoItem?.total_price) }}</td>
 
                   </tr>
                   <tr>
-                    <th>Rem. Qty</th>
+                    <th class="!text-center">Rem. Qty</th>
                     <td class="!text-right">{{ numberFormat(scmWoItem?.max_quantity) }}</td>
-                    <th>Rate</th>
+                    <th class="!text-center">Rate</th>
                     <td class="!text-right">{{ numberFormat(scmWoItem?.rate) }}</td>
                   </tr>
                   
