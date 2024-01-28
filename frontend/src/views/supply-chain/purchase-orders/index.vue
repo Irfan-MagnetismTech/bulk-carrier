@@ -67,13 +67,43 @@ let filterOptions = ref({
       "filter_type": "date"
     },
     {
-      "relation_name": "scmWarehouse",
+      "relation_name": "scmPoItems.scmMaterial",
       "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Warehouse",
+      "label": "Items",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": "scmPoItems.scmMaterial",
+      "field_name": "material_code",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Code",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": "scmPoItems",
+      "field_name": "quantity",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Qty",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": "scmPoItems",
+      "field_name": "unit",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Unit",
       "filter_type": "input"
     },
     {
@@ -83,17 +113,27 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Vendor Name",
+      "label": "Supplier",
       "filter_type": "input"
     },
     {
-      "relation_name": "scmPr",
-      "field_name": "ref_no",
+      "relation_name": "scmVendor",
+      "field_name": "country_name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "PR No",
+      "label": "Origin",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "net_amount",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Value",
       "filter_type": "input"
     },
     {
@@ -104,6 +144,16 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "CS No",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": "scmWarehouse",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Warehouse",
       "filter_type": "input"
     }
   ]
@@ -203,10 +253,39 @@ const navigateToMRRCreate = (purchaseOrderId) => {
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ purchaseOrder?.ref_no }}</td>
               <td>{{ purchaseOrder?.date }}</td>
-              <td>{{ purchaseOrder?.scmWarehouse?.name }}</td>
+              <td style="text-align: center !important;">
+                <table class="w-full">
+                  <tr v-for="(line,index) in purchaseOrder?.scmPoItems" :key="index">
+                    <td><nobr>{{ line?.scmMaterial.name ?? '' }}</nobr></td>
+                  </tr>
+                </table>
+              </td>
+              <td style="text-align: center !important;">
+                <table class="w-full">
+                  <tr v-for="(line,index) in purchaseOrder?.scmPoItems" :key="index">
+                    <td><nobr>{{ line?.scmMaterial.material_code ?? '' }}</nobr></td>
+                  </tr>
+                </table>
+              </td>
+              <td style="text-align: center !important;">
+                <table class="w-full">
+                  <tr v-for="(line,index) in purchaseOrder?.scmPoItems" :key="index">
+                    <td><nobr>{{ line?.quantity ?? '' }}</nobr></td>
+                  </tr>
+                </table>
+              </td>
+              <td style="text-align: center !important;">
+                <table class="w-full">
+                  <tr v-for="(line,index) in purchaseOrder?.scmPoItems" :key="index">
+                    <td><nobr>{{ line?.scmMaterial.unit ?? '' }}</nobr></td>
+                  </tr>
+                </table>
+              </td>
               <td>{{ purchaseOrder?.scmVendor?.name }}</td>
-              <td>{{ purchaseOrder?.scmPr?.ref_no }}</td>
+              <td>{{ purchaseOrder?.scmVendor?.country_name }}</td>
+              <td>{{ purchaseOrder?.net_amount }}</td>
               <td>{{ purchaseOrder?.scmCs?.ref_no ?? 'N/A' }}</td>
+              <td>{{ purchaseOrder?.scmWarehouse?.name }}</td>
               <td>
                 <span :class="purchaseOrder?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseOrder?.business_unit }}</span>
               </td>
@@ -230,12 +309,12 @@ const navigateToMRRCreate = (purchaseOrderId) => {
             <tr v-if="isLoading">
             </tr>
             <tr v-else-if="isTableLoading">
-                <td colspan="7">
+                <td colspan="14">
                   <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
                 </td>
             </tr>
             <tr v-else-if="!purchaseOrders?.data?.length">
-              <td colspan="7">No Data found.</td>
+              <td colspan="14">No Data found.</td>
             </tr>
         </tfoot>
       </table>

@@ -67,17 +67,21 @@
     function changePr(index) {
         props.materialList[index] = [];
         props.form.scmPoLines[index].scm_pr_id = props.form.scmPoLines[index].scmPr?.id ?? null;
-        getMaterialList(props.form.scmPoLines[index].scmPr.id).then((res) => {
-          props.materialList[index] = res;
-        });
-        if (props.form.scm_cs_id != null) {
+        
+        if (props.formType != 'edit') {
           getLineData(props.form.scmPoLines[index].scm_pr_id,props.form.scm_cs_id).then((res) => {
             props.form.scmPoLines[index].scmPoItems = res;
           });
+          getMaterialList(props.form.scmPoLines[index].scmPr.id,props.form.scm_cs_id).then((res) => {
+          props.materialList[index] = res;
+          });
         } else { 
-          getLineData(props.form.scmPoLines[index].scm_pr_id).then((res) => {
-          props.form.scmPoLines[index].scmPoItems = res;
-        });
+          getLineData(props.form.scmPoLines[index].scm_pr_id,props.form.scm_cs_id,props.form.id).then((res) => {
+            props.form.scmPoLines[index].scmPoItems = res;
+          });
+          getMaterialList(props.form.scmPoLines[index].scmPr.id,props.form.scm_cs_id,props.form.id).then((res) => {
+          props.materialList[index] = res;
+          });
         }
         
     }
@@ -229,12 +233,14 @@
         props.form.scmPoLines.forEach((line, index) => {
           props.materialList[index] = [];
           if (line.scmPr) {
-            getMaterialList(line.scmPr.id).then((res) => {
-              props.materialList[index] = res;
-            });
-          }
+            // getMaterialList(line.scmPr.id).then((res) => {
+            //   props.materialList[index] = res;
+            // });
+            getMaterialList(line.scmPr.id,props.form.scm_cs_id,props.form.id).then((res) => {
+            props.materialList[index] = res;
+            });         
+           }
         });
-        console.log('asd');
         editDatas();
       });
 
@@ -407,11 +413,11 @@
     </label>
   </div>
   <div class="input-group !w-1/2">
-  <label class="label-group" v-if="form.currency == 'USD'">
-        <span class="label-item-title">Convertion Rate( Foreign To BDT )<span class="text-red-500">*</span></span>
+  <label class="label-group" v-if="form.currency != 'BDT'">
+        <span class="label-item-title">Convertion Rate( USD To BDT )<span class="text-red-500">*</span></span>
         <input type="text" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
     </label>
-    <label class="label-group" v-if="(form.currency != 'USD' && form.currency != 'BDT' && form.currency != '' && form.currency != nu)">
+    <label class="label-group" v-if="(form.currency != 'USD' && form.currency != 'BDT' && form.currency != '' && form.currency != null)">
         <span class="label-item-title">Convertion Rate( Foreign To USD )<span class="text-red-500">*</span></span>
         <input type="text" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
     </label>

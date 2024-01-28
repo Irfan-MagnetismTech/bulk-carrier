@@ -34,7 +34,7 @@ export default function usePurchaseOrder() {
         scm_vendor_id: null,
         vendor_name: null,
         currency: null,
-        foreign_to_bdt: 0,
+        usd_to_bdt: 0,
         foreign_to_usd: 0,
         remarks: null,
         sub_total: 0.0,
@@ -301,13 +301,14 @@ export default function usePurchaseOrder() {
     }
 
     
-    async function getMaterialList(prId,poId = null) {
+    async function getMaterialList(prId,csId=null,poId = null) {
         isLoading.value = true;
         try {
             const {data, status} = await Api.get(`/${BASE}/search-pr-wise-material`,{
                 params: {
                     pr_id: prId,
                     po_id: poId,
+                    cs_id: csId,
                 },
             });
             prMaterialList.value = data.value;
