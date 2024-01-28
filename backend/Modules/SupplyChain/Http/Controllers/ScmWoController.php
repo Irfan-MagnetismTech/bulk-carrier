@@ -105,8 +105,8 @@ class ScmWoController extends Controller
                         'wo_composite_key' => $item['wo_composite_key'],
                         'wr_composite_key' => $item['wr_composite_key'],
                         'wcs_composite_key' => $item['wcs_composite_key'],
-                        'max_quantity' => $max_quantity,
-                        'wr_quantity' => $item->scmWrLine->quantity,
+                        'max_quantity' => number_format($max_quantity, 2),
+                        'wr_quantity' => number_format($item->scmWrLine->quantity, 2),
                     ];
                 });
                 //data_forget scmPoItems
