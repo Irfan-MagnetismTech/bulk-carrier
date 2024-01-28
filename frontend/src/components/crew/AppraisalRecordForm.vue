@@ -26,7 +26,7 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Age</span>
-            <input type="text" :value="form.age = calculateAge(form.crw_crew_profile?.date_of_birth, null)" placeholder="Age" class="form-input vms-readonly-input" readonly />
+            <input type="text" :value="form.age = calculateAge(form?.crw_crew_profile?.date_of_birth, null)" placeholder="Age" class="form-input vms-readonly-input" readonly />
             <Error v-if="errors?.age" :errors="errors.age" />
         </label>
 
