@@ -1,7 +1,7 @@
 <script setup>
 import useTransaction from '../../../composables/accounts/useTransaction';
 import Title from "../../../services/title";
-import { ref } from "vue";
+import {onMounted, ref, watchEffect} from "vue";
 import useAisReport from "../../../composables/accounts/useAisReport";
 import useAccountCommonApiRequest from "../../../composables/accounts/useAccountCommonApiRequest";
 import Store from "../../../store";
@@ -24,13 +24,19 @@ const searchParams = ref({
 });
 
 
-function fetchAccounts(search, loading) {
-  if(search.length < 3) {
-    return;
-  } else {
-    getAccount(search, businessUnit.value, loading);
-  }
-}
+// function fetchAccounts(search, loading) {
+//   if(search.length < 3) {
+//     return;
+//   } else {
+//     getAccount(search, businessUnit.value, loading);
+//   }
+// }
+
+onMounted(() => {
+  watchEffect(() => {
+    getAccount(null, businessUnit.value, null);
+  });
+});
 </script>
 
 <template>

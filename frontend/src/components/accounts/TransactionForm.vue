@@ -159,36 +159,36 @@ onMounted(() => {
         <VueDatePicker v-model.trim="form.transaction_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
         <Error v-if="errors?.transaction_date" :errors="errors.transaction_date" />
       </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Instrument Type</span>
-        <select class="label-item-input" v-model.trim="form.instrument_type">
-          <option value="" selected disabled>Select Value</option>
-          <option value="A/C Payee">A/C Payee</option>
-          <option value="Cheque">Cheque</option>
-          <option value="Cash">Cash</option>
-          <option value="Pay Order">Pay Order</option>
-          <option value="Draft">Draft</option>
-          <option value="Same / Inter Bank">Same / Inter Bank</option></select>
-        <Error v-if="errors?.instrument_type" :errors="errors.instrument_type" />
+      <label class="label-group">
+        <span class="label-item-title"> Bill No.</span>
+        <input type="text" class="label-item-input" placeholder="Bill no." v-model.trim="form.bill_no" />
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark-disabled:text-gray-300">Instrument Type <span class="text-red-500">*</span></span>
+      <select class="label-item-input" v-model.trim="form.instrument_type" required>
+        <option value="" selected disabled>Select Value</option>
+        <option value="A/C Payee">A/C Payee</option>
+        <option value="Cheque">Cheque</option>
+        <option value="Cash">Cash</option>
+        <option value="Pay Order">Pay Order</option>
+        <option value="Draft">Draft</option>
+        <option value="Same / Inter Bank">Same / Inter Bank</option></select>
+      <Error v-if="errors?.instrument_type" :errors="errors.instrument_type" />
+    </label>
     <label class="label-group">
-      <span class="label-item-title">Instrument Number</span>
-      <input type="text" class="label-item-input" placeholder="Cheque no." v-model.trim="form.instrument_no" />
+      <span class="label-item-title">Instrument Number <span v-if="form.instrument_type !== 'Cash'" class="text-red-500">*</span></span>
+      <input type="text" class="label-item-input" placeholder="Cheque no." v-model.trim="form.instrument_no" :required="form.instrument_type !== 'Cash'" />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark-disabled:text-gray-300">Instrument Date</span>
-      <VueDatePicker v-model.trim="form.instrument_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+      <span class="text-gray-700 dark-disabled:text-gray-300">Instrument Date <span v-if="form.instrument_type !== 'Cash'" class="text-red-500">*</span></span>
+      <VueDatePicker v-model.trim="form.instrument_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" :required="form.instrument_type !== 'Cash'"></VueDatePicker>
       <Error v-if="errors?.instrument_date" :errors="errors.instrument_date" />
     </label>
     <label class="label-group">
-      <span class="label-item-title"> Bill No.</span>
-      <input type="text" class="label-item-input" placeholder="Bill no." v-model.trim="form.bill_no" />
-    </label>
-    <label class="label-group">
-      <span class="label-item-title"> Instrument Amount</span>
-      <input type="number" step=".01" class="label-item-input" placeholder="Instrument Amount" v-model.trim="form.instrument_amount" />
+      <span class="label-item-title"> Instrument Amount <span v-if="form.instrument_type !== 'Cash'" class="text-red-500">*</span></span>
+      <input type="number" step=".01" class="label-item-input" placeholder="Instrument Amount" v-model.trim="form.instrument_amount" :required="form.instrument_type !== 'Cash'" />
     </label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">

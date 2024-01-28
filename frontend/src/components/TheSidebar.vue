@@ -68,7 +68,7 @@ function replaceLastOccurrence(mainString, search, replacement) {
 
 </script>
 <template>
-    <div class="ml-2 py-2 text-gray-500 dark-disabled:text-gray-400">
+    <div class="ml-2 py-2 text-gray-500 dark-disabled:text-gray-400 custom_sidebar">
       <a v-if="userBusinessUnit !== 'BOTH'" class="business_unit text-lg font-bold text-gray-800 dark-disabled:text-gray-200" href="#">
         {{ userBusinessUnit }}
       </a>
