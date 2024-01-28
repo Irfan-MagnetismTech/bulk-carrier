@@ -174,9 +174,8 @@ class AisReportController extends Controller
      */
     public function fixedAssetStatement(Request $request)
     {
-        $assets = AccFixedAsset::get()
-            ->map(function ($asset)
-        {
+        $assets = AccFixedAsset::where('asset_tag', $request->asset_tag)->get()
+        ->map(function ($asset){
                 $data = [
                     'particular'            => $asset->asset_tag,
                     'dep_rate'              => $asset->depreciation_rate,
@@ -220,6 +219,11 @@ class AisReportController extends Controller
         {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
+    }
+
+    public function receivedPaymentSummary(Request $request){
+        $costCentersInfo = (new TrialBalanceService)->handleTrialBalanceService($request); 
+
     }
 
 }
