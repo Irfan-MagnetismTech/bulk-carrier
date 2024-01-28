@@ -18,6 +18,6 @@ class ScmService extends Model
 
     public function getServiceNameAndCodeAttribute(): string
     {
-        return $this->name . ' - ' . $this->short_code;
+        return $this->short_code . ' - ' . $this->name;
     }
 }
