@@ -388,17 +388,17 @@ function calculatePrice(index) {
 console.log("dd", amount)
   if(props.form.currency == 'USD') {
     console.log("usd", exchangeRateBdt, quantity, rate, "=", amount)
-    props.form.opsBunkers[index].amount = (amount) ? amount : null;
-    props.form.opsBunkers[index].amount_usd = (amount) ? amount : null;
+    props.form.opsBunkers[index].amount = parseFloat((amount) ? amount : 0).toFixed(2);
+    props.form.opsBunkers[index].amount_usd = parseFloat((amount) ? amount : 0).toFixed(2);
     props.form.opsBunkers[index].amount_bdt = parseFloat(amount * parseFloat(exchangeRateBdt)).toFixed(2);
   } else if(props.form.currency == 'BDT') {
     console.log("bdt", exchangeRateUsd, quantity, rate, "=", amount)
-    props.form.opsBunkers[index].amount = (amount) ? amount : null;
-    props.form.opsBunkers[index].amount_bdt = (amount) ? amount : null;
+    props.form.opsBunkers[index].amount = parseFloat((amount) ? amount : 0).toFixed(2);
+    props.form.opsBunkers[index].amount_bdt = parseFloat((amount) ? amount : 0).toFixed(2);
     props.form.opsBunkers[index].amount_usd = parseFloat(amount * parseFloat(exchangeRateUsd)).toFixed(2);
   } else {
     console.log("other", exchangeRateUsd, quantity, rate, "=", amount)
-    props.form.opsBunkers[index].amount = (amount) ? amount : null;
+    props.form.opsBunkers[index].amount = parseFloat((amount) ? amount : 0).toFixed(2);
     props.form.opsBunkers[index].amount_bdt = parseFloat(amount * parseFloat(exchangeRateUsd) * parseFloat(exchangeRateBdt)).toFixed(2);
     props.form.opsBunkers[index].amount_usd = parseFloat(amount * parseFloat(exchangeRateUsd)).toFixed(2);
   }

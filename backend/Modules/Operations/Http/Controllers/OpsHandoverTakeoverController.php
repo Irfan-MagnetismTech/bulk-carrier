@@ -140,7 +140,7 @@ class OpsHandoverTakeoverController extends Controller
             'opsBunkers',
         );
 
-        $check= OpsHandoverTakeover::where('ops_vessel_id', $request->ops_vessel_id)->latest()->first();
+        $check= OpsHandoverTakeover::where('ops_vessel_id', $request->ops_vessel_id)->latest()->skip(1)->take(1)->first();
 
         if($check) {
             $previousEffectiveDate = Carbon::parse($check->effective_date);
