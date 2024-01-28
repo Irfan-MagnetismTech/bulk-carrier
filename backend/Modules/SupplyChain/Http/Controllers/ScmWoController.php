@@ -35,8 +35,8 @@ class ScmWoController extends Controller
     {
         try {
             $scmWorkOrders = ScmWo::query()
-                ->with('scmWoLines', 'scmWoTerms', 'scmVendor', 'scmWarehouse', 'scmWcs.scmWr')
-                ->globalSearch($request->all());
+            ->with('scmWoLines.scmWoItems.scmService','scmWoLines.scmWr', 'scmWoTerms', 'scmVendor', 'scmWarehouse', 'scmWoItems', 'scmWcs.scmWcsVendorServices.scmWr')
+            ->globalSearch($request->all());
 
             return response()->success('Data list', $scmWorkOrders, 200);
         } catch (\Exception $e) {
@@ -52,8 +52,11 @@ class ScmWoController extends Controller
      */
     public function store(ScmWoRequest $request): JsonResponse
     {
+        
         $requestData = $request->except('ref_no');
+        
         $requestData['ref_no'] = UniqueId::generate(ScmWo::class, 'WO');
+        // return response()->json( $request->all(), 422);
         $requestData['created_by'] = auth()->id();
 
         
@@ -97,8 +100,8 @@ class ScmWoController extends Controller
                         'required_date' => $item['required_date'],
                         'quantity' => $item['quantity'],
                         'rate' => $item['rate'],
-                        'total' => $item['total'],
-                        'description' => $item['description'],
+                        'total_price' => $item['total_price'],
+                        // 'description' => $item['description']?$item['description']:'',
                         'wo_composite_key' => $item['wo_composite_key'],
                         'wr_composite_key' => $item['wr_composite_key'],
                         'wcs_composite_key' => $item['wcs_composite_key'],
@@ -188,11 +191,11 @@ class ScmWoController extends Controller
             'scm_wo_line_id' => $scmWoLine->id,
             'scm_wo_id' => $workOrder->id,
             'scm_service_id'   => $value['scm_service_id'],
-            'received_date' => $value['received_date'],
+            'required_date' => $value['required_date'],
             'quantity' => $value['quantity'],
             'rate' => $value['rate'],
-            'total' => $value['total'],
-            'description' => $value['description'],
+            'total_price' => $value['total_price'],
+            // 'description' => $value['description'],
             'wcs_composite_key' => $value['wcs_composite_key'] ?? null,
             'wo_composite_key' => CompositeKey::generate($index, $workOrder->id, 'wo', $value['scm_service_id'], $scmWoLine->id),
             'wr_composite_key' => $value['wr_composite_key'],
@@ -252,7 +255,7 @@ class ScmWoController extends Controller
                             'quantity' => $item->quantity,
                             'wr_composite_key' => $item->wr_composite_key,
                             'max_quantity' => $item->quantity - $item->scmWoLines->sum('quantity'),
-                            // 'total_price' => $item->total_price
+                            // 'total_amount' => $item->total_amount
                         ];
                     })
                 ];
@@ -288,8 +291,9 @@ class ScmWoController extends Controller
      */
     public function getServiceByWrId(): JsonResponse
     {
+        // return response()->json(request()->all(),422);
         $wrServices = ScmWrLine::query()
-            ->with('scmService')
+            ->with('scmService','scmWoItems')
             ->where('scm_wr_id', request()->scm_wr_id)
             ->whereNot('status', 'Closed')
             ->get()
@@ -375,7 +379,7 @@ class ScmWoController extends Controller
                     } else {
                         $data['wo_quantity'] = 0;
                     }
-                    $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity');
+                    $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
 
                     return $data;
                 });

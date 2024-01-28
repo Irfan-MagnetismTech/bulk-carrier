@@ -12,6 +12,7 @@ class ScmWoRequest extends FormRequest
         $data =  request('data');
         $dataArray = json_decode($data, true);
 
+
         // $mergeData = array_merge($dataArray, ['attachment' => request('attachment'), 'excel' => request('excel')]);
         
         $this->replace($dataArray);
@@ -30,14 +31,15 @@ class ScmWoRequest extends FormRequest
             'currency' => 'required|max:255',
             'purchase_center' => 'nullable|max:255',
             // 'exchange_rate' => 'required|numeric',
-            'usd_to_bdt' => 'required_if:currency,!=,BDT|numeric',
-            'foreign_to_usd' => 'required_if:currency,!=,BDT,USD|numeric',
-            'total' => 'required|numeric',
+            // 'usd_to_bdt' => 'required_if:currency,!=,BDT|numeric',
+            // 'foreign_to_usd' => 'required_if:currency,!=,BDT,USD|numeric',
+            'total_amount' => 'required|numeric',
             'remarks' => 'nullable|max:255',
             'date' => 'required|date',
             'scmWoLine.*.scmWoItems.*.scm_service_id' => 'required|exists:scm_services,id|integer',
             'scmWoLine.*.scmWoItems.*.required_date' => 'required|date',
             'scmWoLine.*.scmWoItems.*.quantity' => 'required|numeric',
+            'scmWoLine.*.scmWoItems.*.total_price' => 'required|numeric',
             'scmWoLine.*.scmWoItems.*.rate' => 'required|numeric',
             'scmWoLine.*.scmWoItems.*.description' => 'nullable|max:255',
             'scmWoTerms.*.description' => 'nullable|max:255',
@@ -66,6 +68,8 @@ class ScmWoRequest extends FormRequest
 
             'date.required' => 'Date is required',
             'date.date' => 'Date must be a date',
+            
+            'total_amount.required' => 'Total Amount is required',
 
             'remarks.max' => 'Remarks must be less than 255 characters',
 
@@ -76,6 +80,8 @@ class ScmWoRequest extends FormRequest
             'scmWoLine.*.scmWoItems.*.scm_material_id.integer' => 'In row no :position Material must be an integer',
             'scmWoLine.*.scmWoItems.*.scm_material_id.exists' => 'In row no :position Material is not found',
 
+            'scmWoLine.*.scmWoItems.*.total_price.required' => 'In row no :position Total price is required',
+            
             'scmWoLine.*.scmWoItems.*.unit.required' => 'In row no :position Unit is required',
             'scmWoLine.*.scmWoItems.*.unit.max' => 'In row no :position Unit must be less than 255 characters',
             

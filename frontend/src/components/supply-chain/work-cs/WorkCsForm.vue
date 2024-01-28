@@ -550,6 +550,18 @@ import useHeroIcon from '../../../assets/heroIcon';
       fetchWarehouse('');
     });
 
+    if(props.page == 'edit'){
+    const watchBusinessUnit = watch(() => props.form, (newVal, oldVal) => {
+      newVal.scmWcsServices.forEach((service, index) => {
+        props.serviceList.push([]);
+          getWrWiseServiceList(service.scm_wr_id, props.form.id).then((res) => {
+            props.serviceList[index] = res;
+          });
+      });
+      watchBusinessUnit();
+    });
+  }
+
   });
   
   
