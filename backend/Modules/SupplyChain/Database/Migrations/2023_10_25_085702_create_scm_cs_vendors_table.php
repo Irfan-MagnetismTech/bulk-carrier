@@ -42,6 +42,7 @@ return new class extends Migration
             $table->string('vat')->nullable();
             $table->string('ait')->nullable();
             $table->bigInteger('is_selected')->nullable();
+            $table->string('technical_acceptance')->nullable();
             $table->string('stock_type')->comment('ready_stock,manufacturer')->nullable();
             $table->string('manufacturing_days')->comment('if stock type manufacturer')->nullable();
             $table->string('port_of_loading')->nullable();
