@@ -69,22 +69,24 @@ class ScmWcsController extends Controller
                 return response()->json($error, 422);
             }
 
-            // foreach($request->scmWcsServices as $service){
-            //     $work_requisition = ScmWr::find($service->scm_wr_id);
-            //     $work_requisition->update([
-            //         'status' => 'WIP',
-            //     ]);
-                
-            //     $work_requisition->load('scmWrLines');
-            //     foreach ($work_requisition->scmWrLines as $wrLine) {
-            //         if ($wrLine->status === 'WIP') {
-            //             continue;
-            //         }
-            //         $wrLine->update([
-            //             'status' => 'WIP'
-            //         ]);
-            //     }
-            // }
+            foreach($request->scmWcsServices as $service){
+                $work_requisition = ScmWr::find($service['scm_wr_id']);
+                if($work_requisition['status'] != 'WIP'){
+                    $work_requisition->update([
+                        'status' => 'WIP',
+                    ]);
+                    
+                    $work_requisition->load('scmWrLines');
+                    foreach ($work_requisition->scmWrLines as $wrLine) {
+                        if ($wrLine['status'] === 'WIP') {
+                            continue;
+                        }
+                        $wrLine->update([
+                            'status' => 'WIP'
+                        ]);
+                    }
+                }
+            }
 
             $scmWcs = ScmWcs::create($requestData);
 
@@ -158,6 +160,25 @@ class ScmWcsController extends Controller
                 return response()->json($error, 422);
             }
 
+            foreach($request->scmWcsServices as $service){
+                $work_requisition = ScmWr::find($service['scm_wr_id']);
+                if($work_requisition['status'] != 'WIP'){
+                    $work_requisition->update([
+                        'status' => 'WIP',
+                    ]);
+                    
+                    $work_requisition->load('scmWrLines');
+                    foreach ($work_requisition->scmWrLines as $wrLine) {
+                        if ($wrLine['status'] === 'WIP') {
+                            continue;
+                        }
+                        $wrLine->update([
+                            'status' => 'WIP'
+                        ]);
+                    }
+                }
+            }
+
             $work_c->update($requestData);
             $work_c->scmWcsServices()->delete();
 
@@ -191,22 +212,27 @@ class ScmWcsController extends Controller
         $work_c->load('scmWcsServices');
         try {
             DB::beginTransaction();
-            // foreach($work_c->scmWcsServices as $service){
-            //     $work_requisition = ScmWr::find($service->scm_wr_id);
-            //     $work_requisition->update([
-            //         'status' => 'Pending',
-            //     ]);
-                
-            //     $work_requisition->load('scmWrLines');
-            //     foreach ($work_requisition->scmWrLines as $wrLine) {
-            //         if ($wrLine->status === 'Pending') {
-            //             continue;
-            //         }
-            //         $wrLine->update([
-            //             'status' => 'Pending'
-            //         ]);
-            //     }
-            // }
+            foreach($work_c->scmWcsServices as $service){
+                $work_cs_wr = ScmWcsService::where('scm_wr_id',$service->scm_wr_id)->where('id','!=',$service->id)->get();
+
+                if(count($work_cs_wr)==0){
+                    $work_requisition = ScmWr::find($service->scm_wr_id);
+                    $work_requisition->update([
+                        'status' => 'Pending',
+                    ]);
+                    
+                    $work_requisition->load('scmWrLines');
+                    foreach ($work_requisition->scmWrLines as $wrLine) {
+                        if ($wrLine->status === 'Pending') {
+                            continue;
+                        }
+                        $wrLine->update([
+                            'status' => 'Pending'
+                        ]);
+                    }
+                }
+
+            }
 
             $work_c->scmWcsServices()->delete();
             $work_c->delete();
