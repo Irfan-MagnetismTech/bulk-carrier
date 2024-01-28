@@ -6,6 +6,7 @@ use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Operations\Entities\OpsVoyageBudget;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsVoyage extends Model
@@ -92,6 +93,10 @@ class OpsVoyage extends Model
 
     public function opsVoyageExpenditureEntries() {
         return $this->hasMany(OpsVoyageExpenditureEntry::class, 'ops_voyage_id','id');
+    }
+
+    public function opsVoyageBudget() {
+        return $this->hasOne(OpsVoyageBudget::class);
     }
 
 }
