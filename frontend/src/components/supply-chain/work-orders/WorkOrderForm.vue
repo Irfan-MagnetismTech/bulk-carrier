@@ -458,8 +458,8 @@
   </div> -->
   <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 md:gap-2">
     <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
-    <label class="label-group col-start-1">
-      <span class="label-item-title">Wo Ref<span class="text-red-500">*</span></span>
+    <label class="label-group col-start-1" v-if="page == 'edit'">
+      <span class="label-item-title">Wo Ref</span>
       <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
     </label>
     <label class="label-group col-start-1">
@@ -489,12 +489,11 @@
       </v-select>
     </label>
     <label class="label-group">
-      <span class="label-item-title">CS No<span class="text-red-500">*</span></span>
+      <span class="label-item-title">CS No </span>
       <v-select :options="filteredWorkCs" placeholder="--Choose an option--" label="ref_no"  v-model="form.scmWcs" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input" @update:modelValue="wcsChange">
         <template #search="{attributes, events}">
           <input
             class="vs__search"
-            
             v-bind="attributes"
             v-on="events"
           />  
@@ -503,7 +502,8 @@
     </label>
     <label class="label-group">
           <span class="label-item-title">WO Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
+          <!-- <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" /> -->
+          <VueDatePicker v-model="form.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
     </label>    
     <label class="label-group" v-if="form.cs_no != null">
       <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
@@ -519,7 +519,7 @@
       </v-select>
     </label>
     <label class="label-group" v-else>
-      <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
+      <span class="label-item-title">Vendor Name <span class="text-red-500">*</span></span>
       <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.scmVendor" label="name" class="block form-input" @update:modelValue="scmVendorChange">
         <template #search="{attributes, events}">
           <input
@@ -533,7 +533,7 @@
     </label>
 
     <label class="label-group">
-      <span class="label-item-title">Currency</span>
+      <span class="label-item-title">Currency <span class="text-red-500">*</span></span>
       <v-select :options="currencies" placeholder="--Choose an option--" v-model="form.currency" label="name" class="block form-input">
         <template #search="{attributes, events}">
             <input
@@ -549,20 +549,21 @@
         <span class="label-item-title">Convertion Rate( Foreign To BDT )<span class="text-red-500">*</span></span>
         <input type="text" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
     </label> -->
-    <label class="label-group" v-if="form.currency == 'USD'">
-        <span class="label-item-title">Convertion Rate( Foreign To BDT )<span class="text-red-500">*</span></span>
-        <input type="number" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
-    </label>
+    
     <label class="label-group" v-if="(form.currency != 'USD' && form.currency != 'BDT' && form.currency != '')">
-        <span class="label-item-title">Convertion Rate( Foreign To USD )<span class="text-red-500">*</span></span>
-        <input type="number" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
+        <span class="label-item-title">Convertion Rate( Foreign To USD ) <span class="text-red-500">*</span></span>
+        <input type="number" step="0.01" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
+    </label>
+    <label class="label-group" v-if="form.currency != 'BDT'">
+        <span class="label-item-title">Convertion Rate( USD To BDT ) <span class="text-red-500">*</span></span>
+        <input type="number" step="0.01" v-model="form.usd_to_bdt" required class="form-input" name="approved_date" :id="'usd_to_bdt'" />
     </label>
     <RemarksComponent class="col-span-1 md:col-span-3 lg:col-span-4" v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponent>
   </div>
 
   <div class="grid grid-cols-1" v-if="form?.scmWoLines?.length">
     <fieldset class="form-fieldset">
-      <legend class="form-legend">Purchase Order Information <span class="text-red-500">*</span></legend>
+      <legend class="form-legend">Work Order Information <span class="text-red-500">*</span></legend>
       <div v-for="(scmWoLine, index) in form.scmWoLines" :key="index"  class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
 
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -582,7 +583,7 @@
           </v-select>
         </label>
         <label class="block w-1/4 mt-2 text-sm">
-            <span class="text-gray-700">WR Date<span class="text-red-500">*</span></span>
+            <span class="text-gray-700">WR Date </span>
             <!-- <input type="text" class="form-input vms-readonly-input" readonly :value="form.scmPoLines[index]?.scmPr?.raised_date"/> -->
             <VueDatePicker v-model="scmWoLine.scmWr.raised_date" class="form-input" required auto-apply readonly :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
         </label>
@@ -594,7 +595,7 @@
             <tbody>
               <tr class="w-full">
                   <th class="py-3 align-center !w-3/12">Service Details <br/> <span class="!text-[8px]"></span></th>
-                  <th class="py-3 align-center !w-2/12">Required Date</th>
+                  <th class="py-3 align-center !w-2/12">Required Date <span class="text-red-500">*</span></th>
                   <th class="py-3 align-center !w-2/12">Other Info</th>
                   <!-- <th class="py-3 align-center !w-1/12">Tolarence</th> -->
                   <th class="py-3 align-center !w-2/12">Order Details</th>
@@ -612,7 +613,7 @@
                   <td class="">
                     <table class="w-full">
                       <tr>
-                        <td class="w-1/4">Service - Code</td>
+                        <td class="w-1/4">Service - Code <span class="text-red-500">*</span></td>
                         <td class="w-3/4">
                           <v-select :options="serviceList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="scmWoItem.scmService" label="service_name_and_code" class="block form-input w-full" :menu-props="{ minWidth: '250px', minHeight: '400px' }" @update:modelValue="changeService(index,itemIndex)">
                             <template #search="{attributes, events}">
@@ -649,7 +650,7 @@
                   </td>
                   <td>
                     <!-- <input type="date" v-model="scmWoItem.required_date" class="form-input"> -->
-                    <VueDatePicker v-model="scmWoItem.required_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
+                    <VueDatePicker v-model="scmWoItem.required_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd"  required></VueDatePicker>
                   </td>
                   <td>
                     <table>
@@ -717,7 +718,7 @@
   
   <div class="grid grid-cols-1" v-if="form?.scmWoLines?.length">
     <fieldset class="form-fieldset">
-      <legend class="form-legend">--- <span class="text-red-500">*</span></legend>
+      <legend class="form-legend"> Total </legend>
       <div class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
 
         <table class="w-full" id="table">
@@ -761,7 +762,7 @@
   <div class="grid grid-cols-1">
 
     <fieldset class="form-fieldset">
-      <legend class="form-legend">Terms And Conditions <span class="text-red-500">*</span></legend>
+      <legend class="form-legend">Terms And Conditions </legend>
       <table class="w-full whitespace-no-wrap" id="table">
         <tbody class="table_body">
           <tr class="table_tr" v-for="(scmWoTerm, index) in form.scmWoTerms" :key="index">
