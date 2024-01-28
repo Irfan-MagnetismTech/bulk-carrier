@@ -35,8 +35,8 @@ class ScmWoController extends Controller
     {
         try {
             $scmWorkOrders = ScmWo::query()
-                ->with('scmWoLines', 'scmWoTerms', 'scmVendor', 'scmWarehouse', 'scmWcs.scmWr')
-                ->globalSearch($request->all());
+            ->with('scmWoLines.scmWoItems.scmService','scmWoLines.scmWr', 'scmWoTerms', 'scmVendor', 'scmWarehouse', 'scmWoItems', 'scmWcs.scmWcsVendorServices.scmWr')
+            ->globalSearch($request->all());
 
             return response()->success('Data list', $scmWorkOrders, 200);
         } catch (\Exception $e) {
