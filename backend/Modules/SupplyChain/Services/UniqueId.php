@@ -41,12 +41,12 @@ class UniqueId
             $latestModel = $model::latest()->lockForUpdate()->first();
             $tableName = (new $model)->getTable();
 
-            $version = DB::select( DB::raw("select version()") )[0]->{'version()'};
-            return response()->json($version, 422);
+            // $version = DB::select( DB::raw("select version()") )[0]->{'version()'};
+            // return response()->json($version, 422);
 
-            if (strpos($version, 'MariaDB') === false) {
+            // if (strpos($version, 'MariaDB') === false) {
                 DB::statement('SET information_schema_stats_expiry = 0');
-            }
+            // }
 
             $nextId = DB::table('information_schema.tables')
                 ->where('table_name', $tableName)

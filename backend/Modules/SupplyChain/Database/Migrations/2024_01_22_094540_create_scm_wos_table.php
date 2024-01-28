@@ -24,6 +24,9 @@ return new class extends Migration
             $table->string('currency')->nullable();
             $table->decimal('usd_to_bdt')->nullable();
             $table->decimal('foreign_to_usd')->nullable();
+            $table->decimal('sub_total')->nullable();
+            $table->decimal('total_amount')->nullable();
+            $table->decimal('net_amount')->nullable();
             $table->bigInteger('purchase_center')->nullable();
             $table->string('remarks')->nullable();
             $table->tinyInteger('is_closed')->default(0)->comment('0, 1');
