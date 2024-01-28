@@ -13,7 +13,7 @@ class AccCostCenter extends Model
     /**
      * @var array
      */
-    protected $fillable = ['name', 'short_name', 'business_unit', 'type'];
+    protected $fillable = ['name', 'short_name', 'business_unit', 'type', 'ops_vessel_id'];
 
     public function ledgers()
     {
