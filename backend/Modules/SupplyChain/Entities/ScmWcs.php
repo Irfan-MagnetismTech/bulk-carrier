@@ -30,6 +30,8 @@ class ScmWcs extends Model
         'business_unit',
     ];
 
+
+
     public function scmWarehouse()
     {
         return $this->belongsTo(ScmWarehouse::class, 'scm_warehouse_id', 'id');
@@ -58,5 +60,10 @@ class ScmWcs extends Model
     public function scmWcsServices(): HasMany
     {
         return $this->hasMany(ScmWcsService::class)->latest();
+    }
+
+    public function scmWos()
+    {
+        return $this->hasMany(ScmWo::class);
     }
 }

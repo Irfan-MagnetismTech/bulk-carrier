@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * @package Modules\SupplyChain\Services
- * 
+ *
  * @class-type Service
  */
 class UniqueId

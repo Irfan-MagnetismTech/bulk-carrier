@@ -50,7 +50,7 @@ export default function useWorkOrder() {
             {
                 scmWr: '',
                 scm_wr_id: '',
-                scmWoService: [
+                scmWoItems: [
                     {
                         scmService: '',
                         scm_service_id: '',
@@ -101,7 +101,7 @@ export default function useWorkOrder() {
         {
             scmWr: '',
             scm_wr_id: '',
-            scmWoService: [
+            scmWoItems: [
                 {
                     scmService: '',
                     scm_service_id: '',
