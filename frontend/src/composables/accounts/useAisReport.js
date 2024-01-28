@@ -13,7 +13,7 @@ export default function useAisReport() {
     const ledgers = ref([]);
     const trialBalances = ref([]);
     const incomeStatements = ref([]);
-    const costCenterSummaries = ref([]);
+    const costCenterSummary = ref({});
     const fixedAssetStatements = ref([]);
     const balanceSheets = ref([]);
 
@@ -112,7 +112,7 @@ export default function useAisReport() {
 
         try {
             const { data, status } = await Api.post('/acc/cost-center-summary', form);
-            costCenterSummaries.value = data.value;
+            costCenterSummary.value = data.value;
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -146,7 +146,7 @@ export default function useAisReport() {
         trialBalances,
         incomeStatements,
         fixedAssetStatements,
-        costCenterSummaries,
+        costCenterSummary,
         balanceSheets,
         getDayBooks,
         getLedgers,
