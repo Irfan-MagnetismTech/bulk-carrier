@@ -346,7 +346,7 @@ function getChartererContract() {
   //               return false;
   // }
 
-  getChartererContractsByCharterOwner(props.form.ops_charterer_profile_id, props.form.ops_vessel_id);
+  getChartererContractsByCharterOwner(props.form.ops_charterer_profile_id, props.form.ops_vessel_id, 'Active');
 
 }
 
