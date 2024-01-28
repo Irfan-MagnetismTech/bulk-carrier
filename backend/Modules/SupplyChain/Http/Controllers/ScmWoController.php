@@ -370,6 +370,25 @@ class ScmWoController extends Controller
     }
 
 
+    public function searchWoForLc(Request $request): JsonResponse
+    {
+        if ($request->business_unit != 'ALL') {
+            $scmWo = ScmWo::query()
+                ->with('scmWoLines', 'scmWoTerms', 'scmVendor')
+                ->where('purchase_center', 'foreign')
+                ->orWhere('purchase_center', 'FOREIGN')
+                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        } else {
+            $scmWo = [];
+        }
+
+        return response()->success('Search result', $scmWo, 200);
+    }
+
+
     public function getWoLineDatas()
     {
         if (!request()->has('scm_wcs_id')) {
