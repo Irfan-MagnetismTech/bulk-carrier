@@ -174,7 +174,8 @@ class AisReportController extends Controller
      */
     public function fixedAssetStatement(Request $request)
     {
-        $assets = AccFixedAsset::where('asset_tag', $request->asset_tag)->get()
+        $assets = AccFixedAsset::when($request->asset_tag, fn($q) => $q->where('asset_tag', $request->asset_tag ))
+        ->get()
         ->map(function ($asset){
                 $data = [
                     'particular'            => $asset->asset_tag,
