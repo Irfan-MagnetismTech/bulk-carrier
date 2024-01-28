@@ -270,7 +270,7 @@ const navigateToMRRCreate = (purchaseOrderId) => {
               <td style="text-align: center !important;">
                 <table class="w-full">
                   <tr v-for="(line,index) in purchaseOrder?.scmPoItems" :key="index">
-                    <td><nobr>{{ line?.scmMaterial.quantity ?? '' }}</nobr></td>
+                    <td><nobr>{{ line?.quantity ?? '' }}</nobr></td>
                   </tr>
                 </table>
               </td>

@@ -236,10 +236,10 @@
             // getMaterialList(line.scmPr.id).then((res) => {
             //   props.materialList[index] = res;
             // });
-            (line.scmPr.id,props.form.scm_cs_id,props.form.id).then((res) => {
+            getMaterialList(line.scmPr.id,props.form.scm_cs_id,props.form.id).then((res) => {
             props.materialList[index] = res;
-            });
-          }
+            });         
+           }
         });
         editDatas();
       });
