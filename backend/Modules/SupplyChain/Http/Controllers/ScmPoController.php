@@ -108,7 +108,7 @@ class ScmPoController extends Controller
                         'pr_composite_key' => $item['pr_composite_key'],
                         'cs_composite_key' => $item['cs_composite_key'],
                         'max_quantity' => $max_quantity,
-                        'pr_quantity' => $item['quantity'],
+                        'pr_quantity' => $item->scmPrLine->quantity,
                     ];
                 });
                 //data_forget scmPoItems
@@ -376,13 +376,13 @@ class ScmPoController extends Controller
                     $data['unit'] = $item->scmMaterial->unit;
                     $data['pr_composite_key'] = $item->pr_composite_key;
                     $data['pr_quantity'] = $item->quantity;
-                    $data['quantity'] = $item->quantity;
                     if (request()->po_id) {
                         $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
                     } else {
                         $data['po_quantity'] = 0;
                     }
                     $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
+                    $data['quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
                     return $data;
                 });
         } else {
@@ -398,17 +398,16 @@ class ScmPoController extends Controller
                     $data['unit'] = $item->scmMaterial->unit;
                     $data['brand'] = $item->brand;
                     $data['model'] = $item->model;
-                    $data['quantity'] = $item->quantity;
                     $data['cs_composite_key'] = $item->cs_composite_key;
                     $data['pr_composite_key'] = $item->pr_composite_key;
                     $data['pr_quantity'] = $item->scmPrLine->quantity;
-                    $data['quantity'] = $item->quantity;
                     if (request()->po_id) {
                         $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('cs_composite_key', $item->cs_composite_key)->first()->quantity;
                     } else {
                         $data['po_quantity'] = 0;
                     }
                     $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
+                    $data['quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
 
                     return $data;
                 });
@@ -474,7 +473,6 @@ class ScmPoController extends Controller
                     $data['model'] = $item->model;
                     $data['pr_composite_key'] = $item->pr_composite_key;
                     $data['pr_quantity'] = $item->quantity;
-                    $data['quantity'] = $item->quantity;
 
                     if (request()->po_id) {
                         $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
@@ -483,6 +481,7 @@ class ScmPoController extends Controller
                     }
                     $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
                     $data['po_quantity'] = $data['po_quantity'] ?? 0;
+                    $data['quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
 
                     return $data;
                 });
@@ -499,18 +498,16 @@ class ScmPoController extends Controller
                     $data['unit'] = $item->scmMaterial->unit;
                     $data['brand'] = $item->brand;
                     $data['model'] = $item->model;
-                    $data['quantity'] = $item->quantity;
                     $data['cs_composite_key'] = $item->cs_composite_key;
                     $data['pr_composite_key'] = $item->pr_composite_key;
                     $data['pr_quantity'] = $item->scmPrLine->quantity;
-                    $data['quantity'] = $item->quantity;
                     if (request()->po_id) {
                         $data['po_quantity'] = $item->scmPoItems->where("scm_po_id", request()->po_id)->where('cs_composite_key', $item->cs_composite_key)->first()->quantity;
                     } else {
                         $data['po_quantity'] = 0;
                     }
                     $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
-
+                    $data['quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
                     return $data;
                 });
         }

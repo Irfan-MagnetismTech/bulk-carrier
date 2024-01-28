@@ -229,7 +229,7 @@
     <tr>
       <td>Technical Acceptance </td>
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
-            <select v-model="form.form.scmCsVendor[index][0].technical_acceptance" class="form-input">
+            <select v-model="form.scmCsVendor[index][0].technical_acceptance" class="form-input">
               <option value="Accepted">Accepted</option>
               <option value="Rejected">Rejected</option>
             </select>

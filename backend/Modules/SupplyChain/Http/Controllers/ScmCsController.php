@@ -536,7 +536,7 @@ class ScmCsController extends Controller
     public function selectedSupplierstore(SupplierSelectionRequest $request)
     {
 
-        $data = $request->only('id', 'selection_ground', 'auditor_remarks_date', 'auditor_remarks', 'scmCsVendor');
+        $data = $request->only('id', 'selection_ground', 'technical_acceptance','auditor_remarks_date', 'auditor_remarks', 'scmCsVendor');
 
         try {
             $cs = ScmCs::find($data['id']);
@@ -549,7 +549,7 @@ class ScmCsController extends Controller
             );
             foreach ($data['scmCsVendor'] as $key => $value) {
                 $csVendor = ScmCsVendor::find($value[0]['id']);
-                $csVendor->update(['is_selected' => $value[0]['is_selected']]);
+                $csVendor->update(['is_selected' => $value[0]['is_selected'], 'technical_acceptance' => $value[0]['technical_acceptance']]);
             }
 
             return response()->success('Data updated succesfully', $data, 202);

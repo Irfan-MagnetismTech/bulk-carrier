@@ -44,6 +44,7 @@ class ScmCsVendor extends Model
         'vat',
         'ait',
         'is_selected',
+        'technical_acceptance',
         'stock_type',
         'manufacturing_days',
         'quotation_received_date',

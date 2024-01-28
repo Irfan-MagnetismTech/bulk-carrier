@@ -365,7 +365,8 @@
   <div class="input-group">
     <label class="label-group">
           <span class="label-item-title">PO Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
+          <!-- <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" /> -->
+          <VueDatePicker v-model="form.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
       </label>    
     <label class="label-group" v-if="form.cs_no != null">
           <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
@@ -461,12 +462,12 @@
             <table class="w-full whitespace-no-wrap" >
               <tbody>
                 <tr class="w-full">
-                    <th class="py-3 align-center !w-3/12">Material Details <br/> <span class="!text-[8px]"></span></th>
-                    <th class="py-3 align-center !w-1/12">Required Date</th>
+                    <th class="py-3 align-center !w-4/12">Material Details <br/> <span class="!text-[8px]"></span></th>
+                    <th class="py-3 align-center !w-2/12"><nobr>Required Date</nobr></th>
                     <th class="py-3 align-center !w-2/12">Other Info</th>
-                    <th class="py-3 align-center !w-1/12">Tolarence</th>
+                    <th class="py-3 align-center">Tolarence <br/> (%)</th>
                     <th class="py-3 align-center !w-2/12">Order Details</th>
-                    <th class="py-3 align-center !w-2/12">Total Price</th>
+                    <th class="py-3 align-center !w-1/12">Total Price</th>
                     <th class="!w-1/12">
                       <button type="button" @click="addMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
@@ -498,13 +499,13 @@
                         <tr>
                           <td>Unit</td>
                           <td>
-                            <input type="text" readonly v-model="form.scmPoLines[index].scmPoItems[itemIndex].unit" class="vms-readonly-input form-input">
+                            <input type="text" readonly v-model="form.scmPoLines[index].scmPoItems[itemIndex].unit" class="vms-readonly-input form-input-sm">
                           </td>
                         </tr>
                         <tr>
                           <td>Brand</td>
                           <td>
-                            <input type="text" v-model="form.scmPoLines[index].scmPoItems[itemIndex].brand" class="form-input">
+                            <input type="text" v-model="form.scmPoLines[index].scmPoItems[itemIndex].brand" class="form-input-sm">
                           </td>
                         </tr>
                         <tr>
@@ -516,21 +517,18 @@
                       </table>
                     </td>
                     <td>
-                      <input type="date" v-model="form.scmPoLines[index].scmPoItems[itemIndex].required_date" class="form-input">
+                      <!-- <input type="date" v-model="form.scmPoLines[index].scmPoItems[itemIndex].required_date" class="form-input"> -->
+                      <VueDatePicker v-model="form.scmPoLines[index].scmPoItems[itemIndex].required_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
                     </td>
                     <td>
                       <table>
                         <tr>
                           <td>PR Qty</td>
-                          <td>
-                             <input type="number" required v-model="form.scmPoLines[index].scmPoItems[itemIndex].pr_quantity" min=1 class="form-input">
-                          </td>
+                          <td>{{ form.scmPoLines[index].scmPoItems[itemIndex].pr_quantity }}</td>
                         </tr>
                         <tr>
-                          <td>Remaining Qty</td>
-                          <td>
-                            <input type="number" required v-model="form.scmPoLines[index].scmPoItems[itemIndex].max_quantity" min=1 class="form-input">
-                          </td>
+                          <td class="">Remaining Qty</td>
+                          <td>{{ form.scmPoLines[index].scmPoItems[itemIndex].max_quantity }}</td>
                         </tr>
                       </table>
                     </td>
@@ -540,21 +538,21 @@
                     <td>
                       <table>
                         <tr>
-                          <td>Qty</td>
+                          <td class="">Qty</td>
                           <td>
-                             <input type="number" required v-model="form.scmPoLines[index].scmPoItems[itemIndex].quantity" min=1 class="form-input" :max="form.scmPoLines[index].scmPoItems[itemIndex].max_quantity" :class="{'border-2': form.scmPoLines[index].scmPoItems[itemIndex].quantity > form.scmPoLines[index].scmPoItems[itemIndex].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].scmPoItems[itemIndex].quantity > form.scmPoLines[index].scmPoItems[itemIndex].max_quantity}">
+                             <input type="number" required v-model="form.scmPoLines[index].scmPoItems[itemIndex].quantity" min=1 class="form-input text-right" :max="form.scmPoLines[index].scmPoItems[itemIndex].max_quantity" :class="{'border-2': form.scmPoLines[index].scmPoItems[itemIndex].quantity > form.scmPoLines[index].scmPoItems[itemIndex].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].scmPoItems[itemIndex].quantity > form.scmPoLines[index].scmPoItems[itemIndex].max_quantity}">
                           </td>
                         </tr>
                         <tr>
                           <td>Rate</td>
                           <td>
-                            <input type="number" required v-model="form.scmPoLines[index].scmPoItems[itemIndex].rate" min=1 class="form-input">
+                            <input type="number" required v-model="form.scmPoLines[index].scmPoItems[itemIndex].rate" min=1 class="form-input text-right">
                           </td>
                         </tr>
                       </table>
                     </td>
                     <td>
-                      <input type="number" readonly v-model="form.scmPoLines[index].scmPoItems[itemIndex].total_price" class="form-input vms-readonly-input">
+                      <input type="text" readonly v-model="form.scmPoLines[index].scmPoItems[itemIndex].total_price" class="form-input vms-readonly-input text-right">
                     </td>
                     <td class="px-1 py-1 text-center">
                       <button type="button" @click="removeMaterial(index,itemIndex)" class="remove_button">
@@ -591,7 +589,7 @@
           <tr>
             <td class="!w-9/12 text-right">Sub Total</td>
             <td class="text-right">
-              <input type="text" readonly class="vms-readonly-input form-input" v-model="form.sub_total">
+              <input type="text" readonly class="vms-readonly-input form-input text-right" v-model="form.sub_total">
             </td>
           </tr>
           <tr>
@@ -602,20 +600,20 @@
           </tr>
           <tr>
             <td class="!w-9/12 text-right">Total Amount</td>
-            <td class="text-right">
-              <input type="text" readonly class="vms-readonly-input form-input" v-model="form.total_amount">
+            <td class="">
+              <input type="text" readonly class="vms-readonly-input form-input text-right" v-model="form.total_amount">
             </td>
           </tr>
           <tr>
             <td class="!w-9/12 text-right">Add: VAT</td>
             <td class="text-right">
-              <input type="text" class="form-input" v-model="form.vat">
+              <input type="text" class="form-input text-right" v-model="form.vat">
             </td>
           </tr>
           <tr>
             <td class="!w-9/12 text-right">Net Amount</td>
             <td class="text-right">
-              <input type="text" readonly class="vms-readonly-input form-input" v-model="form.net_amount">
+              <input type="text" readonly class="vms-readonly-input form-input text-right" v-model="form.net_amount">
             </td>
           </tr>
           </tbody>
@@ -672,7 +670,11 @@
         @apply block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray disabled:opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed dark-disabled:disabled:bg-gray-900;
     }
     .form-input {
-        @apply block mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
+        @apply block text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
+    }
+  
+    .form-input-sm {
+        @apply block mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray;
     }
     .form-fieldset {
       @apply px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400;
