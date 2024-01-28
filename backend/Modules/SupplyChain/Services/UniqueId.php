@@ -30,7 +30,6 @@ class UniqueId
 
             $lastInsertedRecord->update([
                 'last_inserted_id' => $lastInsertedRecord->last_inserted_id + 1,
-                'updated_at' => now(),
             ]);
         } else {
             LastInserted::query()->create([
