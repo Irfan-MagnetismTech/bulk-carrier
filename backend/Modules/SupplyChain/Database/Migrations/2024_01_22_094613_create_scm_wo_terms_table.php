@@ -13,9 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('test_stocks', function (Blueprint $table) {
+        Schema::create('scm_wo_terms', function (Blueprint $table) {
             $table->id();
-            $table->string('ref_no')->nullable();
+            $table->unsignedBigInteger('scm_wo_id')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('test_stocks');
+        Schema::dropIfExists('wo_terms');
     }
 };

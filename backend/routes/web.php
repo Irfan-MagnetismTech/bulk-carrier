@@ -3,9 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Administration\Http\Controllers\UserController;
 use Modules\Operations\Http\Controllers\OpsBunkerReportController;
-use Modules\Operations\Http\Controllers\OpsExpenseReportController;
 use Modules\Operations\Http\Controllers\OpsVoyageReportController;
-use Modules\Operations\Http\Controllers\OpsOperationReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,4 +19,5 @@ use Modules\Operations\Http\Controllers\OpsOperationReportController;
 // Route::get('/test', fn()=> 'hi');
 Route::get('/', fn() => 'BG Torony - Magnetism Tech Limited');
 
-Route::get('/phone', fn() => (preg_match('/^(\+\d+|\d+)$/', '+8801824502831')) ? "Yes" : "No" );
+// Route::get('lighter-voyage-report', [OpsVoyageReportController::class, 'lighterVoyageReportExcelExport']);
+

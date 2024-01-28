@@ -37,13 +37,13 @@ class ScmPoRequest extends FormRequest
             'net_amount' => 'required|numeric',
             'remarks' => 'max:255',
             'date' => 'required|date',
-            'scmPoLines.*.scm_material_id' => 'required|exists:scm_materials,id|integer',
-            'scmPoLines.*.unit' => 'required|max:255|exists:scm_units,name|string',
-            'scmPoLines.*.brand' => 'max:255',
-            'scmPoLines.*.model' => 'max:255',
-            'scmPoLines.*.required_date' => 'required|date',
-            'scmPoLines.*.quantity' => 'required|numeric',
-            'scmPoLines.*.rate' => 'required|numeric',
+            'scmPoLine.*.scmPoItems.*.scm_material_id' => 'required|exists:scm_materials,id|integer',
+            'scmPoLine.*.scmPoItems.*.unit' => 'required|max:255|exists:scm_units,name|string',
+            'scmPoLine.*.scmPoItems.*.brand' => 'max:255',
+            'scmPoLine.*.scmPoItems.*.model' => 'max:255',
+            'scmPoLine.*.scmPoItems.*.required_date' => 'required|date',
+            'scmPoLine.*.scmPoItems.*.quantity' => 'required|numeric',
+            'scmPoLine.*.scmPoItems.*.rate' => 'required|numeric',
             'scmPoTerms.*.description' => 'max:255',
         ];
     }
@@ -81,18 +81,18 @@ class ScmPoRequest extends FormRequest
             'approved_date.required' => 'Approved date is required',
             'approved_date.date' => 'Approved date must be a date',
 
-            'scmPoLines.*.scm_material_id.required' => 'In row no :position Material is required',
-            'scmPoLines.*.scm_material_id.integer' => 'In row no :position Material must be an integer',
-            'scmPoLines.*.scm_material_id.exists' => 'In row no :position Material is not found',
+            'scmPoLine.*.scmPoItems.*.scm_material_id.required' => 'In row no :position Material is required',
+            'scmPoLine.*.scmPoItems.*.scm_material_id.integer' => 'In row no :position Material must be an integer',
+            'scmPoLine.*.scmPoItems.*.scm_material_id.exists' => 'In row no :position Material is not found',
 
-            'scmPoLines.*.unit.required' => 'In row no :position Unit is required',
-            'scmPoLines.*.unit.max' => 'In row no :position Unit must be less than 255 characters',
+            'scmPoLine.*.scmPoItems.*.unit.required' => 'In row no :position Unit is required',
+            'scmPoLine.*.scmPoItems.*.unit.max' => 'In row no :position Unit must be less than 255 characters',
 
-            'scmPoLines.*.quantity.required' => 'In row no :position Quantity is required',
-            'scmPoLines.*.quantity.numeric' => 'In row no :position Quantity must be a number',
+            'scmPoLine.*.scmPoItems.*.quantity.required' => 'In row no :position Quantity is required',
+            'scmPoLine.*.scmPoItems.*.quantity.numeric' => 'In row no :position Quantity must be a number',
 
-            'scmPoLines.*.required_date.required' => 'In row no :position Required date is required',
-            'scmPoLines.*.required_date.date' => 'In row no :position Required date must be a date',
+            'scmPoLine.*.scmPoItems.*.required_date.required' => 'In row no :position Required date is required',
+            'scmPoLine.*.scmPoItems.*.required_date.date' => 'In row no :position Required date must be a date',
         ];
     }
 

@@ -13,6 +13,6 @@ class AccCostCenter extends Model
     /**
      * @var array
      */
-    protected $fillable = ['ops_vessel_id', 'name', 'short_name', 'business_unit', 'type'];
+    protected $fillable = ['name', 'short_name', 'business_unit', 'type'];
 
 }
