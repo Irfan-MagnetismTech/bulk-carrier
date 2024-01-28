@@ -140,6 +140,33 @@ class OpsHandoverTakeoverController extends Controller
             'opsBunkers',
         );
 
+        $check= OpsHandoverTakeover::where('ops_vessel_id', $request->ops_vessel_id)->latest()->first();
+
+        if($check) {
+            $previousEffectiveDate = Carbon::parse($check->effective_date);
+            $effectiveDate = Carbon::parse($request->effective_date); 
+
+            if (!$effectiveDate->gt($previousEffectiveDate)) {
+
+                $error= [
+                    'message'=>'Invalid Effective Date.',
+                                'errors'=>[
+                                    'note_type'=>['Invalid Effective Date.',
+                        ]]];
+                return response()->json($error, 422);
+            }
+        }
+
+        
+        if($check?->note_type == $request->note_type){
+            $error= [
+                    'message'=>'You can not perform this action. This vessel is already in '.strtolower($request->note_type). '.',
+                    'errors'=>[
+                        'note_type'=>['You can not perform this action. This vessel is already in '.strtolower($request->note_type). '.',
+            ]]];
+            return response()->json($error, 422);
+        }
+
         $handover_takeover->update($handover_takeover_info);  
         $handover_takeover->opsBunkers()->delete();
         $handover_takeover->opsBunkers()->createMany($request->opsBunkers);
