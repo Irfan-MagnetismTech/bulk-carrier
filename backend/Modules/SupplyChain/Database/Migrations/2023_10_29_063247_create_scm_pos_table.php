@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreignId('scm_warehouse_id')->constrained('scm_warehouses')->nullable();
             $table->bigInteger('acc_cost_center_id')->nullable();
             $table->string('currency')->nullable();
-            $table->decimal('foreign_to_bdt')->nullable();
+            $table->decimal('usd_to_bdt')->nullable();
             $table->decimal('foreign_to_usd')->nullable();
             $table->decimal('discount')->nullable();
             $table->decimal('vat')->nullable();

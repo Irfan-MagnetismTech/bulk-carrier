@@ -215,26 +215,15 @@ class ScmPrController extends Controller
     public function destroy(ScmPr $purchaseRequisition): JsonResponse
     {
         try {
-            $poCount = ScmPo::where('scm_pr_id', $purchaseRequisition->id)->count();
-            $csCount = ScmCsMaterial::where('scm_pr_id', $purchaseRequisition->id)->count();
-            $mrrCount = ScmMrr::where('scm_pr_id', $purchaseRequisition->id)->count();
-
-            if ($poCount + $csCount + $mrrCount > 0) {
-                $error = array(
-                    "message" => "Data could not be deleted!",
-                    "errors" => [
-                        "id" => ["This data could not be deleted as it has references in other table!"]
-                    ]
-                );
-                return response()->json($error, 422);
-            }
-
+            DB::beginTransaction();
             $purchaseRequisition->scmPrLines()->delete();
             $purchaseRequisition->delete();
-
+            DB::commit();
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (\Exception $e) {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+
+            return response()->json($purchaseRequisition->preventDeletionIfRelated(), 422);
         }
     }
 
@@ -422,46 +411,46 @@ class ScmPrController extends Controller
 
     public function getMaterialByPrIdForCs(Request $request): JsonResponse
     {
-        if($request->isNotFilled('scm_cs_id')) {
+        if ($request->isNotFilled('scm_cs_id')) {
             $lineData = ScmPrLine::query()
-            ->with('scmMaterial')
-            ->where('scm_pr_id', $request->pr_id)
-            ->whereNot('status', 'Closed')
-            ->whereHas('scmPr', function ($query) {
-                $query->whereIn('status', ['Pending', 'WIP']);
-            })
-            ->get()
-            ->map(function ($item) {
-                $data = $item->scmMaterial;
-                $data['pr_composite_key'] = $item->pr_composite_key;
-                $data['pr_quantity'] = $item->quantity;
-                $data['max_quantity'] = $item->quantity - $item->scmCsmaterials->sum('quantity');
-                return $data;
-            });
+                ->with('scmMaterial')
+                ->where('scm_pr_id', $request->pr_id)
+                ->whereNot('status', 'Closed')
+                ->whereHas('scmPr', function ($query) {
+                    $query->whereIn('status', ['Pending', 'WIP']);
+                })
+                ->get()
+                ->map(function ($item) {
+                    $data = $item->scmMaterial;
+                    $data['pr_composite_key'] = $item->pr_composite_key;
+                    $data['pr_quantity'] = $item->quantity;
+                    $data['max_quantity'] = $item->quantity - $item->scmCsmaterials->sum('quantity');
+                    return $data;
+                });
 
             return response()->success('Search result', $lineData, 200);
-        }else{
+        } else {
             $lineData = ScmPrLine::query()
-            ->with('scmMaterial')
-            ->where('scm_pr_id', $request->pr_id)
-            ->whereNot('status', 'Closed')
-            ->whereHas('scmPr', function ($query) {
-                $query->whereIn('status', ['Pending', 'WIP']);
-            })
-            ->get()
-            ->map(function ($item) use($request){
-                $data = $item->scmMaterial;
-                $material = ScmCsMaterial::query()->where(['scm_material_id' => $item->scm_material_id, 'scm_pr_id' => $request->pr_id,'scm_cs_id'=> $request->scm_cs_id])->first();
-                $data['pr_composite_key'] = $item->pr_composite_key;
-                if($material){
-                    $max_quantity = $item->quantity - $item->scmCsmaterials->sum('quantity') + $material->quantity;
-                }else{
-                    $max_quantity = $item->quantity - $item->scmCsmaterials->sum('quantity');
-                }
-                $data['max_quantity'] = $max_quantity;
-                $data['pr_quantity'] = $item->quantity;
-                return $data;
-            });
+                ->with('scmMaterial')
+                ->where('scm_pr_id', $request->pr_id)
+                ->whereNot('status', 'Closed')
+                ->whereHas('scmPr', function ($query) {
+                    $query->whereIn('status', ['Pending', 'WIP']);
+                })
+                ->get()
+                ->map(function ($item) use ($request) {
+                    $data = $item->scmMaterial;
+                    $material = ScmCsMaterial::query()->where(['scm_material_id' => $item->scm_material_id, 'scm_pr_id' => $request->pr_id, 'scm_cs_id' => $request->scm_cs_id])->first();
+                    $data['pr_composite_key'] = $item->pr_composite_key;
+                    if ($material) {
+                        $max_quantity = $item->quantity - $item->scmCsmaterials->sum('quantity') + $material->quantity;
+                    } else {
+                        $max_quantity = $item->quantity - $item->scmCsmaterials->sum('quantity');
+                    }
+                    $data['max_quantity'] = $max_quantity;
+                    $data['pr_quantity'] = $item->quantity;
+                    return $data;
+                });
         }
 
 
