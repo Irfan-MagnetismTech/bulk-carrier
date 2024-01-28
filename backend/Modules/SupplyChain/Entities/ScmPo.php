@@ -28,7 +28,7 @@ class ScmPo extends Model
         'scm_warehouse_id',
         'acc_cost_center_id',
         'currency',
-        'foreign_to_bdt',
+        'usd_to_bdt',
         'foreign_to_usd',
         'discount',
         'vat',

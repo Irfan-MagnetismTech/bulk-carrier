@@ -39,7 +39,7 @@ class ScmPoController extends Controller
     {
         try {
             $scmWarehouses = ScmPo::query()
-                ->with('scmPoLines.scmPoItems.scmMaterial', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPoItems')
+                ->with('scmPoLines.scmPoItems.scmMaterial', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPoItems.scmMaterial')
                 ->globalSearch($request->all());
 
             return response()->success('Data list', $scmWarehouses, 200);
@@ -54,7 +54,6 @@ class ScmPoController extends Controller
      */
     public function store(ScmPoRequest $request)
     {
-        return response()->json(DB::select("SHOW VARIABLES"), 422);
         $requestData = $request->except('ref_no');
         $requestData['ref_no'] = UniqueId::generate(ScmPo::class, 'PO');
         $requestData['created_by'] = auth()->id();
@@ -366,26 +365,26 @@ class ScmPoController extends Controller
     {
         if (!request()->has('cs_id')) {
             $prMaterials = ScmPrLine::query()
-            ->with('scmMaterial')
-            ->where('scm_pr_id', request()->pr_id)
-            ->whereNot('status', 'Closed')
-            ->get()
-            ->map(function ($item) {
-                $data = $item->scmMaterial;
-                $data['brand'] = $item->brand;
-                $data['model'] = $item->model;
-                $data['unit'] = $item->scmMaterial->unit;
-                $data['pr_composite_key'] = $item->pr_composite_key;
-                $data['pr_quantity'] = $item->quantity;
-                $data['quantity'] = $item->quantity;
-                if (request()->po_id) {
-                    $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
-                } else {
-                    $data['po_quantity'] = 0;
-                }
-                $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
-                return $data;
-            });
+                ->with('scmMaterial')
+                ->where('scm_pr_id', request()->pr_id)
+                ->whereNot('status', 'Closed')
+                ->get()
+                ->map(function ($item) {
+                    $data = $item->scmMaterial;
+                    $data['brand'] = $item->brand;
+                    $data['model'] = $item->model;
+                    $data['unit'] = $item->scmMaterial->unit;
+                    $data['pr_composite_key'] = $item->pr_composite_key;
+                    $data['pr_quantity'] = $item->quantity;
+                    $data['quantity'] = $item->quantity;
+                    if (request()->po_id) {
+                        $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
+                    } else {
+                        $data['po_quantity'] = 0;
+                    }
+                    $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
+                    return $data;
+                });
         } else {
             $prMaterials = ScmCsMaterial::query()
                 ->where([
@@ -405,7 +404,7 @@ class ScmPoController extends Controller
                     $data['pr_quantity'] = $item->scmPrLine->quantity;
                     $data['quantity'] = $item->quantity;
                     if (request()->po_id) {
-                        $data['po_quantity'] = $item->scmPoItems->where('scm_po_id',request()->po_id)->where('cs_composite_key', $item->cs_composite_key)->first()->quantity;
+                        $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('cs_composite_key', $item->cs_composite_key)->first()->quantity;
                     } else {
                         $data['po_quantity'] = 0;
                     }
@@ -506,7 +505,7 @@ class ScmPoController extends Controller
                     $data['pr_quantity'] = $item->scmPrLine->quantity;
                     $data['quantity'] = $item->quantity;
                     if (request()->po_id) {
-                        $data['po_quantity'] = $item->scmPoItems->where("scm_po_id",request()->po_id)->where('cs_composite_key', $item->cs_composite_key)->first()->quantity;
+                        $data['po_quantity'] = $item->scmPoItems->where("scm_po_id", request()->po_id)->where('cs_composite_key', $item->cs_composite_key)->first()->quantity;
                     } else {
                         $data['po_quantity'] = 0;
                     }
