@@ -31,7 +31,6 @@ class ScmWcs extends Model
     ];
 
 
-
     public function scmWarehouse()
     {
         return $this->belongsTo(ScmWarehouse::class, 'scm_warehouse_id', 'id');
