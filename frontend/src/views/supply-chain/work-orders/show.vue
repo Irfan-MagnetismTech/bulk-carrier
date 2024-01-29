@@ -119,19 +119,18 @@ onMounted(() => {
           <table class="w-full">
             <thead>
                 <tr>
-                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="9">Work Order Information</td>
+                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="8">Work Order Information</td>
                 </tr>
             
               <tr class="w-full">
-                <th class="!text-center" rowspan="2">WR No</th>
-                <th class="!text-center" rowspan="2">WR Date</th>
-                <th class="!text-center" colspan="7">Details</th>
-              </tr>
-              <tr>
+                <th class="!text-center" >WR No</th>
+                <th class="!text-center" >WR Date</th>
+                
                 <th class="!text-center">Service - Code</th>
                 <th class="!text-center">Required Date</th>
-                <th class="!text-center" colspan="2">Other Info</th>
-                <th class="!text-center" colspan="2">Order Details</th>
+                <th class="!text-center">WR Qty</th>
+                <th class="!text-center">Qty</th>
+                <th class="!text-center">Rate</th>
                 <th class="!text-center">Total Price</th>
               </tr>
             </thead>
@@ -139,41 +138,41 @@ onMounted(() => {
               <template v-for="(scmWoLine, index) in workOrder.scmWoLines" :key="index">
                 <template v-for="(scmWoItem, itemIndex) in scmWoLine?.scmWoItems" :key="itemIndex">
                   <tr>
-                    <td :rowspan="(scmWoLine?.length ?? 1)*2" v-if="itemIndex == 0">{{ scmWoLine?.scmWr?.ref_no }}</td>
-                    <td class="!text-center" :rowspan="(scmWoLine?.length ?? 1)*2" v-if="itemIndex == 0">{{ formatDate(scmWoLine.scmWr.raised_date) }}</td>
-                    <td rowspan="2">{{ scmWoItem?.scmService?.service_name_and_code }}</td>
-                    <td class="!text-center" rowspan="2">{{ formatDate(scmWoItem?.required_date) }}</td>
-                    <th class="!text-center">WR Qty</th>
+                    <td :rowspan="(scmWoLine?.length ?? 1)" v-if="itemIndex == 0">{{ scmWoLine?.scmWr?.ref_no }}</td>
+                    <td class="!text-center" :rowspan="(scmWoLine?.length ?? 1)" v-if="itemIndex == 0">{{ formatDate(scmWoLine.scmWr.raised_date) }}</td>
+                    <td>{{ scmWoItem?.scmService?.service_name_and_code }}</td>
+                    <td class="!text-center">{{ formatDate(scmWoItem?.required_date) }}</td>
                     <td class="!text-right">{{ numberFormat(scmWoItem?.wr_quantity) }}</td>
-                    <th class="!text-center">Qty</th>
                     <td class="!text-right">{{ numberFormat(scmWoItem?.quantity) }}</td>
-                    <td rowspan="2" class="!text-right">{{ numberFormat(scmWoItem?.total_price) }}</td>
+                    <td class="!text-right">{{ numberFormat(scmWoItem?.rate) }}</td>
+                    <!-- Rate -->
+                    <td class="!text-right">{{ numberFormat(scmWoItem?.total_price) }}</td>
 
                   </tr>
-                  <tr>
+                  <!-- <tr>
                     <th class="!text-center">Rem. Qty</th>
                     <td class="!text-right">{{ numberFormat(scmWoItem?.max_quantity) }}</td>
                     <th class="!text-center">Rate</th>
                     <td class="!text-right">{{ numberFormat(scmWoItem?.rate) }}</td>
-                  </tr>
+                  </tr> -->
                   
                 </template>
                 
                 
               </template>
               <tr>
-                <th colspan="8" class="!text-right">Sub Total</th>
+                <th colspan="7" class="!text-right">Sub Total</th>
                 <td class="!text-right">{{ numberFormat(workOrder?.sub_total) }}</td>
               </tr>
               
               <tr>
-                <th colspan="8" class="!text-right">Total Amount</th>
+                <th colspan="7" class="!text-right">Total Amount</th>
                 <td class="!text-right">{{ numberFormat(workOrder?.total_amount) }}</td>
               </tr>
 
               
               <tr>
-                <th colspan="8" class="!text-right">Net Amount</th>
+                <th colspan="7" class="!text-right">Net Amount</th>
                 <td class="!text-right">{{ numberFormat(workOrder?.net_amount) }}</td>
               </tr>
 
