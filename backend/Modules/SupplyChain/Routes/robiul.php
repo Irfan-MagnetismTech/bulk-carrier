@@ -5,6 +5,7 @@ use Modules\SupplyChain\Http\Controllers\ScmPoController;
 use Modules\SupplyChain\Http\Controllers\ScmWoController;
 use Modules\SupplyChain\Http\Controllers\ScmWrController;
 use Modules\SupplyChain\Http\Controllers\ScmWcsController;
+use Modules\SupplyChain\Http\Controllers\ScmLcRecordStatusController;
 
 Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     //
@@ -12,6 +13,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
         'work-requisitions' => ScmWrController::class,
         'work-cs' => ScmWcsController::class,
         'work-orders' => ScmWoController::class,
+        'lc-record-statuses' => ScmLcRecordStatusController::class,
     ]);
 
     Route::get('search-wr-wise-service-for-wcs', [ScmWrController::class, "getServiceByWrIdForWcs"])->name('getServiceByWrIdForWcs');
