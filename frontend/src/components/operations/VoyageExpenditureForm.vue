@@ -142,14 +142,22 @@ watch(() => props.form.exchange_rate_bdt, (value) => {
 }, { deep: true })
 
 
-
 const calculateHeadAmounts = () => {
+    let total_bdt = 0.0;
+    let total_usd = 0.0;
     props.form.opsVoyageExpenditureEntries.forEach((line, index) => {
             const { amount, amount_usd, amount_bdt } = calculateInCurrency(line);
             props.form.opsVoyageExpenditureEntries[index].amount_usd = (amount_usd * 1);
             props.form.opsVoyageExpenditureEntries[index].amount_bdt = (amount_bdt * 1);
             props.form.opsVoyageExpenditureEntries[index].amount = (amount * 1);
+
+            total_bdt += amount_bdt;
+            total_usd += amount_usd;
     });
+
+    props.form.sub_total_usd = parseFloat(total_usd).toFixed(2);
+    props.form.sub_total_bdt = parseFloat(total_bdt).toFixed(2);
+
     CalculateAll();
 }
 
@@ -174,23 +182,22 @@ const calculateInCurrency = (item) => {
   return {amount : (item.amount > 0) ? item.amount : 0, amount_usd: (item.amount_usd > 0) ? item.amount_usd : 0, amount_bdt:( item.amount_bdt > 0) ?  item.amount_bdt : 0};
 }
 
-watch(() => props.form.opsVoyageExpenditureEntries, (newValue, oldValue) => {
-  let total_bdt = 0.0;
-  let total_usd = 0.0;
-  newValue?.forEach((line, index) => {
+const calculateThings = (index) => {
+  // let total_bdt = 0.0;
+  // let total_usd = 0.0;
+  // newValue?.forEach((line, index) => {
     props.form.opsVoyageExpenditureEntries[index].ops_expense_head_id = props.form.opsVoyageExpenditureEntries[index]?.opsExpenseHead?.id
-    const { amount_usd, amount_bdt } = calculateInCurrency(line, index);
-    total_bdt += amount_bdt;
-    total_usd += amount_usd;
+  //   const { amount_usd, amount_bdt } = calculateInCurrency(line, index);
+  //   total_bdt += amount_bdt;
+  //   total_usd += amount_usd;
 
-  });
-  props.form.sub_total_usd = parseFloat(total_usd).toFixed(2);
-  props.form.sub_total_bdt = parseFloat(total_bdt).toFixed(2);
-  CalculateAll();
+  // });
+  // props.form.sub_total_usd = parseFloat(total_usd).toFixed(2);
+  // props.form.sub_total_bdt = parseFloat(total_bdt).toFixed(2);
+  // CalculateAll();
+}
 
-}, { deep: true })
-
-function CalculateAll() { 
+const CalculateAll = () => { 
   props.form.grand_total_bdt = parseFloat(props.form.sub_total_bdt - props.form.discount_bdt).toFixed(2);
   props.form.grand_total_usd = parseFloat(props.form.sub_total_usd - props.form.discount_usd).toFixed(2);
 }
@@ -319,7 +326,7 @@ function attachFile(e) {
           <tbody>
             <tr v-for="(head, index) in form.opsVoyageExpenditureEntries" :key="index">
               <td class="relative">
-                <v-select :options="vesselExpenseHeads" placeholder="--Choose an option--" v-model="form.opsVoyageExpenditureEntries[index].opsExpenseHead" label="name" class="block form-input" >
+                <v-select :options="vesselExpenseHeads" placeholder="--Choose an option--" v-model="form.opsVoyageExpenditureEntries[index].opsExpenseHead" label="name" class="block form-input" @update:modelValue="calculateThings(index)">
                     <template #search="{attributes, events}">
                         <input
                             class="vs__search"
