@@ -7,7 +7,7 @@ import Store from '../../store/index.js';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
 import { merge } from 'lodash';
-
+import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 
 export default function useQuotation() {
     const BASE = 'scm' 
@@ -20,7 +20,7 @@ export default function useQuotation() {
     const $loading = useLoading();
     const isTableLoading = ref(false);
     const notification = useNotification();
-    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const quotation = ref({
         scmCs: null,
@@ -42,6 +42,7 @@ export default function useQuotation() {
         ait: null,//local
         credit_term: null,//local
         quotation_shipment_date: null,
+        quotation_received_date: null,
         estimated_shipment: null,//foreign
         port_of_loading: null,//foreign
         port_of_discharge: null,//foreign
@@ -49,7 +50,16 @@ export default function useQuotation() {
         mode_of_shipment: null,//foreign
         delivery_term: null,
         terms_and_condition: null,
+        stock_type: null,
+        manufaturing_days: null,
+        warranty: null,
         remarks: null,
+        delivery_time: null,
+        total_negotiated_price: 0,
+        total_offered_price: 0,
+        freight: 0,
+        grand_total_negotiated_price: 0,
+        grand_total_offered_price: 0,
         attachment: null,
         scmCsMaterialVendors: [
             {
@@ -61,8 +71,8 @@ export default function useQuotation() {
                 stock_type: null,
                 manufaturing_days: null,
                 unit: null,
-                offered_price: null,
-                negotiated_price: null,
+                offered_price: 0,
+                negotiated_price: 0,
             },
         ],
     });
@@ -173,7 +183,7 @@ export default function useQuotation() {
     }
 
     async function deleteQuotations(csId,quotationId) {
-
+        console.log('tag', quotationId);
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 

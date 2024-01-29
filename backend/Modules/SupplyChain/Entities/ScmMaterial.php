@@ -19,7 +19,7 @@ class ScmMaterial extends Model
     protected $appends = ['material_name_and_code'];
 
     protected $fillable = [
-        'scm_material_category_id', 'name', 'material_code', 'hs_code', 'store_category', 'unit', 'minimum_stock', 'description', 'sample_photo', 'account_id'
+        'scm_material_category_id', 'name', 'material_code', 'hs_code', 'store_category', 'unit', 'minimum_stock', 'description', 'sample_photo', 'account_id', 'type'
     ];
 
     public function scmMaterialCategory(): BelongsTo

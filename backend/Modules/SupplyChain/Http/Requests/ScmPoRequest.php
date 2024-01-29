@@ -12,10 +12,10 @@ class ScmPoRequest extends FormRequest
         $dataArray = json_decode($data, true);
 
         // $mergeData = array_merge($dataArray, ['attachment' => request('attachment'), 'excel' => request('excel')]);
-        
+
         $this->replace($dataArray);
     }
-    
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -28,7 +28,7 @@ class ScmPoRequest extends FormRequest
             'scm_vendor_id' => 'required|integer|exists:scm_vendors,id',
             'currency' => 'required|max:255',
             // 'exchange_rate' => 'required|numeric',
-            'foreign_to_bdt' => 'required_if:currency,!=,BDT|numeric',
+            'usd_to_bdt' => 'required_if:currency,!=,BDT|numeric',
             'foreign_to_usd' => 'required_if:currency,!=,BDT,USD|numeric',
             'discount' => 'numeric',
             'vat' => 'numeric',
@@ -37,13 +37,13 @@ class ScmPoRequest extends FormRequest
             'net_amount' => 'required|numeric',
             'remarks' => 'max:255',
             'date' => 'required|date',
-            'scmPoLines.*.scm_material_id' => 'required|exists:scm_materials,id|integer',
-            'scmPoLines.*.unit' => 'required|max:255|exists:scm_units,name|string',
-            'scmPoLines.*.brand' => 'max:255',
-            'scmPoLines.*.model' => 'max:255',
-            'scmPoLines.*.required_date' => 'required|date',
-            'scmPoLines.*.quantity' => 'required|numeric',
-            'scmPoLines.*.rate' => 'required|numeric',
+            'scmPoItems.*.scm_material_id' => 'required|exists:scm_materials,id|integer',
+            'scmPoItems.*.unit' => 'required|max:255|exists:scm_units,name|string',
+            'scmPoItems.*.brand' => 'max:255',
+            'scmPoItems.*.model' => 'max:255',
+            'scmPoItems.*.required_date' => 'required|date',
+            'scmPoItems.*.quantity' => 'required|numeric',
+            'scmPoItems.*.rate' => 'required|numeric',
             'scmPoTerms.*.description' => 'max:255',
         ];
     }
@@ -81,18 +81,18 @@ class ScmPoRequest extends FormRequest
             'approved_date.required' => 'Approved date is required',
             'approved_date.date' => 'Approved date must be a date',
 
-            'scmPoLines.*.scm_material_id.required' => 'In row no :position Material is required',
-            'scmPoLines.*.scm_material_id.integer' => 'In row no :position Material must be an integer',
-            'scmPoLines.*.scm_material_id.exists' => 'In row no :position Material is not found',
+            'scmPoItems.*.scm_material_id.required' => 'In row no :position Material is required',
+            'scmPoItems.*.scm_material_id.integer' => 'In row no :position Material must be an integer',
+            'scmPoItems.*.scm_material_id.exists' => 'In row no :position Material is not found',
 
-            'scmPoLines.*.unit.required' => 'In row no :position Unit is required',
-            'scmPoLines.*.unit.max' => 'In row no :position Unit must be less than 255 characters',
+            'scmPoItems.*.unit.required' => 'In row no :position Unit is required',
+            'scmPoItems.*.unit.max' => 'In row no :position Unit must be less than 255 characters',
 
-            'scmPoLines.*.quantity.required' => 'In row no :position Quantity is required',
-            'scmPoLines.*.quantity.numeric' => 'In row no :position Quantity must be a number',
+            'scmPoItems.*.quantity.required' => 'In row no :position Quantity is required',
+            'scmPoItems.*.quantity.numeric' => 'In row no :position Quantity must be a number',
 
-            'scmPoLines.*.required_date.required' => 'In row no :position Required date is required',
-            'scmPoLines.*.required_date.date' => 'In row no :position Required date must be a date',
+            'scmPoItems.*.required_date.required' => 'In row no :position Required date is required',
+            'scmPoItems.*.required_date.date' => 'In row no :position Required date must be a date',
         ];
     }
 

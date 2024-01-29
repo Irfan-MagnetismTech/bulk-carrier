@@ -62,25 +62,25 @@ class ScmMaterialController extends Controller
             $topParentAccountTsllId = $topParent->account_tsll->id;
 
             $material->account()->create([
-                 'acc_balance_and_income_line_id' => config('accounts.balance_income_line.inventory'),
-                 'account_name' => $material->name,
-
-                 'account_code' => config('accounts.account_types.Assets') .' - '. config('accounts.balance_income_balance_header.current_assets') .' - '. config('accounts.balance_income_line.inventory') .' - '. $topParent->id .' - '. $material->id,
-                 
-                 'account_type' => config('accounts.account_types.Assets'),
-                 'parent_account_id' => $topParentAccounPsmlId,
-                 'business_unit' => 'PSML',
-             ]);
-
-             $material->account()->create([
                 'acc_balance_and_income_line_id' => config('accounts.balance_income_line.inventory'),
                 'account_name' => $material->name,
-                'account_code' => config('accounts.account_types.Assets') .' - '. config('accounts.balance_income_balance_header.current_assets') .' - '. config('accounts.balance_income_line.inventory') .' - '. $topParent->id .' - '. $material->id,
+
+                'account_code' => config('accounts.account_types.Assets') . ' - ' . config('accounts.balance_income_balance_header.current_assets') . ' - ' . config('accounts.balance_income_line.inventory') . ' - ' . $topParent->id . ' - ' . $material->id,
+
+                'account_type' => config('accounts.account_types.Assets'),
+                'parent_account_id' => $topParentAccounPsmlId,
+                'business_unit' => 'PSML',
+            ]);
+
+            $material->account()->create([
+                'acc_balance_and_income_line_id' => config('accounts.balance_income_line.inventory'),
+                'account_name' => $material->name,
+                'account_code' => config('accounts.account_types.Assets') . ' - ' . config('accounts.balance_income_balance_header.current_assets') . ' - ' . config('accounts.balance_income_line.inventory') . ' - ' . $topParent->id . ' - ' . $material->id,
                 'account_type' => config('accounts.account_types.Assets'),
                 'parent_account_id' => $topParentAccountTsllId,
                 'business_unit' => 'TSLL',
             ]);
-             // for account creation end
+            // for account creation end
             return response()->success('Data created succesfully', $material, 201);
         } catch (\Exception $e) {
 
@@ -114,10 +114,7 @@ class ScmMaterialController extends Controller
         $requestData = $request->all();
 
         try {
-            if (isset($request->sample_photo)) {
-                $sample_photos = $this->fileUpload->handleFile($request->sample_photo, 'scm/materials', $material->sample_photo);
-                $requestData['sample_photo'] = $sample_photos;
-            }
+            $requestData['sample_photo'] = $this->fileUpload->handleFile($request->sample_photo, 'scm/materials', $material->sample_photo);
             $material->update($requestData);
 
             return response()->success('Data updated sucessfully!', $material, 202);
