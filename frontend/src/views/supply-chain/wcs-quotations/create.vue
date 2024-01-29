@@ -19,7 +19,7 @@ const icons = useHeroIcon();
 const route = useRoute();
 const WCSID = route.params.wcsId;
 // const { getMaterialCs, materialCs, storeMaterialCs, errors, isLoading, getPrWiseCs,showMaterialCs} = useMaterialCs();
-const { getWorkCs, workCs, storeWorkCs, errors, isLoading, showWorkCs} = useWorkCs();
+const { getWorkCs, workCs, storeWorkCs, showWorkCs} = useWorkCs();
 
 
  onMounted(() => {
@@ -27,7 +27,7 @@ const { getWorkCs, workCs, storeWorkCs, errors, isLoading, showWorkCs} = useWork
 });
 
 const { storeQuotations ,quotation,localQuotationLines,foreignQuotationLines} = useQuotation();
-const { storeWcsQuotations ,wcsQuotation,wcsQuotationLines} = useWcsQuotation();
+const { storeWcsQuotations ,wcsQuotation,wcsQuotationLines, errors, isLoading } = useWcsQuotation();
 const page = ref('create');
 const { setTitle } = Title();
 
