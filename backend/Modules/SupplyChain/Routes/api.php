@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Modules\SupplyChain\Http\Controllers\ScmCsController;
 use Modules\SupplyChain\Http\Controllers\ScmMiController;
@@ -11,6 +14,7 @@ use Modules\SupplyChain\Http\Controllers\ScmSrController;
 use Modules\SupplyChain\Http\Controllers\ScmMmrController;
 use Modules\SupplyChain\Http\Controllers\ScmMrrController;
 use Modules\SupplyChain\Http\Controllers\ScmSirController;
+use Modules\Administration\Http\Controllers\UserController;
 use Modules\SupplyChain\Http\Controllers\ScmUnitController;
 use Modules\SupplyChain\Http\Controllers\ScmVendorController;
 use Modules\SupplyChain\Http\Controllers\ScmServiceController;
@@ -144,4 +148,20 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     });
 });
 
+Route::get('insert-ref-no', function () {
+    //insert a user
+    // try {
+    //     DB::beginTransaction();
+    //     $user = new User();
+    //     $user->name = Faker\Factory::create()->name;
+    //     $user->email = Faker\Factory::create()->email;
+    //     $user->password = Hash::make('12345678');
+    //     $user->save();
+    //     DB::commit();
+    // } catch (\Exception $e) {
+    //     DB::rollBack();     
+    //     throw $e;
+    // }
+    return User::count();
+})->name('insertRefNo');
 require __DIR__ . '/robiul.php';

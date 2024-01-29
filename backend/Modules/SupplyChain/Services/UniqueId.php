@@ -3,6 +3,7 @@
 namespace Modules\SupplyChain\Services;
 
 use App\Models\LastInserted;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @package Modules\SupplyChain\Services
@@ -21,25 +22,34 @@ class UniqueId
      */
     public static function generate(object $model, string $prefix): string
     {
-        $lastInsertedRecord = LastInserted::query()
-            ->where('last_inserted_type', get_class($model))
-            ->first();
+        try {
+            DB::beginTransaction();
 
-        if ($lastInsertedRecord) {
-            $uniqueKey = $prefix . '-' . ($lastInsertedRecord->last_inserted_id + 1);
+            $lastInsertedRecord = LastInserted::query()
+                ->where('last_inserted_type', get_class($model))
+                ->lockForUpdate()
+                ->first();
 
-            $lastInsertedRecord->update([
-                'last_inserted_id' => $lastInsertedRecord->last_inserted_id + 1,
-            ]);
-        } else {
-            LastInserted::query()->create([
-                'last_inserted_type' => get_class($model),
-                'last_inserted_id' => 1
-            ]);
+            if ($lastInsertedRecord) {
+                $uniqueKey = $prefix . '-' . ($lastInsertedRecord->last_inserted_id + 1);
 
-            $uniqueKey = $prefix . '-1';
+                $lastInsertedRecord->update([
+                    'last_inserted_id' => $lastInsertedRecord->last_inserted_id + 1,
+                ]);
+            } else {
+                LastInserted::query()->create([
+                    'last_inserted_type' => get_class($model),
+                    'last_inserted_id' => 1
+                ]);
+
+                $uniqueKey = $prefix . '-1';
+            }
+            DB::commit();
+
+            return $uniqueKey;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
         }
-
-        return $uniqueKey;
     }
 }
