@@ -24,7 +24,7 @@ const WCSID = route.params.wcsId;
 
 
 // const { CsData, create , quotation,store} = useSupplierSelection();
-const { WcsData, create , wcsQuotation, store, isLoading} = useWcsSupplierSelection();
+const { WcsData, create , wcsQuotation, store, isLoading, errors} = useWcsSupplierSelection();
 const page = ref('create');
 const { setTitle } = Title();
 

@@ -8,11 +8,12 @@
     import ErrorComponent from "../../utils/ErrorComponent.vue";
     import useBusinessInfo from '../../../composables/useBusinessInfo';
     import usePurchaseOrder from '../../../composables/supply-chain/usePurchaseOrder';
+import env from '../../../config/env';
 
     const { vendors, searchVendor } = useVendor();
     const { getLcCostHeads,lc_cost_heads } = useBusinessInfo();
 
-    const { filteredPurchaseOrders, searchPurchaseOrderForLc,isLoading} = usePurchaseOrder();
+    const { filteredPurchaseOrders, searchPurchaseOrderForLc, getPoMaterials, poMaterials,isLoading: isPoLoading} = usePurchaseOrder();
 
     const props = defineProps({
       form: { type: Object, required: true },
@@ -57,6 +58,11 @@ onMounted(() => {
   watchEffect(() => {
     fetchPo('');
   });
+  
+  watchEffect(() => {
+    if(props.form.scm_po_id) getPoMaterials(props.form.scm_po_id);
+  });
+
 });
 watch(lc_cost_heads, (newVal, oldVal) => {
   newVal.forEach((lc_cost_head, index) => {
@@ -92,20 +98,38 @@ function fetchPo(search, loading = false) {
 }
 
 //watch scmPo
-watch(() => props.form.scmPo, (newVal, oldVal) => {
-  if (newVal) {
-    props.form.scm_po_id = newVal.id;
-    if (newVal.scmVendor) {
-      props.form.scmVendor = newVal.scmVendor;
-      props.form.scm_vendor_id = newVal.scm_vendor_id;
-      }
-    if (newVal.scmWarehouse) {
-      props.form.scmWarehouse = newVal.scmWarehouse;
-      props.form.scm_warehouse_id = newVal.scm_warehouse_id;
-      props.form.acc_cost_center_id = newVal.scmWarehouse.acc_cost_center_id;
-      }
+// watch(() => props.form.scmPo, (newVal, oldVal) => {
+//   if (newVal) {
+//     props.form.scm_po_id = newVal.id;
+//     if (newVal.scmVendor) {
+//       props.form.scmVendor = newVal.scmVendor;
+//       props.form.scm_vendor_id = newVal.scm_vendor_id;
+//       }
+//     if (newVal.scmWarehouse) {
+//       props.form.scmWarehouse = newVal.scmWarehouse;
+//       props.form.scm_warehouse_id = newVal.scm_warehouse_id;
+//       props.form.acc_cost_center_id = newVal.scmWarehouse.acc_cost_center_id;
+//       }
+//     }
+//   });
+
+  function poChange(){
+    let newVal = props.form.scmPo;
+    props.form.scm_po_id = newVal?.id;
+    if (newVal) 
+    {
+      if (newVal.scmVendor) {
+        props.form.scmVendor = newVal.scmVendor;
+        props.form.scm_vendor_id = newVal.scm_vendor_id;
+        }
+      if (newVal.scmWarehouse) {
+        props.form.scmWarehouse = newVal.scmWarehouse;
+        props.form.scm_warehouse_id = newVal.scm_warehouse_id;
+        props.form.acc_cost_center_id = newVal.scmWarehouse.acc_cost_center_id;
+        }
+        if(props.form.scm_po_id) getPoMaterials(props.form.scm_po_id);
     }
-  });
+  }
 
   watchPostEffect(() => {
       props.form.document_value = props.form.cfr_value - props.form.lc_margin;
@@ -116,42 +140,39 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
 
 
   <!-- Basic information -->
-  <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
+  <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 md:gap-2">
     <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
-  </div>
-  <div class="input-group">
-      <label class="label-group">
+    <label class="label-group col-start-1">
         <span class="label-item-title">LC No <span class="text-red-500">*</span></span>
         <input type="text" v-model="form.lc_no" required class="form-input" name="scm_warehouse_id" :id="'lc_no'" />
         <!-- <Error v-if="errors?.lc_no" :errors="errors.lc_no" /> -->
       </label>
       <label class="label-group">
           <span class="label-item-title">LC Date <span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.lc_date" required class="form-input" name="lc_date" :id="'lc_date'" />
+          <!-- <input type="date" v-model="form.lc_date" required class="form-input" name="lc_date" :id="'lc_date'" /> -->
+          <VueDatePicker v-model="form.lc_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
           <!-- <Error v-if="errors?.lc_date" :errors="errors.lc_date"  /> -->
       </label>
       <label class="label-group">
         <span class="label-item-title">LC Expire Date <span class="text-red-500">*</span></span>
-           <input type="date" v-model="form.expire_date" required class="form-input" name="expire_date" :id="'expire_date'" />
+           <!-- <input type="date" v-model="form.expire_date" required class="form-input" name="expire_date" :id="'expire_date'" /> -->
+           <VueDatePicker v-model="form.expire_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
           <!-- <Error v-if="errors?.expire_date" :errors="errors.expire_date"  /> -->
       </label>
       <label class="label-group">
           <span class="label-item-title">Weight <span class="text-red-500">*</span></span>
-          <input type="text" placeholder="*** Metric Ton" v-model="form.weight" required class="form-input" name="weight" :id="'weight'" />
+          <input type="text"  placeholder="*** Metric Ton" v-model="form.weight" required class="form-input" name="weight" :id="'weight'" />
           <!-- <Error v-if="errors?.weight" :errors="errors.weight"  /> -->
       </label>
-      
-  </div>
-  <div class="input-group">    
-    <label class="label-group">
-        <span class="label-item-title">No. Of Packet</span>
-        <input type="text" v-model="form.no_of_packet" required class="form-input" name="no_of_packet" :id="'no_of_packet'" /> 
+      <label class="label-group">
+        <span class="label-item-title">No. Of Packet <span class="text-red-500">*</span></span>
+        <input type="number" step="0.01" v-model="form.no_of_packet" required class="form-input" name="no_of_packet" :id="'no_of_packet'" /> 
         <!-- <Error v-if="errors?.no_of_packet" :errors="errors.no_of_packet" /> -->
     </label>
     <label class="label-group">
           <span class="label-item-title">PO No <span class="text-red-500">*</span></span>
             <!-- <v-select :options="filteredPurchaseOrders" @search="fetchPo" placeholder="--Choose an option--" v-model="form.scmPo" label="ref_no" class="block form-input"> -->
-            <v-select :options="filteredPurchaseOrders" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmPo" label="ref_no" class="block form-input">
+            <v-select :options="filteredPurchaseOrders" placeholder="--Choose an option--" :loading="isPoLoading" v-model="form.scmPo" label="ref_no" class="block form-input" @update:modelValue="poChange">
               <template #search="{attributes,events}">
                 <input
                   class="vs__search"
@@ -173,9 +194,7 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
           <input type="number" v-model="form.assessment_value" required class="form-input" name="assessment_value" :id="'assessment_value'" />
           <!-- <Error v-if="errors?.assessment_value" :errors="errors.assessment_value"  /> -->
       </label>
-  </div>
-  <div class="input-group">    
-    <label class="label-group">
+      <label class="label-group">
         <span class="label-item-title">Issuing Bank <span class="text-red-500">*</span></span>
         <input type="text" v-model="form.issue_bank_name" required class="form-input" name="issue_bank_name" :id="'issue_bank_name'" /> 
         <!-- <Error v-if="errors?.issue_bank_name" :errors="errors.issue_bank_name" /> -->
@@ -196,19 +215,138 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
           <input type="text" v-model="form.discounting_bank_name" required class="form-input" name="discounting_bank_name" :id="'discounting_bank_name'" />
           <!-- <Error v-if="errors?.discounting_bank_name" :errors="errors.discounting_bank_name"  /> -->
       </label>
-  </div>
-  <div class="input-group !w-1/2">    
-    <label class="label-group">
+      <label class="label-group">
         <span class="label-item-title">Party Name</span>
         <input type="text" readonly :value="form.scmVendor?.name" required class="form-input vms-readonly-input" name="scmVendor"/> 
         <!-- <Error v-if="errors?.scm_vendor_id" :errors="errors.scm_vendor_id" /> -->
     </label>
     <label class="label-group">
-          <span class="label-item-title">Attachment</span>
+          <span class="label-item-title">Attachment <template v-if="form.attachment">
+                    <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+form?.attachment">{{
+                        (typeof $props.form?.attachment === 'string')
+                            ? '('+$props.form?.attachment.split('/').pop()+')'
+                            : ''
+                    }}</a>
+              </template></span>
           <input type="file" @input="handleAttachmentChange" class="form-input" name="attachment" :id="'attachment'" /> 
           <!-- <Error v-if="errors?.attachment" :errors="errors.attachment"  /> -->
       </label>
+    <label class="label-group">
+      <span class="label-item-title">PI Ref No <span class="text-red-500">*</span></span>
+      <input type="text" v-model="form.pi_ref_no" required class="form-input" name="pi_ref_no" :id="'pi_ref_no'" />
+      <!-- <Error v-if="errors?.lc_no" :errors="errors.lc_no" /> -->
+    </label>
+    <label class="label-group">
+      <span class="label-item-title">Expected Shipment Date <span class="text-red-500">*</span></span>
+         <!-- <input type="date" v-model="form.expire_date" required class="form-input" name="expire_date" :id="'expire_date'" /> -->
+         <VueDatePicker v-model="form.expected_shipment_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
+        <!-- <Error v-if="errors?.expire_date" :errors="errors.expire_date"  /> -->
+    </label>
+    <label class="label-group">
+      <span class="label-item-title">Shipment Date <span class="text-red-500">*</span></span>
+         <!-- <input type="date" v-model="form.expire_date" required class="form-input" name="expire_date" :id="'expire_date'" /> -->
+         <VueDatePicker v-model="form.shipment_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
+        <!-- <Error v-if="errors?.expire_date" :errors="errors.expire_date"  /> -->
+    </label>
   </div>
+
+
+  <!-- <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
+    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
+  </div>
+  <div class="input-group">
+      <label class="label-group">
+        <span class="label-item-title">LC No <span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.lc_no" required class="form-input" name="scm_warehouse_id" :id="'lc_no'" />
+      </label>
+      <label class="label-group">
+          <span class="label-item-title">LC Date <span class="text-red-500">*</span></span>
+          <VueDatePicker v-model="form.lc_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
+      </label>
+      <label class="label-group">
+        <span class="label-item-title">LC Expire Date <span class="text-red-500">*</span></span>
+           <VueDatePicker v-model="form.expire_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
+      </label>
+      <label class="label-group">
+          <span class="label-item-title">Weight <span class="text-red-500">*</span></span>
+          <input type="text" placeholder="*** Metric Ton" v-model="form.weight" required class="form-input" name="weight" :id="'weight'" />
+      </label>
+      
+  </div>
+  <div class="input-group">    
+    <label class="label-group">
+        <span class="label-item-title">No. Of Packet</span>
+        <input type="text" v-model="form.no_of_packet" required class="form-input" name="no_of_packet" :id="'no_of_packet'" /> 
+    </label>
+    <label class="label-group">
+          <span class="label-item-title">PO No <span class="text-red-500">*</span></span>
+            <v-select :options="filteredPurchaseOrders" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmPo" label="ref_no" class="block form-input">
+              <template #search="{attributes,events}">
+                <input
+                  class="vs__search"
+                  :required="!form.scmPo"
+                  v-bind="attributes"
+                  v-on="events"
+                />
+              </template>
+            </v-select>
+      </label>
+      <label class="label-group">
+        <span class="label-item-title">Invoice Value <span class="text-red-500">*</span></span>
+        <input type="number" v-model="form.invoice_value" required class="form-input" name="invoice_value" :id="'invoice_value'"/>
+    </label>
+      <label class="label-group">
+          <span class="label-item-title">Assessment Value <span class="text-red-500">*</span></span>
+          <input type="number" v-model="form.assessment_value" required class="form-input" name="assessment_value" :id="'assessment_value'" />
+      </label>
+  </div>
+  <div class="input-group">    
+    <label class="label-group">
+        <span class="label-item-title">Issuing Bank <span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.issue_bank_name" required class="form-input" name="issue_bank_name" :id="'issue_bank_name'" /> 
+
+    </label>
+    <label class="label-group">
+          <span class="label-item-title">Advising Bank <span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.advising_bank_name" required class="form-input" name="advising_bank_name" :id="'advising_bank_name'" />
+
+      </label>
+      
+      <label class="label-group">
+        <span class="label-item-title">Beneficiary Bank <span class="text-red-500">*</span></span>
+        <input type="text" v-model="form.beneficiary_bank_name" required class="form-input" name="beneficiary_bank_name" :id="'beneficiary_bank_name'" />
+
+    </label>
+      <label class="label-group">
+          <span class="label-item-title">Discounting Bank <span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.discounting_bank_name" required class="form-input" name="discounting_bank_name" :id="'discounting_bank_name'" />
+
+      </label>
+  </div>
+  <div class="input-group !w-1/2">    
+    <label class="label-group">
+        <span class="label-item-title">Party Name</span>
+        <input type="text" readonly :value="form.scmVendor?.name" required class="form-input vms-readonly-input" name="scmVendor"/> 
+    </label>
+    <label class="label-group">
+          <span class="label-item-title">Attachment</span>
+          <input type="file" @input="handleAttachmentChange" class="form-input" name="attachment" :id="'attachment'" /> 
+      </label>
+    <label class="label-group">
+      <span class="label-item-title">PI Ref No <span class="text-red-500">*</span></span>
+      <input type="text" v-model="form.pi_ref_no" required class="form-input" name="pi_ref_no" :id="'pi_ref_no'" />
+    </label>
+    <label class="label-group">
+      <span class="label-item-title">Expected Shipment Date <span class="text-red-500">*</span></span>
+         <VueDatePicker v-model="form.expected_shipment_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
+    </label>
+    <label class="label-group">
+      <span class="label-item-title">Shipment Date <span class="text-red-500">*</span></span>
+         <VueDatePicker v-model="form.shipment_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
+    </label>
+
+
+  </div> -->
 
 
   <div id="customDataTable">
@@ -280,6 +418,33 @@ watch(() => props.form.scmPo, (newVal, oldVal) => {
         </table>
       <!-- </fieldset> -->
     </div>
+  </div>
+
+  <div class="grid grid-cols-1" >
+    <fieldset class="form-fieldset">
+      <legend class="form-legend"> Material Details </legend>
+
+        <table class="w-full whitespace-no-wrap" id="table" v-if="poMaterials?.length">
+          <thead>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              <th class="w-5/12 px-4 align-center">Material Name</th>
+              <th class="w-5/12 px-4 align-center">HS Code</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+            <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(poMaterial, index) in poMaterials" :key="index">
+              
+              <td class="px-1 py-1">{{ poMaterial?.scmMaterial?.name }}</td>
+              <td class="px-1 py-1">{{ poMaterial?.scmMaterial?.hs_code }}</td>
+              <!-- <td class="px-1 py-1"><input type="text" class="form-input" required v-model.trim="des.value" placeholder="Value" /></td> -->
+              
+            </tr>
+          </tbody>
+        </table>
+        <div v-else class="py-10  text-center rounded-md">
+          <p class="text-md font-bold">{{ form.scm_po_id && !isPoLoading ? 'No Material Found' : 'Please Select PO No' }}</p>
+        </div>
+    </fieldset>
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>

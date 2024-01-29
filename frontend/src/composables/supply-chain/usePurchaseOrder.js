@@ -11,6 +11,7 @@ export default function usePurchaseOrder() {
     const BASE = 'scm' 
     const router = useRouter();
     const purchaseOrders = ref([]);
+    const poMaterials = ref([]);
     const filteredPurchaseOrders = ref([]);
     const $loading = useLoading();
     const isTableLoading = ref(false);
@@ -339,6 +340,27 @@ export default function usePurchaseOrder() {
             isLoading.value = false;
         }
     }
+
+    async function getPoMaterials(poId) {
+        // const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-po-material-by-po-id`,{
+                params: {
+                    scm_po_id: poId
+                },
+            });
+            poMaterials.value =data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            isLoading.value = false;
+        }
+    }
         
 
     return {
@@ -356,6 +378,8 @@ export default function usePurchaseOrder() {
         getMaterialList,
         prMaterialList,
         getLineData,
+        getPoMaterials,
+        poMaterials,
         materialObject,
         poLineObject,
         termsObject,
