@@ -9,9 +9,11 @@ use Modules\Accounts\Entities\AccAccount;
 use Modules\Accounts\Entities\AccBalanceAndIncomeLine;
 use Modules\Accounts\Entities\AccCostCenter;
 use Modules\Accounts\Entities\AccFixedAsset;
+use Modules\Accounts\Entities\AccLedgerEntry;
 use Modules\Accounts\Services\CostCenterSummaryService;
 use Modules\Accounts\Services\DayBookService;
 use Modules\Accounts\Services\LedgerService;
+use Modules\Accounts\Services\PaymentReceiptService;
 use Modules\Accounts\Services\TrialBalanceService;
 
 class AisReportController extends Controller
@@ -22,11 +24,11 @@ class AisReportController extends Controller
     public function dayBook(Request $request): JsonResponse
     {
         try {
-            $ledgetEntries = (new DayBookService)->handleDayBookService();
+            $ledgerEntries = (new DayBookService)->handleDayBookService();
 
             return response()->json([
                 'status' => 'success',
-                'value'  => $ledgetEntries,
+                'value'  => $ledgerEntries,
             ], 200);
         }
         catch (\Exception $e)
@@ -41,11 +43,11 @@ class AisReportController extends Controller
     public function ledger(Request $request): JsonResponse
     {
         try {
-            $ledgetEntries = (new LedgerService)->handleLedgerService();
+            $ledgerEntries = (new LedgerService)->handleLedgerService();
 
             return response()->json([
                 'status' => 'success',
-                'value'  => $ledgetEntries,
+                'value'  => $ledgerEntries,
             ], 200);
         }
         catch (\Exception $e)
@@ -60,11 +62,11 @@ class AisReportController extends Controller
     public function trialBalance(Request $request): JsonResponse
     {
         try {
-            $ledgetEntries = (new TrialBalanceService)->handleTrialBalanceService('trial_balance');
+            $ledgerEntries = (new TrialBalanceService)->handleTrialBalanceService('trial_balance');
 
             return response()->json([
                 'status' => 'success',
-                'value'  => $ledgetEntries,
+                'value'  => $ledgerEntries,
             ], 200);
         }
         catch (\Exception $e)
@@ -76,15 +78,15 @@ class AisReportController extends Controller
     public function incomeStatement()
     {
         try {
-            $ledgetEntries = (new TrialBalanceService)->handleTrialBalanceService('income_statement')->groupBy('value_type')->mapWithKeys(function ($items, $key)
+            $ledgerEntries = (new TrialBalanceService)->handleTrialBalanceService('income_statement')->groupBy('value_type')->mapWithKeys(function ($items, $key)
             {
                 $key == 'C' ? $key = 'incomes' : $key = 'expense';
 
                 return [$key => $items];
             });
 
-            $incomeHeads  = $ledgetEntries['incomes'];
-            $expenseHeads = $ledgetEntries['expense'];
+            $incomeHeads  = $ledgerEntries['incomes'];
+            $expenseHeads = $ledgerEntries['expense'];
             $totalIncome  = $incomeHeads->pluck('closing_balance_amount')->sum();
             $totalExpense = $expenseHeads->pluck('closing_balance_amount')->sum();
 
@@ -98,15 +100,15 @@ class AisReportController extends Controller
             $expenseOnSales   = $expenseHeads->firstWhere('line_id', $expenseOnSalesId)['closing_balance_amount'];
             $expenseOnService = $expenseHeads->firstWhere('line_id', $expenseOnServiceId)['closing_balance_amount'];
 
-            $ledgetEntries['sale_performance']    = $this->setProfitLoss($incomeOnSales, $expenseOnSales, '_on_sale', $incomeOnSalesId, $expenseOnSalesId);
-            $ledgetEntries['service_performance'] = $this->setProfitLoss($incomeOnService, $expenseOnService, '_on_service', $incomeOnServiceId, $expenseOnServiceId);
-            $ledgetEntries['performance']         = $this->setProfitLoss($totalIncome, $totalExpense);
-            $ledgetEntries['grand_total_income']  = $totalIncome + $ledgetEntries['performance']['loss'];
-            $ledgetEntries['grand_total_expense'] = $totalExpense + $ledgetEntries['performance']['profit'];
+            $ledgerEntries['sale_performance']    = $this->setProfitLoss($incomeOnSales, $expenseOnSales, '_on_sale', $incomeOnSalesId, $expenseOnSalesId);
+            $ledgerEntries['service_performance'] = $this->setProfitLoss($incomeOnService, $expenseOnService, '_on_service', $incomeOnServiceId, $expenseOnServiceId);
+            $ledgerEntries['performance']         = $this->setProfitLoss($totalIncome, $totalExpense);
+            $ledgerEntries['grand_total_income']  = $totalIncome + $ledgerEntries['performance']['loss'];
+            $ledgerEntries['grand_total_expense'] = $totalExpense + $ledgerEntries['performance']['profit'];
 
             return response()->json([
                 'status' => 'success',
-                'value'  => $ledgetEntries,
+                'value'  => $ledgerEntries,
             ], 200);
         }
         catch (\Exception $e)
@@ -222,8 +224,23 @@ class AisReportController extends Controller
         }
     }
 
-    public function receivedPaymentSummary(Request $request){
-        $costCentersInfo = (new TrialBalanceService)->handleTrialBalanceService($request); 
+    public function paymentReceiptSummary(Request $request){
+        try{
+            $paymentReceipts = (new PaymentReceiptService)->handlePaymentReceiptSummary($request); 
+
+            return response()->json([
+                'status' => 'success',
+                'value'  => $paymentReceipts,
+            ], 200);            
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+
+
+
+        // return $currentLedgers; 
 
     }
 
