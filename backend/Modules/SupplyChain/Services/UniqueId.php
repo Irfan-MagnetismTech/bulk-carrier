@@ -44,6 +44,7 @@ class UniqueId
 
                 $uniqueKey = $prefix . '-1';
             }
+
             DB::commit();
 
             return $uniqueKey;

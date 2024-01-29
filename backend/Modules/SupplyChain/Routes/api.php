@@ -150,18 +150,18 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
 
 Route::get('insert-ref-no', function () {
     //insert a user
-    // try {
-    //     DB::beginTransaction();
-    //     $user = new User();
-    //     $user->name = Faker\Factory::create()->name;
-    //     $user->email = Faker\Factory::create()->email;
-    //     $user->password = Hash::make('12345678');
-    //     $user->save();
-    //     DB::commit();
-    // } catch (\Exception $e) {
-    //     DB::rollBack();     
-    //     throw $e;
-    // }
-    return User::count();
+    try {
+        DB::beginTransaction();
+        $user = new User();
+        $user->name = Faker\Factory::create()->name;
+        $user->email = Faker\Factory::create()->email;
+        $user->password = Hash::make('12345678');
+        $user->save();
+        DB::commit();
+    } catch (\Exception $e) {
+        DB::rollBack();     
+        throw $e;
+    }
+    // return User::count();
 })->name('insertRefNo');
 require __DIR__ . '/robiul.php';
