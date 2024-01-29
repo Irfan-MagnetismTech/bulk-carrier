@@ -431,7 +431,7 @@
 
 
   <div class="mt-3 md:mt-8" v-if="form?.scmPoLines?.length">
-      <h4 class="text-md font-semibold uppercase mb-2">Purchase Order Information</h4>
+      <h4 class="text-md font-semibold uppercase mb-2 text-center border-2 rounded-md border-gray-400 py-2 mb-0">Purchase Order Information</h4>
       
       <div v-for="(scmPoLine, index) in form.scmPoLines" :key="index"  class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
 
@@ -462,12 +462,12 @@
             <table class="w-full whitespace-no-wrap" >
               <tbody>
                 <tr class="w-full">
-                    <th class="py-3 align-center !w-4/12">Material Details <br/> <span class="!text-[8px]"></span></th>
+                    <th class="py-3 align-center !w-3/12">Material Details <br/> <span class="!text-[8px]"></span></th>
                     <th class="py-3 align-center !w-2/12"><nobr>Required Date</nobr></th>
                     <th class="py-3 align-center !w-2/12">Other Info</th>
-                    <th class="py-3 align-center">Tolarence <br/> (%)</th>
+                    <th class="py-3 align-center !w-1/12">Tolarence <br/> (%)</th>
                     <th class="py-3 align-center !w-2/12">Order Details</th>
-                    <th class="py-3 align-center !w-1/12">Total Price</th>
+                    <th class="py-3 align-center !w-2/12">Total Price</th>
                     <th class="!w-1/12">
                       <button type="button" @click="addMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
@@ -481,9 +481,9 @@
                     <td class="">
                       <table>
                         <tr>
-                          <td>Material - Code</td>
+                          <td><nobr>Material - Code</nobr></td>
                           <td>
-                            <v-select :options="materialList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial" label="material_name_and_code" class="block form-input" :menu-props="{ minWidth: '250px', minHeight: '400px' }" @update:modelValue="changeMaterial(index,itemIndex)">
+                            <v-select :options="materialList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial" label="material_name_and_code" class="block form-input-sm" :menu-props="{ minWidth: '250px', minHeight: '400px' }" @update:modelValue="changeMaterial(index,itemIndex)">
                               <template #search="{attributes, events}">
                                   <input
                                       class="vs__search"
@@ -511,14 +511,14 @@
                         <tr>
                           <td>Model</td>
                           <td>
-                              <input type="text" v-model="form.scmPoLines[index].scmPoItems[itemIndex].model" class="form-input">
+                              <input type="text" v-model="form.scmPoLines[index].scmPoItems[itemIndex].model" class="form-input-sm">
                           </td>
                         </tr>
                       </table>
                     </td>
                     <td>
                       <!-- <input type="date" v-model="form.scmPoLines[index].scmPoItems[itemIndex].required_date" class="form-input"> -->
-                      <VueDatePicker v-model="form.scmPoLines[index].scmPoItems[itemIndex].required_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+                      <VueDatePicker v-model="form.scmPoLines[index].scmPoItems[itemIndex].required_date" class="!text-xs" required auto-apply :enable-time-picker="false" hide-input-icon placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
                     </td>
                     <td>
                       <table>
@@ -533,26 +533,26 @@
                       </table>
                     </td>
                     <td>
-                      <input type="number" v-model="form.scmPoLines[index].scmPoItems[itemIndex].tolarence_level" min=1 class="form-input">  
+                      <input type="number" v-model="form.scmPoLines[index].scmPoItems[itemIndex].tolarence_level" min=1 class="!text-xs form-input text-right">  
                     </td>
                     <td>
                       <table>
                         <tr>
                           <td class="">Qty</td>
                           <td>
-                             <input type="number" required v-model="form.scmPoLines[index].scmPoItems[itemIndex].quantity" min=1 class="form-input text-right" :max="form.scmPoLines[index].scmPoItems[itemIndex].max_quantity" :class="{'border-2': form.scmPoLines[index].scmPoItems[itemIndex].quantity > form.scmPoLines[index].scmPoItems[itemIndex].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].scmPoItems[itemIndex].quantity > form.scmPoLines[index].scmPoItems[itemIndex].max_quantity}">
+                             <input type="number" required v-model="form.scmPoLines[index].scmPoItems[itemIndex].quantity" min=1 class="!text-xs form-input text-right" :max="form.scmPoLines[index].scmPoItems[itemIndex].max_quantity" :class="{'border-2': form.scmPoLines[index].scmPoItems[itemIndex].quantity > form.scmPoLines[index].scmPoItems[itemIndex].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].scmPoItems[itemIndex].quantity > form.scmPoLines[index].scmPoItems[itemIndex].max_quantity}">
                           </td>
                         </tr>
                         <tr>
                           <td>Rate</td>
                           <td>
-                            <input type="number" required v-model="form.scmPoLines[index].scmPoItems[itemIndex].rate" min=1 class="form-input text-right">
+                            <input type="number" required v-model="form.scmPoLines[index].scmPoItems[itemIndex].rate" min=1 class="!text-xs form-input text-right">
                           </td>
                         </tr>
                       </table>
                     </td>
                     <td>
-                      <input type="text" readonly v-model="form.scmPoLines[index].scmPoItems[itemIndex].total_price" class="form-input vms-readonly-input text-right">
+                      <input type="text" readonly v-model="form.scmPoLines[index].scmPoItems[itemIndex].total_price" class="!text-xs form-input vms-readonly-input text-right">
                     </td>
                     <td class="px-1 py-1 text-center">
                       <button type="button" @click="removeMaterial(index,itemIndex)" class="remove_button">
@@ -578,8 +578,49 @@
         </div>
       </div>
     </div>
+    <div v-for="(scmPoLine, index) in form.scmPoLines" :key="index"  class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
 
-  <div id="customDataTableMat" ref="customDataTableirf" class="!max-w-screen" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
+
+<div class="relative my-3">
+  <div class="dt-responsive table-responsive">
+    <table class="w-full whitespace-no-wrap" >
+      <tbody>
+          <tr>
+            <td class="!w-10/12 text-right">Sub Total</td>
+            <td class="text-right">
+              <input type="text" readonly class="vms-readonly-input form-input text-right" v-model="form.sub_total">
+            </td>
+          </tr>
+          <tr>
+            <td class="!w-10/12 text-right">Less: Discount</td>
+            <td class="text-right">
+              <input type="text" class="form-input" v-model="form.discount">
+            </td>
+          </tr>
+          <tr>
+            <td class="!w-10/12 text-right">Total Amount</td>
+            <td class="">
+              <input type="text" readonly class="vms-readonly-input form-input text-right" v-model="form.total_amount">
+            </td>
+          </tr>
+          <tr>
+            <td class="!w-10/12 text-right">Add: VAT</td>
+            <td class="text-right">
+              <input type="text" class="form-input text-right" v-model="form.vat">
+            </td>
+          </tr>
+          <tr>
+            <td class="!w-10/12 text-right">Net Amount</td>
+            <td class="text-right">
+              <input type="text" readonly class="vms-readonly-input form-input text-right" v-model="form.net_amount">
+            </td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+  <!-- <div id="customDataTableMat" ref="customDataTableirf" class="!max-w-screen" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
     <div class="table-responsive">
       <fieldset class="form-fieldset">
         <legend class="form-legend">---</legend>
@@ -620,7 +661,7 @@
         </table>
       </fieldset> 
     </div>
-  </div> 
+  </div>  -->
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen">
@@ -730,4 +771,33 @@
       border-radius: 12rem!important;
       width: 1.3rem!important;
     }   
+
+    .dp__input {
+      font-size: 0.75rem!important;
+    }
+
+    :root{
+      --dp-font-size: 0.75rem!important;
+    }
+    >>> {
+      --vs-controls-color: #374151;
+      --vs-border-color: #4b5563;
+    
+      --vs-dropdown-bg: #282c34;
+      --vs-dropdown-color: #eeeeee;
+      --vs-dropdown-option-color: #eeeeee;
+    
+      --vs-selected-bg: #664cc3;
+      --vs-selected-color: #374151;
+    
+      --vs-search-input-color: #4b5563;
+    
+      --vs-dropdown-option--active-bg: #664cc3;
+      --vs-dropdown-option--active-color: #eeeeee;
+      
+      --dp-border-color: #4b5563;
+      --dp-border-color-hover: #4b5563;
+      --dp-icon-color: #4b5563;
+      --dp-font-size: 0.75rem!important;
+    }
 </style>
