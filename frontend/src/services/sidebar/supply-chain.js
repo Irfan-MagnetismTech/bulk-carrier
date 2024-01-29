@@ -238,6 +238,20 @@ export default [
                 subSubMenu: []
             },
 
+            
+            {
+                route: `${BASE}.work-orders.index`,
+                label: 'Work Order',
+                preIcon: icons.User,
+                postIcon: icons.DownArrow,
+                is_active: false,
+                is_open: false,
+                permissionKey: '',
+                subSubMenu: []
+            },
+
+
+
 
 
 

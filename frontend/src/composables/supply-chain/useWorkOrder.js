@@ -302,12 +302,13 @@ export default function useWorkOrder() {
     }
 
     
-    async function getServiceList(wrId,woId = null) {
+    async function getServiceList(wrId, wcsId=null, woId = null) {
         isLoading.value = true;
         try {
             const {data, status} = await Api.get(`/${BASE}/search-wr-wise-service`,{
                 params: {
                     scm_wr_id: wrId,
+                    scm_wcs_id: wcsId,
                     scm_wo_id: woId,
                 },
             });
@@ -321,13 +322,14 @@ export default function useWorkOrder() {
         }
     }
 
-    async function getLineData(wrId, wcsId = null) { 
+    async function getLineData(wrId, wcsId = null, woId = null) { 
         isLoading.value = true;
         try {
             const {data, status} = await Api.get(`/${BASE}/get-wo-line-datas`,{
                 params: {
                     scm_wr_id: wrId,
                     scm_wcs_id: wcsId,
+                    scm_wo_id: woId,
                 },
             });
             return data.value;  
