@@ -27,7 +27,7 @@ class ScmWcsQuotationRequest extends FormRequest
         return [
             //
             'attachment' => 'nullable|mimes:xlsx,pdf,jpg,png,jpeg,doc,docx',
-            'terms_and_condition' => 'required|max:300',            
+            'terms_and_condition' => 'required|max:250',            
             'remarks' => 'required|max:300',
         ];
     }

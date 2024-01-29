@@ -519,49 +519,27 @@ class ScmPoController extends Controller
         return response()->success('data', $scmPr, 200);
     }
 
-        /**
+    /**
      * Show the specified resource.
      * @param ScmPo $purchaseOrder
      * @return JsonResponse
      */
-    public function getPoMaterialByPoId($id): JsonResponse
+    public function getPoMaterialByPoId(Request $request): JsonResponse
     {
         try {
-            $scmPoItems= ScmPoItem::with('scmMaterial')->where('scm_po_id', $id)->get();
-
-            // $scmPoLines = $purchaseOrder->scmPoLines->map(function ($items) {
-            //     $datas = $items;
-
-            //     $adas = $items->scmPoItems->map(function ($item) {
-            //         return [
-            //             'scm_material_id' => $item['scm_material_id'],
-            //             'scmMaterial' => $item['scmMaterial'],
-            //             'unit' => $item['unit'],
-            //             'brand' => $item['brand'],
-            //             'model' => $item['model'],
-            //             'quantity' => $item['quantity'],                       
-            //         ];
-            //     })->unique('scm_material_id')->values()->all();
-            //     //data_forget scmPoItems
-
-            //     data_forget($items, 'scmPoItems');
-            //     $datas['scmPoItems'] = $adas;
-
-            //     return $datas;
-            // });
+            $scmPoItems= ScmPoItem::with('scmMaterial')->where('scm_po_id', $request->scm_po_id)->get();
 
             $data = $scmPoItems->map(function ($item) {
                 return [
+                    'scmMaterial' => $item['scmMaterial'],
                     'scm_po_id' => $item['scm_po_id'],
                     'scm_material_id' => $item['scm_material_id'],
-                    'scmMaterial' => $item['scmMaterial'],
                     'unit' => $item['unit'],
                     'brand' => $item['brand'],
                     'model' => $item['model'],
                     'quantity' => $item['quantity'],
                 ];
             })->unique('scm_material_id')->values()->all();
-
 
 
             return response()->success('data', $data, 200);

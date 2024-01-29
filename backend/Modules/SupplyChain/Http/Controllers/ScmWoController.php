@@ -453,4 +453,71 @@ class ScmWoController extends Controller
 
         return response()->success('data', $scmWr, 200);
     }
+
+    
+    // for closing Work Order
+    public function closeWo(Request $request): JsonResponse
+    {
+        try {
+            $work_order = ScmWo::find($request->id);
+            $work_order->update([
+                // 'is_closed' => 1,
+                'status' => 'Closed',
+                'closed_by' => auth()->user()->id,
+                'closed_at' => now(),
+                'closing_remarks' => $request->closing_remarks,
+            ]);
+
+            $work_order->load('scmWoItems');
+            foreach ($work_order->scmWoItems as $woItem) {
+                if ($woItem->status === 'Closed') {
+                    continue;
+                }
+                $woItem->update([
+                    // 'is_closed' => 1,
+                    'status' => 'Closed',
+                    'closed_by' => auth()->user()->id,
+                    'closed_at' => now(),
+                    'closing_remarks' => $request->closing_remarks,
+                ]);
+            }
+            return response()->success('Data updated sucessfully!', $work_order, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function closeWoItem(Request $request): JsonResponse
+    {
+        try {
+            $woItem = ScmWoItem::find($request->id);
+            $woItem->update([
+                // 'is_closed' => 1,
+                'status' => 'Closed',
+                'closed_by' => auth()->user()->id,
+                'closed_at' => now(),
+                'closing_remarks' => $request->closing_remarks,
+            ]);
+
+            $work_order = ScmWo::find($request->parent_id);
+            $work_order->load('scmWoItems');
+
+            $woItems = $work_order->scmWoItems->count();
+            $sumIsClosed = $work_order->scmWoItems->where('status', 'Closed')->count();
+
+            if ($woItems === $sumIsClosed) {
+                $work_order->update([
+                    // 'is_closed' => 1,
+                    'status' => 'Closed',
+                    'closed_by' => auth()->user()->id,
+                    'closed_at' => now(),
+                    'closing_remarks' => "All lines are closed",
+                ]);
+            }
+
+            return response()->success('Data updated sucessfully!', [$woItems, $sumIsClosed], 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }
