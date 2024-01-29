@@ -95,6 +95,7 @@ class ScmWoController extends Controller
                         $max_quantity =  $item->scmWrLine->quantity -  $item->scmWrLine->scmWoItems->sum('quantity') + $item->quantity;
                     }
                     return [
+                        'id' => $item['id'],
                         'scm_service_id' => $item['scm_service_id'],
                         'scmService' => $item['scmService'],
                         'closedBy' => $item['closedBy'],
@@ -494,6 +495,7 @@ class ScmWoController extends Controller
 
     public function closeWoItem(Request $request): JsonResponse
     {
+        // dd($request->all());
         try {
             $woItem = ScmWoItem::find($request->id);
             $woItem->update([
