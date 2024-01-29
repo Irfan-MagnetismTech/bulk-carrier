@@ -22,6 +22,11 @@ class ScmWoItem extends Model
         'wr_composite_key',
         'wo_composite_key',
         'wcs_composite_key',
+        'closed_at',
+        'closed_by',
+        'is_closed',
+        'closing_remarks',
+        'status',
     ];
 
     public function scmService(): BelongsTo
