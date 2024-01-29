@@ -46,7 +46,10 @@ class ScmLcRecord extends Model
         'market_rate',
         'business_unit',
         'attachment',
-        'created_by'
+        'created_by',
+        'pi_ref_no',
+        'expected_shipment_date',
+        'shipment_date',
     ];
 
     public function scmLcRecordLines(): HasMany
