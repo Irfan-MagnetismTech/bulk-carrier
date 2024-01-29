@@ -188,18 +188,31 @@ const navigateSupplierSelection = (csId) => {
   if(csId) router.push(routeOptions);
 };
 
-const navigateToPOCreate = (csId) => {
-  const pr_id = null; 
-  const cs_id = csId;
+const navigateSupplierSelectionShow = (csId) => {
   const routeOptions = {
-    name: 'scm.purchase-orders.create',
-    query: {
-      pr_id: null,
-      cs_id: cs_id
+    name: 'scm.supplier-selection.show',
+    params: {
+      csId: csId
     }
+    // query: {
+    //   csId: csId
+    // }
   };
-  router.push(routeOptions);
-};  
+  if(csId) router.push(routeOptions);
+};
+
+// const navigateToPOCreate = (csId) => {
+//   const pr_id = null; 
+//   const cs_id = csId;
+//   const routeOptions = {
+//     name: 'scm.purchase-orders.create',
+//     query: {
+//       pr_id: null,
+//       cs_id: cs_id
+//     }
+//   };
+//   router.push(routeOptions);
+// };  
 
 
 function confirmDelete(id) {
@@ -286,6 +299,7 @@ function confirmDelete(id) {
                 <div class="grid grid-flow-col-dense gap-x-2">
                   <button @click="navigateToQuotation(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Quotations</nobr></button>
                   <button @click="navigateSupplierSelection(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700" v-if="materialCsdata?.scmCsVendors?.length"><nobr>Select Supplier</nobr></button>
+                  <button @click="navigateSupplierSelectionShow(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700" v-if="materialCsdata?.scmCsVendors?.length"><nobr>Select Show</nobr></button>
                   <action-button :action="'edit'" :to="{ name: 'scm.material-cs.edit', params: { materialCsId: materialCsdata.id } }"></action-button>
                   <action-button @click="confirmDelete(materialCsdata.id)" :action="'delete'"></action-button>
                 </div>
