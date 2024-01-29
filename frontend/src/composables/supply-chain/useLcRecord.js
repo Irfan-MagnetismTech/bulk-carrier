@@ -57,6 +57,9 @@ export default function useLcRecord() {
         market_rate: 0.0,
         business_unit: null,
         created_by: null,
+        pi_ref_no: null,
+        expected_shipment_date: null,
+        shipment_date: null,
         scmLcRecordLines: [
                     ], 
     });
