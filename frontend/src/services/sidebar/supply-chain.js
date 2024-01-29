@@ -103,16 +103,16 @@ export default [
                 permissionKey: '',
                 subSubMenu: []
             },
-            {
-                route: `${BASE}.material-cs.index`,
-                label: 'Material CS',
-                preIcon: icons.User,
-                postIcon: icons.DownArrow,
-                is_active: false,
-                is_open: false,
-                permissionKey: '',
-                subSubMenu: []
-            },
+            // {
+            //     route: `${BASE}.material-cs.index`,
+            //     label: 'Material CS',
+            //     preIcon: icons.User,
+            //     postIcon: icons.DownArrow,
+            //     is_active: false,
+            //     is_open: false,
+            //     permissionKey: '',
+            //     subSubMenu: []
+            // },
             {
                 route: `${BASE}.purchase-orders.index`,
                 label: 'Purchase Order',

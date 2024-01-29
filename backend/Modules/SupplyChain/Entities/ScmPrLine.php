@@ -2,13 +2,10 @@
 
 namespace Modules\SupplyChain\Entities;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmPr;
-use Modules\SupplyChain\Entities\ScmPoLine;
 use Modules\SupplyChain\Entities\ScmMrrLine;
 use Modules\SupplyChain\Entities\ScmMaterial;
-use Modules\SupplyChain\Entities\ScmCsMaterial;
 use Modules\SupplyChain\Entities\ScmStockLedger;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,10 +16,8 @@ class ScmPrLine extends Model
     use HasFactory;
 
     protected $fillable = [
-        'scm_pr_id', 'scm_material_id', 'unit', 'brand', 'model',  'country_id', 'country_name', 'sample_file', 'drawing_no', 'part_no', 'specification', 'quantity', 'required_date', 'pr_composite_key', 'is_closed', 'closed_by', 'closed_at', 'closing_remarks', 'status'
+        'scm_pr_id', 'scm_material_id', 'unit', 'brand', 'model',  'country_id', 'country_name', 'sample_file', 'drawing_no', 'part_no', 'specification', 'quantity', 'required_date', 'pr_composite_key',
     ];
-
-    protected $appends = ['material_name_quantity_unit'];
 
     public function scmPr(): BelongsTo
     {
@@ -39,33 +34,13 @@ class ScmPrLine extends Model
         return $this->hasMany(ScmStockLedger::class, 'scm_material_id', 'scm_material_id');
     }
 
-    public function scmPoItems(): HasMany
+    public function scmPoLines(): HasMany
     {
-        return $this->hasMany(ScmPoItem::class, 'pr_composite_key', 'pr_composite_key');
+        return $this->hasMany(ScmPoLine::class, 'pr_composite_key', 'pr_composite_key');
     }
 
-    // public function scmMrrLines(): HasMany
-    // {
-    //     return $this->hasMany(ScmMrrLine::class, 'pr_composite_key', 'pr_composite_key');
-    // }
-
-    public function getMaterialNameQuantityUnitAttribute()
+    public function scmMrrLines(): HasMany
     {
-        return $this->scmMaterial->name . ' - ' . $this->quantity . ' - ' . $this->unit;
-    }
-
-    public function closedBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'closed_by', 'id');
-    }
-
-    public function scmCsmaterials(): HasMany
-    {
-        return $this->hasMany(ScmCsMaterial::class, 'pr_composite_key', 'pr_composite_key');
-    }
-
-    public function createdBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'created_by', 'id');
+        return $this->hasMany(ScmMrrLine::class, 'pr_composite_key', 'pr_composite_key');
     }
 }

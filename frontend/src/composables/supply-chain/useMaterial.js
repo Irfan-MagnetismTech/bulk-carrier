@@ -23,8 +23,7 @@ export default function useMaterial() {
             minimum_stock: 0,
             store_category: '',
             description: '',
-            sample_photo: null,
-            type: '',
+            sample_photo: null
         });
 
     const filterParams = ref(null);
@@ -200,7 +199,6 @@ export default function useMaterial() {
         formData.append('scm_material_category_id', form.scm_material_category_id);
         formData.append('material_code', form.material_code);
         formData.append('name', form.name);
-        formData.append('type', form.type);
         
             
         return formData;

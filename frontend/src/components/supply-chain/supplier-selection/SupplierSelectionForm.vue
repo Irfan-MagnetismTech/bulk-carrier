@@ -1,116 +1,103 @@
 <template>
 <div class="input-group">
-  <label class="label-group">
-        <span class="label-item-title font-bold">CS Ref<span class="text-red-500"> : </span></span>
-        <span class="label-item-title"> {{ form.ref_no }}</span>
+    <label class="label-group">
+        <span class="label-item-title">PR No<span class="text-red-500"> : </span></span>
+        <span class="label-item-title">{{ form.scmPr?.ref_no }}</span>  
     </label>
     <label class="label-group">
-        <span class="label-item-title font-bold">Warehouse<span class="text-red-500"> : </span></span>
-        <span class="label-item-title"> {{ form.scmWarehouse?.name }}</span>
+        <span class="label-item-title">Warehouse<span class="text-red-500"> : </span></span>
+        <span class="label-item-title">{{ form.scmWarehouse?.name }}</span>
     </label>
     <label class="label-group">
-        <span class="label-item-title font-bold">Expire Date<span class="text-red-500"> : </span></span>
-        <span class="label-item-title"> {{ formatDate(form.expire_date) }}</span>
+        <span class="label-item-title">Expire Date<span class="text-red-500"> : </span></span>
+        <span class="label-item-title">{{ form.expire_date }}</span>
     </label>
   </div>
 
   <div class="input-group">
     <label class="label-group">
-        <span class="label-item-title font-bold">Requirement Type<span class="text-red-500"> : </span></span>
-        <span class="label-item-title"> {{ form.priority }}</span>
+        <span class="label-item-title">CS REF<span class="text-red-500"> : </span></span>
+        <span class="label-item-title">{{ form.ref_no }}</span>
     </label>
     <label class="label-group">
-        <span class="label-item-title font-bold">Required Days<span class="text-red-500"> : </span></span>
-        <span class="label-item-title"> {{ form.required_days }}</span>
+        <span class="label-item-title">Requirement Type<span class="text-red-500"> : </span></span>
+        <span class="label-item-title">{{ form.priority }}</span>
     </label>
-    
     <label class="label-group">
-        <span class="label-item-title font-bold">Effective Date<span class="text-red-500"> : </span></span>
-        <span class="label-item-title"> {{ formatDate(form.effective_date) }}</span>
+        <span class="label-item-title">Required Days<span class="text-red-500"> : </span></span>
+        <span class="label-item-title">{{ form.required_days }}</span>
     </label>
   </div>
 
   <div class="input-group">
     <label class="label-group">
-        <span class="label-item-title font-bold">Special Instruction<span class="text-red-500"> : </span></span>
-        <span class="label-item-title"> {{ form.special_instructions }}</span>
+        <span class="label-item-title">Effective Date<span class="text-red-500"> : </span></span>
+        <span class="label-item-title">{{ form.effective_date }}</span>
+    </label>
+    <label class="label-group">
+        <span class="label-item-title">Special Instruction<span class="text-red-500"> : </span></span>
+        <span class="label-item-title">{{ form.special_instructions }}</span>
     </label>
   </div>
 
-<table class="min-w-full divide-y divide-gray-200 dark-disabled:divide-gray-700 mt-10">
-  <caption class="border-2 bg-green-400 uppercase">Comparative Statement</caption>
+<h2 class="py-10">Material Wise Terms</h2>
+<table class="min-w-full divide-y divide-gray-200 dark-disabled:divide-gray-700">
   <thead class="bg-gray-50 dark-disabled:bg-gray-800">
     <tr class="text-gray-600 dark-disabled:text-gray-400 text-sm leading-normal">
       <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
-        <nobr>Material Name</nobr>
+        Material Name
       </th>
-      <!-- <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
-       <nobr>PR No</nobr> 
-      </th> -->
       <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
         Unit
-      </th> 
+      </th>
       <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
         Quantity
       </th>
       <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
-        <nobr>Previous Selected Price</nobr>
+        Previous Selected Price
       </th>
-      <th colspan="2" scope="col" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (formData?.scmCsVendor)" :key="index">
-        <nobr>{{ vendorData[0].scmVendor?.name ?? ''}}</nobr>
-      </th>  
-      <th rowspan="2">
+      <th colspan="2" scope="col" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (formData?.scmCsVendor)" :key="index">{{ vendorData[0].scmVendor.name }}</th>  
+      <th v-if="form.purchase_center == 'Foreign'">
         Details
       </th>     
     </tr>
     <tr>
       <template v-for="(vendorData,index) in (formData?.scmCsVendor)" :key="index">
-          <th>Rate</th>
+          <th>Quantity</th>
           <th>Amount</th>
         </template>
     </tr>
   </thead>
   <tbody>
-    <template v-for="(materialprData,index1) in (formData?.scmCsMaterial)" :key="index1">
-      <template v-for="(materialData,name,index) in (materialprData)" :key="index">
-      <tr v-if="index == 0">
-        <td :rowspan="Object.keys(materialprData).length">{{ materialData[0].scmMaterial.name }}</td>
-        <!-- <td>{{ materialData[0].scmPr.ref_no  }}</td> -->
-        <td :rowspan="Object.keys(materialprData).length">{{ materialData[0].unit }}</td>
-        <td>{{ materialData[0].sum_quantity }}</td>
-        <td></td>
-        <template v-for="(materialVendorData,index11) in (formData?.scmCsMaterialVendor[index1][name])" :key="index11">
-            <td>{{ materialVendorData[0].negotiated_price }}</td>
-            <td>{{ materialVendorData[0].negotiated_price * materialData[0].sum_quantity}}</td>
-         </template>
-        <td :rowspan="Object.keys(materialprData).length">
-          <a @click="showModal(index1,name)" style="display: inline-block;cursor: pointer" class="relative tooltip">
-            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-            </svg>
-            <span class="tooltiptext">Details</span>
-          </a>
-        </td>
-      </tr>
-      <!-- <tr v-else>
-        <td>{{ materialData[0].scmPr.ref_no  }}</td>
-        <td>{{ materialData[0].quantity }}</td>
-        <td></td>
-        <template v-for="(materialVendorData,index11) in (formData?.scmCsMaterialVendor[index1][name])" :key="index11">
-            <td>{{ materialVendorData[0].negotiated_price }}</td>
-            <td>{{ materialVendorData[0].negotiated_price * materialData[0].quantity}}</td>
-         </template>
-      </tr> -->
-    </template>
-  </template>
+    <tr v-for="(materialData,index) in (formData?.scmCsMaterial)" :key="index">
+      <td>{{ materialData[0].scmMaterial.name }}</td>
+      <td>{{ materialData[0].unit }}</td>
+      <td>{{ materialData[0].quantity }}</td>
+      <td></td>
+      <template v-for="(materialVendorData,index1) in (formData?.scmCsMaterialVendor[index])" :key="index1">
+          <td>{{ materialVendorData[0].negotiated_price }}</td>
+          <td>{{ materialVendorData[0].negotiated_price * materialData[0].quantity}}</td>
+      </template>
+      <td v-if="form.purchase_center == 'Foreign'">
+        <a @click="showModal(index)" style="display: inline-block;cursor: pointer" class="relative tooltip">
+                  <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                  </svg>
+                  <span class="tooltiptext">Details</span>
+                </a>
+      </td>
+    </tr>
   </tbody>
   </table>  
-  <table class="min-w-full divide-y divide-gray-200 dark-disabled:divide-gray-700 mt-10">
-  <caption class="border-2 bg-green-400 uppercase">Other Conditions</caption>
+  <h2 class="py-10">Other Consditions</h2>
+  <table class="min-w-full divide-y divide-gray-200 dark-disabled:divide-gray-700">
   <thead class="bg-gray-50 dark-disabled:bg-gray-800">
     <tr class="text-gray-600 dark-disabled:text-gray-400 text-sm leading-normal">
-      <th class="px-6 py-3 text-center text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">Description</th>
-      <th class="px-6 py-3 text-center text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (formData?.scmCsVendor)" :key="index">{{ vendorData[0].scmVendor?.name }}</th>       
+      <th class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
+        Description
+      </th>
+    
+      <th class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (formData?.scmCsVendor)" :key="index">{{ vendorData[0].scmVendor.name }}</th>       
     </tr> 
   </thead>
   <tbody>
@@ -119,36 +106,36 @@
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].quotation_ref }}</td>
     </tr>
     <tr>
-      <td>Quotation Received Date</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ formatDate(VendoData[0].quotation_received_date) }}</td>
+      <td>Quotation Date</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].quotation_date }}</td>
     </tr>
     <tr>
-      <td>Offer Validity</td>
+      <td>Quotation Validity</td>
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].quotation_validity }}</td>
     </tr>
     <tr>
-      <td>Sourcing History</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].sourcing }}</td>
+      <td>Sourcing</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].quotation_ref }}</td>
     </tr>
     <tr>
       <td>Date Of RFQ</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ formatDate(VendoData[0].date_of_rfq) }}</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].date_of_rfq }}</td>
     </tr>
     <tr>
-      <td>Party Type</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].scmVendor.product_source_type }}</td>
+      <td>Vendor Type</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].vendor_type }}</td>
     </tr>
     <tr>
-      <td>Delivery Time</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].scmVendor.delivery_time }}</td>
+      <td>Quotation Received Date</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].quotations_received_date }}</td>
     </tr>
     <tr v-if="form.purchase_center == 'Foreign'">
       <td>Estimated Shipment Date</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ formatDate(VendoData[0].quotation_shipment_date) }}</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].quotation_shipment_date }}</td>
     </tr>
     <tr v-if="form.purchase_center == 'Foreign'">
-      <td>Port Of Loading</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].port_of_loading }}</td>
+      <td>Port Of Shipment</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].port_of_shipment }}</td>
     </tr>
     <tr v-if="form.purchase_center == 'Foreign'">
       <td>Port Of Discharge</td>
@@ -183,19 +170,11 @@
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].payment_method }}</td>
     </tr>
     <tr v-if="form.purchase_center != 'Foreign'">
-      <td>Inventory Type</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].stock_type }}</td>
-    </tr>
-    <tr v-if="form.purchase_center != 'Foreign'">
-      <td>Manufacturing Days</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].manufacturing_days }}</td>
-    </tr>
-    <tr v-if="form.purchase_center != 'Foreign'">
       <td>Credit Term</td>
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].credit_term }}</td>
     </tr>
-    <tr>
-      <td>Inco-term</td>
+    <tr v-if="form.purchase_center != 'Foreign'">
+      <td>Delivery Term</td>
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].delivery_term }}</td>
     </tr> 
     <tr v-if="form.purchase_center != 'Foreign'">
@@ -205,26 +184,6 @@
     <tr v-if="form.purchase_center != 'Foreign'">
       <td>Unloading Charge Bear By</td>
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].unloading_cost_bear_by }}</td>
-    </tr>
-    <tr v-if="form.purchase_center != 'Foreign'">
-      <td>Unloading Charge Bear By</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].unloading_cost_bear_by }}</td>
-    </tr>
-    <tr v-if="form.purchase_center != 'Foreign'">
-      <td>Offer Price</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].total_offered_price }}</td>
-    </tr>
-    <tr v-if="form.purchase_center != 'Foreign'">
-      <td>Freight</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].freight }}</td>
-    </tr>
-    <tr v-if="form.purchase_center != 'Foreign'">
-      <td>Total Offer Price</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].grand_total_offered_price }}</td>
-    </tr>
-    <tr v-if="form.purchase_center != 'Foreign'">
-      <td>Negotiated Price</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].total_negotiated_price }}</td>
     </tr>
     <tr>
       <td>Selected Vendor</td>
@@ -237,24 +196,30 @@
   <div class="input-group">
     <label class="label-group">
         <span class="label-item-title">Selection Ground<span class="text-red-500">*</span></span>
-          <v-select :options="selection_ground" placeholder="--Choose an option--" v-model="form.selection_ground" label="name" class="block form-input" :reduce="selection_ground => selection_ground.value">
-                <template #search="{attributes, events}">
-                    <input
-                        class="vs__search"
-                        v-bind="attributes"
-                        v-on="events"
-                        />
-                </template>
-              </v-select>
+        <input
+          type="text"
+          v-model="form.selection_ground"
+          class="form-input"
+          name="date"
+          :id="'expire_date'" />
+    </label>
+    <label class="label-group">
+        <span class="label-item-title">Auditor Remarks<span class="text-red-500">*</span></span>
+        <input
+          type="text"
+          v-model="form.auditor_remarks"
+          class="form-input"
+          name="date"
+          :id="'expire_date'" />
     </label>
     <label class="label-group">
         <span class="label-item-title">Auditor Remarks Date<span class="text-red-500">*</span></span>
-          <VueDatePicker v-model="form.auditor_remarks_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
-    </label>
-  </div>
-  <div class="input-group">
-    <label class="label-group">
-          <RemarksComponet v-model="form.auditor_remarks" :maxlength="300" :fieldLabel="'Auditor Remarks'" isRequired="true"></RemarksComponet>
+        <input
+          type="date"
+          v-model="form.auditor_remarks_date"
+          class="form-input"
+          name="date"
+          :id="'expire_date'" />
     </label>
   </div>
 
@@ -285,10 +250,6 @@
           <tr style="background-color: #04AA6D;color: white"
               class="text-xs font-semibold tracking-wide text-gray-500 uppercase border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th colspan="5">Details</th>
-            <!-- <th colspan="5">{{ details }}</th>
-            <template v-for="(VendoData,name,index) in (formData?.scmCsVendor)" :key="index" v-if="index == 0">
-                  <th colspan="5">{{ details[index] && details[index][0] && details[index][0].scmMaterial.name }}</th>
-            </template> -->
           </tr>
           </thead>
         </table>
@@ -298,7 +259,7 @@
             <thead>
               <tr>
                 <th>Description</th>
-                <th scope="col" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (formData?.scmCsVendor)" :key="index">{{ vendorData[0].scmVendor?.name }}</th> 
+                <th scope="col" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (formData?.scmCsVendor)" :key="index">{{ vendorData[0].scmVendor.name }}</th> 
               </tr>
             </thead>
             <tbody>
@@ -314,37 +275,31 @@
                   <td>{{ details[index] && details[index][0] && details[index][0].model }}</td>
                 </template>
               </tr>
-              <tr v-if="form.purchase_center == 'Foreign'">
+              <tr>
                 <td>Origin</td>
                 <template v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
                   <td>{{ details[index] && details[index][0] && details[index][0].origin }}</td>
                 </template>
               </tr>
-              <tr v-if="form.purchase_center == 'Foreign'">
-                <td>Installation and Commission</td>
+              <tr>
+                <td>Ready Stock / Manufacturer</td>
                 <template v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
-                  <td>{{ details[index] && details[index][0] && details[index][0].installation_and_commission }}</td>
-                </template>
-              </tr>
-              <tr v-if="form.purchase_center == 'Foreign'">
-                <td>Certification</td>
-                <template v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
-                  <td>{{ details[index] && details[index][0] && details[index][0].certification }}</td>
+                  <td>{{ details[index] && details[index][0] && details[index][0].stock_type }}</td>
                 </template>
               </tr>
               <tr>
-                <td>Warranty</td>
+                <td>Manufacturing Days</td>
                 <template v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
-                  <td>{{ details[index] && details[index][0] && details[index][0].warranty_period }}</td>
+                  <td>{{ details[index] && details[index][0] && details[index][0].manufacturing_days }}</td>
                 </template>
               </tr>
-              <tr v-if="form.purchase_center == 'Foreign'">
-                <td>Offer Price</td>
+              <tr>
+                <td>Offered Price</td>
                 <template v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
                   <td>{{ details[index] && details[index][0] && details[index][0].offered_price }}</td>
                 </template>
               </tr>
-              <tr v-if="form.purchase_center == 'Foreign'">
+              <tr>
                 <td>Negotiated Price</td>
                 <template v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
                   <td>{{ details[index] && details[index][0] && details[index][0]?.negotiated_price }}</td>
@@ -390,9 +345,7 @@
     import useVendor from '../../../composables/supply-chain/useVendor';
     import useMaterialCs from '../../../composables/supply-chain/useMaterialCs';
     import { useRoute } from 'vue-router';
-    import { formatDate } from '../../../utils/helper';
-    import RemarksComponet from '../../utils/RemarksComponent.vue';
-
+    
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
     const { searchVendor, vendors, vendor, isLoading: vendorLoading } = useVendor();
@@ -412,12 +365,7 @@
       },
     }); 
 
-    const selection_ground = [
-      { value: 'Price', name: 'Price' },
-      { value: 'Quality', name: 'Quality' },
-      { value: 'Management Recommendation', name: 'Management Recommendation' },
-      { value: 'Auditors Recommendation', name: 'Auditors Recommendation' },
-    ]; 
+
 
 //after mount
 onMounted(() => {
@@ -430,24 +378,24 @@ onMounted(() => {
 
 
 const isModalOpen = ref(0);
-const details = ref([]);
+const details = ref([{type: ''}]);
 const currentIndex = ref(null);
 
 
-function showModal(index1,name) {
+function showModal(index) {
   isModalOpen.value = 1
-  currentIndex.value = index1 + "-" + name;
-  if(props.formData?.scmCsMaterialVendor[index1][name]) {
-    details.value = cloneDeep(props.formData?.scmCsMaterialVendor[index1][name])
+  currentIndex.value = index
+  if(props.formData?.scmCsMaterialVendor[index]) {
+    details.value = cloneDeep(props.formData?.scmCsMaterialVendor[index])
   } else {
-    details.value = []
+    details.value = [{type: ''}]
   }
   console.log(details.value);
 }
 
 function closeModel() {
   isModalOpen.value = 0
-  details.value = []
+  details.value = [{type: ''}]
 }
 
 

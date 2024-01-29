@@ -123,35 +123,35 @@ export default [
 
     /* Material Route end */
 
-    // /* Service Route start */
+    /* Service Route start */
 
-    // {
-    //     path: `/${BASE}/services`,
-    //     name: `${BASE}.service.index`,
-    //     component: () => import(`../views/${PATH_BASE}/service/index.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: 'service-index' },
-    //     props: (route) => ({ page: parseInt(route.query.page) || 1 }),
-    // },
-    // {
-    //     path: `/${BASE}/service/create`,
-    //     name: `${BASE}.service.create`,
-    //     component: () => import(`../views/${PATH_BASE}/service/create.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: 'service-create' },
-    // },
-    // {
-    //     path: `/${BASE}/service/:serviceId/edit`,
-    //     name: `${BASE}.service.edit`,
-    //     component: () => import(`../views/${PATH_BASE}/service/edit.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: 'service-edit' },
-    // },
-    // {
-    //     path: `/${BASE}/service/:serviceId`,
-    //     name: `${BASE}.service.show`,
-    //     component: () => import(`../views/${PATH_BASE}/service/show.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: 'service-show'  },
-    // },
+    {
+        path: `/${BASE}/services`,
+        name: `${BASE}.service.index`,
+        component: () => import(`../views/${PATH_BASE}/service/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'service-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/service/create`,
+        name: `${BASE}.service.create`,
+        component: () => import(`../views/${PATH_BASE}/service/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'service-create' },
+    },
+    {
+        path: `/${BASE}/service/:serviceId/edit`,
+        name: `${BASE}.service.edit`,
+        component: () => import(`../views/${PATH_BASE}/service/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'service-edit' },
+    },
+    {
+        path: `/${BASE}/service/:serviceId`,
+        name: `${BASE}.service.show`,
+        component: () => import(`../views/${PATH_BASE}/service/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'service-show'  },
+    },
 
-    // /* Service Route end */
+    /* Service Route end */
 
     
     /* Vendor Route start */
@@ -590,7 +590,7 @@ export default [
         })
     },
     {
-        path: `/${BASE}/material-cs`,
+        path: `/${BASE}/material-cs/index`,
         name: `${BASE}.material-cs.index`,
         component: () => import(`../views/${PATH_BASE}/material-cs/index.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'material-cs-index' },
@@ -643,38 +643,4 @@ export default [
         component: () => import(`../views/${PATH_BASE}/supplier-selection/create.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'supplier-selection' },
     },
-     /* Material Cs end */
-    
-     {
-        path: `/${BASE}/cs-cost-projection/:csId/create`,
-        name: `${BASE}.cs-cost-projection.create`,
-        component: () => import(`../views/${PATH_BASE}/cs-cost-projection/create.vue`),
-        meta: { requiresAuth: true, role: ROLE, permission: 'cs-cost-projection-create' },
-        props: (route) => ({
-            cs_id: route.query.cs_id ?? null
-        })
-    },
-    {
-        path: `/${BASE}/cs-cost-projection/:csId/edit`,
-        name: `${BASE}.cs-cost-projection.edit`,
-        component: () => import(`../views/${PATH_BASE}/cs-cost-projection/edit.vue`),
-        meta: { requiresAuth: true, role: ROLE, permission: 'cs-cost-projection-edit' },
-        props: (route) => ({
-            cs_id: route.query.cs_id ?? null
-        })
-    },
-    {
-        path: `/${BASE}/cs-cost-projection/:csId/:quotationId/show`,
-        name: `${BASE}.cs-cost-projection.show`,
-        component: () => import(`../views/${PATH_BASE}/cs-cost-projection/show.vue`),
-        meta: { requiresAuth: true, role: ROLE, permission: 'cs-cost-projection-show'  },
-    },
-    // {
-    //     path: `/${BASE}/quotations/:csId/index`,
-    //     name: `${BASE}.quotations.index`,
-    //     component: () => import(`../views/${PATH_BASE}/quotations/index.vue`),
-    //     meta: { requiresAuth: true, role: ROLE, permission: 'quotations-index' },
-    //     props: (route) => ({ page: parseInt(route.query.page) || 1 }),
-    // },
-   
 ];

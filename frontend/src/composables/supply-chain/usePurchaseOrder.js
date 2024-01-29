@@ -20,12 +20,15 @@ export default function usePurchaseOrder() {
     // use lodash
 
     const purchaseOrder = ref( {
-        ref_no: null,
-        scmWarehouse: null,
-        scm_warehouse_id: null,
+        ref_no: '',
+        scmWarehouse: '',
+        scm_warehouse_id: '',
         acc_cost_center_id: null,
-        date: null,
-        date: null,
+        date: '',
+        pr_no: null,
+        scm_pr_id: null,
+        scmPr: null,
+        date: '',
         cs_no: null,
         purchase_center: null,
         scm_cs_id: null,
@@ -33,99 +36,58 @@ export default function usePurchaseOrder() {
         scmVendor: null,
         scm_vendor_id: null,
         vendor_name: null,
-        currency: null,
+        currency: '',
         foreign_to_bdt: 0,
         foreign_to_usd: 0,
-        remarks: null,
+        remarks: '',
         sub_total: 0.0,
         discount: 0.0,
         total_amount: 0.0,
         vat: 0.0,
         net_amount: 0.0,
-        business_unit: null,
+        business_unit: '',
         scmPoLines: [
             {
-                scmPr: null,
-                scm_pr_id: null,
-                scmPoItems: [
-                    {
-                        scmMaterial: null,
-                        scm_material_id: null,
-                        unit: null,
-                        brand: null,
-                        model: null,
-                        required_date: null,
-                        tolarence_level: 0.0,
-                        pr_composite_key: null,
-                        cs_composite_key: null,
-                        pr_quantity: 0.0,
-                        remaining_quantity: 0.0,
-                        max_quantity: 0.0,
-                        quantity: 0.0,
-                        rate: 0.0,
-                        total_price: 0.0,
-                    }
-                ]
+                scmMaterial: '',
+                scm_material_id: '',
+                unit: '',
+                brand: '',
+                model: '',
+                required_date: null,
+                quantity: 0.0,
+                rate: 0.0,
+                total_price: 0.0,
+                pr_composite_key: '',
+                max_quantity: 0.0,
             }
         ],
         scmPoTerms: [
                         {
-                            description: null
+                            description: ''
                         }
                     ],  
     });
     
     const prMaterialList = ref([]);
     const materialObject = {
-                scmMaterial: null,
-                scm_material_id: null,
-                unit: null,
-                brand: null,
-                model: null,
+                scmMaterial: '',
+                scm_material_id: '',
+                unit: '',
+                brand: '',
+                model: '',
                 required_date: null,
-                tolarence_level: 0.0,
-                pr_composite_key: null,
-                cs_composite_key: null,
-                pr_quantity: 0.0,
-                remaining_quantity: 0.0,
-                max_quantity: 0.0,
                 quantity: 0.0,
                 rate: 0.0,
                 total_price: 0.0,
-             }
-
-    const poLineObject = 
-        {
-            scmPr: null,
-            scm_pr_id: null,
-            scmPoItems: [
-                {
-                    scmMaterial: null,
-                    scm_material_id: null,
-                    unit: null,
-                    brand: null,
-                    model: null,
-                    required_date: null,
-                    tolerence: 0.0,
-                    pr_composite_key: null,
-                    cs_composite_key: null,
-                    pr_quantity: 0.0,
-                    remaining_quantity: 0.0,
-                    max_quantity: 0.0,
-                    quantity: 0.0,
-                    rate: 0.0,
-                    total_price: 0.0,
-                }
-            ]
+                pr_composite_key: '',
+                max_quantity: 0.0,
     }
-    
-    const materialList = ref([[],]);
 
     const termsObject =  {
-        description: null
+        description: ''
     }
 
-    const errors = ref(null);
+    const errors = ref('');
     const isLoading = ref(false);
     const filterParams = ref(null);
 
@@ -311,7 +273,6 @@ export default function usePurchaseOrder() {
                 },
             });
             prMaterialList.value = data.value;
-            return data.value;
             console.log('prMaterialList', prMaterialList.value);    
         } catch (error) {
             const { data, status } = error.response;
@@ -320,25 +281,6 @@ export default function usePurchaseOrder() {
             isLoading.value = false;
         }
     }
-
-    async function getLineData(prId, csId = null) { 
-        isLoading.value = true;
-        try {
-            const {data, status} = await Api.get(`/${BASE}/get-po-line-datas`,{
-                params: {
-                    pr_id: prId,
-                    cs_id: csId,
-                },
-            });
-            return data.value;  
-        } catch (error) {
-            const { data, status } = error.response;
-            notification.showError(status);
-        } finally {
-            isLoading.value = false;
-        }
-    }
-        
 
     return {
         purchaseOrders,
@@ -354,12 +296,9 @@ export default function usePurchaseOrder() {
         searchPurchaseOrderForLc,
         getMaterialList,
         prMaterialList,
-        getLineData,
         materialObject,
-        poLineObject,
         termsObject,
         isTableLoading,
-        materialList,
         isLoading,
         errors,
     };

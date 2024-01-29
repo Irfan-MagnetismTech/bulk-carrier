@@ -6,27 +6,28 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\SupplyChain\Entities\ScmMaterial;
 
 class ScmPoLine extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'scm_po_id', 'scm_pr_id'
+        'scm_po_id', 'scm_material_id', 'unit', 'brand', 'model', 'required_date', 'quantity', 'rate', 'total_price', 'net_rate', 'po_composite_key', 'pr_composite_key',
     ];
 
-    public function scmPo(): BelongsTo
+    public function scmMaterial(): BelongsTo
     {
-        return $this->belongsTo(ScmPo::class);
+        return $this->belongsTo(ScmMaterial::class);
     }
 
-    public function scmPr(): BelongsTo
+    public function scmPrLine(): BelongsTo
     {
-        return $this->belongsTo(ScmPr::class);
+        return $this->belongsTo(ScmPrLine::class, 'pr_composite_key', 'pr_composite_key');
     }
 
-    public function scmPoItems(): HasMany
+    public function scmMrrLines(): HasMany
     {
-        return $this->hasMany(ScmPoItem::class);
+        return $this->hasMany(ScmMrrLine::class, 'po_composite_key', 'po_composite_key');
     }
 }

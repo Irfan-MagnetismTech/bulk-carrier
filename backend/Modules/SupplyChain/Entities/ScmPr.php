@@ -2,18 +2,15 @@
 
 namespace Modules\SupplyChain\Entities;
 
-use App\Models\User;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
-use Modules\SupplyChain\Entities\ScmCs;
+use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Entities\ScmPo;
 use Modules\SupplyChain\Entities\ScmMrr;
-use Modules\SupplyChain\Entities\ScmPrLine;
+use Modules\SupplyChain\Entities\ScmCs;
 use Modules\SupplyChain\Entities\ScmWarehouse;
-use Modules\SupplyChain\Entities\ScmCsMaterial;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Modules\SupplyChain\Entities\ScmCsMaterialVendor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmPr extends Model
@@ -21,7 +18,7 @@ class ScmPr extends Model
     use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
-        'ref_no', 'scm_warehouse_id', 'acc_cost_center_id', 'attachment', 'raised_date', 'remarks', 'purchase_center', 'is_critical', 'approved_date', 'business_unit', 'created_by', 'closed_at', 'closed_by', 'is_closed', 'closing_remarks', 'status'
+        'ref_no', 'scm_warehouse_id', 'acc_cost_center_id', 'attachment', 'raised_date', 'remarks', 'purchase_center', 'is_critical', 'approved_date', 'business_unit', 'created_by'
     ];
 
     public function scmPrLines(): HasMany
@@ -49,17 +46,6 @@ class ScmPr extends Model
         return $this->hasMany(ScmCs::class);
     }
 
-
-    public function scmCsMaterial(): HasMany
-    {
-        return $this->hasMany(ScmCsMaterial::class);
-    }
-
-    public function scmCsMaterialVendor(): HasMany
-    {
-        return $this->hasMany(ScmCsMaterialVendor::class);
-    }
-
     // public function scmPo(): HasMany
     // {
     //     return $this->hasMany(ScmPo::class);
@@ -75,13 +61,4 @@ class ScmPr extends Model
     //     return $this->hasMany(ScmCs::class);
     // }
 
-    public function closedBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'closed_by', 'id');
-    }
-
-    public function createdBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'created_by', 'id');
-    }
 }

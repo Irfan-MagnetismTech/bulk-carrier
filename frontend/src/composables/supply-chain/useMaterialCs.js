@@ -7,8 +7,7 @@ import Store from '../../store/index.js';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
 import { merge } from 'lodash';
-import { loaderSetting as LoaderConfig} from '../../config/setting.js';
-import Swal from 'sweetalert2';
+
 
 export default function useMaterialCs() {
     const BASE = 'scm' 
@@ -16,56 +15,45 @@ export default function useMaterialCs() {
     const materialCsLists = ref([]);
     const filteredMaterialCs = ref([]);
     const quotations = ref([]);
-    const csWiseVendorList = ref([]);
     const filteredMaterialCsLines = ref([]);
     const $loading = useLoading();
     const prMaterialList = ref([]);
     const isTableLoading = ref(false);
     const notification = useNotification();
-    // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const materialCs = ref({
-        ref_no: null,
-        effective_date: null,
-        expire_date: null,
-        priority: null,
-        scmWarehouse: null,
-        scm_warehouse_id: null,
-        scm_warehouse_name: null,
-        acc_cost_center_id: null,
-        scmPr: null,
-        scm_pr_id: null,
-        pr_no: null,
-        special_instructions: null,
-        purchase_center: null,
-        business_unit: null,
-        required_days: null,
+        ref_no: '',
+        effective_date: '',
+        expire_date: '',
+        priority: '',
+        scmWarehouse: '',
+        scm_warehouse_id: '',
+        scm_warehouse_name: '',
+        acc_cost_center_id: '',
+        scmPr: '',
+        scm_pr_id: '',
+        pr_no: '',
+        special_instructions: '',
+        purchase_center: '',
+        business_unit: '',
+        required_days: '',
         scmCsMaterials: [
             {
-                scmPr: null,
-                scm_pr_id: null,
-                scm_material_id: null,
-                scmMaterial: null,
-                max_quantity: null,
-                pr_composite_key: null,
-                unit : null,
-                quantity : null,
+                scm_material_id: '',
+                scmMaterial: '',
+                unit : '',
+                quantity : '',
             }
         ]
     });
 
     const materialObj = {
-                scmPr: null,
-                scm_pr_id: null,
-                scm_material_id: null,
-                scmMaterial: null,
-                max_quantity: null,
-                pr_composite_key: null,
-                unit : null,
-                quantity : null,
+        scm_material_id: '',
+        scmMaterial: '',
+        unit: '',
+        quantity: '',
     }
-
-    const materialList = ref([]);
 
 
     const errors = ref('');
@@ -108,7 +96,6 @@ export default function useMaterialCs() {
         }
     }
     async function storeMaterialCs(form) {
-        if (!checkUniqueArray(form)) return;
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -131,6 +118,7 @@ export default function useMaterialCs() {
     }
 
     async function showMaterialCs(materialCsId) {
+        console.log('tag', materialCsId);
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -148,8 +136,6 @@ export default function useMaterialCs() {
     }
 
     async function updateMaterialCs(form, materialCsId) {
-        if (!checkUniqueArray(form)) return;
-
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -189,34 +175,20 @@ export default function useMaterialCs() {
         }
     }
 
-    // async function searchMaterialCs(searchParam, loading) {
+    async function searchMaterialCs(searchParam, loading) {
         
 
-    //     try {
-    //         const {data, status} = await Api.get(`/${BASE}/search-material-cs`,searchParam);
-    //         filteredMaterialCs.value = data.value;
-    //     } catch (error) {
-    //         const { data, status } = error.response;
-    //         notification.showError(status);
-    //     } finally {
-    //         loading(false)
-    //     }
-    // }
-
-
-    async function getCsData(id) {
-        //NProgress.start();
-        // const loader = $loading.show(LoaderConfig);
-        // isLoading.value = true;
         try {
-            const {data, status} = await Api.get(`/${BASE}/get-cs-data/${id}`);
-            materialCs.value = data.value;
+            const {data, status} = await Api.get(`/${BASE}/search-material-cs`,searchParam);
+            filteredMaterialCs.value = data.value;
         } catch (error) {
-            console.log('tag', error)
+            const { data, status } = error.response;
+            notification.showError(status);
         } finally {
-            //NProgress.done();
+            loading(false)
         }
     }
+
    
 
 
@@ -258,59 +230,17 @@ export default function useMaterialCs() {
         }
     }
 
-    function checkUniqueArray(form) {
-        let isHasError = false;
-        const messages = ref([]);
-        let materialArray = [];
-        form.scmCsMaterials.map((scmCsMaterial, scmCsMaterialIndex) => {
-            let material_key = (scmCsMaterial?.scm_material_id ?? '') + "-" + (scmCsMaterial?.scm_pr_id ?? '');
-            console.log(material_key,scmCsMaterial);
-            if (materialArray.indexOf(material_key) === -1) {
-                materialArray.push(material_key);
-                form.scmCsMaterials[scmCsMaterialIndex].isAspectDuplicate = false;
-              } else {
-                let data = `Duplicate Material Name In Row ${scmCsMaterialIndex + 1}`;
-                messages.value.push(data);
-                form.scmCsMaterials[scmCsMaterialIndex].isAspectDuplicate = true;
-              }
-            });
-
-        if (messages.value.length > 0) {
-            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
-            if (Object.keys(messages.value).length) {
-                for (const property in messages.value) {
-                    rawHtml += `<li> ${messages.value[property]} </li>`
-                }
-                rawHtml += `</ul>`;
-
-                Swal.fire({
-                    icon: "",
-                    title: "Correct Please!",
-                    html: `
-                ${rawHtml}
-                        `,
-                    customClass: "swal-width",
-                });
-                return false;
-            }
-        } else {
-            return true;
-        }
-    }
-
-
     async function getPrWiseMaterialList(prId) {
         //NProgress.start();
         // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
         try {
-            const {data, status} = await Api.get(`/${BASE}/search-pr-wise-material-for-cs`,{
+            const {data, status} = await Api.get(`/${BASE}/search-pr-wise-material`,{
                 params: {
                     pr_id: prId,
                 },
             });
             prMaterialList.value = data.value;
-            return data.value;
         } catch (error) {
             console.log('tag', error)
         } finally {
@@ -319,54 +249,11 @@ export default function useMaterialCs() {
     }
  
 
-    async function searchCs(business_unit, scm_warehouse_id = null, purchase_center = null, searchParam = '') { 
-        //NProgress.start();
-        // const loader = $loading.show(LoaderConfig);
-        // isLoading.value = true;
-        try {
-            const {data, status} = await Api.get(`/${BASE}/search-material-cs`,{
-                params: {
-                    business_unit: business_unit,
-                    scm_warehouse_id: scm_warehouse_id,
-                    purchase_center: purchase_center,
-                    searchParam: searchParam,
-                },
-            });
-            filteredMaterialCs.value = data.value;
-        } catch (error) {
-            console.log('tag', error)
-        } finally {
-            //NProgress.done();
-        }
-    }
-
-    async function getCsWiseVendorList(csId) {
-        // NProgress.start();
-        // const loader = $loading.show(LoaderConfig);
-        // isLoading.value = true;
-        try {
-            const {data, status} = await Api.get(`/${BASE}/cs-wise-vendor-list`,{
-                params: {
-                    cs_id: csId,
-                },
-            });
-            csWiseVendorList.value = data.value;
-            return data.value;
-        } catch (error) {
-            console.log('tag', error)
-        } finally {
-            // isLoading.value = false;
-            // loader.hide();
-        }
-    }
-
-
-
     return {
         materialCs,
         materialCsLists,
         filteredMaterialCs,
-        searchCs,
+        searchMaterialCs,
         getMaterialCs,
         storeMaterialCs,
         showMaterialCs,
@@ -377,11 +264,7 @@ export default function useMaterialCs() {
         quotations,
         materialObj,
         prMaterialList,
-        materialList,
         getPrWiseMaterialList,
-        getCsData,
-        getCsWiseVendorList,
-        csWiseVendorList,
         // getSiWiseData,
         isTableLoading,
         isLoading,

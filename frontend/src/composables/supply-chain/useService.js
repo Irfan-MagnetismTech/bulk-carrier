@@ -144,7 +144,7 @@ export default function useService() {
         // const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
         try {
-            const { data, status } = await Api.get(`${BASE}/search-services`, {params: { searchParam: searchParam }});
+            const { data, status } = await Api.get(`${BASE}/search-service`, {params: { searchParam: searchParam }});
             services.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
@@ -153,7 +153,7 @@ export default function useService() {
         } finally {
             // loader.hide();
             isLoading.value = false;
-            // loading(false)
+            loading(false)
         }
     }
 

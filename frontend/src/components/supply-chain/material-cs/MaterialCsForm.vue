@@ -1,11 +1,12 @@
 <template>
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
-    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
+    <business-unit-input :page="{edit}" v-model="form.business_unit"></business-unit-input>
   </div>
-  <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2" v-if="formType == 'edit'">
+  <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
+ 
     <label class="label-group">
-          <span class="label-item-title">CS Ref</span>
+          <span class="label-item-title">CS Ref<span class="text-red-500">*</span></span>
           <input
             type="text"
             readonly
@@ -14,54 +15,115 @@
             class="form-input vms-readonly-input"
             name="ref_no"
             :id="'ref_no'" />
+         <Error
+            v-if="errors?.ref_no"
+            :errors="errors.ref_no" />
       </label>
   </div>
   <div class="input-group">
     <label class="label-group">
-        <span class="label-item-title">Date <span class="text-red-500">*</span></span>
-        <VueDatePicker v-model="form.effective_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+        <span class="label-item-title">Date<span class="text-red-500">*</span></span>
+        <input
+          type="date"
+          v-model="form.effective_date"
+          required
+          class="form-input"
+          name="date"
+          :id="'date'" />
     </label>
     <label class="label-group">
-        <span class="label-item-title">Expire Date <span class="text-red-500">*</span></span>
-        <VueDatePicker v-model="form.expire_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+        <span class="label-item-title">Expire Date<span class="text-red-500">*</span></span>
+        <input
+          type="date"
+          v-model="form.expire_date"
+          required
+          class="form-input"
+          name="date"
+          :id="'expire_date'" />
     </label>
       <label class="label-group">
-          <span class="label-item-title">Purchase Center <span class="text-red-500">*</span></span>
-          <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input" @update:modelValue="changePurchaseCenter">
+          <span class="label-item-title">PR No<span class="text-red-500">*</span></span>
+            <!-- <v-select
+                :options="filteredStoreIssues"
+                placeholder="--Choose an option--"
+                @option:selected="setStoreIssueOtherData(form.scmSi)"
+                v-model="form.scmSi"
+                label="ref_no"
+                class="block form-input">
+                  <template #search="{attributes, events}">
+                      <input
+                          class="vs__search"
+                          :required="!form.scmSi"
+                          v-bind="attributes"
+                          v-on="events"
+                          />
+                  </template>
+              </v-select> -->
+              <input
+                type="text"
+                readonly
+                :value="form.scmPr?.ref_no"
+                required
+                class="form-input vms-readonly-input"
+                name="si_no"
+                :id="'si_no'" />
+      </label>
+      <label class="label-group">
+        <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
+          <input
+            type="text"
+            readonly
+            :value="form?.scmWarehouse?.name"
+            required
+            class="form-input vms-readonly-input"
+            name="scmwarehouse_name"
+            :id="'scm_warehouse_id'" />
+         
+      </label>     
+  </div>
+  <div class="input-group">
+      <label class="label-group">
+        <span class="label-item-title">Cs Type <span class="text-red-500">*</span></span>
+          <input type="text" readonly :value="form.purchase_center" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" />
+          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
+      </label>
+      <label class="label-group">
+        <span class="label-item-title">Prioity <span class="text-red-500">*</span></span>
+          <!-- <input type="text" readonly :value="form.purchase_center" required class="form-input vms-readonly-input" name="scm_department_id" :id="'scm_department_id'" /> -->
+          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
+          <v-select
+            :options="PRIORITY"
+            placeholder="--Choose an option--"
+            v-model="form.priority"
+            label="name"
+            class="block form-input">
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
-                    :required="!form.purchase_center"
+                    :required="!form.priority"
                     v-bind="attributes"
                     v-on="events"
-                />  
-            </template>        
+                    />
+            </template>
           </v-select>
       </label>
-  </div>
-  <div class="input-group !w-2/3">
-      
-    <label class="label-group">
-        <span class="label-item-title">Warehouse </span>
-          <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" class="block form-input" @update:modelValue="warehouseChange">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
-      </label>  
       <label class="label-group">
         <span class="label-item-title">Required Days <span class="text-red-500">*</span></span>
-          <input type="number" v-model="form.required_days" required class="form-input" min=1/>
+          <input type="number" v-model="form.required_days" required class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
+          <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
       </label>
   </div>
 
-  <div class="input-group !w-2/3">
+  <div class="input-group !w-3/4">
     <label class="label-group">
-            <RemarksComponet v-model="form.special_instructions" :maxlength="300" :fieldLabel="'Special Instruction'" isRequired="true"></RemarksComponet>
+          <span class="label-item-title">Special instruction
+             <span class="text-red-500">*</span></span>
+          <textarea
+            v-model="form.special_instructions"
+            class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea>
+          <Error
+            v-if="errors?.remarks"
+            :errors="errors.remarks" />
     </label>
   </div>  
   <div id="customDataTable" ref="customDataTableirf" class="!min-w-screen"> 
@@ -71,30 +133,18 @@
         <table class="!w-full">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-            <th style="" class="py-3 align-center">PR </th>
             <th style="" class="py-3 align-center">Material Name </th>
             <th style="" class="py-3 align-center">Unit</th>
             <th class="py-3 align-center">Quantity</th>
             <th class="py-3 text-center align-center">Action</th>
           </tr>
           </thead>
+
+          <!-- <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800" v-if="form.scmWarehouse != null"> -->
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmCsMaterial, index) in form.scmCsMaterials" :key="index">
-            <td class="!w-72 relative">
-              <v-select :options="filteredPurchaseRequisitions" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmCsMaterials[index].scmPr" label="ref_no" class="block form-input" @update:modelValue="prChange(index)">
-                <template #search="{attributes, events}">
-                    <input
-                        class="vs__search"
-                        :required="!form.scmCsMaterials[index].scmPr"
-                        v-bind="attributes"
-                        v-on="events"
-                        />
-                </template>
-              </v-select>
-              <span v-show="form.scmCsMaterials[index].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 left-[18rem] md:left-[21rem]" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
-            </td>
-            <td class="!w-72 relative">
-              <v-select :options="materialList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmCsMaterials[index].scmMaterial" label="material_name_and_code" class="block form-input" @update:modelValue="materialChange(index)">
+            <td class="!w-72">
+              <v-select :options="prMaterialList" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmCsMaterials[index].scmMaterial" label="material_name_and_code" class="block form-input" @update:modelValue="materialChange(index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -104,17 +154,16 @@
                         />
                 </template>
               </v-select>
-              <span v-show="form.scmCsMaterials[index].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 left-[18rem] md:left-[21rem]" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
                  <input type="text" readonly v-model="form.scmCsMaterials[index].unit" class="vms-readonly-input form-input">
                </label>
+              
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="number" v-model="form.scmCsMaterials[index].quantity" class="form-input" min="2" required :max="form.scmCsMaterials[index].max_quantity"
-                 :class="{'border-2': form.scmCsMaterials[index].quantity > form.scmCsMaterials[index].max_quantity,'border-red-500 bg-red-100': form.scmCsMaterials[index].quantity > form.scmCsMaterials[index].max_quantity}">
+                 <input type="text" v-model="form.scmCsMaterials[index].quantity" readonly class="form-input">
               </label>
             </td>
             <td class="px-1 py-1 text-center">
@@ -135,7 +184,6 @@
         </div>  
       </fieldset>
     </div>
-    <ErrorComponent :errors="errors"></ErrorComponent> 
 </template>
 
 
@@ -154,27 +202,18 @@
     import useStoreIssue from '../../../composables/supply-chain/useStoreIssue';
     import useStoreIssueReturn from '../../../composables/supply-chain/useStoreIssueReturn';
     import useMaterialCs from '../../../composables/supply-chain/useMaterialCs';
-    import usePurchaseRequisition from '../../../composables/supply-chain/usePurchaseRequisition';
-    import RemarksComponet from '../../utils/RemarksComponent.vue';
-    import ErrorComponent from "../../utils/ErrorComponent.vue";
-    import useHeroIcon from '../../../assets/heroIcon';
-
-
-    const icons = useHeroIcon();
-
+    
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
-    const { warehouses,warehouse,getWarehouses,searchWarehouse ,isLoading:warehouseLoading} = useWarehouse();
+    const { warehouses,warehouse,getWarehouses,searchWarehouse } = useWarehouse();
     const { filteredStoreIssues, searchStoreIssue , fetchSiWiseMaterials, siWiseMaterials} = useStoreIssue();
     const { getSiWiseSir, filteredStoreIssueReturnLines } = useStoreIssueReturn();
     const { getPrWiseMaterialList, prMaterialList } = useMaterialCs();
-    const { searchPurchaseRequisitionForCs, filteredPurchaseRequisitions } = usePurchaseRequisition();
     const props = defineProps({
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
       formType: { type: String, required : false },
       page: { required: false, default: {} },
       materialObj: { type: Object, required: false },
-      materialList: { type: Array, required: false },
     }); 
 
     const PRIORITY = ['High', 'Medium', 'Low']
@@ -188,13 +227,11 @@
     function addMaterial() {
       const clonedObj = cloneDeep(props.materialObj);
       props.form.scmCsMaterials.push(clonedObj);
-      props.materialList.push([]);
     }
 
     function removeMaterial(index){
       props.form.scmCsMaterials.splice(index, 1);
-      props.materialList.splice(index, 1);
-    }
+}
     
 // function fetchStoreIssue(search, loading = false) {
 //     // if (search.length > 0) {
@@ -217,21 +254,9 @@
 function materialChange(index) {
     props.form.scmCsMaterials[index].unit = props.form.scmCsMaterials[index].scmMaterial.unit;
     props.form.scmCsMaterials[index].scm_material_id = props.form.scmCsMaterials[index].scmMaterial.id; 
-    props.form.scmCsMaterials[index].pr_composite_key = props.form.scmCsMaterials[index].scmMaterial.pr_composite_key;
-    props.form.scmCsMaterials[index].max_quantity = props.form.scmCsMaterials[index].scmMaterial.max_quantity;
 }
 
-function prChange(index) {
-  props.form.scmCsMaterials[index].scm_pr_id = props.form.scmCsMaterials[index].scmPr.id;
-  getPrWiseMaterialList(props.form.scmCsMaterials[index].scm_pr_id).then((res) => {
-    props.materialList[index] = res;
-  });
-}
 
-function warehouseChange() {
-  props.form.scm_warehouse_id = props.form?.scmWarehouse?.id ?? null;
-  props.form.acc_cost_center_id = props.form?.scmWarehouse?.cost_center_id ?? null;
-} 
 // watch(() => props.form.scmSi, (new Val,oldVal) => {
 //       props.form.scm_si_id = newVal?.id;
 //       props.form.si_no = newVal?.ref_no;
@@ -346,42 +371,12 @@ function tableWidth() {
 //after mount
 onMounted(() => {
   tableWidth();
-  // watch(() => props?.form?.scm_pr_id, (newVal, oldVal) => {
-  //   getPrWiseMaterialList(props.form.scm_pr_id);
-  //   });
-});
-
-onMounted(() => {
-  watchEffect(() => {
-    searchPurchaseRequisitionForCs(props.form.business_unit, props.form.scm_warehouse_id,props.form.purchase_center, null)
-    
-  });
-  watchEffect(() => {
-    fetchWarehouse('');
-  });
-  if(props.formType == 'edit'){
-    const watchBusinessUnit = watch(() => props.form, (newVal, oldVal) => {
-      newVal.scmCsMaterials.forEach((item, index) => {
-        props.materialList.push([]);
-          getPrWiseMaterialList(item.scm_pr_id).then((res) => {
-            props.materialList[index] = res;
-          });
-      });
-      watchBusinessUnit();
+  watch(() => props?.form?.scm_pr_id, (newVal, oldVal) => {
+    getPrWiseMaterialList(props.form.scm_pr_id);
     });
-  }
-  
 });
 
-
-function changePurchaseCenter() {
-  // searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id,props.form.purchase_center, null)
-}
-function fetchWarehouse(search) {
-    searchWarehouse(search, props.form.business_unit);
-  }
-const purchase_center = ['Local', 'Foreign', 'Plant'];
-
+const DEPARTMENTS = ['N/A','Store Department', 'Engine Department', 'Provision Department'];
 </script>
 
 

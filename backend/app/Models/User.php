@@ -11,9 +11,6 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Modules\Administration\Entities\EmailSignature;
 use Spatie\Permission\Traits\HasRoles;
-/**
- * @method whoAmI()
- */
 
 class User extends Authenticatable
 {
@@ -55,16 +52,4 @@ class User extends Authenticatable
     {
         return $this->hasOne(EmailSignature::class);
     }
-
-    /**
-     * Determines the identity of the user.
-     *
-     * @param mixed $model The model object.
-     * @param mixed $by    The attribute to identify the user.
-     * @return string
-     */
-    // public static function whoAmI($model, $by): string
-    // {
-    //     return (string) (auth()->user()->id == (int)($model->{$by}->id)) ? 'You' : $model->{$by}?->name ?? null;
-    // }
 }

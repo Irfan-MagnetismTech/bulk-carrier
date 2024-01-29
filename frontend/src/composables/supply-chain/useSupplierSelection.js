@@ -7,7 +7,7 @@ import Store from '../../store/index.js';
 import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
 import { merge } from 'lodash';
-import { loaderSetting as LoaderConfig} from '../../config/setting.js';
+
 
 export default function useSupplierSelection() {
     const BASE = 'scm' 
@@ -21,7 +21,7 @@ export default function useSupplierSelection() {
     const $loading = useLoading();
     const isTableLoading = ref(false);
     const notification = useNotification();
-    // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
+    const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const quotation = ref({
         auditor_remarks_date: null,
@@ -54,13 +54,13 @@ export default function useSupplierSelection() {
 
         try {
             const { data, status } = await Api.post(`${BASE}/selected-supplier`, formData);
+            storeRequisition.value = data.value;
             notification.showSuccess(status);
             router.push({ name: `${BASE}.material-cs.index` });
         } catch (error) {
-            console.log(error);
+            notification.error(error.response.data.message);
         } finally {
             isLoading.value = false;
-            loader.hide();
         }
     }
 

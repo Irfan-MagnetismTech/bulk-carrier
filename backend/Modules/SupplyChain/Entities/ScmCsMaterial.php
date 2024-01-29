@@ -3,9 +3,7 @@
 namespace Modules\SupplyChain\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Entities\ScmMaterial;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -14,14 +12,9 @@ class ScmCsMaterial extends Model
     use HasFactory;
 
     protected $fillable = [
-        'scm_cs_id',
-        'scm_pr_id',
-        'scm_material_id',
-        'cs_composite_key',
-        'pr_composite_key',
-        'quantity',
-        'unit'
+        'scm_cs_id', 'scm_material_id', 'quantity', 'unit'
     ];
+
 
     public function scmCs(): BelongsTo
     {
@@ -31,20 +24,5 @@ class ScmCsMaterial extends Model
     public function scmMaterial(): BelongsTo
     {
         return $this->belongsTo(ScmMaterial::class);
-    }
-
-    public function scmPr(): BelongsTo
-    {
-        return $this->belongsTo(ScmPr::class);
-    }
-
-    public function scmPrLine(): BelongsTo
-    {
-        return $this->belongsTo(ScmPrLine::class, 'pr_composite_key', 'pr_composite_key');
-    }
-
-    public function scmPoItems(): HasMany
-    {
-        return $this->hasMany(ScmPoItem::class, 'cs_composite_key', 'cs_composite_key');
     }
 }

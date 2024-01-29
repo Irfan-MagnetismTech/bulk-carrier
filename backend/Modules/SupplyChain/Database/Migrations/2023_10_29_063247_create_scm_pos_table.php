@@ -17,6 +17,7 @@ return new class extends Migration
             $table->comment('po => Purchase order');
             $table->id();
             $table->string('ref_no')->nullable();
+            $table->foreignId('scm_pr_id')->constrained('scm_prs');
             $table->unsignedBigInteger('scm_cs_id')->nullable();
             $table->date('date')->nullable();
             $table->foreignId('scm_vendor_id')->constrained('scm_vendors')->nullable();
@@ -33,13 +34,9 @@ return new class extends Migration
             $table->decimal('total_amount')->nullable();
             $table->decimal('net_amount')->nullable();
             $table->date('pr_date')->nullable();
-            $table->string('purchase_center')->nullable();
+            $table->bigInteger('purchase_center')->nullable();
+            $table->string('status')->nullable();
             $table->string('remarks')->nullable();
-            $table->tinyInteger('is_closed')->default(0)->comment('0, 1');
-            $table->integer('closed_by')->nullable();
-            $table->datetime('closed_at')->nullable();
-            $table->string('closing_remarks')->nullable();
-            $table->enum('status', ['Pending', 'WIP', 'Closed'])->default('Pending');
             $table->timestamps();
         });
     }

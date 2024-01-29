@@ -3,7 +3,6 @@
 namespace Modules\SupplyChain\Http\Controllers;
 
 use Exception;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
@@ -18,7 +17,6 @@ use Modules\SupplyChain\Entities\ScmMrr;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Services\CompositeKey;
-use Modules\SupplyChain\Entities\ScmCsMaterial;
 use Modules\SupplyChain\Http\Requests\ScmPrRequest;
 use Maatwebsite\Excel\Validators\ValidationException;
 
@@ -43,11 +41,9 @@ class ScmPrController extends Controller
                 ->with(
                     'scmPrLines.scmMaterial',
                     'scmWarehouse',
+                    'scmPos',
                     'scmMrrs',
-                    'closedBy',
-                    'createdBy',
-                    'scmPrLines.closedBy',
-                    'scmPrLines.createdBy'
+                    'scmCss'
                 )
                 ->globalSearch($request->all());
 
@@ -118,7 +114,7 @@ class ScmPrController extends Controller
     public function show($id): JsonResponse
     {
         $purchaseRequisition = ScmPr::query()
-            ->with('scmPrLines.scmMaterial', 'scmWarehouse', 'scmPrLines.scmStockLedgers', 'closedBy', 'createdBy', 'scmPrLines.closedBy', 'scmPrLines.createdBy')
+            ->with('scmPrLines.scmMaterial', 'scmWarehouse', 'scmPrLines.scmStockLedgers')
             ->find($id);
 
         $prLines = $purchaseRequisition->scmPrLines->map(function ($scmPrLine) use ($purchaseRequisition) {
@@ -126,7 +122,6 @@ class ScmPrController extends Controller
             $currentStock = $scmPrLine->scmStockLedgers->where('scm_warehouse_id', $purchaseRequisition->scm_warehouse_id)->sum('quantity');
 
             $lines = [
-                'id' => $scmPrLine->id,
                 'scm_material_id' => $scmPrLine->scmMaterial->id,
                 'scmMaterial' => $scmPrLine->scmMaterial,
                 'unit' => $scmPrLine->unit,
@@ -138,12 +133,7 @@ class ScmPrController extends Controller
                 'part_no' => $scmPrLine->part_no,
                 'rob' => $currentStock,
                 'quantity' => $scmPrLine->quantity,
-                'is_closed' => $scmPrLine->is_closed,
-                'closed_by' => (auth()->user()->id == (int)($scmPrLine->closedBy->id)) ? 'You' : $scmPrLine->closedBy->name,
-                'closed_at' => $scmPrLine->closed_at,
-                'closing_remarks' => $scmPrLine->closing_remarks,
-                'required_date' => $scmPrLine->required_date,
-                'status' => $scmPrLine->status,
+                'required_date' => $scmPrLine->required_date
             ];
             return $lines;
         });
@@ -162,12 +152,6 @@ class ScmPrController extends Controller
             'purchase_center' => $purchaseRequisition->purchase_center,
             'approved_date' => $purchaseRequisition->approved_date,
             'remarks' => $purchaseRequisition->remarks,
-            'is_closed' => $purchaseRequisition->is_closed,
-            'closed_by' => (auth()->user()->id == (int)($purchaseRequisition->closedBy->id)) ? 'You' : $purchaseRequisition->closedBy->name,
-            'closed_at' => $purchaseRequisition->closed_at,
-            'closing_remarks' => $purchaseRequisition->closing_remarks,
-            'status' => $purchaseRequisition->status,
-            'created_by' => $purchaseRequisition->createdBy->name,
             'scmPrLines' => $prLines,
         ];
 
@@ -186,12 +170,13 @@ class ScmPrController extends Controller
      */
     public function update(ScmPrRequest $request, ScmPr $purchase_requisition): JsonResponse
     {
-        $requestData = $request->except('ref_no', 'pr_composite_key', 'created_by');
+        $requestData = $request->except('ref_no', 'pr_composite_key');
 
         $linesData = CompositeKey::generateArray($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
 
         try {
             DB::beginTransaction();
+
 
             $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs', $purchase_requisition->attachment);
             $requestData['attachment'] = $attachment;
@@ -209,28 +194,28 @@ class ScmPrController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     * @param ScmPr $purchaseRequisition
+     * @param ScmPr $purchase_requisition
      * @return JsonResponse
      */
-    public function destroy(ScmPr $purchaseRequisition): JsonResponse
+    public function destroy(ScmPr $purchase_requisition): JsonResponse
     {
         try {
-            $poCount = ScmPo::where('scm_pr_id', $purchaseRequisition->id)->count();
-            $csCount = ScmCsMaterial::where('scm_pr_id', $purchaseRequisition->id)->count();
-            $mrrCount = ScmMrr::where('scm_pr_id', $purchaseRequisition->id)->count();
+            $pos = ScmPo::where('scm_pr_id', $purchase_requisition->id)->count();
+            $css = ScmCs::where('scm_pr_id', $purchase_requisition->id)->count();
+            $mrrs = ScmMrr::where('scm_pr_id', $purchase_requisition->id)->count();
 
-            if ($poCount + $csCount + $mrrCount > 0) {
+            if ($pos > 0 || $css > 0 || $mrrs > 0) {
                 $error = array(
                     "message" => "Data could not be deleted!",
                     "errors" => [
-                        "id" => ["This data could not be deleted as it has references in other table!"]
+                        "id" => ["This data could not be deleted as it has reference to other table"]
                     ]
                 );
                 return response()->json($error, 422);
             }
 
-            $purchaseRequisition->scmPrLines()->delete();
-            $purchaseRequisition->delete();
+            $purchase_requisition->scmPrLines()->delete();
+            $purchase_requisition->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (\Exception $e) {
@@ -251,11 +236,10 @@ class ScmPrController extends Controller
                 ->with('scmPrLines')
                 ->where(function ($query) use ($request) {
                     $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
-                        ->where([
-                            'business_unit' => $request->business_unit,
-                            'acc_cost_center_id' => $request->cost_center_id
-                        ]);
+                        ->where('business_unit', $request->business_unit)
+                        ->where('acc_cost_center_id', $request->cost_center_id);
                 })
+                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
                 ->limit(10)
                 ->get();
@@ -263,10 +247,8 @@ class ScmPrController extends Controller
             $purchase_requisition = ScmPr::query()
                 ->with('scmPrLines')
                 ->where(function ($query) use ($request) {
-                    $query->where([
-                        'business_unit' => $request->business_unit,
-                        'acc_cost_center_id' => $request->cost_center_id
-                    ]);
+                    $query->where('business_unit', $request->business_unit)
+                        ->where('acc_cost_center_id', $request->cost_center_id);
                 })
                 ->orderByDesc('ref_no')
                 ->limit(10)
@@ -276,116 +258,71 @@ class ScmPrController extends Controller
         return response()->success('Search result', $purchase_requisition, 200);
     }
 
+    // getPrWiseCsData
 
-    public function searchPurchaseRequisitions(Request $request): JsonResponse
+    // const materialCs = ref({
+    //     ref_no: '',
+    //     date: '',
+    //     expire_date: '',
+    //     priority: '',
+    //     scmWarehouse: '',
+    //     scm_warehouse_id: '',
+    //     scm_warehouse_name: '',
+    //     acc_cost_center_id: '',
+    //     scmPr: '',
+    //     scm_pr_id: '',
+    //     pr_no: '',
+    //     special_instruction: '',
+    //     purchase_center: '',
+    //     business_unit: '',
+    //     required_days: '',
+    // });
+
+
+    public function getPrWiseCsData(Request $request): JsonResponse
     {
-        $purchase_requisition = [];
-        if (isset($request->searchParam)) {
-            $purchase_requisition = ScmPr::query()
-                ->with('scmPrLines')
-                ->whereNot('status', 'Closed')
-                ->where(function ($query) use ($request) {
-                    $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
-                        ->where('business_unit', $request->business_unit)
-                        ->when($request->scm_warehouse_id, function ($query) use ($request) {
-                            $query->where([
-                                'scm_warehouse_id' => $request->scm_warehouse_id,
-                                'purchase_center' => $request->purchase_center
-                            ]);
-                        });
-                })
-                ->orderByDesc('ref_no')
-                ->get();
-        } elseif (isset($request->cs_id) && isset($request->scm_warehouse_id) && isset($request->purchase_center) && isset($request->business_unit)) {
-            $purchase_requisition = ScmPr::query()
-                ->with('scmPrLines')
-                ->whereNot('status', 'Closed')
-                ->when($request->scm_warehouse_id, function ($query) use ($request) {
-                    $query->where('scm_warehouse_id', $request->scm_warehouse_id)
-                        ->where([
-                            'business_unit' => $request->business_unit,
-                            'purchase_center' => $request->purchase_center
-                        ]);
-                })
-                ->whereHas('scmCsMaterial', function ($query) use ($request) {
-                    $query->where('scm_cs_id', $request->cs_id);
-                })
-                ->orderByDesc('ref_no')
-                ->get();
-        } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center) && isset($request->business_unit)) {
-            $purchase_requisition = ScmPr::query()
-                ->with('scmPrLines')
-                ->whereNot('status', 'Closed')
-                ->when($request->scm_warehouse_id, function ($query) use ($request) {
-                    $query->where([
-                        'scm_warehouse_id' => $request->scm_warehouse_id,
-                        'business_unit' => $request->business_unit,
-                        'purchase_center' => $request->purchase_center
-                    ]);
-                })
-                ->orderByDesc('ref_no')
-                ->get();
+        if(request()->filled('pr_id')){
+        $pr_data = ScmPr::query()
+            ->with('scmPrLines.scmMaterial', 'scmWarehouse')
+            ->find($request->pr_id);
+
+            $data = [
+                "scmWarehouse" => $pr_data->scmWarehouse,
+                "scm_warehouse_id" => $pr_data->scm_warehouse_id,
+                "scm_warehouse_name" => $pr_data->scmWarehouse->name,
+                "acc_cost_center_id" => $pr_data->acc_cost_center_id,
+                "scmPr" => $pr_data,
+                "scm_pr_id" => $pr_data->id,
+                "pr_no" => $pr_data->ref_no,
+                "purchase_center" => $pr_data->purchase_center,
+                "business_unit" => $pr_data->business_unit,
+                "scmCsMaterials" => $pr_data->scmPrLines,
+            ];
+         }else{
+            $data = [
+                "scmWarehouse" => null,
+                "scm_warehouse_id" => null,
+                "scm_warehouse_name" => null,
+                "acc_cost_center_id" => null,
+                "scmPr" => null,
+                "scm_pr_id" => null,
+                "pr_no" => null,
+                "purchase_center" => null,
+                "business_unit" => null,
+            ];
+         }
+
+        try {
+            return response()->success
+            ('Data updated sucessfully!', $data, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
         }
-
-        return response()->success('Search result', $purchase_requisition, 200);
     }
-
-    public function searchPurchaseRequisitionsForCs(Request $request): JsonResponse
-    {
-        $purchase_requisition = [];
-        if (isset($request->searchParam)) {
-            $purchase_requisition = ScmPr::query()
-                ->with('scmPrLines')
-                ->whereNot('status', 'Closed')
-                ->where(function ($query) use ($request) {
-                    $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
-                        ->where('business_unit', $request->business_unit)
-                        ->when($request->scm_warehouse_id, function ($query) use ($request) {
-                            $query->where([
-                                'scm_warehouse_id' => $request->scm_warehouse_id,
-                                'purchase_center' => $request->purchase_center
-                            ]);
-                        });
-                })
-                ->orderByDesc('ref_no')
-                ->get();
-        } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center) && isset($request->business_unit)) {
-            $purchase_requisition = ScmPr::query()
-                ->with('scmPrLines')
-                ->whereNot('status', 'Closed')
-                ->when($request->scm_warehouse_id, function ($query) use ($request) {
-                    $query->where([
-                        'scm_warehouse_id' => $request->scm_warehouse_id,
-                        'business_unit' => $request->business_unit,
-                        'purchase_center' => $request->purchase_center
-                    ]);
-                })
-                ->orderByDesc('ref_no')
-                ->get();
-        } elseif (isset($request->business_unit) && isset($request->purchase_center)) {
-            $purchase_requisition = ScmPr::query()
-                ->with('scmPrLines')
-                ->whereNot('status', 'Closed')
-                ->where(function ($query) use ($request) {
-                    $query->when($request->purchase_center, function ($query) use ($request) {
-                        $query->where([
-                            'business_unit' => $request->business_unit,
-                            'purchase_center' => $request->purchase_center
-                        ]);
-                    });
-                })
-                ->orderByDesc('ref_no')
-                ->get();
-        }
-
-        return response()->success('Search result', $purchase_requisition, 200);
-    }
-
-
-
+     
     // public function searchMrr(Request $request): JsonResponse
     // {
-    //     if($request->has('searchParam')) {
+    //     if($request->has('searchParam')) { 
     //         $materialReceiptReport = ScmMrr::query()
     //         ->with('scmMrrLines.scmMaterial')
     //         ->where(function($query) use ($request) {
@@ -413,96 +350,9 @@ class ScmPrController extends Controller
     //         $item->scmMaterials = $item->scmMrrLines->map(function($item1) {
     //                  return $item1->scmMaterial;
     //             });
-    //          return $item;
+    //          return $item;             
     //         });
 
     //     return response()->success('Search Result', $materialReceiptReport, 200);
     // }
-
-
-    public function getMaterialByPrIdForCs(Request $request): JsonResponse
-    {
-        $lineData = ScmPrLine::query()
-            ->with('scmMaterial')
-            ->where('scm_pr_id', $request->pr_id)
-            ->whereNot('status', 'Closed')
-            ->whereHas('scmPr', function ($query) {
-                $query->whereIn('status', ['Pending', 'WIP']);
-            })
-            ->get()
-            ->map(function ($item) {
-                $data = $item->scmMaterial;
-                $data['pr_composite_key'] = $item->pr_composite_key;
-                $data['max_quantity'] = $item->quantity - $item->scmCsmaterials->sum('quantity');
-                return $data;
-            });
-
-        return response()->success('Search result', $lineData, 200);
-    }
-
-    public function closePr(Request $request): JsonResponse
-    {
-        try {
-            $pr = ScmPr::find($request->id);
-            $pr->update([
-                // 'is_closed' => 1,
-                'status' => 'Closed',
-                'closed_by' => auth()->user()->id,
-                'closed_at' => now(),
-                'closing_remarks' => $request->closing_remarks,
-            ]);
-
-            $pr->load('scmPrLines');
-            foreach ($pr->scmPrLines as $prLine) {
-                if ($prLine->status === 'Closed') {
-                    continue;
-                }
-                $prLine->update([
-                    // 'is_closed' => 1,
-                    'status' => 'Closed',
-                    'closed_by' => auth()->user()->id,
-                    'closed_at' => now(),
-                    'closing_remarks' => $request->closing_remarks,
-                ]);
-            }
-            return response()->success('Data updated sucessfully!', $pr, 200);
-        } catch (\Exception $e) {
-            return response()->error($e->getMessage(), 500);
-        }
-    }
-
-    public function closePrLine(Request $request): JsonResponse
-    {
-        try {
-            $prLine = ScmPrLine::find($request->id);
-            $prLine->update([
-                // 'is_closed' => 1,
-                'status' => 'Closed',
-                'closed_by' => auth()->user()->id,
-                'closed_at' => now(),
-                'closing_remarks' => $request->closing_remarks,
-            ]);
-
-            $pr = ScmPr::find($request->parent_id);
-            $pr->load('scmPrLines');
-
-            $prLines = $pr->scmPrLines->count();
-            // $sumIsClosed = $pr->scmPrLines->sum('is_closed');
-            $sumIsClosed = $pr->scmPrLines->where('status', 'Closed')->count();
-
-            if ($prLines === $sumIsClosed) {
-                $pr->update([
-                    // 'is_closed' => 1,
-                    'status' => 'Closed',
-                    'closed_by' => auth()->user()->id,
-                    'closed_at' => now(),
-                    'closing_remarks' => "All lines are closed",
-                ]);
-            }
-
-            return response()->success('Data updated sucessfully!', [$prLines, $sumIsClosed], 200);
-        } catch (\Exception $e) {
-            return response()->error($e->getMessage(), 500);
-        }
-    }
 }

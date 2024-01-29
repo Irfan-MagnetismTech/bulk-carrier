@@ -16,14 +16,15 @@ class ScmCs extends Model
     use HasFactory, GlobalSearchTrait;
 
     protected $fillable = [
+        'scm_pr_id',
         'ref_no',
         'scm_warehouse_id',
         'acc_cost_center_id',
-        'effective_date', //date
+        'effective_date',
         'expire_date',
         'special_instructions',
-        'priority', //requirement type
-        'required_days', //targaet days
+        'priority',
+        'required_days',
         'purchase_center',
         'selection_ground',
         'auditor_remarks_date',
@@ -58,10 +59,5 @@ class ScmCs extends Model
     public function scmCsMaterials()
     {
         return $this->hasMany(ScmCsMaterial::class);
-    }
-
-    public function selectedVendors()
-    {
-        return $this->hasMany(ScmCsVendor::class)->where('is_selected', true);
     }
 }

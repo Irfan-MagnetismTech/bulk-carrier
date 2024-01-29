@@ -25,13 +25,8 @@ return new class extends Migration
             $table->string('purchase_center')->nullable()->comment('local, foreign, plant');
             $table->tinyInteger('is_critical')->default(0)->comment('0, 1');
             $table->date('approved_date')->nullable();
-            $table->tinyInteger('is_closed')->default(0)->comment('0, 1');
-            $table->integer('closed_by')->nullable();
-            $table->datetime('closed_at')->nullable();
-            $table->string('closing_remarks')->nullable();
             $table->string('business_unit')->nullable();
             $table->bigInteger('created_by')->comment('user_id');
-            $table->enum('status', ['Pending','WIP','Closed'])->default('Pending');
             $table->timestamps();
         });
     }
