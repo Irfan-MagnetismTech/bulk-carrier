@@ -87,7 +87,8 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Material",
-      "filter_type": "input"
+      "filter_type": "input",
+      "no_short" : true
     },
     {
       "relation_name": "scmPrLines.scmMaterial",
@@ -97,7 +98,8 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Code",
-      "filter_type": "input"
+      "filter_type": "input",
+      "no_short" : true
     },
     {
       "relation_name": "scmPrLines",
@@ -107,7 +109,8 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Qty",
-      "filter_type": "input"
+      "filter_type": "input",
+      "no_short" : true
     },
     {
       "relation_name": "scmPrLines",
@@ -117,7 +120,8 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Unit",
-      "filter_type": "input"
+      "filter_type": "input",
+      "no_short" : true
     },
     {
       "relation_name": "scmWarehouse",
@@ -128,10 +132,7 @@ let filterOptions = ref({
       "date_from": null,
       "label": "Warehouse",
       "filter_type": "input"
-    }
-    ,
-
-    
+    },
     {
       "relation_name": "createdBy",
       "field_name": "name",
@@ -141,10 +142,7 @@ let filterOptions = ref({
       "date_from": null,
       "label": "Requested By",
       "filter_type": "input"
-    }
-    ,
-
-
+    },
     // {
     //   "relation_name": null,
     //   "field_name": "is_closed",

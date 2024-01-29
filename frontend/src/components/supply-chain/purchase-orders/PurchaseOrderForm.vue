@@ -99,7 +99,8 @@
 
     const customDataTableirf = ref(null);
     const dynamicMinHeight = ref(0);
-
+    const SourceButtonWidth = ref(null);
+    const TargetButtonWidth = ref(null);
 
 
     // function setMaterialOtherData(index){
@@ -245,7 +246,8 @@
       });
 
       }
-     
+      // const sourceWidth = SourceButtonWidth.value.offsetWidth;
+      // TargetButtonWidth.value.style.width = `${sourceWidth}px`;
     });
 
     watch(() => props?.form?.scmVendor, (newVal, oldVal) => {
@@ -463,12 +465,12 @@
               <tbody>
                 <tr class="w-full">
                     <th class="py-3 align-center !w-3/12">Material Details <br/> <span class="!text-[8px]"></span></th>
-                    <th class="py-3 align-center !w-2/12"><nobr>Required Date</nobr></th>
+                    <!-- <th class="py-3 align-center !w-2/12"><nobr>Required Date</nobr></th> -->
                     <th class="py-3 align-center !w-2/12">Other Info</th>
-                    <th class="py-3 align-center !w-1/12">Tolarence <br/> (%)</th>
-                    <th class="py-3 align-center !w-2/12">Order Details</th>
+                    <!-- <th class="py-3 align-center !w-1/12">Tolarence <br/> (%)</th> -->
+                    <th class="py-3 align-center !w-4/12">Order Details</th>
                     <th class="py-3 align-center !w-2/12">Total Price</th>
-                    <th class="!w-1/12">
+                    <th class="!w-1/12" ref="TargetButtonWidth">
                       <button type="button" @click="addMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                           <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
@@ -516,29 +518,33 @@
                         </tr>
                       </table>
                     </td>
-                    <td>
+                    <!-- <td> -->
                       <!-- <input type="date" v-model="form.scmPoLines[index].scmPoItems[itemIndex].required_date" class="form-input"> -->
-                      <VueDatePicker v-model="form.scmPoLines[index].scmPoItems[itemIndex].required_date" class="!text-xs" required auto-apply :enable-time-picker="false" hide-input-icon placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
-                    </td>
+                     
+                    <!-- </td> -->
                     <td>
                       <table>
                         <tr>
                           <td>PR Qty</td>
-                          <td>{{ form.scmPoLines[index].scmPoItems[itemIndex].pr_quantity }}</td>
+                          <td>
+                            <input type="number" required :value="form.scmPoLines[index].scmPoItems[itemIndex].pr_quantity" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
+                          </td>
                         </tr>
                         <tr>
                           <td class="">Remaining Qty</td>
-                          <td>{{ form.scmPoLines[index].scmPoItems[itemIndex].max_quantity }}</td>
+                          <td>
+                            <input type="number" required :value="form.scmPoLines[index].scmPoItems[itemIndex].max_quantity" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
+                          </td>
                         </tr>
                       </table>
                     </td>
-                    <td>
-                      <input type="number" v-model="form.scmPoLines[index].scmPoItems[itemIndex].tolarence_level" min=1 class="!text-xs form-input text-right">  
-                    </td>
+                    <!-- <td>
+                      
+                    </td> -->
                     <td>
                       <table>
                         <tr>
-                          <td class="">Qty</td>
+                          <td>Qty</td>
                           <td>
                              <input type="number" required v-model="form.scmPoLines[index].scmPoItems[itemIndex].quantity" min=1 class="!text-xs form-input text-right" :max="form.scmPoLines[index].scmPoItems[itemIndex].max_quantity" :class="{'border-2': form.scmPoLines[index].scmPoItems[itemIndex].quantity > form.scmPoLines[index].scmPoItems[itemIndex].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].scmPoItems[itemIndex].quantity > form.scmPoLines[index].scmPoItems[itemIndex].max_quantity}">
                           </td>
@@ -549,10 +555,22 @@
                             <input type="number" required v-model="form.scmPoLines[index].scmPoItems[itemIndex].rate" min=1 class="!text-xs form-input text-right">
                           </td>
                         </tr>
+                        <tr>
+                          <td><nobr>Tolerance ( % )</nobr></td>
+                          <td>
+                            <input type="number" v-model="form.scmPoLines[index].scmPoItems[itemIndex].tolarence_level" min=1 class="!text-xs form-input text-right">  
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Required Date</td>
+                          <td>
+                            <VueDatePicker v-model="form.scmPoLines[index].scmPoItems[itemIndex].required_date" class="!text-xs" required auto-apply :enable-time-picker="false" hide-input-icon placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+                          </td>
+                        </tr>
                       </table>
                     </td>
                     <td>
-                      <input type="text" readonly v-model="form.scmPoLines[index].scmPoItems[itemIndex].total_price" class="!text-xs form-input vms-readonly-input text-right">
+                      <input type="number" readonly v-model="form.scmPoLines[index].scmPoItems[itemIndex].total_price" class="!text-xs form-input vms-readonly-input text-right">
                     </td>
                     <td class="px-1 py-1 text-center">
                       <button type="button" @click="removeMaterial(index,itemIndex)" class="remove_button">
@@ -586,33 +604,40 @@
     <table class="w-full whitespace-no-wrap" >
       <tbody>
           <tr>
-            <td class="!w-10/12 text-right">Sub Total</td>
-            <td class="text-right">
-              <input type="text" readonly class="vms-readonly-input form-input text-right" v-model="form.sub_total">
+            <td class="!w-9/12 text-right">Sub Total</td>
+            <td class="text-right !w-2/12">
+              <input type="number" readonly class="vms-readonly-input form-input text-right" v-model="form.sub_total">
+            </td>
+            <td ref="TargetButtonWidth" class="text-right !w-1/12">
+              <button disabled="true" type="button" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-white border border-transparent rounded-md active:bg-white hover:bg-white focus:outline-none focus:shadow-outline-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                        </svg>
+                      </button>
             </td>
           </tr>
           <tr>
             <td class="!w-10/12 text-right">Less: Discount</td>
             <td class="text-right">
-              <input type="text" class="form-input" v-model="form.discount">
+              <input type="number" class="!text-xs first-letter:form-input text-right" v-model="form.discount">
             </td>
           </tr>
           <tr>
             <td class="!w-10/12 text-right">Total Amount</td>
             <td class="">
-              <input type="text" readonly class="vms-readonly-input form-input text-right" v-model="form.total_amount">
+              <input type="number" readonly class="vms-readonly-input form-input text-right" v-model="form.total_amount">
             </td>
           </tr>
           <tr>
             <td class="!w-10/12 text-right">Add: VAT</td>
             <td class="text-right">
-              <input type="text" class="form-input text-right" v-model="form.vat">
+              <input type="number" class="form-input text-right" v-model="form.vat">
             </td>
           </tr>
           <tr>
             <td class="!w-10/12 text-right">Net Amount</td>
             <td class="text-right">
-              <input type="text" readonly class="vms-readonly-input form-input text-right" v-model="form.net_amount">
+              <input type="number" readonly class="vms-readonly-input form-input text-right" v-model="form.net_amount">
             </td>
           </tr>
       </tbody>
