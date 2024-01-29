@@ -83,7 +83,7 @@ class ScmWoController extends Controller
     public function show(ScmWo $workOrder): JsonResponse
     {
         try {
-            $workOrder->load('scmWoLines.scmWoItems.scmService', "scmWoLines.scmWr", 'scmWoTerms', 'scmVendor', 'scmWarehouse', 'scmWoItems', 'scmWcs', 'scmWoLines.scmWoItems.scmWcsService.scmService', 'scmWoLines.scmWoItems.scmWrLine.scmService');
+            $workOrder->load('scmWoLines.scmWoItems.scmService', "scmWoLines.scmWr", 'scmWoTerms', 'scmVendor', 'scmWarehouse','closedBy', 'scmWoItems.closedBy', 'scmWcs', 'scmWoLines.scmWoItems.scmWcsService.scmService', 'scmWoLines.scmWoItems.scmWrLine.scmService');
 
             $scmWoLines = $workOrder->scmWoLines->map(function ($items) {
                 $datas = $items;
@@ -97,6 +97,7 @@ class ScmWoController extends Controller
                     return [
                         'scm_service_id' => $item['scm_service_id'],
                         'scmService' => $item['scmService'],
+                        'closedBy' => $item['closedBy'],
                         'required_date' => $item['required_date'],
                         'quantity' => $item['quantity'],
                         'rate' => $item['rate'],
@@ -457,9 +458,11 @@ class ScmWoController extends Controller
     
     // for closing Work Order
     public function closeWo(Request $request): JsonResponse
-    {
+    {      
+        
         try {
             $work_order = ScmWo::find($request->id);
+            $work_order->load('scmWoItems');
             $work_order->update([
                 // 'is_closed' => 1,
                 'status' => 'Closed',
@@ -467,20 +470,22 @@ class ScmWoController extends Controller
                 'closed_at' => now(),
                 'closing_remarks' => $request->closing_remarks,
             ]);
-
-            $work_order->load('scmWoItems');
-            foreach ($work_order->scmWoItems as $woItem) {
-                if ($woItem->status === 'Closed') {
-                    continue;
+                       
+            if(count($work_order->scmWoItems)>0){
+                foreach($work_order->scmWoItems as $wo_item) {    
+                    if ($wo_item->status === 'Closed') {
+                        continue;
+                    }
+                    $wo_item->update([
+                        // 'is_closed' => 1,
+                        'status' => 'Closed',
+                        'closed_by' => auth()->user()->id,
+                        'closed_at' => now(),
+                        'closing_remarks' => $request->closing_remarks,
+                    ]);
                 }
-                $woItem->update([
-                    // 'is_closed' => 1,
-                    'status' => 'Closed',
-                    'closed_by' => auth()->user()->id,
-                    'closed_at' => now(),
-                    'closing_remarks' => $request->closing_remarks,
-                ]);
             }
+
             return response()->success('Data updated sucessfully!', $work_order, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
