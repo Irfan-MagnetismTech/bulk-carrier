@@ -283,8 +283,11 @@ function confirmDelete(id) {
                  
                   <action-button :action="'show'" :to="{ name: 'scm.work-cs.show', params: { workCsId: workCs.id } }"></action-button>
       
-                  <action-button :action="'edit'" :to="{ name: 'scm.work-cs.edit', params: { workCsId: workCs?.id } }"></action-button>
-                  <action-button @click="confirmDelete(workCs?.id)" :action="'delete'"></action-button>
+                  <action-button :action="'edit'" v-if="workCs?.scmWcsVendors?.length == 0" :to="{ name: 'scm.work-cs.edit', params: { workCsId: workCs?.id } }"></action-button>
+                  <action-button @click="confirmDelete(workCs?.id)" v-if="workCs?.scmWcsVendors?.length == 0" :action="'delete'"></action-button>
+
+                  <action-button v-if="workCs?.scmWcsVendors?.length" :action="'disabled_edit'"></action-button>
+                  <action-button v-if="workCs?.scmWcsVendors?.length" :action="'disabled_delete'"></action-button>
                 </div>
               </td>
             </tr>
