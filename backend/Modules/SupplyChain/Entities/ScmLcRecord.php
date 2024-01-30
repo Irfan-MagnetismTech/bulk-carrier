@@ -56,6 +56,12 @@ class ScmLcRecord extends Model
     {
         return $this->hasMany(ScmLcRecordLine::class);
     }
+
+    public function scmLcRecordStatuses(): HasMany
+    {
+        return $this->hasMany(ScmLcRecordStatus::class);
+    }
+
     public function scmPo(): BelongsTo
     {
         return $this->belongsTo(ScmPo::class);
