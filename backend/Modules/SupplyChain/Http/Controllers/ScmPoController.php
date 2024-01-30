@@ -558,6 +558,30 @@ class ScmPoController extends Controller
                 ]);
             }
             return response()->success('Data updated sucessfully!', $po, 200);
+    /**
+     * Show the specified resource.
+     * @param ScmPo $purchaseOrder
+     * @return JsonResponse
+     */
+    public function getPoMaterialByPoId(Request $request): JsonResponse
+    {
+        try {
+            $scmPoItems= ScmPoItem::with('scmMaterial')->where('scm_po_id', $request->scm_po_id)->get();
+
+            $data = $scmPoItems->map(function ($item) {
+                return [
+                    'scmMaterial' => $item['scmMaterial'],
+                    'scm_po_id' => $item['scm_po_id'],
+                    'scm_material_id' => $item['scm_material_id'],
+                    'unit' => $item['unit'],
+                    'brand' => $item['brand'],
+                    'model' => $item['model'],
+                    'quantity' => $item['quantity'],
+                ];
+            })->unique('scm_material_id')->values()->all();
+
+
+            return response()->success('data', $data, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }

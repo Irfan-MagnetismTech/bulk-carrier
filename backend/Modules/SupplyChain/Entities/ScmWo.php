@@ -2,13 +2,14 @@
 
 namespace Modules\SupplyChain\Entities;
 
+use App\Models\User;
 use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class ScmWo extends Model
 {
@@ -30,9 +31,9 @@ class ScmWo extends Model
         'purchase_center',
         'remarks',
         'business_unit',
+        'created_by',
         'closed_at',
         'closed_by',
-        'created_by',
         'is_closed',
         'closing_remarks',
         'status',
@@ -73,8 +74,13 @@ class ScmWo extends Model
     //     return $this->hasMany(ScmMrr::class);
     // }
 
-    public function scmWoItems(): HasOneThrough
+    public function scmWoItems(): HasManyThrough
     {
-        return $this->hasOneThrough(ScmWoItem::class, ScmWoLine::class);
+        return $this->hasManyThrough(ScmWoItem::class, ScmWoLine::class);
+    }
+
+    public function closedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'closed_by' , 'id');
     }
 }

@@ -1,9 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\SupplyChain\Http\Controllers\ScmPoController;
 use Modules\SupplyChain\Http\Controllers\ScmWoController;
 use Modules\SupplyChain\Http\Controllers\ScmWrController;
 use Modules\SupplyChain\Http\Controllers\ScmWcsController;
+use Modules\SupplyChain\Http\Controllers\ScmLcRecordStatusController;
 
 Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     //
@@ -11,6 +13,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
         'work-requisitions' => ScmWrController::class,
         'work-cs' => ScmWcsController::class,
         'work-orders' => ScmWoController::class,
+        'lc-record-statuses' => ScmLcRecordStatusController::class,
     ]);
 
     Route::get('search-wr-wise-service-for-wcs', [ScmWrController::class, "getServiceByWrIdForWcs"])->name('getServiceByWrIdForWcs');
@@ -31,7 +34,9 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('wcs-wise-vendor-list', [ScmWcsController::class, "wcsWiseVendorList"])->name('wcs-wise-vendor-list');
     Route::get('get-wcs-data/{id}', [ScmWcsController::class, "getWcsWiseData"])->name('getWcsWiseData');
     Route::get('getWcsData/{csId}', [ScmWcsController::class, "getWcsData"])->name('getWcsData');
-
+    
+    
+    Route::get('get-po-material-by-po-id', [ScmPoController::class, "getPoMaterialByPoId"])->name('getPoMaterialByPoId');
     
     Route::get('get-wo-line-datas', [ScmWoController::class, "getWoLineDatas"])->name('get-wo-line-datas');
     Route::get('search-wr-wise-service', [ScmWoController::class, "getServiceByWrId"])->name('getServiceByWrId');
@@ -39,7 +44,8 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('search-wo', [ScmWoController::class, "searchWo"])->name('searchWo');
     Route::get('get-wr-wcs-wise-wo-data', [ScmWoController::class, "getWoOrWoWcsWiseWrData"]);
     Route::get('search-wo-for-lc', [ScmWoController::class, "searchWoForLc"])->name('searchWoForLc');
-
+    Route::post('close-wo', [ScmWoController::class, "closeWo"])->name('closeWo');
+    Route::post('close-woitem', [ScmWoController::class, "closeWoItem"])->name('closeWoItem');
 
 
 });
