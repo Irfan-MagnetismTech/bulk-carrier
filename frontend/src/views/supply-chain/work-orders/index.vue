@@ -19,7 +19,7 @@ import RemarksComponent from '../../../components/utils/RemarksComponent.vue';
 import { useRouter } from 'vue-router';
 import { formatDate } from '../../../config/setting';
 // const { getPurchaseOrders, purchaseOrders, deletePurchaseOrder, isLoading,isTableLoading,errors} = usePurchaseOrder();
-const { getWorkOrders, workOrders, deleteWorkOrder, closeWo, isLoading, isTableLoading, errors } = useWorkOrder();
+const { getWorkOrders, workOrders, deleteWorkOrder, closeWo, confirmationWo, isLoading, isTableLoading, errors } = useWorkOrder();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -35,20 +35,32 @@ const router = useRouter();
 
 
 const closingRemarks = ref(null);
+const confirmationStatus = ref(null);
 const isModalOpen = ref(0);
 const details = ref([{type: ''}]);
 const currentIndex = ref(null);
+const currentBtn = ref(null);
 
 
-function showModal(id) {
-  isModalOpen.value = 1
+function showModal(id, $btn=null) {
+  currentBtn.value=$btn;
+  isModalOpen.value = 1;
   currentIndex.value = id;
 }
 
 function closeModel() {
   isModalOpen.value = 0
   closingRemarks.value = null;
+  confirmationStatus.value = null;
   currentIndex.value = null;
+}
+
+function confirmationWorkOrder() {
+  confirmationWo(currentIndex.value,confirmationStatus.value).then(() => {
+      closeModel()
+    }).catch((error) => {
+      console.error("Error closing WO:", error);
+    });
 }
 
 function closeWorkOrder() {
@@ -274,8 +286,9 @@ const navigateToMRRCreate = (purchaseOrderId) => {
               </td>
               <td>
                 <nobr>
-                <div class="">
-                  <action-button v-show="workOrder.status !== 'Closed'" @click="showModal(workOrder?.id)" :action="'close'"></action-button>
+                <div class="">                  
+                  <action-button v-show="workOrder.confirmation_status == ''" @click="showModal(workOrder?.id)" :action="'show'"></action-button>
+                  <action-button v-show="workOrder.status !== 'Closed'" @click="showModal(workOrder?.id,'close')" :action="'close'"></action-button>
                   <!-- <button @click="navigateToMRRCreate(purchaseOrder.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
                   <action-button :action="'show'" :to="{ name: 'scm.work-orders.show', params: { workOrderId: workOrder.id } }"></action-button>
                   <template>
@@ -340,8 +353,11 @@ const navigateToMRRCreate = (purchaseOrderId) => {
           <table id="dataTable" class="w-full table table-striped table-bordered">
             <tbody>
               <tr>
-                <td>
-                <RemarksComponent v-model="closingRemarks" :maxlength="300" :fieldLabel="'Closing Remarks'" isRequired="true" hideLebel="true"></RemarksComponent>
+                <td v-if="currentBtn=='close'">                  
+                  <RemarksComponent v-model="closingRemarks" :maxlength="300" :fieldLabel="'Closing Remarks'" isRequired="true" hideLebel="true"></RemarksComponent>
+                </td>
+                <td v-else>                  
+                  <RemarksComponent v-model="confirmationStatus" :maxlength="300" :fieldLabel="'Confirmation Status'" isRequired="true" hideLebel="true"></RemarksComponent>
                 </td>
               </tr>
            </tbody>
@@ -352,7 +368,11 @@ const navigateToMRRCreate = (purchaseOrderId) => {
                   class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 border border-gray-300 rounded-lg dark-disabled:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
             CLOSE
           </button>
-          <button type="button" @click="closeWorkOrder" style="color: #1b1e21"
+          <button v-if="currentBtn=='close'" type="button" @click="closeWorkOrder" style="color: #1b1e21"
+                  class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 border border-gray-300 rounded-lg dark-disabled:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
+            CONFIRM
+          </button>
+          <button v-else type="button" @click="confirmationWorkOrder" style="color: #1b1e21"
                   class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 border border-gray-300 rounded-lg dark-disabled:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
             CONFIRM
           </button>
