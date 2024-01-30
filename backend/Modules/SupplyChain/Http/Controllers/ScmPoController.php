@@ -558,6 +558,10 @@ class ScmPoController extends Controller
                 ]);
             }
             return response()->success('Data updated sucessfully!', $po, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
     /**
      * Show the specified resource.
      * @param ScmPo $purchaseOrder
