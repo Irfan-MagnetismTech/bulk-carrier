@@ -218,7 +218,7 @@ export default function useRestHourRecord() {
         try {
             const { data, status } = await Api.post('/crw/crw-rest-hour-report', form);
             restHourReport.value = data.value;
-            //notification.showSuccess(status);
+            //notification.showSuccess(status,data.value.message);
             //await router.push({ name: "crw.rest-hour-records.index" });
         } catch (error) {
             const { data, status } = error.response;

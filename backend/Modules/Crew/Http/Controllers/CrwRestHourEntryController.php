@@ -151,6 +151,12 @@ class CrwRestHourEntryController extends Controller
             $dailyRecords = CrwRestHourEntry::where('ops_vessel_id', $vesselId)->whereBetween('record_date', [$from, $till])
                 ->with(['crwRestHourEntryLine' => fn($q) => $q->where('crw_crew_id', $crewId)])->get();
 
+            if(count($dailyRecords) < 1){
+                return response()->json([
+                    'value' => '',
+                    'message' => 'No data found'
+                ],422);
+            }
             $crwCrewAssignmentId = $dailyRecords->first()->crwRestHourEntryLine->crw_crew_assignment_id;
 
             $restHourRecords                       = [];
