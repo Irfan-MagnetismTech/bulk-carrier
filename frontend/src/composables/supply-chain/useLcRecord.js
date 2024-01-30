@@ -18,6 +18,10 @@ export default function useLcRecord() {
     const notification = useNotification();
     // const LoaderConfig = { 'can-cancel': false, 'loader': 'dots', 'color': 'purple' };
     // use lodash
+    const lcRecordStatus = ref({
+        status: '',
+        date: '',
+    });
 
     const lcRecord = ref({
         lc_no: null,
@@ -202,13 +206,14 @@ export default function useLcRecord() {
         }
     }
 
-    async function storeLcRecordStatuses(form) {
+    async function storeLcRecordStatus(form) {
         // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+        
 
         try {
             const { data, status } = await Api.post(`/${BASE}/lc-record-statuses`, form);
-            lcRecordStatuses.value = data.value;
+            lcRecordStatus.value = data.value;
             notification.showSuccess(status);
             // await router.push({ name: "mnt.ship-departments.index" });
         } catch (error) {
@@ -251,9 +256,10 @@ export default function useLcRecord() {
         showLcRecord,
         updateLcRecord,
         deleteLcRecord,
-        storeLcRecordStatuses,
+        storeLcRecordStatus,
         showLcRecordStatuses,
         lcRecordStatuses,
+        lcRecordStatus,
         isTableLoading,
         isLoading,
         errors,
