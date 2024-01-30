@@ -201,6 +201,18 @@ const navigateToPOCreate = (csId) => {
   router.push(routeOptions);
 };  
 
+const navigateSupplierSelectionShow = (wcsId) => {
+  const routeOptions = {
+    name: 'scm.wcs-supplier-selection.show',
+    params: {
+      wcsId: wcsId
+    }
+    // query: {
+    //   csId: csId
+    // }
+  };
+  if(wcsId) router.push(routeOptions);
+};
 
 function confirmDelete(id) {
         Swal.fire({
@@ -267,6 +279,10 @@ function confirmDelete(id) {
                   <!-- <button @click="navigateToPOCreate(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Create PO</nobr></button> -->
                   <button @click="navigateToQuotation(workCs?.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Quotations</nobr></button>
                   <button @click="navigateSupplierSelection(workCs?.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700" v-if="workCs?.scmWcsVendors?.length && !workCs?.scmWcsVendors?.find(scmWcsVendor => scmWcsVendor.is_selected == 1)"><nobr>Select Supplier</nobr></button>
+                  <button @click="navigateSupplierSelectionShow(workCs.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Supplier Selection</nobr></button>
+                 
+                  <action-button :action="'show'" :to="{ name: 'scm.work-cs.show', params: { workCsId: workCs.id } }"></action-button>
+      
                   <action-button :action="'edit'" :to="{ name: 'scm.work-cs.edit', params: { workCsId: workCs?.id } }"></action-button>
                   <action-button @click="confirmDelete(workCs?.id)" :action="'delete'"></action-button>
                 </div>
