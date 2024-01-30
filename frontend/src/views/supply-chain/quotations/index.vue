@@ -211,6 +211,19 @@ function supplierSelection(csId) {
   };
   if(csId) router.push(routeOptions);
 }
+const supplierSelectionShow = (csId) => {
+  const routeOptions = {
+    name: 'scm.supplier-selection.show',
+    params: {
+      csId: csId
+    }
+    // query: {
+    //   csId: csId
+    // }
+  };
+  if(csId) router.push(routeOptions);
+};
+
 
 function confirmDelete(cs_id, id) {
         Swal.fire({
@@ -260,7 +273,8 @@ function confirmDelete(cs_id, id) {
       </label>
     </div>
     <div>
-          <button @click="supplierSelection(CSID)" class="text-xs px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Supplier Selection</nobr></button> 
+        <button v-if="materialCs?.scmPo?.length == 0 && materialCs?.scmCsVendors?.length" @click="supplierSelection(CSID)" class="text-xs px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Supplier Selection</nobr></button> 
+        <button v-if="materialCs?.scmPo?.length" @click="supplierSelectionShow(CSID)" class="text-xs px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Supplier Selection</nobr></button> 
          <button v-if="materialCs.purchase_center == 'Foreign'" @click="navigateCostProjection(CSID)" class="text-xs px-2 py-1 ml-2 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Cost Projection</nobr></button> 
          
      </div>
@@ -295,10 +309,12 @@ function confirmDelete(cs_id, id) {
               <td v-if="materialCs.purchase_center == 'Foreign'">{{ quotation?.total_offered_price }}</td>
               <td v-if="materialCs.purchase_center == 'Foreign'">{{ quotation?.total_negotiated_price }}</td>
               <td>
-                <div class="grid grid-flow-col-dense gap-x-2">                 
-                  <action-button :action="'edit'" :to="{ name: 'scm.quotations.edit', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>
-                  <!-- <action-button :action="'edit'" :to="{ name: 'scm.cs-cost-projection.create', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button> -->
-                  <action-button @click="confirmDelete(quotation.scm_cs_id, quotation.id)" :action="'delete'" v-if="!quotation.is_selected"></action-button>
+                <div class="grid grid-flow-col-dense gap-x-2">  
+                  <template v-if="materialCs.selectedVendors.length == 0">
+                    <action-button :action="'edit'" :to="{ name: 'scm.quotations.edit', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>
+                    <!-- <action-button :action="'edit'" :to="{ name: 'scm.cs-cost-projection.create', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button> -->
+                    <action-button @click="confirmDelete(quotation.scm_cs_id, quotation.id)" :action="'delete'" v-if="!quotation.is_selected"></action-button>
+                  </template>  
                 </div>
               </td>
             </tr>
