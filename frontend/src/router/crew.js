@@ -535,4 +535,41 @@ export default [
     /* Appraisal Record End */
 
 
+
+    /* Appraisal Record Start */
+    {
+        path: `/${BASE}/rest-hour-records`,
+        name: `${BASE}.rest-hour-records.index`,
+        component: () => import(`../views/crew/rest-hour-record/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'rest-hour-record-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/rest-hour-records/create`,
+        name: `${BASE}.rest-hour-records.create`,
+        component: () => import(`../views/crew/rest-hour-record/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'rest-hour-record-create' },
+    },
+    {
+        path: `/${BASE}/rest-hour-records/:restHourRecordId/edit`,
+        name: `${BASE}.rest-hour-records.edit`,
+        component: () => import(`../views/crew/rest-hour-record/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'rest-hour-record-edit' },
+    },
+    {
+        path: `/${BASE}/rest-hour-records/:restHourRecordId`,
+        name: `${BASE}.rest-hour-records.show`,
+        component: () => import(`../views/crew/rest-hour-record/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'rest-hour-record-show'  },
+    },
+    {
+        path: `/${BASE}/rest-hour-records/report`,
+        name: `${BASE}.rest-hour-records.report`,
+        component: () => import(`../views/crew/rest-hour-record/report.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'rest-hour-record-report' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    /* Appraisal Record End */
+
+
 ];
