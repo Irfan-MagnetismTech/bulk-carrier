@@ -145,11 +145,11 @@ onMounted(() => {
             <strong>Watchkeeper :</strong>
             <span class="ml-1 flex items-center">
               <label class="inline-flex items-center text-gray-600 dark:text-gray-400 mr-2">
-                    <input type="radio" :checked="restHourReport?.assignment?.is_watchkeeper" class="text-purple-600 w-3 h-3 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="accountType" value="personal">
+                    <input type="radio" :checked="restHourReport?.assignment?.is_watchkeeper" readonly class="text-purple-600 w-3 h-3 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="accountType" value="personal">
                     <span class="ml-1">Yes</span>
               </label>
               <label class="inline-flex items-center text-gray-600 dark:text-gray-400">
-                    <input type="radio" :checked="!restHourReport?.assignment?.is_watchkeeper" class="text-purple-600 w-3 h-3 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="accountType" value="personal">
+                    <input type="radio" :checked="!restHourReport?.assignment?.is_watchkeeper" readonly class="text-purple-600 w-3 h-3 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="accountType" value="personal">
                     <span class="ml-1">No</span>
               </label>
             </span>

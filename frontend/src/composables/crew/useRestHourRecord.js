@@ -78,6 +78,17 @@ export default function useRestHourRecord() {
 
         const selectedHourlyRecords = form.hourlyRecords.filter(record => record.is_selected === true);
         const selectedCrews = form.selectedCrews.filter(record => record.is_checked === true);
+
+        if(!selectedHourlyRecords.length){
+            alert("Please select at least one hourly record.");
+            return;
+        }
+
+        if(!selectedCrews.length){
+            alert("Please select at least one crew.");
+            return;
+        }
+
         form.hourlyRecords = [];
         form.selectedCrews = [];
         form.hourlyRecords = selectedHourlyRecords;

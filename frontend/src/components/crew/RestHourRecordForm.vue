@@ -54,7 +54,7 @@ watch(() => vesselAssignedCrews.value, (items) => {
       crw_position_onboard: item?.position_onboard,
       crw_crew_assignment_id : item.id,
       crw_crew_id : item.crwCrew.id,
-      service_start : '',
+      service_start : item?.joining_date,
       comment : '',
       is_checked : false,
     })
@@ -197,7 +197,7 @@ onMounted(() => {
                 <input type="text" :value="form.selectedCrews[index].crw_position_onboard" class="form-input vms-readonly-input" autocomplete="off" readonly/>
               </td>
               <td class="px-1 py-1">
-                <input type="number" v-model.trim="form.selectedCrews[index].service_start" min="0" max="31" class="form-input vms-readonly-input" autocomplete="off" required readonly />
+                <input type="text" v-model.trim="form.selectedCrews[index].service_start" min="0" max="31" class="form-input vms-readonly-input" autocomplete="off" required disabled />
               </td>
               <td class="px-1 py-1">
                 <input type="text" v-model.trim="form.selectedCrews[index].comment" placeholder="Comment.." class="form-input" autocomplete="off"/>
