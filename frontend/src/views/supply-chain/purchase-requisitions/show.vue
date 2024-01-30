@@ -72,7 +72,7 @@
                     </tr>
                     <tr v-if="purchaseRequisition.status === 'Closed'">
                         <th class="w-40">Closed By</th>
-                        <td>{{ purchaseRequisition?.closed_by }}</td>
+                        <td>{{ purchaseRequisition?.closedBy.name }}</td>
                     </tr>
                     <tr v-if="purchaseRequisition.status === 'Closed'">
                         <th class="w-40">Closing Remarks </th>
@@ -148,9 +148,9 @@
                 <span v-else :class="purchaseRequisition.scmPrLines[index]?.is_closed === 0 ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition.scmPrLines[index].is_closed === 0 ? 'Open' : 'Closed' }}</span> -->
                 <button v-if="purchaseRequisition.scmPrLines[index].status != 'Closed'" @click="showModal(purchaseRequisition.scmPrLines[index].id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Close</button>
                                   
-                                  <span v-else :class="purchaseRequisition.scmPrLines[index]?.status === 'Pending' ? 'text-yellow-700 bg-yellow-100' : (purchaseRequisition.scmPrLines[index]?.status == 'WIP' ? 'text-blue-700 bg-blue-100' : 'text-red-700 bg-red-100') " :title="purchaseRequisition.scmPrLines[index]?.status === 'Closed' ? `
-                                  Closed At : ${formatDateTime(purchaseRequisition.scmPrLines[index]?.closed_at)}\nClosed By : ${purchaseRequisition.scmPrLines[index]?.closed_by}
-                                  ` : ''" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition.scmPrLines[index]?.status ?? 'Closed' }}</span>
+                <span v-else :class="purchaseRequisition.scmPrLines[index]?.status === 'Pending' ? 'text-yellow-700 bg-yellow-100' : (purchaseRequisition.scmPrLines[index]?.status == 'WIP' ? 'text-blue-700 bg-blue-100' : 'text-red-700 bg-red-100') " :title="purchaseRequisition.scmPrLines[index]?.status === 'Closed' ? `
+                Closed At : ${formatDateTime(purchaseRequisition.scmPrLines[index]?.closed_at)}\nClosed By : ${purchaseRequisition.scmPrLines[index]?.closed_by}
+                ` : ''" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition.scmPrLines[index]?.status ?? 'Closed' }}</span>
               </td>
               </tr>
             </tbody>
@@ -233,7 +233,7 @@ import usePurchaseRequisition from "../../../composables/supply-chain/usePurchas
 import StoreRequisitionShow from "../../../components/supply-chain/store-requisitions/StoreRequisitionShow.vue";
 import { formatDate, formatDateTime } from '../../../utils/helper';
 import RemarksComponent from '../../../components/utils/RemarksComponent.vue';
-
+import env from "../../../config/env";
 const icons = useHeroIcon();
 
 const route = useRoute();

@@ -323,13 +323,14 @@ export default function usePurchaseOrder() {
         }
     }
 
-    async function getLineData(prId, csId = null) { 
+    async function getLineData(prId, csId=null,poId = null) { 
         isLoading.value = true;
         try {
             const {data, status} = await Api.get(`/${BASE}/get-po-line-datas`,{
                 params: {
                     pr_id: prId,
                     cs_id: csId,
+                    po_id: poId,
                 },
             });
             return data.value;  
@@ -340,6 +341,55 @@ export default function usePurchaseOrder() {
             isLoading.value = false;
         }
     }
+
+    async function closePo(id,closing_remarks) {
+        try {
+            let formData = new FormData();
+            formData.append('id', id);
+            formData.append('closing_remarks', closing_remarks);
+
+            const { data, status } = await Api.post(`/${BASE}/close-po`, formData);
+            notification.showSuccess(status);
+            await getPurchaseOrders(filterParams.value);
+        }
+        catch (error) {
+            if (error.response) {
+                const { data, status ,messege } = error.response;
+                console.log(data,error.response);
+                notification.showError(status);
+            } else {
+                notification.showError("An error occurred. Please check your internet connection.");
+            }
+
+        } finally {
+            // isLoading.value = false;
+        }
+
+    }
+
+    async function closePoLines(parent_id,id,closing_remarks) {
+        try {
+            let formData = new FormData();
+            formData.append('id', id);
+            formData.append('parent_id', parent_id);
+            formData.append('closing_remarks', closing_remarks);
+
+            const { data, status } = await Api.post(`/${BASE}/close-poline`, formData);
+            notification.showSuccess(status);
+            await showPurchaseOrder(parent_id);
+        }
+        catch (error) {
+            if (error.response) {
+                const { data, status ,messege } = error.response;
+                console.log(data,error.response);
+                notification.showError(status);
+            } else {
+                notification.showError("An error occurred. Please check your internet connection.");
+            }
+
+        } finally {
+            // isLoading.value = false;
+        }
 
     async function getPoMaterials(poId) {
         // const loader = $loading.show(LoaderConfig);
@@ -384,6 +434,8 @@ export default function usePurchaseOrder() {
         poLineObject,
         termsObject,
         isTableLoading,
+        closePo,
+        closePoLines,
         materialList,
         isLoading,
         errors,

@@ -78,7 +78,7 @@
         <!-- <td>{{ materialData[0].scmPr.ref_no  }}</td> -->
         <td :rowspan="Object.keys(materialprData).length">{{ materialData[0].unit }}</td>
         <td>{{ materialData[0].sum_quantity }}</td>
-        <td></td>
+        <td>{{ formData?.latestPoItem && formData?.latestPoItem.length ? formData?.latestPoItem[index1].rate : "N/A" }}</td>
         <template v-for="(materialVendorData,index11) in (formData?.scmCsMaterialVendor[index1][name])" :key="index11">
             <td>{{ materialVendorData[0].negotiated_price }}</td>
             <td>{{ materialVendorData[0].negotiated_price * materialData[0].sum_quantity}}</td>
@@ -140,7 +140,7 @@
     </tr>
     <tr>
       <td>Delivery Time</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].scmVendor.delivery_time }}</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].delivery_time }}</td>
     </tr>
     <tr v-if="form.purchase_center == 'Foreign'">
       <td>Estimated Shipment Date</td>
@@ -225,6 +225,15 @@
     <tr v-if="form.purchase_center != 'Foreign'">
       <td>Negotiated Price</td>
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].total_negotiated_price }}</td>
+    </tr>
+    <tr>
+      <td>Technical Acceptance </td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">
+            <select v-model="form.scmCsVendor[index][0].technical_acceptance" class="form-input">
+              <option value="Accepted">Accepted</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+      </td>
     </tr>
     <tr>
       <td>Selected Vendor</td>
@@ -368,7 +377,7 @@
     </form>
     </div>
 
-
+    <ErrorComponent :errors="errors"></ErrorComponent>
 
 </template>
 
@@ -392,7 +401,8 @@
     import { useRoute } from 'vue-router';
     import { formatDate } from '../../../utils/helper';
     import RemarksComponet from '../../utils/RemarksComponent.vue';
-
+    import ErrorComponent from '../../utils/ErrorComponent.vue';
+    
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
     const { searchVendor, vendors, vendor, isLoading: vendorLoading } = useVendor();

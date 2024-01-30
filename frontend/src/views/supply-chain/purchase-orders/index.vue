@@ -13,9 +13,10 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import RemarksComponent from '../../../components/utils/RemarksComponent.vue';
 
 import { useRouter } from 'vue-router';
-const { getPurchaseOrders, purchaseOrders, deletePurchaseOrder, isLoading,isTableLoading,errors} = usePurchaseOrder();
+const { getPurchaseOrders, purchaseOrders, deletePurchaseOrder, isLoading,isTableLoading,errors,closePo} = usePurchaseOrder();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -36,6 +37,30 @@ const icons = useHeroIcon();
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
+
+const isModalOpen = ref(0);
+const details = ref([{type: ''}]);
+const currentIndex = ref(null);
+const closingRemarks = ref(null);
+
+function showModal(id) {
+  isModalOpen.value = 1
+  currentIndex.value = id;
+}
+
+function closeModel() {
+  isModalOpen.value = 0
+  closingRemarks.value = null;
+  currentIndex.value = null;
+}
+
+function closePurchaseOrder() {
+  closePo(currentIndex.value,closingRemarks.value).then(() => {
+            closeModel()
+          }).catch((error) => {
+            console.error("Error closing PO:", error);
+          });
+}
 
 setTitle('Purchase Orders');
 // Code for global search starts here
@@ -208,18 +233,18 @@ function confirmDelete(id) {
 }
 
           
-const navigateToMRRCreate = (purchaseOrderId) => {
-        const pr_id = null; 
-        const po_id = purchaseOrderId;
-        const routeOptions = {
-          name: 'scm.material-receipt-reports.create',
-          query: {
-            pr_id: pr_id,
-            po_id: po_id
-          }
-        };
-        router.push(routeOptions);
-      };
+// const navigateToMRRCreate = (purchaseOrderId) => {
+//         const pr_id = null; 
+//         const po_id = purchaseOrderId;
+//         const routeOptions = {
+//           name: 'scm.material-receipt-reports.create',
+//           query: {
+//             pr_id: pr_id,
+//             po_id: po_id
+//           }
+//         };
+//         router.push(routeOptions);
+//       };
 </script>
 
 <template>
@@ -292,6 +317,7 @@ const navigateToMRRCreate = (purchaseOrderId) => {
               <td>
                 <nobr>
                 <div class="grid grid-flow-col-dense gap-x-2">
+                  <action-button v-show="purchaseOrder.status !== 'Closed'" @click="showModal(purchaseOrder?.id)" :action="'close'"></action-button>
                   <!-- <button @click="navigateToMRRCreate(purchaseOrder.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
                   <action-button :action="'show'" :to="{ name: 'scm.purchase-orders.show', params: { purchaseOrderId: purchaseOrder.id } }"></action-button>
                   <template>
@@ -326,4 +352,57 @@ const navigateToMRRCreate = (purchaseOrderId) => {
   
 
   <ErrorComponent :errors="errors"></ErrorComponent>  
+
+
+  <div v-show="isModalOpen" class="fixed inset-0 z-30 flex items-end overflow-y-auto bg-black bg-opacity-50 sm:items-center sm:justify-center">
+    <!-- Modal -->
+    <form @submit.prevent="" style="position: absolute;top: 0;">
+      <div class="w-full px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark-disabled:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
+        <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
+        <header class="flex justify-end">
+          <button type="button"
+                  class="inline-flex items-center justify-center w-6 h-6 mb-2 text-gray-400 transition-colors duration-150 rounded dark-disabled:hover:text-gray-200 hover: hover:text-gray-700"
+                  aria-label="close" @click="closeModel">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" role="img" aria-hidden="true">
+              <path
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd" fill-rule="evenodd"></path>
+            </svg>
+          </button>
+        </header>
+        <!-- Modal body -->
+        <table class="w-full mb-2 whitespace-no-wrap border-collapse contract-assign-table table2">
+          <thead v-once>
+          <tr style="background-color: #04AA6D;color: white"
+              class="text-xs font-semibold tracking-wide text-gray-500 uppercase border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+            <th colspan="5">Remarks</th>
+          </tr>
+          </thead>
+        </table>
+        <div class="dt-responsive table-responsive">
+          <table id="dataTable" class="w-full table table-striped table-bordered">
+            <tbody>
+              <tr>
+                <td>
+                <RemarksComponent v-model="closingRemarks" :maxlength="300" :fieldLabel="'Closing Remarks'" isRequired="true" hideLebel="true"></RemarksComponent>
+                </td>
+              </tr>
+           </tbody>
+          </table>
+        </div>
+        <footer class="flex flex-col items-center justify-between px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark-disabled:bg-gray-800">
+          <button type="button" @click="closeModel" style="color: #1b1e21"
+                  class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 border border-gray-300 rounded-lg dark-disabled:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
+            CLOSE
+          </button>
+          <button type="button" @click="closePurchaseOrder" style="color: #1b1e21"
+                  class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 border border-gray-300 rounded-lg dark-disabled:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
+            CONFIRM
+          </button>
+        </footer>
+      </div>
+    </form>
+    </div>
+
+
 </template>
