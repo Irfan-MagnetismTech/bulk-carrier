@@ -8,6 +8,7 @@ use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Entities\ScmCsVendor;
 use Modules\SupplyChain\Entities\ScmWarehouse;
 use Modules\SupplyChain\Entities\ScmCsMaterial;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\SupplyChain\Entities\ScmCsMaterialVendor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -35,9 +36,9 @@ class ScmCs extends Model
     ];
 
 
-    public function scmPr()
+    public function scmPo(): BelongsTo
     {
-        return $this->belongsTo(ScmPr::class);
+        return $this->belongsTo(ScmPo::class);
     }
 
     public function scmWarehouse()
