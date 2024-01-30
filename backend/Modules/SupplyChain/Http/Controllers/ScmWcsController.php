@@ -11,6 +11,7 @@ use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmWr;
 use Modules\SupplyChain\Entities\ScmWcs;
 use Modules\SupplyChain\Services\UniqueId;
+use Modules\SupplyChain\Entities\ScmWoItem;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmWcsVendor;
 use Modules\SupplyChain\Services\CompositeKey;
@@ -482,45 +483,31 @@ class ScmWcsController extends Controller
             ->get()
             ->groupBy(['scm_service_id', 'scm_wr_id', 'scm_vendor_id']);
 
-        // $scmWcs['scmWcsService'] = ScmWcsService::query()
-        //     ->with(['scmService', 'scmWr', 'scmWoItemServices.scmWo' => function ($query) {
-        //         $query->latest()->first();
-        //     }])
-        //     ->where('scm_wcs_id', $wcsId)
-        //     ->get()
-        //     ->groupBy(['scm_service_id', 'scm_wr_id'])
-        //     ->map(function ($items) {
-        //         return $items->map(function ($data) {
-        //             $data[0]['sum_quantity'] = $data->sum('quantity');
-        //             return $data;
-        //         });
-        //     });
-        $scmWcs['scmWcsService'] = ScmWcsService::query()
-        ->with(['scmService', 'scmWr', 'scmWoItemServices.scmWo'])
-        ->where('scm_wcs_id', $wcsId)
-        ->get()
-        ->groupBy(['scm_service_id', 'scm_wr_id'])
-        ->map(function ($items) {
-            return $items->map(function ($data){
-                // return $data->map(function ($service){
-                //     $scmWoItemServices = $service['scmWoItemServices']
-                //     ->sortByDesc(function ($item) {
-                //         return optional($item['scmWo'])['date'];
-                //     });
-                    
-                //     $latestScmWoItemService = $scmWoItemServices->first();
-                //     data_forget($service, 'scmWoItemServices');
-                //     $service['scmWoItemServices']=$latestScmWoItemService;
-                //     return $service;
-                // });
 
-                $data[0]['sum_quantity'] = $data->sum('quantity');
-                
-                return $data;
+        $scmWcs['latestWoItem'] = ScmWoItem::query()
+            ->with(['scmWoLine.scmWo'])
+            ->whereIn('scm_service_id', $scmWcs->scmWcsServices->pluck('scm_service_id')->toArray())
+            ->get()
+            ->sortByDesc(function ($item) {
+                return $item->scmWoLine->scmWo->date;
+            })
+            ->groupBy('scm_service_id')
+            ->map(function ($items) {
+                return $items[0];
             });
-        });
 
-            // dd($scmWcs);
+
+        $scmWcs['scmWcsService'] = ScmWcsService::query()
+            ->with(['scmService', 'scmWr'])
+            ->where('scm_wcs_id', $wcsId)
+            ->get()
+            ->groupBy(['scm_service_id', 'scm_wr_id'])
+            ->map(function ($items) {
+                return $items->map(function ($data) {
+                    $data[0]['sum_quantity'] = $data->sum('quantity');
+                    return $data;
+                });
+            });
 
         return response()->success('Detail data', $scmWcs, 200);
     }
@@ -533,6 +520,19 @@ class ScmWcsController extends Controller
 
         try {
             $wcs = ScmWcs::find($data['id']);
+
+            foreach ($data['scmWcsVendor'] as $key => $value) {
+                if (empty($value[0]['is_selected'])) {
+                    $error= [
+                        'message'=>'Must be checked selected vendor.',
+                        'errors'=>[
+                            'service'=>['Must be checked selected vendor.']
+                            ]
+                        ];
+                    return response()->json($error, 422);
+                }
+            }
+
             $wcs->update(
                 [
                     'selection_ground' => $data['selection_ground'],
@@ -568,6 +568,7 @@ class ScmWcsController extends Controller
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
+                // ->whereNotNull('auditor_remarks_date')
                 ->orderByDesc('ref_no')
                 ->get();
                 
@@ -581,6 +582,7 @@ class ScmWcsController extends Controller
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
+                // ->whereNotNull('auditor_remarks_date')
                 ->orderByDesc('ref_no')
                 ->get();
         }
