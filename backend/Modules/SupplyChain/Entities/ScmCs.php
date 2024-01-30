@@ -3,6 +3,7 @@
 namespace Modules\SupplyChain\Entities;
 
 use App\Traits\GlobalSearchTrait;
+use App\Traits\UniqueKeyGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Entities\ScmCsVendor;
@@ -15,7 +16,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmCs extends Model
 {
-    use HasFactory, GlobalSearchTrait;
+    use HasFactory, GlobalSearchTrait, UniqueKeyGenerator;
 
     protected $fillable = [
         'ref_no',
@@ -36,6 +37,7 @@ class ScmCs extends Model
         'is_foreign',
     ];
 
+    protected $refKeyPrefix = 'CS';
 
     public function scmPo(): HasMany
     {
