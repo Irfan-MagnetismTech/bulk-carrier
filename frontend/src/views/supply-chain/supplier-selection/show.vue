@@ -339,10 +339,10 @@ const selection_ground = [
   <caption class="border-2 bg-green-400 uppercase">{{ materialData[0].scmMaterial.name }}</caption>
   <thead class="bg-gray-50 dark-disabled:bg-gray-800">
     <tr class="text-gray-600 dark-disabled:text-gray-400 text-sm leading-normal">
-      <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
+      <th rowspan="2" class="px-6 py-3 text-center text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
         <nobr>Details</nobr>
       </th>
-      <th scope="col" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (CsData?.scmCsVendor)" :key="index">
+      <th scope="col" class="px-6 py-3 text-center text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (CsData?.scmCsVendor)" :key="index">
         <nobr>{{ vendorData[0].scmVendor?.name ?? ''}}</nobr>
       </th>    
     </tr>

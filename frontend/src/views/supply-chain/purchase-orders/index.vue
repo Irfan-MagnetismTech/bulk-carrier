@@ -186,7 +186,37 @@ let filterOptions = ref({
       "date_from": null,
       "label": "Warehouse",
       "filter_type": "input"
-    }
+    },
+    {
+      "relation_name": null,
+      "field_name": "status",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Status",
+      "filter_type": "dropdown",
+      "select_options": [
+        {
+          value: '',
+          label: "ALL",
+          defaultSelected : true
+        },
+        {
+          value: "Pending",
+          label: "Pending"
+        },
+        {
+          value: "WIP",
+          label: "WIP"
+        },
+        {
+          value: "Closed",
+          label: "Closed"
+        },
+
+      ]
+    },
   ]
 });
 
@@ -317,6 +347,12 @@ function confirmDelete(id) {
               <td>{{ purchaseOrder?.net_amount }}</td>
               <td>{{ purchaseOrder?.scmCs?.ref_no ?? 'N/A' }}</td>
               <td>{{ purchaseOrder?.scmWarehouse?.name }}</td>
+              <td>
+                <!-- <button v-if="purchaseRequisition.is_closed == 0" @click="showModal(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Close</button>
+                <span v-else :class="purchaseRequisition?.is_closed === 0 ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.is_closed === 0 ? 'Open' : 'Closed' }}</span> -->
+                <span :class="purchaseOrder?.status === 'Pending' ? 'text-yellow-700 bg-yellow-100' : (purchaseOrder?.status == 'WIP' ? 'text-blue-700 bg-blue-100' : 'text-red-700 bg-red-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseOrder?.status ?? 'Closed' }}</span>
+              </td>
+              
               <td>
                 <span :class="purchaseOrder?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseOrder?.business_unit }}</span>
               </td>
