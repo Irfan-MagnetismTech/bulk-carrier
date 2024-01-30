@@ -16,8 +16,8 @@ import { useRoute } from 'vue-router';
 // const { getMaterialCs, showMaterialCs, materialCs, updateMaterialCs, errors, isLoading } = useMaterialCs();
 // const { updateQuotations, quotation, localQuotationLines, foreignQuotationLines,showQuotation } = useQuotation();
 
-const { getWorkCs, showWorkCs, workCs, updateWorkCs, errors, isLoading } = useWorkCs();
-const { updateWcsQuotations, wcsQuotation, wcsQuotationLines, showWcsQuotation } = useWcsQuotation();
+const { getWorkCs, showWorkCs, workCs, updateWorkCs } = useWorkCs();
+const { updateWcsQuotations, wcsQuotation, wcsQuotationLines, showWcsQuotation, errors, isLoading } = useWcsQuotation();
 
 
 import useHeroIcon from "../../../assets/heroIcon";

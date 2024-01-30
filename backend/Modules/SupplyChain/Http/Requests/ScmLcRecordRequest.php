@@ -54,6 +54,11 @@ class ScmLcRecordRequest extends FormRequest
             'market_rate' => 'numeric|required',
             'attachment' => 'nullable|mimes:xlsx,pdf,jpg,png,jpeg,doc,docx',
             'scmLcRecordLines.*.amount' => 'required|numeric',
+            'pi_ref_no' => 'required|max:255',
+            'expected_shipment_date' => 'required|date',
+            'shipment_date' => 'nullable|date',
+
+            
         ];
     }
 
@@ -103,6 +108,13 @@ class ScmLcRecordRequest extends FormRequest
             'amount.numeric' => 'Amount must be a number',
 
             'particular.required' => 'Particular is required',
+
+            'pi_ref_no.required' => 'PI Ref No. is required',
+
+            'expected_shipment_date.required' => 'Expected shipment date is required',
+            'expected_shipment_date.date' => 'Expected shipment date must be a date',
+            
+            'shipment_date.date' => 'Shipment date must be a date',
 
             'scmLcRecordLines.*.amount.required' => 'Amount is required',
             'scmLcRecordLines.*.amount.numeric' => 'Amount must be a number',
