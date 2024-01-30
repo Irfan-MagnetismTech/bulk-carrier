@@ -456,6 +456,7 @@ class ScmWoController extends Controller
         return response()->success('data', $scmWr, 200);
     }
 
+
     
     // for closing Work Order
     public function closeWo(Request $request): JsonResponse
@@ -523,6 +524,21 @@ class ScmWoController extends Controller
             }
 
             return response()->success('Data updated sucessfully!', [$woItems, $sumIsClosed], 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    // for confirmation Work Order
+    public function confirmationWo(Request $request): JsonResponse
+    {
+        try {
+            $work_order = ScmWo::find($request->id);
+            $work_order->update([
+                'confirmation_status' => 'Closed',
+            ]);
+
+            return response()->success('Data updated sucessfully!', $work_order, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }

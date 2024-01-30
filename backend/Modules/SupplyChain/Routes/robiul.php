@@ -46,6 +46,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('search-wo-for-lc', [ScmWoController::class, "searchWoForLc"])->name('searchWoForLc');
     Route::post('close-wo', [ScmWoController::class, "closeWo"])->name('closeWo');
     Route::post('close-woitem', [ScmWoController::class, "closeWoItem"])->name('closeWoItem');
+    Route::post('confirmation-wo', [ScmWoController::class, "confirmationWo"])->name('confirmationWo');
 
 
 });

@@ -117,7 +117,7 @@ class ScmWcsController extends Controller
      */
     public function show(ScmWcs $work_c): JsonResponse
     {
-        $work_c->load('scmWcsServices.scmService', 'scmWcsServices.scmWr','scmWcsServices.scmWrLine', 'scmWarehouse');
+        $work_c->load('scmWcsServices.scmService', 'scmWcsServices.scmWr','scmWcsServices.scmWrLine', 'scmWarehouse','selectedVendors','scmWos','scmWcsVendors');
 
         $data = $work_c->scmWcsServices->map(function($service){
             $service['wr_quantity']= $service->scmWrLine->quantity;
