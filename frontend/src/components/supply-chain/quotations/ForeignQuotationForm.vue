@@ -385,6 +385,7 @@
       </div>
     </div>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 
 
@@ -406,6 +407,7 @@
     import useMaterialCs from '../../../composables/supply-chain/useMaterialCs';
     import { useRoute } from 'vue-router';
     import RemarksComponet from '../../utils/RemarksComponent.vue';
+    import ErrorComponent from '../../utils/ErrorComponent.vue';
     
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
