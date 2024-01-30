@@ -2,7 +2,6 @@
 import {onMounted, watchEffect,watch,ref, watchPostEffect} from 'vue';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
-import usePurchaseOrder from "../../../composables/supply-chain/usePurchaseOrder";
 import useHelper from "../../../composables/useHelper.js";
 import Title from "../../../services/title";
 import useDebouncedRef from '../../../composables/useDebouncedRef';
@@ -16,7 +15,10 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import RemarksComponent from '../../../components/utils/RemarksComponent.vue';
 
 import { useRouter } from 'vue-router';
+import usePurchaseOrder from '../../../composables/supply-chain/usePurchaseOrder';
+
 const { getPurchaseOrders, purchaseOrders, deletePurchaseOrder, isLoading,isTableLoading,errors,closePo} = usePurchaseOrder();
+
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -99,7 +101,8 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Items",
-      "filter_type": "input"
+      "filter_type": "input",
+      "no_short" : true
     },
     {
       "relation_name": "scmPoItems.scmMaterial",
@@ -109,7 +112,8 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Code",
-      "filter_type": "input"
+      "filter_type": "input",
+      "no_short" : true
     },
     {
       "relation_name": "scmPoItems",
@@ -119,7 +123,8 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Qty",
-      "filter_type": "input"
+      "filter_type": "input",
+      "no_short" : true
     },
     {
       "relation_name": "scmPoItems",
@@ -129,7 +134,8 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Unit",
-      "filter_type": "input"
+      "filter_type": "input",
+      "no_short" : true
     },
     {
       "relation_name": "scmVendor",

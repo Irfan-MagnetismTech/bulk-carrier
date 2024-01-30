@@ -190,8 +190,8 @@ class ScmCsController extends Controller
     public function getCsWiseData($id)
     {
         $materialCs = ScmCs::find($id);
-        $materialCs->load('scmCsMaterials.scmMaterial', 'scmPr', 'scmCsMaterials.scmPr', 'scmWarehouse');
-
+        // $materialCs->load('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmWarehouse');
+        $materialCs->load('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmCsMaterials.scmPrLine', 'scmWarehouse');
         $data = $materialCs->scmCsMaterials->groupBy(['scm_material_id'])->values()->all();
         data_forget($materialCs, 'scmCsMaterials');
 
@@ -507,7 +507,7 @@ class ScmCsController extends Controller
     public function getCsData($csId)
     {
         $scmCs = ScmCs::query()
-            ->with('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmPr', 'scmWarehouse')
+            ->with('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmWarehouse')
             ->find($csId);
 
         $scmCs['scmCsVendor'] = ScmCsVendor::query()
@@ -592,6 +592,7 @@ class ScmCsController extends Controller
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
+                ->whereDate('expire_date', '>=', date('Y-m-d'))
                 ->orderByDesc('ref_no')
                 ->get();
         } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center)) {
@@ -604,6 +605,7 @@ class ScmCsController extends Controller
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
+                ->whereDate('expire_date', '>=', date('Y-m-d'))
                 ->orderByDesc('ref_no')
                 ->get();
         }

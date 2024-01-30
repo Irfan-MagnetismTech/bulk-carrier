@@ -418,7 +418,7 @@
   <div class="input-group !w-1/2">
   <label class="label-group" v-if="form.currency != 'BDT'">
         <span class="label-item-title">Convertion Rate( USD To BDT )<span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
+        <input type="text" v-model="form.usd_to_bdt" required class="form-input" name="approved_date" :id="'usd_to_bdt'" />
     </label>
     <label class="label-group" v-if="(form.currency != 'USD' && form.currency != 'BDT' && form.currency != '' && form.currency != null)">
         <span class="label-item-title">Convertion Rate( Foreign To USD )<span class="text-red-500">*</span></span>
