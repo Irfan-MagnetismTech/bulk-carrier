@@ -186,6 +186,16 @@ class OpsExpenseReportController extends Controller
                     ->with('opsVesselBunkers.stockable')
                     ->get();
 
+        if(count($voyages) < 1) {
+            $error= [
+                'message'=>'Report not found.',
+                'errors'=>[
+                    'type'=>['Report not found.',]
+                    ]
+                ];
+            return response()->json($error, 422);
+        }
+
         $costCenterId = AccCostCenter::where('ops_vessel_id', $ops_vessel_id)->first()->id;
         $allCashRequisitions = AccCashRequisition::where('acc_cost_center_id', $costCenterId)
                                 ->whereBetween('applied_date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])

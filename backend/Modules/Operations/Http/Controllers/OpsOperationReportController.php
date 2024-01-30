@@ -105,6 +105,17 @@ class OpsOperationReportController extends Controller
 
         }
 
+        if(count($voyages) < 1) {
+            $error= [
+                'message'=>'Report not found.',
+                'errors'=>[
+                    'type'=>['Report not found.',]
+                    ]
+                ];
+            return response()->json($error, 422);
+        }
+        
+
         $voyageIds = $voyages->pluck('id');
         $vesselIds = $voyages->pluck('ops_vessel_id')->unique()->values()->toArray();
 

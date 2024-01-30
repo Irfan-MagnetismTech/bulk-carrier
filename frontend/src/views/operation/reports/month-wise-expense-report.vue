@@ -9,7 +9,7 @@ import useVessel from '../../../composables/operations/useVessel';
 const { vessels, searchVessels, isVesselLoading } = useVessel();
 
 
-const { monthWiseExpenseReport, isLoading, getMonthWiseExpenseReport } = useOperationsReport();
+const { monthWiseExpenseReport, isLoading, errors, getMonthWiseExpenseReport } = useOperationsReport();
 const icons = useHeroIcon();
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
