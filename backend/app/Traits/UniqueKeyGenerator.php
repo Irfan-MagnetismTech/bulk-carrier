@@ -6,7 +6,12 @@ use Services\UniqueId;
 
 trait UniqueKeyGenerator
 {
-    protected static function bootUniqueKeyGenerator()
+    /**
+     * On creating a model, put a unique key in ref_no column.
+     * 
+     * @return void
+     */
+    protected static function bootUniqueKeyGenerator(): void
     {
         static::creating(function ($model) {
             $model->ref_no = UniqueId::generate($model, $model->refKeyPrefix);
