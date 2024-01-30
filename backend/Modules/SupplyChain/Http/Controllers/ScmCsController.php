@@ -41,7 +41,7 @@ class ScmCsController extends Controller
     {
         try {
             $scmCs = ScmCs::query()
-                ->with('scmPo', 'scmWarehouse', 'selectedVendors.scmVendor', 'scmCsMaterials.scmMaterial', 'scmCsVendors.scmVendor', 'scmCsMaterialVendors.scmMaterial', 'scmCsMaterialVendors.scmPo')
+                ->with('scmPo', 'scmWarehouse', 'selectedVendors.scmVendor', 'scmCsMaterials.scmMaterial', 'scmCsVendors.scmVendor', 'scmCsMaterialVendors.scmMaterial', 'scmCsMaterialVendors')
                 ->globalSearch(request()->all());
 
             return response()->success('Data list', $scmCs, 200);
@@ -100,7 +100,7 @@ class ScmCsController extends Controller
     {
         $materialCs = ScmCs::find($id);
         // $materialCs->load('scmPr', 'scmWarehouse');
-        $materialCs->load('scmCsMaterials.scmMaterial', 'scmPr', 'scmCsMaterials.scmPr', 'scmCsMaterials.scmPrLine', 'scmWarehouse');
+        $materialCs->load('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmCsMaterials.scmPrLine', 'scmWarehouse');
         $data = $materialCs->scmCsMaterials->map(function ($item) {
             $item['pr_quantity'] = $item->scmPrLine->quantity;
             $item['max_quantity'] = $item->scmPrLine->quantity - $item->scmPrLine->scmCsmaterials->sum('quantity') + $item->quantity;

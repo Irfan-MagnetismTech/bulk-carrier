@@ -11,6 +11,7 @@ use Modules\SupplyChain\Entities\ScmCsMaterial;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\SupplyChain\Entities\ScmCsMaterialVendor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ScmCs extends Model
 {
@@ -36,32 +37,32 @@ class ScmCs extends Model
     ];
 
 
-    public function scmPo(): BelongsTo
+    public function scmPo(): HasMany
     {
-        return $this->belongsTo(ScmPo::class);
+        return $this->hasMany(ScmPo::class);
     }
 
-    public function scmWarehouse()
+    public function scmWarehouse(): BelongsTo
     {
         return $this->belongsTo(ScmWarehouse::class);
     }
 
-    public function scmCsVendors()
+    public function scmCsVendors(): HasMany
     {
         return $this->hasMany(ScmCsVendor::class);
     }
 
-    public function scmCsMaterialVendors()
+    public function scmCsMaterialVendors(): HasMany
     {
         return $this->hasMany(ScmCsMaterialVendor::class);
     }
 
-    public function scmCsMaterials()
+    public function scmCsMaterials(): HasMany
     {
         return $this->hasMany(ScmCsMaterial::class);
     }
 
-    public function selectedVendors()
+    public function selectedVendors(): HasMany
     {
         return $this->hasMany(ScmCsVendor::class)->where('is_selected', true);
     }
