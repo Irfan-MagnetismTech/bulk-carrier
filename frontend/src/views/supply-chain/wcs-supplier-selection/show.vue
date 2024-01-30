@@ -142,9 +142,6 @@ const selection_ground = [
        <nobr>PR No</nobr> 
       </th> -->
       <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
-        Unit
-      </th> 
-      <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
         Quantity
       </th>
       <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
@@ -167,12 +164,11 @@ const selection_ground = [
       <tr v-if="index == 0">
         <td :rowspan="Object.keys(serviceprData).length">{{ serviceData[0].scmService.name }}</td>
         <!-- <td>{{ serviceData[0].scmPr.ref_no  }}</td> -->
-        <td :rowspan="Object.keys(serviceprData).length">{{ serviceData[0].unit }}</td>
-        <td>{{ serviceData[0].sum_quantity }}</td>
+        <td>{{ serviceData[0].quantity }}</td>
         <td>{{ WcsData?.latestPoItem && WcsData?.latestPoItem.length ? WcsData?.latestPoItem[index1].rate : "N/A" }}</td>
         <template v-for="(serviceVendorData,index11) in (WcsData?.scmWcsVendorService[index1][name])" :key="index11">
-            <td>{{ serviceVendorData[0].negotiated_price }}</td>
-            <td>{{ serviceVendorData[0].negotiated_price * serviceData[0].sum_quantity}}</td>
+            <td>{{ serviceVendorData[0].rate }}</td>
+            <td>{{ serviceVendorData[0].rate * serviceData[0].quantity}}</td>
          </template>
       </tr>
       <!-- <tr v-else>
@@ -222,28 +218,24 @@ const selection_ground = [
       <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].scmVendor.product_source_type }}</td>
     </tr>
     <tr>
-      <td>Delivery Time</td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].delivery_time }}</td>
+      <td>VAT</td>
+      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].vat }}</td>
     </tr>
     <tr>
-      <td>Estimated Shipment Date</td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ formatDate(VendoData[0].wcsQuotation_shipment_date) }}</td>
-    </tr>
-    <tr>
-      <td>Port Of Loading</td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].port_of_loading }}</td>
-    </tr>
-    <tr>
-      <td>Port Of Discharge</td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].port_of_discharge }}</td>
-    </tr>
-    <tr>
-      <td>Mode Of Shipment</td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].mode_of_shipment }}</td>
+      <td>AIT</td>
+      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ formatDate(VendoData[0].ait) }}</td>
     </tr>
     <tr>
       <td>Currency</td>
       <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].currency }}</td>
+    </tr>
+    <tr>
+      <td>Security Money</td>
+      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].security_money }}</td>
+    </tr>
+    <tr>
+      <td>Adjustment Policy</td>
+      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].adjustment_policy }}</td>
     </tr>
     <tr>
       <td>Remarks</td>
@@ -252,72 +244,6 @@ const selection_ground = [
     <tr>
       <td>Terms and Condition</td>
       <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].terms_and_condition }}</td>
-    </tr>
-    <tr v-if="wcsQuotation.purchase_center != 'Foreign'">
-      <td>VAT</td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].vat }}</td>
-    </tr>
-    <tr v-if="wcsQuotation.purchase_center != 'Foreign'">
-      <td>AIT</td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].ait }}</td>
-    </tr>
-    <tr v-if="wcsQuotation.purchase_center != 'Foreign'">
-      <td>Payment Method</td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].payment_method }}</td>
-    </tr>
-    <tr v-if="wcsQuotation.purchase_center != 'Foreign'">
-      <td>Inventory Type</td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].stock_type }}</td>
-    </tr>
-    <tr v-if="wcsQuotation.purchase_center != 'Foreign'">
-      <td>Manufacturing Days</td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].manufacturing_days }}</td>
-    </tr>
-    <tr v-if="wcsQuotation.purchase_center != 'Foreign'">
-      <td>Credit Term</td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].credit_term }}</td>
-    </tr>
-    <tr>
-      <td>Inco-term</td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].delivery_term }}</td>
-    </tr> 
-    <tr v-if="wcsQuotation.purchase_center != 'Foreign'">
-      <td>Carring Charge Bear By</td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].carring_cost_bear_by }}</td>
-    </tr>
-    <tr>
-      <td>Unloading Charge Bear By</td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].unloading_cost_bear_by }}</td>
-    </tr>
-    <tr>
-      <td>Unloading Charge Bear By</td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].unloading_cost_bear_by }}</td>
-    </tr>
-    <tr>
-      <td>Offer Price</td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].total_offered_price }}</td>
-    </tr>
-    <tr>
-      <td>Freight</td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].freight }}</td>
-    </tr>
-    <tr>
-      <td>Total Offer Price</td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].grand_total_offered_price }}</td>
-    </tr>
-    <tr>
-      <td>Negotiated Price</td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">{{ VendoData[0].total_negotiated_price }}</td>
-    </tr>
-    <tr>
-      <td>Technical Acceptance </td>
-      <td v-for="(VendoData,index) in (WcsData?.scmWcsVendor)" :key="index">
-            <!-- <select v-model="wcsQuotation.scmWcsVendor[index][0].technical_acceptance" class="wcsQuotation-input">
-              <option value="Accepted">Accepted</option>
-              <option value="Rejected">Rejected</option>
-            </select> -->
-            {{ wcsQuotation.scmWcsVendor[index][0].technical_acceptance }}
-      </td>
     </tr>
     <tr>
       <td>Selected Vendor</td>

@@ -73,7 +73,6 @@
                   <th style="" class="py-3 align-center">Material Name </th>
                   <th style="" class="py-3 align-center">Unit</th>
                   <th class="py-3 align-center">PR Qty</th>
-                  <th class="py-3 align-center">Remaining Qty</th>
                   <th class="py-3 align-center">Quantity</th>
                 </tr>
             </thead>
