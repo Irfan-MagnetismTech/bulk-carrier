@@ -18,6 +18,8 @@ use Modules\SupplyChain\Entities\ScmCsPaymentInfo;
 use Modules\SupplyChain\Http\Requests\ScmCsRequest;
 use Modules\SupplyChain\Entities\ScmCsMaterialVendor;
 use Modules\SupplyChain\Entities\ScmPoItem;
+use Modules\SupplyChain\Entities\ScmPr;
+use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Http\Requests\CsLandedCostRequest;
 use Modules\SupplyChain\Http\Requests\ScmQuotationRequest;
 use Modules\SupplyChain\Http\Requests\SupplierSelectionRequest;
@@ -71,6 +73,14 @@ class ScmCsController extends Controller
                     'unit' => $value['unit'],
                     'quantity' => $value['quantity'],
                 ]);
+                $pr = ScmPr::find($value['scm_pr_id']);
+                if($pr->status == 'Pending'){
+                    $pr->update(['status' => 'WIP']);
+                }
+                $lineData = ScmPrLine::where('scm_pr_id', $value['scm_pr_id'])->where('pr_composite_key', $value['pr_composite_key'])->get();
+                if($lineData[0]->status == 'Pending'){
+                    $lineData[0]->update(['status' => 'WIP']);
+                }
             }
 
             DB::commit();
@@ -125,12 +135,21 @@ class ScmCsController extends Controller
             foreach ($request->scmCsMaterials as $key => $value) {
                 ScmCsMaterial::create([
                     'scm_cs_id' => $materialCs->id,
+                    'scm_pr_id' => $value['scm_pr_id'],
                     'scm_material_id' => $value['scm_material_id'],
                     'cs_composite_key' => CompositeKey::generate(null, $materialCs->id, 'cs', $value['scm_material_id'], $value['scm_pr_id']),
                     'pr_composite_key' => $value['pr_composite_key'],
                     'unit' => $value['unit'],
                     'quantity' => $value['quantity'],
                 ]);
+                $pr = ScmPr::find($value['scm_pr_id']);
+                if($pr->status == 'Pending'){
+                    $pr->update(['status' => 'WIP']);
+                }
+                $lineData = ScmPrLine::where('scm_pr_id', $value['scm_pr_id'])->where('pr_composite_key', $value['pr_composite_key'])->get();
+                if($lineData[0]->status == 'Pending'){
+                    $lineData[0]->update(['status' => 'WIP']);
+                }
             }
             DB::commit();
             return response()->success('Data updated succesfully', $materialCs, 202);

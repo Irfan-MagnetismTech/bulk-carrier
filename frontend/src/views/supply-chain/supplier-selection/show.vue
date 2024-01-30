@@ -331,82 +331,82 @@ const selection_ground = [
   </table>  
 
   
-<table class="min-w-full divide-y divide-gray-200 dark-disabled:divide-gray-700 mt-10">
-  <caption class="border-2 bg-green-400 uppercase">Comparative Statement</caption>
-  <thead class="bg-gray-50 dark-disabled:bg-gray-800">
-    <tr class="text-gray-600 dark-disabled:text-gray-400 text-sm leading-normal">
-      <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
-        <nobr>Material Name</nobr>
-      </th>
-      <!-- <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
-       <nobr>PR No</nobr> 
-      </th> -->
-      <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
-        Unit
-      </th> 
-      <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
-        Quantity
-      </th>
-      <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
-        <nobr>Previous Selected Price</nobr>
-      </th>
-      <th colspan="2" scope="col" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (CsData?.scmCsVendor)" :key="index">
-        <nobr>{{ vendorData[0].scmVendor?.name ?? ''}}</nobr>
-      </th>    
-    </tr>
-    <tr>
-      <template v-for="(vendorData,index) in (CsData?.scmCsVendor)" :key="index">
-          <th>Rate</th>
-          <th>Amount</th>
-        </template>
-    </tr>
-  </thead>
 
-    <template v-for="(materialprData,index1) in (CsData?.scmCsMaterial)" :key="index1">
-      <template v-for="(materialData,name,index) in (materialprData)" :key="index">
+<template v-for="(materialprData,index1) in (CsData?.scmCsMaterial)" :key="index1">
+  <template v-for="(materialData,name,index) in (materialprData)" :key="index">
         
 <table class="min-w-full divide-y divide-gray-200 dark-disabled:divide-gray-700 mt-10">
-  <caption class="border-2 bg-green-400 uppercase">Comparative Statement</caption>
+  <caption class="border-2 bg-green-400 uppercase">{{ materialData[0].scmMaterial.name }}</caption>
   <thead class="bg-gray-50 dark-disabled:bg-gray-800">
     <tr class="text-gray-600 dark-disabled:text-gray-400 text-sm leading-normal">
       <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
-        <nobr>Material Name</nobr>
+        <nobr>Details</nobr>
       </th>
-      <!-- <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
-       <nobr>PR No</nobr> 
-      </th> -->
-      <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
-        Unit
-      </th> 
-      <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
-        Quantity
-      </th>
-      <th rowspan="2" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider">
-        <nobr>Previous Selected Price</nobr>
-      </th>
-      <th colspan="2" scope="col" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (CsData?.scmCsVendor)" :key="index">
+      <th scope="col" class="px-6 py-3 text-left text-gray-600 dark-disabled:text-gray-400 uppercase tracking-wider" v-for="(vendorData,index) in (CsData?.scmCsVendor)" :key="index">
         <nobr>{{ vendorData[0].scmVendor?.name ?? ''}}</nobr>
       </th>    
-    </tr>
-    <tr>
-      <template v-for="(vendorData,index) in (CsData?.scmCsVendor)" :key="index">
-          <th>Rate</th>
-          <th>Amount</th>
-        </template>
     </tr>
   </thead>
   <tbody>
-      <tr v-if="index == 0">
-        <td :rowspan="Object.keys(materialprData).length">{{ materialData[0].scmMaterial.name }}</td>
+      <!-- <tr v-if="index == 0">
+        <td :rowspan="Object.keys(materialprData).length">{{ materialData[0].scmMaterial.name }}</td>-->
         <!-- <td>{{ materialData[0].scmPr.ref_no  }}</td> -->
-        <td :rowspan="Object.keys(materialprData).length">{{ materialData[0].unit }}</td>
+        <!-- <td :rowspan="Object.keys(materialprData).length">{{ materialData[0].unit }}</td>
         <td>{{ materialData[0].sum_quantity }}</td>
         <td>{{ CsData?.latestPoItem && CsData?.latestPoItem.length ? CsData?.latestPoItem[index1].rate : "N/A" }}</td>
         <template v-for="(materialVendorData,index11) in (CsData?.scmCsMaterialVendor[index1][name])" :key="index11">
             <td>{{ materialVendorData[0].negotiated_price }}</td>
             <td>{{ materialVendorData[0].negotiated_price * materialData[0].sum_quantity}}</td>
          </template>
-      </tr>
+      </tr> -->
+      <tr>
+                <td>Brand</td>
+                <template v-for="(materialVendorData,index11) in (CsData?.scmCsMaterialVendor[index1][name])" :key="index11">
+                  <td>{{ materialVendorData && materialVendorData[0] && materialVendorData[0].brand }}</td>
+                </template>
+              </tr>
+              <tr>
+                <td>Model</td>
+                <template v-for="(materialVendorData,index11) in (CsData?.scmCsMaterialVendor[index1][name])" :key="index11">
+                  <td>{{ materialVendorData && materialVendorData[0] && materialVendorData[0].model }}</td>
+                </template>
+              </tr>
+              <tr v-if="quotation.purchase_center == 'Foreign'">
+                <td>Origin</td>
+                <template v-for="(materialVendorData,index11) in (CsData?.scmCsMaterialVendor[index1][name])" :key="index11">
+                  <td>{{ materialVendorData && materialVendorData[0] && materialVendorData[0].origin }}</td>
+                </template>
+              </tr>
+              <tr v-if="quotation.purchase_center == 'Foreign'">
+                <td>Installation and Commission</td>
+                <template v-for="(materialVendorData,index11) in (CsData?.scmCsMaterialVendor[index1][name])" :key="index11">
+                  <td>{{ materialVendorData && materialVendorData[0] && materialVendorData[0].installation_and_commission }}</td>
+                </template>
+              </tr>
+              <tr v-if="quotation.purchase_center == 'Foreign'">
+                <td>Certification</td>
+                <template v-for="(materialVendorData,index11) in (CsData?.scmCsMaterialVendor[index1][name])" :key="index11">
+                  <td>{{ materialVendorData && materialVendorData[0] && materialVendorData[0].certification }}</td>
+                </template>
+              </tr>
+              <tr>
+                <td>Warranty</td>
+                <template v-for="(materialVendorData,index11) in (CsData?.scmCsMaterialVendor[index1][name])" :key="index11">
+                  <td>{{ materialVendorData && materialVendorData[0] && materialVendorData[0].warranty_period }}</td>
+                </template>
+              </tr>
+              <tr v-if="quotation.purchase_center == 'Foreign'">
+                <td>Offer Price</td>
+                <template v-for="(materialVendorData,index11) in (CsData?.scmCsMaterialVendor[index1][name])" :key="index11">
+                  <td>{{ materialVendorData && materialVendorData[0] && materialVendorData[0].offered_price }}</td>
+                </template>
+              </tr>
+              <tr v-if="quotation.purchase_center == 'Foreign'">
+                <td>Negotiated Price</td>
+                <template v-for="(materialVendorData,index11) in (CsData?.scmCsMaterialVendor[index1][name])" :key="index11">
+                  <td>{{ materialVendorData && materialVendorData[0] && materialVendorData[0]?.negotiated_price }}</td>
+                </template>
+              </tr>
       <!-- <tr v-else>
         <td>{{ materialData[0].scmPr.ref_no  }}</td>
         <td>{{ materialData[0].quantity }}</td>

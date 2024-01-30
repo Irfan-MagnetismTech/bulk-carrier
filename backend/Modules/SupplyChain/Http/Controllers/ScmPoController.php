@@ -204,9 +204,18 @@ class ScmPoController extends Controller
                 'scm_po_id' => $purchaseOrder->id,
                 'scm_pr_id' => $values['scm_pr_id'],
             ]);
+            $pr = ScmPr::find($values['scm_pr_id']);
+            if($pr->status == 'Pending'){
+                $pr->update(['status' => 'WIP']);
+            }
 
             foreach ($values['scmPoItems'] as $index => $value) {
                 $this->createScmPoItem($request, $scmPoLine, $purchaseOrder, $value, $index);
+                $lineData = ScmPrLine::where('scm_pr_id', $values['scm_pr_id'])->where('pr_composite_key', $value['pr_composite_key'])->get();
+                if($lineData[0]->status == 'Pending'){
+                    $lineData[0]->update(['status' => 'WIP']);
+                }
+
             }
         }
     }
