@@ -4,6 +4,7 @@ namespace Modules\SupplyChain\Entities;
 
 use App\Models\User;
 use App\Traits\GlobalSearchTrait;
+use App\Traits\UniqueKeyGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmSi;
 use Modules\SupplyChain\Entities\ScmSrLine;
@@ -14,11 +15,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmSr extends Model
 {
-    use HasFactory, GlobalSearchTrait;
+    use HasFactory, GlobalSearchTrait, UniqueKeyGenerator;
 
     protected $fillable = [
         'ref_no', 'scm_warehouse_id', 'acc_cost_center_id', 'department_id', 'date', 'remarks', 'business_unit', 'created_by',
     ];
+
+    protected $refKeyPrefix = 'SR';
 
     public function scmSrLines(): HasMany
     {
