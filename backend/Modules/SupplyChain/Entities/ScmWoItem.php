@@ -30,6 +30,11 @@ class ScmWoItem extends Model
         'status',
     ];
 
+    public function scmWo(): BelongsTo
+    {
+        return $this->belongsTo(ScmService::class);
+    }
+
     public function scmService(): BelongsTo
     {
         return $this->belongsTo(ScmService::class);

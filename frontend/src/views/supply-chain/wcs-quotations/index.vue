@@ -253,6 +253,7 @@ function confirmDelete(wcs_id, id) {
               <td>{{ formatDate(wcsQuotation?.quotation_date) }}</td>
               <td>
                 <div class="">                 
+                  <action-button :action="'show'" :to="{ name: 'scm.wcs-quotations.show', params: { wcsId: wcsQuotation.scm_wcs_id, wcsQuotationId: wcsQuotation.id } }"></action-button>
                   <action-button :action="'edit'" :to="{ name: 'scm.wcs-quotations.edit', params: { wcsId: wcsQuotation.scm_wcs_id, wcsQuotationId: wcsQuotation.id } }"></action-button>
                   <action-button @click="confirmDelete(wcsQuotation.scm_wcs_id, wcsQuotation.id)" :action="'delete'" v-if="!wcsQuotation.is_selected"></action-button>
                 </div>
