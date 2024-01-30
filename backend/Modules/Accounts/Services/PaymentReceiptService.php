@@ -53,6 +53,8 @@ class PaymentReceiptService extends Controller
         $paymentReceiptInfo['closing_balances'] = $this->calculateBalance($allLedgers, $bankAndCashAccounts);
         $paymentReceiptInfo['payments']         = $this->setCurrentLedgers('Payment', $currPayments, $bankAndCashAccounts);
         $paymentReceiptInfo['receipts']         = $this->setCurrentLedgers('Receipt', $currReceipts, $bankAndCashAccounts);
+        $paymentReceiptInfo['ttl_opening']      = $paymentReceiptInfo['opening_balances']->pluck('balance')->sum();
+        $paymentReceiptInfo['ttl_closing']      = $paymentReceiptInfo['closing_balances']->pluck('balance')->sum();
         $paymentReceiptInfo['ttl_payments']     = $paymentReceiptInfo['payments']->pluck('amount')->sum();
         $paymentReceiptInfo['ttl_receipts']     = $paymentReceiptInfo['receipts']->pluck('amount')->sum();
 
@@ -69,7 +71,10 @@ class PaymentReceiptService extends Controller
 
         $balance = $ledgers->whereIn('acc_account_id', $bankAndCashAccounts)->groupBy('acc_balance_and_income_line_id')->map(function ($q, $key)
         {
-            return [$q->first()->accBalanceAndIncomeLine->line_text => $q->pluck('dr_amount')->sum() - $q->pluck('cr_amount')->sum()];
+            return [
+                'account_name' => $q->first()->accBalanceAndIncomeLine->line_text,
+                'balance'      => $q->pluck('dr_amount')->sum() - $q->pluck('cr_amount')->sum(),
+            ];
         });
 
         return $balance;
