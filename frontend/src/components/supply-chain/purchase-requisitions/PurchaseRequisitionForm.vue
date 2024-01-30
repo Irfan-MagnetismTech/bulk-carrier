@@ -274,7 +274,8 @@ function tytytyasd(indx) {
       </label>
       <label class="label-group">
           <span class="label-item-title">Raised Date<span class="text-red-500">*</span></span>
-          or</label>
+          <VueDatePicker v-model="form.raised_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+       </label>
       <label class="label-group">
           <span class="label-item-title">Critical Spares<span class="text-red-500">*</span></span>
           <select v-model="form.is_critical" required class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">

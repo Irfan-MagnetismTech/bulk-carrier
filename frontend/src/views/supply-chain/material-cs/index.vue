@@ -269,7 +269,7 @@ function confirmDelete(id) {
                 <template v-else>
                   <span class="text-red-500">No Vendor Selected</span>
                 </template>
-                {{ materialCsdata?.selection_ground }}</td>
+              </td>
               <td>
                 <template v-if="materialCsdata.selectedVendors.length">
                   <ul v-for="(vendor,index) in materialCsdata?.selectedVendors" :key="index">
@@ -301,10 +301,10 @@ function confirmDelete(id) {
                   <button v-if="materialCsdata.scmPo.length == 0 && materialCsdata?.scmCsVendors?.length" @click="navigateSupplierSelection(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Supplier Selection</nobr></button>
                   <button v-if="materialCsdata.scmPo.length" @click="navigateSupplierSelectionShow(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Supplier Selection</nobr></button>
                   <action-button :action="'show'" :to="{ name: 'scm.material-cs.show', params: { materialCsId: materialCsdata.id } }"></action-button>
-                  <action-button v-if="materialCsdata.scmPo.length == 0" :action="'edit'" :to="{ name: 'scm.material-cs.edit', params: { materialCsId: materialCsdata.id } }"></action-button>
-                  <action-button v-if="materialCsdata.scmPo.length == 0" @click="confirmDelete(materialCsdata.id)" :action="'delete'"></action-button>
-                  <action-button v-if="materialCsdata.scmPo.length" :action="'disabled_edit'"></action-button>
-                  <action-button v-if="materialCsdata.scmPo.length" :action="'disabled_delete'"></action-button>
+                  <action-button v-if="materialCsdata?.scmCsVendors?.length == 0" :action="'edit'" :to="{ name: 'scm.material-cs.edit', params: { materialCsId: materialCsdata.id } }"></action-button>
+                  <action-button v-if="materialCsdata?.scmCsVendors?.length == 0" @click="confirmDelete(materialCsdata.id)" :action="'delete'"></action-button>
+                  <action-button v-if="materialCsdata?.scmCsVendors?.length" :action="'disabled_edit'"></action-button>
+                  <action-button v-if="materialCsdata?.scmCsVendors?.length" :action="'disabled_delete'"></action-button>
                 </div>
               </td>
             </tr>
