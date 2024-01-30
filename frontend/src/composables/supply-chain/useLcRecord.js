@@ -11,6 +11,7 @@ export default function useLcRecord() {
     const BASE = 'scm' 
     const router = useRouter();
     const lcRecords = ref([]);
+    const lcRecordStatuses = ref([]);
     const filteredLcRecords = ref([]);
     const isTableLoading = ref(false);
     const $loading = useLoading();
@@ -200,6 +201,42 @@ export default function useLcRecord() {
             isLoading.value = false;
         }
     }
+
+    async function storeLcRecordStatuses(form) {
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.post(`/${BASE}/lc-record-statuses`, form);
+            lcRecordStatuses.value = data.value;
+            notification.showSuccess(status);
+            // await router.push({ name: "mnt.ship-departments.index" });
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            // loader.hide();
+            isLoading.value = false;
+        }
+    }
+
+    async function showLcRecordStatuses(lcRecordId) {
+
+        // const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`/${BASE}/lc-record-statuses/${lcRecordId}`);
+            lcRecordStatuses.value = data.value;
+            console.log('lcdata', lcRecord.value);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            isLoading.value = false;
+        }
+    }
     
 
 
@@ -214,6 +251,9 @@ export default function useLcRecord() {
         showLcRecord,
         updateLcRecord,
         deleteLcRecord,
+        storeLcRecordStatuses,
+        showLcRecordStatuses,
+        lcRecordStatuses,
         isTableLoading,
         isLoading,
         errors,
