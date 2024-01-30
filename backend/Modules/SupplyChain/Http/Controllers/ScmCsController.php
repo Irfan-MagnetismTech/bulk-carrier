@@ -592,6 +592,7 @@ class ScmCsController extends Controller
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
+                ->whereDate('expire_date', '>=', date('Y-m-d'))
                 ->orderByDesc('ref_no')
                 ->get();
         } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center)) {
@@ -604,6 +605,7 @@ class ScmCsController extends Controller
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
+                ->whereDate('expire_date', '>=', date('Y-m-d'))
                 ->orderByDesc('ref_no')
                 ->get();
         }

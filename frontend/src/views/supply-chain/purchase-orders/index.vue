@@ -99,7 +99,8 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Items",
-      "filter_type": "input"
+      "filter_type": "input",
+      "no_short" : true
     },
     {
       "relation_name": "scmPoItems.scmMaterial",
@@ -109,7 +110,8 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Code",
-      "filter_type": "input"
+      "filter_type": "input",
+      "no_short" : true
     },
     {
       "relation_name": "scmPoItems",
@@ -119,7 +121,8 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Qty",
-      "filter_type": "input"
+      "filter_type": "input",
+      "no_short" : true
     },
     {
       "relation_name": "scmPoItems",
@@ -129,7 +132,8 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Unit",
-      "filter_type": "input"
+      "filter_type": "input",
+      "no_short" : true
     },
     {
       "relation_name": "scmVendor",
