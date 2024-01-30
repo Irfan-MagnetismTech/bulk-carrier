@@ -568,7 +568,6 @@ class ScmWcsController extends Controller
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
-                // ->whereNotNull('auditor_remarks_date')
                 ->orderByDesc('ref_no')
                 ->get();
                 
@@ -582,7 +581,6 @@ class ScmWcsController extends Controller
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
-                // ->whereNotNull('auditor_remarks_date')
                 ->orderByDesc('ref_no')
                 ->get();
         }
