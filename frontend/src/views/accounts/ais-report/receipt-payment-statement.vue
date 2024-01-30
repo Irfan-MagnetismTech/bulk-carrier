@@ -21,8 +21,8 @@ setTitle('AIS Report - Income Statement');
 const searchParams = ref({
   // acc_balance_income_line_id: 35,
   // acc_account_id: '',
-  from_date: '2023-01-01',
-  till_date: '2023-12-31',
+  from_date: '',
+  till_date: '',
   business_unit: businessUnit.value,
 });
 
@@ -196,24 +196,24 @@ onMounted(() => {
           </table>
         </div>
       </div>
-      <div class="w-full overflow-hidden grid grid-cols-2 gap-1">
-        <table class="w-full">
-          <tfoot>
-          <tr style="background-color: #E3E3E3">
-            <td class="text-sm font-bold text-right bg-green-600 text-white" colspan="2">Total</td>
-            <td class="text-sm font-bold text-right bg-green-600 text-white">{{ paymentReceiptStatements?.ttl_receipts?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
-          </tr>
-          </tfoot>
-        </table>
-        <table class="w-full">
-          <tfoot>
-          <tr style="background-color: #E3E3E3">
-            <td class="text-sm font-bold text-right bg-green-600 text-white" colspan="2">Total</td>
-            <td class="text-sm font-bold text-right bg-green-600 text-white">{{ paymentReceiptStatements?.ttl_payments?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
-          </tr>
-          </tfoot>
-        </table>
-      </div>
+<!--      <div class="w-full overflow-hidden grid grid-cols-2 gap-1">-->
+<!--        <table class="w-full">-->
+<!--          <tfoot>-->
+<!--          <tr style="background-color: #E3E3E3">-->
+<!--            <td class="text-sm font-bold text-right bg-green-600 text-white" colspan="2">Total</td>-->
+<!--            <td class="text-sm font-bold text-right bg-green-600 text-white">{{ paymentReceiptStatements?.ttl_receipts?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>-->
+<!--          </tr>-->
+<!--          </tfoot>-->
+<!--        </table>-->
+<!--        <table class="w-full">-->
+<!--          <tfoot>-->
+<!--          <tr style="background-color: #E3E3E3">-->
+<!--            <td class="text-sm font-bold text-right bg-green-600 text-white" colspan="2">Total</td>-->
+<!--            <td class="text-sm font-bold text-right bg-green-600 text-white">{{ paymentReceiptStatements?.ttl_payments?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>-->
+<!--          </tr>-->
+<!--          </tfoot>-->
+<!--        </table>-->
+<!--      </div>-->
     </div>
   </template>
 </template>
@@ -253,17 +253,14 @@ onMounted(() => {
 .balance_line_style {
   font-weight: bold;
   padding-left: 30px;
-  cursor: pointer;
 }
 
 .balance_line_parent {
   padding-left: 50px;
-  cursor: pointer;
 }
 
 .balance_line_parent_child {
   padding-left: 70px;
-  cursor: pointer;
 }
 
 .balance_line_parent_grand_child {
