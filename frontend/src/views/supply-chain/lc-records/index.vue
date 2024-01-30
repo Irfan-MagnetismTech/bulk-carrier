@@ -13,8 +13,9 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import { formatDate, showErrorAlert } from '../../../config/setting';
 
-const { getLcRecords, lcRecords, deleteLcRecord, isLoading,isTableLoading , storeLcRecordStatuses, showLcRecordStatuses, lcRecordStatuses } = useLcRecord();
+const { getLcRecords, lcRecords, deleteLcRecord, isLoading,isTableLoading , storeLcRecordStatus, showLcRecordStatuses, lcRecordStatuses, lcRecordStatus } = useLcRecord();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -46,14 +47,33 @@ function closeModel() {
 
 function getStatus(id){
   showLcRecordStatuses(id).then(() => {
-      addStatus();
+      // addStatus();
       showModal(id)
   }).catch((error) => {
     console.error("Error closing WR:", error);
   });
 }
 function storeStatus() {
-  storeLcRecordStatuses(lcRecordStatuses).then(() => {
+
+  const messages = ref([]);
+  if(!lcRecordStatus.value?.status){
+    messages.value.push('Status Required');
+  }
+  
+  lcRecordStatus.value.scm_lc_record_id = currentIndex.value;
+  if(!lcRecordStatus.value?.date){
+    messages.value.push('Date Required');
+  }
+
+  if(messages.value?.length){
+    showErrorAlert(messages);
+    return;
+  }
+
+
+  storeLcRecordStatus(lcRecordStatus.value).then(() => {
+    lcRecordStatus.value.status = '';
+    lcRecordStatus.value.date = '';
       closeModel()
   }).catch((error) => {
     console.error("Error closing WR:", error);
@@ -267,7 +287,7 @@ function confirmDelete(id) {
   <div v-show="isModalOpen" class="fixed inset-0 z-30 flex items-end overflow-y-auto bg-black bg-opacity-50 sm:items-center sm:justify-center">
     <!-- Modal -->
     <form @submit.prevent="" style="position: absolute;top: 0;">
-      <div class="w-full px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark-disabled:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
+      <div class="w-full px-6 py-4  overflow-y-auto bg-white rounded-t-lg dark-disabled:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
         <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
         <header class="flex justify-end">
           <button type="button"
@@ -281,7 +301,21 @@ function confirmDelete(id) {
           </button>
         </header>
         <!-- Modal body -->
-        <table class="w-full mb-5 whitespace-no-wrap border-collapse contract-assign-table table2">
+        <div class="grid grid-cols-1 md:grid-cols-2 md:gap-2 ">
+          <label class="label-group">
+            <span class="label-item-title">Status <span class="text-red-500">*</span></span>
+              <input type="text" v-model="lcRecordStatus.status" required class="form-input" name="scm_warehouse_id" :id="'lc_no'" />
+          </label>
+          
+          <label class="label-group">
+            <span class="label-item-title">Date <span class="text-red-500">*</span></span>
+            <VueDatePicker  v-model="lcRecordStatus.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :auto-position="false" :min-date="lcRecordStatuses?.last_date"></VueDatePicker>
+          </label>
+
+        </div>
+        <div class="mt-3 min-h-[250px]">
+          <span class="label-item-title"> Previous Status </span>
+          <table class="w-full mb-5 whitespace-no-wrap border-collapse contract-assign-table table2">
           <thead v-once>
           <tr style="background-color: #04AA6D;color: white"
               class="text-xs font-semibold tracking-wide text-gray-500 uppercase border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
@@ -289,16 +323,25 @@ function confirmDelete(id) {
             <th>Date</th>
           </tr>
           </thead>
-          <tbody>
-              <tr v-for="(lcRecordStatus,lcRecordStatusIndex) in lcRecordStatuses" :key="lcRecordStatusIndex">
-                <td class="p-1">
-                  <input :readonly="lcRecordStatusIndex != lcRecordStatuses?.length - 1" type="text" v-model="lcRecordStatus.status" required class="form-input" name="scm_warehouse_id" :id="'lc_no'" />
+          <tbody >
+              <tr v-for="(lcRecordSt,lcRecordStatusIndex) in lcRecordStatuses?.scmLcRecordStatus" :key="lcRecordStatusIndex" v-if="lcRecordStatuses?.scmLcRecordStatus?.length">
+                <td class="p-1">{{ lcRecordSt.status }}
+                  <!-- <input :readonly="lcRecordStatusIndex != lcRecordStatuses?.length - 1" type="text" v-model="lcRecordStatus.status" required class="form-input" name="scm_warehouse_id" :id="'lc_no'" /> -->
                 </td>
-                <td><VueDatePicker :readonly="lcRecordStatusIndex != lcRecordStatuses?.length - 1" v-model="lcRecordStatus.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker></td>
+                <td>
+                  <!-- <VueDatePicker :readonly="lcRecordStatusIndex != lcRecordStatuses?.length - 1" v-model="lcRecordStatus.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :auto-position="false" ></VueDatePicker> -->
+                  {{ formatDate(lcRecordSt.date) }}
                 
+                </td>
+                
+              </tr>
+              <tr v-else>
+                <td colspan="2" class="h-[120px]">No data found</td>
               </tr>
            </tbody>
         </table>
+        </div>
+        
         <!-- <div class="dt-responsive table-responsive">
           <table id="dataTable" class="w-full table table-striped table-bordered">
             
