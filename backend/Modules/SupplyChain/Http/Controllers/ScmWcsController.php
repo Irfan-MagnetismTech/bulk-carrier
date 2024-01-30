@@ -349,6 +349,7 @@ class ScmWcsController extends Controller
 
     public function showWcsQuotation($id)
     {
+
         $scmWcsVendor = ScmWcsVendor::with('scmWcs', 'scmVendor.scmVendorContactPerson', 'scmWcsVendorServices.scmService', 'scmWcsVendorServices.scmWr')->find($id);
         $scmWcsVendorServices = $scmWcsVendor->scmWcsVendorServices->groupBy(['scm_service_id'])->values()->all();
         data_forget($scmWcsVendor, 'scmWcsVendorServices');
@@ -481,17 +482,45 @@ class ScmWcsController extends Controller
             ->get()
             ->groupBy(['scm_service_id', 'scm_wr_id', 'scm_vendor_id']);
 
+        // $scmWcs['scmWcsService'] = ScmWcsService::query()
+        //     ->with(['scmService', 'scmWr', 'scmWoItemServices.scmWo' => function ($query) {
+        //         $query->latest()->first();
+        //     }])
+        //     ->where('scm_wcs_id', $wcsId)
+        //     ->get()
+        //     ->groupBy(['scm_service_id', 'scm_wr_id'])
+        //     ->map(function ($items) {
+        //         return $items->map(function ($data) {
+        //             $data[0]['sum_quantity'] = $data->sum('quantity');
+        //             return $data;
+        //         });
+        //     });
         $scmWcs['scmWcsService'] = ScmWcsService::query()
-            ->with('scmService', 'scmWr')
-            ->where('scm_wcs_id', $wcsId)
-            ->get()
-            ->groupBy(['scm_service_id', 'scm_wr_id'])
-            ->map(function ($items) {
-                return $items->map(function ($data) {
-                    $data[0]['sum_quantity'] = $data->sum('quantity');
-                    return $data;
-                });
+        ->with(['scmService', 'scmWr', 'scmWoItemServices.scmWo'])
+        ->where('scm_wcs_id', $wcsId)
+        ->get()
+        ->groupBy(['scm_service_id', 'scm_wr_id'])
+        ->map(function ($items) {
+            return $items->map(function ($data){
+                // return $data->map(function ($service){
+                //     $scmWoItemServices = $service['scmWoItemServices']
+                //     ->sortByDesc(function ($item) {
+                //         return optional($item['scmWo'])['date'];
+                //     });
+                    
+                //     $latestScmWoItemService = $scmWoItemServices->first();
+                //     data_forget($service, 'scmWoItemServices');
+                //     $service['scmWoItemServices']=$latestScmWoItemService;
+                //     return $service;
+                // });
+
+                $data[0]['sum_quantity'] = $data->sum('quantity');
+                
+                return $data;
             });
+        });
+
+            // dd($scmWcs);
 
         return response()->success('Detail data', $scmWcs, 200);
     }

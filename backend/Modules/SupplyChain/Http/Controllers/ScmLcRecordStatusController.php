@@ -54,7 +54,7 @@ class ScmLcRecordStatusController extends Controller
     {
         try {
             $scmLcRecordStatus = ScmLcRecordStatus::where('scm_lc_record_id', $id)
-                ->latest()
+                ->latest('date')
                 ->get();
             $latestRecord = $scmLcRecordStatus->first();
             
