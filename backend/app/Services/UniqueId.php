@@ -1,6 +1,6 @@
 <?php
 
-namespace Services;
+namespace App\Services;
 
 use App\Models\LastInserted;
 use Illuminate\Support\Facades\DB;
