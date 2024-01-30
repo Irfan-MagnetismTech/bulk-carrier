@@ -125,6 +125,18 @@ onMounted(() => {
             </tr>
             </thead>
             <tbody class="bg-white dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+            <tr class="text-gray-700 dark-disabled:text-gray-400" style="background-color: #DBECDB">
+              <td class="text-sm balance_header">Opening Balance</td>
+              <td class="text-sm text-right font-bold"></td>
+              <td class="text-sm text-right font-bold">{{ paymentReceiptStatements?.ttl_opening.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+            </tr>
+            <tr style="background-color: #eff1f1" class="second_label" v-for="(openingBalanceData, openingBalanceDataKey, openingBalanceDataIndex) in paymentReceiptStatements?.opening_balances" :key="openingBalanceDataIndex">
+              <td class="relative text-sm balance_line_style balance_line !text-left !font-normal">
+                {{ openingBalanceData?.account_name }}
+              </td>
+              <td class="text-sm text-right">{{ openingBalanceData?.balance?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+              <td class="text-sm text-right font-bold"></td>
+            </tr>
             <template v-for="(receiptData, receiptDataKey, receiptDataIndex) in paymentReceiptStatements?.receipts" :key="receiptDataIndex">
               <template v-for="(accountDataLine, accountDataKey, accountDataLineIndex) in receiptData.accounts">
                 <tr class="text-gray-700 dark-disabled:text-gray-400" style="background-color: #DBECDB" v-if="accountDataLineIndex === 0">
@@ -141,109 +153,67 @@ onMounted(() => {
                 </tr>
               </template>
             </template>
-<!--            <tr v-if="incomeStatements?.performance?.profit > 0 && incomeStatements?.performance?.profit > 0">-->
-<!--              <td class="text-sm balance_header">Net Profit</td>-->
-<!--              <td class="text-sm text-right font-bold"></td>-->
-<!--              <td class="text-sm text-right font-bold">{{ incomeStatements?.performance?.profit?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>-->
-<!--            </tr>-->
             </tbody>
           </table>
         </div>
-<!--        <div class="w-full overflow-x-auto">-->
-<!--          <table class="w-full whitespace-no-wrap mb-1">-->
-<!--            <thead>-->
-<!--            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800" style="background-color: #369382;color: #fff">-->
-<!--              <th colspan="3" class="bg-green-600 text-white"> Income </th>-->
-<!--            </tr>-->
-<!--            </thead>-->
-<!--            <tbody class="bg-white dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">-->
-<!--            <template v-for="(incomeData, incomeDataIndex) in incomeStatements.incomes" :key="incomeDataIndex">-->
-<!--              <template v-for="(incomeDataLine, incomeDataLineIndex) in incomeData.lines">-->
-<!--                <tr class="text-gray-700 dark-disabled:text-gray-400" style="background-color: #DBECDB" v-if="incomeDataLineIndex === 0">-->
-<!--                  <td class="text-sm balance_header">{{ incomeData?.line_text }}</td>-->
-<!--                  <td class="text-sm text-right font-bold"></td>-->
-<!--                  <td class="text-sm text-right font-bold">{{ incomeData?.closing_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ incomeData?.closing_balance_status }}</td>-->
-<!--                </tr>-->
-<!--                <tr style="background-color: #eff1f1" class="second_label">-->
-<!--                  <td class="relative text-sm balance_line_style balance_line" :style="{'cursor': incomeDataLine.parent_accounts?.length ? 'pointer' : 'auto'}" :id="incomeDataLine?.line_id" @click="toggleBalanceLineTrID($event)">-->
-<!--                    {{ incomeDataLine?.line_text }}-->
-<!--                    <svg v-if="incomeDataLine.parent_accounts?.length" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="custom_down_arrow w-3 h-3">-->
-<!--                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5" />-->
-<!--                    </svg>-->
-<!--                  </td>-->
-<!--                  <td class="text-sm text-right">{{ incomeDataLine?.closing_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ incomeDataLine?.closing_balance_status }}</td>-->
-<!--                  <td class="text-sm text-right font-bold"></td>-->
-<!--                </tr>-->
-<!--                <template v-for="(lineParentAccount, lineParentAccountIndex) in incomeDataLine.parent_accounts">-->
-<!--                  <tr :class="'balance_account_'+incomeDataLine?.line_id" style="display: none" class="third_label account_row">-->
-<!--                    <td class="relative text-sm balance_line_parent account_name parent_account_line" :style="{'cursor': lineParentAccount.child_accounts?.length ? 'pointer' : 'auto'}" :id="lineParentAccount?.line_id" @click="toggleParentAccountTrID($event)">-->
-<!--                      {{ lineParentAccount?.line_text }}-->
-<!--                      <svg v-if="lineParentAccount.child_accounts?.length" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="custom_down_arrow w-3 h-3">-->
-<!--                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5" />-->
-<!--                      </svg>-->
-<!--                    </td>-->
-<!--                    <td class="text-sm text-right">{{ lineParentAccount?.closing_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ lineParentAccount?.closing_balance_status }}</td>-->
-<!--                    <td class="text-sm text-right font-bold"></td>-->
-<!--                  </tr>-->
-<!--                  <template v-for="(lineChildAccount, lineChildAccountIndex) in lineParentAccount.child_accounts">-->
-<!--                    <tr :class="['parent_account_'+lineParentAccount?.line_id,'hide_balance_account_'+incomeDataLine?.line_id]" class="fourth_label account_row" style="display: none;background-color: #CAF1F1">-->
-<!--                      <td class="relative text-sm balance_line_parent_child account_name child_account_line" :style="{'cursor': lineChildAccount.grandchild_accounts?.length ? 'pointer' : 'auto'}" :id="lineChildAccount?.line_id" @click="toggleChildAccountTrID($event)">-->
-<!--                        {{ lineChildAccount?.line_text }}-->
-<!--                        <svg v-if="lineChildAccount.grandchild_accounts?.length" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="custom_down_arrow w-3 h-3">-->
-<!--                          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5" />-->
-<!--                        </svg>-->
-<!--                      </td>-->
-<!--                      <td class="text-sm text-right">{{ lineChildAccount?.closing_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ lineChildAccount?.closing_balance_status }}</td>-->
-<!--                      <td class="text-sm text-right font-bold"></td>-->
-<!--                    </tr>-->
-<!--                    <template v-for="(lineGrandChildAccount, lineGrandChildAccountIndex) in lineChildAccount.grandchild_accounts">-->
-<!--                      <tr :class="['account_'+lineChildAccount?.line_id,'hide_balance_account_'+incomeDataLine?.line_id,'hide_parent_account_'+lineParentAccount?.line_id]" class="fifth_label" style="display: none;background-color: #e0edff">-->
-<!--                        <td class="text-sm balance_line_parent_grand_child account_name account_line">{{ lineGrandChildAccount?.line_text }}</td>-->
-<!--                        <td class="text-sm text-right">{{ lineGrandChildAccount?.closing_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ lineGrandChildAccount?.closing_balance_status }}</td>-->
-<!--                        <td class="text-sm text-right font-bold"></td>-->
-<!--                      </tr>-->
-<!--                    </template>-->
-<!--                  </template>-->
-<!--                </template>-->
-<!--              </template>-->
-<!--              <tr v-if="incomeStatements?.sale_performance?.income_id == incomeData?.line_id && incomeStatements?.sale_performance?.loss_on_sale > 0">-->
-<!--                <td class="text-sm balance_header">Gross Loss on Sale</td>-->
-<!--                <td class="text-sm text-right font-bold"></td>-->
-<!--                <td class="text-sm text-right font-bold">{{ incomeStatements?.sale_performance?.loss_on_sale?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>-->
-<!--              </tr>-->
-<!--              <tr v-if="incomeStatements?.service_performance?.income_id == incomeData?.line_id && incomeStatements?.service_performance?.loss_on_service > 0">-->
-<!--                <td class="text-sm balance_header">Gross Loss on Service</td>-->
-<!--                <td class="text-sm text-right font-bold"></td>-->
-<!--                <td class="text-sm text-right font-bold">{{ incomeStatements?.service_performance?.loss_on_service?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>-->
-<!--              </tr>-->
-<!--              <tr v-if="incomeStatements?.performance?.loss > 0 && incomeStatements?.performance?.loss > 0">-->
-<!--                <td class="text-sm balance_header">Net Loss</td>-->
-<!--                <td class="text-sm text-right font-bold"></td>-->
-<!--                <td class="text-sm text-right font-bold">{{ incomeStatements?.performance?.loss?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>-->
-<!--              </tr>-->
-<!--            </template>-->
-<!--            </tbody>-->
-<!--          </table>-->
-<!--        </div>-->
+        <div class="w-full overflow-x-auto">
+          <table class="w-full whitespace-no-wrap mb-1">
+            <thead>
+            <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800" style="background-color: #369382;color: #ffff">
+              <th colspan="3" class="bg-green-600 text-white"> Payment </th>
+            </tr>
+            </thead>
+            <tbody class="bg-white dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+            <template v-for="(paymentData, paymentDataKey, paymentDataIndex) in paymentReceiptStatements?.payments" :key="paymentDataIndex">
+              <template v-for="(accountDataLine, accountDataKey, accountDataLineIndex) in paymentData.accounts">
+                <tr class="text-gray-700 dark-disabled:text-gray-400" style="background-color: #DBECDB" v-if="accountDataLineIndex === 0">
+                  <td class="text-sm balance_header">{{ paymentData?.line_text }}</td>
+                  <td class="text-sm text-right font-bold"></td>
+                  <td class="text-sm text-right font-bold">{{ paymentData?.amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+                </tr>
+                <tr style="background-color: #eff1f1" class="second_label">
+                  <td class="relative text-sm balance_line_style balance_line !text-left !font-normal">
+                    {{ accountDataLine?.account_name }}
+                  </td>
+                  <td class="text-sm text-right">{{ accountDataLine?.amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+                  <td class="text-sm text-right font-bold"></td>
+                </tr>
+              </template>
+            </template>
+            <tr class="text-gray-700 dark-disabled:text-gray-400" style="background-color: #DBECDB">
+              <td class="text-sm balance_header">Closing Balance</td>
+              <td class="text-sm text-right font-bold"></td>
+              <td class="text-sm text-right font-bold">{{ paymentReceiptStatements?.ttl_closing.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+            </tr>
+            <tr style="background-color: #eff1f1" class="second_label" v-for="(closingBalanceData, closingBalanceDataKey, closingBalanceDataIndex) in paymentReceiptStatements?.closing_balances" :key="closingBalanceDataIndex">
+              <td class="relative text-sm balance_line_style balance_line !text-left !font-normal">
+                {{ closingBalanceData?.account_name }}
+              </td>
+              <td class="text-sm text-right">{{ closingBalanceData?.balance?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+              <td class="text-sm text-right font-bold"></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-<!--      <div class="w-full overflow-hidden grid grid-cols-2 gap-1">-->
-<!--        <table class="w-full">-->
-<!--          <tfoot>-->
-<!--          <tr style="background-color: #E3E3E3">-->
-<!--            <td class="text-sm font-bold text-right bg-green-600 text-white" colspan="2">Total Expense</td>-->
-<!--            <td class="text-sm font-bold text-right bg-green-600 text-white">{{ incomeStatements?.grand_total_expense?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>-->
-<!--          </tr>-->
-<!--          </tfoot>-->
-<!--        </table>-->
-<!--        <table class="w-full">-->
-<!--          <tfoot>-->
-<!--          <tr style="background-color: #E3E3E3">-->
-<!--            <td class="text-sm font-bold text-right bg-green-600 text-white" colspan="2">Total Income</td>-->
-<!--            <td class="text-sm font-bold text-right bg-green-600 text-white">{{ incomeStatements?.grand_total_income?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>-->
-<!--          </tr>-->
-<!--          </tfoot>-->
-<!--        </table>-->
-<!--      </div>-->
+      <div class="w-full overflow-hidden grid grid-cols-2 gap-1">
+        <table class="w-full">
+          <tfoot>
+          <tr style="background-color: #E3E3E3">
+            <td class="text-sm font-bold text-right bg-green-600 text-white" colspan="2">Total</td>
+            <td class="text-sm font-bold text-right bg-green-600 text-white">{{ paymentReceiptStatements?.ttl_receipts?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+          </tr>
+          </tfoot>
+        </table>
+        <table class="w-full">
+          <tfoot>
+          <tr style="background-color: #E3E3E3">
+            <td class="text-sm font-bold text-right bg-green-600 text-white" colspan="2">Total</td>
+            <td class="text-sm font-bold text-right bg-green-600 text-white">{{ paymentReceiptStatements?.ttl_payments?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
+          </tr>
+          </tfoot>
+        </table>
+      </div>
     </div>
   </template>
 </template>
