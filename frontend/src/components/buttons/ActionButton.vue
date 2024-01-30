@@ -22,13 +22,6 @@ const isTooltipShowing = ref(false);
         </svg>
         <span class="tooltiptext">{{ action }}</span>
       </div>
-      <div v-if="action == 'disabled_delete'" class="tooltip cursor-pointer">
-        <svg xmlns="http://www.w3.org/2000/svg" :class="classes ?? 'icn text-grey-500 dark-disabled:text-gray-400 dark-disabled:hover:text-grey-500'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          <span class="tooltiptext">Disabled</span>
-        </svg>
-        <span class="tooltiptext">Disabled</span>
-      </div>
       
     <div v-else-if="action == 'close'" class="tooltip cursor-pointer">
         <svg xmlns="http://www.w3.org/2000/svg" :class="classes ?? 'icn text-red-500 dark-disabled:text-gray-400 dark-disabled:hover:text-red-500'" fill="none" viewBox="0 0 24 24" stroke="currentColor" >
@@ -76,7 +69,13 @@ const isTooltipShowing = ref(false);
         </svg>
         <span class="tooltiptext">Disabled</span>
       </div>
-      
+      <div v-else-if="action == 'disabled_delete'" class="tooltip cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" :class="classes ?? 'icn text-grey-500 dark-disabled:text-gray-400 dark-disabled:hover:text-grey-500'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          <span class="tooltiptext">Disabled</span>
+        </svg>
+        <span class="tooltiptext">Disabled</span>
+      </div>
       <div v-else-if="action == 'notify customer'" class="tooltip">
         <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="32" height="32" :class="classes ?? 'icn iconify iconify--ic text-blue-500 dark-disabled:text-gray-400 dark-disabled:hover:text-blue-500'" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
           <path fill="currentColor" d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5l-8-5h16zm0 12H4V8l8 5l8-5v10z"></path>
