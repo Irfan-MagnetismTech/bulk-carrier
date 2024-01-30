@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\SupplyChain\Services;
+namespace Services;
 
 use App\Models\LastInserted;
 use Illuminate\Support\Facades\DB;
 
 /**
- * @package Modules\SupplyChain\Services
+ * @package Services
  * 
  * @class-type Service
  */

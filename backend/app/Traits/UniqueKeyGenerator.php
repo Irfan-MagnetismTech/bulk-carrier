@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use Modules\SupplyChain\Services\UniqueId;
+use Services\UniqueId;
 
 trait UniqueKeyGenerator
 {
