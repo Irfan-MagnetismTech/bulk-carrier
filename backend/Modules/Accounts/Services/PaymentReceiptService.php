@@ -53,6 +53,8 @@ class PaymentReceiptService extends Controller
         $paymentReceiptInfo['closing_balances'] = $this->calculateBalance($allLedgers, $bankAndCashAccounts);
         $paymentReceiptInfo['payments']         = $this->setCurrentLedgers('Payment', $currPayments, $bankAndCashAccounts);
         $paymentReceiptInfo['receipts']         = $this->setCurrentLedgers('Receipt', $currReceipts, $bankAndCashAccounts);
+        $paymentReceiptInfo['ttl_payments']     = $paymentReceiptInfo['payments']->pluck('amount')->sum();
+        $paymentReceiptInfo['ttl_receipts']     = $paymentReceiptInfo['receipts']->pluck('amount')->sum();
 
         return $paymentReceiptInfo;
     }
