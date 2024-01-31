@@ -98,7 +98,11 @@ onMounted(() => {
               </tr>
 
 
-
+              <tr>
+                <th class="w-40">User Department</th>
+                <td>{{ workRequisition?.user_department }}</td>
+              </tr>
+              
               
               <tr>
                 <th class="w-40">Attachment</th>
