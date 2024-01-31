@@ -65,7 +65,7 @@ onMounted(() => {
               <td class="!text-center text-white uppercase bg-green-600 font-bold" colspan="8">Crew Requisition List</td>
             </tr>
             <tr>
-              <th>Sl.</th>
+              <th>#</th>
               <th>Rank</th>
               <th>Required Manpower</th>
               <th>Remarks</th>

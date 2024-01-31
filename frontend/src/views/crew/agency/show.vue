@@ -104,7 +104,7 @@ onMounted(() => {
               <td class="!text-center text-white uppercase bg-green-600 font-bold" colspan="8">Contact Person List</td>
             </tr>
             <tr>
-              <th>Sl.</th>
+              <th>#</th>
               <th>Name</th>
               <th>Position</th>
               <th>Contact No</th>

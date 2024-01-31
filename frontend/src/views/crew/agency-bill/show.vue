@@ -85,7 +85,7 @@ onMounted(() => {
               <td class="!text-center text-white uppercase bg-green-600 font-bold" colspan="8">Bill Lines</td>
             </tr>
             <tr>
-              <th>Sl.</th>
+              <th>#</th>
               <th>Particular</th>
               <th>Description</th>
               <th>Per</th>
@@ -100,9 +100,9 @@ onMounted(() => {
               <td class="text-left">{{ billData?.particular }}</td>
               <td class="text-left">{{ billData?.description }}</td>
               <td class="text-left">{{ billData?.per }}</td>
-              <td class="text-left">{{ billData?.quantity }}</td>
-              <td class="text-left">{{ billData?.rate }}</td>
-              <td class="text-left">{{ billData?.amount }}</td>
+              <td class="text-center">{{ billData?.quantity }}</td>
+              <td class="text-right">{{ billData?.rate }}</td>
+              <td class="text-right">{{ billData?.amount }}</td>
             </tr>
             </tbody>
             <tfoot v-if="!agencyBill?.crwAgencyBillLines?.length">

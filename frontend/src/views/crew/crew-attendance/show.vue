@@ -46,7 +46,7 @@ onMounted(() => {
               <td>{{ crwAttendance?.opsVessel?.name }}</td>
             </tr>
             <tr>
-              <th class="w-40"> Total Crews </th>
+              <th class="w-40"> Total Crew </th>
               <td>{{ crwAttendance?.total_crews }}</td>
             </tr>
             <tr>
@@ -67,11 +67,12 @@ onMounted(() => {
         <table class="w-full mt-2">
           <thead>
             <tr>
-              <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="6"> Assigned Crew List </td>
+              <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="7"> Assigned Crew List </td>
             </tr>
             <tr>
+              <th class="!text-center">#</th>
               <th class="w-40 !text-center"> Crew Name </th>
-              <th class="w-40 !text-center"> Contact No </th>
+              <th class="w-40 !text-center"> Crew Contact </th>
               <th class="w-40 !text-center"> Onboard Position </th>
               <th class="w-40 !text-center"> Present Days </th>
               <th class="w-40 !text-center"> Absent Days </th>
@@ -80,6 +81,7 @@ onMounted(() => {
           </thead>
           <tbody>
             <tr v-for="(crwAttendanceLine, index) in crwAttendance?.crwAttendanceLines" :key="index">
+              <td class="!w-5 !text-center">{{ index + 1 }}</td>
               <td class="text-left"> {{ crwAttendanceLine?.crwCrewAssignment?.crwCrew?.full_name }} </td>
               <td class="!text-center"> {{ crwAttendanceLine?.crwCrewAssignment?.crwCrew?.pre_mobile_no }} </td>
               <td class="text-left"> {{ crwAttendanceLine?.crwCrewAssignment?.position_onboard }} </td>

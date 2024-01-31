@@ -24,17 +24,16 @@ onMounted(() => {
 
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Crew Profile Details</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Crew Profile Details # {{profileId}}</h2>
     <default-button :title="'Crew Profile List'" :to="{ name: 'crw.profiles.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
       <div class="flex md:gap-4">
         <div class="w-full">
-          <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Crew Profile Information</h2>
           <table class="w-full">
             <thead>
             <tr>
-              <td class="!text-center bg-gray-200 font-bold" colspan="2">Personal Info</td>
+              <td class="!text-center bg-green-600 text-white font-bold uppercase" colspan="2">Personal Info</td>
             </tr>
             </thead>
             <tbody>
@@ -215,13 +214,13 @@ onMounted(() => {
               </tr>
             </tbody>
           </table>
-          <table class="w-full mt-1" id="profileDetailTable">
+          <table class="w-full mt-3" id="profileDetailTable">
             <thead>
             <tr>
-              <td class="!text-center bg-gray-200 font-bold" colspan="8">Educations</td>
+              <td class="!text-center bg-green-600 text-white font-bold uppercase font-bold" colspan="8">Educations</td>
             </tr>
             <tr>
-              <th>Sl.</th>
+              <th>#</th>
               <th>Exam Title</th>
               <th>Major</th>
               <th>Institute</th>
@@ -249,13 +248,13 @@ onMounted(() => {
             </tr>
             </tfoot>
           </table>
-          <table class="w-full mt-1" id="profileDetailTable">
+          <table class="w-full mt-3" id="profileDetailTable">
             <thead>
             <tr>
-              <td class="!text-center bg-gray-200 font-bold" colspan="7">Trainings</td>
+              <td class="!text-center bg-green-600 text-white font-bold uppercase font-bold" colspan="7">Trainings</td>
             </tr>
             <tr>
-              <th>Sl.</th>
+              <th>#</th>
               <th>Training Title</th>
               <th>Covered Topics</th>
               <th>Training Year</th>
@@ -281,13 +280,13 @@ onMounted(() => {
             </tr>
             </tfoot>
           </table>
-          <table class="w-full mt-1" id="profileDetailTable">
+          <table class="w-full mt-3" id="profileDetailTable">
             <thead>
             <tr>
-              <td class="!text-center bg-gray-200 font-bold" colspan="6">Experiences</td>
+              <td class="!text-center bg-green-600 text-white font-bold uppercase font-bold" colspan="6">Experiences</td>
             </tr>
             <tr>
-              <th>Sl.</th>
+              <th>#</th>
               <th>Employer Name</th>
               <th>From</th>
               <th>To</th>
@@ -311,13 +310,13 @@ onMounted(() => {
             </tr>
             </tfoot>
           </table>
-          <table class="w-full mt-1" id="profileDetailTable">
+          <table class="w-full mt-3" id="profileDetailTable">
             <thead>
             <tr>
-              <td class="!text-center bg-gray-200 font-bold" colspan="6">Others</td>
+              <td class="!text-center bg-green-600 text-white font-bold uppercase font-bold" colspan="6">Others</td>
             </tr>
             <tr>
-              <th>Sl.</th>
+              <th>#</th>
               <th>Language</th>
               <th>Writing</th>
               <th>Reading</th>
@@ -341,13 +340,13 @@ onMounted(() => {
             </tr>
             </tfoot>
           </table>
-          <table class="w-full mt-1" id="profileDetailTable">
+          <table class="w-full mt-3" id="profileDetailTable">
             <thead>
             <tr>
-              <td class="!text-center bg-gray-200 font-bold" colspan="8">References</td>
+              <td class="!text-center bg-green-600 text-white font-bold uppercase font-bold" colspan="8">References</td>
             </tr>
             <tr>
-              <th>Sl.</th>
+              <th>#</th>
               <th>Name</th>
               <th>Organization</th>
               <th>Designation</th>
@@ -375,13 +374,13 @@ onMounted(() => {
             </tr>
             </tfoot>
           </table>
-          <table class="w-full mt-1" id="profileDetailTable">
+          <table class="w-full mt-3" id="profileDetailTable">
             <thead>
             <tr>
-              <td class="!text-center bg-gray-200 font-bold" colspan="8">Nominees</td>
+              <td class="!text-center bg-green-600 text-white font-bold uppercase font-bold" colspan="8">Nominees</td>
             </tr>
             <tr>
-              <th>Sl.</th>
+              <th>#</th>
               <th>Name</th>
               <th>Profession</th>
               <th>Address</th>
@@ -393,7 +392,7 @@ onMounted(() => {
             </thead>
             <tbody>
             <tr v-for="(nomineeData,index) in crewProfile?.nominees" :key="index">
-              <td>{{ index + 1 }}</td>
+              <td class="!text-center">{{ index + 1 }}</td>
               <td>{{ nomineeData?.name }}</td>
               <td>{{ nomineeData?.profession }}</td>
               <td>{{ nomineeData?.address }}</td>

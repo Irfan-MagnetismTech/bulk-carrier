@@ -45,6 +45,10 @@ onMounted(() => {
                 <th class="w-40 text-left">Effective Date</th>
                 <td class="text-left">{{ checkList?.effective_date }}</td>
               </tr>
+              <tr>
+                <th class="w-40 text-left">Remarks</th>
+                <td class="text-left">{{ checkList?.remarks }}</td>
+              </tr>
             </tbody>
           </table>
           <table class="w-full mt-1" id="profileDetailTable">
@@ -53,7 +57,7 @@ onMounted(() => {
               <td class="!text-center text-white uppercase bg-green-600 font-bold" colspan="8">Checklist Item</td>
             </tr>
             <tr>
-              <th>Sl.</th>
+              <th>#</th>
               <th>Item Name</th>
               <th>Remarks</th>
             </tr>

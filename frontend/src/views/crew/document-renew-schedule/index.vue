@@ -192,7 +192,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
             <th> Expire Date </th>
             <th> Left Days</th>
             <th> Crew Name </th>
-            <th> Contact </th>
+            <th> Crew Contact </th>
             <th> Business Unit</th>
             <th> Action </th>
           </tr>

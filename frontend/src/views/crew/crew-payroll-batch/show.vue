@@ -134,7 +134,7 @@ onMounted(() => {
                   <thead>
                   <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
                     <th class="px-4 py-3 align-bottom"><nobr>Crew Name</nobr></th>
-                    <th class="px-4 py-3 align-bottom"><nobr>Contact</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Crew Contact</nobr></th>
                     <th class="px-4 py-3 align-bottom"><nobr>Net Salary</nobr></th>
                     <th class="px-4 py-3 align-bottom"><nobr>Present Days</nobr></th>
                     <th class="px-4 py-3 align-bottom"><nobr>Absent Days</nobr></th>

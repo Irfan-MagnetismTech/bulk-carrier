@@ -53,7 +53,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Total Crews",
+      "label": "Total Crew",
       "filter_type": "input"
     },
     {
