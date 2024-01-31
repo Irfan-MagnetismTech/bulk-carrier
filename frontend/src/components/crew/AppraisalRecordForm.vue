@@ -2,14 +2,15 @@
     <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2">
         <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
         <label class="block w-full mt-2 text-sm col-start-1">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Crew <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Crew" :loading="isCrewLoading"  :options="crews" @search="" v-model="form.crw_crew_profile" label="full_name" @update:modelValue="crewProfileChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Crew Name <span class="text-red-500">*</span></span>
+            <v-select :loading="isCrewLoading"  :options="crews" v-model="form.crw_crew_profile" label="full_name" @update:modelValue="crewProfileChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
                       class="vs__search"
                       :required="!form.crw_crew_profile"
                       v-bind="attributes"
                       v-on="events"
+                      placeholder="--Choose an Option--"
                   />
                 </template>
             </v-select>
@@ -18,15 +19,15 @@
         </label>
 
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Contact No</span>
-            <input type="text" :value="form.crw_crew_profile?.pre_mobile_no" placeholder="Contact No" class="form-input vms-readonly-input" readonly />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Crew Contact</span>
+            <input type="text" :value="form.crw_crew_profile?.pre_mobile_no" placeholder="Crew contact" class="form-input vms-readonly-input" readonly />
             <Error v-if="errors?.contact_no" :errors="errors.contact_no" />
         </label>
 
 
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Age</span>
-            <input type="text" :value="form.age = calculateAge(form.crw_crew_profile?.date_of_birth, null)" placeholder="Age" class="form-input vms-readonly-input" readonly />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Crew Age</span>
+            <input type="text" :value="form.age = calculateAge(form.crw_crew_profile?.date_of_birth, null)" placeholder="Crew age" class="form-input vms-readonly-input" readonly />
             <Error v-if="errors?.age" :errors="errors.age" />
         </label>
 
@@ -46,8 +47,8 @@
 
 
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Nationality</span>
-            <input type="text" :value="form.crw_crew_profile?.nationality" placeholder="Nationality" class="form-input vms-readonly-input" readonly />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Crew Nationality</span>
+            <input type="text" :value="form.crw_crew_profile?.nationality" placeholder="Crew nationality" class="form-input vms-readonly-input" readonly />
             <Error v-if="errors?.nationality" :errors="errors.nationality" />
         </label>
 
@@ -67,14 +68,14 @@
             <Error v-if="errors?.crw_crew_assignment_id" :errors="errors.crw_crew_assignment_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel</span>
-            <input type="text" :value="form.crw_crew_assignment?.opsVessel?.name" placeholder="Vessel" class="form-input vms-readonly-input" readonly />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name</span>
+            <input type="text" :value="form.crw_crew_assignment?.opsVessel?.name" placeholder="Vessel name" class="form-input vms-readonly-input" readonly />
             <!-- <Error v-if="errors?.nationality" :errors="errors.nationality" /> -->
         </label>
 
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Rank</span>
-            <input type="text" :value="form.crw_crew_assignment?.position_onboard" placeholder="Rank" class="form-input vms-readonly-input" readonly />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Crew Rank</span>
+            <input type="text" :value="form.crw_crew_assignment?.position_onboard" placeholder="Crew rank" class="form-input vms-readonly-input" readonly />
             <!-- <Error v-if="errors?.nationality" :errors="errors.nationality" /> -->
         </label>
 

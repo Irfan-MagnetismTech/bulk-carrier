@@ -199,16 +199,16 @@ onMounted(() => {
         </v-select>
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Rank</span>
-        <input type="text" v-model.trim="form.crw_crew_rank" placeholder="Rank" class="form-input vms-readonly-input" autocomplete="off" required />
+        <span class="text-gray-700 dark-disabled:text-gray-300">Crew Rank</span>
+        <input type="text" v-model.trim="form.crw_crew_rank" placeholder="Crew Rank" class="form-input vms-readonly-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Contact</span>
-        <input type="text" :value="form?.crw_crew_name?.pre_mobile_no" placeholder="Contact" class="form-input vms-readonly-input" autocomplete="off" required />
+        <span class="text-gray-700 dark-disabled:text-gray-300"> Crew Contact</span>
+        <input type="text" :value="form?.crw_crew_name?.pre_mobile_no" placeholder="Crew Contact" class="form-input vms-readonly-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Email</span>
-        <input type="text" :value="form?.crw_crew_name?.pre_email" placeholder="Email" class="form-input vms-readonly-input" autocomplete="off" required />
+        <span class="text-gray-700 dark-disabled:text-gray-300">Crew Email</span>
+        <input type="text" :value="form?.crw_crew_name?.pre_email" placeholder="Crew Email" class="form-input vms-readonly-input" autocomplete="off" required />
       </label>
     </div>
   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
