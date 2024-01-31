@@ -8,7 +8,7 @@ class ScmCsRequest extends FormRequest
 {
 
     //preparefor validation
-    protected function prepareForValidation(): void
+    protected function prepareForValidation()
     {
         $data =  request('data');
         $dataArray = json_decode($data, true);
@@ -40,7 +40,7 @@ class ScmCsRequest extends FormRequest
 
     /**
      * Get the error messages for the defined validation rules.
-     * 
+     *
      * @return array
      */
     public function messages(): array

@@ -147,6 +147,63 @@
         </div>  
       </fieldset>
     </div>
+    <div id="customDataTable" ref="customDataTableirf" class="!min-w-screen"> 
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
+        <div class=""> 
+        <table class="!w-full">
+          <thead>
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+            <th style="" class="py-3 align-center">Material Name </th>
+            <th style="" class="py-3 align-center">At Port</th>
+            <th class="py-3 align-center">In Transit</th>
+            <th class="py-3 align-center">Under Lc</th>
+            <th class="py-3 align-center">Total Stock</th>
+            <th class="py-3 align-center">Days To Run</th>
+            <th class="py-3 align-center">Avaialable in <br/> other nit</th>
+          </tr>
+          </thead>
+          <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+          <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmCsMaterial, index) in form.scmCsStockQuantity" :key="index">
+            <td class="!w-72 relative">
+              {{form.scmCsStockQuantity[index].scmMaterial.name  }}
+            </td>
+            <td class="!w-72 relative">
+              <label class="block w-full mt-2 text-sm">
+                <input type="number" v-model="form.scmCsStockQuantity[index].at_port" class="form-input" min="2" required>
+               </label>
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                <input type="number" v-model="form.scmCsStockQuantity[index].in_transit" class="form-input" min="2" required>
+               </label>
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                <input type="number" v-model="form.scmCsStockQuantity[index].under_lc" class="form-input" min="2" required>
+               </label>
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                <input type="number" v-model="form.scmCsStockQuantity[index].total_stock" class="form-input" min="2" required>
+               </label>
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                <input type="number" v-model="form.scmCsStockQuantity[index].days_to_run" class="form-input" min="2" required>
+               </label>
+            </td>
+            <td>
+              <label class="block w-full mt-2 text-sm">
+                <input type="number" v-model="form.scmCsStockQuantity[index].available_in_other_unit" class="form-input" min="2" required>
+               </label>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        </div>  
+      </fieldset>
+    </div>
     <ErrorComponent :errors="errors"></ErrorComponent> 
 </template>
 
@@ -191,7 +248,9 @@
 
     const PRIORITY = ['High', 'Medium', 'Low']
     const form = toRefs(props).form;
-    
+
+    const scmCsMaterialQuantity = ref([]);
+    const editinitaiated = ref(false); 
    
     const tableScrollWidth = ref(null);
     const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -204,8 +263,14 @@
     }
 
     function removeMaterial(index){
+      let deleted_id = props.form.scmCsMaterials[index].scm_material_id;
       props.form.scmCsMaterials.splice(index, 1);
       props.materialList.splice(index, 1);
+      let data = props.form.scmCsMaterials.find((item) => item.scm_material_id == deleted_id);
+      if(!data){
+        scmCsMaterialQuantity.value = scmCsMaterialQuantity.value.filter((item) => item != deleted_id);
+        props.form.scmCsStockQuantity = props.form.scmCsStockQuantity.filter((item) => item.scm_material_id != deleted_id);
+      }
     }
     
 // function fetchStoreIssue(search, loading = false) {
@@ -398,6 +463,35 @@ onMounted(() => {
     });
   }
   
+  watch(() => props.form.scmCsMaterials , (newVal, oldVal) => {
+    if(props.formType == 'create'){
+      editinitaiated.value = true;
+    }
+    newVal.forEach((item, index) => {
+      if(item.scm_material_id){
+        const stockableMaterial = scmCsMaterialQuantity.value.find(material => material === item.scm_material_id); 
+        if(!stockableMaterial){
+          if(editinitaiated.value == true){
+          props.form.scmCsStockQuantity.push({
+            scm_material_id: item.scm_material_id,
+            scmMaterial: item.scmMaterial,
+            at_port: 0,
+            in_transit: 0,
+            under_lc: 0,
+            total_stock: 0,
+            days_to_run: 0,
+            available_in_other_unit: 0,
+          });
+        }
+          scmCsMaterialQuantity.value.push(item.scm_material_id);
+        }
+       }
+    });
+    // loop OldVal
+   
+    console.log('scmCsStockQuantity',scmCsMaterialQuantity.value);
+    editinitaiated.value = true;
+  }, { deep: true }); 
 });
 
 // watchEffect(() => {
