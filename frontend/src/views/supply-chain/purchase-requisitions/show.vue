@@ -26,6 +26,10 @@
                         <td>{{ purchaseRequisition?.scmWarehouse?.name }}</td>
                     </tr>
                     <tr>
+                        <th class="w-40">Departments Name.</th>
+                        <td>{{ purchaseRequisition?.department ?? "N/A" }}</td>
+                    </tr>
+                    <tr>
                         <th class="w-40">Purchase Center</th>
                         <td>{{ purchaseRequisition.purchase_center }}</td>
                     </tr>

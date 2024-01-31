@@ -34,6 +34,7 @@ export default function usePurchaseRequisition() {
         purchase_center: '',
         approved_date: '',
         ref_no: '',
+        department: null,
         excel: null,
         entry_type: "0",
         business_unit: '',
