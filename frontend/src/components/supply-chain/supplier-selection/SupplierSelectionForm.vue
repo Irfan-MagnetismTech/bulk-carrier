@@ -114,6 +114,15 @@
     </tr> 
   </thead>
   <tbody>
+    <tr v-if="form.purchase_center == 'Foreign'">
+      <td>Origin</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].origin }}</td>
+    </tr>
+    <tr v-if="form.purchase_center == 'Foreign'">
+      <td>Brand</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].brand }}</td>
+    </tr>
+    
     <tr>
       <td>Quotation Ref</td>
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].quotation_ref }}</td>
@@ -206,14 +215,7 @@
       <td>Unloading Charge Bear By</td>
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].unloading_cost_bear_by }}</td>
     </tr>
-    <tr v-if="form.purchase_center == 'Foreign'">
-      <td>Brand</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].brand }}</td>
-    </tr>
-    <tr v-if="form.purchase_center == 'Foreign'">
-      <td>Origin</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].origin }}</td>
-    </tr>
+    
     <tr v-if="form.purchase_center == 'Foreign'">
       <td>Offer Price</td>
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].total_offered_price }}</td>
