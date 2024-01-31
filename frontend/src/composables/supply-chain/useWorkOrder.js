@@ -316,11 +316,10 @@ export default function useWorkOrder() {
 
     }
 
-    async function confirmationWo(id,confirmation_status) {
+    async function confirmationWo(workOrderId) {
         try {
             let formData = new FormData();
-            formData.append('id', id);
-            formData.append('confirmation_status', confirmation_status);
+            formData.append('id', workOrderId);
 
             const { data, status } = await Api.post(`/${BASE}/confirmation-wo`, formData);
             notification.showSuccess(status);
