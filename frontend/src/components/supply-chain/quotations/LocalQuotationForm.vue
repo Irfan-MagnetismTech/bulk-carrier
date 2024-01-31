@@ -32,14 +32,14 @@
           </v-select>
     </label>
     <label class="label-group">
-        <span class="label-item-title">Vendor Contact No <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Vendor Contact No</span>
         <input
           type="text"
           :value="form.scmVendor?.scmVendorContactPerson?.phone"
           class="form-input vms-readonly-input" readonly />
     </label>
     <label class="label-group">
-        <span class="label-item-title">Party Type <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Party Type</span>
         <input
           type="text"
           :value="form.scmVendor?.product_source_type"
@@ -87,15 +87,15 @@
           <input type="text" v-model="form.currency" class="form-input" required/>
       </label> -->
       <label class="label-group">
-        <span class="label-item-title">Carrying Charge Bear By <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Carrying Charge Bear By </span>
           <input type="text" v-model="form.carring_cost_bear_by" class="form-input" required/>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Unloading Charge Bear By <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Unloading Charge Bear By</span>
           <input type="text" v-model="form.unloading_cost_bear_by" class="form-input" required/>
       </label>
       <label class="label-group">
-        <span class="label-item-title">VAT <span class="text-red-500">*</span></span>
+        <span class="label-item-title">VAT </span>
           <input type="text" v-model="form.vat" class="form-input" required/>
       </label>
   </div>
@@ -104,11 +104,11 @@
   <div class="input-group">
      
       <label class="label-group">
-        <span class="label-item-title">AIT <span class="text-red-500">*</span></span>
+        <span class="label-item-title">AIT</span>
           <input type="text" v-model="form.ait" class="form-input" required/>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Warranty <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Warranty</span>
         <input type="text" v-model="form.warranty" class="form-input"/>
       
       </label>
@@ -127,18 +127,18 @@
     
     <label class="label-group">
         <span class="label-item-title">Credit Term <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.credit_term" class="form-input" required/>
+          <input type="text" v-model="form.credit_term" class="form-input" required :readonly="form.payment_method == 'Cash'"/>
       </label>
   </div>
 
   <div class="input-group !w-3/4">
     <label class="label-group">
-            <RemarksComponet v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'" isRequired="true"></RemarksComponet>
+            <RemarksComponet v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'"></RemarksComponet>
     </label>
   </div>  
   <div class="input-group !w-3/4">
     <label class="label-group">
-            <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'" isRequired="true"></RemarksComponet>
+            <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
     </label>
   </div>  
 
@@ -173,19 +173,19 @@
                     <td><nobr>{{ scmSrLine?.scmPr?.ref_no }}</nobr></td>
                     <td :rowspan="lines.length">{{ scmSrLine?.scmMaterial?.unit }}</td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].brand" class="form-input" required/>
+                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].brand" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].model" class="form-input" required/>
+                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].model" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].warranty_period" class="form-input" required/>
+                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].warranty_period" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" class="form-input"/>
+                      <input type="number" step="0.01" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input" min="1"/>
+                      <input type="number" step="0.01" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input" min="1"/>
                     </td>
               
                   </tr>

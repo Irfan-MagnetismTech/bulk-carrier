@@ -143,7 +143,7 @@ class ScmPrController extends Controller
                 'closed_at' => $scmPrLine->closed_at,
                 'closing_remarks' => $scmPrLine->closing_remarks,
                 'required_date' => $scmPrLine->required_date,
-                'status' => $scmPrLine->status,
+                'status' => $scmPrLine->status,                
             ];
             return $lines;
         });
@@ -167,6 +167,7 @@ class ScmPrController extends Controller
             'closed_at' => $purchaseRequisition->closed_at,
             'closing_remarks' => $purchaseRequisition->closing_remarks,
             'status' => $purchaseRequisition->status,
+            'department' => $purchaseRequisition->department,
             'created_by' => $purchaseRequisition->createdBy->name,
             'scmPrLines' => $prLines,
         ];
