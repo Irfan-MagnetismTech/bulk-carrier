@@ -59,7 +59,30 @@ class ScmWoController extends Controller
         // return response()->json( $request->all(), 422);
         $requestData['created_by'] = auth()->id();
 
-        
+
+
+
+
+        if(isset($request->scmWoLines)){
+
+            $service_ids= [];
+            foreach ($request->scmWoLines as $key => $values) {
+                foreach ($values['scmWoItems'] as $index => $value) {
+                    $service_ids[]=$value['scm_service_id'];
+                }
+            }
+
+            if(count($service_ids) != count(array_unique($service_ids))) {
+                $error= [
+                    'message'=>'Duplicate service can not allow, one service select only one time.',
+                    'errors'=>[
+                        'Voyage'=>['Duplicate service can not allow, one service select only one time.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
+        }
+
         try {
             DB::beginTransaction();
             $scmWo = ScmWo::create($requestData);
@@ -151,6 +174,24 @@ class ScmWoController extends Controller
     {
         $requestData = $request->except('ref_no');
 
+        if(isset($request->scmWoLines)){
+            $service_ids= [];
+            foreach ($request->scmWoLines as $key => $values) {
+                foreach ($values['scmWoItems'] as $index => $value) {
+                    $service_ids[]=$value['scm_service_id'];
+                }
+            }            
+
+            if(count($service_ids) != count(array_unique($service_ids))) {
+                $error= [
+                    'message'=>'Duplicate service can not allow, one service select only one time.',
+                    'errors'=>[
+                        'Voyage'=>['Duplicate service can not allow, one service select only one time.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
+        }
         try {
             DB::beginTransaction();
 
