@@ -133,7 +133,7 @@
 
   <div class="input-group !w-3/4">
     <label class="label-group">
-            <RemarksComponet v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'"></RemarksComponet></RemarksComponet>
+            <RemarksComponet v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'"></RemarksComponet>
     </label>
   </div>  
   <div class="input-group !w-3/4">
