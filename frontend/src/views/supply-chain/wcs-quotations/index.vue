@@ -189,6 +189,34 @@ function confirmDelete(wcs_id, id) {
           }
         })
       }
+
+
+const supplierSelection = (wcsId) => {
+  const routeOptions = {
+    name: 'scm.wcs-supplier-selection',
+    params: {
+      wcsId: wcsId
+    }
+    // query: {
+    //   csId: csId
+    // }
+  };
+  if(wcsId) router.push(routeOptions);
+};
+ 
+
+const supplierSelectionShow = (wcsId) => {
+  const routeOptions = {
+    name: 'scm.wcs-supplier-selection.show',
+    params: {
+      wcsId: wcsId
+    }
+    // query: {
+    //   csId: csId
+    // }
+  };
+  if(wcsId) router.push(routeOptions);
+};
 </script>
 
 <template>
@@ -199,7 +227,7 @@ function confirmDelete(wcs_id, id) {
     <div class="flex gap-3">
       <default-button :title="'WCS List'" :to="{ name: 'scm.work-cs.index' }" :icon="icons.DataBase"></default-button>
       <!-- {{ workCs?.selectedVendors }} -->
-      <default-button v-if="workCs?.selectedVendors?.length > 0" :title="'Create Quotation'" :to="{ name: 'scm.wcs-quotations.create', params: { wcsId: WCSID }  }" :icon="icons.AddIcon"></default-button>
+      <default-button v-if="workCs?.selectedVendors?.length??0 == 0" :title="'Create Quotation'" :to="{ name: 'scm.wcs-quotations.create', params: { wcsId: WCSID }  }" :icon="icons.AddIcon"></default-button>
     </div>
 
   </div>
@@ -224,6 +252,11 @@ function confirmDelete(wcs_id, id) {
           <span class="label-item-title">{{ workCs.selection_ground }}</span>
       </label>
     </div>
+    <div>
+      <!-- {{ workCs?.scmWo?.length }} - {{ workCs?.scmWcsVendors?.length }} - {{ workCs?.scmWo?.length 0 == 0 && workCs?.scmWcsVendors?.length }} -->
+        <button v-if="(workCs?.scmWo?.length??0) == 0 && workCs?.scmWcsVendors?.length" @click="supplierSelection(WCSID)" class="text-xs px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Supplier Selection</nobr></button> 
+        <button v-if="workCs?.scmWo?.length" @click="supplierSelectionShow(WCSID)" class="text-xs px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Supplier Selection</nobr></button> 
+     </div>
   </div>
  
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
