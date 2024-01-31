@@ -291,15 +291,14 @@ const navigateToMRRCreate = (purchaseOrderId) => {
               <td>
                 <nobr>
                 <div class="">
-                  <action-button v-show="workOrder.confirmation_date == null" @click="confirmationWorkOrder(workOrder.id)" :action="'show'"></action-button>
+                  <action-button v-show="workOrder.confirmation_date == null && workOrder.status !== 'Closed'" @click="confirmationWorkOrder(workOrder.id)" :action="'show'"></action-button>
                   <action-button v-show="workOrder.status !== 'Closed'" @click="showModal(workOrder?.id)" :action="'close'"></action-button>
                   <!-- <button @click="navigateToMRRCreate(purchaseOrder.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
                   <action-button :action="'show'" :to="{ name: 'scm.work-orders.show', params: { workOrderId: workOrder.id } }"></action-button>
                   <template>
                   </template>
-                  <action-button :action="'edit'" :to="{ name: 'scm.work-orders.edit', params: { workOrderId: workOrder.id } }"></action-button>
-                 
-                  <action-button @click="confirmDelete(workOrder.id)" :action="'delete'"></action-button>
+                  <action-button v-show="workOrder.confirmation_date == null && workOrder.status !== 'Closed'" :action="'edit'" :to="{ name: 'scm.work-orders.edit', params: { workOrderId: workOrder.id } }"></action-button>
+                  <action-button v-show="workOrder.confirmation_date == null && workOrder.status !== 'Closed'" @click="confirmDelete(workOrder.id)" :action="'delete'"></action-button>
                 </div>
               </nobr>
               </td>

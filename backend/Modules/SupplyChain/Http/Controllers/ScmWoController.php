@@ -535,6 +535,7 @@ class ScmWoController extends Controller
         try {
             $work_order = ScmWo::find($request->id);
             $work_order->update([
+                'status' => 'WIP',
                 'confirmation_by' => auth()->user()->id,
                 'confirmation_date' => now(),
             ]);
