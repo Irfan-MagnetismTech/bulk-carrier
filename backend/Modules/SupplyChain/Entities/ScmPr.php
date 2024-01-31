@@ -23,7 +23,7 @@ class ScmPr extends Model
     use HasFactory, GlobalSearchTrait, DeletableModel, UniqueKeyGenerator;
 
     protected $fillable = [
-        'ref_no', 'scm_warehouse_id', 'acc_cost_center_id', 'attachment', 'raised_date', 'remarks', 'purchase_center', 'is_critical', 'approved_date', 'business_unit', 'created_by', 'closed_at', 'closed_by', 'is_closed', 'closing_remarks', 'status'
+        'ref_no', 'scm_warehouse_id', 'acc_cost_center_id', 'attachment', 'raised_date', 'remarks', 'purchase_center', 'is_critical', 'approved_date', 'business_unit', 'created_by', 'closed_at', 'closed_by', 'is_closed', 'closing_remarks', 'status', 'department'
     ];
 
     protected $refKeyPrefix = 'PR';
