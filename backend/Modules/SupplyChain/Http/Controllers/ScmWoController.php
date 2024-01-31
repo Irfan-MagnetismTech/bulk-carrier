@@ -535,7 +535,7 @@ class ScmWoController extends Controller
         try {
             $work_order = ScmWo::find($request->id);
             $work_order->update([
-                'confirmation_status' => 'Closed',
+                'confirmation_status' => $request->confirmation_status,
             ]);
 
             return response()->success('Data updated sucessfully!', $work_order, 200);

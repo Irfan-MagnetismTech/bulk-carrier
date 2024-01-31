@@ -42,14 +42,15 @@ const currentIndex = ref(null);
 const currentBtn = ref(null);
 
 
-function showModal(id, $btn=null) {
-  currentBtn.value=$btn;
+function showModal(id, btn=null) {
+  currentBtn.value= btn;
   isModalOpen.value = 1;
   currentIndex.value = id;
 }
 
 function closeModel() {
   isModalOpen.value = 0
+  currentBtn.value= null;
   closingRemarks.value = null;
   confirmationStatus.value = null;
   currentIndex.value = null;
@@ -286,8 +287,8 @@ const navigateToMRRCreate = (purchaseOrderId) => {
               </td>
               <td>
                 <nobr>
-                <div class="">                  
-                  <action-button v-show="workOrder.confirmation_status == ''" @click="showModal(workOrder?.id)" :action="'show'"></action-button>
+                <div class="">
+                  <action-button v-show="workOrder.confirmation_status" @click="showModal(workOrder?.id)" :action="'show'"></action-button>
                   <action-button v-show="workOrder.status !== 'Closed'" @click="showModal(workOrder?.id,'close')" :action="'close'"></action-button>
                   <!-- <button @click="navigateToMRRCreate(purchaseOrder.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
                   <action-button :action="'show'" :to="{ name: 'scm.work-orders.show', params: { workOrderId: workOrder.id } }"></action-button>
@@ -342,21 +343,24 @@ const navigateToMRRCreate = (purchaseOrderId) => {
         </header>
         <!-- Modal body -->
         <table class="w-full mb-2 whitespace-no-wrap border-collapse contract-assign-table table2">
-          <thead v-once>
-          <tr style="background-color: #04AA6D;color: white"
-              class="text-xs font-semibold tracking-wide text-gray-500 uppercase border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-            <th colspan="5">Remarks</th>
-          </tr>
+          <thead>
+            <tr style="background-color: #04AA6D;color: white"
+                class="text-xs font-semibold tracking-wide text-gray-500 uppercase border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              <th  colspan="5">
+                <span v-if="currentBtn=='close'">Remarks</span>
+                <span v-else>Confirmation Status</span>
+              </th>
+            </tr>
           </thead>
         </table>
         <div class="dt-responsive table-responsive">
           <table id="dataTable" class="w-full table table-striped table-bordered">
             <tbody>
               <tr>
-                <td v-if="currentBtn=='close'">                  
+                <td v-if="currentBtn == 'close'">
                   <RemarksComponent v-model="closingRemarks" :maxlength="300" :fieldLabel="'Closing Remarks'" isRequired="true" hideLebel="true"></RemarksComponent>
                 </td>
-                <td v-else>                  
+                <td v-else>
                   <RemarksComponent v-model="confirmationStatus" :maxlength="300" :fieldLabel="'Confirmation Status'" isRequired="true" hideLebel="true"></RemarksComponent>
                 </td>
               </tr>
