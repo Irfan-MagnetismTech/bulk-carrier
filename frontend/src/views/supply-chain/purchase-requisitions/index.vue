@@ -443,7 +443,7 @@ function confirmDelete(id) {
             <tbody>
               <tr>
                 <td>
-                <RemarksComponent v-model="closingRemarks" :maxlength="300" :fieldLabel="'Closing Remarks'" isRequired="true" hideLebel="true"></RemarksComponent>
+                <RemarksComponent v-model="closingRemarks" :maxlength="300" :fieldLabel="'Closing Remarks'" hideLebel="true"></RemarksComponent>
                 </td>
               </tr>
            </tbody>

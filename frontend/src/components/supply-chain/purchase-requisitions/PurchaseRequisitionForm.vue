@@ -73,6 +73,19 @@
       watchPostEffect(() => {
         fetchWarehouse('');
       });
+      // var inndx = 0;
+      // watchPostEffect(() => {
+      //   if(props.formType == 'edit'){
+      //     var apprval_min_date = props?.form?.raised_date ? new Date(props?.form?.raised_date) : null;
+      //     var raised_max_date = props?.form?.approved_date ? new Date(props?.form?.approved_date) : null;
+          
+      //   }else{
+      //     var apprval_min_date = props?.form?.raised_date ? new Date(props?.form?.raised_date) : null;
+      //     var raised_max_date = props?.form?.approved_date ? new Date(props?.form?.approved_date) : null;
+      //   }
+      //   inndx++;  
+      //   console.log(apprval_min_date,raised_max_date);
+      // })
     });
 
 
@@ -304,8 +317,8 @@ function tytytyasd(indx) {
         <!-- <Error v-if="errors?.purchase_center" :errors="errors.purchase_center" /> -->
     </label>
       <label class="label-group">
-          <span class="label-item-title">Approved Date <span class="text-red-500">*</span></span>
-          <VueDatePicker v-model="form.approved_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+          <span class="label-item-title">Approved date <span class="text-red-500">*</span></span>
+          <VueDatePicker v-model="form.approved_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.raised_date"></VueDatePicker>
       </label>
       <div class="md:col-span-2">
 
