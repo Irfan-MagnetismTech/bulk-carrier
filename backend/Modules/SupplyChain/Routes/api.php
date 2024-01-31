@@ -144,5 +144,6 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
         Route::post('close-po', "closePo")->name('closePo');
         Route::post('close-poline', "closePoLine")->name('closePoLine');
     });
-    require __DIR__ . '/robiul.php';
 });
+
+require __DIR__ . '/robiul.php';

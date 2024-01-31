@@ -7,7 +7,7 @@ use Modules\SupplyChain\Http\Controllers\ScmWrController;
 use Modules\SupplyChain\Http\Controllers\ScmWcsController;
 use Modules\SupplyChain\Http\Controllers\ScmLcRecordStatusController;
 
-
+Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     //
     Route::apiResources([
         'work-requisitions' => ScmWrController::class,
@@ -48,3 +48,5 @@ use Modules\SupplyChain\Http\Controllers\ScmLcRecordStatusController;
     Route::post('close-woitem', [ScmWoController::class, "closeWoItem"])->name('closeWoItem');
     Route::post('confirmation-wo', [ScmWoController::class, "confirmationWo"])->name('confirmationWo');
 
+
+});
