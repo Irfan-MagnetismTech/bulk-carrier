@@ -211,8 +211,8 @@
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].brand }}</td>
     </tr>
     <tr v-if="form.purchase_center == 'Foreign'">
-      <td>Model</td>
-      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].model }}</td>
+      <td>Origin</td>
+      <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].origin }}</td>
     </tr>
     <tr v-if="form.purchase_center == 'Foreign'">
       <td>Offer Price</td>

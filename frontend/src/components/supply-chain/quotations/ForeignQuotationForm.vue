@@ -119,8 +119,8 @@
       
       </label>
       <label class="label-group">
-        <span class="label-item-title">Model</span>
-        <input type="number" v-model="form.model" class="form-input"/>
+        <span class="label-item-title">Origin</span>
+        <input type="number" v-model="form.origin" class="form-input"/>
       
       </label>
     
