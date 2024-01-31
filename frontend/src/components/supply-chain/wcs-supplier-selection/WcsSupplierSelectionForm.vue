@@ -79,7 +79,7 @@
         <!-- <td>{{ materialData[0].scmPr.ref_no  }}</td> -->
         <!-- <td :rowspan="Object.keys(servicePrData).length">{{ serviceData[0].unit }}</td> -->
         <td>{{ serviceData[0].sum_quantity }}</td>
-        <td>{{ (formData?.latestWoItem) ? formData?.latestWoItem[index1].rate : "N/A" }}</td>
+        <td>{{ (formData?.latestWoItem && formData?.latestWoItem.length) ? formData?.latestWoItem[index1].rate : "N/A" }}</td>
         <template v-for="(serviceVendorData,index11) in (formData?.scmWcsVendorService[index1][name])" :key="index11">
             <!-- <td>{{ serviceVendorData[0].negotiated_price }}</td>
             <td>{{ serviceVendorData[0].negotiated_price * materialData[0].sum_quantity}}</td> -->
