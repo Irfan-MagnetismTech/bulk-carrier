@@ -223,7 +223,7 @@
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].unloading_cost_bear_by }}</td>
     </tr> -->
     <tr>
-      <td>Selected Vendor</td>
+      <td>Selected Vendor<span class="text-red-500">*</span></td>
       <td v-for="(VendoData,index) in (formData?.scmWcsVendor)" :key="index">
         <input type="checkbox" :class="'menu_' + VendoData.scm_wcs_id" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray" :value="VendoData?.id" v-model="form.scmWcsVendor[index][0].is_selected">
       </td>
