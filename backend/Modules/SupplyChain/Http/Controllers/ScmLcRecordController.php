@@ -26,7 +26,7 @@ class ScmLcRecordController extends Controller
     {
         try {
             $scmLcRecords = ScmLcRecord::query()
-                ->with('scmLcRecordLines', 'scmVendor', 'scmWarehouse', 'scmPo')
+                ->with('scmLcRecordLines', 'scmLcRecordStatuses', 'scmVendor', 'scmWarehouse', 'scmPo')
                 ->globalSearch(request()->all());
 
             return response()->success('Data list', $scmLcRecords, 200);
@@ -55,7 +55,6 @@ class ScmLcRecordController extends Controller
             return response()->success('Data created succesfully', $scmLcRecord, 201);
         } catch (\Exception $e) {
             DB::rollBack();
-
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -68,7 +67,7 @@ class ScmLcRecordController extends Controller
     public function show(ScmLcRecord $lcRecord): JsonResponse
     {
         try {
-            $lcRecord->load('scmLcRecordLines', 'scmVendor', 'scmWarehouse', 'scmPo.scmPoItems.scmMaterial');
+            $lcRecord->load('scmLcRecordLines', 'scmLcRecordStatuses', 'scmVendor', 'scmWarehouse', 'scmPo.scmPoItems.scmMaterial');
             $lcRecord->scmPo->scmPoItems->map(function ($item) {
                 return [
                     'scmMaterial' => $item['scmMaterial'],
@@ -78,6 +77,7 @@ class ScmLcRecordController extends Controller
                     'brand' => $item['brand'],
                     'model' => $item['model'],
                     'quantity' => $item['quantity'],
+                    'status' => $item['status'],
                 ];
             })->unique('scm_material_id')->values()->all();
             return response()->success('data', $lcRecord , 200);

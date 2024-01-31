@@ -31,6 +31,7 @@ class ScmWr extends Model
         'created_by',
         'is_closed',
         'closing_remarks',
+        'user_department',
         'status',
     ];
 

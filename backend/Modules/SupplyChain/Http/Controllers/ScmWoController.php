@@ -57,7 +57,30 @@ class ScmWoController extends Controller
         // return response()->json( $request->all(), 422);
         $requestData['created_by'] = auth()->id();
 
-        
+
+
+
+
+        if(isset($request->scmWoLines)){
+
+            $service_ids= [];
+            foreach ($request->scmWoLines as $key => $values) {
+                foreach ($values['scmWoItems'] as $index => $value) {
+                    $service_ids[]=$value['scm_service_id'];
+                }
+            }
+
+            if(count($service_ids) != count(array_unique($service_ids))) {
+                $error= [
+                    'message'=>'Duplicate service selection is not allowed; each service can be chosen only once.',
+                    'errors'=>[
+                        'Voyage'=>['Duplicate service selection is not allowed; each service can be chosen only once.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
+        }
+
         try {
             DB::beginTransaction();
             $scmWo = ScmWo::create($requestData);
@@ -149,6 +172,24 @@ class ScmWoController extends Controller
     {
         $requestData = $request->except('ref_no');
 
+        if(isset($request->scmWoLines)){
+            $service_ids= [];
+            foreach ($request->scmWoLines as $key => $values) {
+                foreach ($values['scmWoItems'] as $index => $value) {
+                    $service_ids[]=$value['scm_service_id'];
+                }
+            }            
+
+            if(count($service_ids) != count(array_unique($service_ids))) {
+                $error= [
+                    'message'=>'Duplicate service selection is not allowed; each service can be chosen only once.',
+                    'errors'=>[
+                        'Voyage'=>['Duplicate service selection is not allowed; each service can be chosen only once.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
+        }
         try {
             DB::beginTransaction();
 
@@ -533,7 +574,9 @@ class ScmWoController extends Controller
         try {
             $work_order = ScmWo::find($request->id);
             $work_order->update([
-                'confirmation_status' => 'Closed',
+                'status' => 'WIP',
+                'confirmation_by' => auth()->user()->id,
+                'confirmation_date' => now(),
             ]);
 
             return response()->success('Data updated sucessfully!', $work_order, 200);

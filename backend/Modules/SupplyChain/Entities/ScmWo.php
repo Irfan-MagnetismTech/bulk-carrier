@@ -37,7 +37,8 @@ class ScmWo extends Model
         'closed_by',
         'is_closed',
         'closing_remarks',
-        'confirmation_status',
+        'confirmation_date',
+        'confirmation_by',
         'status',
     ];
 

@@ -318,7 +318,7 @@ function confirmDelete(id) {
           <table class="w-full mb-5 whitespace-no-wrap border-collapse contract-assign-table table2">
           <thead v-once>
           <tr style="background-color: #04AA6D;color: white"
-              class="text-xs font-semibold tracking-wide text-gray-500 uppercase border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+              class="text-xs font-semibold tracking-wide text-gray-500  border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th>Status</th>
             <th>Date</th>
           </tr>
