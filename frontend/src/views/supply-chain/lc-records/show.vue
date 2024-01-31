@@ -242,29 +242,53 @@ onMounted(() => {
             </table>
         </div>
 
-        
-        <div class="w-full mt-2">
-            <table class="w-full">
-                <thead>
-                    <tr>
-                        <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="3">Material Details</td>
-                    </tr>
-                    <tr>
-                        <th class="!text-center">#</th>
-                        <th class="!text-center">Material Name</th>
-                        <th class="!text-center">HS Code</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    
-                    <tr v-for="(poMaterial, index) in lcRecord?.scmPo?.scmPoItems" :key="index">
-                        <td class="!text-center">{{ index+1 }}</td>
-                        <td>{{ poMaterial?.scmMaterial?.name }}</td>
-                        <td class="!text-center">{{ poMaterial?.scmMaterial?.hs_code }}</td>
-                    </tr>
+        <div class="flex flex-col w-full">
+            <div class="w-full mt-2">
+                <table class="w-full">
+                    <thead>
+                        <tr>
+                            <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="3">Material Details</td>
+                        </tr>
+                        <tr>
+                            <th class="!text-center">#</th>
+                            <th class="!text-center">Material Name</th>
+                            <th class="!text-center">HS Code</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr v-for="(poMaterial, index) in lcRecord?.scmPo?.scmPoItems" :key="index">
+                            <td class="!text-center">{{ index+1 }}</td>
+                            <td>{{ poMaterial?.scmMaterial?.name }}</td>
+                            <td class="!text-center">{{ poMaterial?.scmMaterial?.hs_code }}</td>
+                        </tr>
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="w-full mt-2">
+                <table class="w-full">
+                    <thead>
+                        <tr>
+                            <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="3">Status</td>
+                        </tr>
+                        <tr>
+                            <th class="!text-center">Status</th>
+                            <th class="!text-center">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <tr v-for="(scmLcRecordStatus, index) in lcRecord?.scmLcRecordStatuses" :key="index">
+                            <td>{{ scmLcRecordStatus?.status }}</td>
+                            <td class="!text-center">{{ formatDate(scmLcRecordStatus?.date) }}</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
         </div>
         </div>
 
