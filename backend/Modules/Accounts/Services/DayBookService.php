@@ -17,8 +17,8 @@ class DayBookService extends Controller
     public function handleDayBookService()
     {
         $ledgetEntries = AccLedgerEntry::with('transaction:id,transaction_date,voucher_type', 'account:id,account_name')
-        ->when(request()->account_id, function ($q){
-            $q->where('account_id', request()->account_id);
+        ->when(request()->acc_account_id, function ($q){
+            $q->where('acc_account_id', request()->acc_account_id);
         })
         ->whereHas('transaction', function ($q){
             $q->whereBetween('transaction_date', [request()->from_date, request()->till_date]);
