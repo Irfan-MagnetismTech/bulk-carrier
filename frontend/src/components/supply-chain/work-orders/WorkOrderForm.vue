@@ -44,6 +44,7 @@
     });
 
     const csVendors = ref([]);
+    const minWoDate = ref('');
 
     
     function addMaterial(index) {
@@ -301,11 +302,47 @@
       props.form.scm_vendor_id = null;
       props.form.scmVendor = null;
       wcsWiseVendorList.value = [];
+      if(props.form?.scmWcs?.id){
+        minWoDate.value = props.form?.scmWcs?.effective_date;
+        // console.log("props.form?.scmWcs", props.form?.scmWcs?.effective_date);
+      }
+      else{
+        minWoDate.value = '';
+      }
+      checkWoDate();
       getWr();
       if(props.form.scm_wcs_id){
         getWcsWiseVendorList(props.form.scmWcs.id);
       }
     }
+
+    function checkWoDate(){
+      if(props.form.date < minWoDate.value) props.form.date = '';
+    }
+
+    function woDateChange(){
+      props.form.scmWoLines?.forEach(scmWoLine => {
+        scmWoLine?.scmWoItems?.forEach(scmWoItem => {
+          if(scmWoItem.required_date < props.form.date)
+            scmWoItem.required_date = '';
+        })
+        // if ((minWoDate.value < scmWoLine?.scmWr?.approved_date || minWoDate.value == '') && scmWoLine?.scmWr) {
+        //   minWoDate.value = scmWoLine?.scmWr?.approved_date;
+        // }
+      });
+    }
+
+    watch(() => props.form.scmWoLines, (scmWoLines) => {
+      minWoDate.value = '' || props.form?.scmWcs?.effective_date;
+      scmWoLines?.forEach(scmWoLine => {
+        if ((minWoDate.value < scmWoLine?.scmWr?.approved_date || minWoDate.value == '' || !minWoDate.value) && scmWoLine?.scmWr) {
+          minWoDate.value = scmWoLine?.scmWr?.approved_date;
+        }
+      });
+
+    checkWoDate();
+
+}, { deep: true });
 
 
 
@@ -526,9 +563,9 @@
       </v-select>
     </label>
     <label class="label-group">
-          <span class="label-item-title">WO Date<span class="text-red-500">*</span></span>
+          <span class="label-item-title">WO Date <span class="text-red-500">*</span></span>
           <!-- <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" /> -->
-          <VueDatePicker v-model="form.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
+          <VueDatePicker v-model="form.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :min-date="minWoDate" @update:modelValue="woDateChange"></VueDatePicker>
     </label>    
     <label class="label-group" v-if="form.cs_no != null">
       <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
@@ -657,7 +694,7 @@
                       <tr>
                         <th class="w-1/4">Required Date <span class="text-red-500">*</span></th>
                         <td class="w-3/4">
-                          <VueDatePicker v-model="scmWoItem.required_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd"  required></VueDatePicker>
+                          <VueDatePicker v-model="scmWoItem.required_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd"  required :min-date="form.date"></VueDatePicker>
                         </td>
                         
                       </tr>
