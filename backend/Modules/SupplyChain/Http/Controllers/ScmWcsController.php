@@ -11,6 +11,7 @@ use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmWr;
 use Modules\SupplyChain\Entities\ScmWcs;
 use Modules\SupplyChain\Services\UniqueId;
+use Modules\SupplyChain\Entities\ScmWoItem;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmWcsVendor;
 use Modules\SupplyChain\Services\CompositeKey;
@@ -116,7 +117,7 @@ class ScmWcsController extends Controller
      */
     public function show(ScmWcs $work_c): JsonResponse
     {
-        $work_c->load('scmWcsServices.scmService', 'scmWcsServices.scmWr','scmWcsServices.scmWrLine', 'scmWarehouse');
+        $work_c->load('scmWcsServices.scmService', 'scmWcsServices.scmWr','scmWcsServices.scmWrLine', 'scmWarehouse','selectedVendors','scmWos','scmWcsVendors');
 
         $data = $work_c->scmWcsServices->map(function($service){
             $service['wr_quantity']= $service->scmWrLine->quantity;
@@ -349,6 +350,7 @@ class ScmWcsController extends Controller
 
     public function showWcsQuotation($id)
     {
+
         $scmWcsVendor = ScmWcsVendor::with('scmWcs', 'scmVendor.scmVendorContactPerson', 'scmWcsVendorServices.scmService', 'scmWcsVendorServices.scmWr')->find($id);
         $scmWcsVendorServices = $scmWcsVendor->scmWcsVendorServices->groupBy(['scm_service_id'])->values()->all();
         data_forget($scmWcsVendor, 'scmWcsVendorServices');
@@ -481,8 +483,22 @@ class ScmWcsController extends Controller
             ->get()
             ->groupBy(['scm_service_id', 'scm_wr_id', 'scm_vendor_id']);
 
+
+        $scmWcs['latestWoItem'] = ScmWoItem::query()
+            ->with(['scmWoLine.scmWo'])
+            ->whereIn('scm_service_id', $scmWcs->scmWcsServices->pluck('scm_service_id')->toArray())
+            ->get()
+            ->sortByDesc(function ($item) {
+                return $item->scmWoLine->scmWo->date;
+            })
+            ->groupBy('scm_service_id')
+            ->map(function ($items) {
+                return $items[0];
+            });
+
+
         $scmWcs['scmWcsService'] = ScmWcsService::query()
-            ->with('scmService', 'scmWr')
+            ->with(['scmService', 'scmWr'])
             ->where('scm_wcs_id', $wcsId)
             ->get()
             ->groupBy(['scm_service_id', 'scm_wr_id'])
@@ -504,6 +520,19 @@ class ScmWcsController extends Controller
 
         try {
             $wcs = ScmWcs::find($data['id']);
+
+            foreach ($data['scmWcsVendor'] as $key => $value) {
+                if (empty($value[0]['is_selected'])) {
+                    $error= [
+                        'message'=>'Must be checked selected vendor.',
+                        'errors'=>[
+                            'service'=>['Must be checked selected vendor.']
+                            ]
+                        ];
+                    return response()->json($error, 422);
+                }
+            }
+
             $wcs->update(
                 [
                     'selection_ground' => $data['selection_ground'],

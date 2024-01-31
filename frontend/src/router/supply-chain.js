@@ -643,6 +643,12 @@ export default [
         component: () => import(`../views/${PATH_BASE}/supplier-selection/create.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'supplier-selection' },
     },
+    {
+        path: `/${BASE}/material-cs/:csId/supplier-selection/show`,
+        name: `${BASE}.supplier-selection.show`,
+        component: () => import(`../views/${PATH_BASE}/supplier-selection/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'supplier-selection-show' },
+    },
      /* Material Cs end */
     
      {

@@ -81,8 +81,7 @@ class ScmPoController extends Controller
     public function show(ScmPo $purchaseOrder): JsonResponse
     {
         try {
-            $purchaseOrder->load('scmPoLines.scmPoItems.scmMaterial', "scmPoLines.scmPr", 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPoItems', 'scmCs', 'scmPoLines.scmPoItems.scmCsMaterial.scmMaterial', 'scmPoLines.scmPoItems.scmPrLine.scmMaterial');
-
+            $purchaseOrder->load('scmPoLines.scmPoItems.scmMaterial', "scmPoLines.scmPr", 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPoItems', 'scmCs','closedBy', 'createdBy', 'scmPoLines.scmPoItems.scmCsMaterial.scmMaterial', 'scmPoLines.scmPoItems.scmPrLine.scmMaterial','scmPoLines.scmPoItems.closedBy');
             $scmPoLines = $purchaseOrder->scmPoLines->map(function ($items) {
                 $datas = $items;
 
@@ -93,6 +92,7 @@ class ScmPoController extends Controller
                         $max_quantity =  $item->scmPrLine->quantity -  $item->scmPrLine->scmPoItems->sum('quantity') + $item->quantity;
                     }
                     return [
+                        'id' => $item['id'],
                         'scm_material_id' => $item['scm_material_id'],
                         'scmMaterial' => $item['scmMaterial'],
                         'unit' => $item['unit'],
@@ -109,6 +109,12 @@ class ScmPoController extends Controller
                         'cs_composite_key' => $item['cs_composite_key'],
                         'max_quantity' => $max_quantity,
                         'pr_quantity' => $item->scmPrLine->quantity,
+                        'is_closed' => $item->is_closed,
+                        'closed_by' => (auth()->user()->id == (int)($item->closedBy?->id)) ? 'You' : $item->closedBy?->name,
+                        // 'closed_by' => $item->closedBy?->name,
+                        'closed_at' => $item->closed_at,
+                        'closing_remarks' => $item->closing_remarks,
+                        'status' => $item->status,
                     ];
                 });
                 //data_forget scmPoItems
@@ -198,9 +204,18 @@ class ScmPoController extends Controller
                 'scm_po_id' => $purchaseOrder->id,
                 'scm_pr_id' => $values['scm_pr_id'],
             ]);
+            $pr = ScmPr::find($values['scm_pr_id']);
+            if($pr->status == 'Pending'){
+                $pr->update(['status' => 'WIP']);
+            }
 
             foreach ($values['scmPoItems'] as $index => $value) {
                 $this->createScmPoItem($request, $scmPoLine, $purchaseOrder, $value, $index);
+                $lineData = ScmPrLine::where('scm_pr_id', $values['scm_pr_id'])->where('pr_composite_key', $value['pr_composite_key'])->get();
+                if($lineData[0]->status == 'Pending'){
+                    $lineData[0]->update(['status' => 'WIP']);
+                }
+
             }
         }
     }
@@ -515,4 +530,100 @@ class ScmPoController extends Controller
 
         return response()->success('data', $scmPr, 200);
     }
+
+    public function closePo(Request $request): JsonResponse
+    {
+        try {
+            $po = ScmPo::find($request->id);
+            $po->update([
+                // 'is_closed' => 1,
+                'status' => 'Closed',
+                'closed_by' => auth()->user()->id,
+                'closed_at' => now(),
+                'closing_remarks' => $request->closing_remarks,
+            ]);
+
+            $po->load('scmPoItems');
+            foreach ($po->scmPoItems as $poLine) {
+                if ($poLine->status === 'Closed') {
+                    continue;
+                }
+
+                $poLine->update([
+                    // 'is_closed' => 1,
+                    'status' => 'Closed',
+                    'closed_by' => auth()->user()->id,
+                    'closed_at' => now(),
+                    'closing_remarks' => $request->closing_remarks,
+                ]);
+            }
+            return response()->success('Data updated sucessfully!', $po, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+    /**
+     * Show the specified resource.
+     * @param ScmPo $purchaseOrder
+     * @return JsonResponse
+     */
+    public function getPoMaterialByPoId(Request $request): JsonResponse
+    {
+        try {
+            $scmPoItems= ScmPoItem::with('scmMaterial')->where('scm_po_id', $request->scm_po_id)->get();
+
+            $data = $scmPoItems->map(function ($item) {
+                return [
+                    'scmMaterial' => $item['scmMaterial'],
+                    'scm_po_id' => $item['scm_po_id'],
+                    'scm_material_id' => $item['scm_material_id'],
+                    'unit' => $item['unit'],
+                    'brand' => $item['brand'],
+                    'model' => $item['model'],
+                    'quantity' => $item['quantity'],
+                ];
+            })->unique('scm_material_id')->values()->all();
+
+
+            return response()->success('data', $data, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function closePoLine(Request $request): JsonResponse
+    {
+        try {
+            $poLine = ScmPoItem::find($request->id);
+            $poLine->update([
+                // 'is_closed' => 1,
+                'status' => 'Closed',
+                'closed_by' => auth()->user()->id,
+                'closed_at' => now(),
+                'closing_remarks' => $request->closing_remarks,
+            ]);
+
+            $po = ScmPo::find($request->parent_id);
+            $po->load('scmPoItems');
+
+            $poLines = $po->scmPoItems->count();
+            // $sumIsClosed = $po->scmPrLines->sum('is_closed');
+            $sumIsClosed = $po->scmPoItems->where('status', 'Closed')->count();
+
+            if ($poLines === $sumIsClosed) {
+                $po->update([
+                    // 'is_closed' => 1,
+                    'status' => 'Closed',
+                    'closed_by' => auth()->user()->id,
+                    'closed_at' => now(),
+                    'closing_remarks' => "All lines are closed",
+                ]);
+            }
+
+            return response()->success('Data updated sucessfully!', [$poLines, $sumIsClosed], 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
 }

@@ -2,6 +2,7 @@
 
 namespace Modules\SupplyChain\Entities;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,7 +23,17 @@ class ScmWoItem extends Model
         'wr_composite_key',
         'wo_composite_key',
         'wcs_composite_key',
+        'closed_at',
+        'closed_by',
+        'is_closed',
+        'closing_remarks',
+        'status',
     ];
+
+    public function scmWo(): BelongsTo
+    {
+        return $this->belongsTo(ScmService::class);
+    }
 
     public function scmService(): BelongsTo
     {
@@ -42,5 +53,10 @@ class ScmWoItem extends Model
     public function scmWoLine(): BelongsTo
     {
         return $this->belongsTo(ScmWoLine::class);
+    }
+
+    public function closedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'closed_by' , 'id');
     }
 }

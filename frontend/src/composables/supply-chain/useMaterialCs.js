@@ -28,6 +28,8 @@ export default function useMaterialCs() {
         ref_no: null,
         effective_date: null,
         expire_date: null,
+        min_expire_date: null,
+        min_effective_date: null,
         priority: null,
         scmWarehouse: null,
         scm_warehouse_id: null,

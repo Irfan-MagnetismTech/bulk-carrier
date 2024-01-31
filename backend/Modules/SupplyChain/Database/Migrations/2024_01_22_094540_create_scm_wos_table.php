@@ -33,8 +33,10 @@ return new class extends Migration
             $table->integer('closed_by')->nullable();
             $table->datetime('closed_at')->nullable();
             $table->string('closing_remarks')->nullable();
-            $table->bigInteger('created_by')->comment('user_id')->nullable();
+            $table->datetime('confirmation_date')->nullable();
+            $table->string('confirmation_by')->nullable();
             $table->enum('status', ['Pending', 'WIP', 'Closed'])->default('Pending');
+            $table->bigInteger('created_by')->comment('user_id')->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();
             $table->timestamps();
         });

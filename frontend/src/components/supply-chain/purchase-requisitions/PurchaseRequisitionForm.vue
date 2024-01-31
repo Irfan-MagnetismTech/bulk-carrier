@@ -73,6 +73,19 @@
       watchPostEffect(() => {
         fetchWarehouse('');
       });
+      // var inndx = 0;
+      // watchPostEffect(() => {
+      //   if(props.formType == 'edit'){
+      //     var apprval_min_date = props?.form?.raised_date ? new Date(props?.form?.raised_date) : null;
+      //     var raised_max_date = props?.form?.approved_date ? new Date(props?.form?.approved_date) : null;
+          
+      //   }else{
+      //     var apprval_min_date = props?.form?.raised_date ? new Date(props?.form?.raised_date) : null;
+      //     var raised_max_date = props?.form?.approved_date ? new Date(props?.form?.approved_date) : null;
+      //   }
+      //   inndx++;  
+      //   console.log(apprval_min_date,raised_max_date);
+      // })
     });
 
 
@@ -274,7 +287,8 @@ function tytytyasd(indx) {
       </label>
       <label class="label-group">
           <span class="label-item-title">Raised Date<span class="text-red-500">*</span></span>
-          or</label>
+          <VueDatePicker v-model="form.raised_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+       </label>
       <label class="label-group">
           <span class="label-item-title">Critical Spares<span class="text-red-500">*</span></span>
           <select v-model="form.is_critical" required class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
@@ -303,9 +317,13 @@ function tytytyasd(indx) {
         <!-- <Error v-if="errors?.purchase_center" :errors="errors.purchase_center" /> -->
     </label>
       <label class="label-group">
-          <span class="label-item-title">Approved Date <span class="text-red-500">*</span></span>
-          <VueDatePicker v-model="form.approved_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+          <span class="label-item-title">Approved date <span class="text-red-500">*</span></span>
+          <VueDatePicker v-model="form.approved_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.raised_date"></VueDatePicker>
       </label>
+      <label class="label-group">
+          <span class="label-item-title">Department</span>
+          <input type="text" v-model="form.department" required class="form-input vms-readonly-input"/>
+       </label>
       <div class="md:col-span-2">
 
         <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
@@ -495,7 +513,7 @@ function tytytyasd(indx) {
 
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Model </span>
-                      <input type="text" v-model="form.scmPrLines[index].model" class="form-input">
+                      <input type="text" v-model="form.scmPrLines[index].select" class="form-input">
                     </label>
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Required Date <span class="text-red-500">*</span></span>

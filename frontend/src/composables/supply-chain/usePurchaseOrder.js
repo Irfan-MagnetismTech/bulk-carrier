@@ -11,6 +11,7 @@ export default function usePurchaseOrder() {
     const BASE = 'scm' 
     const router = useRouter();
     const purchaseOrders = ref([]);
+    const poMaterials = ref([]);
     const filteredPurchaseOrders = ref([]);
     const $loading = useLoading();
     const isTableLoading = ref(false);
@@ -340,6 +341,76 @@ export default function usePurchaseOrder() {
             isLoading.value = false;
         }
     }
+
+    async function closePo(id,closing_remarks) {
+        try {
+            let formData = new FormData();
+            formData.append('id', id);
+            formData.append('closing_remarks', closing_remarks);
+
+            const { data, status } = await Api.post(`/${BASE}/close-po`, formData);
+            notification.showSuccess(status);
+            await getPurchaseOrders(filterParams.value);
+        }
+        catch (error) {
+            if (error.response) {
+                const { data, status ,messege } = error.response;
+                console.log(data,error.response);
+                notification.showError(status);
+            } else {
+                notification.showError("An error occurred. Please check your internet connection.");
+            }
+
+        } finally {
+            // isLoading.value = false;
+        }
+
+    }
+
+    async function closePoLines(parent_id,id,closing_remarks) {
+        try {
+            let formData = new FormData();
+            formData.append('id', id);
+            formData.append('parent_id', parent_id);
+            formData.append('closing_remarks', closing_remarks);
+
+            const { data, status } = await Api.post(`/${BASE}/close-poline`, formData);
+            notification.showSuccess(status);
+            await showPurchaseOrder(parent_id);
+        }
+        catch (error) {
+            if (error.response) {
+                const { data, status ,messege } = error.response;
+                console.log(data,error.response);
+                notification.showError(status);
+            } else {
+                notification.showError("An error occurred. Please check your internet connection.");
+            }
+
+        } finally {
+            // isLoading.value = false;
+        }
+    }
+    async function getPoMaterials(poId) {
+        // const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-po-material-by-po-id`,{
+                params: {
+                    scm_po_id: poId
+                },
+            });
+            poMaterials.value =data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            isLoading.value = false;
+        }
+    }
         
 
     return {
@@ -357,10 +428,14 @@ export default function usePurchaseOrder() {
         getMaterialList,
         prMaterialList,
         getLineData,
+        getPoMaterials,
+        poMaterials,
         materialObject,
         poLineObject,
         termsObject,
         isTableLoading,
+        closePo,
+        closePoLines,
         materialList,
         isLoading,
         errors,

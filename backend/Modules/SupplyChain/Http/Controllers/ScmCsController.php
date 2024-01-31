@@ -18,6 +18,8 @@ use Modules\SupplyChain\Entities\ScmCsPaymentInfo;
 use Modules\SupplyChain\Http\Requests\ScmCsRequest;
 use Modules\SupplyChain\Entities\ScmCsMaterialVendor;
 use Modules\SupplyChain\Entities\ScmPoItem;
+use Modules\SupplyChain\Entities\ScmPr;
+use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Http\Requests\CsLandedCostRequest;
 use Modules\SupplyChain\Http\Requests\ScmQuotationRequest;
 use Modules\SupplyChain\Http\Requests\SupplierSelectionRequest;
@@ -39,7 +41,7 @@ class ScmCsController extends Controller
     {
         try {
             $scmCs = ScmCs::query()
-                ->with('scmPr', 'scmWarehouse', 'selectedVendors.scmVendor', 'scmCsMaterials.scmMaterial', 'scmCsVendors.scmVendor', 'scmCsMaterialVendors.scmMaterial', 'scmCsMaterialVendors.scmPr')
+                ->with('scmPo', 'scmWarehouse', 'selectedVendors.scmVendor', 'scmCsMaterials.scmMaterial', 'scmCsVendors.scmVendor', 'scmCsMaterialVendors.scmMaterial', 'scmCsMaterialVendors')
                 ->globalSearch(request()->all());
 
             return response()->success('Data list', $scmCs, 200);
@@ -71,6 +73,14 @@ class ScmCsController extends Controller
                     'unit' => $value['unit'],
                     'quantity' => $value['quantity'],
                 ]);
+                $pr = ScmPr::find($value['scm_pr_id']);
+                if ($pr->status == 'Pending') {
+                    $pr->update(['status' => 'WIP']);
+                }
+                $lineData = ScmPrLine::where('scm_pr_id', $value['scm_pr_id'])->where('pr_composite_key', $value['pr_composite_key'])->get();
+                if ($lineData[0]->status == 'Pending') {
+                    $lineData[0]->update(['status' => 'WIP']);
+                }
             }
 
             DB::commit();
@@ -90,7 +100,7 @@ class ScmCsController extends Controller
     {
         $materialCs = ScmCs::find($id);
         // $materialCs->load('scmPr', 'scmWarehouse');
-        $materialCs->load('scmCsMaterials.scmMaterial', 'scmPr', 'scmCsMaterials.scmPr', 'scmCsMaterials.scmPrLine', 'scmWarehouse');
+        $materialCs->load('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmCsMaterials.scmPrLine', 'scmWarehouse','selectedVendors','scmPo','scmCsVendors');
         $data = $materialCs->scmCsMaterials->map(function ($item) {
             $item['pr_quantity'] = $item->scmPrLine->quantity;
             $item['max_quantity'] = $item->scmPrLine->quantity - $item->scmPrLine->scmCsmaterials->sum('quantity') + $item->quantity;
@@ -125,12 +135,21 @@ class ScmCsController extends Controller
             foreach ($request->scmCsMaterials as $key => $value) {
                 ScmCsMaterial::create([
                     'scm_cs_id' => $materialCs->id,
+                    'scm_pr_id' => $value['scm_pr_id'],
                     'scm_material_id' => $value['scm_material_id'],
                     'cs_composite_key' => CompositeKey::generate(null, $materialCs->id, 'cs', $value['scm_material_id'], $value['scm_pr_id']),
                     'pr_composite_key' => $value['pr_composite_key'],
                     'unit' => $value['unit'],
                     'quantity' => $value['quantity'],
                 ]);
+                $pr = ScmPr::find($value['scm_pr_id']);
+                if ($pr->status == 'Pending') {
+                    $pr->update(['status' => 'WIP']);
+                }
+                $lineData = ScmPrLine::where('scm_pr_id', $value['scm_pr_id'])->where('pr_composite_key', $value['pr_composite_key'])->get();
+                if ($lineData[0]->status == 'Pending') {
+                    $lineData[0]->update(['status' => 'WIP']);
+                }
             }
             DB::commit();
             return response()->success('Data updated succesfully', $materialCs, 202);
@@ -171,14 +190,12 @@ class ScmCsController extends Controller
     public function getCsWiseData($id)
     {
         $materialCs = ScmCs::find($id);
-        // $materialCs->load('scmPr', 'scmWarehouse');
-        $materialCs->load('scmCsMaterials.scmMaterial', 'scmPr', 'scmCsMaterials.scmPr', 'scmWarehouse');
-        //scmCsMaterials groupBy ['scm_material_id','scm_pr_id']
+        // $materialCs->load('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmWarehouse');
+        $materialCs->load('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmCsMaterials.scmPrLine', 'scmWarehouse');
         $data = $materialCs->scmCsMaterials->groupBy(['scm_material_id'])->values()->all();
         data_forget($materialCs, 'scmCsMaterials');
 
         $materialCs['scmCsMaterials'] = $data;
-
 
         try {
             return response()->success('Detail data', $materialCs, 200);
@@ -490,7 +507,7 @@ class ScmCsController extends Controller
     public function getCsData($csId)
     {
         $scmCs = ScmCs::query()
-            ->with('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmPr', 'scmWarehouse')
+            ->with('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmWarehouse')
             ->find($csId);
 
         $scmCs['scmCsVendor'] = ScmCsVendor::query()
@@ -536,7 +553,7 @@ class ScmCsController extends Controller
     public function selectedSupplierstore(SupplierSelectionRequest $request)
     {
 
-        $data = $request->only('id', 'selection_ground', 'technical_acceptance','auditor_remarks_date', 'auditor_remarks', 'scmCsVendor');
+        $data = $request->only('id', 'selection_ground', 'technical_acceptance', 'auditor_remarks_date', 'auditor_remarks', 'scmCsVendor');
 
         try {
             $cs = ScmCs::find($data['id']);
@@ -575,6 +592,7 @@ class ScmCsController extends Controller
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
+                ->whereDate('expire_date', '>=', date('Y-m-d'))
                 ->orderByDesc('ref_no')
                 ->get();
         } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center)) {
@@ -587,6 +605,7 @@ class ScmCsController extends Controller
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
+                ->whereDate('expire_date', '>=', date('Y-m-d'))
                 ->orderByDesc('ref_no')
                 ->get();
         }

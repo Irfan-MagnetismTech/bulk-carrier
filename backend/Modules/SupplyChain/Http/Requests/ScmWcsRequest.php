@@ -31,6 +31,7 @@ class ScmWcsRequest extends FormRequest
     {
         return [
             'effective_date' => 'required|date|before_or_equal:expire_date',
+            'remarks' => 'nullable|max:300',
             'scmWcsServices.*.scm_wr_id' => ['required','exists:scm_wrs,id','integer'],
             // 'scmWcsServices.*.scm_wr_id' => ['required','exists:scm_wrs,id','integer', Rule::unique('scm_wcs_services')->ignore($this->route('work_c'), 'id'),],
         ];
@@ -48,6 +49,7 @@ class ScmWcsRequest extends FormRequest
             'effective_date.date' => 'Effective Date must be a date.',
             'effective_date.before_or_equal' => 'Effective Date must be before or equal to Expire Date.',
 
+            'remarks.max' => 'Remarks must be less than 300 characters',
             // 'attachment.required' => 'Attachment is required',
             // 'attachment.mimes' => 'Attachment must be an xlsx,pdf,jpg,png,jpeg,doc,docx',
 

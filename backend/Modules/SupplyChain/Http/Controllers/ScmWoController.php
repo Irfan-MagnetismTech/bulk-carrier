@@ -83,7 +83,7 @@ class ScmWoController extends Controller
     public function show(ScmWo $workOrder): JsonResponse
     {
         try {
-            $workOrder->load('scmWoLines.scmWoItems.scmService', "scmWoLines.scmWr", 'scmWoTerms', 'scmVendor', 'scmWarehouse', 'scmWoItems', 'scmWcs', 'scmWoLines.scmWoItems.scmWcsService.scmService', 'scmWoLines.scmWoItems.scmWrLine.scmService');
+            $workOrder->load('scmWoLines.scmWoItems.scmService', "scmWoLines.scmWr", 'scmWoTerms', 'scmVendor', 'scmWarehouse','closedBy', 'scmWoItems.closedBy', 'scmWcs', 'scmWoLines.scmWoItems.scmWcsService.scmService', 'scmWoLines.scmWoItems.scmWrLine.scmService');
 
             $scmWoLines = $workOrder->scmWoLines->map(function ($items) {
                 $datas = $items;
@@ -95,8 +95,10 @@ class ScmWoController extends Controller
                         $max_quantity =  $item->scmWrLine->quantity -  $item->scmWrLine->scmWoItems->sum('quantity') + $item->quantity;
                     }
                     return [
+                        'id' => $item['id'],
                         'scm_service_id' => $item['scm_service_id'],
                         'scmService' => $item['scmService'],
+                        'closedBy' => $item['closedBy'],
                         'required_date' => $item['required_date'],
                         'quantity' => $item['quantity'],
                         'rate' => $item['rate'],
@@ -452,5 +454,95 @@ class ScmWoController extends Controller
 
 
         return response()->success('data', $scmWr, 200);
+    }
+
+
+    
+    // for closing Work Order
+    public function closeWo(Request $request): JsonResponse
+    {      
+        
+        try {
+            $work_order = ScmWo::find($request->id);
+            $work_order->load('scmWoItems');
+            $work_order->update([
+                // 'is_closed' => 1,
+                'status' => 'Closed',
+                'closed_by' => auth()->user()->id,
+                'closed_at' => now(),
+                'closing_remarks' => $request->closing_remarks,
+            ]);
+                       
+            if(count($work_order->scmWoItems)>0){
+                foreach($work_order->scmWoItems as $wo_item) {    
+                    if ($wo_item->status === 'Closed') {
+                        continue;
+                    }
+                    $wo_item->update([
+                        // 'is_closed' => 1,
+                        'status' => 'Closed',
+                        'closed_by' => auth()->user()->id,
+                        'closed_at' => now(),
+                        'closing_remarks' => $request->closing_remarks,
+                    ]);
+                }
+            }
+
+            return response()->success('Data updated sucessfully!', $work_order, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function closeWoItem(Request $request): JsonResponse
+    {
+        // dd($request->all());
+        try {
+            $woItem = ScmWoItem::find($request->id);
+            $woItem->update([
+                // 'is_closed' => 1,
+                'status' => 'Closed',
+                'closed_by' => auth()->user()->id,
+                'closed_at' => now(),
+                'closing_remarks' => $request->closing_remarks,
+            ]);
+
+            $work_order = ScmWo::find($request->parent_id);
+            $work_order->load('scmWoItems');
+
+            $woItems = $work_order->scmWoItems->count();
+            $sumIsClosed = $work_order->scmWoItems->where('status', 'Closed')->count();
+
+            if ($woItems === $sumIsClosed) {
+                $work_order->update([
+                    // 'is_closed' => 1,
+                    'status' => 'Closed',
+                    'closed_by' => auth()->user()->id,
+                    'closed_at' => now(),
+                    'closing_remarks' => "All lines are closed",
+                ]);
+            }
+
+            return response()->success('Data updated sucessfully!', [$woItems, $sumIsClosed], 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    // for confirmation Work Order
+    public function confirmationWo(Request $request): JsonResponse
+    {
+        try {
+            $work_order = ScmWo::find($request->id);
+            $work_order->update([
+                'status' => 'WIP',
+                'confirmation_by' => auth()->user()->id,
+                'confirmation_date' => now(),
+            ]);
+
+            return response()->success('Data updated sucessfully!', $work_order, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }

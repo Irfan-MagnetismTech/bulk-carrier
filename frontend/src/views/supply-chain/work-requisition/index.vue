@@ -365,12 +365,13 @@ function confirmDelete(id) {
               </td>
               <td>
                 <nobr>
+                  <!-- {{ workRequisition.status }} -->
                   <action-button v-show="workRequisition.status !== 'Closed'" @click="showModal(workRequisition?.id)" :action="'close'"></action-button>
                   
                   <action-button :action="'show'" :to="{ name: 'scm.work-requisitions.show', params: { workRequisitionId: workRequisition?.id } }"></action-button>
 
-                  <action-button v-show="workRequisition.status === 'Pending'" :action="'edit'" :to="{ name: 'scm.work-requisitions.edit', params: { workRequisitionId: workRequisition?.id } }"></action-button>
-                  <action-button v-show="workRequisition.status === 'Pending'" @click="confirmDelete(workRequisition?.id)" :action="'delete'"></action-button>
+                  <action-button v-if="workRequisition.status === 'Pending' && workRequisition.status !== 'Closed'" :action="'edit'" :to="{ name: 'scm.work-requisitions.edit', params: { workRequisitionId: workRequisition?.id } }"></action-button>
+                  <action-button v-if="workRequisition.status === 'Pending' && workRequisition.status !== 'Closed'" @click="confirmDelete(workRequisition?.id)" :action="'delete'"></action-button>
                 </nobr>
               </td>
               <!-- <td>{{ purchaseRequisition?.ref_no }}</td>

@@ -98,7 +98,11 @@ onMounted(() => {
               </tr>
 
 
-
+              <tr>
+                <th class="w-40">User Department</th>
+                <td>{{ workRequisition?.user_department }}</td>
+              </tr>
+              
               
               <tr>
                 <th class="w-40">Attachment</th>
@@ -122,24 +126,24 @@ onMounted(() => {
                     </tr>
 
               <tr>
-                        <th class="w-40">Status </th>
-                        <td>
-                          <!-- {{ workRequisition?.status }} -->
-                          <span :class="workRequisition?.status === 'Pending' ? 'text-yellow-700 bg-yellow-100' : (workRequisition?.status == 'WIP' ? 'text-blue-700 bg-blue-100' : 'text-red-700 bg-red-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ workRequisition?.status ?? 'Closed' }}</span>
-                        </td>
-                    </tr>
-                    <tr v-if="workRequisition.status === 'Closed'">
-                        <th class="w-40">Closed At</th>
-                        <td>{{ formatDateTime(workRequisition?.closed_at) }}</td>
-                    </tr>
-                    <tr v-if="workRequisition.status === 'Closed'">
-                        <th class="w-40">Closed By</th>
-                        <td>{{ workRequisition?.closedBy?.name }}</td>
-                    </tr>
-                    <tr v-if="workRequisition.status === 'Closed'">
-                        <th class="w-40">Closing Remarks </th>
-                        <td>{{ workRequisition?.closing_remarks }}</td>
-                    </tr>
+                  <th class="w-40">Status </th>
+                  <td>
+                    <!-- {{ workRequisition?.status }} -->
+                    <span :class="workRequisition?.status === 'Pending' ? 'text-yellow-700 bg-yellow-100' : (workRequisition?.status == 'WIP' ? 'text-blue-700 bg-blue-100' : 'text-red-700 bg-red-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ workRequisition?.status ?? 'Closed' }}</span>
+                  </td>
+              </tr>
+              <tr v-if="workRequisition.status === 'Closed'">
+                  <th class="w-40">Closed At</th>
+                  <td>{{ formatDateTime(workRequisition?.closed_at) }}</td>
+              </tr>
+              <tr v-if="workRequisition.status === 'Closed'">
+                  <th class="w-40">Closed By</th>
+                  <td>{{ workRequisition?.closedBy?.name }}</td>
+              </tr>
+              <tr v-if="workRequisition.status === 'Closed'">
+                  <th class="w-40">Closing Remarks </th>
+                  <td>{{ workRequisition?.closing_remarks }}</td>
+              </tr>
 
               <tr>
                 <td colspan="2">

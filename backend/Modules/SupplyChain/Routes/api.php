@@ -141,6 +141,8 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
         Route::get('search-po-for-lc', "searchPoForLc")->name('searchPoForLc');
         Route::get('get-po-line-datas', "getPoLineDatas")->name('get-po-line-datas');
         Route::get('get-pr-cs-wise-po-data', "getPoOrPoCsWisePrData");
+        Route::post('close-po', "closePo")->name('closePo');
+        Route::post('close-poline', "closePoLine")->name('closePoLine');
     });
 });
 

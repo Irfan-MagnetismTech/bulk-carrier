@@ -2,8 +2,10 @@
 
 namespace Modules\SupplyChain\Entities;
 
+use App\Models\User;
 use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
+use App\Traits\UniqueKeyGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmMrr;
 use Modules\SupplyChain\Entities\ScmPoLine;
@@ -18,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class ScmPo extends Model
 {
-    use HasFactory, GlobalSearchTrait, DeletableModel;
+    use HasFactory, GlobalSearchTrait, DeletableModel, UniqueKeyGenerator;
 
     protected $fillable = [
         'ref_no',
@@ -46,6 +48,8 @@ class ScmPo extends Model
         'closing_remarks',
         'status',
     ];
+
+    protected $refKeyPrefix = 'PO';
 
     public function scmPoLines(): HasMany
     {
@@ -90,5 +94,15 @@ class ScmPo extends Model
     public function scmPoItems(): HasManyThrough
     {
         return $this->hasManyThrough(ScmPoItem::class, ScmPoLine::class);
+    }
+
+    public function closedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'closed_by', 'id');
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
     }
 }

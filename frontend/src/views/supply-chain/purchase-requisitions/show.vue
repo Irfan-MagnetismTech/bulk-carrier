@@ -22,6 +22,14 @@
                         <td>{{ purchaseRequisition?.ref_no }}</td>
                     </tr>
                     <tr>
+                        <th class="w-40">Warehouse Name.</th>
+                        <td>{{ purchaseRequisition?.scmWarehouse?.name }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Departments Name.</th>
+                        <td>{{ purchaseRequisition?.department ?? "N/A" }}</td>
+                    </tr>
+                    <tr>
                         <th class="w-40">Purchase Center</th>
                         <td>{{ purchaseRequisition.purchase_center }}</td>
                     </tr>
@@ -95,8 +103,8 @@
                 <th>SL</th>
                 <th class="w-36 text-center"><nobr>Material Name</nobr></th>
                 <th class="!text-center"><nobr>Unit</nobr></th>
-                <th><nobr>Model</nobr></th>
                 <th><nobr>Brand</nobr></th>
+                <th><nobr>Model</nobr></th>
                 <th><nobr>Country Name</nobr></th>
                 <th><nobr>Drawing No</nobr></th>
                 <th><nobr>Part No</nobr></th>
@@ -148,9 +156,9 @@
                 <span v-else :class="purchaseRequisition.scmPrLines[index]?.is_closed === 0 ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition.scmPrLines[index].is_closed === 0 ? 'Open' : 'Closed' }}</span> -->
                 <button v-if="purchaseRequisition.scmPrLines[index].status != 'Closed'" @click="showModal(purchaseRequisition.scmPrLines[index].id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Close</button>
                                   
-                                  <span v-else :class="purchaseRequisition.scmPrLines[index]?.status === 'Pending' ? 'text-yellow-700 bg-yellow-100' : (purchaseRequisition.scmPrLines[index]?.status == 'WIP' ? 'text-blue-700 bg-blue-100' : 'text-red-700 bg-red-100') " :title="purchaseRequisition.scmPrLines[index]?.status === 'Closed' ? `
-                                  Closed At : ${formatDateTime(purchaseRequisition.scmPrLines[index]?.closed_at)}\nClosed By : ${purchaseRequisition.scmPrLines[index]?.closed_by}
-                                  ` : ''" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition.scmPrLines[index]?.status ?? 'Closed' }}</span>
+                <span v-else :class="purchaseRequisition.scmPrLines[index]?.status === 'Pending' ? 'text-yellow-700 bg-yellow-100' : (purchaseRequisition.scmPrLines[index]?.status == 'WIP' ? 'text-blue-700 bg-blue-100' : 'text-red-700 bg-red-100') " :title="purchaseRequisition.scmPrLines[index]?.status === 'Closed' ? `
+                Closed At : ${formatDateTime(purchaseRequisition.scmPrLines[index]?.closed_at)}\nClosed By : ${purchaseRequisition.scmPrLines[index]?.closed_by}
+                ` : ''" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition.scmPrLines[index]?.status ?? 'Closed' }}</span>
               </td>
               </tr>
             </tbody>
@@ -190,7 +198,7 @@
             <tbody>
               <tr>
                 <td>
-                <RemarksComponent v-model="closingRemarks" :maxlength="300" :fieldLabel="'Closing Remarks'" isRequired="true" hideLebel="true"></RemarksComponent>
+                <RemarksComponent v-model="closingRemarks" :maxlength="300" :fieldLabel="'Closing Remarks'" hideLebel="true"></RemarksComponent>
                 </td>
               </tr>
            </tbody>
@@ -233,7 +241,7 @@ import usePurchaseRequisition from "../../../composables/supply-chain/usePurchas
 import StoreRequisitionShow from "../../../components/supply-chain/store-requisitions/StoreRequisitionShow.vue";
 import { formatDate, formatDateTime } from '../../../utils/helper';
 import RemarksComponent from '../../../components/utils/RemarksComponent.vue';
-
+import env from "../../../config/env";
 const icons = useHeroIcon();
 
 const route = useRoute();

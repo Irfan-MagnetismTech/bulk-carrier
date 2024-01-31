@@ -57,7 +57,9 @@ export default function useWcsSupplierSelection() {
             notification.showSuccess(status);
             router.push({ name: `${BASE}.work-cs.index` });
         } catch (error) {
-            console.log(error);
+            // console.log(error);
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
         } finally {
             isLoading.value = false;
             loader.hide();

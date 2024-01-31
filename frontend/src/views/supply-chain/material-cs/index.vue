@@ -103,17 +103,17 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Selected Vendors",
-      "filter_type": "input"
     },
     {
-      "relation_name": "scmCsMaterials",
-      "field_name": "scmMaterial.name",
+      "relation_name": "scmCsMaterials.scmMaterial",
+      "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
       "label": "Material",
-      "filter_type": "input"
+      "filter_type": "input",
+      "no_short" : true
     },
     {
       "relation_name": "scmWarehouse",
@@ -188,18 +188,31 @@ const navigateSupplierSelection = (csId) => {
   if(csId) router.push(routeOptions);
 };
 
-const navigateToPOCreate = (csId) => {
-  const pr_id = null; 
-  const cs_id = csId;
+const navigateSupplierSelectionShow = (csId) => {
   const routeOptions = {
-    name: 'scm.purchase-orders.create',
-    query: {
-      pr_id: null,
-      cs_id: cs_id
+    name: 'scm.supplier-selection.show',
+    params: {
+      csId: csId
     }
+    // query: {
+    //   csId: csId
+    // }
   };
-  router.push(routeOptions);
-};  
+  if(csId) router.push(routeOptions);
+};
+
+// const navigateToPOCreate = (csId) => {
+//   const pr_id = null; 
+//   const cs_id = csId;
+//   const routeOptions = {
+//     name: 'scm.purchase-orders.create',
+//     query: {
+//       pr_id: null,
+//       cs_id: cs_id
+//     }
+//   };
+//   router.push(routeOptions);
+// };  
 
 
 function confirmDelete(id) {
@@ -256,12 +269,16 @@ function confirmDelete(id) {
                 <template v-else>
                   <span class="text-red-500">No Vendor Selected</span>
                 </template>
-                {{ materialCsdata?.selection_ground }}</td>
+              </td>
               <td>
                 <template v-if="materialCsdata.selectedVendors.length">
-                  <ul v-for="(vendor,index) in materialCsdata?.selectedVendors" :key="index">
-                    <li>{{ vendor.scmVendor.name }}</li>
-                  </ul>
+                  <table class="w-full">
+                    <tr v-for="(vendor,index) in materialCsdata?.selectedVendors" :key="index">
+                      <td>
+                        {{ vendor.scmVendor.name }}
+                      </td>
+                    </tr>
+                  </table>
                 </template>
                 <template v-else>
                   <span class="text-red-500">No Vendor Selected</span>
@@ -285,9 +302,13 @@ function confirmDelete(id) {
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">
                   <button @click="navigateToQuotation(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Quotations</nobr></button>
-                  <button @click="navigateSupplierSelection(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700" v-if="materialCsdata?.scmCsVendors?.length"><nobr>Select Supplier</nobr></button>
-                  <action-button :action="'edit'" :to="{ name: 'scm.material-cs.edit', params: { materialCsId: materialCsdata.id } }"></action-button>
-                  <action-button @click="confirmDelete(materialCsdata.id)" :action="'delete'"></action-button>
+                  <!-- <button v-if="materialCsdata.scmPo.length == 0 && materialCsdata?.scmCsVendors?.length" @click="navigateSupplierSelection(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Supplier Selection</nobr></button>
+                  <button v-if="materialCsdata.scmPo.length" @click="navigateSupplierSelectionShow(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Supplier Selection</nobr></button> -->
+                  <action-button :action="'show'" :to="{ name: 'scm.material-cs.show', params: { materialCsId: materialCsdata.id } }"></action-button>
+                  <action-button v-if="materialCsdata?.scmCsVendors?.length == 0" :action="'edit'" :to="{ name: 'scm.material-cs.edit', params: { materialCsId: materialCsdata.id } }"></action-button>
+                  <action-button v-if="materialCsdata?.scmCsVendors?.length == 0" @click="confirmDelete(materialCsdata.id)" :action="'delete'"></action-button>
+                  <action-button v-if="materialCsdata?.scmCsVendors?.length" :action="'disabled_edit'"></action-button>
+                  <action-button v-if="materialCsdata?.scmCsVendors?.length" :action="'disabled_delete'"></action-button>
                 </div>
               </td>
             </tr>

@@ -5,6 +5,7 @@ namespace Modules\SupplyChain\Entities;
 use App\Models\User;
 use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
+use App\Traits\UniqueKeyGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmWr extends Model
 {
-    use HasFactory, GlobalSearchTrait, DeletableModel;
+    use HasFactory, GlobalSearchTrait, DeletableModel, UniqueKeyGenerator;
 
     protected $fillable = [
         'scm_warehouse_id',
@@ -30,8 +31,11 @@ class ScmWr extends Model
         'created_by',
         'is_closed',
         'closing_remarks',
+        'user_department',
         'status',
     ];
+
+    protected $refKeyPrefix = 'WR';
 
     public function scmWrLines(): HasMany
     {

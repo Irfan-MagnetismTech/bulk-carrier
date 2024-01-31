@@ -19,11 +19,11 @@
   <div class="input-group">
     <label class="label-group">
         <span class="label-item-title">Date <span class="text-red-500">*</span></span>
-        <VueDatePicker v-model="form.effective_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+        <VueDatePicker v-model="form.effective_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.min_effective_date"></VueDatePicker>
     </label>
     <label class="label-group">
         <span class="label-item-title">Expire Date <span class="text-red-500">*</span></span>
-        <VueDatePicker v-model="form.expire_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+        <VueDatePicker v-model="form.expire_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.min_expire_date"></VueDatePicker>
     </label>
       <label class="label-group">
           <span class="label-item-title">Purchase Center <span class="text-red-500">*</span></span>
@@ -61,7 +61,7 @@
 
   <div class="input-group !w-2/3">
     <label class="label-group">
-            <RemarksComponet v-model="form.special_instructions" :maxlength="300" :fieldLabel="'Special Instruction'" isRequired="true"></RemarksComponet>
+            <RemarksComponet v-model="form.special_instructions" :maxlength="300" :fieldLabel="'Special Instruction'"></RemarksComponet>
     </label>
   </div>  
   <div id="customDataTable" ref="customDataTableirf" class="!min-w-screen"> 
@@ -362,15 +362,11 @@ function tableWidth() {
       
     }, 10000);
 }
-//after mount
-onMounted(() => {
-  tableWidth();
-  // watch(() => props?.form?.scm_pr_id, (newVal, oldVal) => {
-  //   getPrWiseMaterialList(props.form.scm_pr_id);
-  //   });
-});
+
 
 onMounted(() => {
+  tableWidth();
+  // mindates
   watchEffect(() => {
     searchPurchaseRequisitionForCs(props.form.business_unit, props.form.scm_warehouse_id,props.form.purchase_center, null)
     
@@ -378,6 +374,18 @@ onMounted(() => {
   watchEffect(() => {
     fetchWarehouse('');
   });
+
+  watchEffect(()=> {
+  //   if(props.formType == 'create'){
+  //   const today = new Date();
+  //   const expire_min_date = new Date(props.form.effective_date);
+  //   const max_effective = new Date(props.form.expire_date);
+  // }else{
+  //   const today = new Date(props.form.effective_date);
+  //   const expire_min_date = new Date(props.form.effective_date);
+  //   const max_effective = new Date(props.form.expire_date);
+  // }
+
   if(props.formType == 'edit'){
     const watchBusinessUnit = watch(() => props.form, (newVal, oldVal) => {
       newVal.scmCsMaterials.forEach((item, index) => {
@@ -392,6 +400,21 @@ onMounted(() => {
   
 });
 
+// watchEffect(() => {
+//   var mindata = null;
+//     var maxdata = null;
+// if(form.scmCsMaterials && form.scmCsMaterials.length > 0){
+//   form.scmCsMaterials.forEach((item, index) => {
+//     var pr_raisedate = item.scmPr.raised_date;
+//     if(new Date(pr_raisedate) > new Date(mindata)){
+//     console.log('pr_raisedate',pr_raisedate);
+//     console.log('mindata',mindata);
+//   }
+//   });
+// }
+// });
+
+});
 
 function changePurchaseCenter() {
   // searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id,props.form.purchase_center, null)

@@ -32,14 +32,14 @@
           </v-select>
     </label>
     <label class="label-group">
-        <span class="label-item-title">Vendor Contact No <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Vendor Contact No</span>
         <input
           type="text"
           :value="form.scmVendor?.scmVendorContactPerson?.phone"
           class="form-input vms-readonly-input" readonly />
     </label>
     <label class="label-group">
-        <span class="label-item-title">Party Type <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Party Type</span>
         <input
           type="text"
           :value="form.scmVendor?.product_source_type"
@@ -60,7 +60,7 @@
        </label>
       <label class="label-group">
         <span class="label-item-title">Quotation Received Date <span class="text-red-500">*</span></span>
-          <VueDatePicker v-model="form.quotation_received_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+          <VueDatePicker v-model="form.quotation_received_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.date_of_rfq"></VueDatePicker>
       </label>
       <label class="label-group">
         <span class="label-item-title">Vendor Quotation No <span class="text-red-500">*</span></span>
@@ -69,7 +69,7 @@
         </label>
         <label class="label-group">
           <span class="label-item-title">Offer Validity <span class="text-red-500">*</span></span>
-            <VueDatePicker v-model="form.quotation_validity" class="form-input" required auto-apply :enable-time-picker="false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+            <VueDatePicker v-model="form.quotation_validity" class="form-input" required auto-apply :enable-time-picker="false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.quotation_received_date"></VueDatePicker>
         </label>
         
       </div>
@@ -82,32 +82,33 @@
             <option value="Credit">Credit</option>
         </select>
       </label>
-      <label class="label-group">
+      <!-- <label class="label-group">
         <span class="label-item-title">Currency <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.currency" class="form-input" required/>
-      </label>
+      </label> -->
       <label class="label-group">
-        <span class="label-item-title">Carrying Charge Bear By <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Carrying Charge Bear By </span>
           <input type="text" v-model="form.carring_cost_bear_by" class="form-input" required/>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Unloading Charge Bear By <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Unloading Charge Bear By</span>
           <input type="text" v-model="form.unloading_cost_bear_by" class="form-input" required/>
+      </label>
+      <label class="label-group">
+        <span class="label-item-title">VAT </span>
+          <input type="text" v-model="form.vat" class="form-input" required/>
       </label>
   </div>
 
   
   <div class="input-group">
+     
       <label class="label-group">
-        <span class="label-item-title">VAT <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.vat" class="form-input" required/>
-      </label>
-      <label class="label-group">
-        <span class="label-item-title">AIT <span class="text-red-500">*</span></span>
+        <span class="label-item-title">AIT</span>
           <input type="text" v-model="form.ait" class="form-input" required/>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Warranty <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Warranty</span>
         <input type="text" v-model="form.warranty" class="form-input"/>
       
       </label>
@@ -115,28 +116,29 @@
           <span class="label-item-title">Delivery Time (Days) <span class="text-red-500">*</span></span>
             <input type="number" v-model="form.delivery_time" required class="form-input " name="scm_department_id" :id="'scm_department_id'" />
         </label>
-  </div>
-
-  
-  <div class="input-group !w-1/2">
-    <label class="label-group">
+        <label class="label-group">
         <span class="label-item-title">Inco-term <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.delivery_term" class="form-input" required/>
       </label>
+  </div>
+
+  
+  <div class="input-group !w-1/4">
+    
     <label class="label-group">
         <span class="label-item-title">Credit Term <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.credit_term" class="form-input" required/>
+          <input type="text" v-model="form.credit_term" class="form-input" required :readonly="form.payment_method == 'Cash'"/>
       </label>
   </div>
 
   <div class="input-group !w-3/4">
     <label class="label-group">
-            <RemarksComponet v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'" isRequired="true"></RemarksComponet>
+            <RemarksComponet v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'"></RemarksComponet>
     </label>
   </div>  
   <div class="input-group !w-3/4">
     <label class="label-group">
-            <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'" isRequired="true"></RemarksComponet>
+            <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
     </label>
   </div>  
 
@@ -148,8 +150,8 @@
           <table class="whitespace-no-wrap">
             <thead>
             <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-              <th class="py-3 align-center">Material Name </th>
-              <th class="py-3 align-center">PR No </th>
+              <th class="py-3 align-center"><nobr>Material Name </nobr></th>
+              <th class="py-3 align-center"><nobr>PR No </nobr></th>
               <th class="py-3 align-center">Unit</th>
               <th class="py-3 align-center">Brand</th>
               <th class="py-3 align-center">Model</th>
@@ -171,19 +173,19 @@
                     <td><nobr>{{ scmSrLine?.scmPr?.ref_no }}</nobr></td>
                     <td :rowspan="lines.length">{{ scmSrLine?.scmMaterial?.unit }}</td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].brand" class="form-input" required/>
+                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].brand" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].model" class="form-input" required/>
+                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].model" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].warranty_period" class="form-input" required/>
+                      <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].warranty_period" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" class="form-input"/>
+                      <input type="number" step="0.01" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input" min="1"/>
+                      <input type="number" step="0.01" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input" min="1"/>
                     </td>
               
                   </tr>
@@ -230,6 +232,7 @@
       </div>
     </div>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 
 
@@ -252,7 +255,8 @@
     import useMaterialCs from '../../../composables/supply-chain/useMaterialCs';
     import { useRoute } from 'vue-router';
     import RemarksComponet from '../../utils/RemarksComponent.vue';
-    
+    import ErrorComponent from '../../utils/ErrorComponent.vue';
+
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses, warehouse, getWarehouses, searchWarehouse } = useWarehouse();
     const { searchVendor, vendors, vendor, isLoading: vendorLoading } = useVendor();
