@@ -245,11 +245,13 @@ function confirmDelete(cs_id, id) {
 <template>
   <!-- Heading -->
  
-  <div class="flex items-center justify-between w-full my-3" v-once>
+  <div class="flex items-center justify-between w-full my-3">
     <h2 class="text-2xl font-semibold text-gray-700">Quotations List</h2>
     <div class="flex gap-3">
       <default-button :title="'CS List'" :to="{ name: 'scm.material-cs.index' }" :icon="icons.DataBase"></default-button>
-      <default-button :title="'Create Quotation'" :to="{ name: 'scm.quotations.create', params: { csId: CSID }  }" :icon="icons.AddIcon"></default-button>
+      <template v-if="materialCs?.selectedVendors?.length == 0">
+        <default-button :title="'Create Quotation'" :to="{ name: 'scm.quotations.create', params: { csId: CSID }  }" :icon="icons.AddIcon"></default-button>
+      </template>
      </div>
   </div>
   <!-- Table -->
@@ -310,8 +312,10 @@ function confirmDelete(cs_id, id) {
               <td v-if="materialCs.purchase_center == 'Foreign'">{{ quotation?.total_negotiated_price }}</td>
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">  
+                  <action-button :action="'edit'" :to="{ name: 'scm.quotations.edit', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>
                   <template v-if="materialCs.selectedVendors.length == 0">
                     <action-button :action="'edit'" :to="{ name: 'scm.quotations.edit', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>
+                   
                     <!-- <action-button :action="'edit'" :to="{ name: 'scm.cs-cost-projection.create', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button> -->
                     <action-button @click="confirmDelete(quotation.scm_cs_id, quotation.id)" :action="'delete'" v-if="!quotation.is_selected"></action-button>
                   </template>  
