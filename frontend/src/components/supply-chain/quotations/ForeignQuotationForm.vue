@@ -67,7 +67,7 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Quotation Received Date <span class="text-red-500">*</span></span>
-          <VueDatePicker v-model="form.quotation_received_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+          <VueDatePicker v-model="form.quotation_received_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.date_of_rfq"></VueDatePicker>
       </label>
       <label class="label-group">
         <span class="label-item-title">Vendor Quotation No <span class="text-red-500">*</span></span>
@@ -75,7 +75,7 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Offer Validity <span class="text-red-500">*</span></span>
-          <VueDatePicker v-model="form.quotation_validity" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+          <VueDatePicker v-model="form.quotation_validity" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.quotation_received_date"></VueDatePicker>
       </label>
   </div>
 
@@ -90,7 +90,7 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Estimated Shipment Date <span class="text-red-500">*</span></span>
-          <VueDatePicker v-model="form.quotation_shipment_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+          <VueDatePicker v-model="form.quotation_shipment_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.quotation_received_date"></VueDatePicker>
       </label>
       <label class="label-group">
         <span class="label-item-title">Port Of Loading <span class="text-red-500">*</span></span>
