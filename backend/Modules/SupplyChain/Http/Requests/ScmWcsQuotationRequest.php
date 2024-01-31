@@ -27,8 +27,8 @@ class ScmWcsQuotationRequest extends FormRequest
         return [
             //
             'attachment' => 'nullable|mimes:xlsx,pdf,jpg,png,jpeg,doc,docx',
-            'terms_and_condition' => 'required|max:250',            
-            'remarks' => 'required|max:300',
+            'terms_and_condition' => 'nullable|max:250',            
+            'remarks' => 'nullable|max:300',
         ];
     }
 
@@ -41,9 +41,9 @@ class ScmWcsQuotationRequest extends FormRequest
     {
         return [
             'attachment.required' => 'Attachment is required',
-            'terms_and_condition.required' => 'Terms And Condition is required',
+            // 'terms_and_condition.required' => 'Terms And Condition is required',
             'terms_and_condition.max' => 'Terms And Condition must be less than 300 characters',
-            'remarks.required' => 'Remarks is required',
+            // 'remarks.required' => 'Remarks is required',
             'remarks.max' => 'Remarks must be less than 300 characters',
             'attachment.mimes' => 'Attachment must be an xlsx,pdf,jpg,png,jpeg,doc,docx',
 

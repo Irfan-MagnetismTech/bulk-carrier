@@ -334,7 +334,13 @@ function tytytyasd(indx) {
             <input type="file" class="form-input" @change="handleAttachmentChange" />
             <Error v-if="errors?.attachment" :errors="errors.attachment"  />
         </label>
-        <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
+
+        <label class="label-group">
+          <span class="label-item-title">User Department</span>
+          <input type="text" v-model.trim="form.user_department" placeholder="User Department" class="form-input"  />
+        </label>
+
+        <RemarksComponet class="col-span-1 md:col-span-3" v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
 
         <div class="md:col-span-3">
             <!-- <table class="w-full whitespace-no-wrap" id="table">
