@@ -32,6 +32,24 @@ const isTooltipShowing = ref(false);
         <span class="tooltiptext">{{ action }}</span>
       </div>
 
+      
+    <div v-else-if="action == 'approve'" class="tooltip cursor-pointer">
+        <!-- <svg xmlns="http://www.w3.org/2000/svg" :class="classes ?? 'icn text-red-500 dark-disabled:text-gray-400 dark-disabled:hover:text-red-500'" fill="none" viewBox="0 0 24 24" stroke="currentColor" >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          <span class="tooltiptext">{{ action }}</span>
+        </svg> -->
+
+        <svg xmlns="http://www.w3.org/2000/svg" :class="classes ?? 'icn text-green-500 dark-disabled:text-gray-400 dark-disabled:hover:text-green-500'" fill="none" viewBox="0 0 24 24"  stroke="currentColor" >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          <span class="tooltiptext">{{ action }}</span>
+        </svg>
+
+
+        <span class="tooltiptext">{{ action }}</span>
+      </div>
+
+
+
     <div v-else-if="action == 'posting'" class="tooltip cursor-pointer">
       <svg xmlns="http://www.w3.org/2000/svg" :class="classes ?? 'icn dark:text-gray-600 dark:hover:text-green-600'" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />

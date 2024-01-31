@@ -54,7 +54,7 @@ function closeModel() {
 function confirmationWorkOrder(id) {
         Swal.fire({
           title: 'Are you sure?',
-          text: "You want to confirm this data!",
+          text: "You want to approve this work order!",
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -291,7 +291,7 @@ const navigateToMRRCreate = (purchaseOrderId) => {
               <td>
                 <nobr>
                 <div class="">
-                  <action-button v-show="workOrder.confirmation_date == null && workOrder.status !== 'Closed'" @click="confirmationWorkOrder(workOrder.id)" :action="'show'"></action-button>
+                  <action-button v-show="workOrder.confirmation_date == null && workOrder.status !== 'Closed'" @click="confirmationWorkOrder(workOrder.id)" :action="'approve'"></action-button>
                   <action-button v-show="workOrder.status !== 'Closed'" @click="showModal(workOrder?.id)" :action="'close'"></action-button>
                   <!-- <button @click="navigateToMRRCreate(purchaseOrder.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
                   <action-button :action="'show'" :to="{ name: 'scm.work-orders.show', params: { workOrderId: workOrder.id } }"></action-button>
