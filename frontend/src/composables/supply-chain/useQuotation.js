@@ -175,9 +175,8 @@ export default function useQuotation() {
             notification.showSuccess(status);
             router.push({ name: `${BASE}.quotations.index` , params: { csId: csId }});
         } catch (error) {
-            console.log('tag', error)
-            // const { data, status } = error.response;
-            // errors.value = notification.showError(status, data);
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
         } finally {
             loader.hide();
             isLoading.value = false;

@@ -32,7 +32,7 @@
           </v-select>
     </label>
     <label class="label-group">
-        <span class="label-item-title">Vendor Contact No <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Vendor Contact No</span>
         <input
           type="text"
           :value="form.scmVendor?.scmVendorContactPerson?.phone"
@@ -43,7 +43,7 @@
          
     </label>
     <label class="label-group">
-        <span class="label-item-title">Party Type <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Party Type</span>
         <input
           type="text"
           :value="form.scmVendor?.product_source_type"
@@ -114,12 +114,12 @@
       </label>
       
       <label class="label-group">
-        <span class="label-item-title">Brand <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Brand</span>
         <input type="number" v-model="form.brand" class="form-input"/>
       
       </label>
       <label class="label-group">
-        <span class="label-item-title">Model <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Model</span>
         <input type="number" v-model="form.model" class="form-input"/>
       
       </label>
@@ -141,7 +141,7 @@
             </select>
         </label>
       <label class="label-group">
-        <span class="label-item-title">Warranty <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Warranty</span>
         <input type="text" v-model="form.warranty" class="form-input"/>
       
       </label>
@@ -160,13 +160,13 @@
 
   <div class="input-group !w-3/4">
       <label class="label-group">
-          <RemarksComponet v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'" isRequired="true"></RemarksComponet>
+          <RemarksComponet v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'"></RemarksComponet>
       </label>
   </div>
 
   <div class="input-group !w-3/4">
     <label class="label-group">
-            <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'" isRequired="true"></RemarksComponet>
+            <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
          
     </label>
   </div>  
