@@ -57,8 +57,6 @@ class ScmAdjustmentController extends Controller
     public function store(ScmAdjustmentRequest $request): JsonResponse
     {
         $requestData = $request->except('ref_no', 'adjustment_composite_key');
-
-        $requestData['ref_no'] = UniqueId::generate(ScmAdjustment::class, 'AJT');
         $requestData['created_by'] = auth()->user()->id;
 
         try {
@@ -165,12 +163,5 @@ class ScmAdjustmentController extends Controller
 
             return response()->json($adjustment->preventDeletionIfRelated(), 422);
         }
-    }
-
-    public function testStock()
-    {
-        TestStock::create([
-            'ref_no' => UniqueId::generate(TestStock::class, 'TS')
-        ]);
     }
 }

@@ -54,8 +54,6 @@ class ScmWoController extends Controller
     {
         
         $requestData = $request->except('ref_no');
-        
-        $requestData['ref_no'] = UniqueId::generate(ScmWo::class, 'WO');
         // return response()->json( $request->all(), 422);
         $requestData['created_by'] = auth()->id();
 

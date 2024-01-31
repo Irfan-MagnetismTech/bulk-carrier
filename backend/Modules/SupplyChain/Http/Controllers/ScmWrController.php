@@ -75,7 +75,6 @@ class ScmWrController extends Controller
                 'scmWrLines'
             );
 
-            $work_requisition_info['ref_no'] = UniqueId::generate(ScmWr::class, 'WR');
             $work_requisition_info['created_by'] = auth()->id();
 
             if (count($request->scmWrLines) < 1) {
