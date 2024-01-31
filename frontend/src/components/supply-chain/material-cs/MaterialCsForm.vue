@@ -427,7 +427,9 @@ function tableWidth() {
       
     }, 10000);
 }
-
+if(props.formType == 'create'){
+      editinitaiated.value == true;
+    }
 
 onMounted(() => {
   tableWidth();
@@ -464,14 +466,12 @@ onMounted(() => {
   }
   
   watch(() => props.form.scmCsMaterials , (newVal, oldVal) => {
-    if(props.page == 'create'){
-      editinitaiated.value == true;
-    }
+    
     newVal.forEach((item, index) => {
       if(item.scm_material_id){
         const stockableMaterial = scmCsMaterialQuantity.value.find(material => material === item.scm_material_id); 
         if(!stockableMaterial){
-            if(editinitaiated.value == true){
+            if(props.formType != 'edit'){
           props.form.scmCsStockQuantity.push({
             scm_material_id: item.scm_material_id,
             scmMaterial: item.scmMaterial,
