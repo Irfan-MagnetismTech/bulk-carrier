@@ -31,7 +31,8 @@ return new class extends Migration
             $table->string('closing_remarks')->nullable();
             $table->string('business_unit')->nullable();
             $table->bigInteger('created_by')->comment('user_id');
-            $table->enum('status', ['Pending','WIP','Closed'])->default('Pending');
+            $table->enum('status', ['Pending', 'WIP', 'Closed'])->default('Pending');
+            $table->string('department')->nullable();
             $table->timestamps();
         });
     }

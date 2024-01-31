@@ -34,6 +34,8 @@ return new class extends Migration
             $table->string('currency')->nullable();
             $table->string('mode_of_shipment')->comment('air,land,sea')->nullable();
             $table->string('terms_and_condition')->nullable();
+            $table->string('brand')->nullable();
+            $table->string('model')->nullable();
             $table->string('remarks')->nullable();
             $table->string('credit_term')->nullable();
             $table->string('carring_cost_bear_by')->nullable();
