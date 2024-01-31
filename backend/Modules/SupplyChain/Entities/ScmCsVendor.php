@@ -37,6 +37,8 @@ class ScmCsVendor extends Model
         'currency',
         'mode_of_shipment',
         'terms_and_condition',
+        'brand',
+        'model',
         'remarks',
         'credit_term',
         'carring_cost_bear_by',
