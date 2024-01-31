@@ -53,6 +53,8 @@ export default function useQuotation() {
         stock_type: null,
         manufaturing_days: null,
         warranty: null,
+        brand: null,
+        model: null,
         remarks: null,
         delivery_time: null,
         total_negotiated_price: 0,

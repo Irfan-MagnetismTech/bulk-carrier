@@ -114,6 +114,20 @@
       </label>
       
       <label class="label-group">
+        <span class="label-item-title">Brand <span class="text-red-500">*</span></span>
+        <input type="number" v-model="form.brand" class="form-input"/>
+      
+      </label>
+      <label class="label-group">
+        <span class="label-item-title">Model <span class="text-red-500">*</span></span>
+        <input type="number" v-model="form.model" class="form-input"/>
+      
+      </label>
+    
+      
+  </div>
+  <div class="input-group !w-3/4">
+    <label class="label-group">
         <span class="label-item-title">Manufacturing Days <span class="text-red-500">*</span></span>
         <input type="number" v-model="form.manufacturing_days" class="form-input" :readonly="form.stock_type == 'Ready Stock'" :class="[form.stock_type == 'Ready Stock' ? 'vms-readonly-input' : '',]"/>
       
@@ -126,9 +140,6 @@
               <option value="Road">Road</option>
             </select>
         </label>
-      
-  </div>
-  <div class="input-group !w-3/4">
       <label class="label-group">
         <span class="label-item-title">Warranty <span class="text-red-500">*</span></span>
         <input type="text" v-model="form.warranty" class="form-input"/>
@@ -138,6 +149,9 @@
         <span class="label-item-title">Delivery Time (Days) <span class="text-red-500">*</span></span>
           <input type="number" v-model="form.delivery_time" required class="form-input " name="scm_department_id" :id="'scm_department_id'" />
       </label>
+  </div>
+  <div class="input-group !w-1/4">
+    
       <label class="label-group">
         <span class="label-item-title">Inco-term <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.delivery_term" required class="form-input" />

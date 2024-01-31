@@ -509,7 +509,7 @@ function tytytyasd(indx) {
 
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Model </span>
-                      <input type="text" v-model="form.scmPrLines[index].model" class="form-input">
+                      <input type="text" v-model="form.scmPrLines[index].select" class="form-input">
                     </label>
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Required Date <span class="text-red-500">*</span></span>
