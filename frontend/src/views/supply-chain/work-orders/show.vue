@@ -198,14 +198,16 @@ onMounted(() => {
                     <!-- Rate -->
                     <td class="!text-right">{{ numberFormat(scmWoItem?.total_price) }}</td>
 
-                    <td>
+                    <td class="">
                                   
-                      <button v-if="scmWoItem.status != 'Closed'" @click="showModal(scmWoItem?.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Close</button>
+                      <div class="flex justify-center">
+                        <button v-if="scmWoItem.status != 'Closed'" @click="showModal(scmWoItem?.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Close</button>
                       <!-- <span v-else :class="scmWoItem?.is_closed === 0 ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ scmWoItem.is_closed === 0 ? 'Open' : 'Closed' }}</span> -->
                       
                       <span v-else :class="scmWoItem?.status === 'Pending' ? 'text-yellow-700 bg-yellow-100' : (scmWoItem?.status == 'WIP' ? 'text-blue-700 bg-blue-100' : 'text-red-700 bg-red-100') " :title="scmWoItem?.status === 'Closed' ? `
                       Closed At : ${formatDateTime(scmWoItem?.closed_at)}\nClosed By : ${scmWoItem?.closedBy?.name}
                       ` : ''" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ scmWoItem?.status ?? 'Closed' }}</span>
+                      </div>
 
                     </td>
                   </tr>
@@ -223,17 +225,20 @@ onMounted(() => {
               <tr>
                 <th colspan="7" class="!text-right">Sub Total</th>
                 <td class="!text-right">{{ numberFormat(workOrder?.sub_total) }}</td>
+                <td></td>
               </tr>
               
               <tr>
                 <th colspan="7" class="!text-right">Total Amount</th>
                 <td class="!text-right">{{ numberFormat(workOrder?.total_amount) }}</td>
+                <td></td>
               </tr>
 
               
               <tr>
                 <th colspan="7" class="!text-right">Net Amount</th>
                 <td class="!text-right">{{ numberFormat(workOrder?.net_amount) }}</td>
+                <td></td>
               </tr>
 
 

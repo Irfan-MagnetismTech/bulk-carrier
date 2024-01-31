@@ -55,7 +55,6 @@ class ScmLcRecordController extends Controller
             return response()->success('Data created succesfully', $scmLcRecord, 201);
         } catch (\Exception $e) {
             DB::rollBack();
-
             return response()->error($e->getMessage(), 500);
         }
     }
