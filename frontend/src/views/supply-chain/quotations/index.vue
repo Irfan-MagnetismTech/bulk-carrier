@@ -312,7 +312,7 @@ function confirmDelete(cs_id, id) {
               <td v-if="materialCs.purchase_center == 'Foreign'">{{ quotation?.total_negotiated_price }}</td>
               <td>
                 <div class="grid grid-flow-col-dense gap-x-2">  
-                  <action-button :action="'edit'" :to="{ name: 'scm.quotations.edit', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>
+                  <action-button :action="'show'" :to="{ name: 'scm.quotations.show', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>
                   <template v-if="materialCs.selectedVendors.length == 0">
                     <action-button :action="'edit'" :to="{ name: 'scm.quotations.edit', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>
                    

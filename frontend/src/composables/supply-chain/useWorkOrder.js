@@ -316,6 +316,31 @@ export default function useWorkOrder() {
 
     }
 
+    async function confirmationWo(id,confirmation_status) {
+        try {
+            let formData = new FormData();
+            formData.append('id', id);
+            formData.append('confirmation_status', confirmation_status);
+
+            const { data, status } = await Api.post(`/${BASE}/confirmation-wo`, formData);
+            notification.showSuccess(status);
+            await getWorkOrders(filterParams.value);
+        }
+        catch (error) {
+            if (error.response) {
+                const { data, status ,messege } = error.response;
+                console.log(data,error.response);
+                notification.showError(status);
+            } else {
+                notification.showError("An error occurred. Please check your internet connection.");
+            }
+
+        } finally {
+            // isLoading.value = false;
+        }
+
+    }
+
     // async function searchPurchaseOrderForLc(searchParam, business_unit) {
     //     isLoading.value = true;
     //         try {
@@ -399,6 +424,7 @@ export default function useWorkOrder() {
         filteredWorkOrders,
         closeWo,
         closeWoItems,
+        confirmationWo,
         // searchPurchaseOrder,
         searchWorkOrder,
         getWorkOrders,

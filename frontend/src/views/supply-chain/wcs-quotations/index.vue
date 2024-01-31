@@ -198,7 +198,8 @@ function confirmDelete(wcs_id, id) {
     <h2 class="text-2xl font-semibold text-gray-700">Quotations List</h2>
     <div class="flex gap-3">
       <default-button :title="'WCS List'" :to="{ name: 'scm.work-cs.index' }" :icon="icons.DataBase"></default-button>
-      <default-button v-if="!workCs?.scmWcsVendors?.find(scmWcsVendor => scmWcsVendor.is_selected == 1)" :title="'Create Quotation'" :to="{ name: 'scm.wcs-quotations.create', params: { wcsId: WCSID }  }" :icon="icons.AddIcon"></default-button>
+      <!-- {{ workCs?.selectedVendors }} -->
+      <default-button v-if="workCs?.selectedVendors?.length > 0" :title="'Create Quotation'" :to="{ name: 'scm.wcs-quotations.create', params: { wcsId: WCSID }  }" :icon="icons.AddIcon"></default-button>
     </div>
 
   </div>
@@ -253,8 +254,14 @@ function confirmDelete(wcs_id, id) {
               <td>{{ formatDate(wcsQuotation?.quotation_date) }}</td>
               <td>
                 <div class="">                 
-                  <action-button :action="'edit'" :to="{ name: 'scm.wcs-quotations.edit', params: { wcsId: wcsQuotation.scm_wcs_id, wcsQuotationId: wcsQuotation.id } }"></action-button>
-                  <action-button @click="confirmDelete(wcsQuotation.scm_wcs_id, wcsQuotation.id)" :action="'delete'" v-if="!wcsQuotation.is_selected"></action-button>
+                  <action-button :action="'show'" :to="{ name: 'scm.wcs-quotations.show', params: { wcsId: wcsQuotation.scm_wcs_id, wcsQuotationId: wcsQuotation.id } }"></action-button>
+                  <!-- {{ workCs?.selectedVendors }} -->
+                  <template v-if="!workCs?.selectedVendors?.length">
+                    
+                    
+                    <action-button  :action="'edit'" :to="{ name: 'scm.wcs-quotations.edit', params: { wcsId: wcsQuotation.scm_wcs_id, wcsQuotationId: wcsQuotation.id } }"></action-button>
+                    <action-button  @click="confirmDelete(wcsQuotation.scm_wcs_id, wcsQuotation.id)" :action="'delete'" v-if="!wcsQuotation.is_selected"></action-button>
+                  </template>
                 </div>
               </td>
             </tr>
