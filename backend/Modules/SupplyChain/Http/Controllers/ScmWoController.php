@@ -74,9 +74,9 @@ class ScmWoController extends Controller
 
             if(count($service_ids) != count(array_unique($service_ids))) {
                 $error= [
-                    'message'=>'Duplicate service can not allow, one service select only one time.',
+                    'message'=>'Duplicate service selection is not allowed; each service can be chosen only once.',
                     'errors'=>[
-                        'Voyage'=>['Duplicate service can not allow, one service select only one time.',]
+                        'Voyage'=>['Duplicate service selection is not allowed; each service can be chosen only once.',]
                         ]
                     ];
                 return response()->json($error, 422);
@@ -184,9 +184,9 @@ class ScmWoController extends Controller
 
             if(count($service_ids) != count(array_unique($service_ids))) {
                 $error= [
-                    'message'=>'Duplicate service can not allow, one service select only one time.',
+                    'message'=>'Duplicate service selection is not allowed; each service can be chosen only once.',
                     'errors'=>[
-                        'Voyage'=>['Duplicate service can not allow, one service select only one time.',]
+                        'Voyage'=>['Duplicate service selection is not allowed; each service can be chosen only once.',]
                         ]
                     ];
                 return response()->json($error, 422);
