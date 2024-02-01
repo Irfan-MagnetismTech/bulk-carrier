@@ -19,12 +19,12 @@
                     </tr>
                     
                     <tr>
-                        <th class="w-40">Vessel</th>
+                        <th class="w-40">Vessel Name</th>
                         <td>{{ vesselBunker.opsVessel?.name }}</td>
                     </tr>
 
                     <tr>
-                        <th class="w-40">Voyage</th>
+                        <th class="w-40">Voyage No</th>
                         <td>{{ vesselBunker.opsVoyage?.voyage_sequence }}</td>
                     </tr>
 

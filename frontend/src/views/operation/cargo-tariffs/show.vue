@@ -20,7 +20,7 @@
                   <td>{{ cargoTariff?.tariff_name }}</td>
               </tr>
               <tr>
-                  <th class="w-40">Vessel</th>
+                  <th class="w-40">Vessel Name</th>
                   <td>{{ cargoTariff?.opsVessel?.name }}</td>
               </tr>
               <tr>

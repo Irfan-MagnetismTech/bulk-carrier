@@ -22,11 +22,11 @@
                         <td><nobr>{{ formatDateTime(bulkNoonReport?.date_time) }}</nobr></td>
                       </tr>
                       <tr>
-                          <th class="w-40">Vessel</th>
+                          <th class="w-40">Vessel Name</th>
                           <td>{{ bulkNoonReport.opsVessel?.name }}</td>
                       </tr>
                       <tr>
-                          <th class="w-40">Voyage</th>
+                          <th class="w-40">Voyage No</th>
                           <td>{{ bulkNoonReport.opsVoyage?.voyage_no }}</td>
                       </tr>
                       <tr>

@@ -14,7 +14,7 @@
                 <td>{{ vessel?.vessel_type }}</td>
               </tr>
               <tr>
-                <th class="w-32">Name</th>
+                <th class="w-32">Vessel Name</th>
                 <td>{{ vessel?.name }}</td>
               </tr>
               <tr>

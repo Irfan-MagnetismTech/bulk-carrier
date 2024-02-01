@@ -66,11 +66,11 @@
 
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-1/2 mt-2 text-sm">
-                <span class="text-gray-700 dark-disabled:text-gray-300">Voyage No <span class="text-red-500">*</span></span>
+                <span class="text-gray-700 dark-disabled:text-gray-300">Voyage Sequence <span class="text-red-500">*</span></span>
                 <input type="text" v-model.trim="form.voyage_no" placeholder="Voyage No" class="form-input" required autocomplete="off" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" />
             </label>
             <label class="block w-1/2 mt-2 text-sm">
-                <span class="text-gray-700 dark-disabled:text-gray-300">Voyage Sequence <span class="text-red-500">*</span></span>
+                <span class="text-gray-700 dark-disabled:text-gray-300">Voyage No <span class="text-red-500">*</span></span>
                 <input type="text" v-model.trim="form.voyage_sequence" readonly class="form-input bg-gray-100" required autocomplete="off" />
             </label>
             <label class="block w-full mt-2 text-sm">

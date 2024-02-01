@@ -222,7 +222,7 @@ onMounted(() => {
               <input type="hidden" v-model="form.ops_vessel_id" />
     </label> 
     <label class="block w-1/2 mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage No <span class="text-red-500">*</span></span>
               <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
                       <input

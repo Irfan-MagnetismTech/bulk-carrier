@@ -23,11 +23,11 @@
                         <!-- <td>{{ contractAssign?.assign_date }}</td> -->
                     </tr>
                     <tr>
-                        <th class="w-40">Vessel</th>
+                        <th class="w-40">Vessel Name</th>
                         <td>{{ contractAssign?.opsVessel?.name }}</td>
                     </tr>
                     <tr>
-                        <th class="w-40">Voyage</th>
+                        <th class="w-40">Voyage No</th>
                         <td>{{ contractAssign?.opsVoyage?.voyage_sequence }}</td>
                     </tr>
                     <tr v-if="contractAssign?.business_unit === 'TSLL'">

@@ -26,7 +26,7 @@
                           <td>{{ chartererInvoice?.opsChartererContract?.contract_name  }}</td>
                       </tr>
                       <tr>
-                          <th class="w-40">Vessel</th>
+                          <th class="w-40">Vessel Name</th>
                           <td>{{ chartererInvoice.opsChartererContract?.opsVessel?.name  }}</td>
                       </tr>
                       <tr v-if="chartererInvoice.contract_type == 'Day Wise'">

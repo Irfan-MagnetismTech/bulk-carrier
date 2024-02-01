@@ -22,7 +22,7 @@
               <input type="hidden" v-model="form.ops_vessel_id" />
       </label>
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage </span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage No </span>
               <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
                   <template #search="{attributes, events}">
                       <input

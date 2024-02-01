@@ -9,7 +9,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">      
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage No <span class="text-red-500">*</span></span>
               <v-select :options="voyages" placeholder="--Choose an option--" :loading="isVoyageLoading"  v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
