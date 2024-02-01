@@ -333,10 +333,10 @@ function tytytyasd(indx) {
           <VueDatePicker v-model="form.approved_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.raised_date" @update:model-value="approvedDateChange"></VueDatePicker>
       </label>
       <label class="label-group">
-          <span class="label-item-title">Department</span>
+          <span class="label-item-title">Departments <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.department" required class="form-input"/>
        </label>
-      <div class="col-start-2 md:col-span-2">
+      <div class="col-start-1 md:col-span-2">
 
         <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
       </div>
