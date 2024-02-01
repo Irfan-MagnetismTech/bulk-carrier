@@ -492,7 +492,7 @@ function tytytyasd(indx) {
           </label>
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-1/2 mt-2 text-sm relative">
-              <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
+              <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" :readonly="form.scmPrLines[index].closed_by">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -515,21 +515,21 @@ function tytytyasd(indx) {
                     
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Unit <span class="text-red-500">*</span></span>
-                      <input type="text" readonly v-model="form.scmPrLines[index].unit" class="vms-readonly-input form-input">
+                      <input type="text" readonly v-model="form.scmPrLines[index].unit" class="vms-readonly-input form-input" :readonly="form.scmPrLines[index].closed_by">
                   </label>
 
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Brand </span>
-                      <input type="text" v-model="form.scmPrLines[index].brand" class="form-input">
+                      <input type="text" v-model="form.scmPrLines[index].brand" class="form-input" :readonly="form.scmPrLines[index].closed_by">
                     </label>
 
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Model </span>
-                      <input type="text" v-model="form.scmPrLines[index].select" class="form-input">
+                      <input type="text" v-model="form.scmPrLines[index].select" class="form-input" :readonly="form.scmPrLines[index].closed_by">
                     </label>
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Required Date <span class="text-red-500">*</span></span>
-                      <VueDatePicker v-model="form.scmPrLines[index].required_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+                      <VueDatePicker v-model="form.scmPrLines[index].required_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :readonly="form.scmPrLines[index].closed_by"></VueDatePicker>
                     </label>
           </div>
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -537,23 +537,23 @@ function tytytyasd(indx) {
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Specification </span>
 
-                      <input type="text" v-model="form.scmPrLines[index].specification" placeholder="" class="form-input" autocomplete="off"/>
+                      <input type="text" v-model="form.scmPrLines[index].specification" placeholder="" class="form-input" autocomplete="off" :readonly="form.scmPrLines[index].closed_by"/>
                     </label>
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Origin </span>
 
-                      <input type="text" v-model="form.scmPrLines[index].country_name" placeholder="" class="form-input" autocomplete="off"/>
+                      <input type="text" v-model="form.scmPrLines[index].country_name" placeholder="" class="form-input" autocomplete="off" :readonly="form.scmPrLines[index].closed_by"/>
                     </label>
                    
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Drawing No </span>
 
-                      <input type="text" v-model="form.scmPrLines[index].drawing_no" placeholder="" class="form-input" autocomplete="off"/>
+                      <input type="text" v-model="form.scmPrLines[index].drawing_no" placeholder="" class="form-input" autocomplete="off" :readonly="form.scmPrLines[index].closed_by"/>
                     </label>
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Part No </span>
 
-                      <input type="text" v-model="form.scmPrLines[index].part_no" placeholder="" class="form-input" autocomplete="off"/>
+                      <input type="text" v-model="form.scmPrLines[index].part_no" placeholder="" class="form-input" autocomplete="off" :readonly="form.scmPrLines[index].closed_by"/>
                     </label>
                     
           </div>
@@ -563,12 +563,12 @@ function tytytyasd(indx) {
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Rob </span>
 
-              <input type="number" v-model="form.scmPrLines[index].rob" readonly placeholder="" class="form-input text-right vms-readonly-input" autocomplete="off"/>
+              <input type="number" v-model="form.scmPrLines[index].rob" readonly placeholder="" class="form-input text-right vms-readonly-input" autocomplete="off" :readonly="form.scmPrLines[index].closed_by"/>
             </label>
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Quantity <span class="text-red-500">*</span></span>
 
-              <input type="number" v-model="form.scmPrLines[index].quantity" required min="1" placeholder="" class="form-input text-right" autocomplete="off"/>
+              <input type="number" v-model="form.scmPrLines[index].quantity" required min="1" placeholder="" class="form-input text-right" autocomplete="off" :readonly="form.scmPrLines[index].closed_by"/>
             </label>
             </div>
           <div class="flex justify-center items-center my-3">

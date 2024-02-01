@@ -422,7 +422,7 @@ export default function usePurchaseOrder() {
             let material_key = scmPoitem.pr_composite_key;
             if (materialArray.indexOf(material_key) === -1) {
                 materialArray.push(material_key);
-                form.scmPoitems[scmPoitemIndex].isAspectDuplicate = false;
+                form.scmPoLines[scmPoLineIndex].scmPoitems[scmPoitemIndex].isAspectDuplicate = false;
               } else {
                 let data = `Duplicate Material Name Having Purchase Requisition ${scmPoLine.scmPr.ref_no} in Row: ${scmPoitemIndex + 1}]`;
                 messages.value.push(data);

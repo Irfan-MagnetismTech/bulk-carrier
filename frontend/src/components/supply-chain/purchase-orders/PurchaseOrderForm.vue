@@ -855,6 +855,5 @@
       --dp-border-color: #4b5563;
       --dp-border-color-hover: #4b5563;
       --dp-icon-color: #4b5563;
-      --dp-font-size: 0.75rem!important;
     }
 </style>
