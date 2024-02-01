@@ -64,11 +64,21 @@ class ScmWoController extends Controller
 
 
         if(isset($request->scmWoLines)){
+            // $service_ids= [];
+            // foreach ($request->scmWoLines as $key => $values) { 
+            //     foreach ($values['scmWoItems'] as $index => $value) {
+            //             $service_ids[]=$value['scm_service_id'];
+            //     }
+            // }
+            $service_ids = [];
+            $wr_ids = [];
 
-            $service_ids= [];
             foreach ($request->scmWoLines as $key => $values) {
-                foreach ($values['scmWoItems'] as $index => $value) {
-                    $service_ids[]=$value['scm_service_id'];
+                $wr_ids[] = $values['scm_wr_id'];
+                if (!in_array($values['scm_wr_id'], $wr_ids)) {
+                    foreach ($values['scmWoItems'] as $index => $value) {
+                        $service_ids[] = $value['scm_service_id'];
+                    }
                 }
             }
 
@@ -146,7 +156,7 @@ class ScmWoController extends Controller
                 return $datas;
             });
 
-            // return response()->json($scmPoLines, 422);
+            // return response()->json($scmWoLines, 422);
 
             // data_forget($workOrder, 'scmPoLines');
 
@@ -185,6 +195,19 @@ class ScmWoController extends Controller
                     $service_ids[]=$value['scm_service_id'];
                 }
             }
+            // $service_ids = [];
+            // $wr_ids = [];
+
+            // foreach ($request->scmWoLines as $key => $values) {
+            //     foreach ($values['scmWoItems'] as $index => $value) {
+            //         if (!in_array($values['scm_wr_id'], $wr_ids) && !in_array($value['scm_service_id'], $service_ids)) {
+            //             $service_ids[] = $value['scm_service_id'];
+            //         }
+            //     }
+            //     $wr_ids[] = $values['scm_wr_id'];
+                
+            // }
+            // dd(count($service_ids) != count(array_unique($service_ids)));
 
             if(count($service_ids) != count(array_unique($service_ids))) {
                 $error= [
@@ -196,6 +219,8 @@ class ScmWoController extends Controller
                 return response()->json($error, 422);
             }
         }
+
+        // dd('gdfg');
         try {
             DB::beginTransaction();
 
@@ -354,6 +379,7 @@ class ScmWoController extends Controller
      */
     public function getServiceByWrId(): JsonResponse
     {
+        // dd(request()->all());
         if (!request()->has('scm_wcs_id')) {
             $wrServices = ScmWrLine::query()
             ->with('scmService','scmWoItems')
@@ -361,6 +387,7 @@ class ScmWoController extends Controller
             ->whereNot('status', 'Closed')
             ->get()
             ->map(function ($item) {
+
                 $data = $item->scmService;
                 $data['wr_composite_key'] = $item->wr_composite_key;
                 $data['wr_quantity'] = $item->quantity;
@@ -373,7 +400,10 @@ class ScmWoController extends Controller
                 $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
                 $data['wo_quantity'] = $data['wo_quantity'] ?? 0;
                 return $data;
+            })->filter(function($item){
+                return ($item['max_quantity'] > 0);
             });
+
 
         } else {
             $wrServices = ScmWcsService::query()
@@ -397,8 +427,12 @@ class ScmWoController extends Controller
                     $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
 
                     return $data;
+                })->filter(function($item){
+                    return ($item['max_quantity'] > 0);
                 });
         }
+
+
 
         return response()->success('data list', $wrServices, 200);
     }
@@ -470,6 +504,8 @@ class ScmWoController extends Controller
                 $data['wo_quantity'] = $data['wo_quantity'] ?? 0;
 
                 return $data;
+            })->filter(function($item){
+                return ($item['max_quantity'] > 0);
             });
         } else {
             $scmWr = ScmWcsService::query()
@@ -494,6 +530,8 @@ class ScmWoController extends Controller
                 $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
 
                 return $data;
+            })->filter(function($item){
+                return ($item['max_quantity'] > 0);
             });
         }
 

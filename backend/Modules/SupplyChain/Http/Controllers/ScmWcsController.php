@@ -568,6 +568,7 @@ class ScmWcsController extends Controller
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
+                ->has('selectedVendors')
                 ->orderByDesc('ref_no')
                 ->get();
                 
@@ -581,6 +582,7 @@ class ScmWcsController extends Controller
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
+                ->has('selectedVendors')
                 ->orderByDesc('ref_no')
                 ->get();
         }
