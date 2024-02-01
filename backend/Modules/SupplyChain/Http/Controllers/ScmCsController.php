@@ -74,16 +74,16 @@ class ScmCsController extends Controller
                     'quantity' => $value['quantity'],
                 ]);
                 $pr = ScmPr::find($value['scm_pr_id']);
-            if ($pr->status == 'Pending') {
-                $pr->update(['status' => 'WIP']);
-            }
-            $lineData = ScmPrLine::where('scm_pr_id', $value['scm_pr_id'])->where('pr_composite_key', $value['pr_composite_key'])->get();
-            if ($lineData[0]->status == 'Pending') {
-                $lineData[0]->update(['status' => 'WIP']);
-            }
+                if ($pr->status == 'Pending') {
+                    $pr->update(['status' => 'WIP']);
+                }
+                $lineData = ScmPrLine::where('scm_pr_id', $value['scm_pr_id'])->where('pr_composite_key', $value['pr_composite_key'])->get();
+                if ($lineData[0]->status == 'Pending') {
+                    $lineData[0]->update(['status' => 'WIP']);
+                }
             }
 
-            foreach($request->scmCsStockQuantity as $key2 => $value1){
+            foreach ($request->scmCsStockQuantity as $key2 => $value1) {
                 ScmCsStockQuantity::create([
                     'scm_cs_id' => $scmMi->id,
                     'scm_material_id' => $value1['scm_material_id'],
@@ -118,7 +118,7 @@ class ScmCsController extends Controller
     {
         $materialCs = ScmCs::find($id);
         // $materialCs->load('scmPr', 'scmWarehouse');
-        $materialCs->load('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmCsMaterials.scmPrLine', 'scmWarehouse','selectedVendors','scmPo','scmCsVendors','scmCsStockQuantity.scmMaterial');
+        $materialCs->load('scmCsMaterials.scmMaterial', 'scmCsMaterials.scmPr', 'scmCsMaterials.scmPrLine', 'scmWarehouse', 'selectedVendors.scmCsPaymentInfo', 'scmPo', 'scmCsVendors', 'scmCsStockQuantity.scmMaterial');
         $data = $materialCs->scmCsMaterials->map(function ($item) {
             $item['pr_quantity'] = $item->scmPrLine->quantity;
             $item['max_quantity'] = $item->scmPrLine->quantity - $item->scmPrLine->scmCsmaterials->sum('quantity') + $item->quantity;
@@ -150,6 +150,10 @@ class ScmCsController extends Controller
             $materialCs->scmCsMaterials->each(function ($item) {
                 $item->delete();
             });
+
+            $materialCs->scmCsStockQuantity->each(function ($item) {
+                $item->delete();
+            });
             foreach ($request->scmCsMaterials as $key => $value) {
                 ScmCsMaterial::create([
                     'scm_cs_id' => $materialCs->id,
@@ -170,7 +174,7 @@ class ScmCsController extends Controller
                 }
             }
 
-            foreach($request->scmCsStockQuantity as $key2 => $value1){
+            foreach ($request->scmCsStockQuantity as $key2 => $value1) {
                 ScmCsStockQuantity::create([
                     'scm_cs_id' => $materialCs->id,
                     'scm_material_id' => $value1['scm_material_id'],
@@ -614,7 +618,8 @@ class ScmCsController extends Controller
 
         if (isset($request->searchParam)) {
             $cs = ScmCs::query()
-                ->with('scmCsVendors', 'scmCsMaterials', 'scmCsMaterialVendors')
+                ->with('scmCsVendors', 'scmCsMaterials', 'scmCsMaterialVendors', 'selectedVendors')
+                ->has('selectedVendors')
                 ->whereHas('scmCsMaterials.scmPr', function ($query) use ($request) {
                     $query->where(function ($query) use ($request) {
                         $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
@@ -628,7 +633,8 @@ class ScmCsController extends Controller
                 ->get();
         } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center)) {
             $cs = ScmCs::query()
-                ->with('scmCsVendors', 'scmCsMaterials', 'scmCsMaterialVendors')
+                ->with('scmCsVendors', 'scmCsMaterials', 'scmCsMaterialVendors', 'selectedVendors')
+                ->has('selectedVendors')
                 ->whereHas('scmCsMaterials.scmPr', function ($query) use ($request) {
                     $query->where(function ($query) use ($request) {
                         $query->where('business_unit', $request->business_unit)

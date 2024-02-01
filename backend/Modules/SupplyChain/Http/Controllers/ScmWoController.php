@@ -54,30 +54,33 @@ class ScmWoController extends Controller
     {
         
         $requestData = $request->except('ref_no');
+        
+        // $requestData['ref_no'] = UniqueId::generate(ScmWo::class, 'WO');
         // return response()->json( $request->all(), 422);
         $requestData['created_by'] = auth()->id();
 
-
-
-
-
         if(isset($request->scmWoLines)){
+            $service_ids = [];
+            $wr_ids = [];
 
-            $service_ids= [];
             foreach ($request->scmWoLines as $key => $values) {
                 foreach ($values['scmWoItems'] as $index => $value) {
-                    $service_ids[]=$value['scm_service_id'];
+                    if (!in_array($values['scm_wr_id'], $wr_ids) ) {
+                        $service_ids[] = $value['scm_service_id'];
+                    }
                 }
+                $wr_ids[] = $values['scm_wr_id'];                
             }
+            
+            if(count($wr_ids) != count(array_unique($wr_ids))) {
+                $wr_error=$this->duplicateDataResponse('WR');
+                return response()->json($wr_error, 422);
+            }
+                        
+            if(count($service_ids) != count(array_unique($service_ids))) {    
+                $service_error=$this->duplicateDataResponse('service');
+                return response()->json($service_error, 422);
 
-            if(count($service_ids) != count(array_unique($service_ids))) {
-                $error= [
-                    'message'=>'Duplicate service selection is not allowed; each service can be chosen only once.',
-                    'errors'=>[
-                        'Voyage'=>['Duplicate service selection is not allowed; each service can be chosen only once.',]
-                        ]
-                    ];
-                return response()->json($error, 422);
             }
         }
 
@@ -94,6 +97,18 @@ class ScmWoController extends Controller
             DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+
+    private function duplicateDataResponse($message){
+        $error= [
+            'message'=>'Duplicate \'' . $message . '\' selection is not allowed; each \'' . $message . '\' can be chosen only once.',
+            'errors'=>[
+                'duplicate'=>['Duplicate \'' . $message . '\' selection is not allowed; each \'' . $message . '\' can be chosen only once.',]
+                ]
+            ];
+            
+        return $error;
     }
 
    /**
@@ -144,7 +159,7 @@ class ScmWoController extends Controller
                 return $datas;
             });
 
-            // return response()->json($scmPoLines, 422);
+            // return response()->json($scmWoLines, 422);
 
             // data_forget($workOrder, 'scmPoLines');
 
@@ -177,23 +192,30 @@ class ScmWoController extends Controller
         $requestData = $request->except('ref_no');
 
         if(isset($request->scmWoLines)){
-            $service_ids= [];
+            $service_ids = [];
+            $wr_ids = [];
+
             foreach ($request->scmWoLines as $key => $values) {
                 foreach ($values['scmWoItems'] as $index => $value) {
-                    $service_ids[]=$value['scm_service_id'];
+                    if (!in_array($values['scm_wr_id'], $wr_ids) ) {
+                        $service_ids[] = $value['scm_service_id'];
+                    }
                 }
+                $wr_ids[] = $values['scm_wr_id'];                
+            }
+            
+            if(count($wr_ids) != count(array_unique($wr_ids))) {
+                $wr_error=$this->duplicateDataResponse('PR');
+                return response()->json($wr_error, 422);
+            }            
+            
+            if(count($service_ids) != count(array_unique($service_ids))) {    
+                $service_error=$this->duplicateDataResponse('service');
+                return response()->json($service_error, 422);
             }
 
-            if(count($service_ids) != count(array_unique($service_ids))) {
-                $error= [
-                    'message'=>'Duplicate service selection is not allowed; each service can be chosen only once.',
-                    'errors'=>[
-                        'Voyage'=>['Duplicate service selection is not allowed; each service can be chosen only once.',]
-                        ]
-                    ];
-                return response()->json($error, 422);
-            }
         }
+
         try {
             DB::beginTransaction();
 
@@ -352,6 +374,7 @@ class ScmWoController extends Controller
      */
     public function getServiceByWrId(): JsonResponse
     {
+        // dd(request()->all());
         if (!request()->has('scm_wcs_id')) {
             $wrServices = ScmWrLine::query()
             ->with('scmService','scmWoItems')
@@ -359,6 +382,7 @@ class ScmWoController extends Controller
             ->whereNot('status', 'Closed')
             ->get()
             ->map(function ($item) {
+
                 $data = $item->scmService;
                 $data['wr_composite_key'] = $item->wr_composite_key;
                 $data['wr_quantity'] = $item->quantity;
@@ -371,7 +395,10 @@ class ScmWoController extends Controller
                 $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
                 $data['wo_quantity'] = $data['wo_quantity'] ?? 0;
                 return $data;
+            })->filter(function($item){
+                return ($item['max_quantity'] > 0);
             });
+
 
         } else {
             $wrServices = ScmWcsService::query()
@@ -395,8 +422,12 @@ class ScmWoController extends Controller
                     $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
 
                     return $data;
+                })->filter(function($item){
+                    return ($item['max_quantity'] > 0);
                 });
         }
+
+
 
         return response()->success('data list', $wrServices, 200);
     }
@@ -468,6 +499,8 @@ class ScmWoController extends Controller
                 $data['wo_quantity'] = $data['wo_quantity'] ?? 0;
 
                 return $data;
+            })->filter(function($item){
+                return ($item['max_quantity'] > 0);
             });
         } else {
             $scmWr = ScmWcsService::query()
@@ -492,6 +525,8 @@ class ScmWoController extends Controller
                 $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
 
                 return $data;
+            })->filter(function($item){
+                return ($item['max_quantity'] > 0);
             });
         }
 

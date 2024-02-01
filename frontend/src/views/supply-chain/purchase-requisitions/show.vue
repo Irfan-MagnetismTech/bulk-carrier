@@ -80,7 +80,7 @@
                     </tr>
                     <tr v-if="purchaseRequisition.status === 'Closed'">
                         <th class="w-40">Closed By</th>
-                        <td>{{ purchaseRequisition?.closed_by }}</td>
+                        <td>{{ purchaseRequisition?.closed_person }}</td>
                     </tr>
                     <tr v-if="purchaseRequisition.status === 'Closed'">
                         <th class="w-40">Closing Remarks </th>

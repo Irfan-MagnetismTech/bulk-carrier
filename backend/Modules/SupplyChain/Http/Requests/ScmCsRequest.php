@@ -31,7 +31,7 @@ class ScmCsRequest extends FormRequest
             'parchase_center' => 'nullable|string',
             'scm_warehouse_id' => 'nullable|exists:scm_warehouses,id|integer',
             'required_days' => 'required|integer',
-            'special_instructions' => 'required|string',
+            'special_instructions' => 'nullable|string|max:300',
             'scmCsMaterials.*.scm_pr_id' => 'required|exists:scm_prs,id|integer',
             'scmCsMaterials.*.scm_material_id' => 'required|exists:scm_materials,id|integer',
             'scmCsMaterials.*.quantity' => 'required|numeric',
