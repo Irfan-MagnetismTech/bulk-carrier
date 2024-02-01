@@ -44,7 +44,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Charterer",
+      "label": "Charterer Name",
       "filter_type": "input"
     },
     {

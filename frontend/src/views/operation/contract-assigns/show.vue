@@ -31,15 +31,15 @@
                         <td>{{ contractAssign?.opsVoyage?.voyage_sequence }}</td>
                     </tr>
                     <tr v-if="contractAssign?.business_unit === 'TSLL'">
-                        <th class="w-40">Customer</th>
+                        <th class="w-40">Customer Name</th>
                         <td>{{ contractAssign?.opsCustomer?.name }}</td>
                     </tr>
                     <tr v-if="contractAssign?.business_unit === 'PSML'">
-                        <th class="w-40">Charterer</th>
+                        <th class="w-40">Charterer Name</th>
                         <td>{{ contractAssign?.opsChartererProfile?.name }}</td>
                     </tr>
                     <tr v-if="contractAssign?.business_unit === 'PSML'">
-                        <th class="w-40">Charterer Contract</th>
+                        <th class="w-40">Contract Name</th>
                         <td>{{ contractAssign?.opsChartererContract?.contract_name }}</td>
                     </tr>
                 </tbody>

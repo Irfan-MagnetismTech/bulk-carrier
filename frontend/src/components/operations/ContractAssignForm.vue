@@ -37,7 +37,7 @@
               <input type="hidden" v-model="form.ops_vessel_id" />
       </label>
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Voyage <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Voyage No <span class="text-red-500">*</span></span>
               <v-select :options="voyages" :readonly="formType=='edit'" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input" @update:modelValue="opsVoyageChange">
                   <template #search="{attributes, events}">
                       <input
@@ -67,7 +67,7 @@
               </v-select>
       </label> -->
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Customer <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Customer Name<span class="text-red-500">*</span></span>
               <v-select :options="customers" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsCustomer" label="name_code" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -83,7 +83,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.contract_assign_type=='Charterer'">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Charterer <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Charterer Name <span class="text-red-500">*</span></span>
               <v-select :options="chartererProfiles" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -96,7 +96,7 @@
               </v-select>
       </label>
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Charterer Contract <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Contract Name <span class="text-red-500">*</span></span>
               <v-select :options="chartererContracts" placeholder="--Choose an option--" v-model="form.opsChartererContract" label="contract_name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -118,7 +118,7 @@
               <th class="w-2/12 px-4 py-3 align-bottom">Loading Point</th>
               <th class="w-2/12 px-4 py-3 align-bottom">Unloading Point</th>
               <th class="w-1/12 px-4 py-3 align-bottom">Quantity</th>
-              <th class="w-3/12 px-4 py-3 align-bottom">Tariff <span class="text-red-500">*</span></th>
+              <th class="w-3/12 px-4 py-3 align-bottom">Tariff Name <span class="text-red-500">*</span></th>
               <th class="w-1/12 px-4 py-3 align-bottom">Rate</th>
               <th class="w-3/12 px-4 py-3 align-bottom text-center">Month - Total Rate <span class="text-red-500">*</span></th>
             </tr>

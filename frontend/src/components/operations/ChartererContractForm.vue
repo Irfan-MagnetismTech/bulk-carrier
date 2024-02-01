@@ -48,7 +48,7 @@
 
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Select Charterer <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Name <span class="text-red-500">*</span></span>
               <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input

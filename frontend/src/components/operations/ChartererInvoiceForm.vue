@@ -11,7 +11,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Owner <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Name <span class="text-red-500">*</span></span>
               <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name_and_code" class="block form-input" @update:modelValue="profileChanged">
                   <template #search="{attributes, events}">
                       <input
@@ -24,7 +24,7 @@
               </v-select>
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Contract <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Contract Name <span class="text-red-500">*</span></span>
               <v-select :options="chartererContracts" placeholder="--Choose an option--" v-model="form.opsChartererContract" label="contract_name" class="block form-input" @update:modelValue="chartererContractChange">
                   <template #search="{attributes, events}">
                       <input
@@ -124,7 +124,7 @@
       <table class="w-full whitespace-no-wrap" >
         <thead v-once>
             <tr class="w-full">
-              <th class="">Voyage <span class="text-red-500">*</span></th>
+              <th class="">Voyage No <span class="text-red-500">*</span></th>
               <th class="">
                 <nobr>Cargo Type</nobr>
               </th>

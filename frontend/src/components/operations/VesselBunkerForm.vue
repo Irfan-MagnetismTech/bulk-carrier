@@ -286,7 +286,7 @@ onMounted(() => {
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.type=='Stock In'">
     <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Vendor <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Vendor Name <span class="text-red-500">*</span></span>
         <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.scmVendor" label="name" class="block form-input" >
             <template #search="{attributes, events}">
                 <input

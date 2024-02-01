@@ -54,7 +54,7 @@
                     </tr>
                     <template v-if="vesselBunker.type == 'Stock In'">
                       <tr>
-                          <th class="w-40">Vendor </th>
+                          <th class="w-40">Vendor Name</th>
                           <td>{{ vesselBunker?.opsBunkers[0]?.scmVendor?.name }}</td>
                       </tr>
                       <tr>
