@@ -68,7 +68,7 @@ class ScmPrController extends Controller
         $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs');
         $requestData['attachment'] = $attachment;
         $requestData['created_by'] = auth()->user()->id;
-        $requestData['ref_no'] = UniqueId::generate(ScmPr::class, 'PR');
+        // $requestData['ref_no'] = UniqueId::generate(ScmPr::class, 'PR');
 
         try {
             DB::beginTransaction();

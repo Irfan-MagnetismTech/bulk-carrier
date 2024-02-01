@@ -55,41 +55,32 @@ class ScmWoController extends Controller
         
         $requestData = $request->except('ref_no');
         
-        $requestData['ref_no'] = UniqueId::generate(ScmWo::class, 'WO');
+        // $requestData['ref_no'] = UniqueId::generate(ScmWo::class, 'WO');
         // return response()->json( $request->all(), 422);
         $requestData['created_by'] = auth()->id();
 
-
-
-
-
         if(isset($request->scmWoLines)){
-            // $service_ids= [];
-            // foreach ($request->scmWoLines as $key => $values) { 
-            //     foreach ($values['scmWoItems'] as $index => $value) {
-            //             $service_ids[]=$value['scm_service_id'];
-            //     }
-            // }
             $service_ids = [];
             $wr_ids = [];
 
             foreach ($request->scmWoLines as $key => $values) {
-                $wr_ids[] = $values['scm_wr_id'];
-                if (!in_array($values['scm_wr_id'], $wr_ids)) {
-                    foreach ($values['scmWoItems'] as $index => $value) {
+                foreach ($values['scmWoItems'] as $index => $value) {
+                    if (!in_array($values['scm_wr_id'], $wr_ids) ) {
                         $service_ids[] = $value['scm_service_id'];
                     }
                 }
+                $wr_ids[] = $values['scm_wr_id'];                
             }
+            
+            if(count($wr_ids) != count(array_unique($wr_ids))) {
+                $wr_error=$this->duplicateDataResponse('WR');
+                return response()->json($wr_error, 422);
+            }
+                        
+            if(count($service_ids) != count(array_unique($service_ids))) {    
+                $service_error=$this->duplicateDataResponse('service');
+                return response()->json($service_error, 422);
 
-            if(count($service_ids) != count(array_unique($service_ids))) {
-                $error= [
-                    'message'=>'Duplicate service selection is not allowed; each service can be chosen only once.',
-                    'errors'=>[
-                        'Voyage'=>['Duplicate service selection is not allowed; each service can be chosen only once.',]
-                        ]
-                    ];
-                return response()->json($error, 422);
             }
         }
 
@@ -106,6 +97,18 @@ class ScmWoController extends Controller
             DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
+    }
+
+
+    private function duplicateDataResponse($message){
+        $error= [
+            'message'=>'Duplicate \'' . $message . '\' selection is not allowed; each \'' . $message . '\' can be chosen only once.',
+            'errors'=>[
+                'duplicate'=>['Duplicate \'' . $message . '\' selection is not allowed; each \'' . $message . '\' can be chosen only once.',]
+                ]
+            ];
+            
+        return $error;
     }
 
    /**
@@ -189,38 +192,30 @@ class ScmWoController extends Controller
         $requestData = $request->except('ref_no');
 
         if(isset($request->scmWoLines)){
-            $service_ids= [];
+            $service_ids = [];
+            $wr_ids = [];
+
             foreach ($request->scmWoLines as $key => $values) {
                 foreach ($values['scmWoItems'] as $index => $value) {
-                    $service_ids[]=$value['scm_service_id'];
+                    if (!in_array($values['scm_wr_id'], $wr_ids) ) {
+                        $service_ids[] = $value['scm_service_id'];
+                    }
                 }
+                $wr_ids[] = $values['scm_wr_id'];                
             }
-            // $service_ids = [];
-            // $wr_ids = [];
-
-            // foreach ($request->scmWoLines as $key => $values) {
-            //     foreach ($values['scmWoItems'] as $index => $value) {
-            //         if (!in_array($values['scm_wr_id'], $wr_ids) && !in_array($value['scm_service_id'], $service_ids)) {
-            //             $service_ids[] = $value['scm_service_id'];
-            //         }
-            //     }
-            //     $wr_ids[] = $values['scm_wr_id'];
-                
-            // }
-            // dd(count($service_ids) != count(array_unique($service_ids)));
-
-            if(count($service_ids) != count(array_unique($service_ids))) {
-                $error= [
-                    'message'=>'Duplicate service selection is not allowed; each service can be chosen only once.',
-                    'errors'=>[
-                        'Voyage'=>['Duplicate service selection is not allowed; each service can be chosen only once.',]
-                        ]
-                    ];
-                return response()->json($error, 422);
+            
+            if(count($wr_ids) != count(array_unique($wr_ids))) {
+                $wr_error=$this->duplicateDataResponse('PR');
+                return response()->json($wr_error, 422);
+            }            
+            
+            if(count($service_ids) != count(array_unique($service_ids))) {    
+                $service_error=$this->duplicateDataResponse('service');
+                return response()->json($service_error, 422);
             }
+
         }
 
-        // dd('gdfg');
         try {
             DB::beginTransaction();
 
