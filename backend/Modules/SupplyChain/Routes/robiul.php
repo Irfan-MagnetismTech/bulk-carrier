@@ -22,6 +22,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('search-work-requisitions-for-wcs', [ScmWrController::class, "searchWorkRequisitionsForWcs"])->name('search-work-requisitions-wcs');
     Route::post('close-wr', [ScmWrController::class, "closeWr"])->name('closeWr');
     Route::post('close-wrline', [ScmWrController::class, "closeWrLine"])->name('closeWrLine');
+    Route::get('work-requisitions-close', [ScmWrController::class, "wrCloseIndex"])->name('wrCloseIndex');
 
 
     Route::post('wcs-quotations', [ScmWcsController::class, "storeWcsQuotation"])->name('wcs-quotations.create');
@@ -35,7 +36,6 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('get-wcs-data/{id}', [ScmWcsController::class, "getWcsWiseData"])->name('getWcsWiseData');
     Route::get('getWcsData/{csId}', [ScmWcsController::class, "getWcsData"])->name('getWcsData');
     
-    
     Route::get('get-po-material-by-po-id', [ScmPoController::class, "getPoMaterialByPoId"])->name('getPoMaterialByPoId');
     
     Route::get('get-wo-line-datas', [ScmWoController::class, "getWoLineDatas"])->name('get-wo-line-datas');
@@ -47,6 +47,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::post('close-wo', [ScmWoController::class, "closeWo"])->name('closeWo');
     Route::post('close-woitem', [ScmWoController::class, "closeWoItem"])->name('closeWoItem');
     Route::post('confirmation-wo', [ScmWoController::class, "confirmationWo"])->name('confirmationWo');
+    Route::get('work-orders-close', [ScmWoController::class, "woCloseIndex"])->name('woCloseIndex');
 
 
 });
