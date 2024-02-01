@@ -200,10 +200,10 @@ filterOptions.value.filter_options.forEach((option, index) => {
           <tbody class="relative">
           <tr v-for="(crwDocument,index) in crewDocumentRenewSchedules" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ crwDocument?.document_name }}</td>
+            <td class="!text-left">{{ crwDocument?.document_name }}</td>
             <td>{{ crwDocument?.crwCrewDocumentRenewal?.expire_date }}</td>
             <td>{{ crwDocument?.crwCrewDocumentRenewal?.left_days }}</td>
-            <td>{{ crwDocument?.crwCrewProfile?.full_name }}</td>
+            <td class="!text-left">{{ crwDocument?.crwCrewProfile?.full_name }}</td>
             <td>{{ crwDocument?.crwCrewProfile?.pre_mobile_no }}</td>
             <td>
               <span :class="crwDocument?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwDocument?.business_unit }}</span>

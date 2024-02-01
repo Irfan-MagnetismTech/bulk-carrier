@@ -63,7 +63,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Year-Month",
+      "label": "Year - Month",
       "filter_type": "input"
     },
     {
@@ -148,7 +148,7 @@ onMounted(() => {
           <tbody>
           <tr v-for="(crwAttendance,index) in crwAttendances?.data" :key="index">
             <td> {{ index + 1 }} </td>
-            <td> {{ crwAttendance?.opsVessel?.name }} </td>
+            <td class="!text-left"> {{ crwAttendance?.opsVessel?.name }} </td>
             <td> {{ crwAttendance?.total_crews }} </td>
             <td> {{ crwAttendance?.year_month }} </td>
             <td>{{ crwAttendance?.working_days }}</td>

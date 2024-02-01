@@ -11,6 +11,8 @@ const { crews, getCrews, crewDocuments, getCrewDocuments, getCrewDocumentRenewal
 const { isCrewDocumentAddModalOpen, storeCrewDocument, storeCrewRenewDocument, updateCrewRenewDocument, currentCrewDocRenewData, deleteCrewRenewDocument, deleteCrewDocument, isDocumentEditModal, errors } = useCrewDocument();
 import env from '../../config/env';
 import Swal from "sweetalert2";
+import useHeroIcon from "../../assets/heroIcon";
+const icons = useHeroIcon();
 
 const props = defineProps({
   form: {
@@ -235,22 +237,27 @@ onMounted(() => {
 
       <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
       <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(crwDocumentData, index) in crewDocuments" :key="crwDocumentData.id">
-        <td>{{ crwDocumentData?.document_name }}</td>
-        <td>{{ crwDocumentData?.issuing_authority }}</td>
+        <td class="!text-left">{{ crwDocumentData?.document_name }}</td>
+        <td class="!text-left">{{ crwDocumentData?.issuing_authority }}</td>
         <td>
           <span class="custom_badge dark-disabled:bg-yellow-700 dark-disabled:text-yellow-100 text-black-700 bg-yellow-200">{{ crwDocumentData?.validity_period }}</span>
         </td>
         <td>{{ crwDocumentData?.crwCrewDocumentRenewals[0]?.issue_date ?? '---'}}</td>
         <td>{{ crwDocumentData?.crwCrewDocumentRenewals[0]?.expire_date ?? '---'}}</td>
-        <td>{{ crwDocumentData?.crwCrewDocumentRenewals[0]?.reference_no ?? '---'}}</td>
+        <td class="!text-left">{{ crwDocumentData?.crwCrewDocumentRenewals[0]?.reference_no ?? '---'}}</td>
         <td>
-          <template v-if="crwDocumentData?.crwCrewDocumentRenewals[0]?.attachment">
-            <a class="custom_link" :href="env.BASE_API_URL+'/'+crwDocumentData?.crwCrewDocumentRenewals[0]?.attachment" target="_blank">
-              Link
-            </a>
-          </template>
-          <template v-else>---</template>
+          <a v-html="icons.Attachment" type="button" v-if="typeof crwDocumentData?.crwCrewDocumentRenewals[0]?.attachment === 'string'"
+             class="text-green-800" target="_blank" :href="env.BASE_API_URL+'/'+crwDocumentData?.crwCrewDocumentRenewals[0]?.attachment"></a>
+          <a v-else>---</a>
         </td>
+<!--        <td>-->
+<!--          <template v-if="crwDocumentData?.crwCrewDocumentRenewals[0]?.attachment">-->
+<!--            <a class="custom_link" :href="env.BASE_API_URL+'/'+crwDocumentData?.crwCrewDocumentRenewals[0]?.attachment" target="_blank">-->
+<!--              Link-->
+<!--            </a>-->
+<!--          </template>-->
+<!--          <template v-else>-&#45;&#45;</template>-->
+<!--        </td>-->
         <td class="px-1 py-1 text-center">
           <nobr>
             <a @click="showCrewDocumentRenewModal(crwDocumentData?.id)" :class="{'custom_renew_active_button': crwDocumentData?.validity_period_in_month,'custom_renew_disable_button': !crwDocumentData?.validity_period_in_month}" class="relative tooltip">
@@ -318,7 +325,7 @@ onMounted(() => {
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Validity Period <span class="text-red-500">*</span></span>
               <select v-model.trim="form.validity_period" class="form-input" required>
-                <option value="" disabled selected>Select</option>
+                <option value="" selected disabled>--Choose an option--</option>
                 <option value="3">3 Months</option>
                 <option value="6">6 Months</option>
                 <option value="12">1 Year</option>

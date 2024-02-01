@@ -190,9 +190,21 @@ function changeTab(tabNumber, buttonType = null){
   } else {
     if(buttonType !== null){
       if (openTab.value === 1) {
-        let tab1Fields = ['business_unit','crw_recruitment_approval_name','hired_by','department_name','crw_rank_id','first_name','last_name','father_name','mother_name',
-        'date_of_birth','gender','religion','marital_status','nationality','nid_no','pre_address','pre_city','pre_mobile_no','per_address','per_city','per_mobile_no'];
-        console.log(tab1Fields);
+        let tab1Fields = ref(['business_unit','crw_recruitment_approval_name','hired_by','department_name','crw_rank_id','first_name','last_name','father_name','mother_name',
+          'date_of_birth','gender','religion','marital_status','nationality','nid_no','pre_address','pre_city','pre_mobile_no','per_address','per_city','per_mobile_no']);
+
+        // if (props.form.hired_by === 'agency' && !tab1Fields.value.includes('agency_name')) {
+        //   tab1Fields.value.push('agency_name');
+        // } else if (props.form.hired_by !== 'agency' && tab1Fields.value.includes('agency_name')) {
+        //   tab1Fields = tab1Fields.value.filter(field => field !== 'agency_name');
+        // }
+
+        // if (props.form.hired_by === 'agency') {
+        //   return [...tab1Fields, 'agency_name'];
+        // } else {
+        //   return tab1Fields;
+        // }
+
         if(!checkValidation(openTab, tabNumber, props,tab1Fields)){
           return;
         }
@@ -325,13 +337,13 @@ onMounted(() => {
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Hired By <span class="text-red-500">*</span></span>
             <select class="form-input" v-model.trim="form.hired_by" required id="hired_by">
-              <option value="" disabled selected>Select</option>
+              <option value="" selected disabled>--Choose an option--</option>
               <option value="Agency">Agency</option>
               <option value="Company">Company</option>
             </select>
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Agency Name </span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Agency Name <span v-if="form.hired_by==='Agency'" class="text-red-500">*</span></span>
             <v-select :loading="isLoading" :options="crwAgencies" placeholder="--Choose an option--" id="agency_name" v-model.trim="form.agency_name" label="agency_name" class="block form-input">
               <template #search="{attributes, events}">
                 <input
@@ -346,7 +358,7 @@ onMounted(() => {
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Department <span class="text-red-500">*</span></span>
             <select class="form-input" v-model.trim="form.department_name" id="department_name" required>
-              <option value="" disabled selected>Select</option>
+              <option value="" selected disabled>--Choose an option--</option>
               <option value="Engine">Engine</option>
               <option value="Deck">Deck</option>
               <option value="Electrical">Electrical</option>
@@ -357,7 +369,7 @@ onMounted(() => {
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Rank Name <span class="text-red-500">*</span></span>
             <select class="form-input" id="crw_rank_id" v-model.trim="form.crw_rank_id" required>
-              <option value="" disabled>select</option>
+              <option value="" selected disabled>--Choose an option--</option>
               <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>
             </select>
           </label>
@@ -386,7 +398,7 @@ onMounted(() => {
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Gender <span class="text-red-500">*</span></span>
             <select class="form-input" v-model.trim="form.gender" id="gender" required>
-              <option value="" disabled>select</option>
+              <option value="" selected disabled>--Choose an option--</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select>
@@ -394,7 +406,7 @@ onMounted(() => {
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Religion <span class="text-red-500">*</span></span>
             <select class="form-input" v-model.trim="form.religion" id="religion" required>
-              <option value="" disabled>select</option>
+              <option value="" selected disabled>--Choose an option--</option>
               <option value="Islam">Islam</option>
               <option value="Hinduism">Hinduism</option>
               <option value="Buddhism">Buddhism</option>
@@ -407,7 +419,7 @@ onMounted(() => {
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Marital Status <span class="text-red-500">*</span></span>
             <select class="form-input" v-model.trim="form.marital_status" id="marital_status" required>
-              <option value="" disabled>select</option>
+              <option value="" selected disabled>--Choose an option--</option>
               <option value="Single">Single</option>
               <option value="Married">Married</option>
             </select>
@@ -433,7 +445,7 @@ onMounted(() => {
           <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Blood Group</span>
             <select class="form-input" v-model.trim="form.blood_group">
-              <option value="" disabled>select</option>
+              <option value="" selected disabled>--Choose an option--</option>
               <option value="A+">A+</option>
               <option value="A-">A-</option>
               <option value="B+">B+</option>
@@ -735,7 +747,7 @@ onMounted(() => {
               </td>
               <td class="px-1 py-1">
                 <select v-model.trim="form.languages[index].writing" class="form-input" required>
-                  <option value="" disabled selected>Select</option>
+                  <option value="" selected disabled>--Choose an option--</option>
                   <option value="Average">Average</option>
                   <option value="Good">Good</option>
                   <option value="Excellent">Excellent</option>
@@ -743,7 +755,7 @@ onMounted(() => {
               </td>
               <td class="px-1 py-1">
                 <select v-model.trim="form.languages[index].reading" class="form-input" required>
-                  <option value="" disabled selected>Select</option>
+                  <option value="" selected disabled>--Choose an option--</option>
                   <option value="Average">Average</option>
                   <option value="Good">Good</option>
                   <option value="Excellent">Excellent</option>
@@ -751,7 +763,7 @@ onMounted(() => {
               </td>
               <td class="px-1 py-1">
                 <select v-model.trim="form.languages[index].speaking" class="form-input" required>
-                  <option value="" disabled selected>Select</option>
+                  <option value="" selected disabled>--Choose an option--</option>
                   <option value="Average">Average</option>
                   <option value="Good">Good</option>
                   <option value="Excellent">Excellent</option>
@@ -759,7 +771,7 @@ onMounted(() => {
               </td>
               <td class="px-1 py-1">
                 <select v-model.trim="form.languages[index].listening" class="form-input" required>
-                  <option value="" disabled selected>Select</option>
+                  <option value="" selected disabled>--Choose an option--</option>
                   <option value="Average">Average</option>
                   <option value="Good">Good</option>
                   <option value="Excellent">Excellent</option>
@@ -914,7 +926,7 @@ onMounted(() => {
               </td>
               <td class="px-1 py-1">
                 <select v-model.trim="form.nominees[index].is_relative" class="form-input" required>
-                  <option value="" disabled selected>Select</option>
+                  <option value="" selected disabled>--Choose an option--</option>
                   <option value="0">No</option>
                   <option value="1">Yes</option>
                 </select>

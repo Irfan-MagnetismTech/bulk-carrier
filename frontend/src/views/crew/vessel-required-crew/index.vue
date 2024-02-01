@@ -26,7 +26,7 @@ const router = useRouter();
 const { vesselRequiredCrews, getVesselRequiredCrews, deleteVesselRequiredCrew, isLoading, isTableLoading  } = useVesselRequiredCrew();
 const { showFilter, swapFilter, setSortingState, clearFilter } = useGlobalFilter();
 const { setTitle } = Title();
-setTitle('Vessel Required Crew');
+setTitle('Vessel Crew Manning');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;

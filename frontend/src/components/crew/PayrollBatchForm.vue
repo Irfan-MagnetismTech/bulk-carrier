@@ -373,7 +373,7 @@ onMounted(() => {
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Attendance Month <span class="text-red-500">*</span></span>
         <select v-model.trim="form.crw_attendance_id" class="form-input" autocomplete="off" required>
-          <option value="">Select</option>
+          <option value="" selected disabled>--Choose an option--</option>
           <option :value="vesselMonthAttendance?.id" v-for="(vesselMonthAttendance,index) in vesselWiseMonthlyAttendances">{{ vesselMonthAttendance?.month_year_name }}</option>
         </select>
       </label>

@@ -150,10 +150,10 @@ onMounted(() => {
           <tbody>
           <tr v-for="(crewAgency,index) in agencies?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-            <td>{{ crewAgency?.agency_name }}</td>
-            <td>{{ crewAgency?.address }}</td>
-            <td>{{ crewAgency?.phone }}</td>
-            <td>{{ crewAgency?.email }}</td>
+            <td class="!text-left">{{ crewAgency?.agency_name }}</td>
+            <td class="!text-left">{{ crewAgency?.address }}</td>
+            <td class="!text-left">{{ crewAgency?.phone }}</td>
+            <td class="!text-left">{{ crewAgency?.email }}</td>
             <td>
               <span :class="crewAgency?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crewAgency?.business_unit }}</span>
             </td>

@@ -145,7 +145,7 @@ onMounted(() => {
           <tr v-for="(restHourRecordData,index) in restHourRecords?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
             <td>{{ formatDate(restHourRecordData?.record_date) }}</td>
-            <td>{{ restHourRecordData?.opsVessel?.name }}</td>
+            <td class="text-left">{{ restHourRecordData?.opsVessel?.name }}</td>
             <td>{{ restHourRecordData?.crwRestHourEntryLines?.length }}</td>
             <td><span :class="restHourRecordData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ restHourRecordData?.business_unit }}</span></td>
             <td>

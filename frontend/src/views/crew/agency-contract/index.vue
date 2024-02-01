@@ -168,17 +168,15 @@ onMounted(() => {
           <tbody>
           <tr v-for="(contract,index) in agencyContracts?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-            <td>{{ contract?.contract_name }}</td>
-            <td>{{ contract?.crwAgency?.agency_name }}</td>
+            <td class="!text-left">{{ contract?.contract_name }}</td>
+            <td class="!text-left">{{ contract?.crwAgency?.agency_name }}</td>
             <td>{{ contract?.validity_from }}</td>
             <td>{{ contract?.validity_till }}</td>
             <td>{{ contract?.billing_cycle }}</td>
             <td>
-              <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+'/'+contract?.attachment">{{
-                  (typeof contract?.attachment === 'string')
-                      ? '('+contract?.attachment.split('/').pop()+')'
-                      : '----'
-                }}</a>
+              <a v-html="icons.Attachment" type="button" v-if="typeof contract?.attachment === 'string'"
+                 class="text-green-800" target="_blank" :href="env.BASE_API_URL+'/'+contract?.attachment"></a>
+              <a v-else>---</a>
             </td>
             <td>
               <span :class="contract?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ contract?.business_unit }}</span>
