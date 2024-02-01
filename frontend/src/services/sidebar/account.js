@@ -296,6 +296,7 @@ export default [
                         permissionKey: '',
                         subSubMenu: [],
                     },
+
                     // {
                     //     route: 'crw.vesselRequiredCrews.index',
                     //     label: 'Cost Center Breakup',
