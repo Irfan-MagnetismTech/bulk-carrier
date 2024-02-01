@@ -67,7 +67,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Crew",
+      "label": "Crew Name",
       "filter_type": "input"
     },
     
@@ -104,7 +104,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Vessel",
+      "label": "Vessel Name",
       "filter_type": "input"
     },
 
