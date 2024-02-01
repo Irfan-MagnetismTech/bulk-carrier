@@ -24,7 +24,7 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Maintenance Type <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Maintenance Type"  :options="maintenanceTypes" v-model="form.maintenance_type" label="value" 
+            <v-select placeholder="--Choose an option--"  :options="maintenanceTypes" v-model="form.maintenance_type" label="value" 
             :reduce="maintenanceType => maintenanceType.key" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
               <template #search="{attributes, events}">
                 <input
@@ -43,7 +43,7 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Vessel" :loading="isVesselLoading"  :options="vessels" @search="" v-model="form.ops_vessel_name" label="name" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <v-select placeholder="--Choose an option--" :loading="isVesselLoading"  :options="vessels" @search="" v-model="form.ops_vessel_name" label="name" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
                       class="vs__search"
@@ -58,7 +58,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Ship Department <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Ship Department" :loading="isShipDepartmentLoading"  :options="shipDepartments" @search="" v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <v-select placeholder="--Choose an option--" :loading="isShipDepartmentLoading"  :options="shipDepartments" @search="" v-model="form.mnt_ship_department_name" label="name" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
               <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -73,7 +73,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Item Group <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Item Group" :loading="isItemGroupLoading"  :options="form.mnt_item_groups" @search="" v-model="form.mnt_item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <v-select placeholder="--Choose an option--" :loading="isItemGroupLoading"  :options="form.mnt_item_groups" @search="" v-model="form.mnt_item_group_name" label="name" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -88,7 +88,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Item <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Item" :loading="isItemLoading"  :options="form.mnt_items" @search="" v-model="form.mnt_item_name" label="name" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <v-select placeholder="--Choose an option--" :loading="isItemLoading"  :options="form.mnt_items" @search="" v-model="form.mnt_item_name" label="name" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
               <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -142,7 +142,7 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Assign To <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select"  :options="assignTo" v-model="form.assigned_to" label="value" 
+            <v-select placeholder="--Choose an option--"  :options="assignTo" v-model="form.assigned_to" label="value" 
             :reduce="aTo => aTo.key" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
               <template #search="{attributes, events}">
                 <input
@@ -161,7 +161,7 @@
         
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Responsible Person <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Responsible Person" :loading="isCommonCrewLoading"  :options="crewsWithRank" v-model="form.responsible_person" label="displayName" 
+            <v-select placeholder="--Choose an option--" :loading="isCommonCrewLoading"  :options="crewsWithRank" v-model="form.responsible_person" label="displayName" 
             :reduce="crewsWithRank => crewsWithRank.displayName" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
               <template #search="{attributes, events}">
                 <input
@@ -201,7 +201,7 @@
         
         <label class="block w-full mt-2 text-sm" v-show="page == 'edit'">
             <span class="text-gray-700 dark-disabled:text-gray-300">Status <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Status"  :options="workRequisitionStatus.filter(status => status.key != 2)" v-model="form.status" label="value" 
+            <v-select placeholder="--Choose an option--"  :options="workRequisitionStatus.filter(status => status.key != 2)" v-model="form.status" label="value" 
             :reduce="status => status.key" :disabled="page != 'edit'"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
               <template #search="{attributes, events}">
                 <input

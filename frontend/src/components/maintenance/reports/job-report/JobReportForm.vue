@@ -58,7 +58,7 @@
         <business-unit-input v-model="form.business_unit"></business-unit-input>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Vessel" :loading="isVesselLoading"  :options="vessels" @search="" 
+            <v-select placeholder="--Choose an option--" :loading="isVesselLoading"  :options="vessels" @search="" 
                             v-model="form.ops_vessel" label="name" @update:modelValue="vesselChange"  class="block form-input">
                 <template #search="{attributes, events}">
                     <input
@@ -74,7 +74,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Ship Department <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Ship Department" :loading="isShipDepartmentLoading"  
+            <v-select placeholder="--Choose an option--" :loading="isShipDepartmentLoading"  
                         :options="shipDepartments" @search="" v-model="form.mnt_ship_department" label="name" @update:modelValue="shipDepartmentChange"  class="block form-input">
                 <template #search="{attributes, events}">
                     <input

@@ -3,7 +3,7 @@
       <!-- <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input> -->
       <!-- <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Vessel" :loading="isVesselLoading"  :options="vessels" @search="" v-model="form.ops_vessel" label="name" @update:modelValue="vesselChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <v-select placeholder="--Choose an option--" :loading="isVesselLoading"  :options="vessels" @search="" v-model="form.ops_vessel" label="name" @update:modelValue="vesselChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
                       class="vs__search"
@@ -18,7 +18,7 @@
         </label> -->
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Survey Item <span class="text-red-500">*</span></span>
-          <v-select placeholder="Select Survey Item" :loading="isSurveyItemLoading"  :options="surveyItems" @search="" v-model="form.mnt_survey_item" label="item_name" @update:modelValue="surveyItemChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+          <v-select placeholder="--Choose an option--" :loading="isSurveyItemLoading"  :options="surveyItems" @search="" v-model="form.mnt_survey_item" label="item_name" @update:modelValue="surveyItemChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -35,7 +35,7 @@
       
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Survey Type <span class="text-red-500">*</span></span>
-          <v-select placeholder="Select Survey Type" :loading="isSurveyTypeLoading"  :options="surveyTypes" @search="" v-model="form.mnt_survey_type" label="survey_type_name" @update:modelValue="surveyTypeChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+          <v-select placeholder="--Choose an option--" :loading="isSurveyTypeLoading"  :options="surveyTypes" @search="" v-model="form.mnt_survey_type" label="survey_type_name" @update:modelValue="surveyTypeChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
                 class="vs__search"

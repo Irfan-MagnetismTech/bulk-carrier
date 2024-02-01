@@ -84,7 +84,7 @@
         
         <label class="block w-full mt-2 text-sm" v-show="!form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status == 2)">
             <span class="text-gray-700 dark-disabled:text-gray-300">Status <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Status"  :options="workRequisitionStatus.filter(status => status.key != 2)" v-model="form.status" label="value" 
+            <v-select placeholder="--Choose an option--"  :options="workRequisitionStatus.filter(status => status.key != 2)" v-model="form.status" label="value" 
             :reduce="status => status.key" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
               <template #search="{attributes, events}">
                 <input
@@ -140,7 +140,7 @@
                   <option :value="index" v-for="(status, index) in workRequisitionStatus" :key="index"  > {{ status }}</option>
                 </select> -->
 
-            <v-select placeholder="Select Status"  :options="workRequisitionStatus" v-model="mntWorkRequisitionLine.status" label="value" 
+            <v-select placeholder="--Choose an option--"  :options="workRequisitionStatus" v-model="mntWorkRequisitionLine.status" label="value" 
             :reduce="status => status.key" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
               <template #search="{attributes, events}">
                 <input
@@ -205,7 +205,7 @@
         <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(mntWorkRequisitionMaterial, index) in form.mntWorkRequisitionMaterials" :key="index">
             <td class="px-1 py-1 flex items-center">
-              <v-select :options="materials" :loading="isMaterialLoading"  placeholder="Enter Material Name" v-model="mntWorkRequisitionMaterial.material_name_and_code" label="material_name_and_code" :reduce="materials => materials.material_name_and_code" class="block form-input" @change="setMaterialUnit(mntWorkRequisitionMaterial)">
+              <v-select :options="materials" :loading="isMaterialLoading"  placeholder="--Choose an option--" v-model="mntWorkRequisitionMaterial.material_name_and_code" label="material_name_and_code" :reduce="materials => materials.material_name_and_code" class="block form-input" @change="setMaterialUnit(mntWorkRequisitionMaterial)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"

@@ -3,7 +3,7 @@
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Vessel" :loading="isVesselLoading"  :options="vessels" @search="" v-model="form.ops_vessel" label="name" @update:modelValue="vesselChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <v-select placeholder="--Choose an option--" :loading="isVesselLoading"  :options="vessels" @search="" v-model="form.ops_vessel" label="name" @update:modelValue="vesselChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
                       class="vs__search"
@@ -18,7 +18,7 @@
         </label>
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Critical Function <span class="text-red-500">*</span></span>
-          <v-select placeholder="Select Critical Function" :loading="isCriticalFunctionLoading"  :options="criticalFunctions" @search="" v-model="form.mnt_critical_function" label="function_name" @update:modelValue="criticalFunctionChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+          <v-select placeholder="--Choose an option--" :loading="isCriticalFunctionLoading"  :options="criticalFunctions" @search="" v-model="form.mnt_critical_function" label="function_name" @update:modelValue="criticalFunctionChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -33,7 +33,7 @@
       </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Category <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Critical Category" :loading="isCriticalItemCategoryLoading"  :options="form.mntCriticalItemCategories" @search="" v-model="form.mnt_critical_item_cat" label="category_name" @update:modelValue="criticalItemCategoryChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <v-select placeholder="--Choose an option--" :loading="isCriticalItemCategoryLoading"  :options="form.mntCriticalItemCategories" @search="" v-model="form.mnt_critical_item_cat" label="category_name" @update:modelValue="criticalItemCategoryChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
                 class="vs__search"
@@ -49,7 +49,7 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Item <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Critical Item" :loading="isCriticalItemLoading"  :options="form.mntCriticalItems" @search="" v-model="form.mnt_critical_item" label="item_name" @update:modelValue="criticalItemChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <v-select placeholder="--Choose an option--" :loading="isCriticalItemLoading"  :options="form.mntCriticalItems" @search="" v-model="form.mnt_critical_item" label="item_name" @update:modelValue="criticalItemChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
                 class="vs__search"

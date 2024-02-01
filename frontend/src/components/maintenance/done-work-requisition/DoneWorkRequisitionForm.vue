@@ -143,7 +143,7 @@
         <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(mntWorkRequisitionMaterial, index) in form.mntWorkRequisitionMaterials" :key="index">
             <td class="px-1 py-1">
-              <!-- <v-select :options="materials" placeholder="Enter Material Name" @search="fetchMaterials" v-model="mntWorkRequisitionMaterial.material_name_and_code" label="material_name_and_code" :reduce="materials => materials.material_name_and_code" class="block form-input" @change="setMaterialUnit(mntWorkRequisitionMaterial)">
+              <!-- <v-select :options="materials" placeholder="--Choose an option--" @search="fetchMaterials" v-model="mntWorkRequisitionMaterial.material_name_and_code" label="material_name_and_code" :reduce="materials => materials.material_name_and_code" class="block form-input" @change="setMaterialUnit(mntWorkRequisitionMaterial)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
