@@ -44,6 +44,21 @@ class ScmWoController extends Controller
         }
     }
 
+    public function woCloseIndex(Request $request): JsonResponse
+    {
+        try {
+            $scmWorkOrders = ScmWo::query()
+                ->with('scmWoLines.scmWoItems.scmService','scmWoLines.scmWr', 'scmWoTerms', 'scmVendor', 'scmWarehouse', 'scmWoItems', 'scmWcs.scmWcsVendorServices.scmWr')
+                ->has('closedBy')
+                ->globalSearch($request->all());
+
+            return response()->success('Data retrieved successfully.', $scmWorkOrders, 200);
+        } catch (QueryException $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+
 
     /**
      * Store a newly created resource in storage.
@@ -418,6 +433,7 @@ class ScmWoController extends Controller
                     } else {
                         $data['wo_quantity'] = 0;
                     }
+
                     $data['quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
                     $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
 
