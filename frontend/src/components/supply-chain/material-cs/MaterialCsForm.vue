@@ -19,11 +19,11 @@
   <div class="input-group">
     <label class="label-group">
         <span class="label-item-title">Date <span class="text-red-500">*</span></span>
-        <VueDatePicker v-model="form.effective_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.min_effective_date"></VueDatePicker>
+        <VueDatePicker v-model="form.effective_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" @update:model-value="effectiveDateChange" :min-date="minEffectiveDate"></VueDatePicker>
     </label>
     <label class="label-group">
         <span class="label-item-title">Expire Date <span class="text-red-500">*</span></span>
-        <VueDatePicker v-model="form.expire_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.min_expire_date"></VueDatePicker>
+        <VueDatePicker v-model="form.expire_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.effective_date"></VueDatePicker>
     </label>
       <label class="label-group">
           <span class="label-item-title">Purchase Center <span class="text-red-500">*</span></span>
@@ -72,7 +72,7 @@
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th style="" class="py-3 align-center">PR </th>
-            <th style="" class="py-3 align-center">Material Name </th>
+            <th style="" class="py-3 align-center !w-72">Material Name </th>
             <th style="" class="py-3 align-center">Unit</th>
             <th class="py-3 align-center">PR Qty</th>
             <th class="py-3 align-center">Remaining Qty</th>
@@ -82,8 +82,8 @@
           </thead>
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmCsMaterial, index) in form.scmCsMaterials" :key="index">
-            <td class="!w-72 relative">
-              <v-select :options="filteredPurchaseRequisitions" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmCsMaterials[index].scmPr" label="ref_no" class="block form-input" @update:modelValue="prChange(index)">
+            <td class="!w-72">
+                <v-select :options="filteredPurchaseRequisitions" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmCsMaterials[index].scmPr" label="ref_no" class="block form-input" @update:modelValue="prChange(index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -93,10 +93,12 @@
                         />
                 </template>
               </v-select>
-              <span v-show="form.scmCsMaterials[index].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 left-[18rem] md:left-[21rem]" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
-            </td>
-            <td class="!w-72 relative">
-              <v-select :options="materialList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmCsMaterials[index].scmMaterial" label="material_name_and_code" class="block form-input" @update:modelValue="materialChange(index)">
+              <!-- <span v-show="form.scmCsMaterials[index].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 left-[18rem] md:left-[21rem]" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span> -->
+            
+              </td>
+            <td class="">
+              <div class="relative">
+                <v-select :options="materialList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmCsMaterials[index].scmMaterial" label="material_name_and_code" class="block form-input" @update:modelValue="materialChange(index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -106,7 +108,9 @@
                         />
                 </template>
               </v-select>
-              <span v-show="form.scmCsMaterials[index].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 left-[18rem] md:left-[21rem]" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
+              <span v-show="form.scmCsMaterials[index].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 left-[12rem] md:left-[12rem]" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
+              </div>
+
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
@@ -149,7 +153,7 @@
     </div>
     <div id="customDataTable" ref="customDataTableirf" class="!min-w-screen"> 
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials Stock<span class="text-red-500">*</span></legend>
         <div class=""> 
         <table class="!w-full">
           <thead>
@@ -170,32 +174,32 @@
             </td>
             <td class="!w-72 relative">
               <label class="block w-full mt-2 text-sm">
-                <input type="number" v-model="form.scmCsStockQuantity[index].at_port" class="form-input" min="2" required>
+                <input type="number" v-model="form.scmCsStockQuantity[index].at_port" class="form-input" min="0" required>
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="number" v-model="form.scmCsStockQuantity[index].in_transit" class="form-input" min="2" required>
+                <input type="number" v-model="form.scmCsStockQuantity[index].in_transit" class="form-input" min="0" required>
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="number" v-model="form.scmCsStockQuantity[index].under_lc" class="form-input" min="2" required>
+                <input type="number" v-model="form.scmCsStockQuantity[index].under_lc" class="form-input" min="0" required>
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="number" v-model="form.scmCsStockQuantity[index].total_stock" class="form-input" min="2" required>
+                <input type="number" v-model="form.scmCsStockQuantity[index].total_stock" class="form-input" min="0" required>
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="number" v-model="form.scmCsStockQuantity[index].days_to_run" class="form-input" min="2" required>
+                <input type="number" v-model="form.scmCsStockQuantity[index].days_to_run" class="form-input" min="0" required>
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="number" v-model="form.scmCsStockQuantity[index].available_in_other_unit" class="form-input" min="2" required>
+                <input type="number" v-model="form.scmCsStockQuantity[index].available_in_other_unit" class="form-input" min="0" required>
                </label>
             </td>
           </tr>
@@ -251,10 +255,15 @@
 
     const scmCsMaterialQuantity = ref([]);
     const editinitaiated = ref(false); 
-   
+    const minEffectiveDate = ref('');
     const tableScrollWidth = ref(null);
     const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
+
+    function effectiveDateChange(){
+      if (props.form.expire_date < props.form.effective_date) 
+        props.form.expire_date = '';
+    }
 
     function addMaterial() {
       const clonedObj = cloneDeep(props.materialObj);
@@ -463,15 +472,25 @@ onMounted(() => {
     });
   }
   
-  watch(() => props.form.scmCsMaterials , (newVal, oldVal) => {
-    if(props.formType == 'create'){
-      editinitaiated.value = true;
-    }
-    newVal.forEach((item, index) => {
-      if(item.scm_material_id){
-        const stockableMaterial = scmCsMaterialQuantity.value.find(material => material === item.scm_material_id); 
-        if(!stockableMaterial){
-          if(editinitaiated.value == true){
+  watch(() => props.form.scmCsMaterials, (newVal, oldVal) => {
+  if (props.formType === 'create') {
+    editinitaiated.value = true;
+  }
+
+  // Remove material_id from scmCsMaterialQuantity and props.form.scmCsStockQuantity
+  scmCsMaterialQuantity.value = scmCsMaterialQuantity.value.filter(materialId =>
+    newVal.some(item => item.scm_material_id === materialId)
+  );
+
+  props.form.scmCsStockQuantity = props.form.scmCsStockQuantity.filter(stockItem =>
+    newVal.some(item => item.scm_material_id === stockItem.scm_material_id)
+  );
+
+  newVal.forEach(item => {
+    if (item.scm_material_id) {
+      const stockableMaterial = scmCsMaterialQuantity.value.includes(item.scm_material_id);
+      if (!stockableMaterial) {
+        if (editinitaiated.value) {
           props.form.scmCsStockQuantity.push({
             scm_material_id: item.scm_material_id,
             scmMaterial: item.scmMaterial,
@@ -483,15 +502,14 @@ onMounted(() => {
             available_in_other_unit: 0,
           });
         }
-          scmCsMaterialQuantity.value.push(item.scm_material_id);
-        }
-       }
-    });
-    // loop OldVal
-   
-    console.log('scmCsStockQuantity',scmCsMaterialQuantity.value);
-    editinitaiated.value = true;
-  }, { deep: true }); 
+        scmCsMaterialQuantity.value.push(item.scm_material_id);
+      }
+    }
+  });
+
+  console.log('scmCsMaterialQuantity', scmCsMaterialQuantity.value);
+  editinitaiated.value = true;
+}, { deep: true });
 });
 
 // watchEffect(() => {

@@ -5,44 +5,44 @@
             <span class="text-gray-700 dark-disabled:text-gray-300">Requisition Date </span>
             <!-- <input type="date" :value="form.requisition_date" placeholder="Requisition Date" class="form-input vms-readonly-input" readonly  /> -->
             <input type="text" :value="moment(form.requisition_date).format('DD/MM/YYYY')" placeholder="Requisition Date" class="form-input vms-readonly-input" readonly  />
-          <Error v-if="errors?.requisition_date" :errors="errors.requisition_date" />
+          <!-- <Error v-if="errors?.requisition_date" :errors="errors.requisition_date" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Reference No </span>
             <input type="text" :value="form.reference_no" placeholder="Reference No" class="form-input vms-readonly-input"  />
-          <Error v-if="errors?.reference_no" :errors="errors.reference_no" />
+          <!-- <Error v-if="errors?.reference_no" :errors="errors.reference_no" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Maintenance Type</span>
             <input type="text" :value="form.maintenance_type" placeholder="Maintenance Type" class="form-input vms-readonly-input"  />
-          <Error v-if="errors?.maintenance_type" :errors="errors.maintenance_type" />
+          <!-- <Error v-if="errors?.maintenance_type" :errors="errors.maintenance_type" /> -->
         </label>
 
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Vessel</span>
               <input type="text" :value="form.opsVessel?.name" placeholder="Vessel Name" class="form-input vms-readonly-input"  readonly/>
-          <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" />
+          <!-- <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Department </span>
           <input type="text" :value="form.mntWorkRequisitionItem?.MntItem?.MntItemGroup?.MntShipDepartment?.name" placeholder="Ship Department" class="form-input vms-readonly-input"  readonly/>
-          <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" />
+          <!-- <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Item Group </span>
           <input type="text" :value="form.mntWorkRequisitionItem?.MntItem?.MntItemGroup?.name" placeholder="Item Group Name" class="form-input vms-readonly-input"  readonly/>
-          <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" />
+          <!-- <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Item </span>
             <input type="text" :value="form.mntWorkRequisitionItem?.MntItem?.name" placeholder="Item Name" class="form-input vms-readonly-input"  readonly/>
-          <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
+          <!-- <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Present Running Hour </span>
             <input type="text" :value="form.mntWorkRequisitionItem?.present_run_hour" placeholder="Present Running Hour" class="form-input vms-readonly-input" readonly />
-          <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
+          <!-- <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" /> -->
         </label>
 
 
@@ -52,7 +52,7 @@
             <span class="text-gray-700 dark-disabled:text-gray-300">Act. Start Date </span>
             <!-- <input type="date" :value="form.act_start_date" placeholder="Act. Start Date" class="form-input vms-readonly-input"  readonly/> -->
             <input type="text" :value="moment(form.act_start_date).format('DD/MM/YYYY')" placeholder="Act. Start Date" class="form-input vms-readonly-input"  readonly/>
-          <Error v-if="errors?.act_start_date" :errors="errors.act_start_date" />
+          <!-- <Error v-if="errors?.act_start_date" :errors="errors.act_start_date" /> -->
         </label>
 
         
@@ -60,13 +60,13 @@
             <span class="text-gray-700 dark-disabled:text-gray-300">Act. Completion Date </span>
             <!-- <input type="date" :value="form.act_completion_date" placeholder="Act. completion Date" class="form-input vms-readonly-input"  readonly/> -->
             <input type="text" :value="moment(form.act_completion_date).format('DD/MM/YYYY')" placeholder="Act. completion Date" class="form-input vms-readonly-input"  readonly/>
-          <Error v-if="errors?.act_completion_date" :errors="errors.act_completion_date" />
+          <!-- <Error v-if="errors?.act_completion_date" :errors="errors.act_completion_date" /> -->
         </label>
 
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Responsible Person</span>
             <input type="text" :value="form.responsible_person" placeholder="Responsible Person Name" class="form-input vms-readonly-input"  readonly/>
-          <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" />
+          <!-- <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" /> -->
         </label>
     </div>
 
@@ -104,7 +104,7 @@
             <td class="px-1 py-1"> 
               <!-- <input type="date" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.start_date" placeholder="Start Date" readonly/>  -->
               <input type="text" class="form-input vms-readonly-input"  :value="moment(mntWorkRequisitionLine.start_date).format('DD/MM/YYYY')" placeholder="Start Date" readonly/> 
-              <Error class="pb-1" v-if="mntWorkRequisitionLine?.start_date_error" :errors="mntWorkRequisitionLine?.start_date_error" />
+              <!-- <Error class="pb-1" v-if="mntWorkRequisitionLine?.start_date_error" :errors="mntWorkRequisitionLine?.start_date_error" /> -->
             </td>
             <td class="px-1 py-1"> 
               <!-- <input type="date" class="form-input vms-readonly-input"  v-model="mntWorkRequisitionLine.completion_date" placeholder="Completion Date" readonly />  -->

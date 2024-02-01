@@ -70,7 +70,7 @@
                 </template>
             </v-select>
             <input type="hidden" v-model="form.ops_vessel_id">
-            <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" />
+            <!-- <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Ship Department <span class="text-red-500">*</span></span>
@@ -86,7 +86,7 @@
                 </template>
             </v-select>
             <input type="hidden" v-model="form.mnt_ship_department_id">
-            <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" />
+            <!-- <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" /> -->
         </label>
     </div>
   </template>
