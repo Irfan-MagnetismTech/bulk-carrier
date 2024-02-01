@@ -72,7 +72,7 @@
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th style="" class="py-3 align-center">PR </th>
-            <th style="" class="py-3 align-center">Material Name </th>
+            <th style="" class="py-3 align-center !w-72">Material Name </th>
             <th style="" class="py-3 align-center">Unit</th>
             <th class="py-3 align-center">PR Qty</th>
             <th class="py-3 align-center">Remaining Qty</th>
@@ -82,8 +82,8 @@
           </thead>
           <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmCsMaterial, index) in form.scmCsMaterials" :key="index">
-            <td class="!w-72 relative">
-              <v-select :options="filteredPurchaseRequisitions" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmCsMaterials[index].scmPr" label="ref_no" class="block form-input" @update:modelValue="prChange(index)">
+            <td class="!w-72">
+                <v-select :options="filteredPurchaseRequisitions" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmCsMaterials[index].scmPr" label="ref_no" class="block form-input" @update:modelValue="prChange(index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -93,10 +93,12 @@
                         />
                 </template>
               </v-select>
-              <span v-show="form.scmCsMaterials[index].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 left-[18rem] md:left-[21rem]" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
-            </td>
-            <td class="!w-72 relative">
-              <v-select :options="materialList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmCsMaterials[index].scmMaterial" label="material_name_and_code" class="block form-input" @update:modelValue="materialChange(index)">
+              <!-- <span v-show="form.scmCsMaterials[index].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 left-[18rem] md:left-[21rem]" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span> -->
+            
+              </td>
+            <td class="">
+              <div class="relative">
+                <v-select :options="materialList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmCsMaterials[index].scmMaterial" label="material_name_and_code" class="block form-input" @update:modelValue="materialChange(index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -106,7 +108,9 @@
                         />
                 </template>
               </v-select>
-              <span v-show="form.scmCsMaterials[index].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 left-[18rem] md:left-[21rem]" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
+              <span v-show="form.scmCsMaterials[index].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 left-[12rem] md:left-[12rem]" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
+              </div>
+
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
@@ -468,14 +472,18 @@ onMounted(() => {
     });
   }
   
- watch(() => props.form.scmCsMaterials, (newVal, oldVal) => {
+  watch(() => props.form.scmCsMaterials, (newVal, oldVal) => {
   if (props.formType === 'create') {
     editinitaiated.value = true;
   }
 
-  // Remove material_id from scmCsMaterialQuantity if not present in newVal
+  // Remove material_id from scmCsMaterialQuantity and props.form.scmCsStockQuantity
   scmCsMaterialQuantity.value = scmCsMaterialQuantity.value.filter(materialId =>
     newVal.some(item => item.scm_material_id === materialId)
+  );
+
+  props.form.scmCsStockQuantity = props.form.scmCsStockQuantity.filter(stockItem =>
+    newVal.some(item => item.scm_material_id === stockItem.scm_material_id)
   );
 
   newVal.forEach(item => {

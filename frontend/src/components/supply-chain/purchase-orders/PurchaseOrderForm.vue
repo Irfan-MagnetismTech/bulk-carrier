@@ -235,6 +235,7 @@
       props.form.scmPoLines[index].scmPoItems[itemIndex].quantity = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.quantity;
       props.form.scmPoLines[index].scmPoItems[itemIndex].pr_composite_key = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.pr_composite_key;
       props.form.scmPoLines[index].scmPoItems[itemIndex].tolarence_level = 0;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].pr_quantity = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.pr_quantity;
       
     }
  
@@ -833,14 +834,8 @@
       border-radius: 12rem!important;
       width: 1.3rem!important;
     }   
-
-    .dp__input {
-      font-size: 0.75rem!important;
-    }
-
-    :root{
-      --dp-font-size: 0.75rem!important;
-    }
+   
+  
     >>> {
       --vs-controls-color: #374151;
       --vs-border-color: #4b5563;
