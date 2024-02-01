@@ -17,7 +17,7 @@
               <input type="hidden" v-model="form.ops_vessel_id">
             </div>
             <input v-else type="text" :value="form.ops_vessel_name?.name" placeholder="Vessel" class="form-input vms-readonly-input" readonly />
-          <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" />
+          <!-- <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Ship Department <span class="text-red-500">*</span></span>
@@ -36,7 +36,7 @@
             </div>
 
           <input v-else type="text" :value="form.mnt_ship_department_name?.name" placeholder="Ship Department" class="form-input vms-readonly-input" readonly />
-          <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" />
+          <!-- <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Item Group <span class="text-red-500">*</span></span>
@@ -55,7 +55,7 @@
           </div>
 
           <input v-else type="text" :value="form.mnt_item_group_name?.name" placeholder="Item Group" class="form-input vms-readonly-input" readonly />
-          <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" />
+          <!-- <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Item <span class="text-red-500">*</span></span>
@@ -74,12 +74,12 @@
             </div>
 
             <input v-else type="text" :value="form.mnt_item_name?.name" placeholder="Item" class="form-input vms-readonly-input" readonly />
-          <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
+          <!-- <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm" v-show="form.mnt_item_name?.has_run_hour">
             <span class="text-gray-700 dark-disabled:text-gray-300">Present Running Hour</span>
             <input type="number" min="0" v-model="form.present_run_hour" placeholder="Present Running Hour" class="form-input" :class="{ 'vms-readonly-input': page === 'edit' }" :disabled="page === 'edit'" />
-          <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
+          <!-- <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" /> -->
         </label>
         
     </div>

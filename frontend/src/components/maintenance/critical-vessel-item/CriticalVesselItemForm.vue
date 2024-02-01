@@ -14,7 +14,7 @@
                 </template>
               </v-select>
               <input type="hidden" v-model="form.ops_vessel_id">
-          <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" />
+          <!-- <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" /> -->
         </label>
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Critical Function <span class="text-red-500">*</span></span>
@@ -29,7 +29,7 @@
           </template>
           </v-select>
           <input type="hidden" v-model="form.mnt_critical_function_id">
-        <Error v-if="errors?.mnt_critical_function_id" :errors="errors.mnt_critical_function_id" />
+        <!-- <Error v-if="errors?.mnt_critical_function_id" :errors="errors.mnt_critical_function_id" /> -->
       </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Category <span class="text-red-500">*</span></span>
@@ -44,7 +44,7 @@
           </template>
           </v-select>
           <input type="hidden" v-model="form.mnt_critical_item_cat_id">
-          <Error v-if="errors?.mnt_critical_item_cat_id" :errors="errors.mnt_critical_item_cat_id" />
+          <!-- <Error v-if="errors?.mnt_critical_item_cat_id" :errors="errors.mnt_critical_item_cat_id" /> -->
         </label>
         
         <label class="block w-full mt-2 text-sm">
@@ -60,12 +60,12 @@
           </template>
           </v-select>
           <input type="hidden" v-model="form.mnt_critical_item_id">
-          <Error v-if="errors?.mnt_critical_item_id" :errors="errors.mnt_critical_item_id" />
+          <!-- <Error v-if="errors?.mnt_critical_item_id" :errors="errors.mnt_critical_item_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Specification</span>
           <input type="text" v-model.trim="form.specification" placeholder="Specification" class="form-input"/>
-          <Error v-if="errors?.specification" :errors="errors.specification" />
+          <!-- <Error v-if="errors?.specification" :errors="errors.specification" /> -->
         </label>
 
       <!-- <label class="block w-full mt-2 text-sm">
@@ -78,7 +78,7 @@
       <div class="block w-full mt-2 text-sm col-start-1">
         <!-- <span class="text-gray-700 dark-disabled:text-gray-300">Notes</span> -->
         <input type="checkbox" v-model="form.is_critical" @change="isCritical" /> Critical Item
-        <Error v-if="errors?.notes" :errors="errors.notes" />
+        <!-- <Error v-if="errors?.notes" :errors="errors.notes" /> -->
       </div>
 
     </div>

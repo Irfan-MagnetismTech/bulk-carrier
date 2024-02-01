@@ -14,7 +14,7 @@
           </template>
           </v-select>
           <input type="hidden" v-model="form.mnt_critical_function_id">
-        <Error v-if="errors?.mnt_critical_function_id" :errors="errors.mnt_critical_function_id" />
+        <!-- <Error v-if="errors?.mnt_critical_function_id" :errors="errors.mnt_critical_function_id" /> -->
       </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Category Name <span class="text-red-500">*</span></span>
@@ -29,13 +29,13 @@
           </template>
           </v-select>
           <input type="hidden" v-model="form.mnt_critical_item_cat_id">
-          <Error v-if="errors?.mnt_critical_item_cat_id" :errors="errors.mnt_critical_item_cat_id" />
+          <!-- <Error v-if="errors?.mnt_critical_item_cat_id" :errors="errors.mnt_critical_item_cat_id" /> -->
         </label>
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Item Name <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.item_name" placeholder="Item Name" class="form-input" required/>
-          <Error v-if="errors?.item_name" :errors="errors.item_name" />
+          <!-- <Error v-if="errors?.item_name" :errors="errors.item_name" /> -->
         </label>
 
       <!-- <label class="block w-full mt-2 text-sm">
