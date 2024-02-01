@@ -150,6 +150,10 @@ class ScmCsController extends Controller
             $materialCs->scmCsMaterials->each(function ($item) {
                 $item->delete();
             });
+
+            $materialCs->scmCsStockQuantity->each(function ($item) {
+                $item->delete();
+            });
             foreach ($request->scmCsMaterials as $key => $value) {
                 ScmCsMaterial::create([
                     'scm_cs_id' => $materialCs->id,
