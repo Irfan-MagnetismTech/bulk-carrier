@@ -11,7 +11,7 @@
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Type <span class="text-red-500">*</span></span>
             <select name="" id="" class="form-input" v-model="form.vessel_type">
-              <option value="" disabled>Select Type</option>
+              <option value="" disabled>--Choose an option--</option>
               <option value="Lighter">Lighter</option>
               <option value="Bulk Carrier">Bulk Carrier</option>
             </select>

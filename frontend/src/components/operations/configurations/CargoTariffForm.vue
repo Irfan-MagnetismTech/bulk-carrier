@@ -79,14 +79,14 @@
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Currency <span class="text-red-500">*</span></span>
               <select name="" id="" required class="form-input" v-model="form.currency">
-                  <option value="" disabled>Select Currency</option>
+                  <option value="" disabled>--Choose an option--</option>
                   <option v-for="currency in currencies">{{ currency }}</option>
               </select>
           </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Status <span class="text-red-500">*</span></span>
               <select name="" id="" required class="form-input" v-model="form.status">
-                <option value="" disabled>Select Status</option>
+                <option value="" disabled>--Choose an option--</option>
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
               </select>
