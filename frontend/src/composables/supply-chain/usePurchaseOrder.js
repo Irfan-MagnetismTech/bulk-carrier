@@ -168,7 +168,7 @@ export default function usePurchaseOrder() {
         }
     }
     async function storePurchaseOrder(form) {
-
+        if (!checkUniqueArray(form)) return;
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -209,6 +209,7 @@ export default function usePurchaseOrder() {
     }
 
     async function updatePurchaseOrder(form, purchaseOrderId) {
+        if (!checkUniqueArray(form)) return;
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -411,7 +412,48 @@ export default function usePurchaseOrder() {
             isLoading.value = false;
         }
     }
+    function checkUniqueArray(form) {
+        let isHasError = false;
+        const messages = ref([]);
         
+        form.scmPoLines.map((scmPoLine, scmPoLineIndex) => {
+            let materialArray = []; 
+            scmPoLine.scmPoItems.map((scmPoitem, scmPoitemIndex) => {
+            let material_key = scmPoitem.pr_composite_key;
+            if (materialArray.indexOf(material_key) === -1) {
+                materialArray.push(material_key);
+                form.scmPoitems[scmPoitemIndex].isAspectDuplicate = false;
+              } else {
+                let data = `Duplicate Material Name Having Purchase Requisition ${scmPoLine.scmPr.ref_no} in Row: ${scmPoitemIndex + 1}]`;
+                messages.value.push(data);
+                form.scmPoLines[scmPoLineIndex].scmPoitems[scmPoitemIndex].isAspectDuplicate = true;
+              }
+            });
+        });
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
+
 
     return {
         purchaseOrders,

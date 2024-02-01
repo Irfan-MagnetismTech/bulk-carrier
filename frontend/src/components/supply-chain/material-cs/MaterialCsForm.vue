@@ -19,11 +19,11 @@
   <div class="input-group">
     <label class="label-group">
         <span class="label-item-title">Date <span class="text-red-500">*</span></span>
-        <VueDatePicker v-model="form.effective_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.min_effective_date"></VueDatePicker>
+        <VueDatePicker v-model="form.effective_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" @update:model-value="effectiveDateChange" :min-date="minEffectiveDate"></VueDatePicker>
     </label>
     <label class="label-group">
         <span class="label-item-title">Expire Date <span class="text-red-500">*</span></span>
-        <VueDatePicker v-model="form.expire_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.min_expire_date"></VueDatePicker>
+        <VueDatePicker v-model="form.expire_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.effective_date"></VueDatePicker>
     </label>
       <label class="label-group">
           <span class="label-item-title">Purchase Center <span class="text-red-500">*</span></span>
@@ -251,10 +251,15 @@
 
     const scmCsMaterialQuantity = ref([]);
     const editinitaiated = ref(false); 
-   
+    const minEffectiveDate = ref('');
     const tableScrollWidth = ref(null);
     const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
+
+    function effectiveDateChange(){
+      if (props.form.expire_date < props.form.effective_date) 
+        props.form.expire_date = '';
+    }
 
     function addMaterial() {
       const clonedObj = cloneDeep(props.materialObj);
@@ -463,15 +468,21 @@ onMounted(() => {
     });
   }
   
-  watch(() => props.form.scmCsMaterials , (newVal, oldVal) => {
-    if(props.formType == 'create'){
-      editinitaiated.value = true;
-    }
-    newVal.forEach((item, index) => {
-      if(item.scm_material_id){
-        const stockableMaterial = scmCsMaterialQuantity.value.find(material => material === item.scm_material_id); 
-        if(!stockableMaterial){
-          if(editinitaiated.value == true){
+ watch(() => props.form.scmCsMaterials, (newVal, oldVal) => {
+  if (props.formType === 'create') {
+    editinitaiated.value = true;
+  }
+
+  // Remove material_id from scmCsMaterialQuantity if not present in newVal
+  scmCsMaterialQuantity.value = scmCsMaterialQuantity.value.filter(materialId =>
+    newVal.some(item => item.scm_material_id === materialId)
+  );
+
+  newVal.forEach(item => {
+    if (item.scm_material_id) {
+      const stockableMaterial = scmCsMaterialQuantity.value.includes(item.scm_material_id);
+      if (!stockableMaterial) {
+        if (editinitaiated.value) {
           props.form.scmCsStockQuantity.push({
             scm_material_id: item.scm_material_id,
             scmMaterial: item.scmMaterial,
@@ -483,15 +494,14 @@ onMounted(() => {
             available_in_other_unit: 0,
           });
         }
-          scmCsMaterialQuantity.value.push(item.scm_material_id);
-        }
-       }
-    });
-    // loop OldVal
-   
-    console.log('scmCsStockQuantity',scmCsMaterialQuantity.value);
-    editinitaiated.value = true;
-  }, { deep: true }); 
+        scmCsMaterialQuantity.value.push(item.scm_material_id);
+      }
+    }
+  });
+
+  console.log('scmCsMaterialQuantity', scmCsMaterialQuantity.value);
+  editinitaiated.value = true;
+}, { deep: true });
 });
 
 // watchEffect(() => {

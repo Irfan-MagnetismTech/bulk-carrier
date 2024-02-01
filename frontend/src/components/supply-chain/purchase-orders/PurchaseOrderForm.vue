@@ -12,6 +12,10 @@
     import usePurchaseOrder from '../../../composables/supply-chain/usePurchaseOrder';
     import RemarksComponet from '../../utils/RemarksComponent.vue';
     import useMaterialCs from '../../../composables/supply-chain/useMaterialCs';
+    import useHeroIcon from '../../../assets/heroIcon';
+
+
+    const icons = useHeroIcon();
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse ,isLoading:warehouseLoading} = useWarehouse();
     const { vendors, searchVendor,isLoading: vendorLoader } = useVendor();
@@ -101,7 +105,7 @@
     const dynamicMinHeight = ref(0);
     const SourceButtonWidth = ref(null);
     const TargetButtonWidth = ref(null);
-
+    const minPoDate = ref('');
 
     // function setMaterialOtherData(index){
     //   let material = materials.value.find((material) => material.id === props.form.materials[index].material_id);
@@ -179,11 +183,42 @@
       props.form.scm_vendor_id = null;
       props.form.scmVendor = null;
       csWiseVendorList.value = [];
+      if(props.form?.scmCs?.id){
+        minPoDate.value = props.form?.scmCs?.effective_date;
+        // console.log("props.form?.scmCs", props.form?.scmCs?.effective_date);
+      }else{
+        minPoDate.value = '';
+      }
+      checkPoDate();
       getPr();
       if(props.form.scm_cs_id){
         getCsWiseVendorList(props.form.scmCs.id);
       }
     }
+
+    function checkPoDate(){
+      if(props.form.date < minPoDate.value) props.form.date = '';
+    }
+    function poDateChange(){
+      props.form.scmPoLines?.forEach(scmPoLine => {
+        scmPoLine?.scmPoItems?.forEach(scmPoItem => {
+          if(scmPoItem.required_date < props.form.date)
+            scmPoItem.required_date = '';
+        })
+        // if ((minPoDate.value < scmPoLine?.scmPr?.approved_date || minPoDate.value == '') && scmPoLine?.scmPr) {
+        //   minPoDate.value = scmPoLine?.scmPr?.approved_date;
+        // }
+      });
+    }
+    watch(() => props.form.scmPoLines, (scmPoLines) => {
+      minPoDate.value = '' || props.form?.scmCs?.effective_date;
+      scmPoLines?.forEach(scmPoLine => {
+        if ((minPoDate.value < scmPoLine?.scmPr?.approved_date || minPoDate.value == '' || !minPoDate.value) && scmPoLine?.scmPr) {
+          minPoDate.value = scmPoLine?.scmPr?.approved_date;
+        }
+      });
+    checkPoDate();
+}, { deep: true });
 
     
     function calculateNetAmount(){
@@ -369,7 +404,7 @@
     <label class="label-group">
           <span class="label-item-title">PO Date<span class="text-red-500">*</span></span>
           <!-- <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" /> -->
-          <VueDatePicker v-model="form.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+          <VueDatePicker v-model="form.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="minPoDate" @update:modelValue="poDateChange"></VueDatePicker>
       </label>    
     <label class="label-group" v-if="form.cs_no != null">
           <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
@@ -496,6 +531,7 @@
                                       />
                               </template>
                           </v-select>
+                          <span v-show="form.scmPoLines[index].scmPoItems[itemIndex].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-1" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
                           </td>
                           
                         </tr>
@@ -565,7 +601,7 @@
                         <tr>
                           <td>Required Date</td>
                           <td>
-                            <VueDatePicker v-model="form.scmPoLines[index].scmPoItems[itemIndex].required_date" class="!text-xs" required auto-apply :enable-time-picker="false" hide-input-icon placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+                            <VueDatePicker v-model="form.scmPoLines[index].scmPoItems[itemIndex].required_date" class="!text-xs" required auto-apply :enable-time-picker="false" hide-input-icon placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.date"></VueDatePicker>
                           </td>
                         </tr>
                       </table>

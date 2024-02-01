@@ -207,7 +207,19 @@ watch(() => props.form.scmPrLines, (newLines) => {
   function fetchMaterials(search) {
   searchMaterial(search)
 }
-
+function raisedDateChange(){
+      if (props.form.approved_date < props.form.raised_date) 
+        props.form.approved_date = '';
+    }
+    
+    function approvedDateChange(){
+      if (props.form.approved_date < props.form.raised_date) 
+        props.form.approved_date = '';
+      props.form.scmPrLines.forEach((scmPrLine) => {
+        if (scmPrLine.required_date < props.form.approved_date) 
+          scmPrLine.required_date = '';
+      })
+    }
 
 
   watch(dropZoneFile, (value) => {
@@ -287,7 +299,7 @@ function tytytyasd(indx) {
       </label>
       <label class="label-group">
           <span class="label-item-title">Raised Date<span class="text-red-500">*</span></span>
-          <VueDatePicker v-model="form.raised_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+          <VueDatePicker v-model="form.raised_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" @update:model-value="raisedDateChange"></VueDatePicker>
        </label>
       <label class="label-group">
           <span class="label-item-title">Critical Spares<span class="text-red-500">*</span></span>
@@ -318,7 +330,7 @@ function tytytyasd(indx) {
     </label>
       <label class="label-group">
           <span class="label-item-title">Approved date <span class="text-red-500">*</span></span>
-          <VueDatePicker v-model="form.approved_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.raised_date"></VueDatePicker>
+          <VueDatePicker v-model="form.approved_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.raised_date" @update:model-value="approvedDateChange"></VueDatePicker>
       </label>
       <label class="label-group">
           <span class="label-item-title">Department</span>
