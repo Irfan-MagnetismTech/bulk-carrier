@@ -48,7 +48,7 @@
                 <input type="text" v-model.trim="form.mother_vessel" placeholder="Mother Vessel Name" class="form-input" required autocomplete="off" />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
             <v-select :options="vessels" placeholder="--Choose an option--" :loading="isVesselLoading"  v-model="form.ops_vessel_name" label="name" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
                 <template #search="{attributes, events}">
                     <input

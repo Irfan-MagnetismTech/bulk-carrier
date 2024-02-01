@@ -76,7 +76,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Vessel",
+      "label": "Vessel Name",
       "filter_type": "input"
     },
     

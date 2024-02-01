@@ -53,6 +53,16 @@ let filterOptions = ref({
       "filter_type": "input"
     },
     {
+      "relation_name": "opsVessel",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Vessel Name",
+      "filter_type": "input"
+    },
+    {
       "relation_name": "opsVoyage",
       "field_name": "voyage_sequence",
       "search_param": "",
@@ -167,6 +177,7 @@ onMounted(() => {
               <tr v-for="(voyageBudget, index) in voyageBudgets.data" :key="voyageBudget?.id">
                   <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
                   <td>{{ voyageBudget?.title }}</td>
+                  <td>{{ voyageBudget?.opsVessel?.name }}</td>
                   <td>{{ voyageBudget?.opsVoyage?.voyage_sequence }}</td>
                   <td>
                     <nobr>{{ formatDate(voyageBudget?.effective_from) }}</nobr>

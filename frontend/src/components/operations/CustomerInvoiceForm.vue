@@ -36,7 +36,7 @@
         <thead v-once>
             <tr class="w-full">
               <th class="w-4/12">Voyage <span class="text-red-500">*</span></th>
-              <th class="w-2/12"><nobr>Vessel</nobr></th>
+              <th class="w-2/12"><nobr>Vessel Name</nobr></th>
               <th class="w-2/12"><nobr>Cargo Type</nobr></th>
               <th class="w-2/12"><nobr>Total Amount</nobr></th>
               <th class="w-1/12py-3 text-center align-center">Details</th>

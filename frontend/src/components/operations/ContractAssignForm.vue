@@ -23,7 +23,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Vessel <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 ">Vessel Name <span class="text-red-500">*</span></span>
               <v-select :options="vessels" :readonly="formType=='edit'" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" @update:modelValue="opsVesselChange">
                   <template #search="{attributes, events}">
                       <input
