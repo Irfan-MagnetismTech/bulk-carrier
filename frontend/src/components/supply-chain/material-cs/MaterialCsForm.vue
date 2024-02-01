@@ -153,7 +153,7 @@
     </div>
     <div id="customDataTable" ref="customDataTableirf" class="!min-w-screen"> 
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials Stock<span class="text-red-500">*</span></legend>
         <div class=""> 
         <table class="!w-full">
           <thead>
