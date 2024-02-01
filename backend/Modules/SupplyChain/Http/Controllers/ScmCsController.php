@@ -614,7 +614,8 @@ class ScmCsController extends Controller
 
         if (isset($request->searchParam)) {
             $cs = ScmCs::query()
-                ->with('scmCsVendors', 'scmCsMaterials', 'scmCsMaterialVendors')
+                ->with('scmCsVendors', 'scmCsMaterials', 'scmCsMaterialVendors', 'selectedVendors')
+                ->has('selectedVendors')
                 ->whereHas('scmCsMaterials.scmPr', function ($query) use ($request) {
                     $query->where(function ($query) use ($request) {
                         $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
@@ -628,7 +629,8 @@ class ScmCsController extends Controller
                 ->get();
         } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center)) {
             $cs = ScmCs::query()
-                ->with('scmCsVendors', 'scmCsMaterials', 'scmCsMaterialVendors')
+                ->with('scmCsVendors', 'scmCsMaterials', 'scmCsMaterialVendors', 'selectedVendors')
+                ->has('selectedVendors')
                 ->whereHas('scmCsMaterials.scmPr', function ($query) use ($request) {
                     $query->where(function ($query) use ($request) {
                         $query->where('business_unit', $request->business_unit)
