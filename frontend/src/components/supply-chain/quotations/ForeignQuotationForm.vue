@@ -54,10 +54,25 @@
     </label>
     <label class="label-group">
         <span class="label-item-title">Sourcing History <span class="text-red-500">*</span></span>
-          <select v-model="form.sourcing" class="form-input">
+          <!-- <select v-model="form.sourcing" class="form-input">
             <option value="Existing">Existing</option>
             <option value="New">New</option>
-          </select>
+          </select> -->
+          <v-select
+            :options="sourcing_array"
+            placeholder="--Choose an option--"
+            v-model="form.sourcing"
+            label="Product Source Type"
+            class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      :required="!form.sourcing"
+                      v-bind="attributes"
+                      v-on="events"
+                      />
+              </template>
+          </v-select>
     </label>   
   </div>
   <div class="input-group">
@@ -464,7 +479,8 @@
     }); 
 
     const stock_types = ['Ready Stock', 'Manufacturing'];
-
+    const sourcing_array = ['Existing', 'New'];
+    
     const addLine = () => {
       const line = cloneDeep(props.lineObj);  
       props.form.scmCsMaterialVendors.push(line);

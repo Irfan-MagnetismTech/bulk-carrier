@@ -227,15 +227,15 @@
     }
 
     function changeMaterial(index,itemIndex) {
-      props.form.scmPoLines[index].scmPoItems[itemIndex].scm_material_id = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.id;
-      props.form.scmPoLines[index].scmPoItems[itemIndex].unit = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.unit;
-      props.form.scmPoLines[index].scmPoItems[itemIndex].brand = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.brand;
-      props.form.scmPoLines[index].scmPoItems[itemIndex].model = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.model;
-      props.form.scmPoLines[index].scmPoItems[itemIndex].max_quantity = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.max_quantity;
-      props.form.scmPoLines[index].scmPoItems[itemIndex].quantity = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.quantity;
-      props.form.scmPoLines[index].scmPoItems[itemIndex].pr_composite_key = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.pr_composite_key;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].scm_material_id = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial?.id ?? null;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].unit = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial?.unit ?? null;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].brand = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial?.brand ?? null;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].model = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial?.model ?? null;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].max_quantity = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial?.max_quantity ?? 0;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].quantity = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial?.quantity ?? 0;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].pr_composite_key = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial?.pr_composite_key ?? null;
       props.form.scmPoLines[index].scmPoItems[itemIndex].tolarence_level = 0;
-      props.form.scmPoLines[index].scmPoItems[itemIndex].pr_quantity = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.pr_quantity;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].pr_quantity = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial?.pr_quantity ?? 0;
       
     }
  
@@ -522,6 +522,7 @@
                         <tr>
                           <td><nobr>Material - Code</nobr></td>
                           <td>
+                            <div class="relative">
                             <v-select :options="materialList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial" label="material_name_and_code" class="block form-input-sm" :menu-props="{ minWidth: '250px', minHeight: '400px' }" @update:modelValue="changeMaterial(index,itemIndex)">
                               <template #search="{attributes, events}">
                                   <input
@@ -532,7 +533,8 @@
                                       />
                               </template>
                           </v-select>
-                          <!-- <span v-show="form.scmPoLines[index].scmPoItems[itemIndex].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-1" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span> -->
+                          <span v-show="form.scmPoLines[index].scmPoItems[itemIndex].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-1" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
+                          </div>
                           </td>
                           
                         </tr>
@@ -596,7 +598,7 @@
                         <tr>
                           <td><nobr>Tolerance ( % )</nobr></td>
                           <td>
-                            <input type="number" v-model="form.scmPoLines[index].scmPoItems[itemIndex].tolarence_level" min=1 class="!text-xs form-input text-right">  
+                            <input type="number" v-model="form.scmPoLines[index].scmPoItems[itemIndex].tolarence_level" min=0 class="!text-xs form-input text-right">  
                           </td>
                         </tr>
                         <tr>

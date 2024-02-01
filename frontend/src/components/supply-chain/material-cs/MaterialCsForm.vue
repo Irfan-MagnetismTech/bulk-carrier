@@ -174,32 +174,32 @@
             </td>
             <td class="!w-72 relative">
               <label class="block w-full mt-2 text-sm">
-                <input type="number" v-model="form.scmCsStockQuantity[index].at_port" class="form-input" min="2" required>
+                <input type="number" v-model="form.scmCsStockQuantity[index].at_port" class="form-input" min="0" required>
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="number" v-model="form.scmCsStockQuantity[index].in_transit" class="form-input" min="2" required>
+                <input type="number" v-model="form.scmCsStockQuantity[index].in_transit" class="form-input" min="0" required>
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="number" v-model="form.scmCsStockQuantity[index].under_lc" class="form-input" min="2" required>
+                <input type="number" v-model="form.scmCsStockQuantity[index].under_lc" class="form-input" min="0" required>
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="number" v-model="form.scmCsStockQuantity[index].total_stock" class="form-input" min="2" required>
+                <input type="number" v-model="form.scmCsStockQuantity[index].total_stock" class="form-input" min="0" required>
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="number" v-model="form.scmCsStockQuantity[index].days_to_run" class="form-input" min="2" required>
+                <input type="number" v-model="form.scmCsStockQuantity[index].days_to_run" class="form-input" min="0" required>
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="number" v-model="form.scmCsStockQuantity[index].available_in_other_unit" class="form-input" min="2" required>
+                <input type="number" v-model="form.scmCsStockQuantity[index].available_in_other_unit" class="form-input" min="0" required>
                </label>
             </td>
           </tr>
