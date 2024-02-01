@@ -492,7 +492,7 @@ function tytytyasd(indx) {
           </label>
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-1/2 mt-2 text-sm relative">
-              <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" :readonly="form.scmPrLines[index].closed_by">
+              <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" :disabled="form.scmPrLines[index].closed_by">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -509,6 +509,9 @@ function tytytyasd(indx) {
                         <a v-if="form.scmPrLines[index].scmMaterial" :href="env.BASE_API_URL+form.scmPrLines[index].scmMaterial?.sample_photo" target="_blank" rel="noopener noreferrer">
                                   <img :src="env.BASE_API_URL+form.scmPrLines[index].scmMaterial?.sample_photo"  alt="" srcset="" class="w-12 mx-auto">
                           </a>
+          </label>
+          <label class="" v-if="form.scmPrLines[index].closed_by">
+            <span class="text-red-500">Closed</span>
           </label>
           </div>
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">

@@ -6,6 +6,7 @@ import useNotification from '../useNotification.js';
 import Store from '../../store/index.js';
 import { merge } from 'lodash';
 import { loaderSetting as LoaderConfig} from '../../config/setting.js';
+import Swal from 'sweetalert2';
 
 export default function usePurchaseOrder() {
     const BASE = 'scm' 
@@ -63,6 +64,7 @@ export default function usePurchaseOrder() {
                         remaining_quantity: 0.0,
                         max_quantity: 0.0,
                         quantity: 0.0,
+                        isAspectDuplicate: false,
                         rate: 0.0,
                         total_price: 0.0,
                     }
@@ -88,6 +90,7 @@ export default function usePurchaseOrder() {
                 pr_composite_key: null,
                 cs_composite_key: null,
                 pr_quantity: 0.0,
+                isAspectDuplicate: false,
                 remaining_quantity: 0.0,
                 max_quantity: 0.0,
                 quantity: 0.0,
@@ -415,18 +418,18 @@ export default function usePurchaseOrder() {
     function checkUniqueArray(form) {
         let isHasError = false;
         const messages = ref([]);
-        
+        let materialArray = [];
         form.scmPoLines.map((scmPoLine, scmPoLineIndex) => {
-            let materialArray = []; 
+             
             scmPoLine.scmPoItems.map((scmPoitem, scmPoitemIndex) => {
             let material_key = scmPoitem.pr_composite_key;
             if (materialArray.indexOf(material_key) === -1) {
                 materialArray.push(material_key);
-                form.scmPoLines[scmPoLineIndex].scmPoitems[scmPoitemIndex].isAspectDuplicate = false;
+                // form.scmPoLines[scmPoLineIndex].scmPoitems[scmPoitemIndex].isAspectDuplicate = false;
               } else {
-                let data = `Duplicate Material Name Having Purchase Requisition ${scmPoLine.scmPr.ref_no} in Row: ${scmPoitemIndex + 1}]`;
+                let data = `Duplicate Material Name Having Purchase Requisition ${scmPoLine.scmPr.ref_no} in ${scmPoLineIndex} Block Row: ${scmPoitemIndex + 1}`;
                 messages.value.push(data);
-                form.scmPoLines[scmPoLineIndex].scmPoitems[scmPoitemIndex].isAspectDuplicate = true;
+                // form.scmPoLines[scmPoLineIndex].scmPoitems[scmPoitemIndex].isAspectDuplicate = true;
               }
             });
         });
