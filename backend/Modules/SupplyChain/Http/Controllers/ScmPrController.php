@@ -138,8 +138,8 @@ class ScmPrController extends Controller
                 'rob' => $currentStock,
                 'quantity' => $scmPrLine->quantity,
                 'is_closed' => $scmPrLine->is_closed,
-                'closed_person' => (auth()->user()->id == (int)($purchaseRequisition?->closedBy?->id)) ? 'You' : $purchaseRequisition?->closedBy?->name,
-                'closed_by' => $purchaseRequisition?->closedBy?->id,
+                'closed_person' => (auth()->user()->id == (int)($scmPrLine?->closedBy?->id)) ? 'You' : $scmPrLine?->closedBy?->name,
+                'closed_by' => $scmPrLine?->closed_by,
                 'closed_at' => $scmPrLine->closed_at,
                 'closing_remarks' => $scmPrLine->closing_remarks,
                 'required_date' => $scmPrLine->required_date,
@@ -164,7 +164,7 @@ class ScmPrController extends Controller
             'remarks' => $purchaseRequisition->remarks,
             'is_closed' => $purchaseRequisition->is_closed,
             'closed_person' => (auth()->user()->id == (int)($purchaseRequisition?->closedBy?->id)) ? 'You' : $purchaseRequisition?->closedBy?->name,
-            'closed_by' => $purchaseRequisition?->closedBy?->id,
+            'closed_by' => $purchaseRequisition?->closed_by,
             'closed_at' => $purchaseRequisition->closed_at,
             'closing_remarks' => $purchaseRequisition->closing_remarks,
             'status' => $purchaseRequisition->status,
@@ -191,8 +191,6 @@ class ScmPrController extends Controller
         $requestData = $request->except('ref_no', 'pr_composite_key', 'created_by');
 
         $linesData = CompositeKey::generateArray($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
-
-        return response()->json($linesData, 422);
 
         try {
             DB::beginTransaction();
