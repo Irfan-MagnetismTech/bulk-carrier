@@ -105,17 +105,19 @@ class ScmWoController extends Controller
      */
     public function show(ScmWo $workOrder): JsonResponse
     {
+        
         try {
             $workOrder->load('scmWoLines.scmWoItems.scmService', "scmWoLines.scmWr", 'scmWoTerms', 'scmVendor', 'scmWarehouse','closedBy', 'scmWoItems.closedBy', 'scmWcs', 'scmWoLines.scmWoItems.scmWcsService.scmService', 'scmWoLines.scmWoItems.scmWrLine.scmService');
 
             $scmWoLines = $workOrder->scmWoLines->map(function ($items) {
                 $datas = $items;
-
                 $adas = $items->scmWoItems->map(function ($item) {
+                    // var_dump($item);
+                    $max_quantity =0;
                     if (isset($item['wcs_composite_key'])) {
-                        $max_quantity = $item->scmWcsService->quantity -  $item->scmWcsService->scmWoItems->sum('quantity') + $item->quantity;
+                        $max_quantity = $item->scmWcsService?->quantity??0 -  $item->scmWcsService?->scmWoItems->sum('quantity') + $item->quantity;
                     } else {
-                        $max_quantity =  $item->scmWrLine->quantity -  $item->scmWrLine->scmWoItems->sum('quantity') + $item->quantity;
+                        $max_quantity =  $item->scmWrLine?->quantity??0 -  $item->scmWrLine->scmWoItems->sum('quantity') + $item->quantity;
                     }
                     return [
                         'id' => $item['id'],
@@ -123,17 +125,19 @@ class ScmWoController extends Controller
                         'scmService' => $item['scmService'],
                         'closedBy' => $item['closedBy'],
                         'required_date' => $item['required_date'],
-                        'quantity' => $item['quantity'],
+                        'quantity' => $item['quantity']?$item['quantity']:'',
                         'rate' => $item['rate'],
                         'total_price' => $item['total_price'],
-                        // 'description' => $item['description']?$item['description']:'',
+                        'description' => $item['description']?$item['description']:'',
                         'wo_composite_key' => $item['wo_composite_key'],
                         'wr_composite_key' => $item['wr_composite_key'],
                         'wcs_composite_key' => $item['wcs_composite_key'],
                         'max_quantity' => number_format($max_quantity, 2),
-                        'wr_quantity' => number_format($item->scmWrLine->quantity, 2),
+                        'wr_quantity' => number_format($item->scmWrLine?->quantity??0, 2),
                     ];
+
                 });
+
                 //data_forget scmPoItems
 
                 data_forget($items, 'scmWoItems');
@@ -180,7 +184,7 @@ class ScmWoController extends Controller
                 foreach ($values['scmWoItems'] as $index => $value) {
                     $service_ids[]=$value['scm_service_id'];
                 }
-            }            
+            }
 
             if(count($service_ids) != count(array_unique($service_ids))) {
                 $error= [
