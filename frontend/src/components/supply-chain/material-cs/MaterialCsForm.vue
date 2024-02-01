@@ -153,7 +153,7 @@
     </div>
     <div id="customDataTable" ref="customDataTableirf" class="!min-w-screen"> 
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials <span class="text-red-500">*</span></legend>
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials Stock<span class="text-red-500">*</span></legend>
         <div class=""> 
         <table class="!w-full">
           <thead>
@@ -174,32 +174,32 @@
             </td>
             <td class="!w-72 relative">
               <label class="block w-full mt-2 text-sm">
-                <input type="number" v-model="form.scmCsStockQuantity[index].at_port" class="form-input" min="2" required>
+                <input type="number" v-model="form.scmCsStockQuantity[index].at_port" class="form-input" min="0" required>
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="number" v-model="form.scmCsStockQuantity[index].in_transit" class="form-input" min="2" required>
+                <input type="number" v-model="form.scmCsStockQuantity[index].in_transit" class="form-input" min="0" required>
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="number" v-model="form.scmCsStockQuantity[index].under_lc" class="form-input" min="2" required>
+                <input type="number" v-model="form.scmCsStockQuantity[index].under_lc" class="form-input" min="0" required>
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="number" v-model="form.scmCsStockQuantity[index].total_stock" class="form-input" min="2" required>
+                <input type="number" v-model="form.scmCsStockQuantity[index].total_stock" class="form-input" min="0" required>
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="number" v-model="form.scmCsStockQuantity[index].days_to_run" class="form-input" min="2" required>
+                <input type="number" v-model="form.scmCsStockQuantity[index].days_to_run" class="form-input" min="0" required>
                </label>
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                <input type="number" v-model="form.scmCsStockQuantity[index].available_in_other_unit" class="form-input" min="2" required>
+                <input type="number" v-model="form.scmCsStockQuantity[index].available_in_other_unit" class="form-input" min="0" required>
                </label>
             </td>
           </tr>
