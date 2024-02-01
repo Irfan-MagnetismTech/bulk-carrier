@@ -4,7 +4,7 @@
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Requisition Date<span class="text-red-500">*</span></span>
             <!-- <input type="date" v-model="form.requisition_date" placeholder="Requisition Date" class="form-input" required  /> -->
-            <VueDatePicker v-model="form.requisition_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+            <VueDatePicker v-model="form.requisition_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" @update:model-value="requisitionDateChange"></VueDatePicker>
           <Error v-if="errors?.requisition_date" :errors="errors.requisition_date" />
         </label>
         <label class="block w-full mt-2 text-sm">
@@ -102,8 +102,8 @@
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
         </label>
         <label class="block w-full mt-2 text-sm" v-show="form.mnt_item_name?.has_run_hour">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Present Runnig Hour </span>
-            <input type="text" v-model.trim="form.present_run_hour" placeholder="Present Runnig Hour" class="form-input vms-readonly-input" readonly />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Present Running Hour </span>
+            <input type="text" v-model.trim="form.present_run_hour" placeholder="Present Running Hour" class="form-input vms-readonly-input" readonly />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
 
@@ -113,7 +113,7 @@
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Est. Start Date <span class="text-red-500">*</span></span>
             <!-- <input type="date" :min="form.requisition_date"  v-model="form.est_start_date" placeholder="Est. Start Date" class="form-input" required  /> -->
-            <VueDatePicker v-model="form.est_start_date" :min-date="form.requisition_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+            <VueDatePicker v-model="form.est_start_date" :min-date="form.requisition_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" @update:model-value="estStartDateChange"></VueDatePicker>
           <Error v-if="errors?.est_start_date" :errors="errors.est_start_date" />
         </label>
 
@@ -263,7 +263,7 @@
 
                 <th class="w-2/12 px-4 py-3 align-bottom" >Last Done</th>
 
-                <th class="px-4 py-3 align-bottom" :class="{ 'w-2/12': form.mnt_item_name?.has_run_hour}" v-show="form.mnt_item_name?.has_run_hour">Prev. Run Hrs.</th>
+                <th class="px-4 py-3 align-bottom" :class="{ 'w-2/12': form.mnt_item_name?.has_run_hour}" v-show="form.mnt_item_name?.has_run_hour">Prev. Running Hrs.</th>
 
                 <th class="w-2/12 px-4 py-3 align-bottom" >Next Due</th>
 
@@ -274,9 +274,9 @@
               <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(jobLine, index) in (tab === 'added_jobs' ?  form.added_job_lines : itemWiseJobLines[tab])" :key="index">
                   <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.job_description" readonly /></td>
                   <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.cycle + ' ' + jobLine.cycle_unit" readonly /></td>
-                  <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.last_done ? moment(jobLine.last_done).format('MM/DD/YYYY') : null" readonly /></td>
+                  <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.last_done ? moment(jobLine.last_done).format('DD/MM/YYYY') : null" readonly /></td>
                   <td v-show="form.mnt_item_name?.has_run_hour"><input type="text"  class="form-input vms-readonly-input"   :value="jobLine.previous_run_hour" readonly /></td>
-                  <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.cycle_unit == 'Hours' ? jobLine.next_due : (jobLine.next_due ? moment(jobLine.next_due).format('MM/DD/YYYY') : null)" readonly /></td>
+                  <td><input type="text"  class="form-input vms-readonly-input"  :value="jobLine.cycle_unit == 'Hours' ? jobLine.next_due : (jobLine.next_due ? moment(jobLine.next_due).format('DD/MM/YYYY') : null)" readonly /></td>
                   <td>
                     <button type="button" :class="{
                       'bg-yellow-700': jobLine.mnt_work_requisition_status == 0,
@@ -472,6 +472,17 @@ function findAddedJobLine(jobLine){
 }
 
 // const { shipDepartments, getShipDepartments } = useShipDepartment();
+
+function requisitionDateChange() {
+  if (props.form.est_start_date < props.form.requisition_date) {
+    props.form.est_start_date = '';
+    estStartDateChange();
+  }
+}
+function estStartDateChange() {
+  if ((props.form.est_completion_date < props.form.est_start_date) || (props.form.est_completion_date < props.form.requisition_date)) 
+    props.form.est_completion_date = '';
+}
 
 
 onMounted(() => {

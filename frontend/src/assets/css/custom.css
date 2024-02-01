@@ -4,6 +4,11 @@
     cursor: not-allowed !important;
 }
 
+.vms-readonly-input .dp__input{
+    background-color: #e7e6e6;
+    cursor: not-allowed;
+}
+
 .tox-notifications-container {
     display: none !important;
 }

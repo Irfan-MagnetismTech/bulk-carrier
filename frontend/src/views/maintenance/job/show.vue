@@ -5,6 +5,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import useJob from '../../../composables/maintenance/useJob';
+import moment from 'moment';
 
 const icons = useHeroIcon();
 
@@ -69,7 +70,7 @@ onMounted(() => {
 
               
               <tr>
-                <th class="w-40">Present Runnig Hour</th>
+                <th class="w-40">Present Running Hour</th>
                 <td>{{ job?.present_run_hour }} Hours</td>
               </tr>
                             
@@ -89,7 +90,7 @@ onMounted(() => {
                         <td> {{ jobLine?.job_description  }} </td>
                         <td> {{jobLine?.cycle }} {{ jobLine.cycle_unit }}</td>
                         <td> <p class="text-center">{{ jobLine?.min_limit}} {{ jobLine.cycle_unit }}</p> </td>
-                        <td> {{ jobLine.last_done }} </td>
+                        <td> <span class="text-center block">{{ moment(jobLine.last_done).format('DD/MM/YYYY') }}</span> </td>
                         <td> {{ jobLine.remarks }} </td>
                       </tr>
                     </tbody>

@@ -155,6 +155,31 @@ export default function useSurvey() {
         }
     }
 
+    async function getSurveysWithoutPagination(mntSurveyItemId, mntSurveyTypeId) {
+        //NProgress.start();
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get('/mnt/get-surveys', {
+                params: {
+                    mnt_survey_type_id: mntSurveyTypeId,
+                    mnt_survey_item_id: mntSurveyItemId,
+                },
+            });
+            surveys.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
+
     
 
     
@@ -166,6 +191,7 @@ export default function useSurvey() {
         showSurvey,
         updateSurvey,
         deleteSurvey,
+        getSurveysWithoutPagination,
         isLoading,
         isTableLoading,
         errors,

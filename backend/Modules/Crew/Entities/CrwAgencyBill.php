@@ -20,5 +20,10 @@ class CrwAgencyBill extends Model
 	public function crwAgency()
     {
         return $this->belongsTo(CrwAgency::class);
-    } 
+    }
+
+    public function crwAgencyContract()
+    {
+        return $this->belongsTo(CrwAgencyContract::class);
+    }
 }

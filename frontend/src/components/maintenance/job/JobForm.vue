@@ -77,8 +77,8 @@
           <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
         </label>
         <label class="block w-full mt-2 text-sm" v-show="form.mnt_item_name?.has_run_hour">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Present Runnig Hour</span>
-            <input type="number" min="0" v-model="form.present_run_hour" placeholder="Present Runnig Hour" class="form-input" :class="{ 'vms-readonly-input': page === 'edit' }" :disabled="page === 'edit'" />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Present Running Hour</span>
+            <input type="number" min="0" v-model="form.present_run_hour" placeholder="Present Running Hour" class="form-input" :class="{ 'vms-readonly-input': page === 'edit' }" :disabled="page === 'edit'" />
           <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
         </label>
         
@@ -118,7 +118,10 @@
             </td>
             <td class="px-1 py-1"><input type="number" min="1"  required class="form-input"  v-model="job_line.cycle" placeholder="Cycle" /></td>
             <td class="px-1 py-1"><input type="number" :max="job_line.cycle - 1" required class="form-input"  v-model="job_line.min_limit" placeholder="Add To Upcoming List" /></td>
-            <td class="px-1 py-1"><input type="date" required class="form-input"  v-model="job_line.last_done"/></td>
+            <td class="px-1 py-1">
+              <!-- <input type="date" required class="form-input"  v-model="job_line.last_done"/> -->
+              <VueDatePicker v-model="job_line.last_done" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+            </td>
             
             <td class="px-1 py-1"><input type="text" class="form-input"  v-model.trim="job_line.remarks" placeholder="Remarks" /></td>
             <td class="px-1 py-1"><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="index == 0" @click="addJob"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
@@ -150,6 +153,8 @@ const { vessels, getVesselsWithoutPaginate, isVesselLoading } = useVessel();
 const { shipDepartmentWiseItems, itemGroupWiseItems, getShipDepartmentWiseItems, getItemGroupWiseItems, isItemLoading } = useItem();
 const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups, isItemGroupLoading } = useItemGroup();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
+
 const icons = useHeroIcon();
 
 const props = defineProps({
@@ -288,5 +293,9 @@ onMounted(() => {
 
   --vs-dropdown-option--active-bg: #664cc3;
   --vs-dropdown-option--active-color: #eeeeee;
+
+  --dp-border-color: #4b5563;
+  --dp-border-color-hover: #4b5563;
+  --dp-icon-color: #4b5563;
 }
 </style>

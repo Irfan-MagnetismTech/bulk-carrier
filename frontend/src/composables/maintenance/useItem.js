@@ -23,7 +23,8 @@ export default function useItem() {
         mnt_item_groups:[],
         name: '',
         item_code: '',
-        description: [{ key: '', value: '' }],
+        // description: [{ key: '', value: '' }],
+        description: [],
         has_run_hour: false,
         business_unit: '',
         form_type: 'create'

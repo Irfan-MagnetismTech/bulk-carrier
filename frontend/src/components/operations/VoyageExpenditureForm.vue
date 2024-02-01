@@ -4,6 +4,7 @@ import { watch, ref, onMounted, watchEffect } from 'vue';
 // import useVesselVoyageExpenditure from "../../composables/operations/useVesselVoyageExpenditure";
 import useVoyageExpenditure from "../../composables/operations/useVoyageExpenditure";
 import useVessel from "../../composables/operations/useVessel";
+import usePort from '../../composables/operations/usePort';
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import useVesselExpenseHead from "../../composables/operations/useVesselExpenseHead";
@@ -14,6 +15,7 @@ import RemarksComponent from '../../components/utils/RemarksComponent.vue';
 
 const { voyageExpenditures, expenseHeadObject, getVoyageExpenditures, showHead, isLoading } = useVoyageExpenditure();
 const { vessel, vessels, getVesselList, showVessel } = useVessel();
+const { ports, searchPorts } = usePort();
 const { voyages, searchVoyages } = useVoyage();
 const { vesselExpenseHeads, showFlatVesselExpenseHead } = useVesselExpenseHead();
 const { currencies, getCurrencies } = useBusinessInfo();
@@ -45,6 +47,13 @@ function fetchVesselExpenseHeads(ops_vessel_id, loading) {
 function fetchVesselWiseVoyages(ops_vessel_id, loading) {
   searchVoyages("", props.form.business_unit, loading, ops_vessel_id)
 }
+
+watch(() => props.form.port, (value) => {
+  // alert(value.code)
+  if(value) {
+    props.form.port_code = value.code;
+  }
+}, {deep: true})
 
 watch(() => props.form.opsVoyage, (newValue, oldValue) => {
 
@@ -88,6 +97,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
 
   if (newValue) {    
     getVesselList(props.form.business_unit);
+    searchPorts("", props.form.business_unit);
   }
   
 }, {deep: true});
@@ -106,8 +116,8 @@ watch(() => props.form.currency, (newValue, oldValue) => {
 
     if(editInitiated.value == 1 || props.formType == 'create') {
     
-    props.form.exchange_rate_usd = '';
-    props.form.exchange_rate_bdt = '';
+    props.form.exchange_rate_usd = null;
+    props.form.exchange_rate_bdt = null;
 
     if(props.form.currency === 'USD') {
       isUSDCurrency.value = true;
@@ -131,22 +141,16 @@ watch(() => props.form.exchange_rate_bdt, (value) => {
   calculateHeadAmounts()
 }, { deep: true })
 
-watch(() => props.form.opsVoyageExpenditureEntries, (newValue, oldValue) => {
 
-  newValue.forEach((line, index) => {
-    props.form.opsVoyageExpenditureEntries[index].ops_expense_head_id = props.form.opsVoyageExpenditureEntries[index]?.opsExpenseHead?.id
-  });
-
-}, { deep: true })
 
 const calculateHeadAmounts = () => {
     props.form.opsVoyageExpenditureEntries.forEach((line, index) => {
-
             const { amount, amount_usd, amount_bdt } = calculateInCurrency(line);
             props.form.opsVoyageExpenditureEntries[index].amount_usd = (amount_usd * 1);
             props.form.opsVoyageExpenditureEntries[index].amount_bdt = (amount_bdt * 1);
             props.form.opsVoyageExpenditureEntries[index].amount = (amount * 1);
-      });
+    });
+    CalculateAll();
 }
 
 const calculateInCurrency = (item) => {
@@ -170,6 +174,31 @@ const calculateInCurrency = (item) => {
   return {amount : (item.amount > 0) ? item.amount : 0, amount_usd: (item.amount_usd > 0) ? item.amount_usd : 0, amount_bdt:( item.amount_bdt > 0) ?  item.amount_bdt : 0};
 }
 
+watch(() => props.form.opsVoyageExpenditureEntries, (newValue, oldValue) => {
+  let total_bdt = 0.0;
+  let total_usd = 0.0;
+  newValue?.forEach((line, index) => {
+    props.form.opsVoyageExpenditureEntries[index].ops_expense_head_id = props.form.opsVoyageExpenditureEntries[index]?.opsExpenseHead?.id
+    const { amount_usd, amount_bdt } = calculateInCurrency(line, index);
+    total_bdt += amount_bdt;
+    total_usd += amount_usd;
+
+  });
+  props.form.sub_total_usd = parseFloat(total_usd).toFixed(2);
+  props.form.sub_total_bdt = parseFloat(total_bdt).toFixed(2);
+  CalculateAll();
+
+}, { deep: true })
+
+function CalculateAll() { 
+  props.form.grand_total_bdt = parseFloat(props.form.sub_total_bdt - props.form.discount_bdt).toFixed(2);
+  props.form.grand_total_usd = parseFloat(props.form.sub_total_usd - props.form.discount_usd).toFixed(2);
+}
+
+watch(() => props.form.discount_bdt, (newValue, oldValue) => {
+props.form.grand_total_bdt = parseFloat(props.form.sub_total_bdt - props.form.discount_bdt).toFixed(2);
+}, { deep: true })
+
 
 function addHead() {
   props.form.opsVoyageExpenditureEntries.push({...expenseHeadObject});
@@ -191,11 +220,22 @@ function attachFile(e) {
 <template>
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
-        <label class="block w-full mt-2 text-sm"></label>
-        <label class="block w-full mt-2 text-sm"></label>
-        <label class="block w-full mt-2 text-sm"></label>
-    </div>
+      <business-unit-input class="w-1/3" v-model="form.business_unit" :page="formType"></business-unit-input>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Port <span class="text-red-500">*</span></span>
+        <v-select :options="ports" placeholder="--Choose an option--" v-model="form.port" label="code_name" class="block form-input">
+            <template #search="{attributes, events}">
+                <input
+                    class="vs__search"
+                    :required="!form.port"
+                    v-bind="attributes"
+                    v-on="events"
+                    />
+            </template>
+        </v-select>
+        <!-- <input type="hidden" v-model="form.port"/> -->
+      </label>
+  </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-1/2 mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
@@ -260,9 +300,9 @@ function attachFile(e) {
         <thead>
             <tr class="w-full">
               <th class="w-72">Expesne Head <span class="text-red-500">*</span></th>
-              <th class="w-20">Quantity <span class="text-red-500">*</span></th>
               <th class="w-24">Invoice Date <span class="text-red-500">*</span></th>
               <th class="w-24">Invoice No. <span class="text-red-500">*</span></th>
+              <th class="w-20">Quantity <span class="text-red-500">*</span></th>
               <th>Rate <span class="text-red-500">*</span></th>
               <th v-if="isOtherCurrency">Amount </th>
               <th>Amount USD</th>
@@ -293,12 +333,15 @@ function attachFile(e) {
                 <span v-show="form.opsVoyageExpenditureEntries[index].isExpenseHeadDuplicate" class="text-yellow-600 absolute top-4 right-12 " title="Duplicate Warning" v-html="icons.ExclamationTriangle"></span>
 
               </td>
-
+              <td>
+                <input type="date" v-model="form.opsVoyageExpenditureEntries[index].invoice_date" placeholder="Invoice Date" class="form-input"/>
+              </td>
+              <td>
+                <input type="text" v-model="form.opsVoyageExpenditureEntries[index].invoice_no" placeholder="Invoice No." class="form-input"/>
+              </td>
               <td>
                   <input type="number" step="0.0001" @input="calculateHeadAmounts()" required v-model="form.opsVoyageExpenditureEntries[index].quantity" placeholder="Qty" class="form-input" autocomplete="off" />
               </td>
-              <td></td>
-              <td></td>
               <td>
                 <input type="number" step="0.0001" @input="calculateHeadAmounts()" required v-model="form.opsVoyageExpenditureEntries[index].rate" placeholder="Rate" class="form-input" autocomplete="off" />
               </td>
@@ -323,6 +366,24 @@ function attachFile(e) {
         </table>
     </div>
 
+  </div>
+  <div v-if="form.opsVoyageExpenditureEntries" class="mt-3 md:mt-5 w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
+    <h4 class="text-md font-semibold uppercase mb-2">Expesne Head Summary</h4>
+
+    <div class="flex flex-col justify-center md:flex-row w-full md:gap-2">
+      <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700 dark-disabled:text-gray-300">Sub Total (BDT) <span class="text-red-500">*</span></span>
+          <input type="number" readonly :value="props.form.sub_total_bdt" placeholder="Sub Total(BDT)" class="form-input" autocomplete="off"/>
+      </label>
+      <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700 dark-disabled:text-gray-300">Discount (BDT) </span>
+          <input type="number" step="0.001"  v-model="props.form.discount_bdt" placeholder="Discount (BDT)" class="form-input" autocomplete="off"/>
+      </label>
+      <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700 dark-disabled:text-gray-300">Grand Total (BDT) <span class="text-red-500">*</span></span>
+          <input type="number" step="0.001" required readonly :value="props.form.grand_total_bdt" placeholder="Grand Total(BDT)" class="form-input" autocomplete="off"/>
+      </label>
+    </div>
   </div>
 
 

@@ -32,7 +32,7 @@
         <Error v-if="errors?.mnt_critical_function_id" :errors="errors.mnt_critical_function_id" />
       </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Critical Catrgory <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Category <span class="text-red-500">*</span></span>
             <v-select placeholder="Select Critical Category" :loading="isCriticalItemCategoryLoading"  :options="form.mntCriticalItemCategories" @search="" v-model="form.mnt_critical_item_cat" label="category_name" @update:modelValue="criticalItemCategoryChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
@@ -48,7 +48,7 @@
         </label>
         
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Critical Item <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Item <span class="text-red-500">*</span></span>
             <v-select placeholder="Select Critical Item" :loading="isCriticalItemLoading"  :options="form.mntCriticalItems" @search="" v-model="form.mnt_critical_item" label="item_name" @update:modelValue="criticalItemChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
             <template #search="{attributes, events}">
             <input
@@ -62,15 +62,20 @@
           <input type="hidden" v-model="form.mnt_critical_item_id">
           <Error v-if="errors?.mnt_critical_item_id" :errors="errors.mnt_critical_item_id" />
         </label>
+        <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700 dark-disabled:text-gray-300">Specification</span>
+          <input type="text" v-model.trim="form.specification" placeholder="Specification" class="form-input"/>
+          <Error v-if="errors?.specification" :errors="errors.specification" />
+        </label>
 
       <!-- <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Notes</span>
         <input type="text" v-model="form.notes" placeholder="Notes" class="form-input"/>
         <Error v-if="errors?.notes" :errors="errors.notes" />
       </label> -->
-      <RemarksComponent v-model.trim="form.notes" :maxlength="500" :fieldLabel="'Notes'"></RemarksComponent>
+      <RemarksComponent  v-model.trim="form.notes" :maxlength="500" :fieldLabel="'Notes'"></RemarksComponent>
       
-      <div class="block w-full mt-2 text-sm">
+      <div class="block w-full mt-2 text-sm col-start-1">
         <!-- <span class="text-gray-700 dark-disabled:text-gray-300">Notes</span> -->
         <input type="checkbox" v-model="form.is_critical" @change="isCritical" /> Critical Item
         <Error v-if="errors?.notes" :errors="errors.notes" />
@@ -81,9 +86,9 @@
       <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Spare Parts <span class="text-red-500">*</span></legend>
       <table class="w-full whitespace-no-wrap" id="table">
         <thead>
-          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+          <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th class="w-6/12 px-4 py-3 align-bottom">Spare Parts Name<span class="text-red-500">*</span></th>
-            <th class="w-2/12 px-4 py-3 align-bottom">Minimum Rob <span class="text-red-500">*</span></th>
+            <th class="w-2/12 px-4 py-3 align-bottom">Minimum ROB <span class="text-red-500">*</span></th>
             <th class="w-2/12 px-4 py-3 align-bottom">Unit <span class="text-red-500">*</span></th>
             <th class="w-2/12 px-4 py-3 align-bottom text-center">Action</th>
           </tr>
@@ -91,7 +96,7 @@
         <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
           <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(mntCriticalItemSp, index) in form.mntCriticalItemSps" :key="index">
             <td class="px-1 py-1"><input type="text" class="form-input" required  v-model.trim="mntCriticalItemSp.sp_name" placeholder="Spare Parts Name"  /></td>
-            <td class="px-1 py-1"><input type="number" min="1" class="form-input" required v-model="mntCriticalItemSp.min_rob" placeholder="Minimum Rob" />
+            <td class="px-1 py-1"><input type="number" min="1" class="form-input" required v-model="mntCriticalItemSp.min_rob" placeholder="Minimum ROB" />
             </td>
             <td class="px-1 py-1"><input type="text" class="form-input" required  v-model.trim="mntCriticalItemSp.unit" placeholder="Unit" /></td>
             <td class="px-1 py-1"><button type="button" class="bg-green-600 text-white px-3 py-2 rounded-md" v-show="index == 0" @click="addCriticalItemSp"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
@@ -208,6 +213,11 @@ watch(() => criticalItemCategoryWiseItems.value, (val) => {
 });
 watch(() => props.form.business_unit, (newValue, oldValue) => {
   businessUnit.value = newValue;
+
+  if (props.page != 'edit') {
+    props.form.ops_vessel = null;
+    vesselChange();
+  }
 });
 
 // watch(() => props.form.is_critical, (newValue, oldValue) => {

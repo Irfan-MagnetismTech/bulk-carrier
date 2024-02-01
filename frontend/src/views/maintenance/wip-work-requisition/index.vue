@@ -14,6 +14,7 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import moment from "moment";
 
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
@@ -169,9 +170,9 @@ onMounted(() => {
     });
   });
 
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-  });
+  // filterOptions.value.filter_options.forEach((option, index) => {
+  //   filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  // });
 
 });
 
@@ -223,7 +224,8 @@ onMounted(() => {
             
           <tr v-for="(wipWorkRequisition,index) in wipWorkRequisitions?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-            <td><nobr>{{ wipWorkRequisition?.requisition_date }}</nobr></td>
+            <!-- <td><nobr>{{ wipWorkRequisition?.requisition_date }}</nobr></td> -->
+            <td><nobr>{{  moment(wipWorkRequisition?.requisition_date).format('DD/MM/YYYY') }}</nobr></td>
             <td>{{ wipWorkRequisition?.reference_no }}</td>
             <td>{{ wipWorkRequisition?.opsVessel?.name }}</td>
             <td>{{ wipWorkRequisition?.maintenance_type }}</td>
@@ -234,6 +236,7 @@ onMounted(() => {
             <td><span :class="wipWorkRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ wipWorkRequisition?.business_unit }}</span></td>
             
             <td>
+                <action-button :action="'show'" :to="{ name: 'mnt.wip-work-requisitions.show', params: { wipWorkRequisitionId: wipWorkRequisition?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'mnt.wip-work-requisitions.edit', params: { wipWorkRequisitionId: wipWorkRequisition?.id } }"></action-button>
                 <!-- <action-button @click="confirmDelete(wipWorkRequisition?.id)" :action="'delete'"></action-button> -->
             </td>

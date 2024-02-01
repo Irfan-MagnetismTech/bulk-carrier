@@ -88,7 +88,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Critical Category",
+      "label": "Category",
       "filter_type": "input"
     },
     
@@ -100,7 +100,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Critical Item",
+      "label": "Item",
       "filter_type": "input"
     },
 
@@ -220,6 +220,7 @@ onMounted(() => {
             <td><span :class="criticalVesselItem?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ criticalVesselItem?.business_unit }}</span></td>
             <td>
               <nobr>
+                <action-button :action="'show'" :to="{ name: 'mnt.critical-vessel-items.show', params: { criticalVesselItemId: criticalVesselItem?.id } }"></action-button>
                 <action-button :action="'edit'" :to="{ name: 'mnt.critical-vessel-items.edit', params: { criticalVesselItemId: criticalVesselItem?.id } }"></action-button>
                 <action-button @click="confirmDelete(criticalVesselItem?.id)" :action="'delete'"></action-button>
               </nobr>
