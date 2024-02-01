@@ -37,7 +37,7 @@ onMounted(() => {
     <!-- Heading -->
     
     <div class="flex items-center justify-between w-full my-3" v-once>
-        <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Create WCS Quotation</h2>
+        <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">WCS Quotation Details</h2>
         <default-button :title="'WCS Quotation List'" :to="{ name: 'scm.wcs-quotations.index' }" :icon="icons.DataBase"></default-button>
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">

@@ -52,8 +52,6 @@ class ScmMoController extends Controller
     {
         $requestData = $request->except('ref_no', 'mo_composite_key');
 
-        $requestData['ref_no'] = UniqueId::generate(ScmMo::class, 'MO');
-
         try {
             DB::beginTransaction();
 

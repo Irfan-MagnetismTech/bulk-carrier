@@ -56,7 +56,6 @@ class ScmWcsController extends Controller
     public function store(ScmWcsRequest $request)
     {
         $requestData = $request->except('ref_no','scmWcsServices');
-        $requestData['ref_no'] = UniqueId::generate(ScmWcs::class, 'WCS');
         try {
             DB::beginTransaction();
 
