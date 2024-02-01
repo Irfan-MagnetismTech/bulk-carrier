@@ -187,7 +187,7 @@
               <th class="py-3 align-center">Model</th>
               <th class="py-3 align-center">Warranty Period</th>
               <th class="py-3 align-center">Offer Price <br/> <span class="text-[0.6rem]">( Per Unit )</span></th>
-              <th class="py-3 align-center">Negotiated Price <br/> <span class="text-[0.6rem]">( Per Unit )</span></th>
+              <th class="py-3 align-center">Negotiated Price <br/> <span class="text-[0.6rem]">( Per Unit )</span><span class="text-red-500">*</span></th>
             </tr>
             </thead>
 
@@ -212,10 +212,10 @@
                       <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].warranty_period" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" step="0.01" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" class="form-input"/>
+                      <input type="number" step="0.01" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" min=0 class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" step="0.01" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input" min="1"/>
+                      <input type="number" step="0.01" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input" min=1 required/>
                     </td>
               
                   </tr>
@@ -305,7 +305,7 @@
     }); 
 
     const route = useRoute();
-    const CSID = route.params.csId;
+    const CSID = route?.params?.csId;
     const payment_term = ['Cash', 'Credit'];
     const sourcing_array = ['Existing', 'New'];
     watch(() => materialCs.value, (newVal, oldVal) => {

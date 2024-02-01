@@ -338,7 +338,7 @@
                       <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].offer_amount" required class="form-input vms-readonly-input" readonly/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" step="0.01" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" required class="form-input" min="1"/>
+                      <input type="number" step="0.01" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" required class="form-input" min=1/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
                       <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_amount" required class="form-input vms-readonly-input" min="1" readonly/>
@@ -574,7 +574,7 @@
     }
 
     const route = useRoute();
-    const CSID = route.params.csId;
+    const CSID = route?.params?.csId;
         
     // watch(() => materialCs.value, (newVal, oldVal) => {
     //   props.form.scmCs = newVal;
