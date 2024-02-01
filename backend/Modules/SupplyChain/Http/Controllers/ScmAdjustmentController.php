@@ -169,11 +169,4 @@ class ScmAdjustmentController extends Controller
             return response()->json($adjustment->preventDeletionIfRelated(), 422);
         }
     }
-
-    public function testStock()
-    {
-        TestStock::create([
-            'ref_no' => UniqueId::generate(TestStock::class, 'TS')
-        ]);
-    }
 }

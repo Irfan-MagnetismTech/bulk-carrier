@@ -55,7 +55,6 @@ class ScmPoController extends Controller
     public function store(ScmPoRequest $request)
     {
         $requestData = $request->except('ref_no');
-        $requestData['ref_no'] = UniqueId::generate(ScmPo::class, 'PO');
         $requestData['created_by'] = auth()->id();
 
         try {
