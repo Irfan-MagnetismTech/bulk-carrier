@@ -14,7 +14,7 @@
                   </template>
                 </v-select>
                 <input type="hidden" v-model="form.ops_vessel_id">
-            <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" />
+            <!-- <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" /> -->
           </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Survey Item <span class="text-red-500">*</span></span>
@@ -29,7 +29,7 @@
             </template>
             </v-select>
             <input type="hidden" v-model="form.survey_item_id">
-          <Error v-if="errors?.survey_item_id" :errors="errors.survey_item_id" />
+          <!-- <Error v-if="errors?.survey_item_id" :errors="errors.survey_item_id" /> -->
         </label>
   
         
@@ -46,7 +46,7 @@
             </template>
             </v-select>
             <input type="hidden" v-model="form.survey_type_id">
-          <Error v-if="errors?.survey_type_id" :errors="errors.survey_type_id" />
+          <!-- <Error v-if="errors?.survey_type_id" :errors="errors.survey_type_id" /> -->
         </label>
   
         <!-- <label class="block w-full mt-2 text-sm">
@@ -73,14 +73,14 @@
             </template>
             </v-select>
             <input type="hidden" v-model="form.mnt_survey_id">
-          <Error v-if="errors?.mnt_survey_id" :errors="errors.mnt_survey_id" />
+          <!-- <Error v-if="errors?.mnt_survey_id" :errors="errors.mnt_survey_id" /> -->
         </label>
         
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Range Date (From) <span class="text-red-500">*</span></span>
           <!-- <input type="date" v-model="form.range_date_from" placeholder="Range Date (From)" class="form-input" @input="setRangeDateTo"  required/> -->
           <VueDatePicker v-model="form.range_date_from" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" @update:model-value="setRangeDateTo"></VueDatePicker>
-          <Error v-if="errors?.range_date_from" :errors="errors.range_date_from" />
+          <!-- <Error v-if="errors?.range_date_from" :errors="errors.range_date_from" /> -->
         </label>
   
         
@@ -88,7 +88,7 @@
           <span class="text-gray-700 dark-disabled:text-gray-300">Range Date (To) <span class="text-red-500">*</span></span>
           <!-- <input type="date" v-model="form.range_date_to" placeholder="Range Date (To)" class="form-input" required/> -->
           <VueDatePicker v-model="form.range_date_to" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
-          <Error v-if="errors?.range_date_to" :errors="errors.range_date_to" />
+          <!-- <Error v-if="errors?.range_date_to" :errors="errors.range_date_to" /> -->
         </label>
   
         
@@ -96,7 +96,7 @@
           <span class="text-gray-700 dark-disabled:text-gray-300">Assigned Date <span class="text-red-500">*</span></span>
           <!-- <input type="date" v-model="form.assigned_date" placeholder="Assigned date" @input="setDueDate"  class="form-input" required/> -->
           <VueDatePicker v-model="form.assigned_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" @update:model-value="setDueDate"></VueDatePicker>
-          <Error v-if="errors?.assigned_date" :errors="errors.assigned_date" />
+          <!-- <Error v-if="errors?.assigned_date" :errors="errors.assigned_date" /> -->
         </label>
   
         
@@ -104,7 +104,7 @@
           <span class="text-gray-700 dark-disabled:text-gray-300">Due Date <span class="text-red-500">*</span></span>
           <!-- <input type="date" v-model="form.due_date" placeholder="Due date" class="form-input" required/> -->
           <VueDatePicker v-model="form.due_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
-          <Error v-if="errors?.due_date" :errors="errors.due_date" />
+          <!-- <Error v-if="errors?.due_date" :errors="errors.due_date" /> -->
         </label>
   
         <!-- <label class="block w-full mt-2 text-sm">

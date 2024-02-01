@@ -29,7 +29,7 @@
           </template>
           </v-select>
           <input type="hidden" v-model="form.survey_item_id">
-        <Error v-if="errors?.survey_item_id" :errors="errors.survey_item_id" />
+        <!-- <Error v-if="errors?.survey_item_id" :errors="errors.survey_item_id" /> -->
       </label>
 
       
@@ -46,19 +46,19 @@
           </template>
           </v-select>
           <input type="hidden" v-model="form.survey_type_id">
-        <Error v-if="errors?.survey_type_id" :errors="errors.survey_type_id" />
+        <!-- <Error v-if="errors?.survey_type_id" :errors="errors.survey_type_id" /> -->
       </label>
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Short Code <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.short_code" placeholder="Short Code" class="form-input" required/>
-        <Error v-if="errors?.short_code" :errors="errors.short_code" />
+        <!-- <Error v-if="errors?.short_code" :errors="errors.short_code" /> -->
       </label>
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Survey Name <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.survey_name" placeholder="Survey Name" class="form-input" required/>
-        <Error v-if="errors?.survey_name" :errors="errors.survey_name" />
+        <!-- <Error v-if="errors?.survey_name" :errors="errors.survey_name" /> -->
       </label>
       
       <!-- <label class="block w-full mt-2 text-sm">
