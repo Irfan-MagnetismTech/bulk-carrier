@@ -532,7 +532,7 @@
                                       />
                               </template>
                           </v-select>
-                          <span v-show="form.scmPoLines[index].scmPoItems[itemIndex].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-1" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
+                          <!-- <span v-show="form.scmPoLines[index].scmPoItems[itemIndex].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-1" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span> -->
                           </td>
                           
                         </tr>
@@ -545,13 +545,13 @@
                         <tr>
                           <td>Brand</td>
                           <td>
-                            <input type="text" v-model="form.scmPoLines[index].scmPoItems[itemIndex].brand" class="form-input-sm">
+                            <input type="text" v-model="form.scmPoLines[index].scmPoItems[itemIndex].brand" class="form-input-sm vms-readonly-input" readonly>
                           </td>
                         </tr>
                         <tr>
                           <td>Model</td>
                           <td>
-                              <input type="text" v-model="form.scmPoLines[index].scmPoItems[itemIndex].model" class="form-input-sm">
+                              <input type="text" v-model="form.scmPoLines[index].scmPoItems[itemIndex].model" class="form-input-sm vms-readonly-input" readonly>
                           </td>
                         </tr>
                       </table>
@@ -634,7 +634,7 @@
         </div>
       </div>
     </div>
-    <div v-for="(scmPoLine, index) in form.scmPoLines" :key="index"  class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
+    <div class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
 
 
 <div class="relative my-3">
