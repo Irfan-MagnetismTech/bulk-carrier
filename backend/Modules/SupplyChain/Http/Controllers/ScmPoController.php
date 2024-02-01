@@ -398,6 +398,9 @@ class ScmPoController extends Controller
                     $data['quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
                     $data['tolarence_level'] = 0;
                     return $data;
+                })
+                ->filter(function ($item) {
+                    return ($item['max_quantity'] > 0);
                 });
         } else {
             $prMaterials = ScmCsMaterial::query()
@@ -424,6 +427,9 @@ class ScmPoController extends Controller
                     $data['quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
                     $data['tolarence_level'] = 0;
                     return $data;
+                })
+                ->filter(function ($item) {
+                    return ($item['max_quantity'] > 0);
                 });
         }
 
@@ -497,6 +503,9 @@ class ScmPoController extends Controller
                     $data['quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
                     $data['tolarence_level'] = 0;
                     return $data;
+                })
+                ->filter(function ($item) {
+                    return ($item['max_quantity'] > 0);
                 });
         } else {
             $scmPr = ScmCsMaterial::query()
@@ -523,6 +532,9 @@ class ScmPoController extends Controller
                     $data['quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
                     $data['tolarence_level'] = 0;
                     return $data;
+                })
+                ->filter(function ($item) {
+                    return ($item['max_quantity'] > 0);
                 });
         }
 
