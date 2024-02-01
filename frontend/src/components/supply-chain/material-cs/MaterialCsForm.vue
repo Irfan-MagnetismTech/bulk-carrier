@@ -464,14 +464,14 @@ onMounted(() => {
   }
   
   watch(() => props.form.scmCsMaterials , (newVal, oldVal) => {
-    if(props.page == 'create'){
-      editinitaiated.value == true;
+    if(props.formType == 'create'){
+      editinitaiated.value = true;
     }
     newVal.forEach((item, index) => {
       if(item.scm_material_id){
         const stockableMaterial = scmCsMaterialQuantity.value.find(material => material === item.scm_material_id); 
         if(!stockableMaterial){
-            if(editinitaiated.value == true){
+          if(editinitaiated.value == true){
           props.form.scmCsStockQuantity.push({
             scm_material_id: item.scm_material_id,
             scmMaterial: item.scmMaterial,
@@ -490,7 +490,7 @@ onMounted(() => {
     // loop OldVal
    
     console.log('scmCsStockQuantity',scmCsMaterialQuantity.value);
-    editinitaiated.value == true;
+    editinitaiated.value = true;
   }, { deep: true }); 
 });
 

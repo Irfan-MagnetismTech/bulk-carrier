@@ -59,7 +59,6 @@ class ScmCsController extends Controller
     public function store(ScmCsRequest $request)
     {
         $requestData = $request->except('ref_no');
-        $requestData['ref_no'] = UniqueId::generate(ScmCs::class, 'CS');
         try {
             DB::beginTransaction();
             $scmMi = ScmCs::create($requestData);
