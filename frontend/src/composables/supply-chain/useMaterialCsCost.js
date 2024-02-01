@@ -132,7 +132,7 @@ export default function useMaterialCsCost() {
         formData.append('data', JSON.stringify(form));
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/create-cs-landed-cost`, formData);
+            const { data, status } = await Api.post(`/${BASE}/store-cs-landed-cost`, formData);
             notification.showSuccess(status);
             router.push({ name: `${BASE}.quotations.index` , params: { csId: csId }});
         } catch (error) {
