@@ -6,6 +6,7 @@ import useNotification from '../useNotification.js';
 import Store from '../../store/index.js';
 import { merge } from 'lodash';
 import { loaderSetting as LoaderConfig} from '../../config/setting.js';
+import Swal from 'sweetalert2';
 
 export default function useWorkOrder() {
     const BASE = 'scm' 
@@ -173,6 +174,7 @@ export default function useWorkOrder() {
     }
     async function storeWorkOrder(form) {
 
+        if(!checkUniqueArray(form)) return;
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -213,6 +215,8 @@ export default function useWorkOrder() {
     }
 
     async function updateWorkOrder(form, workOrderId) {
+
+        if(!checkUniqueArray(form)) return;
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -413,6 +417,65 @@ export default function useWorkOrder() {
             notification.showError(status);
         } finally {
             isLoading.value = false;
+        }
+    }
+
+    function checkUniqueArray(form) {
+        let isHasError = false;
+
+        // console.log(form.scmWoLines);
+        
+
+        const messages = ref([]);
+        const hasDuplicates = form.scmWoLines.forEach((scmWoLine, index) => {
+            if(form.scmWoLines?.filter(woVal => woVal?.scmWr?.id === scmWoLine?.scmWr?.id).length > 1){
+                let data = `Duplicate WR [WR No: ${scmWoLine?.scmWr?.ref_no}] `;
+                messages.value.push(data);
+                scmWoLine.isWrDuplicate = true;
+            }
+            else{
+                scmWoLine.isWrDuplicate = false;
+            }
+            scmWoLine?.scmWoItems?.forEach((scmWoItem, scmWoItemIndex) => {
+                if(scmWoLine.scmWoItems?.filter(val => val.scmService?.id === scmWoItem?.scmService?.id).length > 1){
+                    let data = `Duplicate Service [WR No: ${scmWoLine?.scmWr?.ref_no}] [Service - Code : ${scmWoItem?.scmService?.service_name_and_code}]`;
+                    messages.value.push(data);
+                    scmWoItem.isServiceDuplicate = true;
+                }
+                else {
+                        scmWoItem.isServiceDuplicate = false;
+                    }
+            });
+            
+            // if (form.scmWcsServices.filter(val => ((val?.scm_service_id ?? '' + "-" + val?.scm_wr_id ?? '') === (scmWcsService?.scm_service_id ?? '' + "-" + scmWcsService?.scm_wr_id ?? '')))?.length > 1) {
+            //     let data = `Duplicate Service [Line no: ${index + 1}]`;
+            //     messages.value.push(data);
+            //     scmWcsService.isServiceDuplicate = true;
+            // } else {
+            //     scmWcsService.isServiceDuplicate = false;
+            // }
+
+        });
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
         }
     }
         
