@@ -131,7 +131,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <th class="w-40">Port</th>
+                    <th class="w-40">Port Code</th>
                     <td>{{ chartererContract.opsChartererContractsLocalAgents[0].opsPort?.code_name }}</td>
                 </tr>
                 <tr>

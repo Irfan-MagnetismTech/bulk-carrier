@@ -94,7 +94,7 @@ function fetchVesselWiseVoyages(ops_vessel_id, loading) {
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700">Type</span>
           <select v-model="form.type" class="form-input">
-            <option disabled selected value="">Select Option</option>
+            <option disabled selected value="">--Choose an option--</option>
             <option value="Stock In">Stock In</option>
             <option value="Stock Out">Stock Out</option>
             <option value="Reconciliation">Reconciliation</option>
@@ -103,7 +103,7 @@ function fetchVesselWiseVoyages(ops_vessel_id, loading) {
         <label v-if="form.type != ''" class="block w-full mt-2 text-sm">
           <span class="text-gray-700">{{ form.type }} Type </span>
           <select v-model="form.usage_type" class="form-input">
-            <option disabled selected value="">Select Option</option>
+            <option disabled selected value="">--Choose an option--</option>
             <option value="Idle">Idle</option>
             <option value="Voyage Wise">Voyage Wise</option>
           </select>

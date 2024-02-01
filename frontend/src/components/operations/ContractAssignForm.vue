@@ -4,7 +4,7 @@
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700">Assignment Type </span>
           <select v-model="form.contract_assign_type" class="form-input" :disabled="formType=='edit'">
-            <option value="" selected disabled>Select Type</option>
+            <option value="" selected disabled>--Choose an option--</option>
             <option value="Customer">Customer</option>
             <option value="Charterer">Charterer</option>
           </select>
@@ -150,7 +150,7 @@
               <td>
                 <div v-if="opsContractTariff?.ops_cargo_tariff_id">
                   <select class="form-input" v-model="opsContractTariff.tariff_month" autocomplete="off" required @change = "opsTariffMonthChange(opsContractTariff)" >
-                    <option  value="" disabled selected>Select</option>
+                    <option  value="" disabled selected>--Choose an option--</option>
                     <option v-if="opsContractTariff.ops_cargo_tariff_id" value="jan"> Jan - {{opsContractTariff?.opsCargoTariff?.["jan"]}} </option>
                     <option v-if="opsContractTariff.ops_cargo_tariff_id" value="feb"> Feb - {{opsContractTariff?.opsCargoTariff?.["feb"]}} </option>
                     <option v-if="opsContractTariff.ops_cargo_tariff_id" value="mar"> Mar - {{opsContractTariff?.opsCargoTariff?.["mar"]}} </option>

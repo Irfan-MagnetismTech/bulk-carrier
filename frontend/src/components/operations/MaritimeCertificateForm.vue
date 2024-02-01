@@ -12,7 +12,7 @@
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Certificate Type <span class="text-red-500">*</span></span>
             <select v-model.trim="form.type" class="form-input" required>
-                <option value="" disabled selected>Select</option>
+                <option value="" disabled selected>--Choose an option--</option>
                 <option value="Renewable">Renewable</option>
                 <option value="Permanent">Permanent</option>
               </select>
@@ -20,7 +20,7 @@
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Validity Period <span class="text-red-500">*</span></span>
             <select v-model.trim="form.validity" class="form-input" required>
-                <option  v-if="form.type!='Permanent'" value="" disabled>Select</option>
+                <option  v-if="form.type!='Permanent'" value="" disabled>--Choose an option--</option>
                 <option  v-if="form.type!='Permanent'" value="3">3 Months</option>
                 <option  v-if="form.type!='Permanent'" value="6">6 Months</option>
                 <option  v-if="form.type!='Permanent'" value="12">1 Year</option>

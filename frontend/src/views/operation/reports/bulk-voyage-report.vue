@@ -52,7 +52,7 @@ onMounted(() => {
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 ">Report Type <span class="text-red-500">*</span></span>
           <select v-model="form.type" class="form-input" required :class="{ 'bg-gray-100 text-gray-900': formType === 'edit' }" :disabled="formType=='edit'" >
-            <option value="" disabled selected>Select Option</option>
+            <option value="" disabled selected>--Choose an option--</option>
             <option value="Noon Report">Noon Report</option>
             <option value="Arrival Report">Arrival Report</option>
             <option value="Departure Report">Departure Report</option>

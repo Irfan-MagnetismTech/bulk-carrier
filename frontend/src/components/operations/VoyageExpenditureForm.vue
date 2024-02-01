@@ -229,7 +229,7 @@ function attachFile(e) {
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <business-unit-input class="w-1/3" v-model="form.business_unit" :page="formType"></business-unit-input>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Port <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Port Code <span class="text-red-500">*</span></span>
         <v-select :options="ports" placeholder="--Choose an option--" v-model="form.port" label="code_name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
@@ -283,7 +283,7 @@ function attachFile(e) {
     <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700">Currency <span class="text-red-500">*</span></span>
         <select v-model.trim="form.currency" class="form-input" required>
-          <option selected value="" disabled>Select Currency</option>
+          <option selected value="" disabled>--Choose an option--</option>
           <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
         </select>
     </label>

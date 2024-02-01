@@ -205,7 +205,7 @@ onMounted(() => {
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700">Type <span class="text-red-500">*</span></span>
         <select v-model="form.type" class="form-input" required>
-          <option disabled selected value="">Select Option</option>
+          <option disabled selected value="">--Choose an option--</option>
           <option value="Stock In">Stock In</option>
           <option value="Stock Out">Stock Out</option>
           <option value="Reconciliation">Reconciliation</option>
@@ -214,7 +214,7 @@ onMounted(() => {
       <label v-if="form.type != ''" class="block w-full mt-2 text-sm">
         <span class="text-gray-700">{{ form.type }} Type <span class="text-red-500">*</span></span>
         <select v-model="form.usage_type" class="form-input" required>
-          <option disabled selected value="">Select Option</option>
+          <option disabled selected value="">--Choose an option--</option>
           <option value="Idle">Idle</option>
           <option value="Voyage Wise">Voyage Wise</option>
         </select>
@@ -223,7 +223,7 @@ onMounted(() => {
       <label class="block w-full mt-2 text-sm" v-if="form.type=='Reconciliation'">
         <span class="text-gray-700">Reconfiliation Option <span class="text-red-500">*</span></span>
         <select v-model="form.reconciliation_type" class="form-input" required>
-          <option disabled selected value="">Select Option</option>
+          <option disabled selected value="">--Choose an option--</option>
           <option value="Addition">Addition</option>
           <option value="Deletion">Deletion</option>
         </select>
@@ -302,7 +302,7 @@ onMounted(() => {
     <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700">Currency <span class="text-red-500">*</span></span>
         <select v-model.trim="form.currency" class="form-input" required>
-          <option selected value="" disabled>Select Currency</option>
+          <option selected value="" disabled>--Choose an option--</option>
           <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
         </select>
     </label>

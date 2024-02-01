@@ -49,7 +49,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Port",
+      "label": "Port Code",
       "filter_type": "input"
     },
     {

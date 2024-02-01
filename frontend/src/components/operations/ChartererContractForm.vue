@@ -17,7 +17,7 @@
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Contract Type <span class="text-red-500">*</span></span>
               <select :disabled="formType=='edit'" required v-model="form.contract_type" class="form-input">
-                <option value="" selected disabled>Select</option>
+                <option value="" selected disabled>--Choose an option--</option>
                 <option>Voyage Wise</option>
                 <option>Day Wise</option>
               </select>
@@ -133,7 +133,7 @@
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Currency <span class="text-red-500">*</span></span>
                 <select v-model="form.currency" class="form-input" required>
-                  <option value="" selected disabled>Select Currency</option>
+                  <option value="" selected disabled>--Choose an option--</option>
                   <option v-for="currency in currencies">{{ currency }}</option>
                 </select>
         </label>
@@ -145,7 +145,7 @@
       <h4 class="text-md font-semibold mt-4">Local Agent Info</h4>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Port <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Port Code <span class="text-red-500">*</span></span>
               <v-select :options="ports" placeholder="--Choose an option--" v-model="form.opsChartererContractsLocalAgents[0].opsPort" label="code_name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -219,7 +219,7 @@
 
               <span class="text-gray-700 dark-disabled:text-gray-300"> Status <span class="text-red-500">*</span></span>
                 <select v-model="form.status" class="form-input" required>
-                  <option value="" selected disabled>Select Status</option>
+                  <option value="" selected disabled>--Choose an option--</option>
 				          <option>Active</option>
 				          <option>Inactive</option>
 				        </select>

@@ -168,7 +168,7 @@
               {{ index+1 }}
             </td>
             <td class="flex items-center">
-              <v-select :options="maritimeCertificates" placeholder="--Choose an option--" v-model="form.opsVesselCertificates[index]" label="name" class="w-full block form-input">
+              <v-select :options="maritimeCertificates" placeholder="--Choose an option--" v-model="form.opsVesselCertificates[index]" label="name" class="w-full block form-input" @update:modelValue="setVesselCertificate(index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -185,7 +185,7 @@
               <span class="show-block" v-if="form.opsVesselCertificates[index]?.type">{{ form.opsVesselCertificates[index]?.type }}</span>
             </td>
             <td>
-              <span class="show-block" v-if="form.opsVesselCertificates[index]?.validity">{{ form.opsVesselCertificates[index]?.validity }}</span>
+              <span class="show-block" v-if="form.opsVesselCertificates[index]?.validity && form.opsVesselCertificates[index]?.validity != 0">{{ form.opsVesselCertificates[index]?.validity }}</span>
             </td>
             <td>
               <button type="button" @click="removeVesselCertificate(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -285,6 +285,14 @@ const { materials, getBunkerList } = useMaterial();
 const isCertificateDuplicate = ref(false);
 const isBunkerDuplicate = ref(false);
 
+const setVesselCertificate = (index) => {
+  if(props.form.opsVesselCertificates[index]) {
+    props.form.opsVesselCertificates[index].ops_vessel_certificate_id = props.form.opsVesselCertificates[index].id
+    props.form.opsVesselCertificates[index].type = props.form.opsVesselCertificates[index].type
+    props.form.opsVesselCertificates[index].validity = props.form.opsVesselCertificates[index].validity
+  }
+}
+
 function addVesselCertificate() {
   // console.log(props.maritimeCertificateObject, "dfdf")
   props.form.opsVesselCertificates.push({... props.maritimeCertificateObject });
@@ -329,7 +337,7 @@ watch(() => props.form.business_unit, (value) => {
 
 watch(() => props.form.opsVesselCertificates, (value) => {
   props.form.opsVesselCertificates.some((certificate, index) => {
-            if (props.form.opsVesselCertificates.filter(val => val.name === certificate.name)?.length > 1) {
+            if (props.form.opsVesselCertificates.filter(val => val.id === certificate.ops_vessel_certificate_id)?.length > 1) {
               isCertificateDuplicate.value = true;
             } else {
               isCertificateDuplicate.value = false;

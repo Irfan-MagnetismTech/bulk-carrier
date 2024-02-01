@@ -18,7 +18,7 @@
                         <td><span :class="voyageExpenditure?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ voyageExpenditure?.business_unit }}</span></td>
                     </tr>
                     <tr>
-                        <th class="w-40">Port</th>
+                        <th class="w-40">Port Code</th>
                         <td>{{ voyageExpenditure?.port?.name }}</td>
                     </tr>
                     <tr>

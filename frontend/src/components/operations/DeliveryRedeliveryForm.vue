@@ -12,7 +12,7 @@
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Note Type <span class="text-red-500">*</span></span>
               <select v-model="form.note_type" required class="form-input" :disabled="formType == 'edit'">
-                <option value="">Select Type</option>
+                <option value="" selected disabled>--Choose an option--</option>
                 <option>Delivery</option>
                 <option>Re-delivery</option>
               </select>
@@ -28,7 +28,7 @@
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Currency <span class="text-red-500">*</span></span>
                 <select v-model="form.currency" class="form-input" required>
-                  <option value="" selected disabled>Select Currency</option>
+                  <option value="" selected disabled>--Choose an option--</option>
                   <option v-for="currency in currencies" :key="currency">{{ currency }}</option>
                 </select>
           </label>

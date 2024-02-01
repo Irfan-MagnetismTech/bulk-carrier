@@ -86,7 +86,7 @@
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Currency</span>
               <select v-model="form.opsChartererBankAccounts[0].currency" class="form-input">
-                <option value="">Select Currency</option>
+                <option value="" disabled selected>--Choose an option--</option>
                 <option v-for="currency in currencies">{{ currency }}</option>
               </select>
       </label>

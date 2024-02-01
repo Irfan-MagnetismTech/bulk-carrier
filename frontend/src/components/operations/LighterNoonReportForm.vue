@@ -76,10 +76,10 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
 
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark-disabled:text-gray-300 flex">Last Port <span class="pl-1 text-red-500">*</span>
+          <span class="text-gray-700 dark-disabled:text-gray-300 flex">Last Port Code <span class="pl-1 text-red-500">*</span>
            <span v-show="isPortDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
           </span>
-          <v-select :options="ports" placeholder="Search Port" v-model="form.lastPort" label="code_name" class="block form-input">
+          <v-select :options="ports" placeholder="--Choose an option--" v-model="form.lastPort" label="code_name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -93,10 +93,10 @@
         </label>
 
         <label class="block w-full mt-2 text-sm">
-          <span class="text-gray-700 dark-disabled:text-gray-300 flex">Next Port <span class="pl-1 text-red-500">*</span>
+          <span class="text-gray-700 dark-disabled:text-gray-300 flex">Next Port Code <span class="pl-1 text-red-500">*</span>
            <span v-show="isPortDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
           </span>
-          <v-select :options="ports" placeholder="Search Port" v-model="form.nextPort" label="code_name" class="block form-input">
+          <v-select :options="ports" placeholder="--Choose an option--" v-model="form.nextPort" label="code_name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"

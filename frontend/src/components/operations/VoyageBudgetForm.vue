@@ -240,7 +240,7 @@ onMounted(() => {
     <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700">Currency <span class="text-red-500">*</span></span>
         <select v-model.trim="form.currency" class="form-input" required>
-          <option selected value="" disabled>Select Currency</option>
+          <option selected value="" disabled>--Choose an option--</option>
           <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
         </select>
     </label>

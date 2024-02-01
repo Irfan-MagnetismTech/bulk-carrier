@@ -254,7 +254,7 @@
                   <!-- <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].cost_unit" placeholder="Quantity" class="form-input text-right" autocomplete="off" /> -->
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
                   <select v-model.trim="form.opsChartererInvoiceOthers[index].currency" class="form-input" aria-placeholder="Select Currency" placeholder="Select Currency" @change="SetCurrencyData($event,index)">
-                    <option selected value="" disabled>Select Currency</option>
+                    <option selected value="" disabled>--Choose an option--</option>
                      <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
                   </select>
                 </label>
@@ -357,7 +357,7 @@
                   <!-- <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].currency" placeholder="Quantity" class="form-input text-right" autocomplete="off" /> -->
                   <!-- <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" /> -->
                   <select v-model.trim="form.opsChartererInvoiceServices[index].currency" class="form-input" aria-placeholder="Select Currency" placeholder="Select Currency" @change="SetCurrencyData($event,index)">
-                    <option selected value="" disabled>Select Currency</option>
+                    <option selected value="" disabled>--Choose an option--</option>
                      <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
                   </select>
                 </label>
