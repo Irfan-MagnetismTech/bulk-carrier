@@ -76,10 +76,9 @@ class ScmMrrController extends Controller
         foreach ($request->scmMrrLines as $key => $values) {
             $scmMrrLine = $scmMrr->scmMrrLines()->create([
                 'scm_pr_id' => $values['scm_pr_id'],
-                'scm_po_id' => $values['scm_po_id'],
             ]);
 
-            foreach ($values['scmPoItems'] as $index => $value) {
+            foreach ($values['scmMrrLineItems'] as $index => $value) {
                 $scmMrrLine->scmMrrLineItems()->create([
                     'scm_material_id' => $value['scm_material_id'],
                     'unit' => $value['unit'],
@@ -403,7 +402,7 @@ class ScmMrrController extends Controller
                     $mrrQuantity = 0;
                 }
                 $totalMrrQuantity = $item->scmMrrLineItems->sum('quantity');
-                $tolerance_quantity = $item->quantity * ($item?->tolarence_level ?? 0) / 100;
+                $tolerance_quantity = floor($item->quantity * ($item?->tolarence_level ?? 0) / 100);
 
                 $remainingQuantity = $item->quantity - $totalMrrQuantity + $mrrQuantity + $tolerance_quantity;
                 return [
@@ -447,7 +446,7 @@ class ScmMrrController extends Controller
                 $mrrQuantity = 0;
             }
             $totalMrrQuantity = $item->scmMrrLineItems->sum('quantity');
-            $tolerance_quantity = $item->quantity * ($item?->tolarence_level ?? 0) / 100;
+            $tolerance_quantity = floor($item->quantity * ($item?->tolarence_level ?? 0) / 100);
 
             $remainingQuantity = $item->quantity - $totalMrrQuantity + $mrrQuantity + $tolerance_quantity;
             $data = $item->scmMaterial;

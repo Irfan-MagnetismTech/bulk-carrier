@@ -39,14 +39,7 @@ class ScmMrrRequest extends FormRequest
             'qc_remarks' => 'max:255|required',
             // 'business_unit' => 'required|max:255',
             // 'created_by' => 'required|integer|exists:users,id',
-            'is_completed' => 'required|integer',
             'purchase_center' => 'required|max:255',
-            'scmMrrLines.*.scm_material_id' => 'required|exists:scm_materials,id|integer',
-            'scmMrrLines.*.unit' => 'required|max:255|exists:scm_units,name|string',
-            'scmMrrLines.*.brand' => 'max:255',
-            'scmMrrLines.*.model' => 'max:255',
-            'scmMrrLines.*.quantity' => 'required|numeric',
-            'scmMrrLines.*.rate' => 'required|numeric'
         ];
     }
 
