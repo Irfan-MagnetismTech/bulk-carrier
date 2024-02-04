@@ -5,6 +5,7 @@ import useBankAccount from '../../../composables/accounts/useBankAccount.js';
 import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
+import { formatDate } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 
@@ -62,7 +63,7 @@ onMounted(() => {
               </tr>
               <tr>
                 <th class="w-32">Opening Date</th>
-                <td>{{ bankAccount?.opening_date }}</td>
+                <td>{{ formatDate(bankAccount?.opening_date) }}</td>
               </tr>
               <tr>
                 <th class="w-32">Opening Balance</th>

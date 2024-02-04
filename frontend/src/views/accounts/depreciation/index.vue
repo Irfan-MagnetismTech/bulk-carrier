@@ -40,7 +40,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Year",
+      "label": "Month - Year",
       "filter_type": "input"
     },
     {

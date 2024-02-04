@@ -6,6 +6,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
+import { formatDate } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 
@@ -79,7 +80,7 @@ onMounted(() => {
           </tr>
           <tr>
             <th class="w-40">Acquisition Date</th>
-            <td>{{ fixedAsset?.acquisition_date ?? '---' }}</td>
+            <td>{{ formatDate(fixedAsset?.acquisition_date) ?? '---' }}</td>
           </tr>
           <tr>
             <th class="w-40">Location</th>

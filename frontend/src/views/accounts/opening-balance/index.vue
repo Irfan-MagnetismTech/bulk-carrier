@@ -12,6 +12,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import { formatDate } from "../../../utils/helper.js";
 const router = useRouter();
 
 const props = defineProps({
@@ -257,7 +258,7 @@ onMounted(() => {
             <td>{{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td>{{ balanceData?.costCenter?.name }}</td>
             <td>{{ balanceData?.account?.account_name }}</td>
-            <td>{{ balanceData?.date }}</td>
+            <td>{{ formatDate(balanceData?.date) }}</td>
             <td>{{ balanceData?.cr_amount }}</td>
             <td>{{ balanceData?.dr_amount }}</td>
             <td>

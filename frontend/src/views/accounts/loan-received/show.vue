@@ -6,6 +6,8 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
+import { formatDate } from "../../../utils/helper.js";
+
 
 const icons = useHeroIcon();
 
@@ -55,7 +57,7 @@ onMounted(() => {
           </tr>
           <tr>
             <th class="w-40">Received Date</th>
-            <td>{{ loanReceived?.received_date ?? '---' }}</td>
+            <td>{{ formatDate(loanReceived?.received_date) ?? '---' }}</td>
           </tr>
           <tr>
             <th class="w-40">Payment Type</th>
@@ -71,7 +73,7 @@ onMounted(() => {
           </tr>
           <tr>
             <th class="w-40">Instrument Date</th>
-            <td>{{ loanReceived?.instrument_date ?? '---' }}</td>
+            <td>{{ formatDate(loanReceived?.instrument_date) ?? '---' }}</td>
           </tr>
           <tr>
             <th class="w-40">Received Amount</th>

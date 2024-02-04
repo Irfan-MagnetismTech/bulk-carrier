@@ -11,6 +11,8 @@ import useHeroIcon from "../../../assets/heroIcon";
 import Store from "../../../store";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import { formatDate } from "../../../utils/helper.js";
+
 const icons = useHeroIcon();
 
 const props = defineProps({
@@ -373,10 +375,10 @@ onMounted(() => {
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }} </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.costCenter?.name }} </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.voucher_type }} </td>
-                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> <nobr>{{ transactionData?.transaction_date }}</nobr> </td>
+                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> <nobr>{{ formatDate(transactionData?.transaction_date) }}</nobr> </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.instrument_type }} </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.instrument_no }} </td>
-                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> <nobr>{{ transactionData?.instrument_date }}</nobr> </td>
+                <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> <nobr>{{ formatDate(transactionData?.instrument_date) }}</nobr> </td>
                 <td v-if="ledgerIndex == 0" :rowspan="Object.keys(transactionData?.ledgerEntries).length"> {{ transactionData?.bill_no }} </td>
 
                 <td class="text-left"> <no-br>{{ ledger?.account.account_name }} </no-br></td>
