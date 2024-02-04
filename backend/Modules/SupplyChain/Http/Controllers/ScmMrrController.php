@@ -188,7 +188,7 @@ class ScmMrrController extends Controller
     {
         if ($request->has('searchParam')) {
             $materialReceiptReport = ScmMrr::query()
-                ->with('scmMrrLines.scmMaterial.account')
+                ->with('scmMrrLineItems.scmMaterial')
                 ->where(function ($query) use ($request) {
                     $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
                         ->where('business_unit', $request->business_unit)
@@ -199,7 +199,7 @@ class ScmMrrController extends Controller
                 ->get();
         } else {
             $materialReceiptReport = ScmMrr::query()
-                ->with('scmMrrLines.scmMaterial')
+                ->with('scmMrrLineItems.scmMaterial')
                 ->where(function ($query) use ($request) {
                     $query->where('business_unit', $request->business_unit)
                         ->where('acc_cost_center_id', $request->cost_center_id);
@@ -210,7 +210,7 @@ class ScmMrrController extends Controller
         }
 
         $materialReceiptReport = $materialReceiptReport->map(function ($item) {
-            $item->scmMaterials = $item->scmMrrLines->map(function ($item1) {
+            $item->scmMaterials = $item->scmMrrLineItems->map(function ($item1) {
                 $data = $item1->scmMaterial;
                 $data['purchase_price'] = $item1->rate;
                 return $data;
