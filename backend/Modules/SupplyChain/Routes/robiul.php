@@ -16,6 +16,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
         'lc-record-statuses' => ScmLcRecordStatusController::class,
     ]);
 
+    Route::post('delete-lc-status', [ScmLcRecordStatusController::class, "lcStatusDelete"])->name('lcStatusDelete');
     Route::get('search-wr-wise-service-for-wcs', [ScmWrController::class, "getServiceByWrIdForWcs"])->name('getServiceByWrIdForWcs');
     Route::get('search-wr', [ScmWrController::class, "searchWr"])->name('searchWr');
     Route::get('search-work-requisitions', [ScmWrController::class, "searchWorkRequisitions"])->name('search-work-requisitions');
