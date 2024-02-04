@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('ref_no')->nullable();
             $table->date('date')->nullable();
-            $table->string('wo_no')->nullable();
+            $table->string('scm_wo_id')->nullable();
             $table->date('receive_date')->nullable();
             $table->foreignId('scm_warehouse_id')->constrained('scm_warehouses');
             $table->bigInteger('purchase_center')->nullable();

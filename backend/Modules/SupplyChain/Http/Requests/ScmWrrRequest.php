@@ -6,6 +6,13 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ScmWrrRequest extends FormRequest
 {
+
+    protected function prepareForValidation()
+    {
+        $data =  request('data');
+        $dataArray = json_decode($data, true);
+        $this->replace($dataArray);
+    }
     /**
      * Get the validation rules that apply to the request.
      *

@@ -10,9 +10,9 @@ class ScmWrr extends Model
     use HasFactory;
 
     protected $fillable = [
+        'scm_wo_id',
         'ref_no',
         'date',
-        'wo_no',
         'receive_date',
         'scm_warehouse_id',
         'purchase_center',
