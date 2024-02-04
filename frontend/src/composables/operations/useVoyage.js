@@ -375,7 +375,7 @@ export default function useVoyage() {
 
 	async function getVoyageList(businessUnit, opsVesselId) {
 		//NProgress.start();
-
+		isVoyageLoading.value = true
 		try {
 			const { data, status } = await Api.get(`/ops/get-search-voyages?business_unit=${businessUnit}&ops_vessel_id=${opsVesselId}`);
 
@@ -389,6 +389,8 @@ export default function useVoyage() {
 		} finally {
 			// loading(false)
 			//NProgress.done();
+			isVoyageLoading.value = false
+
 		}
 	}
 

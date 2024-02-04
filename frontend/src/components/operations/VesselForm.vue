@@ -338,6 +338,8 @@ function removeBunker(index){
 // }
 
 watch(() => props.form.business_unit, (value) => {
+  ports.value = []
+  props.form.portOfRegistry = null
   searchPorts("", props.form.business_unit);
 }, { deep : true })
 

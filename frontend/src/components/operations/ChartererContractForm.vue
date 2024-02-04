@@ -26,7 +26,7 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
-              <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
+              <v-select :options="vessels" :loading="isVesselLoading" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -49,7 +49,7 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Name <span class="text-red-500">*</span></span>
-              <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name" class="block form-input">
+              <v-select :options="chartererProfiles" :loading="isChartererLoading" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -132,10 +132,16 @@
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Currency <span class="text-red-500">*</span></span>
-                <select v-model="form.currency" class="form-input" required>
-                  <option value="" selected disabled>--Choose an option--</option>
-                  <option v-for="currency in currencies">{{ currency }}</option>
-                </select>
+                <v-select :options="currencies" :loading="isCurrencyLoading" placeholder="--Choose an option--" v-model="form.currency" class="block form-input">
+                <template #search="{attributes, events}">
+                    <input
+                        class="vs__search"
+                        :required="!form.currency"
+                        v-bind="attributes"
+                        v-on="events"
+                        />
+                </template>
+            </v-select>
         </label>
         <label class="block w-full mt-2 text-sm"></label>
       </div>
@@ -146,7 +152,7 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Port Code <span class="text-red-500">*</span></span>
-              <v-select :options="ports" placeholder="--Choose an option--" v-model="form.opsChartererContractsLocalAgents[0].opsPort" label="code_name" class="block form-input">
+              <v-select :options="ports" :loading="isPortLoading" placeholder="--Choose an option--" v-model="form.opsChartererContractsLocalAgents[0].opsPort" label="code_name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -286,10 +292,10 @@ import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import useCargoTariff from "../../composables/operations/useCargoTariff";
 
 const editInitiated = ref(false);
-const { getCurrencies, currencies } = useBusinessInfo();
-const { vessel, vessels, getVesselList, showVessel } = useVessel();
-const { ports, searchPorts } = usePort();
-const { getAllChartererProfiles, chartererProfiles } = useChartererProfile();
+const { getCurrencies, currencies, isCurrencyLoading } = useBusinessInfo();
+const { vessel, vessels, getVesselList, showVessel, isVesselLoading } = useVessel();
+const { ports, searchPorts, isPortLoading } = usePort();
+const { getAllChartererProfiles, chartererProfiles, isChartererLoading } = useChartererProfile();
 const { cargoTariffs, getAllCargoTariffs } = useCargoTariff();
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
@@ -318,6 +324,8 @@ watch(() => props.form.business_unit, (value) => {
     props.form.ops_charterer_profile_id = null;
     // props.form.opsChartererContractsFinancialTerms.opsCargoTariff = null;
     // props.form.opsChartererContractsFinancialTerms.ops_cargo_tariff_id = null;
+    props.form.opsChartererContractsLocalAgents[0].opsPort = null
+    ports.value = []
   }
 
   getVesselList(props.form.business_unit);

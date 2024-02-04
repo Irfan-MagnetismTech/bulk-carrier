@@ -24,7 +24,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Vessel Name <span class="text-red-500">*</span></span>
-              <v-select :options="vessels" :readonly="formType=='edit'" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" @update:modelValue="opsVesselChange">
+              <v-select :options="vessels" :loading="isVesselLoading" :readonly="formType=='edit'" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" @update:modelValue="opsVesselChange">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -38,7 +38,7 @@
       </label>
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Voyage No <span class="text-red-500">*</span></span>
-              <v-select :options="voyages" :readonly="formType=='edit'" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input" @update:modelValue="opsVoyageChange">
+              <v-select :options="voyages" :loading="isVoyageLoading" :readonly="formType=='edit'" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input" @update:modelValue="opsVoyageChange">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -68,7 +68,7 @@
       </label> -->
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Customer Name<span class="text-red-500">*</span></span>
-              <v-select :options="customers" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsCustomer" label="name_code" class="block form-input">
+              <v-select :options="customers" :loading="isCustomerLoading" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsCustomer" label="name_code" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -84,7 +84,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.contract_assign_type=='Charterer'">
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Charterer Name <span class="text-red-500">*</span></span>
-              <v-select :options="chartererProfiles" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name" class="block form-input">
+              <v-select :options="chartererProfiles" :loading="isChartererLoading" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -97,7 +97,7 @@
       </label>
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Contract Name <span class="text-red-500">*</span></span>
-              <v-select :options="chartererContracts" placeholder="--Choose an option--" v-model="form.opsChartererContract" label="contract_name" class="block form-input">
+              <v-select :options="chartererContracts" :loading="isContractLoading" placeholder="--Choose an option--" v-model="form.opsChartererContract" label="contract_name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -198,11 +198,11 @@ const editInitiated = ref(false);
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const { currencies, getCurrencies } = useBusinessInfo();
-const { getChartererByBusinessUnit, chartererProfiles } = useChartererProfile();
-const { getChartererContractsByCharterOwner, chartererContracts } = useChartererContract();
-const { voyage, voyages, showVoyage, getVoyageList,searchVoyages } = useVoyage();
-const { vessel, vessels, getVesselList, showVessel } = useVessel();
-const { getCustomersByBusinessUnit, customers } = useCustomer();
+const { getChartererByBusinessUnit, chartererProfiles, isChartererLoading } = useChartererProfile();
+const { getChartererContractsByCharterOwner, chartererContracts, isContractLoading } = useChartererContract();
+const { voyage, voyages, showVoyage, getVoyageList,searchVoyages, isVoyageLoading } = useVoyage();
+const { vessel, vessels, getVesselList, showVessel, isVesselLoading } = useVessel();
+const { getCustomersByBusinessUnit, customers, isCustomerLoading } = useCustomer();
 const { getCargoTariffsByVessel, cargoTariffs, getCargoTariffsByVoyage } = useCargoTariff();
 
 const props = defineProps({
@@ -220,6 +220,7 @@ watch(() => props.form.business_unit, (value) => {
 if(props?.formType != 'edit') {
   cleanThings()
   vessels.value = [];
+  voyages.value = [];
 
   if(props.form.contract_assign_type == 'Charterer') {
       getChartererByBusinessUnit(props.form.business_unit);
@@ -246,7 +247,7 @@ watch(() => props.form.contract_assign_type, (value) => {
 
   if(props?.formType != 'edit') {
     cleanThings()
-
+    voyages.value = [];
     if(props.form.contract_assign_type == 'Charterer') {
       getChartererByBusinessUnit(props.form.business_unit);
     } else if(props.form.contract_assign_type == 'Customer') {
