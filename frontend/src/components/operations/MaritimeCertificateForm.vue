@@ -50,15 +50,19 @@ const props = defineProps({
 
 });
 
+const isEditInitiated = ref(0)
+
 watch(() => props.form.type, (value) => {
-  if(value) {
+  if(props.formType == 'create' && value || props.formType == 'edit' && isEditInitiated.value == 1) {
     if(value == 'Permanent') {
       props.form.validity = '0'
     } else {
       props.form.validity = ''
     }
+  } else {
+    isEditInitiated.value = 1
   }
-})
+}, { deep: true })
 </script>
 <style lang="postcss" scoped>
 .input-group {

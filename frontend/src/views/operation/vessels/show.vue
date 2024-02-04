@@ -115,14 +115,14 @@
               <th class="w-10">SL</th>
               <th class="w-52">Certificate Name</th>
               <th class="w-52">Certificate Type</th>
-              <th class="w-52">Validity Period</th>
+              <!-- <th class="w-52">Validity Period</th> -->
             </tr>
             <tbody>
               <tr v-for="(bunker, index) in vessel.opsVesselCertificates">
                 <td>{{ index+1 }}</td>
                 <td>{{ vessel.opsVesselCertificates[index]?.opsMaritimeCertification?.name }}</td>
                 <td>{{ vessel.opsVesselCertificates[index]?.type }}</td>
-                <td>{{ vessel.opsVesselCertificates[index]?.validity }}</td>
+                <!-- <td>{{ vessel.opsVesselCertificates[index]?.validity }}</td> -->
               </tr>
              
             </tbody>

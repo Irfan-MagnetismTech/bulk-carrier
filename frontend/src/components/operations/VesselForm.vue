@@ -150,9 +150,9 @@
         <thead v-once>
           <tr class="w-full">
             <th class="!w-12">SL</th>
-            <th class="!w-80">Certificate Name</th>
-            <th>Certificate Type</th>
-            <th>Validity Period</th>
+            <th class="">Certificate Name</th>
+            <th class="!w-80">Certificate Type</th>
+            <!-- <th>Validity Period</th> -->
             <th class="w-16">
               <button type="button" @click="addVesselCertificate()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
@@ -168,11 +168,11 @@
               {{ index+1 }}
             </td>
             <td class="flex items-center">
-              <v-select :options="maritimeCertificates" placeholder="--Choose an option--" v-model="form.opsVesselCertificates[index]" label="name" class="w-full block form-input" @update:modelValue="setVesselCertificate(index)">
+              <v-select :options="maritimeCertificates" placeholder="--Choose an option--" v-model="form.opsVesselCertificates[index].certificate" label="name" class="w-full block form-input" @update:modelValue="setVesselCertificate(index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.opsVesselCertificates[index]"
+                        :required="!form.opsVesselCertificates[index].certificate"
                         v-bind="attributes"
                         v-on="events"
                         />
@@ -184,9 +184,9 @@
             <td>
               <span class="show-block" v-if="form.opsVesselCertificates[index]?.type">{{ form.opsVesselCertificates[index]?.type }}</span>
             </td>
-            <td>
+            <!-- <td>
               <span class="show-block" v-if="form.opsVesselCertificates[index]?.validity && form.opsVesselCertificates[index]?.validity != 0">{{ form.opsVesselCertificates[index]?.validity }}</span>
-            </td>
+            </td> -->
             <td>
               <button type="button" @click="removeVesselCertificate(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -223,11 +223,11 @@
               {{ index+1 }}
             </td>
             <td class="flex items-center">
-              <v-select v-if="!form.opsBunkers[index]?.is_readonly" :options="materials" placeholder="--Choose an option--" v-model="form.opsBunkers[index]" label="name" class="w-full block form-input">
+              <v-select v-if="!form.opsBunkers[index]?.is_readonly" :options="materials" placeholder="--Choose an option--" v-model="form.opsBunkers[index].bunker" label="name" class="w-full block form-input" @update:modelValue="setVesselBunker(index)">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
-                          :required="!form.opsBunkers[index]"
+                          :required="!form.opsBunkers[index].bunker"
                           v-bind="attributes"
                           v-on="events"
                           />
@@ -287,9 +287,15 @@ const isBunkerDuplicate = ref(false);
 
 const setVesselCertificate = (index) => {
   if(props.form.opsVesselCertificates[index]) {
-    props.form.opsVesselCertificates[index].ops_vessel_certificate_id = props.form.opsVesselCertificates[index].id
-    props.form.opsVesselCertificates[index].type = props.form.opsVesselCertificates[index].type
-    props.form.opsVesselCertificates[index].validity = props.form.opsVesselCertificates[index].validity
+    props.form.opsVesselCertificates[index].ops_vessel_certificate_id = props.form.opsVesselCertificates[index].certificate.id
+    props.form.opsVesselCertificates[index].type = props.form.opsVesselCertificates[index].certificate.type
+  }
+}
+
+const setVesselBunker = (index) => {
+  if(props.form.opsBunkers[index]) {
+    props.form.opsBunkers[index].name = props.form.opsBunkers[index].bunker.name
+    props.form.opsBunkers[index].unit = props.form.opsBunkers[index].bunker.unit
   }
 }
 
@@ -336,14 +342,15 @@ watch(() => props.form.business_unit, (value) => {
 }, { deep : true })
 
 watch(() => props.form.opsVesselCertificates, (value) => {
-  props.form.opsVesselCertificates.some((certificate, index) => {
-            if (props.form.opsVesselCertificates.filter(val => val.id === certificate.ops_vessel_certificate_id)?.length > 1) {
-              isCertificateDuplicate.value = true;
-            } else {
-              isCertificateDuplicate.value = false;
+    props.form.opsVesselCertificates.some((certificate, index) => {
+      if (certificate.certificate && props.form.opsVesselCertificates.filter(val => val.certificate && val.certificate.id === certificate.certificate.id)?.length > 1) {
+          isCertificateDuplicate.value = true;
+          return true;
+      } else {
+          isCertificateDuplicate.value = false;
+      }
+    })
 
-            }
-          })
 }, { deep : true })
 
 watch(() => props.form.opsBunkers, (value) => {
