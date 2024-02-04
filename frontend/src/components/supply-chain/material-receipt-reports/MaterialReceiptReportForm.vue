@@ -179,7 +179,7 @@
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolerence_level = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.tolerence_level ?? 0;
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].pr_qty = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.pr_qty ?? 0;
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].po_qty = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.po_qty ?? 0;
-      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolerance_quantity = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.tolerance_quantity ?? 0;
+      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolerence_quantity = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.tolerence_quantity ?? 0;
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].remaining_quantity = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.remaining_quantity ?? 0;
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].rate = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.rate ?? 0;
       
@@ -239,15 +239,29 @@
         console.log(oldValue);
         props.form.scmWarehouse = null;
       }
-    }
-    
-    );
+    });
 
   watchEffect(() => {
     fetchWarehouse('');
   });
 
-  
+  if(props.formType == 'edit'){
+        const editDatas = watch(()=> [props.form.business_unit,props.form.scm_warehouse_id,props.form.purchase_center,props.form.scmMrrLines], (newVal, oldVal) => {
+        getPoWisePrList(props.form.scmPo.id);
+        props.poMaterialList.splice(0,props.poMaterialList.length);
+        props.form.scmMrrLines.forEach((line, index) => {
+          props.poMaterialList.push([]);
+          props.poMaterialList[index] = [];
+          if (line.scmPr) {
+            getPoMaterialList(props.form.scmPo.id, line.id).then((res) => {
+              props.poMaterialList[index] = res;
+            });        
+           }
+        });
+        editDatas();
+      });
+
+      }
 });
 
 
@@ -477,7 +491,7 @@ watch(() => prlist.value, (newVal, oldVal) => {
                       <tr>
                           <td>Qty</td>
                           <td>
-                            <input type="number" required :value="form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolerance_quantity" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
+                            <input type="number" required :value="form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolerence_quantity" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
                           </td>
                         </tr>
                         <tr>

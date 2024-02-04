@@ -267,8 +267,8 @@
         searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, props.form.scm_cs_id,null);
         
         props.materialList.splice(0,props.materialList.length);
-        props.materialList.push([]);
         props.form.scmPoLines.forEach((line, index) => {
+          props.materialList.push([]);
           props.materialList[index] = [];
           if (line.scmPr) {
             // getMaterialList(line.scmPr.id).then((res) => {
@@ -596,7 +596,7 @@
                           </td>
                         </tr>
                         <tr>
-                          <td><nobr>Tolerance ( % )</nobr></td>
+                          <td><nobr>tolerence ( % )</nobr></td>
                           <td>
                             <input type="number" v-model="form.scmPoLines[index].scmPoItems[itemIndex].tolerence_level" min=0 class="!text-xs form-input text-right">  
                           </td>

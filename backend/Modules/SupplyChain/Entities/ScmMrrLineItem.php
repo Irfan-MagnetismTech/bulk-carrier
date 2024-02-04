@@ -16,7 +16,7 @@ class ScmMrrLineItem extends Model
         'unit',
         'brand',
         'model',
-        'tolerance_quantity',
+        'tolerence_quantity',
         'quantity',
         'rate',
         'po_composite_key',

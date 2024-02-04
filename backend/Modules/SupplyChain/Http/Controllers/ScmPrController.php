@@ -43,7 +43,6 @@ class ScmPrController extends Controller
                 ->with(
                     'scmPrLines.scmMaterial',
                     'scmWarehouse',
-                    'scmMrrs',
                     'closedBy',
                     'createdBy',
                     'scmPrLines.closedBy',
@@ -417,11 +416,18 @@ class ScmPrController extends Controller
     {
         if ($request->isNotFilled('scm_cs_id')) {
             $lineData = ScmPrLine::query()
-                ->with('scmMaterial')
+                ->with('scmMaterial', 'scmPoItems.scmCsMaterial', 'scmCsMaterials')
+
                 ->where('scm_pr_id', $request->pr_id)
                 ->whereNot('status', 'Closed')
                 ->whereHas('scmPr', function ($query) {
                     $query->whereIn('status', ['Pending', 'WIP']);
+                })
+                ->whereNot(function ($query) {
+                    // where has po doesnot has cs
+                    $query->whereHas('scmPoItems', function ($qr) {
+                        $qr->whereDoesntHave('scmCsMaterial');
+                    });
                 })
                 ->get()
                 ->map(function ($item) {

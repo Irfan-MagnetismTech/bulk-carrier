@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('unit')->nullable();
             $table->string('brand')->nullable();
             $table->string('model')->nullable();
-            $table->bigInteger('tolerance_quantity')->nullable();
+            $table->bigInteger('tolerence_quantity')->nullable();
             $table->bigInteger('quantity')->nullable();
             $table->bigInteger('rate')->nullable();
             $table->string('po_composite_key')->nullable();
