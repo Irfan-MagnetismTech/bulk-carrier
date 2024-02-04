@@ -15,7 +15,8 @@ class ScmMrrLine extends Model
     use HasFactory;
 
     protected $fillable = [
-        'scm_mrr_id', 'scm_material_id', 'unit', 'brand', 'model', 'quantity', 'rate', 'po_composite_key', 'pr_composite_key', 'net_rate',
+        'scm_pr_id',
+        'scm_po_id'
     ];
 
     public function scmMrr(): BelongsTo

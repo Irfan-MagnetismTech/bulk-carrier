@@ -22,7 +22,21 @@ class ScmMrr extends Model
     use HasFactory, GlobalSearchTrait, UniqueKeyGenerator;
 
     protected $fillable = [
-        'ref_no', 'type', 'date', 'scm_po_id', 'scm_pr_id', 'scm_warehouse_id', 'scm_lc_record_id', 'scm_cs_id', 'acc_cost_center_id', 'remarks', 'challan_no', 'is_qc_passed', 'qc_remarks', 'business_unit', 'created_by', 'is_completed', 'acc_cash_requisition_id', 'purchase_center',
+        'ref_no',
+        'type',
+        'date',
+        'scm_po_id',
+        'scm_warehouse_id',
+        'scm_lc_record_id',
+        'acc_cost_center_id',
+        'remarks',
+        'challan_no',
+        'is_qc_passed',
+        'qc_remarks',
+        'business_unit',
+        'created_by',
+        'is_completed',
+        'purchase_center',
     ];
 
     protected $refKeyPrefix = 'MRR';
