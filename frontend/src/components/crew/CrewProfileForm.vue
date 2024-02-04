@@ -184,20 +184,23 @@ function removeNomineeItem(index){
 
 const openTab = ref(1);
 
+let tab1Fields = ref([]);
+
 function changeTab(tabNumber, buttonType = null){
   if(buttonType === 'back') {
     openTab.value = tabNumber;
   } else {
     if(buttonType !== null){
       if (openTab.value === 1) {
-        let tab1Fields = ref(['business_unit','crw_recruitment_approval_name','hired_by','department_name','crw_rank_id','first_name','last_name','father_name','mother_name',
+        tab1Fields = ref(['business_unit','crw_recruitment_approval_name','hired_by','department_name','crw_rank_id','first_name','last_name','father_name','mother_name',
           'date_of_birth','gender','religion','marital_status','nationality','nid_no','pre_address','pre_city','pre_mobile_no','per_address','per_city','per_mobile_no']);
 
-        // if (props.form.hired_by === 'agency' && !tab1Fields.value.includes('agency_name')) {
-        //   tab1Fields.value.push('agency_name');
-        // } else if (props.form.hired_by !== 'agency' && tab1Fields.value.includes('agency_name')) {
-        //   tab1Fields = tab1Fields.value.filter(field => field !== 'agency_name');
-        // }
+        if (props.form.hired_by === 'Agency' && !tab1Fields.value.includes('agency_name')) {
+          tab1Fields.value.push('agency_name');
+        } else if (props.form.hired_by !== 'Agency' && tab1Fields.value.includes('agency_name')) {
+          tab1Fields.value = tab1Fields.value.filter(field => field !== 'agency_name');
+        }
+
 
         // if (props.form.hired_by === 'agency') {
         //   return [...tab1Fields, 'agency_name'];
@@ -205,7 +208,7 @@ function changeTab(tabNumber, buttonType = null){
         //   return tab1Fields;
         // }
 
-        if(!checkValidation(openTab, tabNumber, props,tab1Fields)){
+        if(!checkValidation(openTab, tabNumber, props,tab1Fields.value)){
           return;
         }
       }

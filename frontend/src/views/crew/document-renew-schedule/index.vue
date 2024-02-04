@@ -8,6 +8,7 @@ import Paginate from '../../../components/utils/paginate.vue';
 import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import { formatDate } from "../../../utils/helper.js";
 const icons = useHeroIcon();
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
@@ -201,7 +202,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
           <tr v-for="(crwDocument,index) in crewDocumentRenewSchedules" :key="index">
             <td>{{ index + 1 }}</td>
             <td class="!text-left">{{ crwDocument?.document_name }}</td>
-            <td>{{ crwDocument?.crwCrewDocumentRenewal?.expire_date }}</td>
+            <td>{{ formatDate(crwDocument?.crwCrewDocumentRenewal?.expire_date) }}</td>
             <td>{{ crwDocument?.crwCrewDocumentRenewal?.left_days }}</td>
             <td class="!text-left">{{ crwDocument?.crwCrewProfile?.full_name }}</td>
             <td>{{ crwDocument?.crwCrewProfile?.pre_mobile_no }}</td>

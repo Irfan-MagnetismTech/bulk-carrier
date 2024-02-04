@@ -1,4 +1,4 @@
-<script setup>
+\<script setup>
 import {onMounted, ref, watchEffect, watch, watchPostEffect} from "vue";
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import useRestHourRecord from "../../../composables/crew/useRestHourRecord";

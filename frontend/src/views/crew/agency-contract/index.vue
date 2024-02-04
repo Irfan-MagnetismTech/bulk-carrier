@@ -13,6 +13,7 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import { formatDate } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -170,8 +171,8 @@ onMounted(() => {
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
             <td class="!text-left">{{ contract?.contract_name }}</td>
             <td class="!text-left">{{ contract?.crwAgency?.agency_name }}</td>
-            <td>{{ contract?.validity_from }}</td>
-            <td>{{ contract?.validity_till }}</td>
+            <td>{{ formatDate(contract?.validity_from) }}</td>
+            <td>{{ formatDate(contract?.validity_till) }}</td>
             <td>{{ contract?.billing_cycle }}</td>
             <td>
               <a v-html="icons.Attachment" type="button" v-if="typeof contract?.attachment === 'string'"

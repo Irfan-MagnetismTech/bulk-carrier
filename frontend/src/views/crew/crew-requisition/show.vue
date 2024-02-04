@@ -6,6 +6,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
+import { formatDate } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 
@@ -47,7 +48,7 @@ onMounted(() => {
               </tr>
               <tr>
                 <th class="w-40 text-left">Applied Date</th>
-                <td class="text-left">{{ crewRequisition?.applied_date }}</td>
+                <td class="text-left">{{ formatDate(crewRequisition?.applied_date) }}</td>
               </tr>
               <tr>
                 <th class="w-40 text-left">Total Crew</th>

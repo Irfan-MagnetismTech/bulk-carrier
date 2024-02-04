@@ -12,7 +12,7 @@ import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
-
+import { formatDate,formatMonthYear } from "../../../utils/helper.js";
 const icons = useHeroIcon();
 const router = useRouter();
 import env from '../../../config/env';
@@ -150,7 +150,7 @@ onMounted(() => {
             <td> {{ index + 1 }} </td>
             <td class="!text-left"> {{ crwAttendance?.opsVessel?.name }} </td>
             <td> {{ crwAttendance?.total_crews }} </td>
-            <td> {{ crwAttendance?.year_month }} </td>
+            <td> {{ formatMonthYear(crwAttendance?.year_month) }} </td>
             <td>{{ crwAttendance?.working_days }}</td>
             <td>
               <span :class="crwAttendance?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwAttendance?.business_unit }}</span>

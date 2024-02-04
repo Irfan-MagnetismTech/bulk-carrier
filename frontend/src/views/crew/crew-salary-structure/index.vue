@@ -12,6 +12,7 @@ import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import { formatDate,formatMonthYear,formatMonthYearWithTime } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -202,7 +203,7 @@ onMounted(() => {
           <td class="!text-right">{{ crewSalaryStructureData?.deduction }}</td>
           <td class="!text-right">{{ crewSalaryStructureData?.net_amount }}</td>
           <td>{{ crewSalaryStructureData?.currency }}</td>
-          <td>{{ crewSalaryStructureData?.effective_date }}</td>
+          <td>{{ formatDate(crewSalaryStructureData?.effective_date) }}</td>
           <td>
             <span :class="crewSalaryStructureData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crewSalaryStructureData?.business_unit }}</span>
           </td>

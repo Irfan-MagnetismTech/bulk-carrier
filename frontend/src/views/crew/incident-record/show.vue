@@ -6,6 +6,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
+import { formatDate,formatMonthYear,formatMonthYearWithTime } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 
@@ -47,7 +48,7 @@ onMounted(() => {
             </tr>
             <tr>
               <th class="w-40"> Incident Date & Time </th>
-              <td>{{ incidentRecord?.date_time }}</td>
+              <td>{{ formatMonthYearWithTime(incidentRecord?.date_time) }}</td>
             </tr>
             <tr>
               <th class="w-40"> Incident Type </th>

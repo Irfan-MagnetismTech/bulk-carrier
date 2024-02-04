@@ -6,6 +6,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
+import { formatDate,formatMonthYear } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 
@@ -51,7 +52,7 @@ onMounted(() => {
             </tr>
             <tr>
               <th class="w-40"> Year - Month </th>
-              <td>{{ crwAttendance?.year_month }}</td>
+              <td>{{ formatMonthYear(crwAttendance?.year_month) }}</td>
             </tr>
             <tr>
               <th class="w-40"> Working Days </th>

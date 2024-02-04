@@ -12,6 +12,8 @@ import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import { formatDate,formatMonthYear,formatMonthYearWithTime } from "../../../utils/helper.js";
+
 
 const router = useRouter();
 const icons = useHeroIcon();
@@ -166,7 +168,7 @@ onMounted(() => {
           <tbody class="relative">
           <tr v-for="(crwIncidentRecord,index) in incidentRecords?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ crwIncidentRecord?.date_time }}</td>
+            <td>{{ formatMonthYearWithTime(crwIncidentRecord?.date_time) }}</td>
             <td class="!text-left">{{ crwIncidentRecord?.type }}</td>
             <td class="text-left">{{ crwIncidentRecord?.opsVessel?.name }}</td>
             <td class="!text-left">{{ crwIncidentRecord?.location }}</td>

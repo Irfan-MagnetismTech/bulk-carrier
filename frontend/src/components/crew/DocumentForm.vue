@@ -7,6 +7,7 @@ import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import {onMounted, ref, watch, watchEffect} from "vue";
 import Store from "../../store";
 import useCrewDocument from "../../composables/crew/useCrewDocument";
+import { formatDate } from "../../utils/helper.js";
 const { crews, getCrews, crewDocuments, getCrewDocuments, getCrewDocumentRenewals, crewDocumentRenewals, isCrewDocumentRenewModalOpen, isLoading } = useCrewCommonApiRequest();
 const { isCrewDocumentAddModalOpen, storeCrewDocument, storeCrewRenewDocument, updateCrewRenewDocument, currentCrewDocRenewData, deleteCrewRenewDocument, deleteCrewDocument, isDocumentEditModal, errors } = useCrewDocument();
 import env from '../../config/env';
@@ -242,8 +243,8 @@ onMounted(() => {
         <td>
           <span class="custom_badge dark-disabled:bg-yellow-700 dark-disabled:text-yellow-100 text-black-700 bg-yellow-200">{{ crwDocumentData?.validity_period }}</span>
         </td>
-        <td>{{ crwDocumentData?.crwCrewDocumentRenewals[0]?.issue_date ?? '---'}}</td>
-        <td>{{ crwDocumentData?.crwCrewDocumentRenewals[0]?.expire_date ?? '---'}}</td>
+        <td>{{ formatDate(crwDocumentData?.crwCrewDocumentRenewals[0]?.issue_date) ?? '---'}}</td>
+        <td>{{ formatDate(crwDocumentData?.crwCrewDocumentRenewals[0]?.expire_date) ?? '---'}}</td>
         <td class="!text-left">{{ crwDocumentData?.crwCrewDocumentRenewals[0]?.reference_no ?? '---'}}</td>
         <td>
           <a v-html="icons.Attachment" type="button" v-if="typeof crwDocumentData?.crwCrewDocumentRenewals[0]?.attachment === 'string'"

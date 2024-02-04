@@ -12,6 +12,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import { formatDate } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -313,7 +314,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
           <tbody  class="relative">
           <tr v-for="(rcrApproval,index) in recruitmentApprovals?.data" :key="index">
             <td>{{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }}</td>
-            <td><nobr>{{ rcrApproval?.applied_date }}</nobr></td>
+            <td><nobr>{{ formatDate(rcrApproval?.applied_date) }}</nobr></td>
             <td class="!text-left">{{ rcrApproval?.page_title }}</td>
             <td class="!text-left">{{ rcrApproval?.subject }}</td>
             <td>{{ rcrApproval?.total_approved }}</td>

@@ -14,6 +14,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 const icons = useHeroIcon();
 import useGlobalFilter from "../../../composables/useGlobalFilter";
 import {useRouter} from "vue-router";
+import { formatDate } from "../../../utils/helper.js";
 
 const props = defineProps({
   page: {
@@ -241,7 +242,7 @@ onMounted(() => {
             <td class="text-left">{{ requiredCrew?.opsVessel?.name }}</td>
             <td>{{ requiredCrew?.opsVessel?.short_code }}</td>
             <td>{{ requiredCrew?.opsVessel?.vessel_type }}</td>
-            <td>{{ requiredCrew?.effective_date }}</td>
+            <td>{{ formatDate(requiredCrew?.effective_date) }}</td>
             <td>{{ requiredCrew?.total_crew }}</td>
             <td>
               <span :class="requiredCrew?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ requiredCrew?.business_unit }}</span>

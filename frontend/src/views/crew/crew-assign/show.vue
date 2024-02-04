@@ -6,7 +6,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
-
+import { formatDate } from "../../../utils/helper.js";
 const icons = useHeroIcon();
 
 const route = useRoute();
@@ -61,7 +61,7 @@ onMounted(() => {
             </tr>
             <tr>
               <th class="w-40"> Joining Date </th>
-              <td>{{ crewAssign?.joining_date }}</td>
+              <td>{{ formatDate(crewAssign?.joining_date) }}</td>
             </tr>
             <tr>
               <th class="w-40"> Joining Port Code </th>

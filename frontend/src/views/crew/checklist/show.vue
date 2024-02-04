@@ -6,7 +6,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
-
+import { formatDate } from "../../../utils/helper.js";
 const icons = useHeroIcon();
 
 const route = useRoute();
@@ -43,7 +43,7 @@ onMounted(() => {
               </tr>
               <tr>
                 <th class="w-40 text-left">Effective Date</th>
-                <td class="text-left">{{ checkList?.effective_date }}</td>
+                <td class="text-left">{{ formatDate(checkList?.effective_date) }}</td>
               </tr>
               <tr>
                 <th class="w-40 text-left">Remarks</th>
