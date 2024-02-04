@@ -179,7 +179,7 @@
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolerence_level = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.tolerence_level ?? 0;
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].pr_qty = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.pr_qty ?? 0;
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].po_qty = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.po_qty ?? 0;
-      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolerence_quantity = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.tolerence_quantity ?? 0;
+      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolerance_quantity = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.tolerance_quantity ?? 0;
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].remaining_quantity = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.remaining_quantity ?? 0;
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].rate = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.rate ?? 0;
       
@@ -477,7 +477,7 @@ watch(() => prlist.value, (newVal, oldVal) => {
                       <tr>
                           <td>Qty</td>
                           <td>
-                            <input type="number" required :value="form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolerence_quantity" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
+                            <input type="number" required :value="form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolerance_quantity" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
                           </td>
                         </tr>
                         <tr>
