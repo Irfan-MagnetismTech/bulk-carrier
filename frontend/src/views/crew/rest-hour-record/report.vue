@@ -21,7 +21,7 @@ const route = useRoute();
 
 const { setTitle } = Title();
 
-setTitle('Rest Hour Report Details');
+setTitle('Rest Hour Record');
 
 const currentDate = ref(new Date());
 
@@ -72,11 +72,11 @@ onMounted(() => {
 <template>
 
   <form @submit.prevent="getRestHourReport(searchParams)">
-    <div class="w-full flex items-center justify-between mb-2 my-2 select-none">
+    <div class="px-2 py-1 mb-2 mt-3 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
       <fieldset class="w-full grid grid-cols-4 gap-1 px-2 pb-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Rest Hour Record</legend>
         <div>
-          <label for="" class="text-xs" style="margin-left: .01rem">Cost Center <span class="text-red-500">*</span></label>
+          <label for="" class="text-xs" style="margin-left: .01rem">Vessel Name <span class="text-red-500">*</span></label>
           <v-select :options="vessels" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="searchParams.ops_vessel_id" @update:modelValue="vesselChanged" label="name" :reduce="vessels=>vessels.id" class="block w-full rounded form-input">
             <template #search="{attributes, events}">
               <input class="vs__search w-full" style="width: 50%" :required="!searchParams.ops_vessel_id" v-bind="attributes" v-on="events"/>
@@ -84,15 +84,15 @@ onMounted(() => {
           </v-select>
         </div>
         <div>
-          <label for="" class="text-xs" style="margin-left: .01rem">Crew <span class="text-red-500">*</span></label>
+          <label for="" class="text-xs" style="margin-left: .01rem">Crew Name<span class="text-red-500">*</span></label>
           <select class="block w-full rounded form-input" v-model.trim="searchParams.crw_crew_id" required>
-            <option value="">Select</option>
+            <option value="" selected disabled>--Choose an option--</option>
             <option :value="crew?.crw_crew_id" v-for="(crew,index) in vesselAssignedCrews">{{ crew?.crwCrew?.full_name }}</option>
           </select>
         </div>
         <div>
-          <label for="" class="text-xs" style="margin-left: .01rem">Month Year <span class="text-red-500">*</span></label>
-          <VueDatePicker v-model.trim="searchParams.year_month" month-picker class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="mm/yyyy" format="yyyy/MMMM" model-type="yyyy-MM" :text-input="{ format: dateFormat }"></VueDatePicker>
+          <label for="" class="text-xs" style="margin-left: .01rem">Month - Year <span class="text-red-500">*</span></label>
+          <VueDatePicker v-model.trim="searchParams.year_month" month-picker class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="mm/yyyy" format="MMMM/yyyy" model-type="yyyy-MM" :text-input="{ format: dateFormat }"></VueDatePicker>
         </div>
         <div>
           <label for="">&nbsp;</label>

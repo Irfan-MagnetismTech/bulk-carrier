@@ -7,6 +7,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
+import { formatDate } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 
@@ -25,7 +26,7 @@ onMounted(() => {
 
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Agency Contract Details # {{agencyContractId}}</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Agency Contract Details</h2>
     <default-button :title="'Agency Contract'" :to="{ name: 'crw.agencyContracts.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
@@ -52,8 +53,8 @@ onMounted(() => {
               </tr>
               <tr>
                 <th class="w-40 text-left">Validity (From-Till)</th>
-                <td class="text-left">{{ moment(agencyContract?.validity_from).format('DD-MM-YYYY') }}
-                  - {{ moment(agencyContract?.validity_till).format('DD-MM-YYYY') }}</td>
+                <td class="text-left">{{ formatDate(agencyContract?.validity_from) }}
+                  - {{ formatDate(agencyContract?.validity_till) }}</td>
               </tr>
               <tr>
                 <th class="w-40 text-left">Billing Cycle (In Days)</th>

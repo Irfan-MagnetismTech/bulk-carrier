@@ -147,9 +147,9 @@ onMounted(() => {
           <tbody>
           <tr v-for="(bill,index) in agencyBills?.data" :key="index">
             <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-            <td>{{ bill?.crwAgency?.agency_name }}</td>
+            <td class="!text-left">{{ bill?.crwAgency?.agency_name }}</td>
             <td>{{ bill?.crwAgency?.phone }}</td>
-            <td>{{ bill?.invoice_amount }}</td>
+            <td class="!text-right">{{ bill?.invoice_amount }}</td>
             <td>{{ bill?.invoice_currency }}</td>
 <!--            <td>Waiting</td>-->
             <td>

@@ -6,7 +6,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
-
+import { formatDate } from "../../../utils/helper.js";
 const icons = useHeroIcon();
 
 const route = useRoute();
@@ -24,7 +24,7 @@ onMounted(() => {
 
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Crew Checklist Details # {{checkListId}}</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Crew Checklist Details</h2>
     <default-button :title="'Crew Checklist'" :to="{ name: 'crw.checklists.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
@@ -43,7 +43,11 @@ onMounted(() => {
               </tr>
               <tr>
                 <th class="w-40 text-left">Effective Date</th>
-                <td class="text-left">{{ checkList?.effective_date }}</td>
+                <td class="text-left">{{ formatDate(checkList?.effective_date) }}</td>
+              </tr>
+              <tr>
+                <th class="w-40 text-left">Remarks</th>
+                <td class="text-left">{{ checkList?.remarks }}</td>
               </tr>
             </tbody>
           </table>
@@ -53,7 +57,7 @@ onMounted(() => {
               <td class="!text-center text-white uppercase bg-green-600 font-bold" colspan="8">Checklist Item</td>
             </tr>
             <tr>
-              <th>Sl.</th>
+              <th>#</th>
               <th>Item Name</th>
               <th>Remarks</th>
             </tr>

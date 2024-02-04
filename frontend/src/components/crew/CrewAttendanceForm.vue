@@ -105,7 +105,7 @@ onMounted(() => {
     </label>
 
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark-disabled:text-gray-300"> Total Crews </span>
+      <span class="text-gray-700 dark-disabled:text-gray-300"> Total Crew</span>
       <input type="text" :value="form.total_crews" class="form-input vms-readonly-input" autocomplete="off" required readonly/>
     </label>
 
