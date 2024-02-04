@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmPo;
 use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Entities\ScmMrr;
+use Modules\SupplyChain\Entities\ScmMrrLine;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmPoLine;
 use Modules\SupplyChain\Entities\ScmPrLine;
@@ -57,8 +58,8 @@ class ScmMrrController extends Controller
             DB::beginTransaction();
 
             $scmMrr = ScmMrr::create($requestData);
-            $scmMrr->scmMrrLines()->createUpdateOrDelete($request->scmMrrLines);
-            StockLedgerData::insert($scmMrr, $request->scmMrrLines);
+            $this->createScmMrrLinesAndItems($request, $scmMrr);
+            StockLedgerData::insert($scmMrr, $request->scmMrrLineItems);
 
             DB::commit();
 
@@ -67,6 +68,31 @@ class ScmMrrController extends Controller
             DB::rollBack();
 
             return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    private function createScmMrrLinesAndItems($request, $scmMrr)
+    {
+        foreach ($request->scmMrrLines as $key => $values) {
+            $scmMrrLine = $scmMrr->scmMrrLines()->create([
+                'scm_pr_id' => $values['scm_pr_id'],
+                'scm_po_id' => $values['scm_po_id'],
+            ]);
+
+            foreach ($values['scmPoItems'] as $index => $value) {
+                $scmMrrLine->scmMrrLineItems()->create([
+                    'scm_material_id' => $value['scm_material_id'],
+                    'unit' => $value['unit'],
+                    'brand' => $value['brand'],
+                    'model' => $value['model'],
+                    'tolerance_quantity' => $value['tolerance_quantity'],
+                    'quantity' => $value['quantity'],
+                    'rate' => $value['rate'],
+                    'po_composite_key' => $value['po_composite_key'],
+                    'pr_composite_key' => $value['pr_composite_key'],
+                    'net_rate' => $value['net_rate'],
+                ]);
+            }
         }
     }
 
@@ -366,42 +392,41 @@ class ScmMrrController extends Controller
     {
         if (request()->scm_po_id && request()->scm_pr_id) {
             $scmPo = ScmPoLine::query()
-                ->with('scmPo','scmPoItems.scmMaterial','scmPr','scmPoItems.scmMrrItems','scmPoItems.scmPrLine')
+                ->with('scmPo', 'scmPoItems.scmMaterial', 'scmPr', 'scmPoItems.scmMrrLineItems', 'scmPoItems.scmPrLine')
                 ->where('scm_po_id', request()->scm_po_id)
                 ->where('scm_pr_id', request()->scm_pr_id)
                 ->first();
-                $data = $scmPo->scmPoItems->map(function ($item) {
-                        if(request()->scm_mrr_id){
-                            $mrrQuantity = $item->scmMrrItems->where('scm_mrr_id', request()->scm_mrr_id)->where('po_composite_key', $item->po_composite_key)->first->quantity;
-                        }else{
-                            $mrrQuantity = 0;
-                        }
-                        $totalMrrQuantity = $item->scmMrrItems->sum('quantity');
-                        $tolerance_quantity = $item->quantity * ($item?->tolarence_level ?? 0) / 100;
+            $data = $scmPo->scmPoItems->map(function ($item) {
+                if (request()->scm_mrr_id) {
+                    $mrrQuantity = $item->scmMrrLineItems->where('scm_mrr_id', request()->scm_mrr_id)->where('po_composite_key', $item->po_composite_key)->first->quantity;
+                } else {
+                    $mrrQuantity = 0;
+                }
+                $totalMrrQuantity = $item->scmMrrLineItems->sum('quantity');
+                $tolerance_quantity = $item->quantity * ($item?->tolarence_level ?? 0) / 100;
 
-                        $remainingQuantity = $item->quantity - $totalMrrQuantity + $mrrQuantity + $tolerance_quantity;
-                        return [
-                            'scmMaterial' => $item->scmMaterial,
-                            'scm_material_id' => $item->scm_material_id,
-                            'unit' => $item->unit,
-                            'brand' => $item->brand,
-                            'model' => $item->model,
-                            'quantity' => $remainingQuantity,
-                            'rate' => $item->rate,
-                            'net_rate' => $item->net_rate,
-                            'po_qty' => $item->quantity,
-                            'pr_qty' => $item->scmPrLine->quantity,
-                            'po_composite_key' => $item->po_composite_key,
-                            'pr_composite_key' => $item->pr_composite_key,
-                            'mrr_quantity' => $remainingQuantity,
-                            'remaining_quantity' => $remainingQuantity,
-                            'max_quantity' => $remainingQuantity,
-                            'tolarence_level' => $item->tolarence_level,
-                            'tolarence_quantity' => $tolerance_quantity,
-                        ];
-                    });
-
-        }else{
+                $remainingQuantity = $item->quantity - $totalMrrQuantity + $mrrQuantity + $tolerance_quantity;
+                return [
+                    'scmMaterial' => $item->scmMaterial,
+                    'scm_material_id' => $item->scm_material_id,
+                    'unit' => $item->unit,
+                    'brand' => $item->brand,
+                    'model' => $item->model,
+                    'quantity' => $remainingQuantity,
+                    'rate' => $item->rate,
+                    'net_rate' => $item->net_rate,
+                    'po_qty' => $item->quantity,
+                    'pr_qty' => $item->scmPrLine->quantity,
+                    'po_composite_key' => $item->po_composite_key,
+                    'pr_composite_key' => $item->pr_composite_key,
+                    'mrr_quantity' => $remainingQuantity,
+                    'remaining_quantity' => $remainingQuantity,
+                    'max_quantity' => $remainingQuantity,
+                    'tolarence_level' => $item->tolarence_level,
+                    'tolarence_quantity' => $tolerance_quantity,
+                ];
+            });
+        } else {
             $data = [];
         }
         return response()->success('data', $data, 200);
@@ -410,18 +435,18 @@ class ScmMrrController extends Controller
     public function getPoMaterialList(): JsonResponse
     {
         $scmPo = ScmPoLine::query()
-            ->with('scmPo','scmPoItems.scmMaterial','scmPr','scmPoItems.scmMrrItems','scmPoItems.scmPrLine')
+            ->with('scmPo', 'scmPoItems.scmMaterial', 'scmPr', 'scmPoItems.scmMrrLineItems', 'scmPoItems.scmPrLine')
             ->where('scm_po_id', request()->scm_po_id)
             ->where('scm_pr_id', request()->scm_pr_id)
             ->first();
 
         $data = $scmPo->scmPoItems->map(function ($item) {
-            if(request()->scm_mrr_id){
-                $mrrQuantity = $item->scmMrrItems->where('scm_mrr_id', request()->scm_mrr_id)->where('po_composite_key', $item->po_composite_key)->first->quantity;
-            }else{
+            if (request()->scm_mrr_id) {
+                $mrrQuantity = $item->scmMrrLineItems->where('scm_mrr_id', request()->scm_mrr_id)->where('po_composite_key', $item->po_composite_key)->first->quantity;
+            } else {
                 $mrrQuantity = 0;
             }
-            $totalMrrQuantity = $item->scmMrrItems->sum('quantity');
+            $totalMrrQuantity = $item->scmMrrLineItems->sum('quantity');
             $tolerance_quantity = $item->quantity * ($item?->tolarence_level ?? 0) / 100;
 
             $remainingQuantity = $item->quantity - $totalMrrQuantity + $mrrQuantity + $tolerance_quantity;
