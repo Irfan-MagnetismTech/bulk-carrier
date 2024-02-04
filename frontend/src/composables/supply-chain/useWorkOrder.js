@@ -58,7 +58,7 @@ export default function useWorkOrder() {
                         // brand: '',
                         // model: '',
                         required_date: null,
-                        tolarence_level: 0.0,
+                        tolerence_level: 0.0,
                         wr_composite_key: '',
                         wcs_composite_key: '',
                         wr_quantity: 0.0,

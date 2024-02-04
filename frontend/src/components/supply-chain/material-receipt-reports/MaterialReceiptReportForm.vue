@@ -176,10 +176,10 @@
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].quantity = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.quantity ?? 0;
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].po_composite_key = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.po_composite_key ?? null;
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].pr_composite_key = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.pr_composite_key ?? null;
-      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolarence_level = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.tolarence_level ?? 0;
+      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolerence_level = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.tolerence_level ?? 0;
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].pr_qty = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.pr_qty ?? 0;
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].po_qty = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.po_qty ?? 0;
-      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolarence_quantity = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.tolarence_quantity ?? 0;
+      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolerence_quantity = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.tolerence_quantity ?? 0;
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].remaining_quantity = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.remaining_quantity ?? 0;
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].rate = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.rate ?? 0;
       
@@ -395,8 +395,8 @@ watch(() => prlist.value, (newVal, oldVal) => {
                     <th class="py-3 align-center !w-3/12">Material Details <br/> <span class="!text-[8px]"></span></th>
                     <!-- <th class="py-3 align-center !w-2/12"><nobr>Required Date</nobr></th> -->
                     <th class="py-3 align-center !w-3/12">Other Info</th>
-                    <!-- <th class="py-3 align-center !w-1/12">Tolarence <br/> (%)</th> -->
-                    <th class="py-3 align-center !w-2/12">Tolarence</th>
+                    <!-- <th class="py-3 align-center !w-1/12">tolerence <br/> (%)</th> -->
+                    <th class="py-3 align-center !w-2/12">tolerence</th>
                     <th class="py-3 align-center !w-3/12">Order Details</th>
                     <th class="!w-1/12" ref="TargetButtonWidth">
                       <button type="button" @click="addMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -477,13 +477,13 @@ watch(() => prlist.value, (newVal, oldVal) => {
                       <tr>
                           <td>Qty</td>
                           <td>
-                            <input type="number" required :value="form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolarence_quantity" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
+                            <input type="number" required :value="form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolerence_quantity" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
                           </td>
                         </tr>
                         <tr>
                           <td>Level (%)</td>
                           <td>
-                            <input type="number" required :value="form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolarence_level" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
+                            <input type="number" required :value="form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolerence_level" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
                           </td>
                         </tr>
                     </td>

@@ -32,7 +32,7 @@ class ScmPoItem extends Model
         'po_composite_key',
         'pr_composite_key',
         'cs_composite_key',
-        'tolarence_level',
+        'tolerence_level',
         'remarks',
         'is_closed',
         'closed_by',

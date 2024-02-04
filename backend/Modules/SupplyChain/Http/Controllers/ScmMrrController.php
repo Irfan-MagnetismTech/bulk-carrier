@@ -402,7 +402,7 @@ class ScmMrrController extends Controller
                     $mrrQuantity = 0;
                 }
                 $totalMrrQuantity = $item->scmMrrLineItems->sum('quantity');
-                $tolerance_quantity = floor($item->quantity * ($item?->tolarence_level ?? 0) / 100);
+                $tolerance_quantity = floor($item->quantity * ($item?->tolerence_level ?? 0) / 100);
 
                 $remainingQuantity = $item->quantity - $totalMrrQuantity + $mrrQuantity + $tolerance_quantity;
                 return [
@@ -421,8 +421,8 @@ class ScmMrrController extends Controller
                     'mrr_quantity' => $remainingQuantity,
                     'remaining_quantity' => $remainingQuantity,
                     'max_quantity' => $remainingQuantity,
-                    'tolarence_level' => $item->tolarence_level,
-                    'tolarence_quantity' => $tolerance_quantity,
+                    'tolerence_level' => $item->tolerence_level,
+                    'tolerence_quantity' => $tolerance_quantity,
                 ];
             });
         } else {
@@ -446,7 +446,7 @@ class ScmMrrController extends Controller
                 $mrrQuantity = 0;
             }
             $totalMrrQuantity = $item->scmMrrLineItems->sum('quantity');
-            $tolerance_quantity = floor($item->quantity * ($item?->tolarence_level ?? 0) / 100);
+            $tolerance_quantity = floor($item->quantity * ($item?->tolerence_level ?? 0) / 100);
 
             $remainingQuantity = $item->quantity - $totalMrrQuantity + $mrrQuantity + $tolerance_quantity;
             $data = $item->scmMaterial;
@@ -463,8 +463,8 @@ class ScmMrrController extends Controller
             $data['mrr_quantity'] = $remainingQuantity;
             $data['remaining_quantity'] = $remainingQuantity;
             $data['max_quantity'] = $remainingQuantity;
-            $data['tolarence_level'] = $item->tolarence_level;
-            $data['tolarence_quantity'] = $tolerance_quantity;
+            $data['tolerence_level'] = $item->tolerence_level;
+            $data['tolerence_quantity'] = $tolerance_quantity;
             return $data;
         });
 

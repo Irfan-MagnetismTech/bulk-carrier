@@ -234,7 +234,7 @@
       props.form.scmPoLines[index].scmPoItems[itemIndex].max_quantity = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial?.max_quantity ?? 0;
       props.form.scmPoLines[index].scmPoItems[itemIndex].quantity = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial?.quantity ?? 0;
       props.form.scmPoLines[index].scmPoItems[itemIndex].pr_composite_key = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial?.pr_composite_key ?? null;
-      props.form.scmPoLines[index].scmPoItems[itemIndex].tolarence_level = 0;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].tolerence_level = 0;
       props.form.scmPoLines[index].scmPoItems[itemIndex].pr_quantity = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial?.pr_quantity ?? 0;
       
     }
@@ -504,7 +504,7 @@
                     <th class="py-3 align-center !w-3/12">Material Details <br/> <span class="!text-[8px]"></span></th>
                     <!-- <th class="py-3 align-center !w-2/12"><nobr>Required Date</nobr></th> -->
                     <th class="py-3 align-center !w-2/12">Other Info</th>
-                    <!-- <th class="py-3 align-center !w-1/12">Tolarence <br/> (%)</th> -->
+                    <!-- <th class="py-3 align-center !w-1/12">tolerence <br/> (%)</th> -->
                     <th class="py-3 align-center !w-4/12">Order Details</th>
                     <th class="py-3 align-center !w-2/12">Total Price</th>
                     <th class="!w-1/12" ref="TargetButtonWidth">
@@ -598,7 +598,7 @@
                         <tr>
                           <td><nobr>Tolerance ( % )</nobr></td>
                           <td>
-                            <input type="number" v-model="form.scmPoLines[index].scmPoItems[itemIndex].tolarence_level" min=0 class="!text-xs form-input text-right">  
+                            <input type="number" v-model="form.scmPoLines[index].scmPoItems[itemIndex].tolerence_level" min=0 class="!text-xs form-input text-right">  
                           </td>
                         </tr>
                         <tr>
