@@ -99,8 +99,8 @@ onMounted(() => {
           <tr v-for="(transactionEntry, index) in transaction?.ledgerEntries" :key="index">
             <td class="text-left"> {{ transactionEntry?.account?.account_name }} </td>
             <td class="text-left"> {{ transactionEntry?.ref_bill }} </td>
-            <td class="text-left"> {{ transactionEntry?.dr_amount }} </td>
-            <td class="text-left"> {{ transactionEntry?.cr_amount }} </td>
+            <td class="!text-right"> {{ transactionEntry?.dr_amount }} </td>
+            <td class="!text-right"> {{ transactionEntry?.cr_amount }} </td>
             <td class="text-left"> {{ transactionEntry?.remarks }} </td>
           </tr>
           </tbody>

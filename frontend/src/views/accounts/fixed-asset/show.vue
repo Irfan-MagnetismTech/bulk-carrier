@@ -63,6 +63,10 @@ onMounted(() => {
             <td>{{ fixedAsset?.asset_tag ?? '---' }}</td>
           </tr>
           <tr>
+            <th class="w-40">Brand</th>
+            <td>{{ fixedAsset?.brand ?? '---' }}</td>
+          </tr>
+          <tr>
             <th class="w-40">Model</th>
             <td>{{ fixedAsset?.model ?? '---' }}</td>
           </tr>
