@@ -213,6 +213,7 @@ export default function usePort() {
 
 	async function getPortList() {
 		//NProgress.start();
+		isPortLoading.value = true;
 
 		try {
 			const { data, status } = await Api.get(`/ops/get-search-ports`);
@@ -224,6 +225,8 @@ export default function usePort() {
 		} finally {
 			// loading(false)
 			//NProgress.done();
+			isPortLoading.value = false;
+
 		}
 	}
 

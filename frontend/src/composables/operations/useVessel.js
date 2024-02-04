@@ -307,6 +307,7 @@ export default function useVessel() {
 
 	async function getVesselList(businessUnit) {
 		//NProgress.start();
+		isVesselLoading.value = true;
 
 		try {
 			const { data, status } = await Api.get(`/ops/get-search-vessels?business_unit=${businessUnit}`);
@@ -319,6 +320,8 @@ export default function useVessel() {
 		} finally {
 			// loading(false)
 			//NProgress.done();
+			isVesselLoading.value = false;
+
 		}
 	}
 
