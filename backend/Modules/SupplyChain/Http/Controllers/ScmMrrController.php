@@ -79,7 +79,6 @@ class ScmMrrController extends Controller
             ]);
 
             foreach ($values['scmMrrLineItems'] as $index => $value) {
-                return response()->json($value, 422);
                 $scmMrrLine->scmMrrLineItems()->create([
                     'scm_material_id' => $value['scm_material_id'],
                     'unit' => $value['unit'],
@@ -105,7 +104,7 @@ class ScmMrrController extends Controller
     public function show($id): JsonResponse
     {
         $scmMrr = ScmMrr::query()
-            ->with('scmMrrLines.scmMrrLineItems.scmMaterial', 'scmMrrLines.scmPoLine', 'scmMrrLines.scmPrLine', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy', 'accCashRequisition')
+            ->with('scmMrrLines.scmMrrLineItems.scmMaterial', 'scmMrrLines.scmPr', 'scmPo', 'scmWarehouse', 'scmLcRecord', 'createdBy', 'accCashRequisition')
             ->find($id);
 
         $scmMrrLines = $scmMrr->scmMrrLines->map(function ($scmMrrLine) use ($scmMrr) {
