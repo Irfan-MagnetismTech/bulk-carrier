@@ -55,7 +55,7 @@
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Port of Registry <span class="text-red-500">*</span></span>
-        <v-select :options="ports" placeholder="--Choose an option--" v-model="form.portOfRegistry" label="code_name" class="block form-input">
+        <v-select :options="ports" :loading="isPortLoading" placeholder="--Choose an option--" v-model="form.portOfRegistry" label="code_name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -120,10 +120,10 @@
         <span class="text-gray-700 dark-disabled:text-gray-300">Width Overall <span class="text-red-500">*</span></span>
         <input type="number" step="0.001" v-model="form.overall_width" placeholder="Width Overall" class="form-input" required autocomplete="off" />
       </label>
-      <label class="block w-full mt-2 text-sm">
+      <div class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Year Built <span class="text-red-500">*</span></span>
-        <input type="number" step="0.001" v-model="form.year_built" placeholder="Year Built" class="form-input" required autocomplete="off" />
-      </label>
+        <VueDatePicker v-model="form.year_built" class="form-input" required auto-apply year-picker :enable-time-picker="false" placeholder="yyyy" format="yyyy" model-type="yyyy"></VueDatePicker>
+      </div>
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -279,7 +279,7 @@ const props = defineProps({
 });
 
 const { maritimeCertificates, getMaritimeCertificateList } = useMaritimeCertificates();
-const { ports, searchPorts } = usePort();
+const { ports, searchPorts, isPortLoading } = usePort();
 const { materials, getBunkerList } = useMaterial();
 
 const isCertificateDuplicate = ref(false);
