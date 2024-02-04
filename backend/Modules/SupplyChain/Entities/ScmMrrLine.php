@@ -7,6 +7,8 @@ use Modules\SupplyChain\Entities\ScmMrr;
 use Modules\SupplyChain\Entities\ScmPoLine;
 use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Entities\ScmMaterial;
+use Modules\SupplyChain\Entities\ScmMrrLineItem;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -15,7 +17,8 @@ class ScmMrrLine extends Model
     use HasFactory;
 
     protected $fillable = [
-        'scm_mrr_id', 'scm_material_id', 'unit', 'brand', 'model', 'quantity', 'rate', 'po_composite_key', 'pr_composite_key', 'net_rate',
+        'scm_pr_id',
+        'scm_po_id'
     ];
 
     public function scmMrr(): BelongsTo
@@ -36,5 +39,10 @@ class ScmMrrLine extends Model
     public function scmPoLine(): BelongsTo
     {
         return $this->belongsTo(ScmPoLine::class, 'po_composite_key', 'po_composite_key');
+    }
+
+    public function scmMrrLineItems(): HasMany
+    {
+        return $this->hasMany(ScmMrrLineItem::class);
     }
 }

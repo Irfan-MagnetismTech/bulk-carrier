@@ -6,10 +6,9 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmPoLine;
 use Modules\SupplyChain\Entities\ScmPrLine;
-use Modules\SupplyChain\Entities\ScmMrrLine;
 use Modules\SupplyChain\Entities\ScmMaterial;
-use Modules\SupplyChain\Entities\ScmMrrItems;
 use Modules\SupplyChain\Entities\ScmCsMaterial;
+use Modules\SupplyChain\Entities\ScmMrrLineItem;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -77,8 +76,8 @@ class ScmPoItem extends Model
         return $this->belongsTo(User::class, 'created_by', 'id');
     }
 
-    public function scmMrrItems(): HasMany
+    public function scmMrrLineItems(): HasMany
     {
-        return $this->hasMany(ScmMrrItems::class, 'po_composite_key', 'po_composite_key');
+        return $this->hasMany(ScmMrrLineItem::class, 'po_composite_key', 'po_composite_key');
     }
 }
