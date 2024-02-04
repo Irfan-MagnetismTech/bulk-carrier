@@ -16,10 +16,10 @@ class ScmWrrController extends Controller
 
     function __construct(private FileUploadService $fileUpload)
     {
-        //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
-        //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
-        //     $this->middleware('permission:charterer-contract-edit', ['only' => ['update']]);
-        //     $this->middleware('permission:charterer-contract-delete', ['only' => ['destroy']]);
+        //     $this->middleware('permission:work-receipt-report-create|work-receipt-report-edit|work-receipt-report-show|work-receipt-report-delete', ['only' => ['index','show']]);
+        //     $this->middleware('permission:work-receipt-report-create', ['only' => ['store']]);
+        //     $this->middleware('permission:work-receipt-report-edit', ['only' => ['update']]);
+        //     $this->middleware('permission:work-receipt-report-delete', ['only' => ['destroy']]);
     }
 
     /**
@@ -29,9 +29,9 @@ class ScmWrrController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $wrrs = ScmWrr::globalSearch(request()->all());
+            $work_receipt_reports = ScmWrr::globalSearch(request()->all());
 
-            return response()->success('Material Category list', $wrrs, 200);
+            return response()->success('Material Category list', $work_receipt_reports, 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
@@ -45,9 +45,9 @@ class ScmWrrController extends Controller
     public function store(ScmWrrRequest $request): JsonResponse
     {
         $requestData = $request->all();
-        try {
-            $wrr = ScmWrr::create($requestData);
-            return response()->success('Data created succesfully', $wrr, 201);
+        try {            
+            $work_receipt_report = ScmWrr::create($requestData);
+            return response()->success('Data created succesfully', $work_receipt_report, 201);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
@@ -59,10 +59,10 @@ class ScmWrrController extends Controller
      * @param ScmWrr $material
      * @return JsonResponse
      */
-    public function show(ScmWrr $wrr): JsonResponse
+    public function show(ScmWrr $work_receipt_report): JsonResponse
     {
         try {
-            return response()->success('data', $wrr, 200);
+            return response()->success('data', $work_receipt_report, 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
@@ -75,12 +75,12 @@ class ScmWrrController extends Controller
      * @param ScmWrr $material
      * @return JsonResponse
      */
-    public function update(ScmWrrRequest $request, ScmWrr $wrr): JsonResponse
+    public function update(ScmWrrRequest $request, ScmWrr $work_receipt_report): JsonResponse
     {
         $requestData = $request->all();
         try {            
-            $wrr->update($requestData);
-            return response()->success('Data updated sucessfully!', $wrr, 202);
+            $work_receipt_report->update($requestData);
+            return response()->success('Data updated sucessfully!', $work_receipt_report, 202);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
@@ -92,10 +92,10 @@ class ScmWrrController extends Controller
      * @param ScmWrr $material
      * @return JsonResponse
      */
-    public function destroy(ScmWrr $wrr): JsonResponse
+    public function destroy(ScmWrr $work_receipt_report): JsonResponse
     {
         try {
-            $wrr->delete();
+            $work_receipt_report->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (\Exception $e) {

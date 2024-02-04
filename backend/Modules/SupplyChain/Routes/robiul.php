@@ -13,7 +13,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::apiResources([
         'work-requisitions' => ScmWrController::class,
         'work-cs' => ScmWcsController::class,
-        'wrrs' => ScmWrrController::class,
+        'work-receipt-reports' => ScmWrrController::class,
         'work-orders' => ScmWoController::class,
         'lc-record-statuses' => ScmLcRecordStatusController::class,
     ]);
