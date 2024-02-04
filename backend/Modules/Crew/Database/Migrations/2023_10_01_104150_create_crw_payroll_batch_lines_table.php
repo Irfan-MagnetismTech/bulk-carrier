@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('crw_payroll_batch_lines', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('crw_payroll_batch_id');
+			$table->foreignId('crw_payroll_batch_id')->constrained('crw_payroll_batches', 'id')->cascadeOnDelete();
             $table->unsignedBigInteger('crw_crew_id');
             $table->unsignedBigInteger('crw_attendance_line_id');
             $table->unsignedBigInteger('crw_salary_structure_id');

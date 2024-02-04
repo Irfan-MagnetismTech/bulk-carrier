@@ -11,7 +11,7 @@ class CrwAgencyContractRequest extends FormRequest
     {
         $data      = request('data');
         $dataArray = json_decode($data, true);
-        $logo = is_object(request('attachment')) ? request('attachment') : null;
+        $logo      = is_object(request('attachment')) ? request('attachment') : null;
         $mergeData = array_merge($dataArray, ['attachment' => $logo]);
 
         $this->replace($mergeData);
@@ -19,12 +19,12 @@ class CrwAgencyContractRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     * 
+     *
      * @return array
      */
     public function rules(): array {
         return [
-            'crw_agency_id'        => 'required|integer',
+            'crw_agency_id'        => 'required|integer|exists:crw_agencies,id',
             'billing_cycle'        => 'required|integer|max:365',
             'billing_currency'     => 'required|string|max:255',
             'validity_from'        => 'required|date',
@@ -32,7 +32,7 @@ class CrwAgencyContractRequest extends FormRequest
             'service_offered'      => 'required|string|max:700',
             'terms_and_conditions' => 'required|string|max:1000',
             'remarks'              => 'nullable|string|max:700',
-            'attachment'           => 'nullable|mimes:pdf,doc,docx,jpeg,png,gif,xlsx|max:2048', // accepting documents, images, and Excel files
+            'attachment'           => 'nullable|mimes:pdf,doc,docx,jpeg,png,gif,xlsx|max:2048',
             'account_holder_name'  => 'required|string|max:255',
             'bank_name'            => 'required|string|max:255',
             'bank_address'         => 'required|string|max:255',
@@ -49,7 +49,7 @@ class CrwAgencyContractRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            //
+            'crw_agency_id' => 'The Agency Name does not exists.',
         ];
     }
 
