@@ -50,7 +50,7 @@ class ScmMrrController extends Controller
      * @param ScmMrrRequest $request
      * @return JsonResponse
      */
-    public function store(ScmMrrRequest $request): JsonResponse
+    public function store(ScmMrrRequest $request)
     {
         $requestData = $request->except('ref_no');
 
@@ -59,7 +59,7 @@ class ScmMrrController extends Controller
 
             $scmMrr = ScmMrr::create($requestData);
             $this->createScmMrrLinesAndItems($request, $scmMrr);
-            StockLedgerData::insert($scmMrr, $request->scmMrrLineItems);
+
 
             DB::commit();
 
@@ -79,6 +79,7 @@ class ScmMrrController extends Controller
             ]);
 
             foreach ($values['scmMrrLineItems'] as $index => $value) {
+                return response()->json($value, 422);
                 $scmMrrLine->scmMrrLineItems()->create([
                     'scm_material_id' => $value['scm_material_id'],
                     'unit' => $value['unit'],
@@ -92,6 +93,7 @@ class ScmMrrController extends Controller
                     'net_rate' => $value['net_rate'],
                 ]);
             }
+            StockLedgerData::insert($scmMrr, $values);
         }
     }
 
