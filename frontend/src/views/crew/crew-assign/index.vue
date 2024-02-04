@@ -13,6 +13,7 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import RemarksComponent from "../../../components/utils/RemarksComponent.vue";
+import { formatDate } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -33,7 +34,7 @@ const debouncedValue = useDebouncedRef('', 800);
 
 const { setTitle } = Title();
 
-setTitle('Crew Assigns');
+setTitle('Crew Assign');
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
@@ -239,13 +240,13 @@ onMounted(() => {
           <tbody>
             <tr v-for="(crwAssign,index) in crewAssigns?.data" :key="index">
               <td> {{ index + 1 }} </td>
-              <td> <nobr> {{ crwAssign?.assignment_code }} </nobr> </td>
-              <td> <nobr> {{ crwAssign?.opsVessel?.name }} </nobr> </td>
-              <td class="text-left"> <nobr> {{ crwAssign?.crwCrew?.full_name }} </nobr> </td>
+              <td class="!text-left"> <nobr> {{ crwAssign?.assignment_code }} </nobr> </td>
+              <td class="!text-left"> <nobr> {{ crwAssign?.opsVessel?.name }} </nobr> </td>
+              <td class="!text-left"> <nobr> {{ crwAssign?.crwCrew?.full_name }} </nobr> </td>
               <td> <nobr> {{ crwAssign?.crwCrew?.pre_mobile_no }} </nobr> </td>
-              <td> <nobr> {{ crwAssign?.position_onboard }} </nobr> </td>
-              <td> <nobr> {{ crwAssign?.joining_date }} </nobr> </td>
-              <td> <nobr> {{ crwAssign?.joining_port_code }} </nobr> </td>
+              <td class="!text-left"> <nobr> {{ crwAssign?.position_onboard }} </nobr> </td>
+              <td> <nobr> {{ formatDate(crwAssign?.joining_date) }} </nobr> </td>
+              <td class="!text-left"> <nobr> {{ crwAssign?.joining_port_code }} </nobr> </td>
               <td> {{ crwAssign?.duration }}  </td>
               <td>
                 <span :class="crwAssign?.status === 'Onboard' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full"> {{ crwAssign?.status }}

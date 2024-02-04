@@ -6,6 +6,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
+import { formatDate } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 
@@ -24,7 +25,7 @@ onMounted(() => {
 
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Crew Profile Details # {{profileId}}</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Crew Profile Details</h2>
     <default-button :title="'Crew Profile List'" :to="{ name: 'crw.profiles.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
@@ -64,7 +65,7 @@ onMounted(() => {
                 <th>Recruitment Approval</th>
                 <td>
                   [
-                  <strong>Applied Date:</strong> {{ crewProfile?.crewRecruitmentApproval?.applied_date }},
+                  <strong>Applied Date:</strong> {{ formatDate(crewProfile?.crewRecruitmentApproval?.applied_date) }},
                   <strong>Page Title:</strong> {{ crewProfile?.crewRecruitmentApproval?.page_title }},
                   <strong>Total Approved:</strong> {{ crewProfile?.crewRecruitmentApproval?.total_approved }}
                   ]
@@ -127,7 +128,7 @@ onMounted(() => {
                       </tr>
                       <tr>
                         <th>Date of Birth</th>
-                        <td>{{ crewProfile?.date_of_birth }}</td>
+                        <td>{{ formatDate(crewProfile?.date_of_birth) }}</td>
                       </tr>
                       <tr>
                         <th>Gender</th>
@@ -151,7 +152,7 @@ onMounted(() => {
                       </tr>
                       <tr v-if="crewProfile?.passport_no">
                         <th>Passport No & Issue Date</th>
-                        <td>{{ crewProfile?.passport_no }}, {{ crewProfile?.passport_issue_date }}</td>
+                        <td>{{ crewProfile?.passport_no }}, {{ formatDate(crewProfile?.passport_issue_date) }}</td>
                       </tr>
                       <tr v-if="crewProfile?.blood_group">
                         <th>Blood Group</th>
@@ -298,8 +299,8 @@ onMounted(() => {
             <tr v-for="(experienceData,index) in crewProfile?.experiences" :key="index">
               <td>{{ index + 1 }}</td>
               <td>{{ experienceData?.employer_name }}</td>
-              <td>{{ experienceData?.from_date }}</td>
-              <td>{{ experienceData?.till_date }}</td>
+              <td>{{ formatDate(experienceData?.from_date) }}</td>
+              <td>{{ formatDate(experienceData?.till_date) }}</td>
               <td>{{ experienceData?.last_designation }}</td>
               <td>{{ experienceData?.reason_for_leave }}</td>
             </tr>

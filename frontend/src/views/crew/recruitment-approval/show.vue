@@ -6,6 +6,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
+import { formatDate } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 
@@ -24,7 +25,7 @@ onMounted(() => {
 
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Recruitment Approval Details # {{recruitmentApprovalId}}</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Recruitment Approval Details</h2>
     <default-button :title="'Recruitment Approval'" :to="{ name: 'crw.recruitmentApprovals.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
@@ -43,7 +44,7 @@ onMounted(() => {
               </tr>
               <tr>
                 <th class="w-40 text-left">Applied Date</th>
-                <td class="text-left">{{ recruitmentApproval?.applied_date }}</td>
+                <td class="text-left">{{ formatDate(recruitmentApproval?.applied_date) }}</td>
               </tr>
               <tr>
                 <th class="w-40 text-left">Page Title</th>

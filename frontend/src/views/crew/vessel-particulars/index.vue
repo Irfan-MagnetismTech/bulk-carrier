@@ -127,6 +127,14 @@ let filterOptions = ref( {
 			"order_by": null,
 			"date_from": null
 			},
+      {
+        "relation_name": null,
+        "field_name": "business_unit",
+        "search_param": "",
+        "action": null,
+        "order_by": null,
+        "date_from": null
+      }
 	]
 });
 
@@ -276,7 +284,13 @@ onMounted(() => {
                 </div>
               </th>
               <th>
-                <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
+                <div class="flex justify-evenly items-center">
+                  <span>Business Unit</span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(10,'asc',filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[10].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[10].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(10,'desc',filterOptions)" :class="{'text-gray-800' : filterOptions.filter_options[10].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[10].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
               </th>
               <th>Action</th>
             </tr>
@@ -300,6 +314,9 @@ onMounted(() => {
               <th><input v-model="filterOptions.filter_options[7].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[8].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[9].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
+              <th>
+                <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
+              </th>
               <th>
                 <button title="Clear Filter" @click="clearFilter(filterOptions)" type="button" v-html="icons.NotFilterIcon"></button>
               </th>

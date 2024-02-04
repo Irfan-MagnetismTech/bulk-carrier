@@ -13,6 +13,7 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import useGlobalFilter from "../../../composables/useGlobalFilter";
 import {useRouter} from "vue-router";
+import { formatDate } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 
@@ -187,7 +188,7 @@ onMounted(() => {
           <tbody class="relative">
           <tr v-for="(chkList,index) in checklists?.data" :key="index">
             <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-            <td class="w-1/6"><nobr>{{ chkList?.effective_date }}</nobr></td>
+            <td class="w-1/6"><nobr>{{ formatDate(chkList?.effective_date) }}</nobr></td>
             <td style="text-align: left !important;">
               <span v-for="(chkListLine,index) in chkList?.crwCrewChecklistLines" :key="index"
                     class="text-xs mr-2 mb-2 inline-block py-1 px-2.5 leading-none whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded">
