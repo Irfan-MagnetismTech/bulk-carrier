@@ -330,7 +330,12 @@ function confirmDelete(id) {
             <span class="label-item-title">Date <span class="text-red-500">*</span></span>
             <VueDatePicker  v-model="lcRecordStatus.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :auto-position="false" :min-date="lcRecordStatuses?.last_date"></VueDatePicker>
           </label>
-
+        </div>
+        <div class="flex justify-end mt-2">
+          <button type="button" @click="storeStatus" 
+                  class="w-full px-5 py-3 text-sm font-medium leading-5 text-white duration-150 rounded-lg sm:px-4 sm:py-2 sm:w-auto bg-green-500 hover:bg-green-700 ">
+            Save
+          </button>
         </div>
         <div class="mt-3 min-h-[250px]">
           <span class="label-item-title"> Previous Status </span>
@@ -373,10 +378,7 @@ function confirmDelete(id) {
                   class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 border border-gray-300 rounded-lg dark-disabled:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
             CLOSE
           </button>
-          <button type="button" @click="storeStatus" style="color: #1b1e21"
-                  class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 border border-gray-300 rounded-lg dark-disabled:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
-            CONFIRM
-          </button>
+          
         </footer>
       </div>
     </form>
