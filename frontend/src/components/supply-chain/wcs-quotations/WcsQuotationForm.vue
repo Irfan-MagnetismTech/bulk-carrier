@@ -50,7 +50,7 @@
 
     <label class="label-group">
         <span class="label-item-title">Payment Method <span class="text-red-500">*</span></span>
-         <select v-model="form.payment_mode" class="form-input" required >
+         <select v-model="form.payment_mode" class="form-input" required @change="paymentModeChange">
             <option value="" disabled selected>Select</option>
             <option value="Cash">Cash</option>
             <option value="Credit">Credit</option>
@@ -67,26 +67,26 @@
           <option value="USD">USD</option>
         </select>
       </label>
-      <label class="label-group">
-        <span class="label-item-title">Credit Term <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.credit_term" class="form-input" required placeholder="Credit Term"/>
+      <label class="label-group" >
+        <span class="label-item-title">Credit Term <span v-show="form.payment_mode != 'Cash'" class="text-red-500">*</span></span>
+          <input type="text" v-model="form.credit_term" class="form-input" :class="{'vms-readonly-input': form.payment_mode == 'Cash'}" :required="form.payment_mode != 'Cash'" placeholder="Credit Term" :readonly="form.payment_mode == 'Cash'"/>
       </label>
       <label class="label-group">
-        <span class="label-item-title">VAT <span class="text-red-500">*</span></span>
-          <input type="number" step="0.01" v-model="form.vat" class="form-input" required/>
+        <span class="label-item-title">VAT</span>
+          <input type="text"  v-model="form.vat" placeholder="VAT" class="form-input" />
       </label>
       <label class="label-group">
-        <span class="label-item-title">AIT <span class="text-red-500">*</span></span>
-          <input type="number" step="0.01" v-model="form.ait" class="form-input" required/>
+        <span class="label-item-title">AIT</span>
+          <input type="text"  v-model="form.ait" placeholder="AIT" class="form-input" />
       </label>
       
       <label class="label-group">
-        <span class="label-item-title">Security Money <span class="text-red-500">*</span></span>
-          <input type="number" step="0.01" min="0" v-model="form.security_money" class="form-input" required/>
+        <span class="label-item-title">Security Money</span>
+          <input type="number" step="0.01" min="0" v-model="form.security_money" class="form-input" />
       </label>
       <label class="label-group">
-        <span class="label-item-title">Adjustment Policy <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.adjustment_policy" class="form-input" placeholder="Adjustment Policy" required/>
+        <span class="label-item-title">Adjustment Policy</span>
+          <input type="text" v-model="form.adjustment_policy" class="form-input" placeholder="Adjustment Policy" />
       </label>
 
       <label class="label-group">
@@ -101,8 +101,8 @@
             <input type="file" class="form-input" @change="handleAttachmentChange" />
             <Error v-if="errors?.attachment" :errors="errors.attachment"  />
         </label>
-        <RemarksComponent class="col-span-1 md:col-span-3 lg:col-span-4" v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'" isRequired="true"></RemarksComponent>
-        <RemarksComponent class="col-span-1 md:col-span-3 lg:col-span-4" v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'" isRequired="true"></RemarksComponent>
+        <RemarksComponent class="col-span-1 md:col-span-3 lg:col-span-4" v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'" ></RemarksComponent>
+        <RemarksComponent class="col-span-1 md:col-span-3 lg:col-span-4" v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'" ></RemarksComponent>
   </div>
 
   <fieldset class=" grid grid-cols-1 px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400 ">
@@ -474,6 +474,11 @@ import ErrorComponent from '../../utils/ErrorComponent.vue';
     function changeMaterial(value,index) {
         props.form.scmCsMaterialVendors[index].unit = value.unit;
         props.form.scmCsMaterialVendors[index].scm_material_id = value.id;
+    }
+
+    function paymentModeChange(){
+      if(props.form.payment_mode == 'Cash')
+        props.form.credit_term = '';
     }
 
   function setVendorOtherData() {

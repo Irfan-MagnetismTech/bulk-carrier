@@ -20,6 +20,7 @@ class OpsVesselBunker extends Model
         'exchange_rate_usd',
         'total_amount_bdt',
         'total_amount_usd',
+        'amount',
         'type',
         'usage_type',
         'date',

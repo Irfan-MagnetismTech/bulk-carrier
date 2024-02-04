@@ -82,7 +82,7 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Crew Contact",
-      "filter_type": "input", 
+      "filter_type": "input",
       "nobr_tag": true
     },
     {

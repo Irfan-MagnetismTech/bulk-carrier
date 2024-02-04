@@ -29,13 +29,18 @@
                         </td>
                     </tr>
                     <tr>
-                        <th class="w-40">Exchange Rate</th>
-                        <td>{{ deliveryRedelivery.exchange_rate }}</td>
-                    </tr>
-                    <tr>
                         <th class="w-40">Currency</th>
                         <td>{{ deliveryRedelivery.currency }}</td>
                     </tr>
+                    <tr>
+                        <th class="w-40">Exchange Rate <small>[To USD]</small></th>
+                        <td>{{ deliveryRedelivery.exchange_rate_usd }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Exchange Rate <small>[To BDT]</small></th>
+                        <td>{{ deliveryRedelivery.exchange_rate_bdt }}</td>
+                    </tr>
+                    
                     <tr>
                         <th class="w-40">Vessel</th>
                         <td>{{ deliveryRedelivery.opsVessel?.name }}</td>
@@ -81,7 +86,7 @@
           <table class="w-full">
             <thead>
                 <tr>
-                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="7">Bunker Information</td>
+                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="8">Bunker Information</td>
                 </tr>
             </thead>
             <thead v-once>
@@ -91,12 +96,13 @@
                 <th>Unit</th>
                 <th>Quantity</th>
                 <th>Rate</th>
+                <th>Amount</th>
                 <th>Amount <small>(USD)</small></th>
                 <th>Amount <small>(BDT)</small></th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(certificate, index) in deliveryRedelivery.opsBunkers">
+              <tr v-for="(certificate, index) in deliveryRedelivery.opsBunkers" :key="index">
                 <td>
                   {{ index+1 }}
                 </td>
@@ -114,6 +120,11 @@
               <td>
                 <span>
                   {{ numberFormat(deliveryRedelivery.opsBunkers[index].rate) }}
+                </span>
+              </td>
+              <td>
+                <span>
+                  {{ numberFormat(deliveryRedelivery.opsBunkers[index].amount) }}
                 </span>
               </td>
               <td>

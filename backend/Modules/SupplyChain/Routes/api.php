@@ -111,7 +111,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
         Route::get('get-pr-wise-cs-data', "getPrWiseCsData")->name('getPrWiseCsData');
         Route::get('search-pr', "searchPr")->name('searchPr');
         Route::get('search-purchase-requisitions', "searchPurchaseRequisitions")->name('search-purchase-requisitions');
-        Route::get('search-purchase-requisitions-for-cs', "searchPurchaseRequisitionsForCs")->name('search-purchase-requisitions');
+        Route::get('search-purchase-requisitions-for-cs', "searchPurchaseRequisitionsForCs")->name('search-purchase-requisitions-for-cs');
         Route::post('close-pr', "closePr")->name('closePr');
         Route::post('close-prline', "closePrLine")->name('closePrLine');
     });
@@ -141,6 +141,8 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
         Route::get('search-po-for-lc', "searchPoForLc")->name('searchPoForLc');
         Route::get('get-po-line-datas', "getPoLineDatas")->name('get-po-line-datas');
         Route::get('get-pr-cs-wise-po-data', "getPoOrPoCsWisePrData");
+        Route::post('close-po', "closePo")->name('closePo');
+        Route::post('close-poline', "closePoLine")->name('closePoLine');
     });
 });
 

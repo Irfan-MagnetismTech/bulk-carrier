@@ -62,6 +62,15 @@ class OpsChartererInvoiceController extends Controller
                 $voyage_ids[]=$voyage['ops_voyage_id'];
             }
 
+            if(count($voyage_ids) != count(array_values(array_unique($voyage_ids)))) {
+                    $error= [
+                        'message'=>'Same voyage cannot be billed more than once.',
+                        'errors'=>[
+                            'Voyage'=>['Same voyage cannot be billed more than once.',]
+                            ]
+                        ];
+                    return response()->json($error, 422);
+            }
 
             $isBilled = OpsChartererInvoiceVoyage::whereIn('ops_voyage_id', $voyage_ids)->get();
 
@@ -141,9 +150,18 @@ class OpsChartererInvoiceController extends Controller
 
             $notMatchedInArray1 = array_diff($voyage_ids, $currentVoyages->toArray());
 
+            if(count($voyage_ids) != count(array_values(array_unique($voyage_ids)))) {
+                $error= [
+                    'message'=>'Same voyage cannot be billed more than once.',
+                    'errors'=>[
+                        'Voyage'=>['Same voyage cannot be billed more than once.',]
+                        ]
+                    ];
+                return response()->json($error, 422);
+            }
+
             $isBilled = OpsChartererInvoiceVoyage::whereIn('ops_voyage_id', $notMatchedInArray1)->get();
-
-
+           
             if(count($isBilled) > 0) {
                 $error= [
                     'message'=>'One or more voyages are already billed.',

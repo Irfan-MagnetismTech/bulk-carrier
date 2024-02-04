@@ -4,7 +4,7 @@
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Name <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.function_name" placeholder="Critical Function Name" class="form-input" required/>
-          <Error v-if="errors?.function_name" :errors="errors.function_name" />
+          <!-- <Error v-if="errors?.function_name" :errors="errors.function_name" /> -->
         </label>
       <!-- <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Notes</span>

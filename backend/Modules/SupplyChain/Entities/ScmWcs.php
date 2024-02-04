@@ -4,6 +4,7 @@ namespace Modules\SupplyChain\Entities;
 
 use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
+use App\Traits\UniqueKeyGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Accounts\Entities\AccCostCenter;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmWcs extends Model
 {
-    use HasFactory, GlobalSearchTrait, DeletableModel;
+    use HasFactory, GlobalSearchTrait, DeletableModel, UniqueKeyGenerator;
 
     protected $fillable = [
         'scm_warehouse_id',
@@ -29,6 +30,8 @@ class ScmWcs extends Model
         'remarks',
         'business_unit',
     ];
+
+    protected $refKeyPrefix = 'WCS';
 
     public function scmWarehouse()
     {
@@ -58,5 +61,10 @@ class ScmWcs extends Model
     public function scmWcsServices(): HasMany
     {
         return $this->hasMany(ScmWcsService::class)->latest();
+    }
+
+    public function scmWos()
+    {
+        return $this->hasMany(ScmWo::class);
     }
 }

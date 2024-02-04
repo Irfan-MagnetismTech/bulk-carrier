@@ -15,7 +15,11 @@ class OpsHandoverTakeover extends Model
     protected $fillable = [
         'note_type',
         'effective_date',
-        'exchange_rate',
+        'exchange_rate_bdt',
+        'exchange_rate_usd',
+        'total_amount_bdt',
+        'total_amount_usd',
+        'amount',
         'currency',
         'ops_vessel_id',
         'ops_charterer_profile_id',

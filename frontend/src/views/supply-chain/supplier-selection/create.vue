@@ -35,7 +35,7 @@ onMounted(() => {
         quotation.value = value;
         quotation.value.supplier_selection = [];
         Object.entries(value.scmCsVendor).forEach(([key, data]) => {
-            quotation.value.supplier_selection.push({'is_selected': false});
+            quotation.value.supplier_selection.push({ 'is_selected': false,'technical_acceptance': null, 'scm_cs_vendor_id': data[0].id, 'scm_vendor_id': data[0].scm_vendor_id});
         });
     }
   });
@@ -52,7 +52,7 @@ setTitle('Select Supplier');
           <!-- <material-cs-form v-model:form="quotation" :errors="errors" :page="page"></material-cs-form> -->
             <!-- Submit button -->
            <supplier-selection-form v-model:form="quotation" :errors="errors" :page="page" :materialObj="materialObj" :formData="CsData"></supplier-selection-form>
-            <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
+            <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Confirm</button>
         </form>
         
     </div>

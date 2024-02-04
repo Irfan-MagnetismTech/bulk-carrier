@@ -19,7 +19,7 @@
             </div>
             <input v-else type="text" :value="form?.opsVessel?.name" placeholder="Vessel Name" class="form-input vms-readonly-input" readonly />
             
-          <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" />
+          <!-- <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Ship Department <span class="text-red-500">*</span></span>
@@ -37,7 +37,7 @@
               <input type="hidden" v-model="form.mnt_ship_department_id">
             </div>
             <input v-else type="text" :value="form?.mntItem?.mntItemGroup?.mntShipDepartment?.name" placeholder="Ship Department Name" class="form-input vms-readonly-input" readonly />
-          <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" />
+          <!-- <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Item Group <span class="text-red-500">*</span></span>
@@ -55,7 +55,7 @@
               <input type="hidden" v-model="form.mnt_item_group_id">
             </div>
             <input v-else type="text" :value="form?.mntItem?.mntItemGroup?.name" placeholder="Item Group Name" class="form-input vms-readonly-input" readonly />
-          <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" />
+          <!-- <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" /> -->
         </label>
         <div class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Item Name <span class="text-red-500">*</span></span>
@@ -73,30 +73,30 @@
               <input type="hidden" v-model="form.mnt_item_id">
             </div>
             <input v-else type="text" :value="form?.mntItem?.name" placeholder="Item Name" class="form-input vms-readonly-input" readonly />
-          <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
+          <!-- <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" /> -->
           </div>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Previous Running Hour </span>
             <input type="text" v-model.trim="form.previous_run_hour" placeholder="Previous Running Hour" class="form-input vms-readonly-input" readonly />
-          <Error v-if="errors?.previous_run_hour" :errors="errors.previous_run_hour" />
+          <!-- <Error v-if="errors?.previous_run_hour" :errors="errors.previous_run_hour" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Running Hour (Since Last Update) <span v-show="!(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" class="text-red-500">*</span></span>
             <input type="number" min="1" v-model="form.running_hour" placeholder="Running Hour" class="form-input" :required="!(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" :class="{ 'vms-readonly-input' : page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0  }"  :readonly="page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0" />
-          <Error v-if="errors?.running_hour" :errors="errors.running_hour" />
+          <!-- <Error v-if="errors?.running_hour" :errors="errors.running_hour" /> -->
         </label>
 
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Present Running Hour <span v-show="(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" class="text-red-500">*</span></span>
             <input type="number" min="1" v-model="computedPresentRunHour" placeholder="Present Running Hour" class="form-input" :required="(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" :class="{ 'vms-readonly-input': !(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)  }" :readonly="!(page === 'edit' && form.previous_run_hour == 0 && form.running_hour == 0)" />
-            <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
+            <!-- <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" /> -->
         </label>
 
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Updated On <span class="text-red-500">*</span></span>
             <!-- <input type="date" v-model="form.updated_on" placeholder="Updated on" class="form-input" required  /> -->
             <VueDatePicker v-model="form.updated_on" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
-          <Error v-if="errors?.updated_on" :errors="errors.updated_on" />
+          <!-- <Error v-if="errors?.updated_on" :errors="errors.updated_on" /> -->
         </label>
         
     </div>

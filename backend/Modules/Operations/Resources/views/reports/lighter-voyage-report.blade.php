@@ -165,7 +165,7 @@
                                                     $contractVariables[$field] += $total;
                                                 }
                                             @endphp
-                                            {{ ($vesselBunker->type=='Stock Out')?($sectorData?($sectorData[$month] * $sector['quantity']):''):'' }}
+                                            {{ ($vesselBunker->type=='Stock Out')?($sectorData?number_format(($sectorData[$month] * $sector['quantity']),2):''):'' }}
                                         @endif
                                     </td>
                                     
@@ -194,14 +194,14 @@
                                                 @endphp
             
                                                 <td rowspan="{{ count($vesselBunker->opsVoyage->opsVoyageSectors) }}">
-                                                    {{ ($vesselBunker->type=='Stock Out')?$expense->amount_bdt : '' }}
+                                                    {{ ($vesselBunker->type=='Stock Out')?number_format($expense->amount_bdt,2) : '' }}
                                                 </td>
                                             @endforeach
                                         @else
                                             <td></td>
                                         @endif
                                     @endforeach
-                                    <td rowspan="{{ count($vesselBunker->opsVoyage->opsVoyageSectors) }}">{{ $total_cost? $total_cost : '' }}</td>
+                                    <td rowspan="{{ count($vesselBunker->opsVoyage->opsVoyageSectors) }}">{{ $total_cost? number_format($total_cost,2) : '' }}</td>
                                     {{-- @foreach($data['opsVesselBunkerTitle'] as $title)
                                         @foreach($vesselBunker?->opsVoyage?->opsVesselBunkers->where('type','Stock Out') as $key=>$vessel_bunker)                                    
                                             @if ($loop->first)                                    
@@ -282,7 +282,7 @@
                             $voyageIds[]=$vesselBunker->ops_voyage_id; 
                             // $voyage_id=($sector?->ops_voyage_id)?$sector?->ops_voyage_id:'';                           
                         @endphp
-                    @elseif(isset($vesselBunker))                        
+                    @elseif(isset($vesselBunker))
                             {{-- @dd($vesselBunker) --}}
                         <tr>
                             <td><nobr>{{ \Carbon\Carbon::parse($vesselBunker['date'])->format('d/m/Y') }}</nobr></td>
@@ -295,7 +295,7 @@
                             <td rowspan=""></td>
                             <td rowspan=""></td>
                             @foreach($data['opsContractTitle'] as $title)                        	
-                                <td></td>                                
+                                <td></td>
                             @endforeach
 
                                 @foreach($data['opsExpenditureHeadTitle'] as $index=>$title)
@@ -361,7 +361,7 @@
                                 $field = strtolower(str_replace(' ', '', $title['particular']));
                             @endphp
                             {{
-                                $contractVariables[$field];
+                                number_format($contractVariables[$field],2);
                             }}
                         </th>
                     @endforeach
@@ -371,11 +371,11 @@
                                 $field = strtolower(str_replace(' ', '', $title['name']));
                             @endphp
                             {{
-                                $expenseVariables[$field];
+                                number_format($expenseVariables[$field],2)
                             }}
                         </th>
                     @endforeach
-                    <th>{{$grand_total_cost}}</th>
+                    <th>{{ number_format($grand_total_cost,2) }}</th>
                     {{-- @foreach($data['opsVesselBunkerTitle'] as $bunker)                        	
                         @foreach($data['bunkerMaterialTitle'] as $matrial)                        	
                             <th>

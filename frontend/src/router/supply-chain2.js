@@ -128,6 +128,12 @@ export default [
         component: () => import(`../views/${PATH_BASE}/wcs-supplier-selection/create.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'wcs-supplier-selection' },
     },
+    {
+        path: `/${BASE}/work-cs/:wcsId/supplier-selection/show`,
+        name: `${BASE}.wcs-supplier-selection.show`,
+        component: () => import(`../views/${PATH_BASE}/wcs-supplier-selection/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'wcs-supplier-selection-show' },
+    },
     /* Quotation End */
 
     /* Work Order start */

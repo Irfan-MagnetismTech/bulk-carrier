@@ -29,6 +29,7 @@ class ScmWrRequest extends FormRequest
             'attachment' => 'nullable|mimes:xlsx,pdf,jpg,png,jpeg,doc,docx',
             'remarks' => 'max:500',            
             'purchase_center' => 'required|max:255',
+            'user_department' => 'nullable|max:255',
             
             'scmWrLines.*.scm_service_id' => 'exclude_if:entry_type,1|required|exists:scm_services,id|integer',
             'scmWrLines.*.quantity' => 'exclude_if:entry_type,1|required|numeric|min:1',
@@ -59,9 +60,11 @@ class ScmWrRequest extends FormRequest
             'attachment.required' => 'Attachment is required',
             'attachment.mimes' => 'Attachment must be an xlsx,pdf,jpg,png,jpeg,doc,docx',
             'remarks.max' => 'Remarks must be less than 500 characters',
-
+            
             'purchase_center.required' => 'Purchase center is required',
             'purchase_center.max' => 'Purchase center must be less than 255 characters',
+            
+            'user_department.max' => 'User department must be less than 255 characters',
 
             'scmWrLines.*.scm_service_id.required' => 'In row no :position Service is required',
             'scmWrLines.*.scm_service_id.integer' => 'In row no :position Service must be an integer',

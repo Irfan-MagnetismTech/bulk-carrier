@@ -2,7 +2,7 @@
     import { ref, watch, onMounted,watchEffect,computed } from 'vue';
     import Error from "../../Error.vue";
     import useMaterial from "../../../composables/supply-chain/useMaterial.js";
-    import useService from "../../../composables/supply-chain/useService.js";
+    import useService from '../../../composables/supply-chain/useService';
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
     import usePurchaseRequisition from '../../../composables/supply-chain/usePurchaseRequisition';
@@ -11,104 +11,181 @@
     import ErrorComponent from "../../utils/ErrorComponent.vue";
     import cloneDeep from 'lodash/cloneDeep';
     import useBusinessInfo from '../../../composables/useBusinessInfo';
-    import usePurchaseOrder from '../../../composables/supply-chain/usePurchaseOrder';
+    import useHeroIcon from '../../../assets/heroIcon';
+    // import usePurchaseOrder from '../../../composables/supply-chain/usePurchaseOrder';
     import useWorkOrder from '../../../composables/supply-chain/useWorkOrder';
     import RemarksComponent from '../../utils/RemarksComponent.vue';
     import useMaterialCs from '../../../composables/supply-chain/useMaterialCs';
     import useWorkCs from '../../../composables/supply-chain/useWorkCs';
     const { material, materials, getMaterials,searchMaterial } = useMaterial();
-    const { warehouses,warehouse,getWarehouses,searchWarehouse ,isLoading:warehouseLoading} = useWarehouse();
+    const { service, services, getServices, searchService, isLoading:isServiceLoading } = useService();
+    const { warehouses,warehouse,getWarehouses,searchWarehouse ,isLoading:isWarehouseLoading} = useWarehouse();
     const { vendors, searchVendor,isLoading: vendorLoader } = useVendor();
     const { currencies, getCurrencies } = useBusinessInfo();
-    const { getMaterialList, prMaterialList, isLoading ,getLineData} = usePurchaseOrder();
-    const { getServiceList, wrServiceList, isLoading:isWorkOrderLoading } = useWorkOrder();
-    const { searchPurchaseRequisition, filteredPurchaseRequisitions } = usePurchaseRequisition();
-    const { searchWorkRequisition, filteredWorkRequisitions, isLoading:isWorkRequisitionLoading } = useWorkRequisition();
+    // const { getMaterialList, prMaterialList, isLoading ,getLineData} = usePurchaseOrder();
+    const { getServiceList, wrServiceList, getLineData, isLoading:isWorkOrderLoading } = useWorkOrder();
+    // const { searchPurchaseRequisition, filteredPurchaseRequisitions } = usePurchaseRequisition();
+    const { searchWorkRequisition, filteredWorkRequisitions } = useWorkRequisition();
         
     const { filteredMaterialCs, searchCs,getCsWiseVendorList,csWiseVendorList} = useMaterialCs();
-    const { filteredWorkCs, searchWcs, getWcsWiseVendorList, wcsWiseVendorList } = useWorkCs();
+    const { filteredWorkCs, searchWcs, getWcsWiseVendorList, wcsWiseVendorList, isLoading:isWorkCsLoading } = useWorkCs();
 
     const props= defineProps({
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
       formType: { type: String, required : false },
-    //   materialObject: { type: Object, required: false },
-      workObject: { type: Object, required: false },
-
+      // materialObject: { type: Object, required: false },
+      serviceObject: { type: Object, required: false },
       termsObject: { type: Object, required: false },
       page: { required: false, default: {} },
-    //   poLineObject: { type: Object, required: false },
+      // poLineObject: { type: Object, required: false },
       woLineObject: { type: Object, required: false },
-    //   materialList: { type: [Object, Array], required: false },
+      // materialList: { type: [Object, Array], required: false },
       serviceList: { type: [Object, Array], required: false },
     });
 
     const csVendors = ref([]);
+    const minWoDate = ref('');
 
+    const icons = useHeroIcon();
     
     function addMaterial(index) {
       const clonedObj = cloneDeep(props.materialObject);
-      // props.form.scmPoLines.push(clonedObj);
-      props.form.scmPoLines[index].scmPoMaterial.push(clonedObj);
-      // setMinHeight();
+      props.form.scmPoLines[index].scmPoItems.push(clonedObj);
     }
 
     function removeMaterial(index,itemIndex){
-      props.form.scmPoLines[index].scmPoMaterial.splice(itemIndex, 1);
-      // setMinHeight();
+      props.form.scmPoLines[index].scmPoItems.splice(itemIndex, 1);
     }
 
+    
+    function addService(index) {
+      const clonedObj = cloneDeep(props.serviceObject);
+      props.form.scmWoLines[index].scmWoItems.push(clonedObj);
+    }
+
+    function removeService(index,itemIndex){
+      props.form.scmWoLines[index].scmWoItems.splice(itemIndex, 1);
+    }
+
+
+
     function addBlock() {
-      let lineLength = props.form.scmPoLines.length;
-      const clonedObj = cloneDeep(props.poLineObject);
-      props.form.scmPoLines.push(clonedObj);
-      props.materialList.push([]);
-      // setMinHeight();
+      let lineLength = props.form.scmWoLines.length;
+      const clonedObj = cloneDeep(props.woLineObject);
+      props.form.scmWoLines.push(clonedObj);
+      props.serviceList.push([]);
     }
 
     function removeBlock(index) {
-      props.form.scmPoLines.splice(index, 1);
-      // setMinHeight();
+      props.form.scmWoLines.splice(index, 1);
     }
 
     function addTerms() {
           const clonedTermObj = cloneDeep(props.termsObject);
-          props.form.scmPoTerms.push(clonedTermObj);
+          props.form.scmWoTerms.push(clonedTermObj);
     }
 
     function removeTerms(index){
-      props.form.scmPoTerms.splice(index, 1);
+      props.form.scmWoTerms.splice(index, 1);
     }
 
     function changePr(index) {
-      props.form.scmPoLines[index].scm_pr_id = props.form.scmPoLines[index].scmPr.id;
-      getMaterialList(props.form.scmPoLines[index].scmPr.id).then((res) => {
-        props.materialList[index] = res;
-      });
-      if (props.form.scm_cs_id != null) {
-        getLineData(props.form.scmPoLines[index].scm_pr_id,props.form.scm_cs_id).then((res) => {
-          props.form.scmPoLines[index] = res;
+        props.materialList[index] = [];
+        props.form.scmPoLines[index].scm_pr_id = props.form.scmPoLines[index].scmPr?.id ?? null;
+        getMaterialList(props.form.scmPoLines[index].scmPr.id).then((res) => {
+          props.materialList[index] = res;
         });
-      } else { 
-        getLineData(props.form.scmPoLines[index].scm_pr_id).then((res) => {
-        props.form.scmPoLines[index] = res;
-      });
-      }
-      
+        if (props.form.scm_cs_id != null) {
+          getLineData(props.form.scmPoLines[index].scm_pr_id,props.form.scm_cs_id).then((res) => {
+            props.form.scmPoLines[index].scmPoItems = res;
+          });
+        } else { 
+          getLineData(props.form.scmPoLines[index].scm_pr_id).then((res) => {
+          props.form.scmPoLines[index].scmPoItems = res;
+        });
+        }
+        
     }
+
+    
+    // function changeWr(index) {
+    //     props.serviceList[index] = [];
+    //     props.form.scmWoLines[index].scm_wr_id = props.form.scmWoLines[index].scmWr?.id ?? null;
+    //     if(props.page == 'create')
+    //     {
+    //       getServiceList(props.form.scmWoLines[index].scmWr?.id).then((res) => {
+    //         props.serviceList[index] = res;
+    //       });
+    //     }
+    //     else{
+    //         getServiceList(props.form.scmWoLines[index].scmWr?.id, props.form.id).then((res) => {
+    //         props.serviceList[index] = res;
+    //       });
+    //     }
+    //     if (props.form.scm_wcs_id != null) {
+    //       getLineData(props.form.scmWoLines[index].scm_wr_id,props.form.scm_wcs_id).then((res) => {
+    //         props.form.scmWoLines[index].scmWoItems = res;
+    //       });
+    //     } else { 
+    //       getLineData(props.form.scmWoLines[index].scm_wr_id).then((res) => {
+    //       props.form.scmWoLines[index].scmWoItems = res;
+    //     });
+    //     }
+        
+    // }
+
+    function changeWr(index) {
+        props.serviceList[index] = [];
+        props.form.scmWoLines[index].scm_wr_id = props.form.scmWoLines[index].scmWr?.id ?? null;
+        
+        if (props.formType != 'edit') {
+          getLineData(props.form.scmWoLines[index].scm_wr_id, props.form.scm_wcs_id).then((res) => {
+            props.form.scmWoLines[index].scmWoItems = res;
+          });
+          getServiceList(props.form.scmWoLines[index].scmWr?.id,props.form.scm_wcs_id).then((res) => {
+          props.serviceList[index] = res;
+          });
+        } else { 
+          getLineData(props.form.scmWoLines[index].scm_wr_id, props.form.scm_wcs_id, props.form.id).then((res) => {
+            props.form.scmWoLines[index].scmWoItems = res;
+          });
+          getServiceList(props.form.scmWoLines[index].scmWr?.id, props.form.scm_wcs_id, props.form.id).then((res) => {
+          props.serviceList[index] = res;
+          });
+        }
+        
+    }
+
+
+
+    function changeWarehouse() {
+      props.form.scm_warehouse_id = props.form.scmWarehouse?.id ?? null;
+      props.form.acc_cost_center_id = props.form.scmWarehouse?.cost_center_id ?? null;
+      props.form.scmVendor = null;
+      props.form.scm_vendor_id = null;
+      getPr();
+      getCs();
+    }
+
+    
+    function warehouseChange() {
+      props.form.scm_warehouse_id = props.form.scmWarehouse?.id;
+      props.form.acc_cost_center_id = props.form.scmWarehouse?.cost_center_id;
+      props.form.scmVendor = null;
+      props.form.scm_vendor_id = null;
+      getWr();
+      getWcs();
+    }
+
+
 
     const purchase_center = ['Local', 'Foreign', 'Plant'];
 
     const customDataTableirf = ref(null);
     const dynamicMinHeight = ref(0);
 
-// const setMinHeight = () => {
-//   dynamicMinHeight.value = customDataTableirf.value.offsetHeight + 100;
-// };
 
-// onMounted(() => {
-//   setMinHeight();
-// });
 
     // function setMaterialOtherData(index){
     //   let material = materials.value.find((material) => material.id === props.form.materials[index].material_id);
@@ -158,51 +235,154 @@
       }
 
     watch(() => props?.form?.scmPoLines, (newVal, oldVal) => {
-      // let total = 0.0;
-      // let materialArray = [];
-      // newVal?.forEach((line, index) => {
-      //   let material_key = line.scm_material_id + "-" + line?.brand ?? '' + "-" + line?.model ?? '';
-      //   console.log('material', material_key, 'index', index);
-      //   if (materialArray.indexOf(material_key) === -1) {
-      //     materialArray.push(material_key);
-      //     props.form.scmPoLines[index].total_price = parseFloat((line?.rate * line?.quantity).toFixed(2));
-      //     total += parseFloat(props.form.scmPoLines[index].total_price);
-      //     setMaterialOtherData(line, index);
-      //     props.form.sub_total = parseFloat(total.toFixed(2));
-      //     calculateNetAmount();
-      //   } else {
-      //     alert("Duplicate Material Found");
-      //     // props.form.scmPoLines.splice(index, 1);
-      //   }  
-       
-         
-      // });
+      let total = 0.0;
+      newVal?.forEach((lines, index) => {
+        if(lines?.scmPoItems?.length != 0){
+          lines.scmPoItems.forEach((line, itemIndex) => {
+          props.form.scmPoLines[index].scmPoItems[itemIndex].total_price = parseFloat(((line?.rate ?? 0) * (line?.quantity ?? 0)).toFixed(2));
+          total += parseFloat(props.form.scmPoLines[index].scmPoItems[itemIndex].total_price);
+          });
+        }
+      });
+      
+      props.form.sub_total = parseFloat(total.toFixed(2));
+      calculateNetAmount();
     }, { deep: true });
 
+
+    
+    watch(() => props?.form?.scmWoLines, (newVal, oldVal) => {
+      let total = 0.0;
+      newVal?.forEach((lines, index) => {
+        if(lines?.scmWoItems?.length != 0){
+          lines.scmWoItems?.forEach((line, itemIndex) => {
+          props.form.scmWoLines[index].scmWoItems[itemIndex].total_price = parseFloat(((line?.rate ?? 0) * (line?.quantity ?? 0)).toFixed(2));
+          total += parseFloat(props.form.scmWoLines[index].scmWoItems[itemIndex].total_price);
+          });
+        }
+      });
+      
+      props.form.sub_total = parseFloat(total.toFixed(2));
+      calculateNetAmount();
+    }, { deep: true });
+
+
+
+
     function changePurchaseCenter() { 
-  
+      props.form.scmVendor = null;
+      props.form.scm_vendor_id = null;
+      getCs();
+      getPr();
+
+    }
+
+    
+    function purchaseCenterChange() { 
+      props.form.scmVendor = null;
+      props.form.scm_vendor_id = null;
+      getWcs();
+      getWr();
     }
 
     function changeCs() {
       props.form.cs_no = props.form?.scmCs?.ref_no ?? null;
-      searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, props.form.scmCs.id);
-      getCsWiseVendorList(props.form.scmCs.id);
+      props.form.scm_cs_id = props.form?.scmCs?.id ?? null;
+      props.form.scm_vendor_id = null;
+      props.form.scmVendor = null;
+      csWiseVendorList.value = [];
+      getPr();
+      if(props.form.scm_cs_id){
+        getCsWiseVendorList(props.form.scmCs.id);
+      }
     }
 
     
-    function changeWcs() {
+    function wcsChange() {
       props.form.wcs_no = props.form?.scmWcs?.ref_no ?? null;
-      searchWorkRequisition(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, props.form.scmWcs?.id);
-      getWcsWiseVendorList(props.form.scmWcs?.id);
+      props.form.scm_wcs_id = props.form?.scmWcs?.id ?? null;
+      props.form.scm_vendor_id = null;
+      props.form.scmVendor = null;
+      wcsWiseVendorList.value = [];
+      if(props.form?.scmWcs?.id){
+        minWoDate.value = props.form?.scmWcs?.effective_date;
+        // console.log("props.form?.scmWcs", props.form?.scmWcs?.effective_date);
+      }
+      else{
+        minWoDate.value = '';
+      }
+      checkWoDate();
+      getWr();
+      if(props.form.scm_wcs_id){
+        getWcsWiseVendorList(props.form.scmWcs.id);
+      }
     }
+
+    function checkWoDate(){
+      if(props.form.date < minWoDate.value) props.form.date = '';
+    }
+
+    function woDateChange(){
+      props.form.scmWoLines?.forEach(scmWoLine => {
+        scmWoLine?.scmWoItems?.forEach(scmWoItem => {
+          if(scmWoItem.required_date < props.form.date)
+            scmWoItem.required_date = '';
+        })
+        // if ((minWoDate.value < scmWoLine?.scmWr?.approved_date || minWoDate.value == '') && scmWoLine?.scmWr) {
+        //   minWoDate.value = scmWoLine?.scmWr?.approved_date;
+        // }
+      });
+    }
+
+    watch(() => props.form.scmWoLines, (scmWoLines) => {
+      minWoDate.value = '' || props.form?.scmWcs?.effective_date;
+      scmWoLines?.forEach(scmWoLine => {
+        if ((minWoDate.value < scmWoLine?.scmWr?.approved_date || minWoDate.value == '' || !minWoDate.value) && scmWoLine?.scmWr) {
+          minWoDate.value = scmWoLine?.scmWr?.approved_date;
+        }
+      });
+
+    checkWoDate();
+
+}, { deep: true });
 
 
 
     
     function calculateNetAmount(){
-      props.form.total_amount = parseFloat((props.form.sub_total - props.form.discount).toFixed(2));
-      props.form.net_amount = parseFloat((props.form.total_amount + parseFloat(props.form.vat)).toFixed(2));
+      // props.form.total_amount = parseFloat((props.form.sub_total - props.form.discount).toFixed(2));
+      // props.form.net_amount = parseFloat((props.form.total_amount + parseFloat(props.form.vat)).toFixed(2));
+
+      props.form.total_amount = parseFloat((props.form.sub_total).toFixed(2));
+      props.form.net_amount = props.form.total_amount;
     }
+
+    function changeMaterial(index,itemIndex) {
+      props.form.scmPoLines[index].scmPoItems[itemIndex].scm_material_id = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.id;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].unit = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.unit;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].brand = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.brand;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].model = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.model;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].max_quantity = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.max_quantity;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].quantity = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.quantity;
+      props.form.scmPoLines[index].scmPoItems[itemIndex].pr_composite_key = props.form.scmPoLines[index].scmPoItems[itemIndex].scmMaterial.pr_composite_key;
+      
+    }
+
+    
+    function changeService(index,itemIndex) {
+      props.form.scmWoLines[index].scmWoItems[itemIndex].scm_service_id = props.form.scmWoLines[index].scmWoItems[itemIndex].scmService?.id;
+      // props.form.scmWoLines[index].scmWoItems[itemIndex].unit = props.form.scmWoLines[index].scmWoItems[itemIndex].scmService.unit;
+      // props.form.scmWoLines[index].scmWoItems[itemIndex].brand = props.form.scmWoLines[index].scmWoItems[itemIndex].scmService.brand;
+      // props.form.scmWoLines[index].scmWoItems[itemIndex].model = props.form.scmWoLines[index].scmWoItems[itemIndex].scmService.model;
+      // console.log("", props.form.scmWoLines[index].scmWoItems[itemIndex].scmService.quantity);
+      props.form.scmWoLines[index].scmWoItems[itemIndex].max_quantity = props.form.scmWoLines[index].scmWoItems[itemIndex].scmService.max_quantity;
+      props.form.scmWoLines[index].scmWoItems[itemIndex].wr_quantity = props.form.scmWoLines[index].scmWoItems[itemIndex].scmService.wr_quantity;
+      props.form.scmWoLines[index].scmWoItems[itemIndex].quantity = props.form.scmWoLines[index].scmWoItems[itemIndex].scmService.quantity;
+      props.form.scmWoLines[index].scmWoItems[itemIndex].wr_composite_key = props.form.scmWoLines[index].scmWoItems[itemIndex].scmService.wr_composite_key;
+      
+    }
+
+
  
     watch(() => props?.form?.discount, (newVal, oldVal) => {
       calculateNetAmount();
@@ -210,63 +390,131 @@
     watch(() => props?.form?.vat, (newVal, oldVal) => {
       calculateNetAmount();
     });
-    onMounted(() => {
-      getCurrencies()
-      watch(() => props?.form?.scm_pr_id, (newVal, oldVal) => {
-      // if (props.formType == 'edit') {
-      //   getMaterialList(props.form.scm_pr_id,props.form.id);
-      // } else {
-      // getMaterialList(props.form.scm_pr_id);
-      // }
-      });
-      fetchVendor('');
+    watch(() => props?.form?.scmCs, (newVal, oldVal) => {
+      if(newVal){
+        props.form.scm_cs_id = newVal.id;
+        props.form.cs_no = newVal.ref_no;
+      }
     }); 
-
-    //watch scmVendor to change scm_vendor_id
-    watch(() => props?.form?.scmVendor, (newVal, oldVal) => {
-      if(newVal){
-        props.form.scm_vendor_id = newVal.id;
-      }
-    });
-    watch(() => props?.form?.scmPr, (newVal, oldVal) => {
-      if(newVal){
-        props.form.pr_no = newVal.ref_no;
-      }
-    });
-
     onMounted(() => {
-      watchEffect(() => {
-        searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, null,null);
-      });
-      watchEffect(() => {
-        searchCs(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, null);
-      });
+      getCurrencies();
+      fetchVendor('');
       watchEffect(() => {
         fetchWarehouse('');
       });
+    
+      if(props.formType == 'edit'){
+        const editDatas = watch(()=> [props.form.business_unit,props.form.scm_warehouse_id,props.form.purchase_center,props.form.scm_wcs_id,props.form.scmWoLines], (newVal, oldVal) => {
+        searchWcs(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, null);
+        if(props.form.scm_wcs_id){
+          getWcsWiseVendorList(props.form.scm_wcs_id);
+        }
+        searchWorkRequisition(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, props.form.scm_wcs_id,null);
+        
+        props.serviceList.splice(0,props.serviceList.length);
+        props.serviceList.push([]);
+        props.form.scmWoLines.forEach((line, index) => {
+          props.serviceList[index] = [];
+          if (line.scmWr) {
+            // getServiceList(line.scmWr.id, props.form.id).then((res) => {
+            //   props.serviceList[index] = res;
+            // });
+            getServiceList(line.scmWr.id,props.form.scm_wcs_id,props.form.id).then((res) => {
+              props.serviceList[index] = res;
+            }); 
+          }
+        });
+        console.log('asd');
+        editDatas();
+      });
+
+      }
+     
     });
 
-    // watch(() => props.form.scmWarehouse, (value) => {
-    //         props.form.scm_warehouse_id = value?.id ?? null;
-    //         props.form.acc_cost_center_id = value?.cost_center_id;
-    //         props.form.scmPoLines = [];
-    //         props.form.scmPoLines.push(cloneDeep(props.poLineObject));
-    //         props.form.scmPoLines[0].scmPoMaterial.push(cloneDeep(props.materialObject));
-    //   });
-    function scmWarehouseChange(){
-      let value = props.form.scmWarehouse;
-      props.form.scm_warehouse_id = value?.id ?? null;
-      props.form.acc_cost_center_id = value?.cost_center_id;
-      props.form.scmWoLines = [];
-      props.form.scmWoLines?.push(cloneDeep(props.woLineObject));
-      props.form.scmWoLines[0].scmWoService?.push(cloneDeep(props.workObject));
+    // watch(() => props?.form?.scmVendor, (newVal, oldVal) => {
+    //   console.log('scm vendor watch called');
+    //   if(newVal){
+    //     props.form.scm_vendor_id = newVal.id;
+    //   }
+    // });
+
+    function scmVendorChange(){
+      props.form.scm_vendor_id = props.form.scmVendor?.id;
     }
-        
-    watch(() => props.form.business_unit, (newValue, oldValue) => {
-      if(newValue !== oldValue && oldValue != ''){
+
+    function getPr(){
+      props.materialList.splice(0,props.materialList.length)
+      props.materialList.push([]);
+      filteredPurchaseRequisitions.value = [];
+      props.form.scmPoLines = [];
+       props.form.scmPoLines.push(cloneDeep(props.poLineObject));
+      props.form.scmPoLines[0].scmPoItems = [];
+      props.form.scmPoLines[0].scmPoItems.push(cloneDeep(props.materialObject));
+      searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, props.form.scm_cs_id,null);
+    } 
+
+    function getCs(){
+      props.form.scmCs = null;
+      props.form.scm_cs_id = null;
+      props.form.cs_no = null;
+      csWiseVendorList.value = [];
+      searchCs(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, null);
+    }
+
+    
+    function getWr(){
+      props.serviceList.splice(0,props.serviceList.length)
+      props.serviceList.push([]);
+      // filteredPurchaseRequisitions.value = [];
+      filteredWorkRequisitions.value = [];
+      props.form.scmWoLines = [];
+      props.form.scmWoLines.push(cloneDeep(props.woLineObject));
+      props.form.scmWoLines[0].scmWoItems = [];
+      props.form.scmWoLines[0].scmWoItems.push(cloneDeep(props.serviceObject));
+      searchWorkRequisition(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, props.form.scm_wcs_id,null);
+    } 
+
+    function getWcs(){
+      props.form.scmWcs = null;
+      props.form.scm_wcs_id = null;
+      props.form.wcs_no = null;
+      wcsWiseVendorList.value = [];
+      searchWcs(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, null);
+    }
+
+
+    onMounted(() => {
+      watch(() => props.form.business_unit, (newValue, oldValue) => {
+      if(newValue !== oldValue && oldValue != '' && oldValue != null){
+        console.log(oldValue);
         props.form.scmWarehouse = null;
+        props.form.scmVendor = null;
+        props.form.scm_vendor_id = null;
+        props.form.scmPoTerms = [];
+        props.form.scmPoTerms.push(cloneDeep(props.termsObject));
+        getCs();
+        getPr();
       }
-    });
+    }
+    
+    );
+
+  watchEffect(() => {
+    fetchWarehouse('');
+  });
+
+  
+});
+
+
+    watch(() => props.form.scmWarehouse, (value) => {
+            props.form.scm_warehouse_id = value?.id ?? null;
+            props.form.acc_cost_center_id = value?.cost_center_id;
+      });
+     
+        
+   
 </script>
 <template>
 
@@ -276,13 +524,13 @@
   </div> -->
   <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 md:gap-2">
     <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
-    <label class="label-group col-start-1">
-      <span class="label-item-title">Wo Ref<span class="text-red-500">*</span></span>
+    <label class="label-group col-start-1" v-if="page == 'edit'">
+      <span class="label-item-title">Wo Ref</span>
       <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
     </label>
     <label class="label-group col-start-1">
         <span class="label-item-title">Purchase Center <span class="text-red-500">*</span></span>
-        <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input" @update:modelValue="changePurchaseCenter">
+        <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input" @update:modelValue="purchaseCenterChange">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -295,7 +543,7 @@
     </label>
     <label class="label-group">
       <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-      <v-select :options="warehouses" placeholder="--Choose an option--" :loading="isWorkOrderLoading" v-model="form.scmWarehouse" label="name" class="block form-input" @update:modelValue="scmWarehouseChange">
+      <v-select :options="warehouses" placeholder="--Choose an option--" :loading="isWorkOrderLoading" v-model="form.scmWarehouse" label="name" class="block form-input" @update:modelValue="warehouseChange">
         <template #search="{attributes, events}">
           <input
             class="vs__search"
@@ -307,12 +555,11 @@
       </v-select>
     </label>
     <label class="label-group">
-      <span class="label-item-title">CS No<span class="text-red-500">*</span></span>
-      <v-select :options="filteredWorkCs" placeholder="--Choose an option--" label="ref_no"  v-model="form.scmWcs" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input" @update:modelValue="changeWcs">
+      <span class="label-item-title">CS No </span>
+      <v-select :options="filteredWorkCs" placeholder="--Choose an option--" label="ref_no"  v-model="form.scmWcs" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input" @update:modelValue="wcsChange">
         <template #search="{attributes, events}">
           <input
             class="vs__search"
-            :required="!form.scmWcs"
             v-bind="attributes"
             v-on="events"
           />  
@@ -320,12 +567,13 @@
       </v-select>
     </label>
     <label class="label-group">
-          <span class="label-item-title">PO Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
+          <span class="label-item-title">WO Date <span class="text-red-500">*</span></span>
+          <!-- <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" /> -->
+          <VueDatePicker v-model="form.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :min-date="minWoDate" @update:modelValue="woDateChange"></VueDatePicker>
     </label>    
     <label class="label-group" v-if="form.cs_no != null">
       <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
-      <v-select :options="csWiseVendorList" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.scmVendor" label="name" class="block form-input">
+      <v-select :options="csWiseVendorList" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.scmVendor" label="name" class="block form-input" @update:modelValue="scmVendorChange">
         <template #search="{attributes, events}">
           <input
             class="vs__search"
@@ -337,8 +585,8 @@
       </v-select>
     </label>
     <label class="label-group" v-else>
-      <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
-      <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.scmVendor" label="name" class="block form-input">
+      <span class="label-item-title">Vendor Name <span class="text-red-500">*</span></span>
+      <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.scmVendor" label="name" class="block form-input" @update:modelValue="scmVendorChange">
         <template #search="{attributes, events}">
           <input
             class="vs__search"
@@ -351,7 +599,7 @@
     </label>
 
     <label class="label-group">
-      <span class="label-item-title">Currency</span>
+      <span class="label-item-title">Currency <span class="text-red-500">*</span></span>
       <v-select :options="currencies" placeholder="--Choose an option--" v-model="form.currency" label="name" class="block form-input">
         <template #search="{attributes, events}">
             <input
@@ -363,330 +611,246 @@
         </template>
       </v-select>
     </label>
-    <label class="label-group" v-if="form.currency == 'USD'">
+    <!-- <label class="label-group" v-if="form.currency == 'USD'">
         <span class="label-item-title">Convertion Rate( Foreign To BDT )<span class="text-red-500">*</span></span>
         <input type="text" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
+    </label> -->
+    
+    <label class="label-group" v-if="(form.currency != 'USD' && form.currency != 'BDT' && form.currency != '')">
+        <span class="label-item-title">Convertion Rate( Foreign To USD ) <span class="text-red-500">*</span></span>
+        <input type="number" step="0.01" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
+    </label>
+    <label class="label-group" v-if="form.currency != 'BDT' && form.currency != ''">
+        <span class="label-item-title">Convertion Rate( USD To BDT ) <span class="text-red-500">*</span></span>
+        <input type="number" step="0.01" v-model="form.usd_to_bdt" required class="form-input" name="approved_date" :id="'usd_to_bdt'" />
     </label>
     <RemarksComponent class="col-span-1 md:col-span-3 lg:col-span-4" v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponent>
   </div>
 
-  <hr>
+  <div class="grid grid-cols-1" v-if="form?.scmWoLines?.length">
+    <fieldset class="form-fieldset">
+      <legend class="form-legend">Work Order Information <span class="text-red-500">*</span></legend>
+      <div v-for="(scmWoLine, index) in form.scmWoLines" :key="index"  class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
 
-  <!-- <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
-    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
-  </div>
-  <div class="input-group !w-1/4">
-      <label class="label-group">
-          <span class="label-item-title">Po Ref<span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
-      </label>
-    </div>
-  <div class="input-group">
-    <label class="label-group">
-        <span class="label-item-title">Purchase Center <span class="text-red-500">*</span></span>
-        <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input" @update:modelValue="changePurchaseCenter">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.purchase_center"
-                  v-bind="attributes"
-                  v-on="events"
-              />  
-          </template>        
-        </v-select>
-    </label>
-      <label class="label-group">
-        <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
-         <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.scmWarehouse"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
-      </label>
-      <label class="label-group">
-          <span class="label-item-title">CS No<span class="text-red-500">*</span></span>
-          <v-select :options="filteredMaterialCs" placeholder="--Choose an option--" label="ref_no"  v-model="form.scmCs" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input" @update:modelValue="changeCs">
-            <template #search="{attributes, events}">
-                <input
-                    class="vs__search"
-                    :required="!form.scmCs"
-                    v-bind="attributes"
-                    v-on="events"
-                />  
-            </template>        
-          </v-select>
-      </label>
-      
-  </div>
-  <div class="input-group">
-    <label class="label-group">
-          <span class="label-item-title">PO Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" />
-      </label>    
-    <label class="label-group" v-if="form.cs_no != null">
-          <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
-          
-          <v-select :options="csWiseVendorList" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.scmVendor" label="name" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.scmVendor"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
-      </label>
-      <label class="label-group" v-else>
-          <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
-          <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.scmVendor" label="name" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.scmVendor"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
-      </label>
-      
-      <label class="label-group">
-        <span class="label-item-title">Currency</span>
-        <v-select :options="currencies" placeholder="--Choose an option--" v-model="form.currency" label="name" class="block form-input">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.currency"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
-    </label>
-    <label class="label-group" v-if="form.currency == 'USD'">
-        <span class="label-item-title">Convertion Rate( Foreign To BDT )<span class="text-red-500">*</span></span>
-        <input type="text" v-model="form.foreign_to_usd" required class="form-input" name="approved_date" :id="'foreign_to_usd'" />
-    </label>
-  </div>
-
-  <div class="input-group !w-3/4">
-    <label class="label-group">
-         <RemarksComponent v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponent>
-    </label>
-  </div>
-
-
-  <div class="mt-3 md:mt-8" v-if="form?.scmPoLines?.length">
-      <h4 class="text-md font-semibold uppercase mb-2">Purchase Order Information</h4>
-      
-      <div v-for="(scmPoLine, index) in form.scmPoLines" :key="index"  class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
-
-        <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-          <label class="block w-1/4 mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">PR No. <span class="text-red-500">*</span></span>
-            <v-select :options="filteredPurchaseRequisitions" placeholder="--Choose an option--" :loading="bunkerLoader"  v-model="form.scmPoLines[index].scmPr" label="ref_no" class="block form-input"
-            @update:modelValue="changePr(index)"
+      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <label class="block w-1/4 mt-2 text-sm">
+          <span class="text-gray-700 dark-disabled:text-gray-300">WR No. <span class="text-red-500">*</span></span>
+          <div class="relative">
+            <v-select :options="filteredWorkRequisitions" placeholder="--Choose an option--" v-model="scmWoLine.scmWr" label="ref_no" class="block form-input"
+            @update:modelValue="changeWr(index)"
             >
               <template #search="{attributes, events}">
                   <input
                       class="vs__search"
-                      :required="!form.scmPoLines[index].scmPr"
+                      :required="!scmWoLine.scmWr"
                       v-bind="attributes"
                       v-on="events"
                       />
               </template>
             </v-select>
-          </label>
-          <label class="block w-1/4 mt-2 text-sm">
-              <span class="text-gray-700">PR Date<span class="text-red-500">*</span></span>
-              <input type="text" class="form-input" />
-          </label>
-        </div>
-
-        <div class="relative my-3">
-          <div class="dt-responsive table-responsive">
-            <table class="w-full whitespace-no-wrap" >
-              <tbody v-if="form.scmPoLines[index]?.scmPoMaterial?.length > 0">
-                <template v-for="(lineItem, itemIndex) in form.scmPoLines[index].scmPoMaterial" :key="itemIndex">
-                  <tr class="w-full" v-if="itemIndex==0">
-                    <th class="py-3 align-center">Material Details <br/> <span class="!text-[8px]"></span></th>
-                    <th class="py-3 align-center">Required Date</th>
-                    <th class="py-3 align-center">Other Info</th>
-                    <th class="py-3 align-center">Tolarence</th>
-                    <th class="py-3 align-center">Order Details</th>
-                    <th class="py-3 align-cente">Total Price</th>
-                    <th>
-                      <button type="button" @click="addMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                          <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                        </svg>
-                      </button>
-                    </th>
-                  </tr>
-                  <tr class="table_tr">
-                    <td class="">
-                      <table>
-                        <tr>
-                          <td>Material - Code</td>
-                          <td>
-                            <v-select :options="materialList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial" label="material_name_and_code" class="block form-input" :menu-props="{ minWidth: '250px', minHeight: '400px' }">
-                              <template #search="{attributes, events}">
-                                  <input
-                                      class="vs__search"
-                                      :required="!form.scmPoLines[index].scmPoMaterial[itemIndex].scmMaterial"
-                                      v-bind="attributes"
-                                      v-on="events"
-                                      />
-                              </template>
-                          </v-select>
-                          </td>
-                          
-                        </tr>
-                        <tr>
-                          <td>Unit</td>
-                          <td>
-                            <input type="text" readonly v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].unit" class="vms-readonly-input form-input">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Brand</td>
-                          <td>
-                            <input type="text" v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].brand" class="form-input">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Model</td>
-                          <td>
-                              <input type="text" v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].model" class="form-input">
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                    <td>
-                      <input type="date" v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].required_date" class="form-input">
-                    </td>
-                    <td>
-                      <table>
-                        <tr>
-                          <td>PR Qty</td>
-                          <td>
-                             <input type="number" required v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].quantity" min=1 class="form-input" :max="form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity" :class="{'border-2': form.scmPoLines[index].scmPoMaterial[itemIndex].quantity > form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].scmPoMaterial[itemIndex].quantity > form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity}">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Remaining Qty</td>
-                          <td>
-                            <input type="number" required v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].rate" min=1 class="form-input">
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                    <td>
-                      <input type="text" readonly :value="form.scmPoLines[index]?.scmPoMaterial[itemIndex].max_quantity" min=1 class="form-input">  
-                    </td>
-                    <td>
-                      <table>
-                        <tr>
-                          <td>Qty</td>
-                          <td>
-                             <input type="number" required v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].quantity" min=1 class="form-input" :max="form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity" :class="{'border-2': form.scmPoLines[index].scmPoMaterial[itemIndex].quantity > form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity,'border-red-500 bg-red-100': form.scmPoLines[index].scmPoMaterial[itemIndex].quantity > form.scmPoLines[index].scmPoMaterial[itemIndex].max_quantity}">
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Rate</td>
-                          <td>
-                            <input type="number" required v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].rate" min=1 class="form-input">
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                    <td>
-                      <input type="number" readonly v-model="form.scmPoLines[index].scmPoMaterial[itemIndex].total_price" class="form-input vms-readonly-input">
-                    </td>
-                    <td class="px-1 py-1 text-center">
-                      <button type="button" @click="removeMaterial(index,itemIndex)" class="remove_button">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                        </svg>
-                      </button>
-                    </td>
-                  </tr>
-         
-                </template>
-              </tbody>
-            </table>
+            <span v-show="scmWoLine.isWrDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-10" title="Duplicate Service" v-html="icons.ExclamationTriangle"></span>
           </div>
-        </div>
-        <div class="flex justify-center items-center my-3">
-            <button type="button" @click="addBlock()" class="px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center">
-              Add More
-            </button>
-            <button type="button" v-if="index > 0" @click="removeBlock(index)" class="px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center ml-3">
-              Remove
-            </button> 
+        </label>
+        <label class="block w-1/4 mt-2 text-sm">
+            <span class="text-gray-700">WR Date </span>
+            <!-- <input type="text" class="form-input vms-readonly-input" readonly :value="form.scmPoLines[index]?.scmPr?.raised_date"/> -->
+            <VueDatePicker v-model="scmWoLine.scmWr.raised_date" class="form-input" required auto-apply readonly :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
+        </label>
+      </div>
+
+      <div class="relative my-3">
+        <div class="dt-responsive table-responsive">
+          <table class="w-full whitespace-no-wrap" >
+            <tbody>
+              <tr class="w-full">
+                  <th class="py-3 align-center !w-4/12">Service Details <br/> <span class="!text-[8px]"></span></th>
+                  <!-- <th class="py-3 align-center !w-2/12">Required Date <span class="text-red-500">*</span></th> -->
+                  <th class="py-3 align-center !w-2/12">Other Info</th>
+                  <!-- <th class="py-3 align-center !w-1/12">Tolarence</th> -->
+                  <th class="py-3 align-center !w-3/12">Order Details</th>
+                  <th class="py-3 align-center !w-2/12">Total Price</th>
+                  <th class="!w-1/12">
+                    <button type="button" @click="addService(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                      </svg>
+                    </button>
+                  </th>
+                </tr>
+              <template v-for="(scmWoItem, itemIndex) in form.scmWoLines[index].scmWoItems" :key="itemIndex">
+                <tr class="table_tr">
+                  <td class="">
+                    <table class="w-full">
+                      <tr>
+                        <th class="w-1/4">Service - Code <span class="text-red-500">*</span></th>
+                        <td class="w-3/4">
+                          <div class="relative">
+                              <v-select :options="serviceList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="scmWoItem.scmService" label="service_name_and_code" class="block form-input w-full" :menu-props="{ minWidth: '250px', minHeight: '400px' }" @update:modelValue="changeService(index,itemIndex)">
+                                <template #search="{attributes, events}">
+                                    <input
+                                        class="vs__search"
+                                        :required="!scmWoItem.scmService"
+                                        v-bind="attributes"
+                                        v-on="events"
+                                        />
+                                </template>
+                            </v-select>
+                            <span v-show="scmWoItem.isServiceDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-10" title="Duplicate Service" v-html="icons.ExclamationTriangle"></span>
+                          </div>
+                        </td>
+                        
+                      </tr>
+                      
+                      <tr>
+                        <th class="w-1/4">Required Date <span class="text-red-500">*</span></th>
+                        <td class="w-3/4">
+                          <VueDatePicker v-model="scmWoItem.required_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd"  required :min-date="form.date"></VueDatePicker>
+                        </td>
+                        
+                      </tr>
+
+                      <!-- <tr>
+                        <td>Unit</td>
+                        <td>
+                          <input type="text" readonly v-model="form.scmPoLines[index].scmPoItems[itemIndex].unit" class="vms-readonly-input form-input">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Brand</td>
+                        <td>
+                          <input type="text" v-model="form.scmPoLines[index].scmPoItems[itemIndex].brand" class="form-input">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Model</td>
+                        <td>
+                            <input type="text" v-model="form.scmPoLines[index].scmPoItems[itemIndex].model" class="form-input">
+                        </td>
+                      </tr> -->
+                    </table>
+                  </td>
+                  <!-- <td>
+                    <VueDatePicker v-model="scmWoItem.required_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd"  required></VueDatePicker>
+                  </td> -->
+                  <td>
+                    <table>
+                      <tr>
+                        <td>WR Qty</td>
+                        <td>
+                          <input type="text" readonly v-model="scmWoItem.wr_quantity" min=1 class="form-input text-right vms-readonly-input">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Remaining Qty</td>
+                        <td>
+                          <input type="text" readonly v-model="scmWoItem.max_quantity" min=1 class="form-input text-right vms-readonly-input">
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <!-- <td>
+                    <input type="number" v-model="form.scmPoLines[index].scmPoItems[itemIndex].tolarence_level" min=1 class="form-input">  
+                  </td> -->
+                  <td>
+                    <table>
+                      <tr>
+                        <td>Qty</td>
+                        <td>
+                          
+                          <input type="number" required v-model="scmWoItem.quantity" min=1 step="0.01" class="form-input text-right" :max="scmWoItem.max_quantity" :class="{'border-2': scmWoItem.quantity > scmWoItem.max_quantity,'border-red-500 bg-red-100': scmWoItem.quantity > scmWoItem.max_quantity}">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Rate <span class="text-red-500">*</span></td>
+                        <td>
+                          <input type="number" required v-model="scmWoItem.rate" step="0.01" min=1 class="form-input text-right">
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td>
+                    <input type="text" readonly v-model="scmWoItem.total_price" class="form-input vms-readonly-input text-right">
+                  </td>
+                  <td class="px-1 py-1 text-center">
+                    <button type="button" @click="removeService(index,itemIndex)" class="remove_button">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+      
+              </template>
+            </tbody>
+          </table>
         </div>
       </div>
-    </div>
+      <div class="flex justify-center items-center my-3">
+          <button type="button" @click="addBlock()" class="px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center">
+            Add More
+          </button>
+          <button type="button" v-if="index > 0" @click="removeBlock(index)" class="px-3 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple flex w-32 justify-center text-center ml-3">
+            Remove
+          </button> 
+      </div>
+      </div>
+    </fieldset>
+  </div>
+  
+  <div class="grid grid-cols-1" v-if="form?.scmWoLines?.length">
+    <fieldset class="form-fieldset">
+      <legend class="form-legend"> Total </legend>
+      <div class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
 
-  <div id="customDataTableMat" ref="customDataTableirf" class="pb-20 !max-w-screen" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
-    <div class="table-responsive">
-      <fieldset class="form-fieldset">
-        <legend class="form-legend">Materials <span class="text-red-500">*</span></legend>
         <table class="w-full" id="table">
           <tbody class="table_body">
           <tr>
-            <td>Sub Total</td>
-            <td class="text-right">
-              <input type="text" readonly class="vms-readonly-input form-input" v-model="form.sub_total">
+            <td class="!w-9/12 text-right">Sub Total</td>
+            <td class="text-right !w-3/12">
+              <input type="text" readonly class="vms-readonly-input form-input text-right" v-model="form.sub_total">
             </td>
           </tr>
-          <tr>
-            <td>Less: Discount</td>
-            <td class="text-right">
+          <!-- <tr>
+            <td class="!w-9/12 text-right">Less: Discount</td>
+            <td class="text-right !w-3/12">
               <input type="text" class="form-input" v-model="form.discount">
             </td>
-          </tr>
+          </tr> -->
           <tr>
-            <td>Total Amount</td>
-            <td class="text-right">
-              <input type="text" readonly class="vms-readonly-input form-input" v-model="form.total_amount">
+            <td class="!w-9/12 text-right">Total Amount</td>
+            <td class="text-right !w-3/12">
+              <input type="text" readonly class="vms-readonly-input form-input text-right" v-model="form.total_amount">
             </td>
           </tr>
-          <tr>
-            <td>Add: VAT</td>
-            <td class="text-right">
+          <!-- <tr>
+            <td class="!w-9/12 text-right">Add: VAT</td>
+            <td class="text-right !w-3/12">
               <input type="text" class="form-input" v-model="form.vat">
             </td>
-          </tr>
+          </tr> -->
           <tr>
-            <td>Net Amount</td>
-            <td class="text-right">
-              <input type="text" readonly class="vms-readonly-input form-input" v-model="form.net_amount">
+            <td class="!w-9/12 text-right">Net Amount</td>
+            <td class="text-right !w-3/12">
+              <input type="text" readonly class="vms-readonly-input form-input text-right" v-model="form.net_amount">
             </td>
           </tr>
           </tbody>
         </table>
-      </fieldset>
-    </div>
-  </div> 
+      </div>
+    </fieldset>
+  </div>
+  
+  <div class="grid grid-cols-1">
 
-  <div id="customDataTable">
-    <div  class="table-responsive max-w-screen">
-      <fieldset class="form-fieldset">
-        <legend class="form-legend">Terms And Conditions <span class="text-red-500">*</span></legend>
-        <table class="w-full whitespace-no-wrap" id="table">
-         <tbody class="table_body">
-          <tr class="table_tr" v-for="(scmPoTerm, index) in form.scmPoTerms" :key="index">
+    <fieldset class="form-fieldset">
+      <legend class="form-legend">Terms And Conditions </legend>
+      <table class="w-full whitespace-no-wrap" id="table">
+        <tbody class="table_body">
+          <tr class="table_tr" v-for="(scmWoTerm, index) in form.scmWoTerms" :key="index">
             <td>
-              <input type="text" v-model="form.scmPoTerms[index].description" class="form-input">
+              <input type="text" v-model="scmWoTerm.description" class="form-input">
             </td>
-           
+            
             <td class="px-1 py-1 text-center">
               <button v-if="index!=0" type="button" @click="removeTerms(index)" class="remove_button">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -700,12 +864,15 @@
               </button>
             </td>
           </tr>
-        
-          </tbody>
-        </table>
-      </fieldset>
-    </div>
-  </div> -->
+          
+        </tbody>
+      </table>
+    </fieldset>
+  </div>
+
+
+    
+  
   <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 

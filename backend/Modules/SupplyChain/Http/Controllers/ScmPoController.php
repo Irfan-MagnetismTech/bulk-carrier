@@ -39,7 +39,7 @@ class ScmPoController extends Controller
     {
         try {
             $scmWarehouses = ScmPo::query()
-                ->with('scmPoLines.scmPoItems.scmMaterial', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPoItems')
+                ->with('scmPoLines.scmPoItems.scmMaterial', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPoItems.scmMaterial')
                 ->globalSearch($request->all());
 
             return response()->success('Data list', $scmWarehouses, 200);
@@ -54,9 +54,7 @@ class ScmPoController extends Controller
      */
     public function store(ScmPoRequest $request)
     {
-        return response()->json(DB::select("SHOW VARIABLES"), 422);
         $requestData = $request->except('ref_no');
-        $requestData['ref_no'] = UniqueId::generate(ScmPo::class, 'PO');
         $requestData['created_by'] = auth()->id();
 
         try {
@@ -82,8 +80,7 @@ class ScmPoController extends Controller
     public function show(ScmPo $purchaseOrder): JsonResponse
     {
         try {
-            $purchaseOrder->load('scmPoLines.scmPoItems.scmMaterial', "scmPoLines.scmPr", 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPoItems', 'scmCs', 'scmPoLines.scmPoItems.scmCsMaterial.scmMaterial', 'scmPoLines.scmPoItems.scmPrLine.scmMaterial');
-
+            $purchaseOrder->load('scmPoLines.scmPoItems.scmMaterial', "scmPoLines.scmPr", 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPoItems', 'scmCs', 'closedBy', 'createdBy', 'scmPoLines.scmPoItems.scmCsMaterial.scmMaterial', 'scmPoLines.scmPoItems.scmPrLine.scmMaterial', 'scmPoLines.scmPoItems.closedBy');
             $scmPoLines = $purchaseOrder->scmPoLines->map(function ($items) {
                 $datas = $items;
 
@@ -94,6 +91,7 @@ class ScmPoController extends Controller
                         $max_quantity =  $item->scmPrLine->quantity -  $item->scmPrLine->scmPoItems->sum('quantity') + $item->quantity;
                     }
                     return [
+                        'id' => $item['id'],
                         'scm_material_id' => $item['scm_material_id'],
                         'scmMaterial' => $item['scmMaterial'],
                         'unit' => $item['unit'],
@@ -109,7 +107,13 @@ class ScmPoController extends Controller
                         'pr_composite_key' => $item['pr_composite_key'],
                         'cs_composite_key' => $item['cs_composite_key'],
                         'max_quantity' => $max_quantity,
-                        'pr_quantity' => $item['quantity'],
+                        'pr_quantity' => $item->scmPrLine->quantity,
+                        'is_closed' => $item->is_closed,
+                        'closed_by' => (auth()->user()->id == (int)($item->closedBy?->id)) ? 'You' : $item->closedBy?->name,
+                        // 'closed_by' => $item->closedBy?->name,
+                        'closed_at' => $item->closed_at,
+                        'closing_remarks' => $item->closing_remarks,
+                        'status' => $item->status,
                     ];
                 });
                 //data_forget scmPoItems
@@ -199,9 +203,17 @@ class ScmPoController extends Controller
                 'scm_po_id' => $purchaseOrder->id,
                 'scm_pr_id' => $values['scm_pr_id'],
             ]);
+            $pr = ScmPr::find($values['scm_pr_id']);
+            if ($pr->status == 'Pending') {
+                $pr->update(['status' => 'WIP']);
+            }
 
             foreach ($values['scmPoItems'] as $index => $value) {
                 $this->createScmPoItem($request, $scmPoLine, $purchaseOrder, $value, $index);
+                $lineData = ScmPrLine::where('scm_pr_id', $values['scm_pr_id'])->where('pr_composite_key', $value['pr_composite_key'])->get();
+                if ($lineData[0]->status == 'Pending') {
+                    $lineData[0]->update(['status' => 'WIP']);
+                }
             }
         }
     }
@@ -364,24 +376,65 @@ class ScmPoController extends Controller
      */
     public function getMaterialByPrId(): JsonResponse
     {
-        $prMaterials = ScmPrLine::query()
-            ->with('scmMaterial')
-            ->where('scm_pr_id', request()->pr_id)
-            ->whereNot('status', 'Closed')
-            ->get()
-            ->map(function ($item) {
-                $data = $item->scmMaterial;
-                $data['brand'] = $item->brand;
-                $data['model'] = $item->model;
-                if (request()->po_id) {
-                    $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
-                } else {
-                    $data['po_quantity'] = 0;
-                }
-                $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
-                $data['po_quantity'] = $data['po_quantity'] ?? 0;
-                return $data;
-            });
+        if (!request()->has('cs_id')) {
+            $prMaterials = ScmPrLine::query()
+                ->with('scmMaterial')
+                ->where('scm_pr_id', request()->pr_id)
+                ->whereNot('status', 'Closed')
+                ->get()
+                ->map(function ($item) {
+                    $data = $item->scmMaterial;
+                    $data['brand'] = $item->brand;
+                    $data['model'] = $item->model;
+                    $data['isAspectDuplicate'] = false;
+                    $data['unit'] = $item->scmMaterial->unit;
+                    $data['pr_composite_key'] = $item->pr_composite_key;
+                    $data['pr_quantity'] = $item->quantity;
+                    if (request()->po_id) {
+                        $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
+                    } else {
+                        $data['po_quantity'] = 0;
+                    }
+                    $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
+                    $data['quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
+                    $data['tolarence_level'] = 0;
+                    return $data;
+                })
+                ->filter(function ($item) {
+                    return ($item['max_quantity'] > 0);
+                });
+        } else {
+            $prMaterials = ScmCsMaterial::query()
+                ->where([
+                    'scm_cs_id' => request()->cs_id,
+                    'scm_pr_id' => request()->pr_id
+                ])
+                ->get()
+                ->map(function ($item) {
+                    $data = $item->scmMaterial;
+                    $data['scm_material_id'] = $item->scmMaterial->id;
+                    $data['unit'] = $item->scmMaterial->unit;
+                    $data['brand'] = $item->brand;
+                    $data['model'] = $item->model;
+                    $data['isAspectDuplicate'] = false;
+                    $data['cs_composite_key'] = $item->cs_composite_key;
+                    $data['pr_composite_key'] = $item->pr_composite_key;
+                    $data['pr_quantity'] = $item->scmPrLine->quantity;
+                    if (request()->po_id) {
+                        $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('cs_composite_key', $item->cs_composite_key)->first()->quantity;
+                    } else {
+                        $data['po_quantity'] = 0;
+                    }
+                    $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
+                    $data['quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
+                    $data['tolarence_level'] = 0;
+                    return $data;
+                })
+                ->filter(function ($item) {
+                    return ($item['max_quantity'] > 0);
+                });
+        }
+
         return response()->success('data list', $prMaterials, 200);
     }
 
@@ -438,10 +491,10 @@ class ScmPoController extends Controller
                     $data['scmMaterial'] = $item->scmMaterial;
                     $data['unit'] = $item->scmMaterial->unit;
                     $data['brand'] = $item->brand;
+                    $data['isAspectDuplicate'] = false;
                     $data['model'] = $item->model;
                     $data['pr_composite_key'] = $item->pr_composite_key;
                     $data['pr_quantity'] = $item->quantity;
-                    $data['quantity'] = $item->quantity;
 
                     if (request()->po_id) {
                         $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
@@ -450,8 +503,12 @@ class ScmPoController extends Controller
                     }
                     $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
                     $data['po_quantity'] = $data['po_quantity'] ?? 0;
-
+                    $data['quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
+                    $data['tolarence_level'] = 0;
                     return $data;
+                })
+                ->filter(function ($item) {
+                    return ($item['max_quantity'] > 0);
                 });
         } else {
             $scmPr = ScmCsMaterial::query()
@@ -466,23 +523,121 @@ class ScmPoController extends Controller
                     $data['unit'] = $item->scmMaterial->unit;
                     $data['brand'] = $item->brand;
                     $data['model'] = $item->model;
-                    $data['quantity'] = $item->quantity;
+                    $data['isAspectDuplicate'] = false;
                     $data['cs_composite_key'] = $item->cs_composite_key;
                     $data['pr_composite_key'] = $item->pr_composite_key;
                     $data['pr_quantity'] = $item->scmPrLine->quantity;
-                    $data['quantity'] = $item->quantity;
                     if (request()->po_id) {
-                        $data['po_quantity'] = $item->scmPoItems->where('cs_composite_key', $item->cs_composite_key)->sum('quantity');
+                        $data['po_quantity'] = $item->scmPoItems->where("scm_po_id", request()->po_id)->where('cs_composite_key', $item->cs_composite_key)->first()->quantity;
                     } else {
                         $data['po_quantity'] = 0;
                     }
-                    $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity');
-
+                    $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
+                    $data['quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
+                    $data['tolarence_level'] = 0;
                     return $data;
+                })
+                ->filter(function ($item) {
+                    return ($item['max_quantity'] > 0);
                 });
         }
 
 
         return response()->success('data', $scmPr, 200);
+    }
+
+    public function closePo(Request $request): JsonResponse
+    {
+        try {
+            $po = ScmPo::find($request->id);
+            $po->update([
+                // 'is_closed' => 1,
+                'status' => 'Closed',
+                'closed_by' => auth()->user()->id,
+                'closed_at' => now(),
+                'closing_remarks' => $request->closing_remarks,
+            ]);
+
+            $po->load('scmPoItems');
+            foreach ($po->scmPoItems as $poLine) {
+                if ($poLine->status === 'Closed') {
+                    continue;
+                }
+
+                $poLine->update([
+                    // 'is_closed' => 1,
+                    'status' => 'Closed',
+                    'closed_by' => auth()->user()->id,
+                    'closed_at' => now(),
+                    'closing_remarks' => $request->closing_remarks,
+                ]);
+            }
+            return response()->success('Data updated sucessfully!', $po, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+    /**
+     * Show the specified resource.
+     * @param ScmPo $purchaseOrder
+     * @return JsonResponse
+     */
+    public function getPoMaterialByPoId(Request $request): JsonResponse
+    {
+        try {
+            $scmPoItems = ScmPoItem::with('scmMaterial')->where('scm_po_id', $request->scm_po_id)->get();
+
+            $data = $scmPoItems->map(function ($item) {
+                return [
+                    'scmMaterial' => $item['scmMaterial'],
+                    'scm_po_id' => $item['scm_po_id'],
+                    'scm_material_id' => $item['scm_material_id'],
+                    'unit' => $item['unit'],
+                    'brand' => $item['brand'],
+                    'model' => $item['model'],
+                    'quantity' => $item['quantity'],
+                ];
+            })->unique('scm_material_id')->values()->all();
+
+
+            return response()->success('data', $data, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function closePoLine(Request $request): JsonResponse
+    {
+        try {
+            $poLine = ScmPoItem::find($request->id);
+            $poLine->update([
+                // 'is_closed' => 1,
+                'status' => 'Closed',
+                'closed_by' => auth()->user()->id,
+                'closed_at' => now(),
+                'closing_remarks' => $request->closing_remarks,
+            ]);
+
+            $po = ScmPo::find($request->parent_id);
+            $po->load('scmPoItems');
+
+            $poLines = $po->scmPoItems->count();
+            // $sumIsClosed = $po->scmPrLines->sum('is_closed');
+            $sumIsClosed = $po->scmPoItems->where('status', 'Closed')->count();
+
+            if ($poLines === $sumIsClosed) {
+                $po->update([
+                    // 'is_closed' => 1,
+                    'status' => 'Closed',
+                    'closed_by' => auth()->user()->id,
+                    'closed_at' => now(),
+                    'closing_remarks' => "All lines are closed",
+                ]);
+            }
+
+            return response()->success('Data updated sucessfully!', [$poLines, $sumIsClosed], 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }

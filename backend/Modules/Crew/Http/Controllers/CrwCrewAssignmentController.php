@@ -40,7 +40,7 @@ class CrwCrewAssignmentController extends Controller
     public function store(CrwCrewAssignmentRequest $request)
     {
         try {
-            $crwCrewAssignmentData = $request->only('ops_vessel_id', 'assignment_code', 'crw_crew_id', 'position_onboard', 'joining_date', 'joining_port_code', 'duration', 'remarks', 'business_unit');
+            $crwCrewAssignmentData = $request->only('ops_vessel_id', 'assignment_code', 'crw_crew_id', 'position_onboard', 'is_watchkeeper', 'joining_date', 'joining_port_code', 'duration', 'remarks', 'business_unit');
             $crwCrewAssignment     = CrwCrewAssignment::create($crwCrewAssignmentData);
             $assignmentCode = 'ASGMNT-'.date('Y').'-'.$crwCrewAssignment->id;
             $crwCrewAssignment->update(['assignment_code' => $assignmentCode]);
@@ -80,7 +80,7 @@ class CrwCrewAssignmentController extends Controller
     public function update(CrwCrewAssignmentRequest $request, CrwCrewAssignment $crwCrewAssignment)
     {
         try {
-            $crwCrewAssignmentData = $request->only('ops_vessel_id', 'crw_crew_id', 'position_onboard', 'joining_date', 'joining_port_code', 'duration', 'remarks', 'business_unit');
+            $crwCrewAssignmentData = $request->only('ops_vessel_id', 'crw_crew_id', 'position_onboard', 'is_watchkeeper', 'joining_date', 'joining_port_code', 'duration', 'remarks', 'business_unit');
             $crwCrewAssignment->update($crwCrewAssignmentData);
 
             return response()->success('Updated successfully', $crwCrewAssignment, 202);

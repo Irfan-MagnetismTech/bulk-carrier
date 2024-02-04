@@ -49,7 +49,7 @@
                   
                   <div class="w-2/6 block  text-sm relative">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Section Type <span class="text-red-500">*</span></span>
-                      <select v-model.trim="appraisalFormLine.is_tabular" class="form-input" required>
+                      <select v-model.trim="appraisalFormLine.is_tabular" class="form-input" required @change = "resetAppraisalFormLineItems(appraisalFormLine)">
                         <option value="" disabled selected>Select Section Type</option>
                         <option value="1" >Tabular</option>
                         <option value="0">Non Tabular</option>
@@ -69,7 +69,7 @@
                   </div> -->
 
                 </div>
-                <table class="w-full whitespace-no-wrap" id="table">
+                <table class="w-full whitespace-no-wrap" id="table" v-if="appraisalFormLine.is_tabular == 1">
                 <thead>
                     <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
                         <th class="w-1/12 px-4 py-2 align-center max-w-[67px]">Item No <span class="text-red-500" v-show="appraisalFormLine?.appraisalFormLineItems?.length">*</span></th>
@@ -201,6 +201,10 @@
     if (event.target.value === 'Number') props.form.total_marks += 5;
     else if( appraisalFormLineItem.answer_type && appraisalFormLineItem.answer_type === 'Number') props.form.total_marks -= 5;
     appraisalFormLineItem.answer_type = event.target.value;
+  }
+
+  function resetAppraisalFormLineItems(appraisalFormLine){
+    appraisalFormLine.appraisalFormLineItems = [];
   }
 
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

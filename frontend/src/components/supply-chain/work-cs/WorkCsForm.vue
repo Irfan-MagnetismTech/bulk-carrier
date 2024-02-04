@@ -28,7 +28,7 @@
         </label>
         <label class="label-group">
           <span class="label-item-title">Effective Date <span class="text-red-500">*</span></span>
-          <VueDatePicker v-model="form.effective_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+          <VueDatePicker v-model="form.effective_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" @update:model-value="effectiveDateChange" :min-date="minEffectiveDate"></VueDatePicker>
       </label>
       <label class="label-group">
           <span class="label-item-title">Expire Date <span class="text-red-500">*</span></span>
@@ -339,6 +339,7 @@ import useHeroIcon from '../../../assets/heroIcon';
       const icons = useHeroIcon();
       const PRIORITY = ['High', 'Medium', 'Low']
       const form = toRefs(props).form;
+      const minEffectiveDate = ref('');
       
      
       const tableScrollWidth = ref(null);
@@ -367,6 +368,12 @@ import useHeroIcon from '../../../assets/heroIcon';
         props.form.scmWcsServices.splice(index, 1);
         props.serviceList.splice(index, 1);
       }
+
+      function effectiveDateChange(){
+      if (props.form.expire_date < props.form.effective_date) 
+        props.form.expire_date = '';
+
+    }
 
 
       
@@ -419,6 +426,19 @@ import useHeroIcon from '../../../assets/heroIcon';
       props.serviceList[index] = res;
     });
   }
+
+  watch(() => props.form.scmWcsServices, (scmWcsServices) => {
+    minEffectiveDate.value = '';
+    scmWcsServices?.forEach(scmWcsService => {
+      if ((minEffectiveDate.value < scmWcsService?.scmWr?.approved_date || minEffectiveDate.value == '') && scmWcsService?.scmWr) {
+        minEffectiveDate.value = scmWcsService?.scmWr?.approved_date;
+      }
+    });
+
+    if(props.form.effective_date < minEffectiveDate.value)
+      props.form.effective_date = '';
+
+}, { deep: true });
 
   // watch(() => props.form.scmSi, (new Val,oldVal) => {
   //       props.form.scm_si_id = newVal?.id;
@@ -549,6 +569,18 @@ import useHeroIcon from '../../../assets/heroIcon';
       // searchWorkRequisition(props.form.business_unit, props.form.scm_warehouse_id,props.form.purchase_center, null)
       fetchWarehouse('');
     });
+
+    if(props.page == 'edit'){
+    const watchBusinessUnit = watch(() => props.form, (newVal, oldVal) => {
+      newVal.scmWcsServices.forEach((service, index) => {
+        props.serviceList.push([]);
+          getWrWiseServiceList(service.scm_wr_id, props.form.id).then((res) => {
+            props.serviceList[index] = res;
+          });
+      });
+      watchBusinessUnit();
+    });
+  }
 
   });
   
