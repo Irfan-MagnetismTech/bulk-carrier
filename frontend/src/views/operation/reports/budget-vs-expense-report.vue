@@ -70,8 +70,8 @@ watch(() => form.value.ops_vessel_id, (newValue, oldValue) => {
 
 }, { deep: true });
 
-function fetchVesselWiseVoyages(ops_vessel_id, loading) {
-  searchVoyages("", form.value.business_unit, loading, ops_vessel_id)
+function fetchVesselWiseVoyages(ops_vessel_id) {
+  searchVoyages("", form.value.business_unit, ops_vessel_id)
 }
 </script>
 <template>

@@ -680,9 +680,9 @@ watch(() => props?.form?.discounted_amount, (newVal, oldVal) => {
   CalculateAll();
 });
 
-// function fetchVoyages(searchParam, loading) {
+// function fetchVoyages(searchParam) {
 //   loading(true)
-//   searchVoyages(searchParam, props.form.business_unit, loading)
+//   searchVoyages(searchParam, props.form.business_unit)
 // }
 
 

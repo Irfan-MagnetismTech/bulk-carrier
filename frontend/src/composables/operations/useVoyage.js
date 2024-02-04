@@ -338,7 +338,7 @@ export default function useVoyage() {
 		}
 	}
 
-	async function searchVoyages(searchParam, businessUnit, loading, vesselId = null) {
+	async function searchVoyages(searchParam, businessUnit, vesselId = null) {
 		//NProgress.start();
 		isVoyageLoading.value = true;
 		try {

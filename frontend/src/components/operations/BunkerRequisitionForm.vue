@@ -104,9 +104,9 @@ const props = defineProps({
 });
 
 
-function fetchVoyages(searchParam, loading) {
+function fetchVoyages(searchParam) {
   // loading(true)
-  searchVoyages(searchParam, props.form.business_unit, loading)
+  searchVoyages(searchParam, props.form.business_unit)
 }
 
 watch(() => props.form.business_unit, (value) => {
