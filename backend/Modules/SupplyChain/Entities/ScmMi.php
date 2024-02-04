@@ -4,6 +4,7 @@ namespace Modules\SupplyChain\Entities;
 
 use App\Models\User;
 use App\Traits\GlobalSearchTrait;
+use App\Traits\UniqueKeyGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmMmr;
 use Modules\SupplyChain\Entities\ScmMiLine;
@@ -16,11 +17,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmMi extends Model
 {
-    use HasFactory, StockLedger, GlobalSearchTrait;
+    use HasFactory, StockLedger, GlobalSearchTrait, UniqueKeyGenerator;
     
     protected $fillable = [
         'ref_no', 'scm_mmr_id','scm_mo_id', 'from_warehouse_id', 'to_warehouse_id', 'date', 'business_unit', 'created_by',
     ];
+
+    protected $refKeyPrefix = 'MI';
 
     public function scmMiLines(): HasMany
     {

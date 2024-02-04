@@ -39,7 +39,7 @@ onMounted(() => {
       <fieldset class="w-full grid grid-cols-4 gap-1 px-2 pb-3 border border-gray-500 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Fixed Asset Statement</legend>
         <div>
-          <label for="" class="text-xs" style="margin-left: .01rem">Asset Tag <span class="text-red-500">*</span></label>
+          <label for="" class="text-xs" style="margin-left: .01rem">Asset Tag</label>
           <v-select :options="allFixedAssetLists" placeholder="--Choose an option--" v-model.trim="searchParams.asset_tag" :reduce="allFixedAssetLists => allFixedAssetLists.asset_tag" label="asset_tag"  class="block w-full rounded form-input">
             <template #search="{attributes, events}">
               <input class="vs__search w-full" style="width: 50%" v-bind="attributes" v-on="events"/>

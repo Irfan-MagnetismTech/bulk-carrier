@@ -2,6 +2,7 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -9,12 +10,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsHandoverTakeover extends Model
 {
-    use HasFactory, GlobalSearchTrait;
+    use HasFactory, GlobalSearchTrait, DeletableModel;
 
     protected $fillable = [
         'note_type',
         'effective_date',
-        'exchange_rate',
+        'exchange_rate_bdt',
+        'exchange_rate_usd',
+        'total_amount_bdt',
+        'total_amount_usd',
+        'amount',
         'currency',
         'ops_vessel_id',
         'ops_charterer_profile_id',

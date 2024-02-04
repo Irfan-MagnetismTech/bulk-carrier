@@ -37,28 +37,32 @@ onMounted(() => {
     <default-button :title="'Appraisal Record List'" :to="{ name: 'crw.appraisal-records.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
-      <div class="flex md:gap-4">
+      <div class="flex md:gap-4 grid col-1">
         <div class="w-full">
-          <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Appraisal Record Information</h2>
+
           <table class="w-full">
-            
+            <thead>
+            <tr>
+              <th colspan="2" class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Basic Info</th>
+            </tr>
+            </thead>
             <tbody>
               <tr>
                 <th class="w-40">Business Unit</th>
                 <td><span :class="appraisalRecord?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ appraisalRecord?.business_unit }}</span></td>
               </tr>
              <tr>
-                <th class="w-40">Crew</th>
+                <th class="w-40">Crew Name</th>
                 <td>{{ appraisalRecord?.crwCrew?.full_name }}</td>
               </tr>
               
              <tr>
-                <th class="w-40">Contact No</th>
+                <th class="w-40">Crew Contact</th>
                 <td>{{ appraisalRecord?.crwCrew?.pre_mobile_no }}</td>
               </tr>
 
              <tr>
-                <th class="w-40">Age</th>
+                <th class="w-40">Crew Age</th>
                 <td>{{ appraisalRecord?.age }}</td>
               </tr>
               <tr>
@@ -74,7 +78,7 @@ onMounted(() => {
 
               
               <tr>
-                <th class="w-40">Nationality</th>
+                <th class="w-40">Crew Nationality</th>
                 <td>{{ appraisalRecord?.crwCrew?.nationality }}</td>
               </tr>
 
@@ -85,13 +89,13 @@ onMounted(() => {
 
               
               <tr>
-                <th class="w-40">Vessel</th>
+                <th class="w-40">Vessel Name</th>
                 <td>{{ appraisalRecord?.crwCrewAssignment?.opsVessel?.name }}</td>
               </tr>
 
               
               <tr>
-                <th class="w-40">Rank</th>
+                <th class="w-40">Crew Rank</th>
                 <td>{{ appraisalRecord?.crwCrewAssignment?.position_onboard }}</td>
               </tr>
 
@@ -132,98 +136,99 @@ onMounted(() => {
                 <td>{{ appraisalRecord.obtained_marks }}</td>
               </tr>
 
-
-              
               <tr>
                 <th class="w-40">Appraisal Date</th>
                 <td>{{ formatDate(appraisalRecord?.appraisal_date) }}</td>
               </tr>
+            </tbody>
+          </table>
 
-              <tr>
-                <td colspan="2">
-                  <template class="px-2 py-2 mt-3 border border-gray-300 rounded dark-disabled:border-gray-400" v-for="(appraisalFormLine, index) in  
+          <table class="w-full mt-2">
+            <tbody>
+            <tr>
+              <td colspan="2">
+                <template class="px-2 py-2 mt-3 border border-gray-300 rounded dark-disabled:border-gray-400" v-for="(appraisalFormLine, index) in
               appraisalRecord?.appraisalRecordLines" :key="index">
-                <table class="w-full whitespace-no-wrap mt-2" id="table" v-if="appraisalFormLine.is_tabular">
+                  <table class="w-full whitespace-no-wrap mt-2" id="table" v-if="appraisalFormLine.is_tabular">
                     <thead>
-                        <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-200 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-                            <th colspan="4" class="px-4 py-2 text-center">{{ appraisalFormLine.section_no }}. {{ appraisalFormLine.section_name }}</th>    
-                        </tr>
-                        
-                        <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-200 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-                            <th class="w-2/5 px-4 py-2 text-center">Aspect</th>
-                            <th class="w-2/5 px-4 py-2 text-center">Comments</th>
-                            <th class="w-1/5 px-4 py-2 text-center">Marks</th>
-                        </tr>
+                    <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-200 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+                      <th colspan="4" class="px-4 py-2 text-center bg-green-600 text-white">{{ appraisalFormLine.section_no }}. {{ appraisalFormLine.section_name }}</th>
+                    </tr>
+
+                    <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-200 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+                      <th class="w-2/5 px-4 py-2 text-center">Aspect</th>
+                      <th class="w-2/5 px-4 py-2 text-center">Comments</th>
+                      <th class="w-1/5 px-4 py-2 text-center">Marks</th>
+                    </tr>
 
                     </thead>
                     <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-                      <template> 
-                        {{ appraisalFormLine.appraisalRecordLineItems = (page == 'create' ? appraisalFormLine?.appraisalFormLineItems : appraisalFormLine.appraisalRecordLineItems) }} 
-                      </template>
+                    <template>
+                      {{ appraisalFormLine.appraisalRecordLineItems = (page == 'create' ? appraisalFormLine?.appraisalFormLineItems : appraisalFormLine.appraisalRecordLineItems) }}
+                    </template>
 
-                        <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(appraisalFormLineItem, appraisalFormLineItemIndex) in appraisalFormLine?.appraisalRecordLineItems" :key="appraisalFormLineItemIndex">
-                            <td class="px-1 py-1">
-                              
-                              <div>
-                                <strong>{{ appraisalFormLineItem.aspect }}:</strong><br>
-                                {{ appraisalFormLineItem.description }}
-                              </div>
-                            </td>
-                            <td>
-                              {{ appraisalFormLineItem.comment }}
-                            </td>
-                            <td class="px-1 py-1 text-center">
-                              <div v-if="appraisalFormLineItem.answer_type == 'Boolean'" class="">
-                                <!-- <select v-model.trim="appraisalFormLineItem.answer" class="form-input" required>
-                                  <option value="" disabled selected>Select</option>
-                                  <option value="1">Yes</option>
-                                  <option value="0">No</option>
-                                </select> -->
-                                {{ appraisalFormLineItem.answer == 1 ? "Yes" : "No" }}
-                              </div>
-                              <div v-else-if="appraisalFormLineItem.answer_type == 'Number' || appraisalFormLineItem.answer_type == 'Grade'" >
-                                <!-- <select v-model.trim="appraisalFormLineItem.answer" class="form-input" required>
-                                  <option value="" disabled selected>Select</option>
-                                  <option value="1">{{ appraisalFormLineItem.answer_type == 'Grade' ? 'Poor' : 1 }}</option>
-                                  <option value="2">{{ appraisalFormLineItem.answer_type == 'Grade' ? 'Fair' : 2 }}</option>
-                                  <option value="3">{{ appraisalFormLineItem.answer_type == 'Grade' ? 'Good' : 3 }}</option>
-                                  <option value="4">{{ appraisalFormLineItem.answer_type == 'Grade' ? 'Very Good' : 4 }}</option>
-                                  <option value="5">{{ appraisalFormLineItem.answer_type == 'Grade' ? 'Excellent' : 5 }}</option>
-                                </select> -->
-                                {{ appraisalFormLineItem.answer_type == 'Grade' ? grade[appraisalFormLineItem.answer] : appraisalFormLineItem.answer }}
-                              </div>
-                            </td>
-                        </tr>
+                    <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(appraisalFormLineItem, appraisalFormLineItemIndex) in appraisalFormLine?.appraisalRecordLineItems" :key="appraisalFormLineItemIndex">
+                      <td class="px-1 py-1">
+
+                        <div>
+                          <strong>{{ appraisalFormLineItem.aspect }}:</strong><br>
+                          {{ appraisalFormLineItem.description }}
+                        </div>
+                      </td>
+                      <td>
+                        {{ appraisalFormLineItem.comment }}
+                      </td>
+                      <td class="px-1 py-1 text-center">
+                        <div v-if="appraisalFormLineItem.answer_type == 'Boolean'" class="">
+                          <!-- <select v-model.trim="appraisalFormLineItem.answer" class="form-input" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                          </select> -->
+                          {{ appraisalFormLineItem.answer == 1 ? "Yes" : "No" }}
+                        </div>
+                        <div v-else-if="appraisalFormLineItem.answer_type == 'Number' || appraisalFormLineItem.answer_type == 'Grade'" >
+                          <!-- <select v-model.trim="appraisalFormLineItem.answer" class="form-input" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="1">{{ appraisalFormLineItem.answer_type == 'Grade' ? 'Poor' : 1 }}</option>
+                            <option value="2">{{ appraisalFormLineItem.answer_type == 'Grade' ? 'Fair' : 2 }}</option>
+                            <option value="3">{{ appraisalFormLineItem.answer_type == 'Grade' ? 'Good' : 3 }}</option>
+                            <option value="4">{{ appraisalFormLineItem.answer_type == 'Grade' ? 'Very Good' : 4 }}</option>
+                            <option value="5">{{ appraisalFormLineItem.answer_type == 'Grade' ? 'Excellent' : 5 }}</option>
+                          </select> -->
+                          {{ appraisalFormLineItem.answer_type == 'Grade' ? grade[appraisalFormLineItem.answer] : appraisalFormLineItem.answer }}
+                        </div>
+                      </td>
+                    </tr>
                     </tbody>
-                </table>
+                  </table>
 
-                <table class="w-full whitespace-no-wrap  mt-2" id="table" v-else>
-                  <thead>
-                        <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-200 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-                            <th class="px-4 py-2 text-center">{{ appraisalFormLine.section_no }}. {{ appraisalFormLine.section_name }}</th>    
-                        </tr>
-                  </thead>
-                  <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800 ">
-                        <tr class="">
-                            <td class="px-4 py-2 ">
-                              <div class="min-h-[50px]">
-                                  {{ appraisalFormLine.comment }}
-                              </div>
-                              
-                            </td>    
-                        </tr>
-                        
+                  <table class="w-full whitespace-no-wrap  mt-2" id="table" v-else>
+                    <thead>
+                    <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-200 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+                      <th class="px-4 py-2 text-center">{{ appraisalFormLine.section_no }}. {{ appraisalFormLine.section_name }}</th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800 ">
+                    <tr class="">
+                      <td class="px-4 py-2 ">
+                        <div class="min-h-[50px]">
+                          {{ appraisalFormLine.comment }}
+                        </div>
+
+                      </td>
+                    </tr>
+
                     </tbody>
 
-                </table>
-                
-            </template>
+                  </table>
 
-                </td>
-              </tr>               
+                </template>
+
+              </td>
+            </tr>
             </tbody>
           </table>
-          
         </div>
       </div>
   </div>

@@ -52,7 +52,6 @@ class ScmMrrController extends Controller
     public function store(ScmMrrRequest $request): JsonResponse
     {
         $requestData = $request->except('ref_no');
-        $requestData['ref_no'] = UniqueId::generate(ScmMrr::class, 'MRR');
 
         try {
             DB::beginTransaction();

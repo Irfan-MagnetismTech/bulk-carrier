@@ -62,7 +62,7 @@ watch(
 );
 
 let filterOptions = ref( {
-  "business_unit": null,
+  "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
   "isFilter": false,
@@ -213,6 +213,10 @@ onMounted(() => {
                   <td>{{ contractAssign?.opsCustomer?.name }}</td>
                   <td>{{ contractAssign?.opsChartererProfile?.name }}</td>
                   <td>{{ contractAssign?.opsChartererContract?.contract_name }}</td>
+                  <td>
+                    <span :class="contractAssign?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ contractAssign?.business_unit }}</span>
+
+                  </td>
                    <!-- <td>{{ contractAssign?.opsVessel?.name }}</td>
                   <td>{{ contractAssign?.opsVoyage?.voyage_no }}</td>
                   <td>{{ contractAssign?.opsVessel?.capacity }}</td>

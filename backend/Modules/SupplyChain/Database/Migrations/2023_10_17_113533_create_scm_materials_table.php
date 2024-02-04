@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('sample_photo')->nullable();
             $table->bigInteger('account_id')->nullable();
+            $table->string('type')->comment('consumable, asset');
             $table->timestamps();
         });
     }

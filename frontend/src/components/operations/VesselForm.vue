@@ -163,21 +163,23 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(certificate, index) in form.opsVesselCertificates">
+          <tr v-for="(certificate, index) in form.opsVesselCertificates" :key="index">
             <td>
               {{ index+1 }}
             </td>
-            <td>
+            <td class="flex items-center">
               <v-select :options="maritimeCertificates" placeholder="--Choose an option--" v-model="form.opsVesselCertificates[index]" label="name" class="w-full block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.opsVesselCertificates[index].name"
+                        :required="!form.opsVesselCertificates[index]"
                         v-bind="attributes"
                         v-on="events"
                         />
                 </template>
-            </v-select>
+              </v-select>
+              <span v-show="isCertificateDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
+
             </td>
             <td>
               <span class="show-block" v-if="form.opsVesselCertificates[index]?.type">{{ form.opsVesselCertificates[index]?.type }}</span>
@@ -205,7 +207,6 @@
             <th class="!w-12">SL</th>
             <th class="!w-80">Bunker Name</th>
             <th class="!w-20">Unit</th>
-            <th>Opening Balance</th>
             <th class="w-16">
               <!--  :class="formType=='edit' ? 'hidden' : '' " -->
               <button type="button" @click="addBunker()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -217,11 +218,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(certificate, index) in form.opsBunkers">
+          <tr v-for="(bunker, index) in form.opsBunkers" :key="index">
             <td>
               {{ index+1 }}
             </td>
-            <td>
+            <td class="flex items-center">
               <v-select v-if="!form.opsBunkers[index]?.is_readonly" :options="materials" placeholder="--Choose an option--" v-model="form.opsBunkers[index]" label="name" class="w-full block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -233,17 +234,13 @@
                   </template>
               </v-select>
               <span v-else class="show-block !justify-center !bg-gray-100">{{ form.opsBunkers[index]?.name }}</span>
+              <span v-show="isBunkerDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
 
             </td>
             <td>
               <span class="show-block !justify-center !bg-gray-100" v-if="form.opsBunkers[index]?.unit">{{ form.opsBunkers[index]?.unit }}</span>
             </td>
             <td>
-              <label class="block w-full mt-2 text-sm">
-                <input type="number" :readonly="form.opsBunkers[index]?.is_readonly"  step="0.001" required v-model="form.opsBunkers[index].opening_balance" placeholder="Opening Balance" class="form-input text-right" autocomplete="off"/>
-              </label>
-            </td>
-            <td :class="{hidden : form.opsBunkers[index]?.is_readonly}">
               <button type="button" @click="removeBunker(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
@@ -267,6 +264,8 @@ import useMaterial from '../../composables/supply-chain/useMaterial';
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import RemarksComponent from '../../components/utils/RemarksComponent.vue';
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
+import useHeroIcon from "../../assets/heroIcon";
+const icons = useHeroIcon();
 
 const props = defineProps({
     form: {
@@ -282,6 +281,10 @@ const props = defineProps({
 const { maritimeCertificates, getMaritimeCertificateList } = useMaritimeCertificates();
 const { ports, searchPorts } = usePort();
 const { materials, getBunkerList } = useMaterial();
+
+const isCertificateDuplicate = ref(false);
+const isBunkerDuplicate = ref(false);
+
 function addVesselCertificate() {
   // console.log(props.maritimeCertificateObject, "dfdf")
   props.form.opsVesselCertificates.push({... props.maritimeCertificateObject });
@@ -324,6 +327,28 @@ watch(() => props.form.business_unit, (value) => {
   searchPorts("", props.form.business_unit);
 }, { deep : true })
 
+watch(() => props.form.opsVesselCertificates, (value) => {
+  props.form.opsVesselCertificates.some((certificate, index) => {
+            if (props.form.opsVesselCertificates.filter(val => val.name === certificate.name)?.length > 1) {
+              isCertificateDuplicate.value = true;
+            } else {
+              isCertificateDuplicate.value = false;
+
+            }
+          })
+}, { deep : true })
+
+watch(() => props.form.opsBunkers, (value) => {
+
+    props.form.opsBunkers.some((material, index) => {
+            if (props.form.opsBunkers.filter(val => val.name === material.name)?.length > 1) {
+              isBunkerDuplicate.value = true;
+            } else {
+              isBunkerDuplicate.value = false;
+
+            }
+		});
+}, { deep : true })
 
 onMounted(() => {
   getMaritimeCertificateList();

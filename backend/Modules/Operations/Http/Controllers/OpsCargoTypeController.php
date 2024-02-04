@@ -113,7 +113,9 @@ class OpsCargoTypeController extends Controller
     public function destroy(OpsCargoType $cargo_type): JsonResponse
     {
         try {
+            DB::beginTransaction();            
             $cargo_type->delete($cargo_type);
+            DB::commit();
 
             return response()->json([
                 'message' => 'Data deleted successfully.'
@@ -121,7 +123,8 @@ class OpsCargoTypeController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($cargo_type->preventDeletionIfRelated(), 422);  
         }
     }
 

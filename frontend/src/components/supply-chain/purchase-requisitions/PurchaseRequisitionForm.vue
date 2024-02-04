@@ -13,7 +13,10 @@
     import {useStore} from "vuex";
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
-    
+    import useHeroIcon from '../../../assets/heroIcon';
+
+
+    const icons = useHeroIcon();
     const { material, materials, getMaterials,searchMaterial,isLoading: materialLoading } = useMaterial();
     const { warehouses,warehouse,getWarehouses,searchWarehouse ,isLoading:warehouseLoading} = useWarehouse();
     const { getMaterialWiseCurrentStock,CurrentStock} =useStockLedger();
@@ -70,6 +73,19 @@
       watchPostEffect(() => {
         fetchWarehouse('');
       });
+      // var inndx = 0;
+      // watchPostEffect(() => {
+      //   if(props.formType == 'edit'){
+      //     var apprval_min_date = props?.form?.raised_date ? new Date(props?.form?.raised_date) : null;
+      //     var raised_max_date = props?.form?.approved_date ? new Date(props?.form?.approved_date) : null;
+          
+      //   }else{
+      //     var apprval_min_date = props?.form?.raised_date ? new Date(props?.form?.raised_date) : null;
+      //     var raised_max_date = props?.form?.approved_date ? new Date(props?.form?.approved_date) : null;
+      //   }
+      //   inndx++;  
+      //   console.log(apprval_min_date,raised_max_date);
+      // })
     });
 
 
@@ -154,13 +170,13 @@
 watch(() => props.form.scmPrLines, (newLines) => {
   let materialArray = [];
   newLines.forEach((line, index) => {
-    let material_key = line.scm_material_id + "-" + line?.brand ?? + "-" + line?.model ?? '';
-    if (materialArray.indexOf(material_key) === -1) {
-      materialArray.push(material_key);
-    } else {
-      alert("Duplicate Material Found");
-      props.form.scmPrLines.splice(index, 1);
-    }
+    // let material_key = line.scm_material_id + "-" + line?.brand ?? + "-" + line?.model ?? '';
+    // if (materialArray.indexOf(material_key) === -1) {
+    //   materialArray.push(material_key);
+    // } else {
+    //   alert("Duplicate Material Found");
+    //   props.form.scmPrLines.splice(index, 1);
+    // }
 
     if (line.scmMaterial) {
       const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
@@ -170,7 +186,6 @@ watch(() => props.form.scmPrLines, (newLines) => {
           props.form.scmPrLines[index].unit = selectedMaterial.unit;
           props.form.scmPrLines[index].scm_material_id = selectedMaterial.id;
           getMaterialWiseCurrentStock(selectedMaterial.id,props.form.scm_warehouse_id).then(() => {
-        
             props.form.scmPrLines[index].rob = CurrentStock ?? 0;
           });
         }
@@ -192,7 +207,19 @@ watch(() => props.form.scmPrLines, (newLines) => {
   function fetchMaterials(search) {
   searchMaterial(search)
 }
-
+function raisedDateChange(){
+      if (props.form.approved_date < props.form.raised_date) 
+        props.form.approved_date = '';
+    }
+    
+    function approvedDateChange(){
+      if (props.form.approved_date < props.form.raised_date) 
+        props.form.approved_date = '';
+      props.form.scmPrLines.forEach((scmPrLine) => {
+        if (scmPrLine.required_date < props.form.approved_date) 
+          scmPrLine.required_date = '';
+      })
+    }
 
 
   watch(dropZoneFile, (value) => {
@@ -201,11 +228,15 @@ watch(() => props.form.scmPrLines, (newLines) => {
     }
   });
 
-  watch(() => props.form.scmWarehouse, (value) => {
-        props.form.scm_warehouse_id = value?.id ?? null;
-        props.form.acc_cost_center_id = value?.cost_center_id;
-  });
+  // watch(() => props.form.scmWarehouse, (value) => {
+  //       props.form.scm_warehouse_id = value?.id ?? null;
+  //       props.form.acc_cost_center_id = value?.cost_center_id;
+  // });
     
+  function changeWarehouse(value) {
+    props.form.scm_warehouse_id = value?.id ?? null;
+    props.form.acc_cost_center_id = value?.cost_center_id;
+  }
   watch(() => props.form.business_unit, (newValue, oldValue) => {
    if(newValue !== oldValue && oldValue != ''){
     props.form.scmWarehouse = null;
@@ -213,9 +244,9 @@ watch(() => props.form.scmPrLines, (newLines) => {
 });
 
 
-function tytyty(indx) {
-  console.log(indx)
-}
+// function tytyty(indx) {
+//   console.log(indx)
+// }
 
 
 
@@ -241,19 +272,20 @@ function tytytyasd(indx) {
 <template>
 
   <!-- Basic information -->
-  <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
-    <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
-  </div>
-  <div class="input-group">
-      <label class="label-group">
+  <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2">
+    <div>
+      <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
+    </div>
+  
+      <label class="label-group col-start-1" v-show="page === 'edit'">
           <span class="label-item-title">PR Ref <span class="text-red-500">*</span></span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
           <!-- <Error v-if="errors?.ref_no" :errors="errors.ref_no"  /> -->
       </label>
-      <label class="label-group">
+      <label class="label-group col-start-1">
         <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
           <!-- <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse" v-model="form.scmWarehouse" label="name" class="block form-input"> -->
-          <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" class="block form-input">
+          <v-select :options="warehouses" placeholder="--Choose an option--" :loading="warehouseLoading" v-model="form.scmWarehouse" label="name" class="block form-input" @update:modelValue="changeWarehouse(form.scmWarehouse)">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -267,9 +299,8 @@ function tytytyasd(indx) {
       </label>
       <label class="label-group">
           <span class="label-item-title">Raised Date<span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.raised_date" required class="form-input" name="raised" :id="'raised'" />
-          <!-- <Error v-if="errors?.raised" :errors="errors.raised"  /> -->
-      </label>
+          <VueDatePicker v-model="form.raised_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" @update:model-value="raisedDateChange"></VueDatePicker>
+       </label>
       <label class="label-group">
           <span class="label-item-title">Critical Spares<span class="text-red-500">*</span></span>
           <select v-model="form.is_critical" required class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
@@ -278,8 +309,6 @@ function tytytyasd(indx) {
           </select>
           <!-- <Error v-if="errors?.is_critical" :errors="errors.is_critical"  /> -->
       </label>
-  </div>
-  <div class="input-group !w-3/4">
     <label class="label-group">
         <span class="label-item-title">Attachment</span>
         <input type="file" class="form-input" @change="handleAttachmentChange" />
@@ -300,22 +329,20 @@ function tytytyasd(indx) {
         <!-- <Error v-if="errors?.purchase_center" :errors="errors.purchase_center" /> -->
     </label>
       <label class="label-group">
-          <span class="label-item-title">Approved Date <span class="text-red-500">*</span></span>
-          <input type="date" v-model="form.approved_date" required class="form-input" name="approved_date" :id="'approved_date'" />
-          <!-- <Error v-if="errors?.approved_date" :errors="errors.approved_date"  /> -->
+          <span class="label-item-title">Approved date <span class="text-red-500">*</span></span>
+          <VueDatePicker v-model="form.approved_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.raised_date" @update:model-value="approvedDateChange"></VueDatePicker>
       </label>
-  </div>
+      <label class="label-group">
+          <span class="label-item-title">Departments <span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.department" required class="form-input"/>
+       </label>
+      <div class="col-start-1 md:col-span-2">
 
-  <div class="input-group !w-3/4">
-    <label class="label-group">
-          <!-- <span class="label-item-title">Remarks </span> -->
-          <!-- <textarea v-model="form.remarks" class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input"></textarea> -->
-          <!-- <Error v-if="errors?.remarks" :errors="errors.remarks" /> -->
-          <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
-    </label>
-  </div>
+        <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
+      </div>
+  
 
-  <div class="flex items-center w-full" v-if="formType != 'edit'">
+  <div class="flex items-center w-full md:col-span-3" v-if="formType != 'edit'">
     <div class="label-group">
           <div class="my-3 flex gap-6">
                 <div class="flex items-center">
@@ -329,7 +356,7 @@ function tytytyasd(indx) {
             </div>
         </div>
   </div>
-  <div id="" v-if="form?.entry_type == '0' || formType == 'edit'">
+  <div id="" v-if="form?.entry_type == '0' || formType == 'edit'"  class="md:col-span-3">
 <!-- 
     <div id="customDataTable" ref="customDataTableirf" class="!max-w-screen overflow-x-scroll pb-20"> 
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
@@ -460,12 +487,12 @@ function tytytyasd(indx) {
         
         <div v-for="(ScmPrLine, index) in form.scmPrLines" :key="index" class="w-full mx-auto p-2 border rounded-mdborder-gray-400 mb-5 shadow-md">
           <label class="block w-1/2 mt-2 text-sm">
-
-          <span class="text-gray-700 dark-disabled:text-gray-300">Material Name <span class="text-red-500">*</span></span>
-         </label>
+          <span class="text-gray-700 dark-disabled:text-gray-300">Material Name <span class="text-red-500">*</span>
+          </span>
+          </label>
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-            <label class="block w-1/2 mt-2 text-sm">
-              <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input">
+            <label class="block w-1/2 mt-2 text-sm relative">
+              <v-select :options="materials" placeholder="--Choose an option--" :loading="materialLoading" v-model="form.scmPrLines[index].scmMaterial" label="material_name_and_code" class="block form-input" :disabled="form.scmPrLines[index].closed_by">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -475,32 +502,37 @@ function tytytyasd(indx) {
                           />
                   </template>
               </v-select>
+              <span v-show="form.scmPrLines[index].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 left-[18rem] md:left-[21rem]" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
             </label>
-          <label class="block w-full mt-2 text-sm">
+           
+            <label class="block w-full mt-2 text-sm">
                         <a v-if="form.scmPrLines[index].scmMaterial" :href="env.BASE_API_URL+form.scmPrLines[index].scmMaterial?.sample_photo" target="_blank" rel="noopener noreferrer">
                                   <img :src="env.BASE_API_URL+form.scmPrLines[index].scmMaterial?.sample_photo"  alt="" srcset="" class="w-12 mx-auto">
                           </a>
+          </label>
+          <label class="" v-if="form.scmPrLines[index].closed_by">
+            <span class="text-red-500">Closed</span>
           </label>
           </div>
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
                     
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Unit <span class="text-red-500">*</span></span>
-                      <input type="text" readonly v-model="form.scmPrLines[index].unit" class="vms-readonly-input form-input">
+                      <input type="text" readonly v-model="form.scmPrLines[index].unit" class="vms-readonly-input form-input" :readonly="form.scmPrLines[index].closed_by">
                   </label>
 
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Brand </span>
-                      <input type="text" v-model="form.scmPrLines[index].brand" class="form-input">
+                      <input type="text" v-model="form.scmPrLines[index].brand" class="form-input" :readonly="form.scmPrLines[index].closed_by">
                     </label>
 
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Model </span>
-                      <input type="text" v-model="form.scmPrLines[index].model" class="form-input">
+                      <input type="text" v-model="form.scmPrLines[index].model" class="form-input" :readonly="form.scmPrLines[index].closed_by">
                     </label>
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Required Date <span class="text-red-500">*</span></span>
-                      <input type="date" v-model="form.scmPrLines[index].required_date" required class="form-input">
+                      <VueDatePicker v-model="form.scmPrLines[index].required_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :readonly="form.scmPrLines[index].closed_by"></VueDatePicker>
                     </label>
           </div>
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -508,23 +540,23 @@ function tytytyasd(indx) {
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Specification </span>
 
-                      <input type="text" v-model="form.scmPrLines[index].specification" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <input type="text" v-model="form.scmPrLines[index].specification" placeholder="" class="form-input" autocomplete="off" :readonly="form.scmPrLines[index].closed_by"/>
                     </label>
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Origin </span>
 
-                      <input type="text" v-model="form.scmPrLines[index].country_name" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <input type="text" v-model="form.scmPrLines[index].country_name" placeholder="" class="form-input" autocomplete="off" :readonly="form.scmPrLines[index].closed_by"/>
                     </label>
                    
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Drawing No </span>
 
-                      <input type="text" v-model="form.scmPrLines[index].drawing_no" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <input type="text" v-model="form.scmPrLines[index].drawing_no" placeholder="" class="form-input" autocomplete="off" :readonly="form.scmPrLines[index].closed_by"/>
                     </label>
                     <label class="block w-full mt-2 text-sm">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Part No </span>
 
-                      <input type="text" v-model="form.scmPrLines[index].part_no" placeholder="" class="form-input text-right" autocomplete="off"/>
+                      <input type="text" v-model="form.scmPrLines[index].part_no" placeholder="" class="form-input" autocomplete="off" :readonly="form.scmPrLines[index].closed_by"/>
                     </label>
                     
           </div>
@@ -534,12 +566,12 @@ function tytytyasd(indx) {
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Rob </span>
 
-              <input type="number" v-model="form.scmPrLines[index].rob" readonly placeholder="" class="form-input text-right vms-readonly-input" autocomplete="off"/>
+              <input type="number" v-model="form.scmPrLines[index].rob" readonly placeholder="" class="form-input text-right vms-readonly-input" autocomplete="off" :readonly="form.scmPrLines[index].closed_by"/>
             </label>
             <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Quantity <span class="text-red-500">*</span></span>
 
-              <input type="number" v-model="form.scmPrLines[index].quantity" required min="1" placeholder="" class="form-input text-right" autocomplete="off"/>
+              <input type="number" v-model="form.scmPrLines[index].quantity" required min="1" placeholder="" class="form-input text-right" autocomplete="off" :readonly="form.scmPrLines[index].closed_by"/>
             </label>
             </div>
           <div class="flex justify-center items-center my-3">
@@ -556,25 +588,26 @@ function tytytyasd(indx) {
   </div>
 
 
-  <div v-else>
-    <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Download Excel <span class="text-red-500">*</span></legend>
-        <div class="input-group !w-1/2">
-                <label class="label-group">
-                    <span class="label-item-title">Store Category<span class="text-red-500">*</span></span>
-                    <v-select name="user" v-model="excelExportData.store_category_name" placeholder="--Choose an option--" label="Store Category" :options="store_category" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
-                    </v-select>
-                    <!-- <Error v-if="errors?.store_category" :errors="errors.store_category" /> -->
-                </label>
-                <label class="label-group">
-                <button type="button" @click.prevent="downloadExcel" class="flex items-center justify-center px-4 py-2 mt-6 ml-6 text-sm leading-4 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium active:bg-purple-600  hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Download </button>
-                </label>
-            </div>
-      </fieldset>
-      <hr class="my-4"/>
+    <div v-else class="md:col-span-3">
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+          <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Download Excel <span class="text-red-500">*</span></legend>
+          <div class="input-group !w-1/2">
+                  <label class="label-group">
+                      <span class="label-item-title">Store Category<span class="text-red-500">*</span></span>
+                      <v-select name="user" v-model="excelExportData.store_category_name" placeholder="--Choose an option--" label="Store Category" :options="store_category" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+                      </v-select>
+                      <!-- <Error v-if="errors?.store_category" :errors="errors.store_category" /> -->
+                  </label>
+                  <label class="label-group">
+                  <button type="button" @click.prevent="downloadExcel" class="flex items-center justify-center px-4 py-2 mt-6 ml-6 text-sm leading-4 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium active:bg-purple-600  hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Download </button>
+                  </label>
+              </div>
+        </fieldset>
+        <hr class="my-4"/>
 
-      <DropZoneV2 :form="form" :page="page"></DropZoneV2>
-  </div>
+        <DropZoneV2 :form="form" :page="page"></DropZoneV2>
+    </div>
+  </div>  
   <ErrorComponent :errors="errors"></ErrorComponent>  
 </template>
 

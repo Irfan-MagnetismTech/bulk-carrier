@@ -12,6 +12,8 @@ import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import { formatDate,formatMonthYear,formatMonthYearWithTime } from "../../../utils/helper.js";
+
 
 const router = useRouter();
 const icons = useHeroIcon();
@@ -27,7 +29,7 @@ const props = defineProps({
 const { incidentRecords, getIncidentRecords, deleteIncidentRecord, isLoading, isTableLoading } = useIncidentRecord();
 const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
-setTitle('Incident Records');
+setTitle('Incident Record');
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 let filterOptions = ref( {
@@ -36,16 +38,6 @@ let filterOptions = ref( {
   "page": props.page,
   "isFilter": false,
   "filter_options": [
-    {
-      "relation_name": "opsVessel",
-      "field_name": "name",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Vessel Name",
-      "filter_type": "input"
-    },
     {
       "relation_name": null,
       "field_name": "date_time",
@@ -64,6 +56,16 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Incident Type",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": "opsVessel",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Vessel Name",
       "filter_type": "input"
     },
     {
@@ -166,11 +168,11 @@ onMounted(() => {
           <tbody class="relative">
           <tr v-for="(crwIncidentRecord,index) in incidentRecords?.data" :key="index">
             <td>{{ index + 1 }}</td>
+            <td>{{ formatMonthYearWithTime(crwIncidentRecord?.date_time) }}</td>
+            <td class="!text-left">{{ crwIncidentRecord?.type }}</td>
             <td class="text-left">{{ crwIncidentRecord?.opsVessel?.name }}</td>
-            <td>{{ crwIncidentRecord?.date_time }}</td>
-            <td>{{ crwIncidentRecord?.type }}</td>
-            <td>{{ crwIncidentRecord?.location }}</td>
-            <td>{{ crwIncidentRecord?.reported_by }}</td>
+            <td class="!text-left">{{ crwIncidentRecord?.location }}</td>
+            <td class="!text-left">{{ crwIncidentRecord?.reported_by }}</td>
             <td>
               <a v-html="icons.Attachment" type="button" v-if="typeof crwIncidentRecord?.attachment === 'string'" class="text-green-800" target="_blank" :href="env.BASE_API_URL+'/'+crwIncidentRecord?.attachment"></a>
               <a v-else>---</a>

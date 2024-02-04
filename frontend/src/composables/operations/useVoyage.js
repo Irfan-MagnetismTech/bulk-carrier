@@ -5,6 +5,8 @@ import { useRouter } from 'vue-router';
 import Api from '../../apis/Api';
 import Error from '../../services/error';
 import useNotification from '../useNotification.js';
+import moment from 'moment';
+import Swal from "sweetalert2";
 
 export default function useVoyage() {
 	const router = useRouter();
@@ -32,9 +34,9 @@ export default function useVoyage() {
 		ops_voyage_id: '',
         port_code: '',
 		operation_type: "",
-        eta: '',
-        etb: '',
-        etd: '',
+        ata: '',
+        atb: '',
+        atd: '',
         load_commence: '',
         load_complete: '',
         unload_commence: '',
@@ -129,6 +131,35 @@ export default function useVoyage() {
 
 	async function storeVoyage(form) {
 		//NProgress.start();
+		
+		let hasError = 0;
+		form.opsVoyagePortSchedules.map((schedule) => {
+
+			hasError += compareTime(form.sail_date, form.transit_date, 'hours')
+
+			hasError += compareTime(schedule.ata, schedule.atb)
+			hasError += compareTime(schedule.atb, schedule.atd, 'hours')
+
+			hasError += compareTime(schedule.atb, schedule.load_commence)
+			hasError += compareTime(schedule.load_commence, schedule.load_complete)
+
+			hasError += compareTime(schedule.atb, schedule.unload_commence)
+			hasError += compareTime(schedule.unload_commence, schedule.unload_complete)
+
+			hasError += compareTime(schedule.unload_complete, schedule.atd)
+
+		})
+
+		if(hasError > 0) {
+			Swal.fire({
+				icon: "",
+				title: "Correct Please!",
+				html: `Invalid Date and Time.`,
+				customClass: "swal-width",
+			});
+			return false;
+		}
+
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
@@ -156,6 +187,24 @@ export default function useVoyage() {
 		}
 	}
 
+	function compareTime(firstTime, lastTime, type = 'minutes') {
+
+		if(firstTime != '' && lastTime != '') {
+			let date1 = moment(firstTime);
+			let date2 = moment(lastTime);
+	
+			if ( date2.diff(date1, type) <= 0 ) {
+				return 1;
+			} else {
+				return 0;
+			}
+		} else {
+			return 0;
+		}
+
+		
+	}
+
 	async function showVoyage(voyageId) {
 		//NProgress.start();
 		// const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2', 'is-full-page': false});
@@ -179,17 +228,36 @@ export default function useVoyage() {
 
 	async function updateVoyage(form, voyageId) {
 		//NProgress.start();
+		let hasError = 0;
+		form.opsVoyagePortSchedules.map((schedule) => {
+
+			hasError += compareTime(form.sail_date, form.transit_date, 'hours')
+
+			hasError += compareTime(schedule.ata, schedule.atb)
+			hasError += compareTime(schedule.atb, schedule.atd, 'hours')
+
+			hasError += compareTime(schedule.atb, schedule.load_commence)
+			hasError += compareTime(schedule.load_commence, schedule.load_complete)
+
+			hasError += compareTime(schedule.atb, schedule.unload_commence)
+			hasError += compareTime(schedule.unload_commence, schedule.unload_complete)
+
+			hasError += compareTime(schedule.unload_complete, schedule.atd)
+
+		})
+
+		if(hasError > 0) {
+			Swal.fire({
+				icon: "",
+				title: "Correct Please!",
+				html: `Invalid Date and Time.`,
+				customClass: "swal-width",
+			});
+			return false;
+		}
+
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
-
-		// form.opsVoyageCertificates.map((element) => {
-		// 	element.ops_maritime_certification_id = element.id
-		// 	element.business_unit = form.business_unit
-		// })
-
-		// form.opsBunkers.map((element) => {
-		// 	element.scm_material_id = element.id
-		// })
 		
 		try {
 			const { data, status } = await Api.put(
@@ -368,7 +436,7 @@ export default function useVoyage() {
                 }
 			}
 			
-            else if(openTab.value === 4){
+            else if(openTab.value === 3){
                 let voyageScheduleFieldStatus = true;
                 props.form.opsVoyagePortSchedules.forEach((value, index) => {
                     if(!props.form.opsVoyagePortSchedules[index][field]){

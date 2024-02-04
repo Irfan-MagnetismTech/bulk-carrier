@@ -1,7 +1,14 @@
 <template>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
-      <label class="block w-full mt-2 text-sm"></label>
+      <label class="block w-full mt-2 text-sm">
+          <span class="text-gray-700">Assignment Type </span>
+          <select v-model="form.contract_assign_type" class="form-input" :disabled="formType=='edit'">
+            <option value="" selected disabled>Select Type</option>
+            <option value="Customer">Customer</option>
+            <option value="Charterer">Charterer</option>
+          </select>
+      </label>
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
 
@@ -45,7 +52,7 @@
       </label>
     </div>
 
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.business_unit=='TSLL'">
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.contract_assign_type=='Customer'">
       <!-- <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Tarrif <span class="text-red-500">*</span></span>
               <v-select :options="cargoTariffs" placeholder="--Choose an option--" v-model="form.opsCargoTariff" label="tariff_name" class="block form-input">
@@ -58,11 +65,10 @@
                           />
                   </template>
               </v-select>
-              <input type="hidden" v-model="form.ops_vessel_id" />
       </label> -->
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Customer <span class="text-red-500">*</span></span>
-              <v-select :options="customers" placeholder="--Choose an option--" v-model="form.opsCustomer" label="name_code" class="block form-input">
+              <v-select :options="customers" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsCustomer" label="name_code" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -72,14 +78,13 @@
                           />
                   </template>
               </v-select>
-              <input type="hidden" v-model="form.ops_voyage_id" />
       </label>
     </div>
 
-    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.business_unit=='PSML'">
+    <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.contract_assign_type=='Charterer'">
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Charterer <span class="text-red-500">*</span></span>
-              <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name" class="block form-input">
+              <v-select :options="chartererProfiles" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -89,7 +94,6 @@
                           />
                   </template>
               </v-select>
-              <input type="hidden" v-model="form.ops_vessel_id" />
       </label>
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 ">Charterer Contract <span class="text-red-500">*</span></span>
@@ -103,10 +107,9 @@
                           />
                   </template>
               </v-select>
-              <input type="hidden" v-model="form.ops_voyage_id" />
       </label>
     </div>
-    <div v-if="form.business_unit=='TSLL' && form.opsVoyage">
+    <div v-if="(form.opsVoyage && form.contract_assign_type=='Customer')">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Sector <span class="text-red-500">*</span></legend>
         <table class="w-full whitespace-no-wrap" id="table">
@@ -189,6 +192,7 @@ import moment from 'moment';
 import cloneDeep from 'lodash/cloneDeep';
 import useCustomer from "../../composables/operations/useCustomer";
 import useCargoTariff from "../../composables/operations/useCargoTariff";
+import Swal from 'sweetalert2';
 
 const editInitiated = ref(false);
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
@@ -214,21 +218,65 @@ const props = defineProps({
 
 watch(() => props.form.business_unit, (value) => {
 if(props?.formType != 'edit') {
-  props.form.opsVoyage = null;
-  props.form.ops_voyage_id = null;
-  props.form.opsVessel = null;
-  props.form.ops_vessel_id = null;
+  cleanThings()
+  vessels.value = [];
+
+  if(props.form.contract_assign_type == 'Charterer') {
+      getChartererByBusinessUnit(props.form.business_unit);
+    } else if(props.form.contract_assign_type == 'Customer') {
+      getCustomersByBusinessUnit(props.form.business_unit);
+    }
 }
 
 getVesselList(props.form.business_unit);
 
 }, { deep : true })
 
+watch(() => props.form.contract_assign_type, (value) => {
+
+  if(props.form.business_unit == '' || props.form.business_unit =='ALL' || props.form.business_unit == null) {
+    Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: "Please add business unit first",
+                    customClass: "swal-width",
+                });
+                return false;
+  }
+
+  if(props?.formType != 'edit') {
+    cleanThings()
+
+    if(props.form.contract_assign_type == 'Charterer') {
+      getChartererByBusinessUnit(props.form.business_unit);
+    } else if(props.form.contract_assign_type == 'Customer') {
+      getCustomersByBusinessUnit(props.form.business_unit);
+    }
+  }
+
+
+}, { deep: true });
+
+function cleanThings() {
+  props.form.opsVoyage = null;
+  props.form.ops_voyage_id = null;
+  props.form.opsVessel = null;
+  props.form.ops_vessel_id = null;
+  chartererProfiles.value = []
+  chartererContracts.value = []
+  customers.value = []
+  props.form.opsCustomer = null;
+  props.form.ops_customer_id = null;
+  props.form.opsCargoTariff = null;
+  props.form.ops_cargo_tariff_id = null;
+  props.form.opsChartererProfile = null;
+  props.form.ops_charterer_profile_id = null;
+}
+
 onMounted(() => {
   watchPostEffect(() => {
     getVesselList(props.form.business_unit);
-  getChartererByBusinessUnit(props.form.business_unit);
-  getCustomersByBusinessUnit(props.form.business_unit);
+    
   })
  
 })
@@ -273,23 +321,34 @@ function opsVesselChange() {
     showVessel(value?.id, loadStatus);
     getVoyageList(props.form.business_unit, props.form.ops_vessel_id);
     // getCargoTariffsByVessel(props.form.ops_vessel_id);
+    chartererContracts.value = []
+
+    getChartererContract()
   }
 }
 
 
 watch(() => props.form.opsChartererProfile, (value) => {
     props.form.ops_charterer_profile_id = value?.id;
+    chartererContracts.value = []
+    getChartererContract()
 })
 
 
+function getChartererContract() {
+  // if(props.form.ops_charterer_profile_id == null || props.form.ops_vessel_id == null) {
+  //   Swal.fire({
+  //                   icon: "",
+  //                   title: "Correct Please!",
+  //                   html: "Please add business unit first",
+  //                   customClass: "swal-width",
+  //               });
+  //               return false;
+  // }
 
-watch(() => props.form.opsChartererProfile, (value) => {
-    props.form.ops_charterer_profile_id = value?.id;
-    getChartererContractsByCharterOwner(value?.id);
-})
+  getChartererContractsByCharterOwner(props.form.ops_charterer_profile_id, props.form.ops_vessel_id, 'Active');
 
-
-
+}
 
 
 // watch(() => props.form.ops_charterer_profile_id, (value) => {

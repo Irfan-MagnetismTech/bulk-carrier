@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Administration\Http\Controllers\UserController;
 use Modules\Operations\Http\Controllers\OpsBunkerReportController;
+use Modules\Operations\Http\Controllers\OpsExpenseReportController;
 use Modules\Operations\Http\Controllers\OpsVoyageReportController;
 use Modules\Operations\Http\Controllers\OpsOperationReportController;
 
@@ -19,7 +20,3 @@ use Modules\Operations\Http\Controllers\OpsOperationReportController;
 // Route::get('login', [UserController::class, 'index']);
 // Route::get('/test', fn()=> 'hi');
 Route::get('/', fn() => 'BG Torony - Magnetism Tech Limited');
-
-Route::get('budget-vs-expense-report', [OpsOperationReportController::class, 'budgetVsExpenseReport']);
-// Route::get('lighter-voyage-report', [OpsVoyageReportController::class, 'lighterVoyageReportExcelExport']);
-

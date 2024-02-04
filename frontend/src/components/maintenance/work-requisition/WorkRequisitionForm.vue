@@ -5,12 +5,12 @@
             <span class="text-gray-700 dark-disabled:text-gray-300">Requisition Date<span class="text-red-500">*</span></span>
             <!-- <input type="date" v-model="form.requisition_date" placeholder="Requisition Date" class="form-input" required  /> -->
             <VueDatePicker v-model="form.requisition_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" @update:model-value="requisitionDateChange"></VueDatePicker>
-          <Error v-if="errors?.requisition_date" :errors="errors.requisition_date" />
+          <!-- <Error v-if="errors?.requisition_date" :errors="errors.requisition_date" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Reference No <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.reference_no" placeholder="Reference No" class="form-input" required />
-          <Error v-if="errors?.reference_no" :errors="errors.reference_no" />
+          <!-- <Error v-if="errors?.reference_no" :errors="errors.reference_no" /> -->
         </label>
         <!-- <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Maintenance Type <span class="text-red-500">*</span></span>
@@ -35,7 +35,7 @@
                 />
               </template>
             </v-select>
-          <Error v-if="errors?.maintenance_type" :errors="errors.maintenance_type" />
+          <!-- <Error v-if="errors?.maintenance_type" :errors="errors.maintenance_type" /> -->
         </label>
 
 
@@ -54,7 +54,7 @@
                 </template>
               </v-select>
               <input type="hidden" v-model="form.ops_vessel_id">
-          <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" />
+          <!-- <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Ship Department <span class="text-red-500">*</span></span>
@@ -69,7 +69,7 @@
             </template>
           </v-select>
           <input type="hidden" v-model="form.mnt_ship_department_id">
-          <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" />
+          <!-- <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Item Group <span class="text-red-500">*</span></span>
@@ -84,7 +84,7 @@
           </template>
           </v-select>
           <input type="hidden" v-model="form.mnt_item_group_id">
-          <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" />
+          <!-- <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Item <span class="text-red-500">*</span></span>
@@ -99,12 +99,12 @@
               </template>
             </v-select>
             <input type="hidden" v-model="form.mnt_item_id">
-          <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
+          <!-- <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm" v-show="form.mnt_item_name?.has_run_hour">
             <span class="text-gray-700 dark-disabled:text-gray-300">Present Running Hour </span>
             <input type="text" v-model.trim="form.present_run_hour" placeholder="Present Running Hour" class="form-input vms-readonly-input" readonly />
-          <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
+          <!-- <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" /> -->
         </label>
 
 
@@ -114,7 +114,7 @@
             <span class="text-gray-700 dark-disabled:text-gray-300">Est. Start Date <span class="text-red-500">*</span></span>
             <!-- <input type="date" :min="form.requisition_date"  v-model="form.est_start_date" placeholder="Est. Start Date" class="form-input" required  /> -->
             <VueDatePicker v-model="form.est_start_date" :min-date="form.requisition_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" @update:model-value="estStartDateChange"></VueDatePicker>
-          <Error v-if="errors?.est_start_date" :errors="errors.est_start_date" />
+          <!-- <Error v-if="errors?.est_start_date" :errors="errors.est_start_date" /> -->
         </label>
 
         
@@ -122,7 +122,7 @@
             <span class="text-gray-700 dark-disabled:text-gray-300">Est. Completion Date <span class="text-red-500">*</span></span>
             <!-- <input type="date" :min="form.est_start_date ? form.est_start_date : form.requisition_date"  v-model="form.est_completion_date" placeholder="Est. completion Date" class="form-input" required  /> -->
             <VueDatePicker v-model="form.est_completion_date" :min-date="form.est_start_date ? form.est_start_date : form.requisition_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
-          <Error v-if="errors?.est_completion_date" :errors="errors.est_completion_date" />
+          <!-- <Error v-if="errors?.est_completion_date" :errors="errors.est_completion_date" /> -->
         </label>
 
         
@@ -153,7 +153,7 @@
                 />
               </template>
             </v-select>
-          <Error v-if="errors?.assigned_to" :errors="errors.assigned_to" />
+          <!-- <Error v-if="errors?.assigned_to" :errors="errors.assigned_to" /> -->
         </label>
 
 
@@ -173,7 +173,7 @@
               </template>
             </v-select>
             <!-- <input type="hidden" v-model="form.responsible_person"> -->
-          <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" />
+          <!-- <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" /> -->
         </label>
        
 
@@ -212,7 +212,7 @@
                 />
               </template>
             </v-select>
-          <Error v-if="errors?.status" :errors="errors.status" />
+          <!-- <Error v-if="errors?.status" :errors="errors.status" /> -->
         </label>
 
 
@@ -294,7 +294,7 @@
           <p class="text-md font-bold">{{ form.mnt_item_id ? 'No job found' : 'Please select Item' }}</p>
         </div>
 
-        <Error v-if="errors?.added_job_lines" :errors="errors.added_job_lines" />
+        <!-- <Error v-if="errors?.added_job_lines" :errors="errors.added_job_lines" /> -->
         
       </div>
     </div>

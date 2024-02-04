@@ -58,13 +58,16 @@ class ScmAdjustmentController extends Controller
     {
         $requestData = $request->except('ref_no', 'adjustment_composite_key');
 
-        $requestData['ref_no'] = UniqueId::generate(ScmAdjustment::class, 'AJT');
+        // $requestData['ref_no'] = UniqueId::generate(ScmAdjustment::class, 'AJT');
         $requestData['created_by'] = auth()->user()->id;
 
         try {
             DB::beginTransaction();
 
             $adjustment = ScmAdjustment::create($requestData);
+
+            $ref_no = UniqueId::generate($adjustment->id, 'AJT');
+            $adjustment->update(['ref_no' => $ref_no]);
 
             $linesData = CompositeKey::generateArray($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
             $adjustment->scmAdjustmentLines()->createMany($linesData);
@@ -165,12 +168,5 @@ class ScmAdjustmentController extends Controller
 
             return response()->json($adjustment->preventDeletionIfRelated(), 422);
         }
-    }
-
-    public function testStock()
-    {
-        TestStock::create([
-            'ref_no' => UniqueId::generate(TestStock::class, 'TS')
-        ]);
     }
 }

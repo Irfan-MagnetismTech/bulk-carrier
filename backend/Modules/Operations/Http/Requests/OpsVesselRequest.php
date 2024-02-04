@@ -54,8 +54,8 @@ class OpsVesselRequest extends FormRequest
             'total_cargo_hold'=> ['required', 'numeric'],
             'live_tracking_config'=> ['nullable', 'string', 'max:5000'],
             'remarks'         => ['nullable', 'string', 'max:500'],
-            'opsVesselCertificates.*.ops_maritime_certification_id' => ['nullable', 'numeric', 'max:255'],           
-            'opsBunkers.*.scm_material_id' => ['nullable', 'numeric', 'max:255'],
+            'opsVesselCertificates.*.ops_maritime_certification_id' => ['nullable', 'numeric', 'max:255', 'distinct'],           
+            'opsBunkers.*.scm_material_id' => ['nullable', 'numeric', 'max:255', 'distinct'],
             'opsBunkers.*.unit' => ['nullable', 'string', 'max:255'],
             // 'opsBunkers.*.opening_balance' => ['nullable', 'numeric'],
         ];
@@ -113,8 +113,8 @@ class OpsVesselRequest extends FormRequest
             'live_tracking_config.max' => 'Live tracking may not be greater than :max characters.',
             'remarks.max' => 'Remarks may not be greater than :max characters.',
 
-            // 'opsVesselCertificates.*.ops_maritime_certification_id.max' => 'Certificate name not be greater than :max characters for row is :position',
-            // 'opsBunkers.*.scm_material_id.max' => 'Bunker name not be greater than :max characters for row is :position.',
+            'opsVesselCertificates.*.ops_maritime_certification_id.distinct' => 'Certificate cannot be duplicate. Error encountered in row :position',
+            'opsBunkers.*.scm_material_id.distinct' => 'Bunker cannot be duplicate. Error encountered in row :position.',
             // 'opsBunkers.*.unit.max' => 'Unit not be greater than :max characters for row is :position.',            
             // 'opsBunkers.*.opening_balance.integer' => 'Opening balance must be an integer for row is :position.',
             // 'opsBunkers.*.opening_balance.max' => 'Opening balance must not exceed :max for row is :position.',

@@ -51,7 +51,7 @@ onMounted(() => {
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Agency Name <span class="text-red-500">*</span></span>
         <select class="form-input" v-model="form.crw_agency_id" required>
-          <option value="" selected disabled>Select</option>
+          <option value="" selected disabled>--Choose an option--</option>
           <option v-for="(agency,index) in crwAgencies" :value="agency.id" :key="index">{{ agency?.agency_name }} ({{ agency?.phone }})</option>
         </select>
       </label>

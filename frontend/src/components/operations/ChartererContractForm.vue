@@ -133,7 +133,7 @@
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Currency <span class="text-red-500">*</span></span>
                 <select v-model="form.currency" class="form-input" required>
-                  <option value="">Select Currency</option>
+                  <option value="" selected disabled>Select Currency</option>
                   <option v-for="currency in currencies">{{ currency }}</option>
                 </select>
         </label>
@@ -178,8 +178,8 @@
 
     <div id="contract-validity">
       <h4 class="text-md font-semibold mt-4">Contract Validity and Billing</h4>
-      <div v-if="form.contract_type == 'Day Wise'" class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        <label class="block w-full mt-2 text-sm">
+      <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+        <label class="block w-full mt-2 text-sm" >
               <span class="text-gray-700 dark-disabled:text-gray-300">Credit Days</span>
               <input type="number" v-model.trim="form.opsChartererContractsFinancialTerms.credit_days" placeholder="Credit Days" class="form-input" autocomplete="off" />
         </label>
@@ -217,9 +217,9 @@
         
             <label class="block mt-2 text-sm w-1/2">
 
-              <span class="text-gray-700 dark-disabled:text-gray-300"> Status</span>
-                <select v-model="form.status" class="form-input">
-                  <option value="">Select Status</option>
+              <span class="text-gray-700 dark-disabled:text-gray-300"> Status <span class="text-red-500">*</span></span>
+                <select v-model="form.status" class="form-input" required>
+                  <option value="" selected disabled>Select Status</option>
 				          <option>Active</option>
 				          <option>Inactive</option>
 				        </select>
@@ -247,10 +247,10 @@
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Cleaning Fee </span>
               <input type="number" step="0.001" v-model.trim="form.opsChartererContractsFinancialTerms.cleaning_fee" placeholder="Cleaning Fee" class="form-input" autocomplete="off" />
-          </label>
+        </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Cancellation Fee <small>(%)</small></span>
-            <input type="text" v-model.trim="form.opsChartererContractsFinancialTerms.cancellation_fee" placeholder="Cancellation Fee" class="form-input" autocomplete="off" />
+            <input type="number" step="0.001" v-model.trim="form.opsChartererContractsFinancialTerms.cancellation_fee" placeholder="Cancellation Fee" class="form-input" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Others Fee</span>
@@ -360,11 +360,15 @@ watch(() => props.form, (value) => {
 }, {deep: true});
 
 
-watch(() => props.form.opsChartererContractsLocalAgents[0].opsPort, (value) => {
+watch(() => props.form.opsChartererContractsLocalAgents[0]?.opsPort, (value) => {
   if(value) {
     props.form.opsChartererContractsLocalAgents[0].port_code = value?.code
   } else {
-    props.form.opsChartererContractsLocalAgents[0].port_code = null
+    if(props.form.opsChartererContractsLocalAgents.length) {
+      props.form.opsChartererContractsLocalAgents[0].port_code = null
+    } else {
+      props.form.opsChartererContractsLocalAgents.push({})
+    }
   }
 }, { deep: true})
 
@@ -417,8 +421,8 @@ function replaceThings(value) {
     if(value?.opsChartererBankAccounts) {
       props.form.bank_name = value?.opsChartererBankAccounts[0]?.bank_name
       props.form.bank_branch_name = value?.opsChartererBankAccounts[0]?.bank_branch_name
-      props.form.bank_account_no = value?.opsChartererBankAccounts[0]?.bank_account_no
-      props.form.bank_account_name = value?.opsChartererBankAccounts[0]?.bank_account_name
+      props.form.bank_account_no = value?.opsChartererBankAccounts[0]?.account_no
+      props.form.bank_account_name = value?.opsChartererBankAccounts[0]?.account_name
       props.form.swift_code = value?.opsChartererBankAccounts[0]?.swift_code
       props.form.routing_no = value?.opsChartererBankAccounts[0]?.routing_no
       props.form.currency = value?.opsChartererBankAccounts[0]?.currency

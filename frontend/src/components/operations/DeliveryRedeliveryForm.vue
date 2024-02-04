@@ -11,7 +11,7 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Note Type <span class="text-red-500">*</span></span>
-              <select v-model="form.note_type" required class="form-input">
+              <select v-model="form.note_type" required class="form-input" :disabled="formType == 'edit'">
                 <option value="">Select Type</option>
                 <option>Delivery</option>
                 <option>Re-delivery</option>
@@ -26,17 +26,25 @@
             </label>
 
           <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Exchange Rate</span>
-              <input type="number" step="0.001" v-model.trim="form.exchange_rate" placeholder="Exchange Rate" class="form-input" autocomplete="off" />
-          </label>
-
-          <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Currency <span class="text-red-500">*</span></span>
                 <select v-model="form.currency" class="form-input" required>
-                  <option value="">Select Currency</option>
+                  <option value="" selected disabled>Select Currency</option>
                   <option v-for="currency in currencies" :key="currency">{{ currency }}</option>
                 </select>
           </label>
+
+          <label class="block w-full mt-2 text-sm" v-if="form.currency != 'USD' && form.currency != ''">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Exchange Rate <small>[To USD]</small> <span class="text-red-500">*</span></span>
+              <input type="number" step="0.001" v-model.trim="form.exchange_rate_usd" required placeholder="Exchange Rate" class="form-input" autocomplete="off" />
+          </label>
+
+          <label class="block w-full mt-2 text-sm" v-if="form.currency != 'BDT' && form.currency != ''">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Exchange Rate <small>[To BDT]</small> <span class="text-red-500">*</span></span>
+              <input type="number" step="0.001" v-model.trim="form.exchange_rate_bdt" required placeholder="Exchange Rate" class="form-input" autocomplete="off" />
+          </label>
+          <label class="block w-full mt-2 text-sm" v-if="form.currency == ''"></label>
+
+          
           
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -119,6 +127,7 @@
               <th>Unit</th>
               <th>Quantity</th>
               <th>Rate</th>
+              <th>Amount </th>
               <th>Amount <small>(USD)</small></th>
               <th>Amount <small>(BDT)</small></th>
             </tr>
@@ -142,6 +151,11 @@
               <td>
                 <label class="block w-full mt-2 text-sm">
                   <input type="number" step="0.001" v-model.trim="form.opsBunkers[index].rate" placeholder="Rate" :keypress="calculatePrice(index)" class="form-input text-right" autocomplete="off" />
+                </label>
+              </td>
+              <td>
+                <label class="block w-full mt-2 text-sm">
+                  <input type="text" v-model.trim="form.opsBunkers[index].amount" placeholder="Amount" class="form-input text-right" autocomplete="off" readonly/>
                 </label>
               </td>
               <td>
@@ -197,6 +211,9 @@ watch(() => props.form.opsVessel, (value) => {
     props.form.owner_name = value?.owner_name
     props.form.capacity = value?.capacity
   
+    if((props?.formType == 'edit' && editInitiated.value == true) || props.formType == 'create') {
+      props.form.opsBunkers = []
+    }
     let loadStatus = false;
     showVessel(value?.id, loadStatus);
   } else {
@@ -281,17 +298,18 @@ watch(() => props.form.currency, (value) => {
   console.log("currency change ")
 
   if(value) {
+    
 
 
     if(props?.formType == 'edit' && editInitiated.value == true) {
-    props.form.exchange_rate = null;
-
+      props.form.exchange_rate_bdt = null;
+      props.form.exchange_rate_usd = null;
       if(props.form.opsBunkers) {
         // for(const bunker of props.form.opsBunkers) {
         //   bunker.rate = 0;
         // }
         for(let index in props.form.opsBunkers) {
-          props.form.opsBunkers[index].rate = null
+          // props.form.opsBunkers[index].rate = null
           calculatePrice(index)
         }
       }
@@ -299,14 +317,14 @@ watch(() => props.form.currency, (value) => {
     }
 
     if(props?.formType == 'create') {
-    props.form.exchange_rate = null;
-
+      props.form.exchange_rate_bdt = null;
+      props.form.exchange_rate_usd = null;
       if(props.form.opsBunkers) {
         // for(const bunker of props.form.opsBunkers) {
         //   bunker.rate = 0;
         // }
         for(let index in props.form.opsBunkers) {
-          props.form.opsBunkers[index].rate = null
+          // props.form.opsBunkers[index].rate = null
           calculatePrice(index)
         }
       }
@@ -314,9 +332,36 @@ watch(() => props.form.currency, (value) => {
   }
 }, { deep: true})
 
-watch(() => props.form.exchange_rate, (value) => {
+watch(() => props.form.exchange_rate_usd, (value) => {
 console.log("exchange rate changing")
   if(value) {
+
+    props.form.opsBunkers.forEach(function(element, index) {
+        calculatePrice(index)
+    })
+
+    if(props?.formType == 'edit' && editInitiated.value == true) {
+      for(let index in props.form.opsBunkers) {
+        calculatePrice(index)
+      }
+    }
+
+    if(props?.formType == 'create') {
+
+      for(let index in props.form.opsBunkers) {
+        calculatePrice(index)
+      }
+    }
+  }
+}, {deep: true});
+watch(() => props.form.exchange_rate_bdt, (value) => {
+console.log("exchange rate changing")
+  if(value) {
+
+    props.form.opsBunkers.forEach(function(element, index) {
+        calculatePrice(index)
+    })
+
     if(props?.formType == 'edit' && editInitiated.value == true) {
       for(let index in props.form.opsBunkers) {
         calculatePrice(index)
@@ -336,29 +381,32 @@ function calculatePrice(index) {
   console.log("calculate price", index)
   let quantity = (props.form.opsBunkers[index].quantity > 0) ? props.form.opsBunkers[index].quantity : 0;
   let rate = (props.form.opsBunkers[index].rate > 0) ? props.form.opsBunkers[index].rate : 0;
-  let exchangeRate = (props.form.exchange_rate > 0) ? props.form.exchange_rate : 0;
+  let exchangeRateUsd = (props.form.exchange_rate_usd > 0) ? props.form.exchange_rate_usd : 0;
+  let exchangeRateBdt = (props.form.exchange_rate_bdt > 0) ? props.form.exchange_rate_bdt : 0;
 
-  let amount = parseFloat(quantity) * parseFloat(rate)
-
+  let amount = parseFloat(parseFloat(quantity) * parseFloat(rate))
+console.log("dd", amount)
   if(props.form.currency == 'USD') {
-    console.log("usd", exchangeRate, quantity, rate, "=", amount)
-    props.form.opsBunkers[index].amount_usd = (amount) ? amount : null;
-    props.form.opsBunkers[index].amount_bdt = amount * parseFloat(exchangeRate);
+    console.log("usd", exchangeRateBdt, quantity, rate, "=", amount)
+    props.form.opsBunkers[index].amount = parseFloat((amount) ? amount : 0).toFixed(2);
+    props.form.opsBunkers[index].amount_usd = parseFloat((amount) ? amount : 0).toFixed(2);
+    props.form.opsBunkers[index].amount_bdt = parseFloat(amount * parseFloat(exchangeRateBdt)).toFixed(2);
+  } else if(props.form.currency == 'BDT') {
+    console.log("bdt", exchangeRateUsd, quantity, rate, "=", amount)
+    props.form.opsBunkers[index].amount = parseFloat((amount) ? amount : 0).toFixed(2);
+    props.form.opsBunkers[index].amount_bdt = parseFloat((amount) ? amount : 0).toFixed(2);
+    props.form.opsBunkers[index].amount_usd = parseFloat(amount * parseFloat(exchangeRateUsd)).toFixed(2);
   } else {
-    console.log("bdt", exchangeRate, quantity, rate, "=", amount)
-
-    props.form.opsBunkers[index].amount_bdt = (amount) ? amount : null;
-    // props.form.opsBunkers[index].amount_usd = p1arseFloat(amount / parseFloat(exchangeRate));
-    props.form.opsBunkers[index].amount_usd = null
+    console.log("other", exchangeRateUsd, quantity, rate, "=", amount)
+    props.form.opsBunkers[index].amount = parseFloat((amount) ? amount : 0).toFixed(2);
+    props.form.opsBunkers[index].amount_bdt = parseFloat(amount * parseFloat(exchangeRateUsd) * parseFloat(exchangeRateBdt)).toFixed(2);
+    props.form.opsBunkers[index].amount_usd = parseFloat(amount * parseFloat(exchangeRateUsd)).toFixed(2);
   }
 }
 
 
-
-
 onMounted(() => {
   getCurrencies();
-  getVesselList(props.form.business_unit);
 })
 
 </script>

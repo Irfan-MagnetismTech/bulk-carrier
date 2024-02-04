@@ -45,6 +45,9 @@ return new class extends Migration
             $table->decimal('market_rate')->nullable();
             $table->string('business_unit')->nullable();
             $table->string('attachment')->nullable();
+            $table->string('pi_ref_no')->nullable();
+            $table->date('expected_shipment_date')->nullable();
+            $table->date('shipment_date')->nullable();
             $table->bigInteger('created_by')->comment('user_id')->nullable();
             $table->timestamps();
         });

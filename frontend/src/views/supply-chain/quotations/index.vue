@@ -15,9 +15,10 @@ import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import useQuotation from '../../../composables/supply-chain/useQuotation';
+import { formatDate } from '../../../utils/helper';
 
-const { getMaterialCs, materialCs, materialCsLists, deleteMaterialCs, isLoading, errors, isTableLoading } = useMaterialCs();
-const {getQuotations,quotations} = useQuotation();
+const { getMaterialCs, materialCs, materialCsLists, deleteMaterialCs, isLoading, errors, isTableLoading,showMaterialCs} = useMaterialCs();
+const {getQuotations,quotations,deleteQuotations} = useQuotation();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -47,6 +48,7 @@ onMounted(() => {
         console.error("Error fetching SR:", error);
       });
   });
+  showMaterialCs(CSID);
 });
 
 const tableScrollWidth = ref(null);
@@ -166,8 +168,64 @@ let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 //   router.push(routeOptions);
 // };
 
+const navigateSupplierSelection = (csId) => {
+  const routeOptions = {
+    name: 'scm.supplier-selection',
+    params: {
+      csId: csId
+    }
+    // query: {
+    //   csId: csId
+    // }
+  };
+  if(csId) router.push(routeOptions);
+};
 
-function confirmDelete(id) {
+function navigateCostProjection(csId) {
+  if(materialCs?.value?.selectedVendors?.length && materialCs?.value?.selectedVendors[0]?.scmCsPaymentInfo){
+    const routeOptions1 = {
+      name: 'scm.cs-cost-projection.edit',
+      params: {
+        csId: csId
+      }
+    };
+    if(csId) router.push(routeOptions1);
+  }else{
+      const routeOptions2 = {
+      name: 'scm.cs-cost-projection.create',
+      params: {
+        csId: csId
+      }
+    };
+    if(csId) router.push(routeOptions2);
+  }
+  
+}
+
+function supplierSelection(csId) {
+  const routeOptions = {
+    name: 'scm.supplier-selection',
+    params: {
+      csId: csId
+    }
+  };
+  if(csId) router.push(routeOptions);
+}
+const supplierSelectionShow = (csId) => {
+  const routeOptions = {
+    name: 'scm.supplier-selection.show',
+    params: {
+      csId: csId
+    }
+    // query: {
+    //   csId: csId
+    // }
+  };
+  if(csId) router.push(routeOptions);
+};
+
+
+function confirmDelete(cs_id, id) {
         Swal.fire({
           title: 'Are you sure?',
           text: "You want to delete this data!",
@@ -178,7 +236,7 @@ function confirmDelete(id) {
           confirmButtonText: 'Yes'
         }).then((result) => {
           if (result.isConfirmed) {
-            deleteMaterialCs(id);
+            deleteQuotations(cs_id,id);
           }
         })
       }
@@ -187,21 +245,57 @@ function confirmDelete(id) {
 <template>
   <!-- Heading -->
  
-  <div class="flex items-center justify-between w-full my-3" v-once>
+  <div class="flex items-center justify-between w-full my-3">
     <h2 class="text-2xl font-semibold text-gray-700">Quotations List</h2>
-    <default-button :title="'Create Store Issue'" :to="{ name: 'scm.quotations.create', params: { csId: CSID }  }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-3">
+      <default-button :title="'CS List'" :to="{ name: 'scm.material-cs.index' }" :icon="icons.DataBase"></default-button>
+      <template v-if="materialCs?.selectedVendors?.length == 0">
+        <default-button :title="'Create Quotation'" :to="{ name: 'scm.quotations.create', params: { csId: CSID }  }" :icon="icons.AddIcon"></default-button>
+      </template>
+     </div>
   </div>
   <!-- Table -->
-  <div id="customDataTable">
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
+    <div class="input-group mb-10 mt-5">
+      <label class="label-group">
+          <span class="label-item-title">CS Ref<span class="text-red-500"> : </span></span>
+          <span class="label-item-title">{{ materialCs?.ref_no }}</span>  
+      </label>
+      <label class="label-group">
+          <span class="label-item-title">Warehouse<span class="text-red-500"> : </span></span>
+          <span class="label-item-title">{{ materialCs.scmWarehouse?.name }}</span>
+      </label>
+      <label class="label-group">
+          <span class="label-item-title">Effective Date<span class="text-red-500"> : </span></span>
+          <span class="label-item-title">{{ formatDate(materialCs.effective_date) }}</span>
+      </label>
+      <label class="label-group">
+          <span class="label-item-title">Selection Criteria<span class="text-red-500"> : </span></span>
+          <span class="label-item-title">{{ materialCs.selection_ground }}</span>
+      </label>
+    </div>
+    <div>
+        <button v-if="materialCs?.scmPo?.length == 0 && materialCs?.scmCsVendors?.length" @click="supplierSelection(CSID)" class="text-xs px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Supplier Selection</nobr></button> 
+        <button v-if="materialCs?.scmPo?.length" @click="supplierSelectionShow(CSID)" class="text-xs px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Supplier Selection</nobr></button> 
+         <button v-if="materialCs.purchase_center == 'Foreign'" @click="navigateCostProjection(CSID)" class="text-xs px-2 py-1 ml-2 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Cost Projection</nobr></button> 
+         
+     </div>
+  </div>
+ 
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
+    <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
-          <thead v-once>
+          <thead>
           <tr class="w-full">
             <th>#</th>
+            <th>Vendor Name</th>
+            <th>Contact Person</th>
+            <th>Origin</th>
             <th>Quotation No</th>
             <th>Date</th>
-            <th>Vendor Name</th>
-            <th>Vendor Contact</th>
+            <th v-if="materialCs.purchase_center == 'Foreign'">Offer Value</th>
+            <th v-if="materialCs.purchase_center == 'Foreign'">Negotiated Value</th>
             <th>Action</th>
           </tr>
           </thead>
@@ -209,20 +303,28 @@ function confirmDelete(id) {
           <tbody>
             <tr v-for="(quotation,index) in (quotations?.data ? quotations?.data : quotations)" :key="index">
               <td>{{ index + 1 }}</td>
-              <td>{{ quotation?.quotation_ref }}</td>
-              <td>{{ quotation?.quotation_date }}</td>
               <td>{{ quotation?.scmVendor?.name }}</td>
-              <td>{{ quotation?.scmVendor?.scmVendorContactPerson?.phone }}</td>
+              <td>{{ quotation?.scmVendor?.scmVendorContactPerson?.name }}</td>
+              <td>{{ quotation?.scmVendor?.country_name }}</td>
+              <td>{{ quotation?.quotation_ref }}</td>
+              <td>{{ formatDate(quotation?.quotation_received_date) }}</td>
+              <td v-if="materialCs.purchase_center == 'Foreign'">{{ quotation?.total_offered_price }}</td>
+              <td v-if="materialCs.purchase_center == 'Foreign'">{{ quotation?.total_negotiated_price }}</td>
               <td>
-                <div class="grid grid-flow-col-dense gap-x-2">                 
-                  <action-button :action="'edit'" :to="{ name: 'scm.quotations.edit', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>
-                  <!-- <action-button @click="confirmDelete(materialCsdata.id)" :action="'delete'"></action-button> -->
+                <div class="grid grid-flow-col-dense gap-x-2">  
+                  <action-button :action="'show'" :to="{ name: 'scm.quotations.show', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>
+                  <template v-if="materialCs.selectedVendors.length == 0">
+                    <action-button :action="'edit'" :to="{ name: 'scm.quotations.edit', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button>
+                   
+                    <!-- <action-button :action="'edit'" :to="{ name: 'scm.cs-cost-projection.create', params: { csId: quotation.scm_cs_id, quotationId: quotation.id } }"></action-button> -->
+                    <action-button @click="confirmDelete(quotation.scm_cs_id, quotation.id)" :action="'delete'" v-if="!quotation.is_selected"></action-button>
+                  </template>  
                 </div>
               </td>
             </tr>
-            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && quotations?.data?.length"></LoaderComponent>
+            <LoaderComponent :isLoading="isTableLoading" v-if="isTableLoading && quotations?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!quotations?.data?.length" class="relative h-[250px]">
+          <!-- <tfoot v-if="!quotations?.data?.length" class="relative h-[250px]">
               <tr v-if="isLoading">
               </tr>
               <tr v-else-if="isTableLoading">
@@ -233,11 +335,13 @@ function confirmDelete(id) {
               <tr v-else-if="!quotations?.data?.length">
                 <td colspan="7">No Data found.</td>
               </tr>
-          </tfoot>
+          </tfoot> -->
       </table>
     </div>
     <Paginate :data="quotations" to="scm.quotations-cs.index" :page="page"></Paginate>
   </div>
+  </div>
+ 
   <!-- Heading -->
   
   
