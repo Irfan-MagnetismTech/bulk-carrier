@@ -139,8 +139,7 @@ class ScmWoController extends Controller
 
             $scmWoLines = $workOrder->scmWoLines->map(function ($items) {
                 $datas = $items;
-                $adas = $items->scmWoItems->map(function ($item) {
-                    // var_dump($item);
+                $adas = $items->scmWoItems->map(function ($item) use ($items){
                     $max_quantity =0;
                     if (isset($item['wcs_composite_key'])) {
                         $max_quantity = $item->scmWcsService?->quantity??0 -  $item->scmWcsService?->scmWoItems->sum('quantity') + $item->quantity;
@@ -149,6 +148,7 @@ class ScmWoController extends Controller
                     }
                     return [
                         'id' => $item['id'],
+                        'scmWr'=>$items->scmWr,
                         'scm_service_id' => $item['scm_service_id'],
                         'scmService' => $item['scmService'],
                         'closedBy' => $item['closedBy'],
