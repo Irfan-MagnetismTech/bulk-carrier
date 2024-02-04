@@ -29,8 +29,6 @@ export default function useMaterialReceiptReport() {
         date: null,        
         scm_po_id: null,        
         scmPo: null,
-        scm_po_no: null,
-        scm_po_date: null,
         // scmPr: null,
         // scm_pr_id: null,
         // scm_pr_no: null,      
@@ -46,9 +44,9 @@ export default function useMaterialReceiptReport() {
             {
                 scm_pr_id: null,
                 scmPr: null,
-                scmMrrItems: [
+                scmMrrLineItems: [
                     {
-                        scmMrrItems: null,
+                        scmMrrLineItems: null,
                         scm_mrr_item_id: null,
                         scmMaterial: null,
                         scm_material_id: null,
@@ -71,7 +69,7 @@ export default function useMaterialReceiptReport() {
         ],
     });
     const materialObject = {
-        scmMrrItems: null,
+        scmMrrLineItems: null,
         scm_mrr_item_id: null,
         scmMaterial: null,
         scm_material_id: null,

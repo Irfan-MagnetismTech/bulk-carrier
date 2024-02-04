@@ -38,18 +38,18 @@
     
     function addMaterial(index) {
       const clonedObj = cloneDeep(props.materialObject);
-      props.form.scmMrrLines[index].scmMrrItems.push(clonedObj);
+      props.form.scmMrrLines[index].scmMrrLineItems.push(clonedObj);
     }
 
     function removeMaterial(index,itemIndex){
-      props.form.scmMrrLines[index].scmMrrItems.splice(itemIndex, 1);
+      props.form.scmMrrLines[index].scmMrrLineItems.splice(itemIndex, 1);
     }
 
     function addBlock() {
       let lineLength = props.form.scmMrrLines.length;
       const clonedObj = cloneDeep(props.mrrLineObject);
       props.form.scmMrrLines.push(clonedObj);
-      props.materialList.push([]);
+      props.poMaterialList.push([]);
     }
 
     function removeBlock(index) {
@@ -59,31 +59,40 @@
     
 
     function changePr(index) {
-        props.materialList[index] = [];
+        props.poMaterialList[index] = [];
         props.form.scmMrrLines[index].scm_pr_id = props.form.scmMrrLines[index].scmPr?.id ?? null;
-        
-        if (props.formType != 'edit') {
-          getLineData(props.form.scmMrrLines[index].scm_pr_id).then((res) => {
-            props.form.scmMrrLines[index].scmMrrItems = res;
-          });
-          getMaterialList(props.form.scmMrrLines[index].scmPr.id).then((res) => {
-          props.materialList[index] = res;
-          });
-        } else { 
-          getLineData(props.form.scmMrrLines[index].scm_pr_id,props.form.id).then((res) => {
-            props.form.scmMrrLines[index].scmMrrItems = res;
-          });
-          getMaterialList(props.form.scmMrrLines[index].scmPr.id,props.form.id).then((res) => {
-          props.materialList[index] = res;
-          });
-        }
-        
+        props.form.scmMrrLines[index].scmMrrLineItems = [];
+      //   props.form.scmMrrLines.push({
+      //   scmPr: line,
+      //   scm_pr_id: line.id,
+      //   scmMrrLineItems: [],
+      // });
+      // props.poMaterialList.push([]);
+      if(props.form.scmMrrLines[index].scm_pr_id && props.form.scmPo.id){
+        getMrrLineData(props.form.scmPo.id, props.form.scmMrrLines[index].scm_pr_id).then((res) => {
+          props.form.scmMrrLines[index].scmMrrLineItems = res;
+        });
+        getPoMaterialList(props.form.scmPo.id, props.form.scmMrrLines[index].scm_pr_id).then((res) => {
+          props.poMaterialList[index] = res;
+        });
+      }
     }
+
+    watch(() => props.form.scmPo, (newVal, oldVal) => {
+      if(newVal !== oldVal && newVal != null){
+        props.form.scm_po_id = newVal.id;
+      }
+    });
 
     function changeWarehouse() {
       props.form.scm_warehouse_id = props.form.scmWarehouse?.id ?? null;
       props.form.acc_cost_center_id = props.form.scmWarehouse?.cost_center_id ?? null;
-      getPoList(props.form.business_unit,props.form.purchase_center,props.form.scm_warehouse_id);
+      props.form.scmMrrLines = [];
+      props.form.scmPo = null;
+      props.form.scm_po_id = null;
+      // if(props.form.business_unit && props.form.purchase_center && props.form.scm_warehouse_id){
+      //   getPoList(props.form.business_unit,props.form.purchase_center,props.form.scm_warehouse_id);
+      // }
     }
 
     const purchase_center = ['Local', 'Foreign', 'Plant'];
@@ -142,35 +151,37 @@
     // watch(() => props?.form?.scmMrrLines, (newVal, oldVal) => {
     //   let total = 0.0;
     //   newVal?.forEach((lines, index) => {
-    //     if(lines?.scmMrrItems?.length != 0){
-    //       lines.scmMrrItems.forEach((line, itemIndex) => {
-    //       props.form.scmMrrLines[index].scmMrrItems[itemIndex].total_price = parseFloat(((line?.rate ?? 0) * (line?.quantity ?? 0)).toFixed(2));
-    //       total += parseFloat(props.form.scmMrrLines[index].scmMrrItems[itemIndex].total_price);
+    //     if(lines?.scmMrrLineItems?.length != 0){
+    //       lines.scmMrrLineItems.forEach((line, itemIndex) => {
+    //       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].total_price = parseFloat(((line?.rate ?? 0) * (line?.quantity ?? 0)).toFixed(2));
+    //       total += parseFloat(props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].total_price);
     //       });
     //     }
     //   });
     // }, { deep: true });
 
     function changePurchaseCenter() { 
-      props.form.scmVendor = null;
-      props.form.scm_vendor_id = null;
+      props.form.scmMrrLines = [];
+      props.form.scmPo = null;
+      props.form.scm_po_id = null;
     }
 
 
     function changeMaterial(index,itemIndex) {
-      props.form.scmMrrLines[index].scmMrrItems[itemIndex].scm_material_id = props.form.scmMrrLines[index].scmMrrItems[itemIndex].scmMaterial?.id ?? null;
-      props.form.scmMrrLines[index].scmMrrItems[itemIndex].unit = props.form.scmMrrLines[index].scmMrrItems[itemIndex].scmMaterial?.unit ?? null;
-      props.form.scmMrrLines[index].scmMrrItems[itemIndex].brand = props.form.scmMrrLines[index].scmMrrItems[itemIndex].scmMaterial?.brand ?? null;
-      props.form.scmMrrLines[index].scmMrrItems[itemIndex].model = props.form.scmMrrLines[index].scmMrrItems[itemIndex].scmMaterial?.model ?? null;
-      props.form.scmMrrLines[index].scmMrrItems[itemIndex].max_quantity = props.form.scmMrrLines[index].scmMrrItems[itemIndex].scmMaterial?.max_quantity ?? 0;
-      props.form.scmMrrLines[index].scmMrrItems[itemIndex].quantity = props.form.scmMrrLines[index].scmMrrItems[itemIndex].scmMaterial?.quantity ?? 0;
-      props.form.scmMrrLines[index].scmMrrItems[itemIndex].pr_composite_key = props.form.scmMrrLines[index].scmMrrItems[itemIndex].scmMaterial?.pr_composite_key ?? null;
-      props.form.scmMrrLines[index].scmMrrItems[itemIndex].tolarence_level = props.form.scmMrrLines[index].scmMrrItems[itemIndex].scmMaterial?.tolarence_level ?? 0;
-      props.form.scmMrrLines[index].scmMrrItems[itemIndex].pr_qty = props.form.scmMrrLines[index].scmMrrItems[itemIndex].scmMaterial?.pr_qty ?? 0;
-      props.form.scmMrrLines[index].scmMrrItems[itemIndex].po_qty = props.form.scmMrrLines[index].scmMrrItems[itemIndex].scmMaterial?.po_qty ?? 0;
-      props.form.scmMrrLines[index].scmMrrItems[itemIndex].tolarence_quantity = props.form.scmMrrLines[index].scmMrrItems[itemIndex].scmMaterial?.tolarence_quantity ?? 0;
-      props.form.scmMrrLines[index].scmMrrItems[itemIndex].remaining_quantity = props.form.scmMrrLines[index].scmMrrItems[itemIndex].scmMaterial?.remaining_quantity ?? 0;
-      props.form.scmMrrLines[index].scmMrrItems[itemIndex].rate = props.form.scmMrrLines[index].scmMrrItems[itemIndex].scmMaterial?.rate ?? 0;
+      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scm_material_id = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.id ?? null;
+      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].unit = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.unit ?? null;
+      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].brand = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.brand ?? null;
+      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].model = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.model ?? null;
+      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].max_quantity = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.max_quantity ?? 0;
+      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].quantity = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.quantity ?? 0;
+      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].po_composite_key = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.po_composite_key ?? null;
+      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].pr_composite_key = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.pr_composite_key ?? null;
+      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolarence_level = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.tolarence_level ?? 0;
+      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].pr_qty = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.pr_qty ?? 0;
+      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].po_qty = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.po_qty ?? 0;
+      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolarence_quantity = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.tolarence_quantity ?? 0;
+      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].remaining_quantity = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.remaining_quantity ?? 0;
+      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].rate = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.rate ?? 0;
       
       
     }
@@ -178,6 +189,10 @@
     onMounted(() => {
       watchEffect(() => {
         fetchWarehouse('');
+      });
+
+      watchEffect(() => {
+        getPoList(props.form.business_unit,props.form.purchase_center,props.form.scm_warehouse_id);
       });
     
       // if(props.formType == 'edit'){
@@ -213,8 +228,8 @@
     //   filteredPurchaseRequisitions.value = [];
     //   props.form.scmMrrLines = [];
     //    props.form.scmMrrLines.push(cloneDeep(props.mrrLineObject));
-    //   props.form.scmMrrLines[0].scmMrrItems = [];
-    //   props.form.scmMrrLines[0].scmMrrItems.push(cloneDeep(props.materialObject));
+    //   props.form.scmMrrLines[0].scmMrrLineItems = [];
+    //   props.form.scmMrrLines[0].scmMrrLineItems.push(cloneDeep(props.materialObject));
     //   searchPurchaseRequisition(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, null);
     // } 
 
@@ -255,11 +270,11 @@ watch(() => prlist.value, (newVal, oldVal) => {
       props.form.scmMrrLines.push({
         scmPr: line,
         scm_pr_id: line.id,
-        scmMrrItems: [],
+        scmMrrLineItems: [],
       });
       props.poMaterialList.push([]);
       getMrrLineData(props.form.scmPo.id, line.id).then((res) => {
-        props.form.scmMrrLines[index].scmMrrItems = res;
+        props.form.scmMrrLines[index].scmMrrLineItems = res;
         console.log(res);
       });
       getPoMaterialList(props.form.scmPo.id, line.id).then((res) => {
@@ -275,18 +290,16 @@ watch(() => prlist.value, (newVal, oldVal) => {
   <!-- <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
     <input type="text" readonly v-model="form.business_unit" required class="form-input vms-readonly-input" name="business_unit" :id="'business_unit'" />
   </div> -->
-
-  <div class="flex flex-col justify-center w-1/4 md:flex-row md:gap-2">
+  <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2">
+  
+  <div class="flex flex-col justify-center md:flex-row md:gap-2">
     <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
   </div>
-  <div class="input-group !w-1/4" v-if="formType == 'edit'">
-      <label class="label-group">
-          <span class="label-item-title">Po Ref<span class="text-red-500">*</span></span>
-          <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
-      </label>
-    </div>
-  <div class="input-group">
-    <label class="label-group">
+    <label class="label-group col-start-1" v-if="formType == 'edit'">
+        <span class="label-item-title">MRR Ref<span class="text-red-500">*</span></span>
+        <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
+    </label>
+    <label class="label-group col-start-1">
         <span class="label-item-title">Purchase Center <span class="text-red-500">*</span></span>
         <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input" @update:modelValue="changePurchaseCenter">
           <template #search="{attributes, events}">
@@ -313,6 +326,16 @@ watch(() => prlist.value, (newVal, oldVal) => {
           </v-select>
       </label>
       <label class="label-group">
+          <span class="label-item-title">Receive Date<span class="text-red-500">*</span></span>
+          <!-- <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" /> -->
+          <VueDatePicker v-model="form.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+      </label> 
+      <label class="label-group">
+          <span class="label-item-title">Challan No<span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.challan_no" required class="form-input"/>
+         
+      </label>  
+      <label class="label-group">
         <span class="label-item-title">PO Ref <span class="text-red-500">*</span></span>
          <v-select :options="polist" placeholder="--Choose an option--" :loading="poloading" v-model="form.scmPo" label="ref_no" class="block form-input" @update:modelValue="changePo">
           <template #search="{attributes, events}">
@@ -325,30 +348,29 @@ watch(() => prlist.value, (newVal, oldVal) => {
           </template>
           </v-select>
       </label>
-  </div>
-  <div class="input-group">
-    <label class="label-group">
-          <span class="label-item-title">PO Date<span class="text-red-500">*</span></span>
-          <!-- <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" /> -->
-          <VueDatePicker v-model="form.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="minPoDate" @update:modelValue="poDateChange"></VueDatePicker>
-      </label>  
-  </div>
-  <div class="input-group !w-3/4">
-    <label class="label-group">
+      <label class="label-group">
+        <span class="label-item-title">PO Date<span class="text-red-500">*</span></span>
+        <input type="text" class="form-input vms-readonly-input" readonly :value="form.scmPo?.date"/>
+      </label>
+    
+    <label class="label-group col-start-1 col-span-2">
          <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
+    </label>
+    <label class="label-group col-start-1 col-span-2">
+         <RemarksComponet v-model="form.qc_remarks" isRequired="true" :maxlength="300" :fieldLabel="'QC Remarks'"></RemarksComponet>
     </label>
   </div>
 
 
-  <div class="mt-3 md:mt-8" v-if="'zczczc'">
-      <h4 class="text-md font-semibold uppercase mb-2 text-center border-2 rounded-md border-gray-400 py-2 mb-0">Purchase Order Information</h4>
+  <div class="mt-3 md:mt-8" v-if="form.scmMrrLines.length">
+      <h4 class="text-md font-semibold uppercase mb-2 text-center border-2 rounded-md border-gray-400 py-2 mb-0">Material Receive Report Information</h4>
       
       <div v-for="(scmPoLine, index) in form.scmMrrLines" :key="index"  class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
 
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-1/4 mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">PR No. <span class="text-red-500">*</span></span>
-            <v-select :options="prlist" placeholder="--Choose an option--" v-model="form.scmMrrLines[index].scmPr" label="ref_no" class="block form-input">
+            <v-select :options="prlist" placeholder="--Choose an option--" v-model="form.scmMrrLines[index].scmPr" label="ref_no" class="block form-input" @update:modelValue="changePr(index)">
               <template #search="{attributes, events}">
                   <input
                       class="vs__search"
@@ -384,8 +406,8 @@ watch(() => prlist.value, (newVal, oldVal) => {
                       </button>
                     </th>
                   </tr>
-                  <template v-if="form?.scmMrrLines[index].scmMrrItems.length">
-                <template v-for="(lineItem, itemIndex) in form.scmMrrLines[index].scmMrrItems" :key="itemIndex">
+                  <template v-if="form.scmMrrLines[index].scmMrrLineItems.length">
+                <template v-for="(lineItem, itemIndex) in form.scmMrrLines[index].scmMrrLineItems" :key="itemIndex">
                   <tr class="table_tr">
                     <td class="">
                       <table>
@@ -393,17 +415,17 @@ watch(() => prlist.value, (newVal, oldVal) => {
                           <td><nobr>Material - Code</nobr></td>
                           <td>
                             <div class="relative">
-                            <v-select :options="poMaterialList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmMrrLines[index].scmMrrItems[itemIndex].scmMaterial" label="material_name_and_code" class="block form-input-sm" :menu-props="{ minWidth: '250px', minHeight: '400px' }" @update:modelValue="changeMaterial(index,itemIndex)">
+                            <v-select :options="poMaterialList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial" label="material_name_and_code" class="block form-input-sm" :menu-props="{ minWidth: '250px', minHeight: '400px' }" @update:modelValue="changeMaterial(index,itemIndex)">
                               <template #search="{attributes, events}">
                                   <input
                                       class="vs__search"
-                                      :required="!form.scmMrrLines[index].scmMrrItems[itemIndex].scmMaterial"
+                                      :required="!form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial"
                                       v-bind="attributes"
                                       v-on="events"
                                       />
                               </template>
                           </v-select>
-                          <!-- <span v-show="form.scmMrrLines[index].scmMrrItems[itemIndex].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-1" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span> -->
+                          <!-- <span v-show="form.scmMrrLines[index].scmMrrLineItems[itemIndex].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-1" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span> -->
                           </div>
                           </td>
                           
@@ -411,19 +433,19 @@ watch(() => prlist.value, (newVal, oldVal) => {
                         <tr>
                           <td>Unit</td>
                           <td>
-                            <input type="text" readonly v-model="form.scmMrrLines[index].scmMrrItems[itemIndex].unit" class="vms-readonly-input form-input-sm">
+                            <input type="text" readonly v-model="form.scmMrrLines[index].scmMrrLineItems[itemIndex].unit" class="vms-readonly-input form-input-sm">
                           </td>
                         </tr>
                         <tr>
                           <td>Brand</td>
                           <td>
-                            <input type="text" v-model="form.scmMrrLines[index].scmMrrItems[itemIndex].brand" class="form-input-sm vms-readonly-input" readonly>
+                            <input type="text" v-model="form.scmMrrLines[index].scmMrrLineItems[itemIndex].brand" class="form-input-sm vms-readonly-input" readonly>
                           </td>
                         </tr>
                         <tr>
                           <td>Model</td>
                           <td>
-                              <input type="text" v-model="form.scmMrrLines[index].scmMrrItems[itemIndex].model" class="form-input-sm vms-readonly-input" readonly>
+                              <input type="text" v-model="form.scmMrrLines[index].scmMrrLineItems[itemIndex].model" class="form-input-sm vms-readonly-input" readonly>
                           </td>
                         </tr>
                       </table>
@@ -433,20 +455,20 @@ watch(() => prlist.value, (newVal, oldVal) => {
                         <tr>
                           <td>PR Qty</td>
                           <td>
-                            <input type="number" required :value="form.scmMrrLines[index].scmMrrItems[itemIndex].pr_qty" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
+                            <input type="number" required :value="form.scmMrrLines[index].scmMrrLineItems[itemIndex].pr_qty" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
                           </td>
                         </tr>
                         <tr>
                           <td>PO Qty</td>
                           <td>
-                            <input type="number" required :value="form.scmMrrLines[index].scmMrrItems[itemIndex].po_qty" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
+                            <input type="number" required :value="form.scmMrrLines[index].scmMrrLineItems[itemIndex].po_qty" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
                           </td>
                         </tr>
                         
                         <tr>
                           <td class="">Remaining Qty</td>
                           <td>
-                            <input type="number" required :value="form.scmMrrLines[index].scmMrrItems[itemIndex].remaining_quantity" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
+                            <input type="number" required :value="form.scmMrrLines[index].scmMrrLineItems[itemIndex].remaining_quantity" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
                           </td>
                         </tr>
                       </table>
@@ -455,13 +477,13 @@ watch(() => prlist.value, (newVal, oldVal) => {
                       <tr>
                           <td>Qty</td>
                           <td>
-                            <input type="number" required :value="form.scmMrrLines[index].scmMrrItems[itemIndex].tolarence_quantity" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
+                            <input type="number" required :value="form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolarence_quantity" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
                           </td>
                         </tr>
                         <tr>
                           <td>Level (%)</td>
                           <td>
-                            <input type="number" required :value="form.scmMrrLines[index].scmMrrItems[itemIndex].tolarence_level" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
+                            <input type="number" required :value="form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolarence_level" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
                           </td>
                         </tr>
                     </td>
@@ -470,13 +492,13 @@ watch(() => prlist.value, (newVal, oldVal) => {
                         <tr>
                           <td>Qty</td>
                           <td>
-                             <input type="number" required v-model="form.scmMrrLines[index].scmMrrItems[itemIndex].quantity" min=1 class="!text-xs form-input text-right" :max="form.scmMrrLines[index].scmMrrItems[itemIndex].max_quantity" :class="{'border-2': form.scmMrrLines[index].scmMrrItems[itemIndex].quantity > form.scmMrrLines[index].scmMrrItems[itemIndex].max_quantity,'border-red-500 bg-red-100': form.scmMrrLines[index].scmMrrItems[itemIndex].quantity > form.scmMrrLines[index].scmMrrItems[itemIndex].max_quantity}">
+                             <input type="number" required v-model="form.scmMrrLines[index].scmMrrLineItems[itemIndex].quantity" min=1 class="!text-xs form-input text-right" :max="form.scmMrrLines[index].scmMrrLineItems[itemIndex].max_quantity" :class="{'border-2': form.scmMrrLines[index].scmMrrLineItems[itemIndex].quantity > form.scmMrrLines[index].scmMrrLineItems[itemIndex].max_quantity,'border-red-500 bg-red-100': form.scmMrrLines[index].scmMrrLineItems[itemIndex].quantity > form.scmMrrLines[index].scmMrrLineItems[itemIndex].max_quantity}">
                           </td>
                         </tr>
                         <tr>
                           <td>Rate</td>
                           <td>
-                            <input type="number" required v-model="form.scmMrrLines[index].scmMrrItems[itemIndex].rate" min=1 class="!text-xs form-input text-right">
+                            <input type="number" required v-model="form.scmMrrLines[index].scmMrrLineItems[itemIndex].rate" min=1 class="!text-xs form-input text-right">
                           </td>
                         </tr>
                       </table>
