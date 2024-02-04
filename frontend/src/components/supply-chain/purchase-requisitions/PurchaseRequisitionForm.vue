@@ -336,7 +336,7 @@ function tytytyasd(indx) {
           <span class="label-item-title">Departments <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.department" required class="form-input"/>
        </label>
-      <div class="col-start-1 md:col-span-2">
+      <div class="col-start-1 col-span-2">
 
         <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
       </div>

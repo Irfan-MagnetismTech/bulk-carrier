@@ -391,7 +391,7 @@ class ScmPoController extends Controller
                     $data['pr_composite_key'] = $item->pr_composite_key;
                     $data['pr_quantity'] = $item->quantity;
                     if (request()->po_id) {
-                        $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
+                        $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()?->quantity ?? 0;
                     } else {
                         $data['po_quantity'] = 0;
                     }
@@ -497,7 +497,7 @@ class ScmPoController extends Controller
                     $data['pr_quantity'] = $item->quantity;
 
                     if (request()->po_id) {
-                        $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
+                        $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()?->quantity ?? 0;
                     } else {
                         $data['po_quantity'] = 0;
                     }
@@ -636,6 +636,40 @@ class ScmPoController extends Controller
             }
 
             return response()->success('Data updated sucessfully!', [$poLines, $sumIsClosed], 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getPoListForMrr(){
+        try {
+            $scmPo = ScmPo::query()
+                ->with('scmPoLines.scmPoItems.scmMaterial', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPoItems.scmMaterial')
+                ->whereNot('status', 'Closed')
+                ->where([
+                    'business_unit' => request()->business_unit,
+                    'purchase_center' => request()->purchase_center,
+                    'scm_warehouse_id' => request()->scm_warehouse_id,
+                ])
+                ->get();
+
+            return response()->success('Data list', $scmPo, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getPoWisePrList(){
+        try {
+            $scmPo = ScmPr::query()
+                ->with('scmPoLines')
+                ->has('scmPoLines')
+                ->whereHas('scmPoLines', function ($query) {
+                    $query->where('scm_po_id', request()->po_id);
+                })
+                ->get();
+
+            return response()->success('Data list', $scmPo, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }

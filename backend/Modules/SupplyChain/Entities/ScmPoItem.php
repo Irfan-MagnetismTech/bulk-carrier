@@ -8,6 +8,7 @@ use Modules\SupplyChain\Entities\ScmPoLine;
 use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Entities\ScmMrrLine;
 use Modules\SupplyChain\Entities\ScmMaterial;
+use Modules\SupplyChain\Entities\ScmMrrItems;
 use Modules\SupplyChain\Entities\ScmCsMaterial;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -74,5 +75,10 @@ class ScmPoItem extends Model
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+
+    public function scmMrrItems(): HasMany
+    {
+        return $this->hasMany(ScmMrrItems::class, 'po_composite_key', 'po_composite_key');
     }
 }

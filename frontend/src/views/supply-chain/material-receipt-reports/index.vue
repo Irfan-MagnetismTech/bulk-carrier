@@ -159,7 +159,7 @@ function confirmDelete(id) {
  
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Material Receipt Report List</h2>
-    <!-- <default-button :title="'Create Material Receipt Report'" :to="{ name: 'scm.material-receipt-reports.create' }" :icon="icons.AddIcon"></default-button> -->
+    <default-button :title="'Create Material Receipt Report'" :to="{ name: 'scm.material-receipt-reports.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <!-- Table -->
   <div id="customDataTable">

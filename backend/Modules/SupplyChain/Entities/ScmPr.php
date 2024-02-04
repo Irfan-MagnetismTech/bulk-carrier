@@ -64,6 +64,11 @@ class ScmPr extends Model
         return $this->hasMany(ScmCsMaterialVendor::class);
     }
 
+    public function scmPoLines(): HasMany
+    {
+        return $this->hasMany(ScmPoLine::class);
+    }
+
     // public function scmPo(): HasMany
     // {
     //     return $this->hasMany(ScmPo::class);

@@ -361,4 +361,89 @@ class ScmMrrController extends Controller
             return response()->success('data list', $prMaterials, 200);
         }
     }
+
+    public function getMrrLineData(): JsonResponse
+    {
+        if (request()->scm_po_id && request()->scm_pr_id) {
+            $scmPo = ScmPoLine::query()
+                ->with('scmPo','scmPoItems.scmMaterial','scmPr','scmPoItems.scmMrrItems','scmPoItems.scmPrLine')
+                ->where('scm_po_id', request()->scm_po_id)
+                ->where('scm_pr_id', request()->scm_pr_id)
+                ->first();
+                $data = $scmPo->scmPoItems->map(function ($item) {
+                        if(request()->scm_mrr_id){
+                            $mrrQuantity = $item->scmMrrItems->where('scm_mrr_id', request()->scm_mrr_id)->where('po_composite_key', $item->po_composite_key)->first->quantity;
+                        }else{
+                            $mrrQuantity = 0;
+                        }
+                        $totalMrrQuantity = $item->scmMrrItems->sum('quantity');
+                        $tolerance_quantity = $item->quantity * ($item?->tolarence_level ?? 0) / 100;
+
+                        $remainingQuantity = $item->quantity - $totalMrrQuantity + $mrrQuantity + $tolerance_quantity;
+                        return [
+                            'scmMaterial' => $item->scmMaterial,
+                            'scm_material_id' => $item->scm_material_id,
+                            'unit' => $item->unit,
+                            'brand' => $item->brand,
+                            'model' => $item->model,
+                            'quantity' => $remainingQuantity,
+                            'rate' => $item->rate,
+                            'net_rate' => $item->net_rate,
+                            'po_qty' => $item->quantity,
+                            'pr_qty' => $item->scmPrLine->quantity,
+                            'po_composite_key' => $item->po_composite_key,
+                            'pr_composite_key' => $item->pr_composite_key,
+                            'mrr_quantity' => $remainingQuantity,
+                            'remaining_quantity' => $remainingQuantity,
+                            'max_quantity' => $remainingQuantity,
+                            'tolarence_level' => $item->tolarence_level,
+                            'tolarence_quantity' => $tolerance_quantity,
+                        ];
+                    });
+
+        }else{
+            $data = [];
+        }
+        return response()->success('data', $data, 200);
+    }
+
+    public function getPoMaterialList(): JsonResponse
+    {
+        $scmPo = ScmPoLine::query()
+            ->with('scmPo','scmPoItems.scmMaterial','scmPr','scmPoItems.scmMrrItems','scmPoItems.scmPrLine')
+            ->where('scm_po_id', request()->scm_po_id)
+            ->where('scm_pr_id', request()->scm_pr_id)
+            ->first();
+
+        $data = $scmPo->scmPoItems->map(function ($item) {
+            if(request()->scm_mrr_id){
+                $mrrQuantity = $item->scmMrrItems->where('scm_mrr_id', request()->scm_mrr_id)->where('po_composite_key', $item->po_composite_key)->first->quantity;
+            }else{
+                $mrrQuantity = 0;
+            }
+            $totalMrrQuantity = $item->scmMrrItems->sum('quantity');
+            $tolerance_quantity = $item->quantity * ($item?->tolarence_level ?? 0) / 100;
+
+            $remainingQuantity = $item->quantity - $totalMrrQuantity + $mrrQuantity + $tolerance_quantity;
+            $data = $item->scmMaterial;
+            $data['brand'] = $item->brand;
+            $data['model'] = $item->model;
+            $data['unit'] = $item->unit;
+            $data['quantity'] = $remainingQuantity;
+            $data['rate'] = $item->rate;
+            $data['net_rate'] = $item->net_rate;
+            $data['po_qty'] = $item->quantity;
+            $data['pr_qty'] = $item->scmPrLine->quantity;
+            $data['po_composite_key'] = $item->po_composite_key;
+            $data['pr_composite_key'] = $item->pr_composite_key;
+            $data['mrr_quantity'] = $remainingQuantity;
+            $data['remaining_quantity'] = $remainingQuantity;
+            $data['max_quantity'] = $remainingQuantity;
+            $data['tolarence_level'] = $item->tolarence_level;
+            $data['tolarence_quantity'] = $tolerance_quantity;
+            return $data;
+        });
+
+        return response()->success('data', $data, 200);
+    }
 }
