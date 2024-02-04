@@ -12,6 +12,7 @@ import Store from "../../../store";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import { formatMonthYear, formatDate } from "../../../utils/helper.js";
 const icons = useHeroIcon();
 
 const props = defineProps({
@@ -170,7 +171,7 @@ onMounted(() => {
                   <td> {{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }} </td>
                   <td> {{ cashRequisition?.costCenter?.name }} </td>
                   <td> {{ cashRequisition?.id }} </td>
-                  <td> {{ cashRequisition?.applied_date }} </td>
+                  <td> {{ formatDate(cashRequisition?.applied_date) }} </td>
                   <td> {{ cashRequisition?.scmPr?.ref_no }} </td>
                   <td class="text-left"> {{ cashRequisition?.requisitor?.name }} </td>
                   <td class="text-right">  {{ cashRequisition?.total_amount }} </td>

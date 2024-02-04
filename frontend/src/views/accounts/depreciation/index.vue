@@ -13,6 +13,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import useDepreciation from "../../../composables/accounts/useDepreciation";
 const icons = useHeroIcon();
+import { formatMonthYear, formatDate } from "../../../utils/helper.js";
 
 const props = defineProps({
   page: {
@@ -136,8 +137,8 @@ onMounted(() => {
           <tbody class="relative">
                 <tr v-for="(depreciationData, index) in depreciations?.data" :key="index">
                   <td> {{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }} </td>
-                  <td class="text-left"> {{ depreciationData?.month_year }} </td>
-                  <td class="text-left"> {{ depreciationData?.applied_date }} </td>
+                  <td class="text-left"> {{ formatMonthYear(depreciationData?.month_year) }} </td>
+                  <td class="text-left"> {{ formatDate(depreciationData?.applied_date) }} </td>
                   <td class="text-left"> {{ depreciationData?.costCenter?.name }} </td>
                 <td>
                   <span :class="depreciationData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">

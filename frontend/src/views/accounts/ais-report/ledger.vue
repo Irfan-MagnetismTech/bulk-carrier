@@ -5,6 +5,7 @@ import {onMounted, ref, watchEffect} from "vue";
 import useAisReport from "../../../composables/accounts/useAisReport";
 import useAccountCommonApiRequest from "../../../composables/accounts/useAccountCommonApiRequest";
 import Store from "../../../store";
+import { formatMonthYear, formatDate } from "../../../utils/helper.js";
 
 const { ledgers, getLedgers, isLoading} = useAisReport();
 const { bgColor } = useTransaction();
@@ -94,7 +95,7 @@ onMounted(() => {
                 :class="{'bg-white': index % 2 === 0, 'bg-gray-100': index % 2 !== 0}"
             >
                 <td class="text-sm"> {{ ++index }} </td>
-                <td class="text-sm"> {{ ledgerData?.transaction?.transaction_date }} </td>
+                <td class="text-sm"> {{ formatDate(ledgerData?.transaction?.transaction_date) }} </td>
                 <td class="text-sm !text-left"> {{ ledgers?.account_name }} </td>
               <td class="text-sm"> {{ ledgerData?.transaction?.voucher_type }} </td>
               <td class="text-sm transaction_col" style="color: blueviolet">

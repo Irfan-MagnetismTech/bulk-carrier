@@ -12,6 +12,7 @@ import Store from "../../../store";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import { formatMonthYear, formatDate } from "../../../utils/helper.js";
 const icons = useHeroIcon();
 
 const props = defineProps({
@@ -155,7 +156,7 @@ onMounted(() => {
           <tbody class="relative">
                 <tr v-for="(advanceAdjustment, index) in advanceAdjustments?.data" :key="index">
                   <td> {{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }} </td>
-                  <td> {{ advanceAdjustment?.adjustment_date }} </td>
+                  <td> {{ formatDate(advanceAdjustment?.adjustment_date) }} </td>
                   <td> {{ advanceAdjustment?.costCenter?.name }} </td>
                   <td> {{ advanceAdjustment?.accCashRequisition?.id }} </td>
                   <td> {{ advanceAdjustment?.accCashRequisition?.total_amount }} </td>

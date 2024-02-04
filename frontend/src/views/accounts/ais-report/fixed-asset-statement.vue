@@ -4,7 +4,7 @@ import {onMounted, ref, watch, watchEffect} from "vue";
 import useAisReport from "../../../composables/accounts/useAisReport";
 import useAccountCommonApiRequest from "../../../composables/accounts/useAccountCommonApiRequest";
 import Store from "../../../store";
-
+import { formatMonthYear, formatDate } from "../../../utils/helper.js";
 const { fixedAssetStatements, getFixedAssetStatement, isLoading} = useAisReport();
 const { allFixedAssetLists, getFixedAsset} = useAccountCommonApiRequest();
 
@@ -88,7 +88,7 @@ onMounted(() => {
       <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(fixedAssetData,index) in fixedAssetStatements" :key="index">
         <td class="text-sm">{{ fixedAssetData?.particular }}</td>
         <td class="text-sm">{{ fixedAssetData?.dep_rate }}</td>
-        <td class="text-sm">{{ fixedAssetData?.acquisition_date }}</td>
+        <td class="text-sm">{{ formatDate(fixedAssetData?.acquisition_date) }}</td>
         <td class="text-sm">{{ fixedAssetData?.opening_cost }}</td>
         <td class="text-sm">{{ fixedAssetData?.addition_cost }}</td>
         <td class="text-sm">{{ fixedAssetData?.delation_cost }}</td>
