@@ -256,15 +256,22 @@ class ScmWrController extends Controller
     {
 
         $lineData = ScmWrLine::query()
-        ->with('scmService')
+        ->with('scmService','scmWoItems.scmWrLine')
         ->when($request->scm_wr_id, function ($query) use ($request) {
             $query->where('scm_wr_id', $request->scm_wr_id);
         })
         ->whereNot('status', 'Closed')
         ->whereHas('scmWr', function ($query) {
             $query->whereIn('status', ['Pending', 'WIP']);
-        })
+        })        
         ->get()
+        // ->filter(function ($item) {
+        //     if($item->scm_service_id == $item->scmWoItems->whereNotNull('wcs_composite_key')->first()->scm_service_id){
+        //         return $item;
+        //     }
+
+        //     return $item->scmWoItems->whereNotNull('wcs_composite_key')->isNotEmpty();
+        // })
         ->map(function ($item) use ($request){
             $data = $item->scmService;
             $data['wr_composite_key'] = $item->wr_composite_key;
@@ -325,7 +332,13 @@ class ScmWrController extends Controller
         $work_requisition =[];
         if (isset($request->searchParam)) {
             $work_requisition = ScmWr::query()
-                ->with('scmWrLines')
+                ->with([
+                    'scmWrLines' => function ($query) {
+                        $query->whereHas('scmWoItems', function ($subQuery) {
+                            $subQuery->whereNotNull('wcs_composite_key');
+                        });
+                    }
+                ])
                 ->whereNot('status', 'Closed')
                 ->where(function ($query) use ($request) {
                     $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
@@ -341,7 +354,13 @@ class ScmWrController extends Controller
                 ->get();
         } elseif (isset($request->scm_wcs_id) && isset($request->scm_warehouse_id) && isset($request->purchase_center) && isset($request->business_unit)) {
             $work_requisition = ScmWr::query()
-                ->with('scmWrLines')
+                ->with([
+                    'scmWrLines' => function ($query) {
+                        $query->whereHas('scmWoItems', function ($subQuery) {
+                            $subQuery->whereNotNull('wcs_composite_key');
+                        });
+                    }
+                ])
                 ->whereNot('status', 'Closed')
                 ->when($request->scm_warehouse_id, function ($query) use ($request) {
                     $query->where('scm_warehouse_id', $request->scm_warehouse_id)
@@ -356,7 +375,13 @@ class ScmWrController extends Controller
                 ->get();
         } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center) && isset($request->business_unit)) {
             $work_requisition = ScmWr::query()
-                ->with('scmWrLines')
+                ->with([
+                    'scmWrLines' => function ($query) {
+                        $query->whereHas('scmWoItems', function ($subQuery) {
+                            $subQuery->whereNotNull('wcs_composite_key');
+                        });
+                    }
+                ])
                 ->whereNot('status', 'Closed')
                 ->when($request->scm_warehouse_id, function ($query) use ($request) {
                     $query->where('scm_warehouse_id', $request->scm_warehouse_id)

@@ -132,8 +132,7 @@ class ScmWoController extends Controller
      * @return JsonResponse
      */
     public function show(ScmWo $workOrder): JsonResponse
-    {
-        
+    {        
         try {
             $workOrder->load('scmWoLines.scmWoItems.scmService', "scmWoLines.scmWr", 'scmWoTerms', 'scmVendor', 'scmWarehouse','closedBy', 'scmWoItems.closedBy', 'scmWcs', 'scmWoLines.scmWoItems.scmWcsService.scmService', 'scmWoLines.scmWoItems.scmWrLine.scmService','scmWoLines.scmWoItems.scmWrLine.scmWr');
 
@@ -205,7 +204,7 @@ class ScmWoController extends Controller
     public function update(ScmWoRequest $request, ScmWo $workOrder): JsonResponse
     {
         $requestData = $request->except('ref_no');
-
+        $workOrder->load('scmWoItems','scmWoLines.scmWoItems');
         if(isset($request->scmWoLines)){
             $service_ids = [];
             $wr_ids = [];
