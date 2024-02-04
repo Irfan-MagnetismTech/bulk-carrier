@@ -16,6 +16,7 @@ use Modules\Accounts\Entities\AccCashRequisition;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class ScmMrr extends Model
 {
@@ -51,11 +52,6 @@ class ScmMrr extends Model
         return $this->belongsTo(ScmPo::class);
     }
 
-    public function scmPr(): BelongsTo
-    {
-        return $this->belongsTo(ScmPr::class);
-    }
-
     public function scmWarehouse(): BelongsTo
     {
         return $this->belongsTo(ScmWarehouse::class);
@@ -76,8 +72,8 @@ class ScmMrr extends Model
         return $this->morphMany(ScmStockLedger::class, 'stockable');
     }
 
-    public function accCashRequisition(): BelongsTo
+    public function scmMrrLineItems(): HasManyThrough
     {
-        return $this->belongsTo(AccCashRequisition::class);
+        return $this->hasManyThrough(ScmMrrLineItem::class, ScmMrrLine::class);
     }
 }

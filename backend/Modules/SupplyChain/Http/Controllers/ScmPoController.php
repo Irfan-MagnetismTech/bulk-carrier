@@ -246,6 +246,7 @@ class ScmPoController extends Controller
      */
     public function destroy(ScmPo $purchaseOrder)
     {
+        $purchaseOrder->load('scmPoLines.scmPoItems');
         try {
             DB::beginTransaction();
 
