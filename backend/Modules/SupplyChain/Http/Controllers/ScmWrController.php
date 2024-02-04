@@ -256,15 +256,22 @@ class ScmWrController extends Controller
     {
 
         $lineData = ScmWrLine::query()
-        ->with('scmService','scmWoItems')
+        ->with('scmService','scmWoItems.scmWrLine')
         ->when($request->scm_wr_id, function ($query) use ($request) {
             $query->where('scm_wr_id', $request->scm_wr_id);
         })
         ->whereNot('status', 'Closed')
         ->whereHas('scmWr', function ($query) {
             $query->whereIn('status', ['Pending', 'WIP']);
-        })
+        })        
         ->get()
+        // ->filter(function ($item) {
+        //     if($item->scm_service_id == $item->scmWoItems->whereNotNull('wcs_composite_key')->first()->scm_service_id){
+        //         return $item;
+        //     }
+
+        //     return $item->scmWoItems->whereNotNull('wcs_composite_key')->isNotEmpty();
+        // })
         ->map(function ($item) use ($request){
             $data = $item->scmService;
             $data['wr_composite_key'] = $item->wr_composite_key;
@@ -280,9 +287,6 @@ class ScmWrController extends Controller
             $data['max_quantity'] = $max;
             return $data;
         });
-        // ->filter(function ($item) {
-        //     return isset($item['scmWoItems']) && $item['scmWoItems'] && $item['scmWoItems']->whereNotNull('wcs_composite_key')->isNotEmpty();
-        // });
 
         return response()->success('Search result', $lineData, 200);
     }
