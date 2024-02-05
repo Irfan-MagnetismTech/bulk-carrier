@@ -256,22 +256,21 @@ class ScmWrController extends Controller
     {
 
         $lineData = ScmWrLine::query()
-        ->with('scmService','scmWoItems.scmWrLine')
+        ->with('scmService','scmWoItems.scmWcsService')
         ->when($request->scm_wr_id, function ($query) use ($request) {
             $query->where('scm_wr_id', $request->scm_wr_id);
         })
         ->whereNot('status', 'Closed')
         ->whereHas('scmWr', function ($query) {
             $query->whereIn('status', ['Pending', 'WIP']);
-        })        
+        })
+        ->whereNot(function ($query) {
+            $query->whereHas('scmWoItems', function($qr){
+                $qr->whereDoesntHave('scmWcsService');
+            });
+        })
         ->get()
-        // ->filter(function ($item) {
-        //     if($item->scm_service_id == $item->scmWoItems->whereNotNull('wcs_composite_key')->first()->scm_service_id){
-        //         return $item;
-        //     }
 
-        //     return $item->scmWoItems->whereNotNull('wcs_composite_key')->isNotEmpty();
-        // })
         ->map(function ($item) use ($request){
             $data = $item->scmService;
             $data['wr_composite_key'] = $item->wr_composite_key;
@@ -279,11 +278,13 @@ class ScmWrController extends Controller
             if(isset($request->scm_wcs_id)){
                 $scmWcsService = ScmWcsService::where(['scm_wr_id'=>$request->scm_wr_id,'scm_wcs_id'=>$request->scm_wcs_id, 'scm_service_id'=>$item->scm_service_id])->first();
             }
+
             if($scmWcsService){
                 $max = $item->quantity - $item->scmWcsServices->sum('quantity') + $scmWcsService->quantity - $item->scmWoItems->sum('quantity');
             }else{
-                $max = $item->quantity - $item->scmWcsServices->sum('quantity') - $item->scmWoItems->sum('quantity') ;
+                $max = $item->quantity - $item->scmWoItems->sum('quantity') ;
             }
+            
             $data['max_quantity'] = $max;
             return $data;
         });

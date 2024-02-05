@@ -391,9 +391,10 @@ class ScmWoController extends Controller
         // dd(request()->all());
         if (!request()->has('scm_wcs_id')) {
             $wrServices = ScmWrLine::query()
-            ->with('scmService','scmWoItems')
+            ->with('scmService','scmWoItems','scmWcsServices')
             ->where('scm_wr_id', request()->scm_wr_id)
             ->whereNot('status', 'Closed')
+            ->doesntHave('scmWcsServices')
             ->get()
             ->map(function ($item) {
 
@@ -494,8 +495,10 @@ class ScmWoController extends Controller
     {
         if (!request()->has('scm_wcs_id')) {
             $scmWr = ScmWrLine::query()
+            ->with('scmService','scmWoItems','scmWcsServices')
             ->where('scm_wr_id', request()->scm_wr_id)
             ->whereNot('status', 'Closed')
+            ->doesntHave('scmWcsServices')
             ->get()
             ->map(function ($item) {
                 $data['scm_service_id'] = $item->scmService->id;
