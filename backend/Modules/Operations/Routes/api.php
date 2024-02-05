@@ -21,6 +21,7 @@ use Modules\Operations\Http\Controllers\OpsContractAssignController;
 use Modules\Operations\Http\Controllers\OpsVoyageBoatNoteController;
 use Modules\Operations\Http\Controllers\OpsCashRequisitionController;
 use Modules\Operations\Http\Controllers\OpsCustomerInvoiceController;
+use Modules\Operations\Http\Controllers\OpsOperationReportController;
 use Modules\Operations\Http\Controllers\OpsChartererInvoiceController;
 use Modules\Operations\Http\Controllers\OpsChartererProfileController;
 use Modules\Operations\Http\Controllers\OpsHandoverTakeoverController;
@@ -161,5 +162,7 @@ Route::middleware(['auth:api'])->prefix('ops')->group(function ()
 
     Route::post('lighter-voyage-report', [OpsVoyageReportController::class, 'lighterVoyageReport']);
     Route::post('bulk-voyage-report', [OpsVoyageReportController::class, 'bulkVoyageReport']);
+    Route::post('budget-vs-expense-report', [OpsOperationReportController::class, 'budgetVsExpenseReport']);
+    Route::post('month-wise-expense-report', [OpsExpenseReportController::class, 'monthWiseExpenseReport']);
 
 });

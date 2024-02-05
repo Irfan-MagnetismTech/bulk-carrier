@@ -78,6 +78,26 @@ import useHeroIcon from '../../../assets/heroIcon';
       props.form.attachment = fileData;
     }
 
+    function raisedDateChange(){
+      if (props.form.approved_date < props.form.raised_date) 
+        props.form.approved_date = '';
+
+    }
+
+    
+    function approvedDateChange(){
+      if (props.form.approved_date < props.form.raised_date) 
+        props.form.approved_date = '';
+
+      props.form.scmWrLines.forEach((scmWrLine) => {
+        if (scmWrLine.required_date < props.form.approved_date) 
+          scmWrLine.required_date = '';
+      })
+
+    }
+
+
+
     onMounted(() => {
       fetchAllStoreCategories();
       fetchMaterials('');
@@ -301,12 +321,12 @@ function tytytyasd(indx) {
         <label class="label-group">
             <span class="label-item-title">Raised Date<span class="text-red-500">*</span></span>
             <!-- <input type="date" v-model="form.raised_date" required class="form-input" name="raised" :id="'raised'" /> -->
-            <VueDatePicker v-model="form.raised_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
+            <VueDatePicker v-model="form.raised_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd"  @update:model-value="raisedDateChange"></VueDatePicker>
             <Error v-if="errors?.raised_date" :errors="errors.raised_date"  />
         </label>    
         <label class="label-group">
             <span class="label-item-title">Approved Date<span class="text-red-500">*</span></span>
-            <VueDatePicker v-model="form.approved_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :min-date="form.raised_date"></VueDatePicker>
+            <VueDatePicker v-model="form.approved_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :min-date="form.raised_date" @update:model-value="approvedDateChange"></VueDatePicker>
             <Error v-if="errors?.approved_date" :errors="errors.approved_date"  />
         </label>
         <label class="label-group">
@@ -334,7 +354,13 @@ function tytytyasd(indx) {
             <input type="file" class="form-input" @change="handleAttachmentChange" />
             <Error v-if="errors?.attachment" :errors="errors.attachment"  />
         </label>
-        <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
+
+        <label class="label-group">
+          <span class="label-item-title">User Department</span>
+          <input type="text" v-model.trim="form.user_department" placeholder="User Department" class="form-input"  />
+        </label>
+
+        <RemarksComponet class="col-span-1 md:col-span-3" v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
 
         <div class="md:col-span-3">
             <!-- <table class="w-full whitespace-no-wrap" id="table">

@@ -11,6 +11,7 @@ use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmWr;
 use Modules\SupplyChain\Entities\ScmWcs;
 use Modules\SupplyChain\Services\UniqueId;
+use Modules\SupplyChain\Entities\ScmWoItem;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmWcsVendor;
 use Modules\SupplyChain\Services\CompositeKey;
@@ -55,7 +56,7 @@ class ScmWcsController extends Controller
     public function store(ScmWcsRequest $request)
     {
         $requestData = $request->except('ref_no','scmWcsServices');
-        $requestData['ref_no'] = UniqueId::generate(ScmWcs::class, 'WCS');
+        // $requestData['ref_no'] = UniqueId::generate(ScmWcs::class, 'WCS');
         try {
             DB::beginTransaction();
 
@@ -69,25 +70,38 @@ class ScmWcsController extends Controller
                 return response()->json($error, 422);
             }
 
-            // foreach($request->scmWcsServices as $service){
-            //     $work_requisition = ScmWr::find($service->scm_wr_id);
-            //     $work_requisition->update([
-            //         'status' => 'WIP',
-            //     ]);
-                
-            //     $work_requisition->load('scmWrLines');
-            //     foreach ($work_requisition->scmWrLines as $wrLine) {
-            //         if ($wrLine->status === 'WIP') {
-            //             continue;
-            //         }
-            //         $wrLine->update([
-            //             'status' => 'WIP'
-            //         ]);
-            //     }
-            // }
+            foreach($request->scmWcsServices as $service){
+                $work_requisition = ScmWr::find($service['scm_wr_id']);
+                if($work_requisition['status'] != 'WIP'){
+                    $work_requisition->update([
+                        'status' => 'WIP',
+                    ]);
+                    
+                    $work_requisition->load('scmWrLines');
+                    foreach ($work_requisition->scmWrLines as $wrLine) {
+                        if ($wrLine['status'] === 'WIP') {
+                            continue;
+                        }
+                        $wrLine->update([
+                            'status' => 'WIP'
+                        ]);
+                    }
+                }
+            }
 
             $scmWcs = ScmWcs::create($requestData);
-            $scmWcs->scmWcsServices()->createMany($request->scmWcsServices);
+
+            foreach ($request->scmWcsServices as $key => $value) {
+                ScmWcsService::create([
+                    'scm_wcs_id' => $scmWcs->id,
+                    'scm_wr_id' => $value['scm_wr_id'],
+                    'scm_service_id' => $value['scm_service_id'],
+                    'wcs_composite_key' => CompositeKey::generate(null, $scmWcs->id, 'wcs', $value['scm_service_id'], $value['scm_wr_id']),
+                    'wr_composite_key' => $value['wr_composite_key'],
+                    'quantity' => $value['quantity'],
+                ]);
+            }
+
             DB::commit();
             return response()->success('Data created succesfully', $scmWcs, 201);
         } catch (\Exception $e) {
@@ -103,7 +117,18 @@ class ScmWcsController extends Controller
      */
     public function show(ScmWcs $work_c): JsonResponse
     {
-        $work_c->load('scmWcsServices.scmService', 'scmWcsServices.scmWr', 'scmWarehouse');
+        $work_c->load('scmWcsServices.scmService', 'scmWcsServices.scmWr','scmWcsServices.scmWrLine', 'scmWarehouse','selectedVendors','scmWos','scmWcsVendors');
+
+        $data = $work_c->scmWcsServices->map(function($service){
+            $service['wr_quantity']= $service->scmWrLine->quantity;
+            $service['max_quantity']= $service->scmWrLine->quantity - $service->scmWrLine->scmWcsServices->sum('quantity') + $service->quantity;
+
+            return $service;
+        });
+
+        data_forget($work_c, 'scmWcsServices');
+        $work_c['scmWcsServices']= $data;
+
 
         try {
             return response()->success('Detail data', $work_c, 200);
@@ -136,10 +161,38 @@ class ScmWcsController extends Controller
                 return response()->json($error, 422);
             }
 
+            foreach($request->scmWcsServices as $service){
+                $work_requisition = ScmWr::find($service['scm_wr_id']);
+                if($work_requisition['status'] != 'WIP'){
+                    $work_requisition->update([
+                        'status' => 'WIP',
+                    ]);
+                    
+                    $work_requisition->load('scmWrLines');
+                    foreach ($work_requisition->scmWrLines as $wrLine) {
+                        if ($wrLine['status'] === 'WIP') {
+                            continue;
+                        }
+                        $wrLine->update([
+                            'status' => 'WIP'
+                        ]);
+                    }
+                }
+            }
+
             $work_c->update($requestData);
             $work_c->scmWcsServices()->delete();
-            $work_c->scmWcsServices()->createMany($request->scmWcsServices);
 
+            foreach ($request->scmWcsServices as $key => $value) {
+                ScmWcsService::create([
+                    'scm_wcs_id' => $work_c->id,
+                    'scm_wr_id' => $value['scm_wr_id'],
+                    'scm_service_id' => $value['scm_service_id'],
+                    'wcs_composite_key' => CompositeKey::generate(null, $work_c->id, 'wcs', $value['scm_service_id'], $value['scm_wr_id']),
+                    'wr_composite_key' => $value['wr_composite_key'],
+                    'quantity' => $value['quantity'],
+                ]);
+            }
 
             DB::commit();
             return response()->success('Data updated succesfully', $work_c, 202);
@@ -160,22 +213,27 @@ class ScmWcsController extends Controller
         $work_c->load('scmWcsServices');
         try {
             DB::beginTransaction();
-            // foreach($work_c->scmWcsServices as $service){
-            //     $work_requisition = ScmWr::find($service->scm_wr_id);
-            //     $work_requisition->update([
-            //         'status' => 'Pending',
-            //     ]);
-                
-            //     $work_requisition->load('scmWrLines');
-            //     foreach ($work_requisition->scmWrLines as $wrLine) {
-            //         if ($wrLine->status === 'Pending') {
-            //             continue;
-            //         }
-            //         $wrLine->update([
-            //             'status' => 'Pending'
-            //         ]);
-            //     }
-            // }
+            foreach($work_c->scmWcsServices as $service){
+                $work_cs_wr = ScmWcsService::where('scm_wr_id',$service->scm_wr_id)->where('id','!=',$service->id)->get();
+
+                if(count($work_cs_wr)==0){
+                    $work_requisition = ScmWr::find($service->scm_wr_id);
+                    $work_requisition->update([
+                        'status' => 'Pending',
+                    ]);
+                    
+                    $work_requisition->load('scmWrLines');
+                    foreach ($work_requisition->scmWrLines as $wrLine) {
+                        if ($wrLine->status === 'Pending') {
+                            continue;
+                        }
+                        $wrLine->update([
+                            'status' => 'Pending'
+                        ]);
+                    }
+                }
+
+            }
 
             $work_c->scmWcsServices()->delete();
             $work_c->delete();
@@ -258,6 +316,7 @@ class ScmWcsController extends Controller
                 $rate = $values[0]['rate'] ?? 0;
                 $quantity = $values[0]['quantity'] ?? 0;
 
+
                 foreach ($values as $key1 => $value) {
                     $wcsService = ScmWcsService::where([
                         'scm_wcs_id' => $scmWcs->id,
@@ -291,6 +350,7 @@ class ScmWcsController extends Controller
 
     public function showWcsQuotation($id)
     {
+
         $scmWcsVendor = ScmWcsVendor::with('scmWcs', 'scmVendor.scmVendorContactPerson', 'scmWcsVendorServices.scmService', 'scmWcsVendorServices.scmWr')->find($id);
         $scmWcsVendorServices = $scmWcsVendor->scmWcsVendorServices->groupBy(['scm_service_id'])->values()->all();
         data_forget($scmWcsVendor, 'scmWcsVendorServices');
@@ -423,8 +483,22 @@ class ScmWcsController extends Controller
             ->get()
             ->groupBy(['scm_service_id', 'scm_wr_id', 'scm_vendor_id']);
 
+
+        $scmWcs['latestWoItem'] = ScmWoItem::query()
+            ->with(['scmWoLine.scmWo'])
+            ->whereIn('scm_service_id', $scmWcs->scmWcsServices->pluck('scm_service_id')->toArray())
+            ->get()
+            ->sortByDesc(function ($item) {
+                return $item->scmWoLine->scmWo->date;
+            })
+            ->groupBy('scm_service_id')
+            ->map(function ($items) {
+                return $items[0];
+            });
+
+
         $scmWcs['scmWcsService'] = ScmWcsService::query()
-            ->with('scmService', 'scmWr')
+            ->with(['scmService', 'scmWr'])
             ->where('scm_wcs_id', $wcsId)
             ->get()
             ->groupBy(['scm_service_id', 'scm_wr_id'])
@@ -446,6 +520,19 @@ class ScmWcsController extends Controller
 
         try {
             $wcs = ScmWcs::find($data['id']);
+
+            foreach ($data['scmWcsVendor'] as $key => $value) {
+                if (empty($value[0]['is_selected'])) {
+                    $error= [
+                        'message'=>'Must be checked selected vendor.',
+                        'errors'=>[
+                            'service'=>['Must be checked selected vendor.']
+                            ]
+                        ];
+                    return response()->json($error, 422);
+                }
+            }
+
             $wcs->update(
                 [
                     'selection_ground' => $data['selection_ground'],
@@ -472,8 +559,8 @@ class ScmWcsController extends Controller
 
         if (isset($request->searchParam)) {
             $wcs = ScmWcs::query()
-                ->with('scmWsVendors', 'scmWsServices', 'scmWcsVendorServices')
-                ->whereHas('scmWsServices.scmWr', function ($query) use ($request) {
+                ->with('scmWcsVendors', 'scmWcsServices', 'scmWcsVendorServices')
+                ->whereHas('scmWcsServices.scmWr', function ($query) use ($request) {
                     $query->where(function ($query) use ($request) {
                         $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
                             ->where('business_unit', $request->business_unit)
@@ -481,18 +568,21 @@ class ScmWcsController extends Controller
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
+                ->has('selectedVendors')
                 ->orderByDesc('ref_no')
                 ->get();
+                
         } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center)) {
             $wcs = ScmWcs::query()
-                ->with('scmWsVendors', 'scmWsServices', 'scmWcsVendorServices')
-                ->whereHas('scmWsServices.scmWr', function ($query) use ($request) {
+                ->with('scmWcsVendors', 'scmWcsServices', 'scmWcsVendorServices')
+                ->whereHas('scmWcsServices.scmWr', function ($query) use ($request) {
                     $query->where(function ($query) use ($request) {
                         $query->where('business_unit', $request->business_unit)
                             ->where('scm_warehouse_id', $request->scm_warehouse_id)
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
+                ->has('selectedVendors')
                 ->orderByDesc('ref_no')
                 ->get();
         }

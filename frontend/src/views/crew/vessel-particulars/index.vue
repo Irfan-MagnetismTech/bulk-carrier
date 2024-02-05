@@ -339,6 +339,7 @@ onMounted(() => {
                   <span :class="vesselParticular?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ vesselParticular?.business_unit }}</span>
                 </td>
                   <td class="flex border-b-0 border-l-0 items-center justify-center space-x-2 text-gray-600 ">
+
                       <button @click="dlGeneralParticular(vesselParticular?.opsVessel?.name, vesselParticular.id)" class="flex bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
                         Download
                         <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

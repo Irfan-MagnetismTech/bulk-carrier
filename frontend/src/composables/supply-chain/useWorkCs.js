@@ -193,7 +193,7 @@ export default function useWorkCs() {
         }
     }
 
-    async function getWrWiseServiceList(wrId) {
+    async function getWrWiseServiceList(wrId, wcsId = null) {
         //NProgress.start();
         // const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -201,6 +201,7 @@ export default function useWorkCs() {
             const {data, status} = await Api.get(`/${BASE}/search-wr-wise-service-for-wcs`,{
                 params: {
                     scm_wr_id: wrId,
+                    scm_wcs_id: wcsId,
                 },
             });
             wrServiceList.value = data.value;

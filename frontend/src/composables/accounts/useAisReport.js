@@ -13,6 +13,7 @@ export default function useAisReport() {
     const ledgers = ref([]);
     const trialBalances = ref([]);
     const incomeStatements = ref([]);
+    const paymentReceiptStatements = ref([]);
     const costCenterSummary = ref({});
     const fixedAssetStatements = ref([]);
     const balanceSheets = ref([]);
@@ -139,6 +140,23 @@ export default function useAisReport() {
         }
     }
 
+    async function getPaymentReceiptStatement(form) {
+
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#0F6B61'});
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.post('/acc/payment-receipt-summary', form);
+            paymentReceiptStatements.value = data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
+    }
+
 
     return {
         dayBooks,
@@ -146,12 +164,14 @@ export default function useAisReport() {
         trialBalances,
         incomeStatements,
         fixedAssetStatements,
+        paymentReceiptStatements,
         costCenterSummary,
         balanceSheets,
         getDayBooks,
         getLedgers,
         getTrialBalance,
         getIncomeStatement,
+        getPaymentReceiptStatement,
         getFixedAssetStatement,
         getCostCenterSummary,
         getBalanceSheet,

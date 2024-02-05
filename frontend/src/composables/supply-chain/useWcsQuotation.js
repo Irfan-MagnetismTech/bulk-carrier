@@ -35,8 +35,8 @@ export default function useWcsQuotation() {
 
         payment_mode: "",
         credit_term: null,
-        vat: 0,//local
-        ait: 0,//local
+        vat: '',//local
+        ait: '',//local
         currency: '',
         security_money: 0,
         adjustment_policy: null,

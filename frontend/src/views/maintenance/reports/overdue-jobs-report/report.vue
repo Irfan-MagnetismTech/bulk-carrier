@@ -32,7 +32,7 @@ setTitle('Overdue Jobs Report');
     <div v-show="showReport">
         <div v-if="overdueJobs?.length" class="">
     
-            <div class="w-full my-2 overflow-hidden border shadow-xs dark:border-0 px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
+            <div class="w-full my-2 overflow-hidden border shadow-xs dark-disabled:border-0 px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
                 <!-- Print Button -->
                 <!-- <div class="flex justify-end">
                     <div title="Print" @click="downloadOverdueJobsReport(formParams)" class="w-14 px-4 cursor-pointer py-2 text-sm text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -51,7 +51,7 @@ setTitle('Overdue Jobs Report');
                             <h3 class="mb-1 font-bold mt-2" >{{ itemGroup.name  }}</h3>
                             <table id="table" class="w-full whitespace-no-wrap">
                                 <thead>
-                                    <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 border-b dark:border-gray-700 bg-gray-300 dark:text-gray-200 dark:bg-gray-700">
+                                    <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 border-b dark-disabled:border-gray-700 bg-gray-300 dark-disabled:text-gray-200 dark-disabled:bg-gray-700">
                                         <th class="w-1/12"> Item Code </th>
                                         <th class="w-2/12"> Item </th>
                                         <th class="w-1/12"> Running Hours</th>
@@ -62,7 +62,7 @@ setTitle('Overdue Jobs Report');
                                     </tr>
                                 </thead>
                         
-                                <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                                <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
                                     <template  v-for="(item, itemIndex) in itemGroup.mntItems" :key="itemIndex">
                                         <template v-for="(job, jobIndex) in item.mntJobs" :key="jobIndex">
                                             <template v-for="(jobLine, jobLineIndex) in job.mntJobLines" :key="jobLineIndex">
@@ -96,7 +96,7 @@ setTitle('Overdue Jobs Report');
             </div>
         </div>
         <template v-else>
-        <div class="px-2 py-20 bg-white rounded-lg shadow-md dark:bg-gray-800">
+        <div class="px-2 py-20 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
             <h1 class="w-full text-center vms-no-data-found">Sorry! No data found</h1>
         </div>
         </template>

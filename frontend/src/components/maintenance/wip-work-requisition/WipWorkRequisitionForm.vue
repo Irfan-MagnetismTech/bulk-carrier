@@ -4,44 +4,44 @@
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Requisition Date </span>
             <input type="text" :value="moment(form.requisition_date).format('DD/MM/YYYY')" placeholder="Requisition Date" class="form-input vms-readonly-input" readonly  />
-          <Error v-if="errors?.requisition_date" :errors="errors.requisition_date" />
+          <!-- <Error v-if="errors?.requisition_date" :errors="errors.requisition_date" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Reference No </span>
             <input type="text" :value="form.reference_no" placeholder="Reference No" class="form-input vms-readonly-input"  />
-          <Error v-if="errors?.reference_no" :errors="errors.reference_no" />
+          <!-- <Error v-if="errors?.reference_no" :errors="errors.reference_no" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Maintenance Type</span>
             <input type="text" :value="form.maintenance_type" placeholder="Maintenance Type" class="form-input vms-readonly-input"  />
-          <Error v-if="errors?.maintenance_type" :errors="errors.maintenance_type" />
+          <!-- <Error v-if="errors?.maintenance_type" :errors="errors.maintenance_type" /> -->
         </label>
 
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Vessel</span>
               <input type="text" :value="form.opsVessel?.name" placeholder="Vessel Name" class="form-input vms-readonly-input"  readonly/>
-          <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" />
+          <!-- <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Department </span>
           <input type="text" :value="form.mntWorkRequisitionItem?.MntItem?.MntItemGroup?.MntShipDepartment?.name" placeholder="Ship Department" class="form-input vms-readonly-input"  readonly/>
-          <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" />
+          <!-- <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Item Group </span>
           <input type="text" :value="form.mntWorkRequisitionItem?.MntItem?.MntItemGroup?.name" placeholder="Item Group Name" class="form-input vms-readonly-input"  readonly/>
-          <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" />
+          <!-- <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Item </span>
             <input type="text" :value="form.mntWorkRequisitionItem?.MntItem?.name" placeholder="Item Name" class="form-input vms-readonly-input"  readonly/>
-          <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" />
+          <!-- <Error v-if="errors?.mnt_item_id" :errors="errors.mnt_item_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm"> 
             <span class="text-gray-700 dark-disabled:text-gray-300">Present Running Hour</span>
             <input type="number" v-model="form.mntWorkRequisitionItem.present_run_hour" :min="form.min_present_run_hour"  placeholder="Present Running Hour" class="form-input"  />
-          <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" />
+          <!-- <Error v-if="errors?.present_run_hour" :errors="errors.present_run_hour" /> -->
         </label>
 
 
@@ -51,7 +51,7 @@
             <span class="text-gray-700 dark-disabled:text-gray-300">Act. Start Date <span v-show="form.status != 0"  class="text-red-500">*</span></span>
             <!-- <input type="date" :min="form.requisition_date" :required="form.status != 0"  v-model="form.act_start_date" placeholder="Act. Start Date" class="form-input" required  /> -->
             <VueDatePicker :min-date="form.requisition_date" :required="form.status != 0"  v-model="form.act_start_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" @update:model-value="processMntWorkRequisitionLines"></VueDatePicker>
-          <Error v-if="errors?.act_start_date" :errors="errors.act_start_date" />
+          <!-- <Error v-if="errors?.act_start_date" :errors="errors.act_start_date" /> -->
         </label>
 
         
@@ -61,14 +61,14 @@
 
             <VueDatePicker :min-date="maxCompletionDate??form.act_start_date"  v-model="form.act_completion_date" class="form-input" :class="{'vms-readonly-input' : form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2) }"  :readonly="form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2)" :required="!form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status != 2)"   auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" ></VueDatePicker>
 
-          <Error v-if="errors?.act_completion_date" :errors="errors.act_completion_date" />
+          <!-- <Error v-if="errors?.act_completion_date" :errors="errors.act_completion_date" /> -->
         </label>
 
 
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Responsible Person</span>
             <input type="text" :value="form.responsible_person" placeholder="Responsible Person Name" class="form-input vms-readonly-input"  readonly/>
-          <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" />
+          <!-- <Error v-if="errors?.responsible_person" :errors="errors.responsible_person" /> -->
         </label>
 
         <!-- <label class="block w-full mt-2 text-sm" v-show="!form.mntWorkRequisitionLines?.find(mntWorkRequisitionLine => mntWorkRequisitionLine.status == 2)">
@@ -95,7 +95,7 @@
                 />
               </template>
             </v-select>
-          <Error v-if="errors?.status" :errors="errors.status" />
+          <!-- <Error v-if="errors?.status" :errors="errors.status" /> -->
         </label>
 
 
@@ -162,7 +162,7 @@
 
               <VueDatePicker :min-date="form.act_start_date"  
               :max-date="form.act_completion_date"  v-model="mntWorkRequisitionLine.start_date" :class="{ 'vms-readonly-input' : (mntWorkRequisitionLine.status == 0 || mntWorkRequisitionLine.status == null)  }"  :disabled="(mntWorkRequisitionLine.status == 0 || mntWorkRequisitionLine.status == null)" :required="(mntWorkRequisitionLine.status != 0 || mntWorkRequisitionLine.status != null)" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
-              <Error class="pb-1" v-if="mntWorkRequisitionLine?.start_date_error" :errors="mntWorkRequisitionLine?.start_date_error" />
+              <!-- <Error class="pb-1" v-if="mntWorkRequisitionLine?.start_date_error" :errors="mntWorkRequisitionLine?.start_date_error" /> -->
             </td>
             <td class="px-1 py-1"> 
               <!-- <input type="date" class="form-input" :min="mntWorkRequisitionLine.start_date" 
@@ -170,7 +170,7 @@
 
               <VueDatePicker :min-date="mntWorkRequisitionLine.start_date" v-model="mntWorkRequisitionLine.completion_date" class="form-input" :class="{ 'vms-readonly-input' : mntWorkRequisitionLine.status != 2  }"  :disabled="mntWorkRequisitionLine.status != 2" :required="mntWorkRequisitionLine.status == 2" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" ></VueDatePicker>
               <!-- <Error class="pb-1" v-if="mntWorkRequisitionLine?.errors?.completion_date" :errors="mntWorkRequisitionLine?.errors?.completion_date" /> -->
-              <Error class="pb-1" v-if="mntWorkRequisitionLine?.completion_date_error" :errors="mntWorkRequisitionLine?.completion_date_error" />
+              <!-- <Error class="pb-1" v-if="mntWorkRequisitionLine?.completion_date_error" :errors="mntWorkRequisitionLine?.completion_date_error" /> -->
             </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.checking" /> </td>
             <td class="px-1 py-1" v-show="businessUnit !== 'PSML'" > <input type="checkbox" v-model="mntWorkRequisitionLine.replace" /> </td>

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * @package Modules\SupplyChain\Services
- * 
+ *
  * @class-type Service
  */
 class UniqueId
@@ -14,9 +14,9 @@ class UniqueId
     /**
      * Generates a unique ID for any model.
      *
-     * @param string $model The model to generate the ID for.
-     * @param string $prefix The prefix to prepend to the ID.
-     * @return string The unique ID.
+     * @param int $modelId
+     * @param string $prefix
+     * @return string
      */
     public static function generate(string $model, string $prefix)
     {
@@ -25,7 +25,7 @@ class UniqueId
         // $lastYear = $latestModel ? $latestModel->created_at->format('Y') : null;
 
         $tableName = (new $model)->getTable();
-        // DB::statement('SET information_schema_stats_expiry = 0');
+        DB::statement('SET information_schema_stats_expiry = 0');
 
         $nextId = DB::table('information_schema.tables')
             ->where('table_name', $tableName)

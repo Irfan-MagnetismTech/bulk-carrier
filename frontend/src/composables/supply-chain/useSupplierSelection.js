@@ -34,13 +34,16 @@ export default function useSupplierSelection() {
     const filterParams = ref(null);
 
     async function create(csId) {
+        const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
         try {
-            isLoading.value = true;
             const response = await Api.get(`${BASE}/getCsData/${csId}`);
            CsData.value = response.data.value;
         } catch (error) {
-            console.log(error);
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
         } finally {
+            loader.hide();
             isLoading.value = false;
         }
     }
@@ -57,7 +60,8 @@ export default function useSupplierSelection() {
             notification.showSuccess(status);
             router.push({ name: `${BASE}.material-cs.index` });
         } catch (error) {
-            console.log(error);
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
         } finally {
             isLoading.value = false;
             loader.hide();
@@ -65,31 +69,38 @@ export default function useSupplierSelection() {
     }
 
     async function edit(CsId) {
+        const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
         try {
-            isLoading.value = true;
             const response = await Api.get(`${BASE}/quotation/${id}/edit`);
             if (response.status === 200) {
                 quotation.value = response.data.value;
             }
         } catch (error) {
-            notification.error(error.response.data.message);
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
         } finally {
             isLoading.value = false;
+            loader.hide();
         }
     }
 
     async function update(id) {
+        const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
         try {
-            isLoading.value = true;
             const response = await Api.put(`${BASE}/quotation/${id}`, quotation.value);
             if (response.status === 200) {
                 notification.success(response.data.message);
                 router.push({ name: "QuotationList" });
             }
         } catch (error) {
-            notification.error(error.response.data.message);
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
         } finally {
             isLoading.value = false;
+            loader.hide();
         }
     }
 

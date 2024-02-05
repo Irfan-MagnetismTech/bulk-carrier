@@ -79,7 +79,7 @@
         <!-- <td>{{ materialData[0].scmPr.ref_no  }}</td> -->
         <!-- <td :rowspan="Object.keys(servicePrData).length">{{ serviceData[0].unit }}</td> -->
         <td>{{ serviceData[0].sum_quantity }}</td>
-        <td></td>
+        <td>{{ (formData?.latestWoItem && formData?.latestWoItem.length) ? formData?.latestWoItem[index1].rate : "N/A" }}</td>
         <template v-for="(serviceVendorData,index11) in (formData?.scmWcsVendorService[index1][name])" :key="index11">
             <!-- <td>{{ serviceVendorData[0].negotiated_price }}</td>
             <td>{{ serviceVendorData[0].negotiated_price * materialData[0].sum_quantity}}</td> -->
@@ -223,7 +223,7 @@
       <td v-for="(VendoData,index) in (formData?.scmCsVendor)" :key="index">{{ VendoData[0].unloading_cost_bear_by }}</td>
     </tr> -->
     <tr>
-      <td>Selected Vendor</td>
+      <td>Selected Vendor<span class="text-red-500">*</span></td>
       <td v-for="(VendoData,index) in (formData?.scmWcsVendor)" :key="index">
         <input type="checkbox" :class="'menu_' + VendoData.scm_wcs_id" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray" :value="VendoData?.id" v-model="form.scmWcsVendor[index][0].is_selected">
       </td>

@@ -3,17 +3,21 @@
 namespace Modules\SupplyChain\Entities;
 
 use App\Traits\GlobalSearchTrait;
+use App\Traits\UniqueKeyGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Entities\ScmCsVendor;
 use Modules\SupplyChain\Entities\ScmWarehouse;
 use Modules\SupplyChain\Entities\ScmCsMaterial;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\SupplyChain\Entities\ScmCsStockQuantity;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\SupplyChain\Entities\ScmCsMaterialVendor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmCs extends Model
 {
-    use HasFactory, GlobalSearchTrait;
+    use HasFactory, GlobalSearchTrait, UniqueKeyGenerator;
 
     protected $fillable = [
         'ref_no',
@@ -34,34 +38,40 @@ class ScmCs extends Model
         'is_foreign',
     ];
 
+    protected $refKeyPrefix = 'CS';
 
-    public function scmPr()
+    public function scmPo(): HasMany
     {
-        return $this->belongsTo(ScmPr::class);
+        return $this->hasMany(ScmPo::class);
     }
 
-    public function scmWarehouse()
+    public function scmWarehouse(): BelongsTo
     {
         return $this->belongsTo(ScmWarehouse::class);
     }
 
-    public function scmCsVendors()
+    public function scmCsVendors(): HasMany
     {
         return $this->hasMany(ScmCsVendor::class);
     }
 
-    public function scmCsMaterialVendors()
+    public function scmCsMaterialVendors(): HasMany
     {
         return $this->hasMany(ScmCsMaterialVendor::class);
     }
 
-    public function scmCsMaterials()
+    public function scmCsMaterials(): HasMany
     {
         return $this->hasMany(ScmCsMaterial::class);
     }
 
-    public function selectedVendors()
+    public function selectedVendors(): HasMany
     {
         return $this->hasMany(ScmCsVendor::class)->where('is_selected', true);
+    }
+
+    public function scmCsStockQuantity(): HasMany
+    {
+        return $this->hasMany(ScmCsStockQuantity::class);
     }
 }

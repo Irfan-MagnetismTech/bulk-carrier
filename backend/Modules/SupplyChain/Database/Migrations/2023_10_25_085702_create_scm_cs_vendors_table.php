@@ -34,6 +34,8 @@ return new class extends Migration
             $table->string('currency')->nullable();
             $table->string('mode_of_shipment')->comment('air,land,sea')->nullable();
             $table->string('terms_and_condition')->nullable();
+            $table->string('brand')->nullable();
+            $table->string('origin')->nullable();
             $table->string('remarks')->nullable();
             $table->string('credit_term')->nullable();
             $table->string('carring_cost_bear_by')->nullable();
@@ -42,6 +44,7 @@ return new class extends Migration
             $table->string('vat')->nullable();
             $table->string('ait')->nullable();
             $table->bigInteger('is_selected')->nullable();
+            $table->string('technical_acceptance')->nullable();
             $table->string('stock_type')->comment('ready_stock,manufacturer')->nullable();
             $table->string('manufacturing_days')->comment('if stock type manufacturer')->nullable();
             $table->string('port_of_loading')->nullable();

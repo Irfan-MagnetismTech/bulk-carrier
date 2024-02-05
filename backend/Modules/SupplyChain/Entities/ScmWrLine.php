@@ -57,4 +57,9 @@ class ScmWrLine extends Model
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
     }
+
+    public function scmWoItems(): HasMany
+    {
+        return $this->hasMany(ScmWoItem::class, 'wr_composite_key', 'wr_composite_key');
+    }
 }

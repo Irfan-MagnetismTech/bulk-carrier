@@ -35,14 +35,29 @@ class ScmWoController extends Controller
     {
         try {
             $scmWorkOrders = ScmWo::query()
-                ->with('scmWoLines', 'scmWoTerms', 'scmVendor', 'scmWarehouse', 'scmWcs.scmWr')
-                ->globalSearch($request->all());
+            ->with('scmWoLines.scmWoItems.scmService','scmWoLines.scmWr', 'scmWoTerms', 'scmVendor', 'scmWarehouse', 'scmWoItems', 'scmWcs.scmWcsVendorServices.scmWr')
+            ->globalSearch($request->all());
 
             return response()->success('Data list', $scmWorkOrders, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    public function woCloseIndex(Request $request): JsonResponse
+    {
+        try {
+            $scmWorkOrders = ScmWo::query()
+                ->with('scmWoLines.scmWoItems.scmService','scmWoLines.scmWr', 'scmWoTerms', 'scmVendor', 'scmWarehouse', 'scmWoItems', 'scmWcs.scmWcsVendorServices.scmWr')
+                ->has('closedBy')
+                ->globalSearch($request->all());
+
+            return response()->success('Data retrieved successfully.', $scmWorkOrders, 200);
+        } catch (QueryException $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
 
 
     /**
@@ -52,9 +67,37 @@ class ScmWoController extends Controller
      */
     public function store(ScmWoRequest $request): JsonResponse
     {
+        
         $requestData = $request->except('ref_no');
-        $requestData['ref_no'] = UniqueId::generate(ScmWo::class, 'WO');
+        
+        // $requestData['ref_no'] = UniqueId::generate(ScmWo::class, 'WO');
+        // return response()->json( $request->all(), 422);
         $requestData['created_by'] = auth()->id();
+
+        if(isset($request->scmWoLines)){
+            $service_ids = [];
+            $wr_ids = [];
+
+            foreach ($request->scmWoLines as $key => $values) {
+                foreach ($values['scmWoItems'] as $index => $value) {
+                    if (!in_array($values['scm_wr_id'], $wr_ids) ) {
+                        $service_ids[] = $value['scm_service_id'];
+                    }
+                }
+                $wr_ids[] = $values['scm_wr_id'];                
+            }
+            
+            if(count($wr_ids) != count(array_unique($wr_ids))) {
+                $wr_error=$this->duplicateDataResponse('WR');
+                return response()->json($wr_error, 422);
+            }
+                        
+            if(count($service_ids) != count(array_unique($service_ids))) {    
+                $service_error=$this->duplicateDataResponse('service');
+                return response()->json($service_error, 422);
+
+            }
+        }
 
         try {
             DB::beginTransaction();
@@ -71,6 +114,18 @@ class ScmWoController extends Controller
         }
     }
 
+
+    private function duplicateDataResponse($message){
+        $error= [
+            'message'=>'Duplicate \'' . $message . '\' selection is not allowed; each \'' . $message . '\' can be chosen only once.',
+            'errors'=>[
+                'duplicate'=>['Duplicate \'' . $message . '\' selection is not allowed; each \'' . $message . '\' can be chosen only once.',]
+                ]
+            ];
+            
+        return $error;
+    }
+
    /**
      * Show the specified resource.
      * @param ScmWo $workOrder
@@ -78,33 +133,39 @@ class ScmWoController extends Controller
      */
     public function show(ScmWo $workOrder): JsonResponse
     {
+        
         try {
-            $workOrder->load('scmWoLines.scmWoItems.scmService', "scmWoLines.scmWr", 'scmWoTerms', 'scmVendor', 'scmWarehouse', 'scmWoItems', 'scmWcs', 'scmWoLines.scmWoItems.scmWcsService.scmService', 'scmWoLines.scmWoItems.scmWrLine.scmService');
+            $workOrder->load('scmWoLines.scmWoItems.scmService', "scmWoLines.scmWr", 'scmWoTerms', 'scmVendor', 'scmWarehouse','closedBy', 'scmWoItems.closedBy', 'scmWcs', 'scmWoLines.scmWoItems.scmWcsService.scmService', 'scmWoLines.scmWoItems.scmWrLine.scmService');
 
             $scmWoLines = $workOrder->scmWoLines->map(function ($items) {
                 $datas = $items;
-
                 $adas = $items->scmWoItems->map(function ($item) {
+                    // var_dump($item);
+                    $max_quantity =0;
                     if (isset($item['wcs_composite_key'])) {
-                        $max_quantity = $item->scmWcsService->quantity -  $item->scmWcsService->scmWoItems->sum('quantity') + $item->quantity;
+                        $max_quantity = $item->scmWcsService?->quantity??0 -  $item->scmWcsService?->scmWoItems->sum('quantity') + $item->quantity;
                     } else {
-                        $max_quantity =  $item->scmWrLine->quantity -  $item->scmWrLine->scmWoItems->sum('quantity') + $item->quantity;
+                        $max_quantity =  $item->scmWrLine?->quantity??0 -  $item->scmWrLine->scmWoItems->sum('quantity') + $item->quantity;
                     }
                     return [
+                        'id' => $item['id'],
                         'scm_service_id' => $item['scm_service_id'],
                         'scmService' => $item['scmService'],
+                        'closedBy' => $item['closedBy'],
                         'required_date' => $item['required_date'],
-                        'quantity' => $item['quantity'],
+                        'quantity' => $item['quantity']?$item['quantity']:'',
                         'rate' => $item['rate'],
-                        'total' => $item['total'],
-                        'description' => $item['description'],
+                        'total_price' => $item['total_price'],
+                        'description' => $item['description']?$item['description']:'',
                         'wo_composite_key' => $item['wo_composite_key'],
                         'wr_composite_key' => $item['wr_composite_key'],
                         'wcs_composite_key' => $item['wcs_composite_key'],
-                        'max_quantity' => $max_quantity,
-                        'wr_quantity' => $item['quantity'],
+                        'max_quantity' => number_format($max_quantity, 2),
+                        'wr_quantity' => number_format($item->scmWrLine?->quantity??0, 2),
                     ];
+
                 });
+
                 //data_forget scmPoItems
 
                 data_forget($items, 'scmWoItems');
@@ -113,7 +174,7 @@ class ScmWoController extends Controller
                 return $datas;
             });
 
-            // return response()->json($scmPoLines, 422);
+            // return response()->json($scmWoLines, 422);
 
             // data_forget($workOrder, 'scmPoLines');
 
@@ -144,6 +205,31 @@ class ScmWoController extends Controller
     public function update(ScmWoRequest $request, ScmWo $workOrder): JsonResponse
     {
         $requestData = $request->except('ref_no');
+
+        if(isset($request->scmWoLines)){
+            $service_ids = [];
+            $wr_ids = [];
+
+            foreach ($request->scmWoLines as $key => $values) {
+                foreach ($values['scmWoItems'] as $index => $value) {
+                    if (!in_array($values['scm_wr_id'], $wr_ids) ) {
+                        $service_ids[] = $value['scm_service_id'];
+                    }
+                }
+                $wr_ids[] = $values['scm_wr_id'];                
+            }
+            
+            if(count($wr_ids) != count(array_unique($wr_ids))) {
+                $wr_error=$this->duplicateDataResponse('PR');
+                return response()->json($wr_error, 422);
+            }            
+            
+            if(count($service_ids) != count(array_unique($service_ids))) {    
+                $service_error=$this->duplicateDataResponse('service');
+                return response()->json($service_error, 422);
+            }
+
+        }
 
         try {
             DB::beginTransaction();
@@ -187,11 +273,11 @@ class ScmWoController extends Controller
             'scm_wo_line_id' => $scmWoLine->id,
             'scm_wo_id' => $workOrder->id,
             'scm_service_id'   => $value['scm_service_id'],
-            'received_date' => $value['received_date'],
+            'required_date' => $value['required_date'],
             'quantity' => $value['quantity'],
             'rate' => $value['rate'],
-            'total' => $value['total'],
-            'description' => $value['description'],
+            'total_price' => $value['total_price'],
+            // 'description' => $value['description'],
             'wcs_composite_key' => $value['wcs_composite_key'] ?? null,
             'wo_composite_key' => CompositeKey::generate($index, $workOrder->id, 'wo', $value['scm_service_id'], $scmWoLine->id),
             'wr_composite_key' => $value['wr_composite_key'],
@@ -222,6 +308,22 @@ class ScmWoController extends Controller
         }
     }
 
+    public function searchWarehouse(Request $request): JsonResponse
+    {
+        if ($request->business_unit != 'ALL') {
+            $scmWo = ScmWo::query()
+                ->with('scmWoLines', 'scmWoTerms')
+                ->whereBusinessUnit($request->business_unit)
+                ->where('name', 'LIKE', "%$request->searchParam%")
+                ->orderByDesc('name')
+                ->limit(10)
+                ->get();
+        } else {
+            $scmWo = [];
+        }
+
+        return response()->success('Search result', $scmWo, 200);
+    }
 
     public function getWoOrWoWcsWiseWrData(Request $request): JsonResponse
     {
@@ -251,7 +353,7 @@ class ScmWoController extends Controller
                             'quantity' => $item->quantity,
                             'wr_composite_key' => $item->wr_composite_key,
                             'max_quantity' => $item->quantity - $item->scmWoLines->sum('quantity'),
-                            // 'total_price' => $item->total_price
+                            // 'total_amount' => $item->total_amount
                         ];
                     })
                 ];
@@ -287,22 +389,62 @@ class ScmWoController extends Controller
      */
     public function getServiceByWrId(): JsonResponse
     {
-        $wrServices = ScmWrLine::query()
-            ->with('scmService')
+        // dd(request()->all());
+        if (!request()->has('scm_wcs_id')) {
+            $wrServices = ScmWrLine::query()
+            ->with('scmService','scmWoItems')
             ->where('scm_wr_id', request()->scm_wr_id)
             ->whereNot('status', 'Closed')
             ->get()
             ->map(function ($item) {
+
                 $data = $item->scmService;
+                $data['wr_composite_key'] = $item->wr_composite_key;
+                $data['wr_quantity'] = $item->quantity;
                 if (request()->scm_wo_id) {
                     $data['wo_quantity'] = $item->scmWoItems->where('scm_wo_id', request()->scm_wo_id)->where('wr_composite_key', $item->wr_composite_key)->first()->quantity;
                 } else {
                     $data['wo_quantity'] = 0;
                 }
+                $data['quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
                 $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
                 $data['wo_quantity'] = $data['wo_quantity'] ?? 0;
                 return $data;
+            })->filter(function($item){
+                return ($item['max_quantity'] > 0);
             });
+
+
+        } else {
+            $wrServices = ScmWcsService::query()
+                ->where([
+                    'scm_wcs_id' => request()->scm_wcs_id,
+                    'scm_wr_id' => request()->scm_wr_id
+                ])
+                ->get()
+                ->map(function ($item) {
+                    $data = $item->scmService;
+                    $data['scm_service_id'] = $item->scmService->id;
+                    $data['wcs_composite_key'] = $item->wcs_composite_key;
+                    $data['wr_composite_key'] = $item->wr_composite_key;
+                    $data['wr_quantity'] = $item->scmWrLine->quantity;
+                    if (request()->scm_wo_id) {
+                        $data['wo_quantity'] = $item->scmWoItems->where('scm_wo_id', request()->scm_wo_id)->where('wcs_composite_key', $item->wcs_composite_key)->first()->quantity;
+                    } else {
+                        $data['wo_quantity'] = 0;
+                    }
+
+                    $data['quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
+                    $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
+
+                    return $data;
+                })->filter(function($item){
+                    return ($item['max_quantity'] > 0);
+                });
+        }
+
+
+
         return response()->success('data list', $wrServices, 200);
     }
     
@@ -330,57 +472,171 @@ class ScmWoController extends Controller
     }
 
 
+    public function searchWoForLc(Request $request): JsonResponse
+    {
+        if ($request->business_unit != 'ALL') {
+            $scmWo = ScmWo::query()
+                ->with('scmWoLines', 'scmWoTerms', 'scmVendor')
+                ->where('purchase_center', 'foreign')
+                ->orWhere('purchase_center', 'FOREIGN')
+                // ->where('ref_no', 'LIKE', "%$request->searchParam%")
+                ->orderByDesc('ref_no')
+                // ->limit(10)
+                ->get();
+        } else {
+            $scmWo = [];
+        }
+
+        return response()->success('Search result', $scmWo, 200);
+    }
+
+
     public function getWoLineDatas()
     {
         if (!request()->has('scm_wcs_id')) {
             $scmWr = ScmWrLine::query()
-                ->where('scm_wr_id', request()->scm_wr_id)
-                ->whereNot('status', 'Closed')
-                ->get()
-                ->map(function ($item) {
-                    $data['scm_service_id'] = $item->scmService->id;
-                    $data['scmService'] = $item->scmService;
-                    $data['wr_composite_key'] = $item->wr_composite_key;
-                    $data['wr_quantity'] = $item->quantity;
-                    $data['quantity'] = $item->quantity;
+            ->where('scm_wr_id', request()->scm_wr_id)
+            ->whereNot('status', 'Closed')
+            ->get()
+            ->map(function ($item) {
+                $data['scm_service_id'] = $item->scmService->id;
+                $data['scmService'] = $item->scmService;
+                $data['wr_composite_key'] = $item->wr_composite_key;
+                $data['wr_quantity'] = $item->quantity;
+                
+                if (request()->scm_wo_id) {
+                    $data['wo_quantity'] = $item->scmWoItems->where('scm_wo_id', request()->scm_wo_id)->where('wr_composite_key', $item->wr_composite_key)->first()->quantity;
+                } else {
+                    $data['wo_quantity'] = 0;
+                }
 
-                    if (request()->scm_wo_id) {
-                        $data['wo_quantity'] = $item->scmWoItems->where('scm_wo_id', request()->scm_wo_id)->where('wr_composite_key', $item->wr_composite_key)->first()->quantity;
-                    } else {
-                        $data['wo_quantity'] = 0;
-                    }
-                    $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
-                    $data['wo_quantity'] = $data['wo_quantity'] ?? 0;
+                $data['quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
+                $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
+                $data['wo_quantity'] = $data['wo_quantity'] ?? 0;
 
-                    return $data;
-                });
+                return $data;
+            })->filter(function($item){
+                return ($item['max_quantity'] > 0);
+            });
         } else {
             $scmWr = ScmWcsService::query()
-                ->where([
-                    'scm_wcs_id' => request()->scm_wcs_id,
-                    'scm_wr_id' => request()->scm_wr_id
-                ])
-                ->get()
-                ->map(function ($item) {
-                    $data['scm_service_id'] = $item->scmService->id;
-                    $data['scmService'] = $item->scmService;
-                    $data['quantity'] = $item->quantity;
-                    $data['wcs_composite_key'] = $item->wcs_composite_key;
-                    $data['wr_composite_key'] = $item->wr_composite_key;
-                    $data['wr_quantity'] = $item->scmWrLine->quantity;
-                    $data['quantity'] = $item->quantity;
-                    if (request()->scm_wo_id) {
-                        $data['wo_quantity'] = $item->scmWoItems->where('wcs_composite_key', $item->wcs_composite_key)->sum('quantity');
-                    } else {
-                        $data['wo_quantity'] = 0;
-                    }
-                    $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity');
+            ->where([
+                'scm_wcs_id' => request()->scm_wcs_id,
+                'scm_wr_id' => request()->scm_wr_id
+            ])
+            ->get()
+            ->map(function ($item) {
+                $data['scm_service_id'] = $item->scmService->id;
+                $data['scmService'] = $item->scmService;
+                // $data['quantity'] = $item->quantity;
+                $data['wcs_composite_key'] = $item->wcs_composite_key;
+                $data['wr_composite_key'] = $item->wr_composite_key;
+                $data['wr_quantity'] = $item->scmWrLine->quantity;
+                if (request()->scm_wo_id) {
+                    $data['wo_quantity'] = $item->scmWoItems->where('wcs_composite_key', $item->wcs_composite_key)->sum('quantity');
+                } else {
+                    $data['wo_quantity'] = 0;
+                }
+                $data['quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
+                $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
 
-                    return $data;
-                });
+                return $data;
+            })->filter(function($item){
+                return ($item['max_quantity'] > 0);
+            });
         }
 
 
         return response()->success('data', $scmWr, 200);
+    }
+
+
+    
+    // for closing Work Order
+    public function closeWo(Request $request): JsonResponse
+    {      
+        
+        try {
+            $work_order = ScmWo::find($request->id);
+            $work_order->load('scmWoItems');
+            $work_order->update([
+                // 'is_closed' => 1,
+                'status' => 'Closed',
+                'closed_by' => auth()->user()->id,
+                'closed_at' => now(),
+                'closing_remarks' => $request->closing_remarks,
+            ]);
+                       
+            if(count($work_order->scmWoItems)>0){
+                foreach($work_order->scmWoItems as $wo_item) {    
+                    if ($wo_item->status === 'Closed') {
+                        continue;
+                    }
+                    $wo_item->update([
+                        // 'is_closed' => 1,
+                        'status' => 'Closed',
+                        'closed_by' => auth()->user()->id,
+                        'closed_at' => now(),
+                        'closing_remarks' => $request->closing_remarks,
+                    ]);
+                }
+            }
+
+            return response()->success('Data updated sucessfully!', $work_order, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function closeWoItem(Request $request): JsonResponse
+    {
+        // dd($request->all());
+        try {
+            $woItem = ScmWoItem::find($request->id);
+            $woItem->update([
+                // 'is_closed' => 1,
+                'status' => 'Closed',
+                'closed_by' => auth()->user()->id,
+                'closed_at' => now(),
+                'closing_remarks' => $request->closing_remarks,
+            ]);
+
+            $work_order = ScmWo::find($request->parent_id);
+            $work_order->load('scmWoItems');
+
+            $woItems = $work_order->scmWoItems->count();
+            $sumIsClosed = $work_order->scmWoItems->where('status', 'Closed')->count();
+
+            if ($woItems === $sumIsClosed) {
+                $work_order->update([
+                    // 'is_closed' => 1,
+                    'status' => 'Closed',
+                    'closed_by' => auth()->user()->id,
+                    'closed_at' => now(),
+                    'closing_remarks' => "All lines are closed",
+                ]);
+            }
+
+            return response()->success('Data updated sucessfully!', [$woItems, $sumIsClosed], 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    // for confirmation Work Order
+    public function confirmationWo(Request $request): JsonResponse
+    {
+        try {
+            $work_order = ScmWo::find($request->id);
+            $work_order->update([
+                'status' => 'WIP',
+                'confirmation_by' => auth()->user()->id,
+                'confirmation_date' => now(),
+            ]);
+
+            return response()->success('Data updated sucessfully!', $work_order, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
     }
 }

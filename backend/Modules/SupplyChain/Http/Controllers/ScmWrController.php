@@ -36,7 +36,8 @@ class ScmWrController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $scmWr = ScmWr::with('scmWrLines.scmService', 'scmWrLines.closedBy', 'scmWrLines.createdBy', 'scmWarehouse', 'closedBy', 'createdBy')
+            $scmWr = ScmWr::with('scmWrLines.scmService', 'scmWrLines.closedBy', 'scmWrLines.createdBy', 'scmWrLines.scmWoItems','scmWarehouse', 'closedBy', 'createdBy')
+                // ->has('closedBy')
                 ->globalSearch($request->all());
 
             // $loggedInUserId = Auth::id();
@@ -49,6 +50,20 @@ class ScmWrController extends Controller
             //         $wr->createdBy->name = 'You';
             //     }
             // });
+
+            return response()->success('Data retrieved successfully.', $scmWr, 200);
+        } catch (QueryException $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+
+    public function wrCloseIndex(Request $request): JsonResponse
+    {
+        try {
+            $scmWr = ScmWr::with('scmWrLines.scmService', 'scmWrLines.closedBy', 'scmWrLines.createdBy', 'scmWrLines.scmWoItems','scmWarehouse', 'closedBy', 'createdBy')
+                ->has('closedBy')
+                ->globalSearch($request->all());
 
             return response()->success('Data retrieved successfully.', $scmWr, 200);
         } catch (QueryException $e) {
@@ -75,7 +90,7 @@ class ScmWrController extends Controller
                 'scmWrLines'
             );
 
-            $work_requisition_info['ref_no'] = UniqueId::generate(ScmWr::class, 'WR');
+            // $work_requisition_info['ref_no'] = UniqueId::generate(ScmWr::class, 'WR');
             $work_requisition_info['created_by'] = auth()->id();
 
             if (count($request->scmWrLines) < 1) {
@@ -239,22 +254,32 @@ class ScmWrController extends Controller
 
     public function getServiceByWrIdForWcs(Request $request): JsonResponse
     {
+
         $lineData = ScmWrLine::query()
-            ->with('scmService')
-            ->when($request->scm_wr_id, function ($query) use ($request) {
-                $query->where('scm_wr_id', $request->scm_wr_id);
-            })
-            ->whereNot('status', 'Closed')
-            ->whereHas('scmWr', function ($query) {
-                $query->whereIn('status', ['Pending', 'WIP']);
-            })
-            ->get()
-            ->map(function ($item) {
-                $data = $item->scmService;
-                $data['wr_composite_key'] = $item->wr_composite_key;
-                $data['max_quantity'] = $item->quantity - $item->scmWcsServices->sum('quantity');
-                return $data;
-            });
+        ->with('scmService')
+        ->when($request->scm_wr_id, function ($query) use ($request) {
+            $query->where('scm_wr_id', $request->scm_wr_id);
+        })
+        ->whereNot('status', 'Closed')
+        ->whereHas('scmWr', function ($query) {
+            $query->whereIn('status', ['Pending', 'WIP']);
+        })
+        ->get()
+        ->map(function ($item) use ($request){
+            $data = $item->scmService;
+            $data['wr_composite_key'] = $item->wr_composite_key;
+            $scmWcsService =null;
+            if(isset($request->scm_wcs_id)){
+                $scmWcsService = ScmWcsService::where(['scm_wr_id'=>$request->scm_wr_id,'scm_wcs_id'=>$request->scm_wcs_id, 'scm_service_id'=>$item->scm_service_id])->first();
+            }
+            if($scmWcsService){
+                $max = $item->quantity - $item->scmWcsServices->sum('quantity') + $scmWcsService->quantity - $item->scmWoItems->sum('quantity');
+            }else{
+                $max = $item->quantity - $item->scmWcsServices->sum('quantity') - $item->scmWoItems->sum('quantity') ;
+            }
+            $data['max_quantity'] = $max;
+            return $data;
+        });
 
         return response()->success('Search result', $lineData, 200);
     }
@@ -297,6 +322,7 @@ class ScmWrController extends Controller
 
     public function searchWorkRequisitions(Request $request): JsonResponse
     {
+        $work_requisition =[];
         if (isset($request->searchParam)) {
             $work_requisition = ScmWr::query()
                 ->with('scmWrLines')

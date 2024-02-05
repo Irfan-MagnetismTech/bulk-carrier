@@ -2,6 +2,7 @@
 
 namespace Modules\SupplyChain\Entities;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmPoLine;
 use Modules\SupplyChain\Entities\ScmPrLine;
@@ -31,7 +32,13 @@ class ScmPoItem extends Model
         'po_composite_key',
         'pr_composite_key',
         'cs_composite_key',
-        'tolarence_level'
+        'tolarence_level',
+        'remarks',
+        'is_closed',
+        'closed_by',
+        'closed_at',
+        'closing_remarks',
+        'status',
     ];
 
     public function scmMaterial(): BelongsTo
@@ -57,5 +64,15 @@ class ScmPoItem extends Model
     public function scmPoLine(): BelongsTo
     {
         return $this->belongsTo(ScmPoLine::class);
+    }
+
+    public function closedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'closed_by', 'id');
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
     }
 }
