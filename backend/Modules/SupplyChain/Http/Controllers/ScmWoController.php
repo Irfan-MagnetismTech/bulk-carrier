@@ -641,4 +641,24 @@ class ScmWoController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+
+    public function getWoListForWrr(){
+        try {
+            $scmWo = ScmWo::query()
+                ->with('scmWoLines.scmWoItems.scmService', 'scmWoTerms', 'scmVendor', 'scmWarehouse', 'scmWoItems.scmService')
+                ->whereNot('status', 'Closed')
+                ->where([
+                    'business_unit' => request()->business_unit,
+                    'purchase_center' => request()->purchase_center,
+                    'scm_warehouse_id' => request()->scm_warehouse_id,
+                ])
+                ->get();
+
+            return response()->success('Data list', $scmWo, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
 }
