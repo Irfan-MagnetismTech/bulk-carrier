@@ -9,7 +9,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
-              <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
+              <v-select :options="vessels" :loading="isVesselLoading" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -23,7 +23,7 @@
       </label>
       <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Voyage No </span>
-              <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
+              <v-select :options="voyages" :loading="isVoyageLoading" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -79,7 +79,7 @@
           <span class="text-gray-700 dark-disabled:text-gray-300 flex">Last Port Code <span class="pl-1 text-red-500">*</span>
            <span v-show="isPortDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
           </span>
-          <v-select :options="ports" placeholder="--Choose an option--" v-model="form.lastPort" label="code_name" class="block form-input">
+          <v-select :options="ports" :loading="isPortLoading" placeholder="--Choose an option--" v-model="form.lastPort" label="code_name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -96,7 +96,7 @@
           <span class="text-gray-700 dark-disabled:text-gray-300 flex">Next Port Code <span class="pl-1 text-red-500">*</span>
            <span v-show="isPortDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
           </span>
-          <v-select :options="ports" placeholder="--Choose an option--" v-model="form.nextPort" label="code_name" class="block form-input">
+          <v-select :options="ports" :loading="isPortLoading" placeholder="--Choose an option--" v-model="form.nextPort" label="code_name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -121,7 +121,6 @@
               <th>SL</th>
               <th class="w-72">Bunker Name</th>
               <th>Unit</th>
-              <th><nobr> Present Stock </nobr></th>
               <th><nobr> FUEL - CON/24H </nobr></th>
               <th><nobr> FUEL - CON/Voyage </nobr></th>
               <th class="hidden"><nobr> FUEL - Stock/L </nobr></th>
@@ -138,11 +137,6 @@
               </td>
               <td>
                 <span class="show-block !justify-center !bg-gray-100" v-if="form.opsBunkers[index]?.unit">{{ form.opsBunkers[index]?.unit }}</span>
-              </td>
-              <td>
-                <label class="block w-full mt-2 text-sm">
-                  <span class="show-block !block !bg-gray-100 !text-right">{{ form.opsBunkers[index].opening_balance }}</span>
-                </label>
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
@@ -178,9 +172,9 @@ import useHeroIcon from "../../assets/heroIcon";
 
 const icons = useHeroIcon();
 const dateTimeFormat = ref(Store.getters.getVueDatePickerTextInputFormat.dateTime);
-const { ports, searchPorts } = usePort();
-const { voyage, voyages, showVoyage, getVoyageList } = useVoyage();
-const { vessel, vessels, getVesselList, showVessel } = useVessel();
+const { ports, searchPorts, isPortLoading } = usePort();
+const { voyage, voyages, showVoyage, getVoyageList, isVoyageLoading } = useVoyage();
+const { vessel, vessels, getVesselList, showVessel, isVesselLoading } = useVessel();
 
 const props = defineProps({
     form: {
