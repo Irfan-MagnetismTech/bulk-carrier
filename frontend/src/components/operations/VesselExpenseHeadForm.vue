@@ -8,7 +8,7 @@ import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
 const { expenseHeads, getAllExpenseHeads, showHead, isLoading } = useExpenseHead();
-const { vessel, vessels, getVesselList, showVessel } = useVessel();
+const { vessel, vessels, getVesselList, showVessel, isVesselLoading } = useVessel();
 
 const subheads = ref([]);
 
@@ -22,8 +22,8 @@ const props = defineProps({
   errors: { type: [Object, Array], required: false },
 });
 
-function fetchExpenseHeads(searchParam, loading) {
-    getAllExpenseHeads(props.form.business_unit, loading).then(() => {
+function fetchExpenseHeads(searchParam) {
+    getAllExpenseHeads(props.form.business_unit).then(() => {
       if(props.formType == 'create') {
         props.form.heads = expenseHeads.value
       }
@@ -53,7 +53,7 @@ watch(() => props.form.business_unit, (newValue, oldValue) => {
 
   if (newValue) {    
     getVesselList(props.form.business_unit);
-    fetchExpenseHeads('', false)
+    fetchExpenseHeads('', true)
   }
   
 }, {deep: true});
@@ -100,7 +100,7 @@ function checkSubhead(headIndex, subHeadIndex) {
           <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
-              <v-select :options="vessels" placeholder="--Choose an option--" :readonly="formType=='edit'" :disabled="formType=='edit'"  v-model="form.opsVessel" label="name" class="block form-input">
+              <v-select :options="vessels" :loading="isVesselLoading" placeholder="--Choose an option--" :readonly="formType=='edit'" :disabled="formType=='edit'"  v-model="form.opsVessel" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
