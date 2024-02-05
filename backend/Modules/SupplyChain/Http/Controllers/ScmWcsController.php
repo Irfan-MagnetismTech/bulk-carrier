@@ -559,7 +559,7 @@ class ScmWcsController extends Controller
 
         if (isset($request->searchParam)) {
             $wcs = ScmWcs::query()
-                ->with('scmWcsVendors', 'scmWcsServices', 'scmWcsVendorServices','scmWos')
+                ->with('scmWcsVendors', 'scmWcsServices.scmWoItems', 'scmWcsVendorServices')
                 ->whereHas('scmWcsServices.scmWr', function ($query) use ($request) {
                     $query->where(function ($query) use ($request) {
                         $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
@@ -568,14 +568,20 @@ class ScmWcsController extends Controller
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
-                ->doesntHave('scmWos')
                 ->has('selectedVendors')
                 ->orderByDesc('ref_no')
                 ->get();
+                // ->filter(function ($item) {
+                //     return $item->scmWcsServices->filter(function ($service) {
+                //         return $service->quantity > $service->scmWoItems->sum('quantity');
+                //     })->isNotEmpty();
+                // })
+                // ->values()
+                // ->toArray();
                 
         } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center)) {
             $wcs = ScmWcs::query()
-                ->with('scmWcsVendors', 'scmWcsServices', 'scmWcsVendorServices','scmWos')
+                ->with('scmWcsVendors', 'scmWcsServices.scmWoItems', 'scmWcsVendorServices')
                 ->whereHas('scmWcsServices.scmWr', function ($query) use ($request) {
                     $query->where(function ($query) use ($request) {
                         $query->where('business_unit', $request->business_unit)
@@ -583,11 +589,18 @@ class ScmWcsController extends Controller
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
-                ->doesntHave('scmWos')
                 ->has('selectedVendors')
                 ->orderByDesc('ref_no')
                 ->get();
+                // ->filter(function ($item) {                    
+                //     return $item->scmWcsServices->filter(function ($service) {
+                //         return $service->quantity > $service->scmWoItems->sum('quantity');
+                //     })->isNotEmpty();
+                // })
+                // ->values()
+                // ->toArray();
         }
+
 
         return response()->success('Search result', $wcs, 200);
     }

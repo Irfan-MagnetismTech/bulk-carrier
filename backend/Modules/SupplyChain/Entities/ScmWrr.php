@@ -13,7 +13,7 @@ class ScmWrr extends Model
         'scm_wo_id',
         'ref_no',
         'date',
-        'receive_date',
+        'challan_no',
         'scm_warehouse_id',
         'purchase_center',
         'remarks',
