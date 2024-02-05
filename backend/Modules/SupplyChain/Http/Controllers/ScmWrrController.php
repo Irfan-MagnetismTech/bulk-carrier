@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Services\FileUploadService;
 use Modules\SupplyChain\Entities\ScmWrr;
+use Modules\SupplyChain\Entities\ScmWoLine;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmWrrItem;
 use Modules\SupplyChain\Http\Requests\ScmWrrRequest;
@@ -215,5 +216,44 @@ class ScmWrrController extends Controller
         });
 
         return response()->success('Search Result', $serviceReceiptReport, 200);
+    }
+
+
+    public function getMrrLineData(): JsonResponse
+    {
+        if (request()->scm_wo_id && request()->scm_wr_id) {
+            $scmWo = ScmWoLine::query()
+                ->with('scmWo', 'scmWoItems.scmService', 'scmWr', 'scmWoItems.scmWrrLineItems', 'scmWoItems.scmWrLine')
+                ->where('scm_wo_id', request()->scm_wo_id)
+                ->where('scm_wr_id', request()->scm_wr_id)
+                ->first();
+            $data = $scmWo->scmWoItems->map(function ($item) {
+                if (request()->scm_wrr_id) {
+                    $wrrQuantity = $item->scmWrrLineItems->where('scm_wrr_id', request()->scm_wrr_id)->where('wo_composite_key', $item->wo_composite_key)->first->quantity;
+                } else {
+                    $wrrQuantity = 0;
+                }
+                $totalWrrQuantity = $item->scmWrrLineItems->sum('quantity');
+
+                $remainingQuantity = $item->quantity - $totalWrrQuantity + $wrrQuantity;
+                return [
+                    'scmService' => $item->scmService,
+                    'scm_service_id' => $item->scm_service_id,
+                    'quantity' => $remainingQuantity,
+                    'rate' => $item->rate,
+                    'net_rate' => $item->net_rate,
+                    'wo_qty' => $item->quantity,
+                    'wr_qty' => $item->scmWrLine->quantity,
+                    'wo_composite_key' => $item->wo_composite_key,
+                    'wr_composite_key' => $item->wr_composite_key,
+                    'wrr_quantity' => $remainingQuantity,
+                    'remaining_quantity' => $remainingQuantity,
+                    'max_quantity' => $remainingQuantity,
+                ];
+            });
+        } else {
+            $data = [];
+        }
+        return response()->success('data', $data, 200);
     }
 }
