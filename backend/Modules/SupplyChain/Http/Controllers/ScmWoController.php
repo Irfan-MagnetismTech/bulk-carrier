@@ -661,4 +661,19 @@ class ScmWoController extends Controller
         }
     }
 
+    public function getWoWiseWrList(){
+        try {
+            $scmWo = ScmWr::query()
+                ->with('scmWoLines')
+                ->has('scmWoLines')
+                ->whereHas('scmWoLines', function ($query) {
+                    $query->where('scm_wo_id', request()->scm_wo_id);
+                })
+                ->get();
+
+            return response()->success('Data list', $scmWo, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }
