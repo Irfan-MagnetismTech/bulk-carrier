@@ -178,4 +178,42 @@ class ScmWrrController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+
+    public function searchWrr(Request $request): JsonResponse
+    {
+        if ($request->has('searchParam')) {
+            $serviceReceiptReport = ScmWrr::query()
+                ->with('scmWrrLineItems.scmService')
+                ->where(function ($query) use ($request) {
+                    $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
+                        ->where('business_unit', $request->business_unit)
+                        ->where('acc_cost_center_id', $request->cost_center_id);
+                })
+                ->orderByDesc('ref_no')
+                ->limit(10)
+                ->get();
+        } else {
+            $serviceReceiptReport = ScmWrr::query()
+                ->with('scmWrrLineItems.scmService')
+                ->where(function ($query) use ($request) {
+                    $query->where('business_unit', $request->business_unit)
+                        ->where('acc_cost_center_id', $request->cost_center_id);
+                })
+                ->orderByDesc('ref_no')
+                ->limit(10)
+                ->get();
+        }
+
+        $serviceReceiptReport = $serviceReceiptReport->map(function ($item) {
+            $item['scmServices'] = $item->scmWrrLineItems->map(function ($item1) {
+                $data = $item1->scmService;
+                $data['purchase_price'] = $item1->rate;
+                return $data;
+            });
+            return $item;
+        });
+
+        return response()->success('Search Result', $serviceReceiptReport, 200);
+    }
 }
