@@ -496,21 +496,4 @@ import { formatDate } from "../../utils/helper";
   td label{
     font-size: 12px;
   }
-
-  >>> {
-    --vs-controls-color: #374151;
-    --vs-border-color: #4b5563;
-
-    --vs-dropdown-bg: #282c34;
-    --vs-dropdown-color: #eeeeee;
-    --vs-dropdown-option-color: #eeeeee;
-
-    --vs-selected-bg: #664cc3;
-    --vs-selected-color: #374151;
-
-    --vs-search-input-color: #4b5563;
-
-    --vs-dropdown-option--active-bg: #664cc3;
-    --vs-dropdown-option--active-color: #eeeeee;
-  }
   </style>
