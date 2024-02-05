@@ -10,6 +10,7 @@ use Modules\SupplyChain\Entities\ScmCsVendor;
 use Modules\SupplyChain\Entities\ScmWarehouse;
 use Modules\SupplyChain\Entities\ScmCsMaterial;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\SupplyChain\Entities\ScmCsStockQuantity;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\SupplyChain\Entities\ScmCsMaterialVendor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -67,5 +68,10 @@ class ScmCs extends Model
     public function selectedVendors(): HasMany
     {
         return $this->hasMany(ScmCsVendor::class)->where('is_selected', true);
+    }
+
+    public function scmCsStockQuantity(): HasMany
+    {
+        return $this->hasMany(ScmCsStockQuantity::class);
     }
 }

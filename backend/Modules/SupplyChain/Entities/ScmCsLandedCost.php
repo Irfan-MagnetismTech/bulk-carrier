@@ -14,6 +14,7 @@ class ScmCsLandedCost extends Model
         'scm_cs_vendor_id',
         'scm_vendor_id',
         'hs_codes',
+        'price_per_piece',
         'exchange_rate',
         'product_price',
         'freight_charge',

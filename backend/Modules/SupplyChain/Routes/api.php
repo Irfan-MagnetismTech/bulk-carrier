@@ -80,6 +80,8 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('search-mo', [ScmMoController::class, "searchMo"])->name('searchMo');
 
     Route::get('get-material-for-mrr', [ScmMrrController::class, "getMaterialByPrId"])->name('getMaterialForMrrId');
+    Route::get('get-mrr-line-data', [ScmMrrController::class, "getMrrLineData"])->name('getMrrLineData');
+    Route::get('get-po-material-list', [ScmMrrController::class, "getPoMaterialList"])->name('getPoMaterialList');
     Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse');
 
 
@@ -111,7 +113,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
         Route::get('get-pr-wise-cs-data', "getPrWiseCsData")->name('getPrWiseCsData');
         Route::get('search-pr', "searchPr")->name('searchPr');
         Route::get('search-purchase-requisitions', "searchPurchaseRequisitions")->name('search-purchase-requisitions');
-        Route::get('search-purchase-requisitions-for-cs', "searchPurchaseRequisitionsForCs")->name('search-purchase-requisitions');
+        Route::get('search-purchase-requisitions-for-cs', "searchPurchaseRequisitionsForCs")->name('search-purchase-requisitions-for-cs');
         Route::post('close-pr', "closePr")->name('closePr');
         Route::post('close-prline', "closePrLine")->name('closePrLine');
     });
@@ -138,11 +140,13 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::controller(ScmPoController::class)->group(function () {
         Route::get('search-pr-wise-material', "getMaterialByPrId")->name('getMaterialByPrId');
         Route::get('search-po', "searchPo")->name('searchPo');
+        Route::get('get-po-list', "getPoListForMrr")->name('getPoListForMrr');
         Route::get('search-po-for-lc', "searchPoForLc")->name('searchPoForLc');
         Route::get('get-po-line-datas', "getPoLineDatas")->name('get-po-line-datas');
         Route::get('get-pr-cs-wise-po-data', "getPoOrPoCsWisePrData");
         Route::post('close-po', "closePo")->name('closePo');
         Route::post('close-poline', "closePoLine")->name('closePoLine');
+        Route::get('get-po-wise-pr-list', "getPoWisePrList")->name('getPoWisePrList');
     });
 });
 

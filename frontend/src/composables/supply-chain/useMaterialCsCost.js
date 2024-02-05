@@ -132,7 +132,7 @@ export default function useMaterialCsCost() {
         formData.append('data', JSON.stringify(form));
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/create-cs-landed-cost`, formData);
+            const { data, status } = await Api.post(`/${BASE}/store-cs-landed-cost`, formData);
             notification.showSuccess(status);
             router.push({ name: `${BASE}.quotations.index` , params: { csId: csId }});
         } catch (error) {
@@ -173,6 +173,7 @@ export default function useMaterialCsCost() {
                         scmCsVendor: vendor,
                         scm_cs_vendor_id: vendor.id,
                         hs_codes: null,
+                        price_per_pi: 0.0,
                         exchange_rate: 0.0,
                         product_price: 0.0,
                         freight_charge: 0.0,

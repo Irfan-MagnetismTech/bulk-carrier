@@ -22,6 +22,14 @@
                         <td>{{ purchaseRequisition?.ref_no }}</td>
                     </tr>
                     <tr>
+                        <th class="w-40">Warehouse Name.</th>
+                        <td>{{ purchaseRequisition?.scmWarehouse?.name }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Departments Name.</th>
+                        <td>{{ purchaseRequisition?.department ?? "N/A" }}</td>
+                    </tr>
+                    <tr>
                         <th class="w-40">Purchase Center</th>
                         <td>{{ purchaseRequisition.purchase_center }}</td>
                     </tr>
@@ -72,7 +80,7 @@
                     </tr>
                     <tr v-if="purchaseRequisition.status === 'Closed'">
                         <th class="w-40">Closed By</th>
-                        <td>{{ purchaseRequisition?.closedBy.name }}</td>
+                        <td>{{ purchaseRequisition?.closed_person }}</td>
                     </tr>
                     <tr v-if="purchaseRequisition.status === 'Closed'">
                         <th class="w-40">Closing Remarks </th>
@@ -95,8 +103,8 @@
                 <th>SL</th>
                 <th class="w-36 text-center"><nobr>Material Name</nobr></th>
                 <th class="!text-center"><nobr>Unit</nobr></th>
-                <th><nobr>Model</nobr></th>
                 <th><nobr>Brand</nobr></th>
+                <th><nobr>Model</nobr></th>
                 <th><nobr>Country Name</nobr></th>
                 <th><nobr>Drawing No</nobr></th>
                 <th><nobr>Part No</nobr></th>
@@ -190,7 +198,7 @@
             <tbody>
               <tr>
                 <td>
-                <RemarksComponent v-model="closingRemarks" :maxlength="300" :fieldLabel="'Closing Remarks'" isRequired="true" hideLebel="true"></RemarksComponent>
+                <RemarksComponent v-model="closingRemarks" :maxlength="300" :fieldLabel="'Closing Remarks'" hideLebel="true"></RemarksComponent>
                 </td>
               </tr>
            </tbody>

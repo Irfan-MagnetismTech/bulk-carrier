@@ -32,7 +32,7 @@
           </v-select>
     </label>
     <label class="label-group">
-        <span class="label-item-title">Vendor Contact No <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Vendor Contact No</span>
         <input
           type="text"
           :value="form.scmVendor?.scmVendorContactPerson?.phone"
@@ -43,7 +43,7 @@
          
     </label>
     <label class="label-group">
-        <span class="label-item-title">Party Type <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Party Type</span>
         <input
           type="text"
           :value="form.scmVendor?.product_source_type"
@@ -54,10 +54,25 @@
     </label>
     <label class="label-group">
         <span class="label-item-title">Sourcing History <span class="text-red-500">*</span></span>
-          <select v-model="form.sourcing" class="form-input">
+          <!-- <select v-model="form.sourcing" class="form-input">
             <option value="Existing">Existing</option>
             <option value="New">New</option>
-          </select>
+          </select> -->
+          <v-select
+            :options="sourcing_array"
+            placeholder="--Choose an option--"
+            v-model="form.sourcing"
+            label="Product Source Type"
+            class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      :required="!form.sourcing"
+                      v-bind="attributes"
+                      v-on="events"
+                      />
+              </template>
+          </v-select>
     </label>   
   </div>
   <div class="input-group">
@@ -67,7 +82,7 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Quotation Received Date <span class="text-red-500">*</span></span>
-          <VueDatePicker v-model="form.quotation_received_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+          <VueDatePicker v-model="form.quotation_received_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.date_of_rfq"></VueDatePicker>
       </label>
       <label class="label-group">
         <span class="label-item-title">Vendor Quotation No <span class="text-red-500">*</span></span>
@@ -75,14 +90,29 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Offer Validity <span class="text-red-500">*</span></span>
-          <VueDatePicker v-model="form.quotation_validity" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+          <VueDatePicker v-model="form.quotation_validity" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.quotation_received_date"></VueDatePicker>
       </label>
   </div>
 
   <div class="input-group">
       <label class="label-group">
         <span class="label-item-title">Payment Method <span class="text-red-500">*</span></span>
-         <input type="text" v-model="form.payment_method" required readonly class="form-input " name="scm_department_id" :id="'scm_department_id'" />
+         <!-- <input type="text" v-model="form.payment_method" required readonly class="form-input " name="scm_department_id" :id="'scm_department_id'" /> -->
+         <v-select
+            :options="payment_term_array"
+            placeholder="--Choose an option--"
+            v-model="form.payment_method"
+            label="Product Source Type"
+            class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      :required="!form.payment_method"
+                      v-bind="attributes"
+                      v-on="events"
+                      />
+              </template>
+          </v-select>
       </label>
       <label class="label-group">
         <span class="label-item-title">Currency <span class="text-red-500">*</span></span>
@@ -90,7 +120,7 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Estimated Shipment Date <span class="text-red-500">*</span></span>
-          <VueDatePicker v-model="form.quotation_shipment_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
+          <VueDatePicker v-model="form.quotation_shipment_date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.quotation_received_date"></VueDatePicker>
       </label>
       <label class="label-group">
         <span class="label-item-title">Port Of Loading <span class="text-red-500">*</span></span>
@@ -108,51 +138,110 @@
 
       <label class="label-group">
         <span class="label-item-title">Inventory Type <span class="text-red-500">*</span></span>
-            <select v-model="form.stock_type" class="form-input" @change="changeStockType()">
+            <!-- <select v-model="form.stock_type" class="form-input" @change="changeStockType()">
               <option v-for="stock_type in stock_types" :value="stock_type">{{ stock_type }}</option>
-          </select>
+          </select> -->
+          <v-select
+            :options="stock_type_array"
+            placeholder="--Choose an option--"
+            v-model="form.stock_type"
+            label="Product Source Type"
+            class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input" @update:modelValue="changeStockType">
+            <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      :required="!form.stock_type"
+                      v-bind="attributes"
+                      v-on="events"
+                      />
+              </template>
+          </v-select>
       </label>
-      
       <label class="label-group">
         <span class="label-item-title">Manufacturing Days <span class="text-red-500">*</span></span>
         <input type="number" v-model="form.manufacturing_days" class="form-input" :readonly="form.stock_type == 'Ready Stock'" :class="[form.stock_type == 'Ready Stock' ? 'vms-readonly-input' : '',]"/>
       
       </label>
       <label class="label-group">
+        <span class="label-item-title">Brand</span>
+        <input type="number" v-model="form.brand" class="form-input"/>
+      
+      </label>
+     
+    
+      
+  </div>
+  <div class="input-group">
+    <label class="label-group">
+        <span class="label-item-title">Origin</span>
+        <input type="number" v-model="form.origin" class="form-input"/>
+      
+      </label>
+      <label class="label-group">
           <span class="label-item-title">Mode Of Shipment <span class="text-red-500">*</span></span>
-            <select v-model="form.mode_of_shipment" class="form-input">
+            <!-- <select v-model="form.mode_of_shipment" class="form-input">
               <option value="Air">Air</option>
               <option value="Sea">Sea</option>
               <option value="Road">Road</option>
-            </select>
+            </select> -->
+            <v-select
+            :options="mode_of_shipment_array"
+            placeholder="--Choose an option--"
+            v-model="form.mode_of_shipment"
+            label="Product Source Type"
+            class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      :required="!form.mode_of_shipment"
+                      v-bind="attributes"
+                      v-on="events"
+                      />
+              </template>
+          </v-select>
         </label>
-      
-  </div>
-  <div class="input-group !w-3/4">
       <label class="label-group">
-        <span class="label-item-title">Warranty <span class="text-red-500">*</span></span>
+        <span class="label-item-title">Warranty</span>
         <input type="text" v-model="form.warranty" class="form-input"/>
       
       </label>
       <label class="label-group">
-        <span class="label-item-title">Delivery Time (Days) <span class="text-red-500">*</span></span>
-          <input type="number" v-model="form.delivery_time" required class="form-input " name="scm_department_id" :id="'scm_department_id'" />
+        <span class="label-item-title">Delivery Time (Days)</span>
+          <input type="number" v-model="form.delivery_time" class="form-input " name="scm_department_id" :id="'scm_department_id'" />
       </label>
+  </div>
+  <div class="input-group !w-1/4">
+    
       <label class="label-group">
         <span class="label-item-title">Inco-term <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.delivery_term" required class="form-input" />
+          <!-- <input type="text" v-model="form.delivery_term" required class="form-input" /> -->
+          <v-select
+            :options="inco_term_array_array"
+            placeholder="--Choose an option--"
+            v-model="form.delivery_term"
+            label="Product Source Type"
+            class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      :required="!form.delivery_term"
+                      v-bind="attributes"
+                      v-on="events"
+                      />
+              </template>
+          </v-select>
       </label>
   </div>
 
   <div class="input-group !w-3/4">
       <label class="label-group">
-          <RemarksComponet v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'" isRequired="true"></RemarksComponet>
+          <RemarksComponet v-model="form.terms_and_condition" :maxlength="300" :fieldLabel="'Terms & Conditions'"></RemarksComponet>
       </label>
   </div>
 
   <div class="input-group !w-3/4">
     <label class="label-group">
-            <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'" isRequired="true"></RemarksComponet>
+            <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
          
     </label>
   </div>  
@@ -243,16 +332,16 @@
                       <input type="text" :value="form.scmCsMaterialVendors[indexa][index].quantity" class="form-input vms-readonly-input" readonly/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" class="form-input"/>
+                      <input type="number" step="0.01" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" required class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].offer_amount" class="form-input vms-readonly-input" readonly/>
+                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].offer_amount" required class="form-input vms-readonly-input" readonly/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input" min="1"/>
+                      <input type="number" step="0.01" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" required class="form-input" min=1/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_amount" class="form-input vms-readonly-input" min="1" readonly/>
+                      <input type="number" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_amount" required class="form-input vms-readonly-input" min="1" readonly/>
                     </td>
                   </tr>
                   
@@ -382,11 +471,11 @@
                 </td>
                 <td></td>
                 <td class="text-right">
-                  <input type="text" v-model="form.freight" class="form-input" required/>
+                  <input type="number" v-model="form.freight" class="form-input" required min="0"/>
                 </td>
                 <td></td>
                 <td class="text-right">
-                  <input type="text" :value="form.freight" class="form-input vms-readonly-input" required readonly/>
+                  <input type="number" :value="form.freight" class="form-input vms-readonly-input" required readonly/>
                 </td>
               </tr>
               <tr>
@@ -449,7 +538,11 @@
 
     }); 
 
-    const stock_types = ['Ready Stock', 'Manufacturing'];
+    const stock_type_array = ['Ready Stock', 'Manufacturing'];
+    const sourcing_array = ['Existing', 'New'];
+    const payment_term_array = ["LC","CAD","TT","Others"];
+    const mode_of_shipment_array = ["Air","Sea","Road"];
+    const inco_term_array_array = ["Exwork","FOB","CPT","CFR","DDP","Other"];
 
     const addLine = () => {
       const line = cloneDeep(props.lineObj);  
@@ -481,7 +574,7 @@
     }
 
     const route = useRoute();
-    const CSID = route.params.csId;
+    const CSID = route?.params?.csId;
         
     // watch(() => materialCs.value, (newVal, oldVal) => {
     //   props.form.scmCs = newVal;

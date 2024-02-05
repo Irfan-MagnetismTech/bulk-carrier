@@ -8,7 +8,7 @@ class ScmCsRequest extends FormRequest
 {
 
     //preparefor validation
-    protected function prepareForValidation(): void
+    protected function prepareForValidation()
     {
         $data =  request('data');
         $dataArray = json_decode($data, true);
@@ -31,7 +31,7 @@ class ScmCsRequest extends FormRequest
             'parchase_center' => 'nullable|string',
             'scm_warehouse_id' => 'nullable|exists:scm_warehouses,id|integer',
             'required_days' => 'required|integer',
-            'special_instructions' => 'required|string',
+            'special_instructions' => 'nullable|string|max:300',
             'scmCsMaterials.*.scm_pr_id' => 'required|exists:scm_prs,id|integer',
             'scmCsMaterials.*.scm_material_id' => 'required|exists:scm_materials,id|integer',
             'scmCsMaterials.*.quantity' => 'required|numeric',
@@ -40,7 +40,7 @@ class ScmCsRequest extends FormRequest
 
     /**
      * Get the error messages for the defined validation rules.
-     * 
+     *
      * @return array
      */
     public function messages(): array

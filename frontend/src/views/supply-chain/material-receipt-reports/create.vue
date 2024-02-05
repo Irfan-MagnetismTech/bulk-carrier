@@ -10,7 +10,7 @@ import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 
 const icons = useHeroIcon();
 
-const { getMaterialReceiptReports, materialReceiptReport, storeMaterialReceiptReport,materialObject,getPrAndPoWiseMrrData, errors, isLoading } = useMaterialReceiptReport();
+const { getMaterialReceiptReports, materialReceiptReport, storeMaterialReceiptReport,materialObject,getPrAndPoWiseMrrData, errors, isLoading,poMaterialList } = useMaterialReceiptReport();
 const page = ref('create');
 const { setTitle } = Title();
 
@@ -28,7 +28,7 @@ const props = defineProps({
 });
 
 onMounted(() => {
-    getPrAndPoWiseMrrData(props.pr_id, props.po_id);
+    // getPrAndPoWiseMrrData(props.pr_id, props.po_id);
 }); 
 
 </script>
@@ -40,7 +40,7 @@ onMounted(() => {
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="storeMaterialReceiptReport(materialReceiptReport)">
-          <material-receipt-report-form v-model:form="materialReceiptReport" :errors="errors" :materialObject="materialObject" :page="page"></material-receipt-report-form>
+          <material-receipt-report-form v-model:form="materialReceiptReport" :errors="errors" :materialObject="materialObject" v-model:poMaterialList="poMaterialList" :page="page"></material-receipt-report-form>
             <!-- Submit button -->
             <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
         </form>

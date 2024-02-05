@@ -48,8 +48,6 @@ class ScmSrController extends Controller
     {
         $requestData = $request->except('ref_no', 'sr_composite_key');
 
-        $requestData['ref_no'] = UniqueId::generate(ScmSr::class, 'SR');
-
         try {
             DB::beginTransaction();
 

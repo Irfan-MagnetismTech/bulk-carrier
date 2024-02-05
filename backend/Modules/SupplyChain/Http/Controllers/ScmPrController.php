@@ -43,7 +43,6 @@ class ScmPrController extends Controller
                 ->with(
                     'scmPrLines.scmMaterial',
                     'scmWarehouse',
-                    'scmMrrs',
                     'closedBy',
                     'createdBy',
                     'scmPrLines.closedBy',
@@ -139,7 +138,8 @@ class ScmPrController extends Controller
                 'rob' => $currentStock,
                 'quantity' => $scmPrLine->quantity,
                 'is_closed' => $scmPrLine->is_closed,
-                'closed_by' => (auth()->user()->id == (int)($scmPrLine?->closedBy?->id)) ? 'You' : $scmPrLine?->closedBy?->name,
+                'closed_person' => (auth()->user()->id == (int)($scmPrLine?->closedBy?->id)) ? 'You' : $scmPrLine?->closedBy?->name,
+                'closed_by' => $scmPrLine?->closed_by,
                 'closed_at' => $scmPrLine->closed_at,
                 'closing_remarks' => $scmPrLine->closing_remarks,
                 'required_date' => $scmPrLine->required_date,
@@ -163,10 +163,12 @@ class ScmPrController extends Controller
             'approved_date' => $purchaseRequisition->approved_date,
             'remarks' => $purchaseRequisition->remarks,
             'is_closed' => $purchaseRequisition->is_closed,
-            'closed_by' => (auth()->user()->id == (int)($purchaseRequisition?->closedBy?->id)) ? 'You' : $purchaseRequisition?->closedBy?->name,
+            'closed_person' => (auth()->user()->id == (int)($purchaseRequisition?->closedBy?->id)) ? 'You' : $purchaseRequisition?->closedBy?->name,
+            'closed_by' => $purchaseRequisition?->closed_by,
             'closed_at' => $purchaseRequisition->closed_at,
             'closing_remarks' => $purchaseRequisition->closing_remarks,
             'status' => $purchaseRequisition->status,
+            'department' => $purchaseRequisition->department,
             'created_by' => $purchaseRequisition->createdBy->name,
             'scmPrLines' => $prLines,
         ];
@@ -189,6 +191,8 @@ class ScmPrController extends Controller
         $requestData = $request->except('ref_no', 'pr_composite_key', 'created_by');
 
         $linesData = CompositeKey::generateArray($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
+
+        return response()->json($linesData, 422);
 
         try {
             DB::beginTransaction();
@@ -413,11 +417,17 @@ class ScmPrController extends Controller
     {
         if ($request->isNotFilled('scm_cs_id')) {
             $lineData = ScmPrLine::query()
-                ->with('scmMaterial')
+                ->with('scmMaterial', 'scmPoItems.scmCsMaterial', 'scmCsMaterials')
+
                 ->where('scm_pr_id', $request->pr_id)
                 ->whereNot('status', 'Closed')
                 ->whereHas('scmPr', function ($query) {
                     $query->whereIn('status', ['Pending', 'WIP']);
+                })
+                ->whereNot(function ($query) {
+                    $query->whereHas('scmPoItems', function ($qr) {
+                        $qr->whereDoesntHave('scmCsMaterial');
+                    });
                 })
                 ->get()
                 ->map(function ($item) {
@@ -438,6 +448,11 @@ class ScmPrController extends Controller
                     $query->whereIn('status', ['Pending', 'WIP']);
                 })
                 ->get()
+                ->whereNot(function ($query) {
+                    $query->whereHas('scmPoItems', function ($qr) {
+                        $qr->whereDoesntHave('scmCsMaterial');
+                    });
+                })
                 ->map(function ($item) use ($request) {
                     $data = $item->scmMaterial;
                     $material = ScmCsMaterial::query()->where(['scm_material_id' => $item->scm_material_id, 'scm_pr_id' => $request->pr_id, 'scm_cs_id' => $request->scm_cs_id])->first();

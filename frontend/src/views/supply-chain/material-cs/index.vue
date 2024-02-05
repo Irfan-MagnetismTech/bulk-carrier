@@ -103,8 +103,6 @@ let filterOptions = ref({
       "order_by": null,
       "date_from": null,
       "label": "Selected Vendors",
-      "filter_type": "input",
-      "no_short" : true
     },
     {
       "relation_name": "scmCsMaterials.scmMaterial",
@@ -274,9 +272,13 @@ function confirmDelete(id) {
               </td>
               <td>
                 <template v-if="materialCsdata.selectedVendors.length">
-                  <ul v-for="(vendor,index) in materialCsdata?.selectedVendors" :key="index">
-                    <li>{{ vendor.scmVendor.name }}</li>
-                  </ul>
+                  <table class="w-full">
+                    <tr v-for="(vendor,index) in materialCsdata?.selectedVendors" :key="index">
+                      <td>
+                        {{ vendor.scmVendor.name }}
+                      </td>
+                    </tr>
+                  </table>
                 </template>
                 <template v-else>
                   <span class="text-red-500">No Vendor Selected</span>
