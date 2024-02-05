@@ -6,6 +6,8 @@ import useExpenseHead from "../../composables/operations/useExpenseHead";
 import useVessel from "../../composables/operations/useVessel";
 import BusinessUnitInput from "../input/BusinessUnitInput.vue";
 import ErrorComponent from '../../components/utils/ErrorComponent.vue';
+import LoaderComponent from "../../components/utils/LoaderComponent.vue";
+
 
 const { expenseHeads, getAllExpenseHeads, showHead, isLoading } = useExpenseHead();
 const { vessel, vessels, getVesselList, showVessel, isVesselLoading } = useVessel();
@@ -95,6 +97,8 @@ function checkSubhead(headIndex, subHeadIndex) {
 
 </script>
 <template>
+  <LoaderComponent :isLoading = isVesselLoading></LoaderComponent>
+  
   <!-- Basic information -->
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
