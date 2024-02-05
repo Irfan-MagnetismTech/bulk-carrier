@@ -56,14 +56,15 @@ watch(() => props.form.opsVoyage, (newValue, oldValue) => {
 
 watch(() => props.form.opsVessel, (newValue, oldValue) => {
 
-    props.form.opsVoyageBudgetEntries = []
-    vesselExpenseHeads.value = []
+    
     props.form.ops_vessel_id = null;
     // props.form.ops_vessel_id = newValue?.id;
     if(editInitiated.value == 1 || props.formType == 'create') {
       voyages.value = []
       props.form.opsVoyage = null;
       props.form.ops_voyage_id = null
+      props.form.opsVoyageBudgetEntries = []
+      vesselExpenseHeads.value = []
     }
     
 
