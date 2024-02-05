@@ -3,9 +3,12 @@
 namespace Modules\SupplyChain\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\SupplyChain\Entities\ScmPo;
+use Modules\SupplyChain\Entities\ScmPr;
+use Modules\SupplyChain\Entities\ScmPoItem;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmPoLine extends Model
 {
