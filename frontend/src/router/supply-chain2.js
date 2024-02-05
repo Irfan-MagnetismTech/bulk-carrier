@@ -170,6 +170,46 @@ export default [
 
     /* Work Order end */
 
+    /* Work Receipt Report start */
+
+    {
+        path: `/${BASE}/work-receipt-reports`,
+        name: `${BASE}.work-receipt-reports.index`,
+        component: () => import(`../views/${PATH_BASE}/work-receipt-reports/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'work-receipt-reports-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    // {
+    //     path: `/${BASE}/material-receipt-reports/create`,
+    //     name: `${BASE}.material-receipt-reports.create`,
+    //     component: () => import(`../views/${PATH_BASE}/material-receipt-reports/create.vue`),
+    //     meta: { requiresAuth: true, role: ROLE, permission: 'material-receipt-reports-create' },
+    //     props: (route) => ({
+    //         pr_id: route.query.pr_id,
+    //         po_id: route.query.po_id || null // Set to null if po_id is not provided
+    //     })
+    // },
+    {
+        path: `/${BASE}/work-receipt-reports/create`,
+        name: `${BASE}.work-receipt-reports.create`,
+        component: () => import(`../views/${PATH_BASE}/work-receipt-reports/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'work-receipt-reports-create' },
+    },
+    {
+        path: `/${BASE}/work-receipt-reports/:workReceiptReportId/edit`,
+        name: `${BASE}.work-receipt-reports.edit`,
+        component: () => import(`../views/${PATH_BASE}/work-receipt-reports/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'work-receipt-reports-edit' },
+    },
+    {
+        path: `/${BASE}/work-receipt-reports/:workReceiptReportId`,
+        name: `${BASE}.work-receipt-reports.show`,
+        component: () => import(`../views/${PATH_BASE}/work-receipt-reports/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'work-receipt-reports-show'  },
+    },
+
+    /* Work Receipt Report end */
+
 
     
 ];
