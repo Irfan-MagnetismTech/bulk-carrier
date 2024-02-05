@@ -13,18 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('scm_mrr_line_items', function (Blueprint $table) {
+        Schema::create('scm_wrr_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('scm_mrr_line_id')->constrained('scm_mrr_lines');
-            $table->unsignedBigInteger('scm_material_id');
-            $table->string('unit')->nullable();
-            $table->string('brand')->nullable();
-            $table->string('model')->nullable();
-            $table->bigInteger('tolerence_quantity')->nullable();
+            $table->foreignId('scm_wrr_id')->constrained('scm_wrrs');
+            $table->unsignedBigInteger('scm_wrr_line_id')->nullable();
+            $table->unsignedBigInteger('scm_service_id');
             $table->bigInteger('quantity')->nullable();
             $table->bigInteger('rate')->nullable();
-            $table->string('po_composite_key')->nullable();
-            $table->string('pr_composite_key')->nullable();
+            $table->string('wo_composite_key')->nullable();
+            $table->string('wr_composite_key')->nullable();
             $table->decimal('net_rate', 10, 2)->nullable();
             $table->timestamps();
         });
@@ -37,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scm_mrr_items');
+        Schema::dropIfExists('scm_wrr_items');
     }
 };
