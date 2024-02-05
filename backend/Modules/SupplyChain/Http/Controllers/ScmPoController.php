@@ -99,7 +99,7 @@ class ScmPoController extends Controller
                         'model' => $item['model'],
                         'required_date' => $item['required_date'],
                         'quantity' => $item['quantity'],
-                        'tolarence_level' => $item['tolarence_level'],
+                        'tolerence_level' => $item['tolerence_level'],
                         'rate' => $item['rate'],
                         'total_price' => $item['total_price'],
                         'net_rate' => $item['net_rate'],
@@ -232,7 +232,7 @@ class ScmPoController extends Controller
             'rate' => $value['rate'],
             'total_price' => $value['total_price'],
             'cs_composite_key' => $value['cs_composite_key'] ?? null,
-            'tolarence_level' => $value['tolarence_level'],
+            'tolerence_level' => $value['tolerence_level'],
             'net_rate' => $value['total_price'] / $request['sub_total'] * $request['net_amount'] / $value['quantity'],
             'po_composite_key' => CompositeKey::generate($index, $purchaseOrder->id, 'po', $value['scm_material_id'], $scmPoLine->id),
             'pr_composite_key' => $value['pr_composite_key'],
@@ -246,6 +246,7 @@ class ScmPoController extends Controller
      */
     public function destroy(ScmPo $purchaseOrder)
     {
+        $purchaseOrder->load('scmPoLines.scmPoItems');
         try {
             DB::beginTransaction();
 
@@ -391,13 +392,13 @@ class ScmPoController extends Controller
                     $data['pr_composite_key'] = $item->pr_composite_key;
                     $data['pr_quantity'] = $item->quantity;
                     if (request()->po_id) {
-                        $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
+                        $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()?->quantity ?? 0;
                     } else {
                         $data['po_quantity'] = 0;
                     }
                     $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
                     $data['quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
-                    $data['tolarence_level'] = 0;
+                    $data['tolerence_level'] = 0;
                     return $data;
                 })
                 ->filter(function ($item) {
@@ -427,7 +428,7 @@ class ScmPoController extends Controller
                     }
                     $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
                     $data['quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
-                    $data['tolarence_level'] = 0;
+                    $data['tolerence_level'] = 0;
                     return $data;
                 })
                 ->filter(function ($item) {
@@ -497,14 +498,14 @@ class ScmPoController extends Controller
                     $data['pr_quantity'] = $item->quantity;
 
                     if (request()->po_id) {
-                        $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
+                        $data['po_quantity'] = $item->scmPoItems->where('scm_po_id', request()->po_id)->where('pr_composite_key', $item->pr_composite_key)->first()?->quantity ?? 0;
                     } else {
                         $data['po_quantity'] = 0;
                     }
                     $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
                     $data['po_quantity'] = $data['po_quantity'] ?? 0;
                     $data['quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
-                    $data['tolarence_level'] = 0;
+                    $data['tolerence_level'] = 0;
                     return $data;
                 })
                 ->filter(function ($item) {
@@ -534,7 +535,7 @@ class ScmPoController extends Controller
                     }
                     $data['max_quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
                     $data['quantity'] = $item->quantity - $item->scmPoItems->sum('quantity') + $data['po_quantity'];
-                    $data['tolarence_level'] = 0;
+                    $data['tolerence_level'] = 0;
                     return $data;
                 })
                 ->filter(function ($item) {
@@ -636,6 +637,40 @@ class ScmPoController extends Controller
             }
 
             return response()->success('Data updated sucessfully!', [$poLines, $sumIsClosed], 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getPoListForMrr(){
+        try {
+            $scmPo = ScmPo::query()
+                ->with('scmPoLines.scmPoItems.scmMaterial', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPoItems.scmMaterial')
+                ->whereNot('status', 'Closed')
+                ->where([
+                    'business_unit' => request()->business_unit,
+                    'purchase_center' => request()->purchase_center,
+                    'scm_warehouse_id' => request()->scm_warehouse_id,
+                ])
+                ->get();
+
+            return response()->success('Data list', $scmPo, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getPoWisePrList(){
+        try {
+            $scmPo = ScmPr::query()
+                ->with('scmPoLines')
+                ->has('scmPoLines')
+                ->whereHas('scmPoLines', function ($query) {
+                    $query->where('scm_po_id', request()->po_id);
+                })
+                ->get();
+
+            return response()->success('Data list', $scmPo, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }

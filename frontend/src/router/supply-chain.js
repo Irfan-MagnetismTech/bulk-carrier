@@ -330,22 +330,22 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: 'material-receipt-reports-index' },
         props: (route) => ({ page: parseInt(route.query.page) || 1 }),
     },
-    {
-        path: `/${BASE}/material-receipt-reports/create`,
-        name: `${BASE}.material-receipt-reports.create`,
-        component: () => import(`../views/${PATH_BASE}/material-receipt-reports/create.vue`),
-        meta: { requiresAuth: true, role: ROLE, permission: 'material-receipt-reports-create' },
-        props: (route) => ({
-            pr_id: route.query.pr_id,
-            po_id: route.query.po_id || null // Set to null if po_id is not provided
-        })
-    },
     // {
     //     path: `/${BASE}/material-receipt-reports/create`,
     //     name: `${BASE}.material-receipt-reports.create`,
     //     component: () => import(`../views/${PATH_BASE}/material-receipt-reports/create.vue`),
     //     meta: { requiresAuth: true, role: ROLE, permission: 'material-receipt-reports-create' },
+    //     props: (route) => ({
+    //         pr_id: route.query.pr_id,
+    //         po_id: route.query.po_id || null // Set to null if po_id is not provided
+    //     })
     // },
+    {
+        path: `/${BASE}/material-receipt-reports/create`,
+        name: `${BASE}.material-receipt-reports.create`,
+        component: () => import(`../views/${PATH_BASE}/material-receipt-reports/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-receipt-reports-create' },
+    },
     {
         path: `/${BASE}/material-receipt-reports/:materialReceiptReportId/edit`,
         name: `${BASE}.material-receipt-reports.edit`,

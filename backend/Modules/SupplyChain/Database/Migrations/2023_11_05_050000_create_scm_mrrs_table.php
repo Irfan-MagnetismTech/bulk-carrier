@@ -19,10 +19,10 @@ return new class extends Migration
             $table->string('type')->comment('cash,local,foreign')->nullable();
             $table->date('date')->nullable();
             $table->bigInteger('scm_po_id')->nullable();
-            $table->bigInteger('scm_pr_id')->nullable();
+            // $table->bigInteger('scm_pr_id')->nullable();
             $table->bigInteger('scm_warehouse_id')->nullable();
             $table->bigInteger('scm_lc_record_id')->nullable();
-            $table->bigInteger('scm_cs_id')->nullable();
+            // $table->bigInteger('scm_cs_id')->nullable();
             $table->bigInteger('acc_cost_center_id')->nullable();
             $table->text('remarks')->nullable();
             $table->string('challan_no')->nullable();
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('business_unit')->comment('TSLL,PSML')->nullable();
             $table->bigInteger('created_by')->comment('user_id')->nullable();
             $table->tinyInteger('is_completed')->comment('0, 1')->nullable();
-            $table->bigInteger('acc_cash_requisition_id')->nullable();
+            // $table->bigInteger('acc_cash_requisition_id')->nullable();
             $table->string('purchase_center')->nullable();
             $table->timestamps();
         });

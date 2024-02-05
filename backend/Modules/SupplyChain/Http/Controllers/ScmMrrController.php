@@ -12,8 +12,10 @@ use Modules\SupplyChain\Entities\ScmMrr;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmPoLine;
 use Modules\SupplyChain\Entities\ScmPrLine;
+use Modules\SupplyChain\Entities\ScmMrrLine;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
+use Modules\SupplyChain\Entities\ScmMrrLineItem;
 use Modules\SupplyChain\Services\StockLedgerData;
 use Modules\SupplyChain\Http\Requests\ScmMrrRequest;
 
@@ -35,7 +37,7 @@ class ScmMrrController extends Controller
     {
         try {
             $mrr = ScmMrr::query()
-                ->with('scmMrrLines', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy', 'accCashRequisition')
+                ->with('scmMrrLines', 'scmPo', 'scmWarehouse', 'scmLcRecord', 'createdBy')
                 ->globalSearch(request()->all());
 
             return response()->success('Data list', $mrr, 200);
@@ -49,7 +51,7 @@ class ScmMrrController extends Controller
      * @param ScmMrrRequest $request
      * @return JsonResponse
      */
-    public function store(ScmMrrRequest $request): JsonResponse
+    public function store(ScmMrrRequest $request)
     {
         $requestData = $request->except('ref_no');
 
@@ -57,8 +59,8 @@ class ScmMrrController extends Controller
             DB::beginTransaction();
 
             $scmMrr = ScmMrr::create($requestData);
-            $scmMrr->scmMrrLines()->createUpdateOrDelete($request->scmMrrLines);
-            StockLedgerData::insert($scmMrr, $request->scmMrrLines);
+            $this->createScmMrrLinesAndItems($request, $scmMrr);
+
 
             DB::commit();
 
@@ -70,6 +72,33 @@ class ScmMrrController extends Controller
         }
     }
 
+    private function createScmMrrLinesAndItems($request, $scmMrr)
+    {
+        foreach ($request->scmMrrLines as $key => $values) {
+            $scmMrrLine = $scmMrr->scmMrrLines()->create([
+                'scm_pr_id' => $values['scm_pr_id'],
+            ]);
+            foreach ($values['scmMrrLineItems'] as $index => $value) {
+                ScmMrrLineItem::create([
+                    'scm_material_id' => $values['scmMrrLineItems'][$index]['scm_material_id'],
+                    'scm_mrr_line_id' => $scmMrrLine->id,
+                    'scm_mrr_id' => $scmMrr->id,
+                    'unit' => $values['scmMrrLineItems'][$index]['unit'],
+                    'brand' => $values['scmMrrLineItems'][$index]['brand'],
+                    'model' => $values['scmMrrLineItems'][$index]['model'],
+                    'tolerence_quantity' => $values['scmMrrLineItems'][$index]['tolerence_quantity'],
+                    'quantity' => $values['scmMrrLineItems'][$index]['quantity'],
+                    'rate' => $values['scmMrrLineItems'][$index]['rate'],
+                    'po_composite_key' => $values['scmMrrLineItems'][$index]['po_composite_key'],
+                    'pr_composite_key' => $values['scmMrrLineItems'][$index]['pr_composite_key'],
+                    'net_rate' => $values['scmMrrLineItems'][$index]['net_rate'],
+                ]);
+
+            }
+            StockLedgerData::insert($scmMrr, $values['scmMrrLineItems']);
+        }
+    }
+
     /**
      * Show the specified resource.
      * @param $id
@@ -77,33 +106,56 @@ class ScmMrrController extends Controller
      */
     public function show($id): JsonResponse
     {
-        $scmMrr = ScmMrr::query()
-            ->with('scmMrrLines.scmMaterial', 'scmMrrLines.scmPoLine', 'scmMrrLines.scmPrLine', 'scmPo', 'scmPr', 'scmWarehouse', 'scmLcRecord', 'createdBy', 'accCashRequisition')
-            ->find($id);
-
-        $scmMrrLines = $scmMrr->scmMrrLines->map(function ($scmMrrLine) use ($scmMrr) {
-            $lines = [
-                'scm_material_id' => $scmMrrLine->scm_material_id,
-                'scmMaterial' => $scmMrrLine->scmMaterial,
-                'unit' => $scmMrrLine->unit,
-                'brand' => $scmMrrLine->brand,
-                'model' => $scmMrrLine->model,
-                'quantity' => $scmMrrLine->quantity,
-                'rate' => $scmMrrLine->rate,
-                'net_rate' => $scmMrrLine->net_rate,
-                'po_qty' => $scmMrrLine?->scmPoLine?->quantity ?? 0,
-                'pr_qty' => $scmMrrLine?->scmPrLine?->quantity ?? 0,
-                'current_stock' => CurrentStock::count($scmMrrLine->scm_material_id, $scmMrr->scm_warehouse_id),
-                'po_composite_key' => $scmMrrLine->po_composite_key ?? null,
-                'pr_composite_key' => $scmMrrLine->pr_composite_key ?? null,
-                'max_quantity' => ($scmMrrLine->po_composite_key != null && $scmMrrLine->po_composite_key != '') ? ($scmMrrLine->scmPoLine->quantity - $scmMrrLine->scmPoLine->scmMrrLines->sum('quantity') + $scmMrrLine->quantity) : ($scmMrrLine->scmPrLine->quantity - $scmMrrLine->scmPrLine->scmMrrLines->sum('quantity') + $scmMrrLine->quantity),
-                // 'max_quantity' => $scmMrrLine->scmPoLine->scmMrrLines->sum('quantity'),
-            ];
-
-            return $lines;
+        $scmMrr = ScmMrr::query()->find($id);
+        $scmMrr->load('scmMrrLines.scmMrrLineItems.scmMaterial', "scmMrrLines.scmPr", 'scmWarehouse', 'scmMrrLineItems', 'createdBy', 'scmMrrLines.scmMrrLineItems.scmPoItem.scmMaterial');
+        $scmMrrLines = $scmMrr->scmMrrLines->map(function ($items) {
+            $datas = $items;
+            $adas = $items->scmMrrLineItems->map(function ($item) {
+                    $max_quantity = $item?->scmPoItem?->quantity ?? 0 -  $item?->scmPoItem?->scmMrrLineItems->sum('quantity')  ?? 0 + $item->quantity;
+                        return [
+                            'id' => $item['id'],
+                            'scm_material_id' => $item['scm_material_id'],
+                            'scmMaterial' => $item['scmMaterial'],
+                            'unit' => $item['unit'],
+                            'brand' => $item['brand'],
+                            'model' => $item['model'],
+                            'tolerence_quantity' => $item['tolerence_quantity'],
+                            'quantity' => $item['quantity'],
+                            'tolerence_level' => $item->scmPoItem?->tolerence_level ?? 0,
+                            'rate' => $item['rate'],
+                            'total_price' => $item['rate'] * $item['quantity'],
+                            'net_rate' => $item['net_rate'],
+                            'po_composite_key' => $item['po_composite_key'],
+                            'pr_composite_key' => $item['pr_composite_key'],
+                            'mrr_composite_key' => $item['mrr_composite_key'],
+                            'max_quantity' => $max_quantity,
+                            'pr_qty' => $item->scmPrLine->quantity,
+                            'po_qty' => $item?->scmPoItem?->quantity ?? 0,
+                        ];
+            });
+            data_forget($items, 'scmMrrLineItems');
+            $datas['scmMrrLineItems'] = $adas;
+            return $datas;
         });
+
         data_forget($scmMrr, 'scmMrrLines');
-        $scmMrr->scmMrrLines = $scmMrrLines;
+        $scmMrr['scmMrrLines'] = $scmMrrLines;
+
+
+        // return response()->json($scmPoLines, 422);
+
+        // data_forget($purchaseOrder, 'scmPoLines');
+
+        // $purchaseOrder->scmPoLines = $scmPoLines;
+
+        // data forget scmPolines.scmPoItems and data set
+        // $purchaseOrder->scmPoLines->map(function ($item) {
+        //     $item->scmPoItems->map(function ($item) {
+        //
+        //         return $item;
+        //     });
+        //     return $item;
+        // });
 
         try {
             return response()->success('data', $scmMrr, 200);
@@ -161,7 +213,7 @@ class ScmMrrController extends Controller
     {
         if ($request->has('searchParam')) {
             $materialReceiptReport = ScmMrr::query()
-                ->with('scmMrrLines.scmMaterial.account')
+                ->with('scmMrrLineItems.scmMaterial')
                 ->where(function ($query) use ($request) {
                     $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
                         ->where('business_unit', $request->business_unit)
@@ -172,7 +224,7 @@ class ScmMrrController extends Controller
                 ->get();
         } else {
             $materialReceiptReport = ScmMrr::query()
-                ->with('scmMrrLines.scmMaterial')
+                ->with('scmMrrLineItems.scmMaterial')
                 ->where(function ($query) use ($request) {
                     $query->where('business_unit', $request->business_unit)
                         ->where('acc_cost_center_id', $request->cost_center_id);
@@ -183,7 +235,7 @@ class ScmMrrController extends Controller
         }
 
         $materialReceiptReport = $materialReceiptReport->map(function ($item) {
-            $item->scmMaterials = $item->scmMrrLines->map(function ($item1) {
+            $item->scmMaterials = $item->scmMrrLineItems->map(function ($item1) {
                 $data = $item1->scmMaterial;
                 $data['purchase_price'] = $item1->rate;
                 return $data;
@@ -360,5 +412,89 @@ class ScmMrrController extends Controller
                 });
             return response()->success('data list', $prMaterials, 200);
         }
+    }
+
+    public function getMrrLineData(): JsonResponse
+    {
+        if (request()->scm_po_id && request()->scm_pr_id) {
+            $scmPo = ScmPoLine::query()
+                ->with('scmPo', 'scmPoItems.scmMaterial', 'scmPr', 'scmPoItems.scmMrrLineItems', 'scmPoItems.scmPrLine')
+                ->where('scm_po_id', request()->scm_po_id)
+                ->where('scm_pr_id', request()->scm_pr_id)
+                ->first();
+            $data = $scmPo->scmPoItems->map(function ($item) {
+                if (request()->scm_mrr_id) {
+                    $mrrQuantity = $item->scmMrrLineItems->where('scm_mrr_id', request()->scm_mrr_id)->where('po_composite_key', $item->po_composite_key)->first->quantity;
+                } else {
+                    $mrrQuantity = 0;
+                }
+                $totalMrrQuantity = $item->scmMrrLineItems->sum('quantity');
+                $tolerence_quantity = floor($item->quantity * ($item?->tolerence_level ?? 0) / 100);
+
+                $remainingQuantity = $item->quantity - $totalMrrQuantity + $mrrQuantity + $tolerence_quantity;
+                return [
+                    'scmMaterial' => $item->scmMaterial,
+                    'scm_material_id' => $item->scm_material_id,
+                    'unit' => $item->unit,
+                    'brand' => $item->brand,
+                    'model' => $item->model,
+                    'quantity' => $remainingQuantity,
+                    'rate' => $item->rate,
+                    'net_rate' => $item->net_rate,
+                    'po_qty' => $item->quantity,
+                    'pr_qty' => $item->scmPrLine->quantity,
+                    'po_composite_key' => $item->po_composite_key,
+                    'pr_composite_key' => $item->pr_composite_key,
+                    'mrr_quantity' => $remainingQuantity,
+                    'remaining_quantity' => $remainingQuantity,
+                    'max_quantity' => $remainingQuantity,
+                    'tolerence_level' => $item->tolerence_level,
+                    'tolerence_quantity' => $tolerence_quantity,
+                ];
+            });
+        } else {
+            $data = [];
+        }
+        return response()->success('data', $data, 200);
+    }
+
+    public function getPoMaterialList(): JsonResponse
+    {
+        $scmPo = ScmPoLine::query()
+            ->with('scmPo', 'scmPoItems.scmMaterial', 'scmPr', 'scmPoItems.scmMrrLineItems', 'scmPoItems.scmPrLine')
+            ->where('scm_po_id', request()->scm_po_id)
+            ->where('scm_pr_id', request()->scm_pr_id)
+            ->first();
+
+        $data = $scmPo->scmPoItems->map(function ($item) {
+            if (request()->scm_mrr_id) {
+                $mrrQuantity = $item->scmMrrLineItems->where('scm_mrr_id', request()->scm_mrr_id)->where('po_composite_key', $item->po_composite_key)->first->quantity;
+            } else {
+                $mrrQuantity = 0;
+            }
+            $totalMrrQuantity = $item->scmMrrLineItems->sum('quantity');
+            $tolerence_quantity = floor($item->quantity * ($item?->tolerence_level ?? 0) / 100);
+
+            $remainingQuantity = $item->quantity - $totalMrrQuantity + $mrrQuantity + $tolerence_quantity;
+            $data = $item->scmMaterial;
+            $data['brand'] = $item->brand;
+            $data['model'] = $item->model;
+            $data['unit'] = $item->unit;
+            $data['quantity'] = $remainingQuantity;
+            $data['rate'] = $item->rate;
+            $data['net_rate'] = $item->net_rate;
+            $data['po_qty'] = $item->quantity;
+            $data['pr_qty'] = $item->scmPrLine->quantity;
+            $data['po_composite_key'] = $item->po_composite_key;
+            $data['pr_composite_key'] = $item->pr_composite_key;
+            $data['mrr_quantity'] = $remainingQuantity;
+            $data['remaining_quantity'] = $remainingQuantity;
+            $data['max_quantity'] = $remainingQuantity;
+            $data['tolerence_level'] = $item->tolerence_level;
+            $data['tolerence_quantity'] = $tolerence_quantity;
+            return $data;
+        });
+
+        return response()->success('data', $data, 200);
     }
 }

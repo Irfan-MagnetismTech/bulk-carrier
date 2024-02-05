@@ -29,4 +29,5 @@ class ScmPoLine extends Model
     {
         return $this->hasMany(ScmPoItem::class);
     }
+
 }
