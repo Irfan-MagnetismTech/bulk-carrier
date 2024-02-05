@@ -40,13 +40,8 @@ class ScmMrrLineItem extends Model
         return $this->belongsTo(ScmPrLine::class, 'pr_composite_key', 'pr_composite_key');
     }
 
-    public function scmPoLine(): BelongsTo
-    {
-        return $this->belongsTo(ScmPoLine::class, 'po_composite_key', 'po_composite_key');
-    }
-
     public function scmPoItem(): BelongsTo
     {
-        return $this->belongsTo(ScmPoItem::class);
+        return $this->belongsTo(ScmPoItem::class, 'po_composite_key', 'po_composite_key');
     }
 }

@@ -35,6 +35,7 @@
       poMaterialList: { type: [Object, Array], required: false },
     });
 
+    const editinitaiated = ref(false); 
     
     function addMaterial(index) {
       const clonedObj = cloneDeep(props.materialObject);
@@ -241,64 +242,63 @@
       }
     });
 
-  watchEffect(() => {
-    fetchWarehouse('');
-  });
-
-  if(props.formType == 'edit'){
-        const editDatas = watch(()=> props.form.scmMrrLines, (newVal, oldVal) => {
-        getPoWisePrList(props.form?.scmPo?.id);
-        props.poMaterialList.splice(0,props.poMaterialList.length);
-      //   if(props.form.scmMrrLines.length > 0){
-      //   props.form.scmMrrLines.forEach((line, index) => {
-      //     props.poMaterialList.push([]);
-      //     props.poMaterialList[index] = [];
-      //     if (line.scmPr) {
-      //       getPoMaterialList(props.form.scmPo.id, line.id).then((res) => {
-      //         props.poMaterialList[index] = res;
-      //       });        
-      //      }
-      //   });
-      // }
-      console.log(props.form.scmMrrLines);
-        editDatas();
+      watchEffect(() => {
+        fetchWarehouse('');
       });
 
-      }
+      if(props.formType == 'edit'){
+            const editDatas = watch(()=> props.form.scmMrrLines, (newVal, oldVal) => {
+            getPoWisePrList(props.form?.scmPo?.id);
+            props.poMaterialList.splice(0,props.poMaterialList.length);
+            if(props.form.scmMrrLines.length > 0){
+            props.form.scmMrrLines.forEach((line, index) => {
+              props.poMaterialList.push([]);
+              props.poMaterialList[index] = [];
+              if (line.scmPr) {
+                getPoMaterialList(props.form.scmPo.id,line.scmPr.id,line.id).then((res) => {
+                  props.poMaterialList[index] = res;
+                });        
+                }
+            });
+          }
+          console.log(props.form.scmMrrLines);
+            editDatas();
+          });
+
+          }
 });
 
 
-  watch(() => props.form.scmWarehouse, (value) => {
-          props.form.scm_warehouse_id = value?.id ?? null;
-          props.form.acc_cost_center_id = value?.cost_center_id;
-    });
-     
   function changePo(){
   props.form.scmMrrLines = [];
   // props.materialList.splice(0,props.materialList.length)
   getPoWisePrList(props.form.scmPo.id);
 }   
 watch(() => prlist.value, (newVal, oldVal) => {
-  console.log(newVal);
-  if(newVal.length > 0){
-    props.form.scmMrrLines = [];
-    // props.materialList.splice(0,props.materialList.length);
-    newVal.forEach((line, index) => {
-      props.form.scmMrrLines.push({
-        scmPr: line,
-        scm_pr_id: line.id,
-        scmMrrLineItems: [],
-      });
-      props.poMaterialList.push([]);
-      getMrrLineData(props.form.scmPo.id, line.id).then((res) => {
-        props.form.scmMrrLines[index].scmMrrLineItems = res;
-        console.log(res);
-      });
-      getPoMaterialList(props.form.scmPo.id, line.id).then((res) => {
-        props.poMaterialList[index] = res;
-      });
-    });
+  if (props.formType === 'create') {
+    editinitaiated.value = true;
   }
+  if (editinitaiated.value) {
+      if(newVal.length > 0){
+        props.form.scmMrrLines = [];
+        // props.materialList.splice(0,props.materialList.length);
+        newVal.forEach((line, index) => {
+          props.form.scmMrrLines.push({
+            scmPr: line,
+            scm_pr_id: line.id,
+            scmMrrLineItems: [],
+          });
+          props.poMaterialList.push([]);
+          getMrrLineData(props.form.scmPo.id, line.id).then((res) => {
+            props.form.scmMrrLines[index].scmMrrLineItems = res;
+          });
+          getPoMaterialList(props.form.scmPo.id, line.id).then((res) => {
+            props.poMaterialList[index] = res;
+          });
+        });
+      }
+    }
+    editinitaiated.value = true;
 });
 </script>
 <template>
@@ -379,7 +379,7 @@ watch(() => prlist.value, (newVal, oldVal) => {
   </div>
 
 
-  <div class="mt-3 md:mt-8" v-if="form.scmMrrLines.length">
+  <div class="mt-3 md:mt-8" v-if="form?.scmMrrLines.length">
       <h4 class="text-md font-semibold uppercase mb-2 text-center border-2 rounded-md border-gray-400 py-2 mb-0">Material Receive Report Information</h4>
       
       <div v-for="(scmPoLine, index) in form.scmMrrLines" :key="index"  class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
@@ -546,11 +546,6 @@ watch(() => prlist.value, (newVal, oldVal) => {
         </div>
       </div>
     </div>
-    <div class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
-
-
-
-</div>
   <!-- <div id="customDataTableMat" ref="customDataTableirf" class="!max-w-screen" :style="{ minHeight: dynamicMinHeight + 'px!important' }" >
     <div class="table-responsive">
       <fieldset class="form-fieldset">
