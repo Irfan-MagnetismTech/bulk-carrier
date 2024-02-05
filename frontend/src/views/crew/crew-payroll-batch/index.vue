@@ -27,7 +27,7 @@ const props = defineProps({
 const { payrollBatches, getPayrollBatches, deletePayrollBatch, isLoading, isTableLoading } = usePayrollBatch();
 const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
-setTitle('Payroll Batch Lists');
+setTitle('Salary');
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 let filterOptions = ref( {
@@ -146,7 +146,7 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3">
-    <h2 class="text-2xl font-semibold text-gray-700">List of Payroll Batch</h2>
+    <h2 class="text-2xl font-semibold text-gray-700">Salary List</h2>
     <default-button :title="'Create Payroll Batch'" :to="{ name: 'crw.crewPayrollBatches.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div id="customDataTable">
@@ -160,7 +160,7 @@ onMounted(() => {
             <td>{{ payrollBatchData?.crwAttendance?.month_year_name }}</td>
             <td>{{ payrollBatchData?.total_crew }}</td>
             <td>{{ payrollBatchData?.working_days }}</td>
-            <td>{{ payrollBatchData?.net_payment }}</td>
+            <td class="!text-right">{{ payrollBatchData?.net_payment }}</td>
             <td>
               <span :class="payrollBatchData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ payrollBatchData?.business_unit }}</span>
             </td>

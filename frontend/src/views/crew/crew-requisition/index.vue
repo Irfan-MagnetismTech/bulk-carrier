@@ -13,7 +13,7 @@ const icons = useHeroIcon();
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
-
+import { formatDate } from "../../../utils/helper.js";
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 const props = defineProps({
@@ -216,7 +216,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
           <tr v-for="(requiredCrew,index) in crewRequisitions?.data" :key="index">
             <td>{{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td class="text-left">{{ requiredCrew?.opsVessel?.name }}</td>
-            <td class="text-left">{{ requiredCrew?.applied_date }}</td>
+            <td class="text-left">{{ formatDate(requiredCrew?.applied_date) }}</td>
             <td>{{ requiredCrew?.total_required_manpower }}</td>
             <td>
               <span :class="requiredCrew?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ requiredCrew?.business_unit }}</span>

@@ -7,7 +7,7 @@ use Illuminate\Validation\Rule;
 
 class AppraisalRecordRequest extends FormRequest
 {
-    
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -17,8 +17,7 @@ class AppraisalRecordRequest extends FormRequest
         return [
             'crw_crew_id'                                => 'required|integer|exists:crw_crew_profiles,id',
             'appraisal_form_id'                          => 'required|integer|exists:appraisal_forms,id',
-            'crw_crew_assignment_id'                     => [Rule::unique('appraisal_records')->ignore($this->id)], 
-            // ['required', 'integer', 'exists:crw_crew_assignments,id', Rule::unique('appraisal_records')->ignore($this->id)],
+            'crw_crew_assignment_id'                     => ['required', 'integer', Rule::unique('appraisal_records')->ignore($this->id), 'exists:crw_crew_assignments,id'],
             'appraisal_date'                             => 'required|date',
             'age'                                        => 'required|integer',
             'business_unit'                              => 'required|in:PSML,TSLL',
@@ -35,7 +34,9 @@ class AppraisalRecordRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            //
+            'crw_crew_id.exists'            => 'The Crew Name does not exists.',
+            'appraisal_form_id.exists'      => 'The Appraisal Form does not exists.',
+            'crw_crew_assignment_id.exists' => 'The Crew Assignment does not exists.',
         ];
     }
 

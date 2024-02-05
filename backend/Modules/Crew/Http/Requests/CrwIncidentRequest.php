@@ -24,6 +24,7 @@ class CrwIncidentRequest extends FormRequest
      */
     public function rules(): array {
         return [
+            'ops_vessel_id'                           => ['required', 'integer', 'exists:ops_vessels,id'],            
             'date_time'                               => ['required', 'date',
                                                             Rule::unique('crw_incidents')
                                                                 ->where('ops_vessel_id', $this->ops_vessel_id)
@@ -36,7 +37,7 @@ class CrwIncidentRequest extends FormRequest
             'attachment'                              => 'nullable|mimes:pdf,doc,docx,jpeg,png,gif,xlsx|max:2048',
             'description'                             => 'nullable|string|max:500',
             'business_unit'                           => 'required|in:PSML,TSLL',
-            'crwIncidentParticipants.*.crw_crew_id'   => 'required|distinct',
+            'crwIncidentParticipants.*.crw_crew_id'   => ['required', 'distinct', 'exists:crw_crew_profiles,id'],
             'crwIncidentParticipants.*.injury_status' => 'required|string|max:255',
             'crwIncidentParticipants.*.notes'         => 'string|max:255',
         ];
@@ -49,7 +50,9 @@ class CrwIncidentRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            'date_time.unique'   => 'A record with the combination of vessel name, incident date & time already exists.',
+            'ops_vessel_id.exists'                          => 'The Vessel Name does not exists.',            
+            'date_time.unique'                              => 'A record with the combination of vessel name, incident date & time already exists.',
+            'crwIncidentParticipants.*.crw_crew_id.exists'  => 'The Crew Name does not exists[:position].',
         ];
     }
 

@@ -23,6 +23,7 @@ export default function useCrewAssign() {
         joining_date: "",
         joining_port_code: "",
         joining_port_name: "",
+        is_watchkeeper: "0",
         duration: "",
         remarks: "",
     });
@@ -173,8 +174,6 @@ export default function useCrewAssign() {
     }
 
     async function updateCrewAssignStatus(form,crewAssigns) {
-
-        console.log(crewAssigns);
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;

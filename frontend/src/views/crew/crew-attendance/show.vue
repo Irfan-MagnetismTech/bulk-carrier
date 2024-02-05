@@ -6,6 +6,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
+import { formatDate,formatMonthYear } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 
@@ -24,7 +25,7 @@ onMounted(() => {
 
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">  Crew Attendance Details  # {{crwAttendanceId}} </h2>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">  Crew Attendance Details</h2>
     <default-button :title="' Crew Attendance List'" :to="{ name: 'crw.crwAttendances.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
@@ -46,12 +47,12 @@ onMounted(() => {
               <td>{{ crwAttendance?.opsVessel?.name }}</td>
             </tr>
             <tr>
-              <th class="w-40"> Total Crews </th>
+              <th class="w-40"> Total Crew </th>
               <td>{{ crwAttendance?.total_crews }}</td>
             </tr>
             <tr>
               <th class="w-40"> Year - Month </th>
-              <td>{{ crwAttendance?.year_month }}</td>
+              <td>{{ formatMonthYear(crwAttendance?.year_month) }}</td>
             </tr>
             <tr>
               <th class="w-40"> Working Days </th>
@@ -67,11 +68,12 @@ onMounted(() => {
         <table class="w-full mt-2">
           <thead>
             <tr>
-              <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="6"> Assigned Crew List </td>
+              <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="7"> Assigned Crew List </td>
             </tr>
             <tr>
+              <th class="!text-center">#</th>
               <th class="w-40 !text-center"> Crew Name </th>
-              <th class="w-40 !text-center"> Contact No </th>
+              <th class="w-40 !text-center"> Crew Contact </th>
               <th class="w-40 !text-center"> Onboard Position </th>
               <th class="w-40 !text-center"> Present Days </th>
               <th class="w-40 !text-center"> Absent Days </th>
@@ -80,6 +82,7 @@ onMounted(() => {
           </thead>
           <tbody>
             <tr v-for="(crwAttendanceLine, index) in crwAttendance?.crwAttendanceLines" :key="index">
+              <td class="!w-5 !text-center">{{ index + 1 }}</td>
               <td class="text-left"> {{ crwAttendanceLine?.crwCrewAssignment?.crwCrew?.full_name }} </td>
               <td class="!text-center"> {{ crwAttendanceLine?.crwCrewAssignment?.crwCrew?.pre_mobile_no }} </td>
               <td class="text-left"> {{ crwAttendanceLine?.crwCrewAssignment?.position_onboard }} </td>

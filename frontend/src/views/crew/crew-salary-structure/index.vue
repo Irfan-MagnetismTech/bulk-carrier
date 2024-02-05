@@ -12,6 +12,7 @@ import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import { formatDate,formatMonthYear,formatMonthYearWithTime } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -30,7 +31,7 @@ const debouncedValue = useDebouncedRef('', 800);
 
 const { setTitle } = Title();
 
-setTitle('Crew Salary Structures');
+setTitle('Crew Salary Structure');
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
@@ -40,26 +41,6 @@ let filterOptions = ref( {
   "page": props.page,
   "isFilter": false,
   "filter_options": [
-    {
-      "relation_name": null,
-      "field_name": "effective_date",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Effective Date",
-      "filter_type": "input"
-    },
-    {
-      "relation_name": null,
-      "field_name": "currency",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Currency",
-      "filter_type": "input"
-    },
     {
       "relation_name": "crwCrew",
       "field_name": "full_name",
@@ -118,6 +99,26 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Net Amount",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "currency",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Currency",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "effective_date",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Effective Date",
       "filter_type": "input"
     },
   ]
@@ -195,14 +196,14 @@ onMounted(() => {
         <tbody class="relative">
         <tr v-for="(crewSalaryStructureData,index) in crewSalaryStructures?.data" :key="index">
           <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-          <td>{{ crewSalaryStructureData?.effective_date }}</td>
-          <td>{{ crewSalaryStructureData?.currency }}</td>
-          <td>{{ crewSalaryStructureData?.crwCrew?.full_name }}</td>
+          <td class="!text-left">{{ crewSalaryStructureData?.crwCrew?.full_name }}</td>
           <td>{{ crewSalaryStructureData?.crwCrew?.pre_mobile_no }}</td>
-          <td>{{ crewSalaryStructureData?.gross_salary }}</td>
-          <td>{{ crewSalaryStructureData?.addition }}</td>
-          <td>{{ crewSalaryStructureData?.deduction }}</td>
-          <td>{{ crewSalaryStructureData?.net_amount }}</td>
+          <td class="!text-right">{{ crewSalaryStructureData?.gross_salary }}</td>
+          <td class="!text-right">{{ crewSalaryStructureData?.addition }}</td>
+          <td class="!text-right">{{ crewSalaryStructureData?.deduction }}</td>
+          <td class="!text-right">{{ crewSalaryStructureData?.net_amount }}</td>
+          <td>{{ crewSalaryStructureData?.currency }}</td>
+          <td>{{ formatDate(crewSalaryStructureData?.effective_date) }}</td>
           <td>
             <span :class="crewSalaryStructureData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crewSalaryStructureData?.business_unit }}</span>
           </td>

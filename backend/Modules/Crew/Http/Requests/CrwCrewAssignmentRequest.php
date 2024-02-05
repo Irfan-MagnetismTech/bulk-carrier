@@ -14,8 +14,8 @@ class CrwCrewAssignmentRequest extends FormRequest
      */
     public function rules(): array {
         return [
-            'ops_vessel_id'      => 'required|integer',
-            'crw_crew_id'        => ['required', 'integer', Rule::unique('crw_crew_assignments')->where('status', "Onboard")->ignore($this->id)],
+            'ops_vessel_id'      => ['required', 'integer', 'exists:ops_vessels,id'],
+            'crw_crew_id'        => ['required', 'integer', Rule::unique('crw_crew_assignments')->where('status', "Onboard")->ignore($this->id), 'exists:crw_crew_profiles,id'],
             'position_onboard'   => 'required|string|max:255',
             'joining_date'       => 'required|date',
             'joining_port_code'  => 'required|string|max:10',
@@ -35,6 +35,8 @@ class CrwCrewAssignmentRequest extends FormRequest
      */
     public function messages(): array {
         return [
+            'ops_vessel_id.exists'      => 'The Vessel Name does not exists.',            
+            'crw_crew_id.exists'        => 'The Crew Name does not exists.',            
             'crw_crew_id.unique'        => 'Complete the current onboard job before assigning a new job to this crew member.',
         ];
     }
