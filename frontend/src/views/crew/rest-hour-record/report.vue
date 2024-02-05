@@ -101,7 +101,7 @@ onMounted(() => {
       </fieldset>
     </div>
   </form>
-  <div v-if="restHourReport?.daily_records?.length" class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-x-auto relative">
+  <div v-if="Object.keys(restHourReport).length" class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-x-auto relative">
 <!--    <div class="absolute top-0 right-0 mt-2 mr-2">-->
 <!--      <button @click="tableToExcel('rest-hour-table','rest-hour-record-'+searchParams.year_month)" class="w-full px-1 py-1 text-sm font-medium leading-2 text-white bg-gray-600 border border-transparent rounded-lg active:bg-gray-500 hover:bg-gray-500 focus:outline-none focus:shadow-outline-purple">-->
 <!--        Download Excel-->
@@ -285,6 +285,9 @@ onMounted(() => {
           </div>
         </div>
       </div>
+  </div>
+  <div v-else class="px-4 py-3 mb-8 bg-white text-center text-red-700 rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-x-auto relative">
+    <span>No record found</span>
   </div>
 </template>
 <style lang="postcss" scoped>

@@ -97,11 +97,9 @@ onMounted(() => {
               <tr>
                 <th>Attachment</th>
                 <td>
-                  <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+'/'+crewProfile?.attachment">{{
-                      (typeof crewProfile?.attachment === 'string')
-                          ? '('+crewProfile?.attachment.split('/').pop()+')'
-                          : '----'
-                    }}</a>
+                  <a v-html="icons.Attachment" type="button" v-if="typeof crewProfile?.attachment === 'string'"
+                     class="text-green-800" target="_blank" :href="env.BASE_API_URL+'/'+crewProfile?.attachment"></a>
+                  <a v-else>---</a>
                 </td>
               </tr>
               <tr>
