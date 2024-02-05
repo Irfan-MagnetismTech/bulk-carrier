@@ -447,6 +447,11 @@ class ScmPrController extends Controller
                     $query->whereIn('status', ['Pending', 'WIP']);
                 })
                 ->get()
+                ->whereNot(function ($query) {
+                    $query->whereHas('scmPoItems', function ($qr) {
+                        $qr->whereDoesntHave('scmCsMaterial');
+                    });
+                })
                 ->map(function ($item) use ($request) {
                     $data = $item->scmMaterial;
                     $material = ScmCsMaterial::query()->where(['scm_material_id' => $item->scm_material_id, 'scm_pr_id' => $request->pr_id, 'scm_cs_id' => $request->scm_cs_id])->first();
