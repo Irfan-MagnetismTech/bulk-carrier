@@ -9,8 +9,10 @@ use Illuminate\Support\Facades\DB;
 use App\Services\FileUploadService;
 use Modules\SupplyChain\Entities\ScmWrr;
 use Modules\SupplyChain\Entities\ScmWoLine;
+use Modules\SupplyChain\Entities\ScmWrLine;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmWrrItem;
+use Modules\SupplyChain\Entities\ScmWrrLine;
 use Modules\SupplyChain\Http\Requests\ScmWrrRequest;
 
 class ScmWrrController extends Controller
@@ -219,7 +221,69 @@ class ScmWrrController extends Controller
     }
 
 
-    public function getMrrLineData(): JsonResponse
+        /**
+     * Retrieves the materials associated with a given purchase requisition ID.
+     *
+     * @return JsonResponse
+     */
+    public function getServiceByWrrId(): JsonResponse
+    {
+        if (!request()->scm_wo_id) {
+            $wrServices = ScmWrrLine::query()
+                ->with('scmService', 'scmWrrLines')
+                ->where('scm_wrr_id', request()->scm_wrr_id)
+                ->get()
+                ->map(function ($item) {
+                    $data = $item->scmService;
+                    $data['quantity'] = $item->quantity;
+                    $data['wr_qty'] = $item->quantity;
+                    $data['wo_qty'] = 0;
+                    $data['rate'] = 0;
+                    $data['net_rate'] = 0;
+                    $data['wr_composite_key'] = $item->wr_composite_key;
+                    $data['wo_composite_key'] = null;
+                    // $data['current_stock'] = CurrentStock::count($item->scmMaterial->id, request()->scm_warehouse_id);
+                    if (request()->scm_wrr_id) {
+                        $data['wrr_quantity'] = $item->scmWrrLines->where('scm_wrr_id', request()->scm_wrr_id)->where('wr_composite_key', $item->wr_composite_key)->first()->quantity;
+                    } else {
+                        $data['wrr_quantity'] = 0;
+                    }
+                    $data['max_quantity'] = $item->quantity - $item->scmWrrLines->sum('quantity') + $data['wrr_quantity'];
+
+                    return $data;
+                });
+            return response()->success('data list', $wrServices, 200);
+        }
+
+        if (request()->scm_wo_id) {
+            $wrServices = ScmWoLine::query()
+                ->with('scmService', 'scmWrrLines', 'scmWrLine')
+                ->where('scm_wo_id', request()->scm_wo_id)
+                ->get()
+                ->map(function ($item) {
+                    $data = $item->scmService;
+                    $data['quantity'] = $item->quantity;
+                    if (request()->scm_wrr_id) {
+                        $data['wrr_quantity'] = $item->scmWrrLines->where('scm_wrr_id', request()->scm_wrr_id)->where('wo_composite_key', $item->wo_composite_key)->quantity;
+                    } else {
+                        $data['wrr_quantity'] = 0;
+                    }
+                    $data['max_quantity'] = $item->quantity - $item->scmWrrLines->sum('quantity') + $data['wrr_quantity'];
+                    $data['wo_qty'] = $item->quantity;
+                    $data['wr_qty'] = $item->scmWrLine->quantity;
+                    $data['rate'] = $item->rate;
+                    $data['net_rate'] = $item->net_rate;
+                    $data['wr_composite_key'] = $item->wr_composite_key;
+                    $data['wo_composite_key'] = $item->wo_composite_key;
+                    // $data['current_stock'] = CurrentStock::count($item->scmService->id, request()->scm_warehouse_id);
+                    // $data['max_quantity'] = $item->quantity - $item->scmWrrLines->sum('quantity');//some edit needed
+                    return $data;
+                });
+            return response()->success('data list', $wrServices, 200);
+        }
+    }
+
+    public function getWrrLineData(): JsonResponse
     {
         if (request()->scm_wo_id && request()->scm_wr_id) {
             $scmWo = ScmWoLine::query()
@@ -254,6 +318,40 @@ class ScmWrrController extends Controller
         } else {
             $data = [];
         }
+        return response()->success('data', $data, 200);
+    }
+
+    public function getWoServiceList(): JsonResponse
+    {
+        $scmWo = ScmWoLine::query()
+            ->with('scmWo', 'scmWoItems.scmService', 'scmWr', 'scmWoItems.scmWrrLineItems', 'scmWoItems.scmWrLine')
+            ->where('scm_wo_id', request()->scm_wo_id)
+            ->where('scm_wr_id', request()->scm_wr_id)
+            ->first();
+
+        $data = $scmWo->scmWoItems->map(function ($item) {
+            if (request()->scm_wrr_id) {
+                $wrrQuantity = $item->scmWrrLineItems->where('scm_wrr_id', request()->scm_wrr_id)->where('wo_composite_key', $item->wo_composite_key)->first->quantity;
+            } else {
+                $wrrQuantity = 0;
+            }
+            $totalWrrQuantity = $item->scmMrrLineItems->sum('quantity');
+
+            $remainingQuantity = $item->quantity - $totalWrrQuantity + $wrrQuantity;
+            $data = $item->scmService;
+            $data['quantity'] = $remainingQuantity;
+            $data['rate'] = $item->rate;
+            $data['net_rate'] = $item->net_rate;
+            $data['wo_qty'] = $item->quantity;
+            $data['wr_qty'] = $item->scmWrLine->quantity;
+            $data['wo_composite_key'] = $item->wo_composite_key;
+            $data['wr_composite_key'] = $item->wr_composite_key;
+            $data['wrr_quantity'] = $remainingQuantity;
+            $data['remaining_quantity'] = $remainingQuantity;
+            $data['max_quantity'] = $remainingQuantity;
+            return $data;
+        });
+
         return response()->success('data', $data, 200);
     }
 }

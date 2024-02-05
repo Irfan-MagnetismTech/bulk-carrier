@@ -56,4 +56,8 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
 
     Route::get('search-wrr', [ScmWrrController::class, "searchWrr"])->name('searchWrr');
     Route::get('get-wrr-line-data', [ScmWrrController::class, "getWrrLineData"])->name('getWrrLineData');
+    Route::get('get-wo-service-list', [ScmWrrController::class, "getWoServiceList"])->name('getWoServiceList');
+    Route::get('get-service-for-wrr', [ScmWrrController::class, "getServiceByWrrId"])->name('getServiceForWrrId');
+
+
 });
