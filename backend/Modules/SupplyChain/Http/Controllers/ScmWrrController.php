@@ -139,7 +139,7 @@ class ScmWrrController extends Controller
     public function update(ScmWrrRequest $request, ScmWrr $work_receipt_report): JsonResponse
     {
         $requestData = $request->except('ref_no');
-        $work_receipt_report->load('scmWrrLines');
+        $work_receipt_report->load('scmWrrLines','scmWrrLineItems');
         try {
             DB::beginTransaction();
 
@@ -166,7 +166,7 @@ class ScmWrrController extends Controller
      */
     public function destroy(ScmWrr $work_receipt_report): JsonResponse
     {
-        $work_receipt_report->load('scmWrrLines','scmWoLineItems');
+        $work_receipt_report->load('scmWrrLines','scmWrrLineItems');
         try {
             $work_receipt_report->delete();
             $work_receipt_report->scmWrrLines()->delete();
