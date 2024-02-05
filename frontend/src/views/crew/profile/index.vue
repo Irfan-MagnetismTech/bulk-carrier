@@ -74,7 +74,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Mobile No.",
+      "label": "Contact No.",
       "filter_type": "input"
     },
     {
