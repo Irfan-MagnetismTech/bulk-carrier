@@ -106,33 +106,56 @@ class ScmMrrController extends Controller
      */
     public function show($id): JsonResponse
     {
-        $scmMrr = ScmMrr::query()
-            ->with('scmMrrLines.scmMrrLineItems.scmMaterial', 'scmMrrLines.scmPr', 'scmPo', 'scmWarehouse', 'scmLcRecord', 'createdBy', 'accCashRequisition')
-            ->find($id);
-
-        $scmMrrLines = $scmMrr->scmMrrLines->map(function ($scmMrrLine) use ($scmMrr) {
-            $lines = [
-                'scm_material_id' => $scmMrrLine->scm_material_id,
-                'scmMaterial' => $scmMrrLine->scmMaterial,
-                'unit' => $scmMrrLine->unit,
-                'brand' => $scmMrrLine->brand,
-                'model' => $scmMrrLine->model,
-                'quantity' => $scmMrrLine->quantity,
-                'rate' => $scmMrrLine->rate,
-                'net_rate' => $scmMrrLine->net_rate,
-                'po_qty' => $scmMrrLine?->scmPoLine?->quantity ?? 0,
-                'pr_qty' => $scmMrrLine?->scmPrLine?->quantity ?? 0,
-                'current_stock' => CurrentStock::count($scmMrrLine->scm_material_id, $scmMrr->scm_warehouse_id),
-                'po_composite_key' => $scmMrrLine->po_composite_key ?? null,
-                'pr_composite_key' => $scmMrrLine->pr_composite_key ?? null,
-                'max_quantity' => ($scmMrrLine->po_composite_key != null && $scmMrrLine->po_composite_key != '') ? ($scmMrrLine->scmPoLine->quantity - $scmMrrLine->scmPoLine->scmMrrLines->sum('quantity') + $scmMrrLine->quantity) : ($scmMrrLine->scmPrLine->quantity - $scmMrrLine->scmPrLine->scmMrrLines->sum('quantity') + $scmMrrLine->quantity),
-                // 'max_quantity' => $scmMrrLine->scmPoLine->scmMrrLines->sum('quantity'),
-            ];
-
-            return $lines;
+        $scmMrr = ScmMrr::query()->find($id);
+        $scmMrr->load('scmMrrLines.scmMrrLineItems.scmMaterial', "scmMrrLines.scmPr", 'scmWarehouse', 'scmMrrLineItems', 'createdBy', 'scmMrrLines.scmMrrLineItems.scmPoItem.scmMaterial');
+        $scmMrrLines = $scmMrr->scmMrrLines->map(function ($items) {
+            $datas = $items;
+            $adas = $items->scmMrrLineItems->map(function ($item) {
+                    $max_quantity = $item?->scmPoItem?->quantity ?? 0 -  $item?->scmPoItem?->scmMrrLineItems->sum('quantity')  ?? 0 + $item->quantity;
+                        return [
+                            'id' => $item['id'],
+                            'scm_material_id' => $item['scm_material_id'],
+                            'scmMaterial' => $item['scmMaterial'],
+                            'unit' => $item['unit'],
+                            'brand' => $item['brand'],
+                            'model' => $item['model'],
+                            'tolerence_quantity' => $item['tolerence_quantity'],
+                            'quantity' => $item['quantity'],
+                            'tolerence_level' => $item->scmPoItem?->tolerence_level ?? 0,
+                            'rate' => $item['rate'],
+                            'total_price' => $item['rate'] * $item['quantity'],
+                            'net_rate' => $item['net_rate'],
+                            'po_composite_key' => $item['po_composite_key'],
+                            'pr_composite_key' => $item['pr_composite_key'],
+                            'mrr_composite_key' => $item['mrr_composite_key'],
+                            'max_quantity' => $max_quantity,
+                            'pr_qty' => $item->scmPrLine->quantity,
+                            'po_qty' => $item?->scmPoItem?->quantity ?? 0,
+                        ];
+            });
+            data_forget($items, 'scmMrrLineItems');
+            $datas['scmMrrLineItems'] = $adas;
+            return $datas;
         });
+
         data_forget($scmMrr, 'scmMrrLines');
-        $scmMrr->scmMrrLines = $scmMrrLines;
+        $scmMrr['scmMrrLines'] = $scmMrrLines;
+
+
+        // return response()->json($scmPoLines, 422);
+
+        // data_forget($purchaseOrder, 'scmPoLines');
+
+        // $purchaseOrder->scmPoLines = $scmPoLines;
+
+        // data forget scmPolines.scmPoItems and data set
+        // $purchaseOrder->scmPoLines->map(function ($item) {
+        //     $item->scmPoItems->map(function ($item) {
+        //
+        //         return $item;
+        //     });
+        //     return $item;
+        // });
 
         try {
             return response()->success('data', $scmMrr, 200);

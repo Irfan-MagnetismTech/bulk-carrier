@@ -3,8 +3,9 @@
 namespace Modules\SupplyChain\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\SupplyChain\Entities\ScmPoItem;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmMrrLineItem extends Model
 {
@@ -42,5 +43,10 @@ class ScmMrrLineItem extends Model
     public function scmPoLine(): BelongsTo
     {
         return $this->belongsTo(ScmPoLine::class, 'po_composite_key', 'po_composite_key');
+    }
+
+    public function scmPoItem(): BelongsTo
+    {
+        return $this->belongsTo(ScmPoItem::class);
     }
 }

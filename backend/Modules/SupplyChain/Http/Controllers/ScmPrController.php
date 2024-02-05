@@ -424,7 +424,6 @@ class ScmPrController extends Controller
                     $query->whereIn('status', ['Pending', 'WIP']);
                 })
                 ->whereNot(function ($query) {
-                    // where has po doesnot has cs
                     $query->whereHas('scmPoItems', function ($qr) {
                         $qr->whereDoesntHave('scmCsMaterial');
                     });

@@ -246,18 +246,21 @@
   });
 
   if(props.formType == 'edit'){
-        const editDatas = watch(()=> [props.form.business_unit,props.form.scm_warehouse_id,props.form.purchase_center,props.form.scmMrrLines], (newVal, oldVal) => {
-        getPoWisePrList(props.form.scmPo.id);
+        const editDatas = watch(()=> props.form.scmMrrLines, (newVal, oldVal) => {
+        getPoWisePrList(props.form?.scmPo?.id);
         props.poMaterialList.splice(0,props.poMaterialList.length);
-        props.form.scmMrrLines.forEach((line, index) => {
-          props.poMaterialList.push([]);
-          props.poMaterialList[index] = [];
-          if (line.scmPr) {
-            getPoMaterialList(props.form.scmPo.id, line.id).then((res) => {
-              props.poMaterialList[index] = res;
-            });        
-           }
-        });
+      //   if(props.form.scmMrrLines.length > 0){
+      //   props.form.scmMrrLines.forEach((line, index) => {
+      //     props.poMaterialList.push([]);
+      //     props.poMaterialList[index] = [];
+      //     if (line.scmPr) {
+      //       getPoMaterialList(props.form.scmPo.id, line.id).then((res) => {
+      //         props.poMaterialList[index] = res;
+      //       });        
+      //      }
+      //   });
+      // }
+      console.log(props.form.scmMrrLines);
         editDatas();
       });
 
