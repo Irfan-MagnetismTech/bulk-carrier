@@ -4,6 +4,7 @@ namespace Modules\SupplyChain\Entities;
 
 use App\Models\User;
 use App\Traits\GlobalSearchTrait;
+use App\Traits\UniqueKeyGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmMo;
 use Modules\SupplyChain\Entities\ScmMmrLine;
@@ -14,11 +15,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmMmr extends Model
 {
-    use HasFactory, GlobalSearchTrait;
+    use HasFactory, GlobalSearchTrait, UniqueKeyGenerator;
 
     protected $fillable = [
         'ref_no', 'date', 'delivery_date', 'from_warehouse_id', 'to_warehouse_id', 'requested_by', 'requested_for', 'remarks', 'business_unit', 'created_by',
     ];
+
+    protected $refKeyPrefix = 'MMR';
 
     public function fromWarehouse(): BelongsTo
     {

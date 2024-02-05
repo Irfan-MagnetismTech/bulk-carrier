@@ -60,7 +60,7 @@ function setSortState(index, order) {
                 <div :class="{ 'no-wrap': !option.nobr_tag }">
                   <div class="flex justify-center items-center">
                     <span class="mr-2">{{ option.label }}</span>
-                    <div class="flex flex-col cursor-pointer" v-if="option.filter_type">
+                    <div class="flex flex-col cursor-pointer" v-if="(option.no_short ? (option.filter_type && !option.no_short) : option.filter_type)">
                       <div
                           v-html="icons.descIcon"
                           @click="setSortState(key, 'asc')"

@@ -237,15 +237,15 @@ onMounted(() => {
           </tbody>
           <tfoot v-if="!appraisalRecords?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="5">Loading...</td>
+            <td colspan="9"></td>
           </tr>
           <tr v-else-if="isTableLoading">
-              <td colspan="5">
+              <td colspan="9">
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
             </tr>
           <tr v-else-if="!appraisalRecords?.data?.length">
-            <td colspan="5">No appraisal record found.</td>
+            <td colspan="9">No appraisal record found.</td>
           </tr>
           </tfoot>
       </table>

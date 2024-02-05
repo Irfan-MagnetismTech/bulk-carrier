@@ -20,4 +20,9 @@ class AccLedgerEntry extends Model
     {
         return $this->belongsTo(AccTransaction::class, 'acc_transaction_id', 'id')->withDefault();
     }
+
+    public function accBalanceAndIncomeLine()
+    {
+        return $this->belongsTo(AccBalanceAndIncomeLine::class, 'acc_balance_and_income_line_id', 'id')->withDefault();
+    }
 }

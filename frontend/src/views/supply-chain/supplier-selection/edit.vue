@@ -9,7 +9,7 @@ import LocalQuotationForm from "../../../components/supply-chain/quotations/Loca
 import useQuotation from "../../../composables/supply-chain/useQuotation";
 import { useRoute } from 'vue-router';
 
-const { getMaterialCs, showMaterialCs, materialCs, updateMaterialCs,materialObject, errors, isLoading } = useMaterialCs();
+const { getMaterialCs, showMaterialCs, materialCs, updateMaterialCs, errors, isLoading } = useMaterialCs();
 const { updateQuotations, quotation, localQuotationLines, foreignQuotationLines,showQuotation } = useQuotation();
 
 import useHeroIcon from "../../../assets/heroIcon";
@@ -35,7 +35,7 @@ onMounted(() => {
         <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Edit Material CS</h2>
         <default-button :title="'Quotation List'" :to="{ name: 'scm.quotations.index' }" :icon="icons.DataBase"></default-button>
     </div>
-    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
+    <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
         <form @submit.prevent="updateQuotations(quotation, csId, quotationId)">
             <template v-if="materialCs.purchase_center == 'FOREIGN'">
                 <foreign-quotation-form v-model:form="quotation" :errors="errors" :page="page" :lineObj="foreignQuotationLines"></foreign-quotation-form>

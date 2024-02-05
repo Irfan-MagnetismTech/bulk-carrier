@@ -116,7 +116,9 @@ class OpsCustomerController extends Controller
     public function destroy(OpsCustomer $customer): JsonResponse
     {
         try {
+            DB::beginTransaction();            
             $customer->delete($customer);
+            DB::commit();
 
             return response()->json([
                 'value' => '',
@@ -125,7 +127,8 @@ class OpsCustomerController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($customer->preventDeletionIfRelated(), 422);
         }
     }
 

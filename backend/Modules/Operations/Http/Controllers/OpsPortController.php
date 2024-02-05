@@ -117,8 +117,10 @@ class OpsPortController extends Controller
     public function destroy(OpsPort $port): JsonResponse
     {
         try {
+            DB::beginTransaction();            
             $port->delete($port);
-
+            DB::commit();
+            
             return response()->json([
                 'value' => '',
                 'message' => 'Data deleted Successfully.'
@@ -126,7 +128,8 @@ class OpsPortController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);        
+            DB::rollBack();
+            return response()->json($port->preventDeletionIfRelated(), 422);      
         }
     }
 

@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <business-unit-input v-model="form.business_unit" :page="'edit'"></business-unit-input>
+      <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
@@ -10,7 +10,7 @@
     <div class="flex flex-col w-full md:flex-row md:gap-2">
         <label class="block w-1/2 mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Customer Name <span class="text-red-500">*</span></span>
-              <v-select :options="customers" placeholder="--Choose an option--" v-model="form.opsCustomer" label="name_code" class="block form-input" @update:modelValue="profileChanged">
+              <v-select :options="customers" placeholder="--Choose an option--" v-model="form.opsCustomer" label="name_code" class="block form-input" @update:modelValue="profileChanged" :disabled="formType === 'edit'">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -687,9 +687,16 @@ watch(() => props?.form?.discounted_amount, (newVal, oldVal) => {
 
 
 
-// watch(() => props.form.opsCustomerProfile, (value) => {
-//     props.form.ops_customer_profile_id = value?.id;
-// })
+watch(() => props.form.business_unit, (value) => {
+  
+  if(props.formType == 'create') {
+    customers.value = []
+    props.form.opsCustomer = null
+    props.form.ops_customer_id = null
+  }
+  getCustomersByBusinessUnit(props.form.business_unit)
+
+}, { deep: true})
 
 function profileChanged() {
   let value = props.form.opsCustomer ?? null;
@@ -757,7 +764,6 @@ watch(() => props.form.opsCustomerContract, (value) => {
 onMounted(() => {
   // getAllCustomerProfiles();
   getCurrencies();
-  getCustomersByBusinessUnit(props.form.business_unit)
 })
 
 

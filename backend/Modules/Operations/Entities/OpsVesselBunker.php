@@ -2,14 +2,15 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\SupplyChain\Traits\StockLedger;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsVesselBunker extends Model
 {
-    use HasFactory, GlobalSearchTrait, StockLedger;
+    use HasFactory, GlobalSearchTrait, StockLedger, DeletableModel;
 
     protected $fillable = [
         'ops_vessel_id',
@@ -19,6 +20,7 @@ class OpsVesselBunker extends Model
         'exchange_rate_usd',
         'total_amount_bdt',
         'total_amount_usd',
+        'amount',
         'type',
         'usage_type',
         'date',

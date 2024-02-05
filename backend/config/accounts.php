@@ -27,6 +27,7 @@ return [
     ],
 
     'balance_income_line'           => [
+        'cash'              => 7,
         'bank'              => 8,
         'income_from_sales' => 49, //@ranks = Sales Accounts
         'income_from_service' => 57, //@ranks = Income From Service

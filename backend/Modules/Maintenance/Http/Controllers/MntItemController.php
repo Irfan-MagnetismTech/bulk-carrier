@@ -54,7 +54,7 @@ class MntItemController extends Controller
 
             $input['description'] = json_encode(collect($input['description'])->whereNotNull('key')->values()->all());
 
-            return $input['description'];
+            // return $input['description'];
 
             $item = MntItem::create($input);
 

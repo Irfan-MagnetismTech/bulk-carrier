@@ -5,9 +5,15 @@ namespace Modules\Accounts\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Accounts\Entities\AccAccount;
+use Modules\Accounts\Entities\AccBalanceAndIncomeLine;
+use Modules\Accounts\Entities\AccCostCenter;
 use Modules\Accounts\Entities\AccFixedAsset;
+use Modules\Accounts\Entities\AccLedgerEntry;
+use Modules\Accounts\Services\CostCenterSummaryService;
 use Modules\Accounts\Services\DayBookService;
 use Modules\Accounts\Services\LedgerService;
+use Modules\Accounts\Services\PaymentReceiptService;
 use Modules\Accounts\Services\TrialBalanceService;
 
 class AisReportController extends Controller
@@ -18,11 +24,11 @@ class AisReportController extends Controller
     public function dayBook(Request $request): JsonResponse
     {
         try {
-            $ledgetEntries = (new DayBookService)->handleDayBookService();
+            $ledgerEntries = (new DayBookService)->handleDayBookService();
 
             return response()->json([
                 'status' => 'success',
-                'value'  => $ledgetEntries,
+                'value'  => $ledgerEntries,
             ], 200);
         }
         catch (\Exception $e)
@@ -37,11 +43,11 @@ class AisReportController extends Controller
     public function ledger(Request $request): JsonResponse
     {
         try {
-            $ledgetEntries = (new LedgerService)->handleLedgerService();
+            $ledgerEntries = (new LedgerService)->handleLedgerService();
 
             return response()->json([
                 'status' => 'success',
-                'value'  => $ledgetEntries,
+                'value'  => $ledgerEntries,
             ], 200);
         }
         catch (\Exception $e)
@@ -56,11 +62,11 @@ class AisReportController extends Controller
     public function trialBalance(Request $request): JsonResponse
     {
         try {
-            $ledgetEntries = (new TrialBalanceService)->handleTrialBalanceService('trial_balance');
+            $ledgerEntries = (new TrialBalanceService)->handleTrialBalanceService('trial_balance');
 
             return response()->json([
                 'status' => 'success',
-                'value'  => $ledgetEntries,
+                'value'  => $ledgerEntries,
             ], 200);
         }
         catch (\Exception $e)
@@ -72,15 +78,15 @@ class AisReportController extends Controller
     public function incomeStatement()
     {
         try {
-            $ledgetEntries = (new TrialBalanceService)->handleTrialBalanceService('income_statement')->groupBy('value_type')->mapWithKeys(function ($items, $key)
+            $ledgerEntries = (new TrialBalanceService)->handleTrialBalanceService('income_statement')->groupBy('value_type')->mapWithKeys(function ($items, $key)
             {
                 $key == 'C' ? $key = 'incomes' : $key = 'expense';
 
                 return [$key => $items];
             });
 
-            $incomeHeads  = $ledgetEntries['incomes'];
-            $expenseHeads = $ledgetEntries['expense'];
+            $incomeHeads  = $ledgerEntries['incomes'];
+            $expenseHeads = $ledgerEntries['expense'];
             $totalIncome  = $incomeHeads->pluck('closing_balance_amount')->sum();
             $totalExpense = $expenseHeads->pluck('closing_balance_amount')->sum();
 
@@ -94,15 +100,15 @@ class AisReportController extends Controller
             $expenseOnSales   = $expenseHeads->firstWhere('line_id', $expenseOnSalesId)['closing_balance_amount'];
             $expenseOnService = $expenseHeads->firstWhere('line_id', $expenseOnServiceId)['closing_balance_amount'];
 
-            $ledgetEntries['sale_performance']    = $this->setProfitLoss($incomeOnSales, $expenseOnSales, '_on_sale', $incomeOnSalesId, $expenseOnSalesId);
-            $ledgetEntries['service_performance'] = $this->setProfitLoss($incomeOnService, $expenseOnService, '_on_service', $incomeOnServiceId, $expenseOnServiceId);
-            $ledgetEntries['performance']         = $this->setProfitLoss($totalIncome, $totalExpense);
-            $ledgetEntries['grand_total_income']  = $totalIncome + $ledgetEntries['performance']['loss'];
-            $ledgetEntries['grand_total_expense'] = $totalExpense + $ledgetEntries['performance']['profit'];
+            $ledgerEntries['sale_performance']    = $this->setProfitLoss($incomeOnSales, $expenseOnSales, '_on_sale', $incomeOnSalesId, $expenseOnSalesId);
+            $ledgerEntries['service_performance'] = $this->setProfitLoss($incomeOnService, $expenseOnService, '_on_service', $incomeOnServiceId, $expenseOnServiceId);
+            $ledgerEntries['performance']         = $this->setProfitLoss($totalIncome, $totalExpense);
+            $ledgerEntries['grand_total_income']  = $totalIncome + $ledgerEntries['performance']['loss'];
+            $ledgerEntries['grand_total_expense'] = $totalExpense + $ledgerEntries['performance']['profit'];
 
             return response()->json([
                 'status' => 'success',
-                'value'  => $ledgetEntries,
+                'value'  => $ledgerEntries,
             ], 200);
         }
         catch (\Exception $e)
@@ -121,12 +127,12 @@ class AisReportController extends Controller
                 return [$key => $items];
             });
 
-            $balancesheets['income']                  = (new TrialBalanceService)->calculateIncomeGrowthRate();
+            $balancesheets['income'] = (new TrialBalanceService)->calculateIncomeGrowthRate();
 
             $liabilitiesTotalAmount                   = $balancesheets['liabilities']->pluck('closing_balance_amount')->sum();
             $assetsTotalAmount                        = $balancesheets['assets']->pluck('closing_balance_amount')->sum();
             $balancesheets['grand_total_liabilities'] = round($liabilitiesTotalAmount + $balancesheets['income']['curr_year_opening'] + $balancesheets['income']['curr_year_income'], 2);
-            $balancesheets['grand_total_assets']      = round( $assetsTotalAmount, 2 );
+            $balancesheets['grand_total_assets']      = round($assetsTotalAmount, 2);
 
             return response()->json([
                 'status' => 'success',
@@ -164,31 +170,78 @@ class AisReportController extends Controller
         return $profitLossInfo;
     }
 
-    public function fixedAssetStatement(Request $request){
-        $assets = AccFixedAsset::get()
-            ->map(function($asset){
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function fixedAssetStatement(Request $request)
+    {
+        $assets = AccFixedAsset::when($request->asset_tag, fn($q) => $q->where('asset_tag', $request->asset_tag ))
+        ->get()
+        ->map(function ($asset){
                 $data = [
-                    'particular'           =>  $asset->asset_tag,
-                    'dep_rate'             =>  $asset->depreciation_rate,
-                    'acquisition_date'     =>  $asset->acquisition_date,
-                    'opening_cost'         =>  '',
-                    'addition_cost'        =>  $add_cost = $asset->fixedAssetAccount?->ledgers->sum('dr_amount'),
-                    'delation_cost'        =>  $del_cost = $asset->fixedAssetAccount?->ledgers->sum('cr_amount'),
-                    'closing_cost'         =>  $cost     = $add_cost - $del_cost,
-                    'opening_depreciation' =>  '',
-                    'addition_depreciation'=>  $add_dep = $asset->acumulateDepreciationAccount?->ledgers->sum('dr_amount'),
-                    'delation_depreciation'=>  $del_dep = $asset->acumulateDepreciationAccount?->ledgers->sum('cr_amount'),
-                    'closing_depreciation' =>  $dep     = $add_dep - $del_dep,
-                    'wdv'                  =>  $cost - $dep
+                    'particular'            => $asset->asset_tag,
+                    'dep_rate'              => $asset->depreciation_rate,
+                    'acquisition_date'      => $asset->acquisition_date,
+                    'opening_cost'          => '',
+                    'addition_cost'         => $add_cost = $asset->fixedAssetAccount?->ledgers->sum('dr_amount'),
+                    'delation_cost'         => $del_cost = $asset->fixedAssetAccount?->ledgers->sum('cr_amount'),
+                    'closing_cost'          => $cost = $add_cost - $del_cost,
+                    'opening_depreciation'  => '',
+                    'addition_depreciation' => $add_dep = $asset->acumulateDepreciationAccount?->ledgers->sum('dr_amount'),
+                    'delation_depreciation' => $del_dep = $asset->acumulateDepreciationAccount?->ledgers->sum('cr_amount'),
+                    'closing_depreciation'  => $dep = $add_dep - $del_dep,
+                    'wdv'                   => $cost - $dep,
                 ];
 
-            return $data;
-        });
+                return $data;
+            });
         // dd('gg');
+
         return response()->json([
             'status' => 'success',
             'value'  => $assets,
         ], 200);
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function costCenterSummary(Request $request)
+    {
+        try{
+            $costCentersInfo = (new CostCenterSummaryService)->handleCostCenterSummaryService($request); 
+
+            return response()->json([
+                'status' => 'success',
+                'value'  => $costCentersInfo,
+            ], 200);            
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function paymentReceiptSummary(Request $request){
+        try{
+            $paymentReceipts = (new PaymentReceiptService)->handlePaymentReceiptSummary($request); 
+
+            return response()->json([
+                'status' => 'success',
+                'value'  => $paymentReceipts,
+            ], 200);            
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+
+
+
+        // return $currentLedgers; 
+
     }
 
 }

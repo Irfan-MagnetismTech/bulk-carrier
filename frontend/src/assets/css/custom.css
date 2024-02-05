@@ -39,7 +39,11 @@
     font-size: 12px;
 }
 
-/* title-tip down */
+.custom_sidebar span{
+    font-size: 13px !important;
+}
+
+    /* title-tip down */
 [data-title]:hover {
     position: relative;
 }
@@ -334,6 +338,28 @@ input.custom_date::-webkit-calendar-picker-indicator{
     --dp-border-color-hover: #4b5563;
     --dp-icon-color: #4b5563;
 }
+
+.vs--single {
+	&:not(.vs--open) .vs__selected + .vs__search {
+	  width: 0;
+	  padding: 0;
+	  margin: 0;
+	  border: none;
+	  height: 0;
+	}
+  
+	.vs__selected-options {
+	  width: 0;
+	}
+  
+	.vs__selected {
+	  display: block;
+	  white-space: nowrap;
+	  text-overflow: ellipsis;
+	  max-width: 100%;
+	  overflow: hidden;
+	}
+  }
 
 
 @media only screen and (min-width: 768px) {

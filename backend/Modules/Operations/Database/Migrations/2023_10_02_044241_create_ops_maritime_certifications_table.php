@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('type');
-            $table->string('validity');
+            $table->string('validity')->nullable();
             $table->string('authority')->nullable();
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
             $table->timestamps();

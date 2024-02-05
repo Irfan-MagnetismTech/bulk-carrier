@@ -214,15 +214,18 @@ class OpsVesselExpenseHeadController extends Controller
     public function destroy(OpsVesselExpenseHead $vessel_expense_head): JsonResponse
     {
         try{
+            DB::beginTransaction();            
             OpsVesselExpenseHead::where('ops_vessel_id', $vessel_expense_head->ops_vessel_id)->delete();
-
+            DB::commit();
+            
             return response()->json([
                 'message' => 'Data deleted successfully.'
             ], 204);
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($vessel_expense_head->preventDeletionIfRelated(), 422);
         }
     }
 

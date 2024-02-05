@@ -11,12 +11,17 @@ export default function useLcRecord() {
     const BASE = 'scm' 
     const router = useRouter();
     const lcRecords = ref([]);
+    const lcRecordStatuses = ref([]);
     const filteredLcRecords = ref([]);
     const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
     // const LoaderConfig = { 'can-cancel': false, 'loader': 'dots', 'color': 'purple' };
     // use lodash
+    const lcRecordStatus = ref({
+        status: '',
+        date: '',
+    });
 
     const lcRecord = ref({
         lc_no: null,
@@ -57,6 +62,9 @@ export default function useLcRecord() {
         market_rate: 0.0,
         business_unit: null,
         created_by: null,
+        pi_ref_no: null,
+        expected_shipment_date: null,
+        shipment_date: null,
         scmLcRecordLines: [
                     ], 
     });
@@ -197,6 +205,43 @@ export default function useLcRecord() {
             isLoading.value = false;
         }
     }
+
+    async function storeLcRecordStatus(form) {
+        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        isLoading.value = true;
+        
+
+        try {
+            const { data, status } = await Api.post(`/${BASE}/lc-record-statuses`, form);
+            lcRecordStatus.value = data.value;
+            notification.showSuccess(status);
+            // await router.push({ name: "mnt.ship-departments.index" });
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+        } finally {
+            // loader.hide();
+            isLoading.value = false;
+        }
+    }
+
+    async function showLcRecordStatuses(lcRecordId) {
+
+        const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`/${BASE}/lc-record-statuses/${lcRecordId}`);
+            lcRecordStatuses.value = data.value;
+            console.log('lcdata', lcRecord.value);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
+    }
     
 
 
@@ -211,6 +256,10 @@ export default function useLcRecord() {
         showLcRecord,
         updateLcRecord,
         deleteLcRecord,
+        storeLcRecordStatus,
+        showLcRecordStatuses,
+        lcRecordStatuses,
+        lcRecordStatus,
         isTableLoading,
         isLoading,
         errors,

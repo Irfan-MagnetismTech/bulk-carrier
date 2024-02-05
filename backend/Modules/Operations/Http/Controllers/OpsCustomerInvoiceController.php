@@ -202,6 +202,7 @@ class OpsCustomerInvoiceController extends Controller
             $customer_invoice->opsCustomerInvoiceOthers()->delete();
             $customer_invoice->opsCustomerInvoiceServices()->delete();
             $customer_invoice->delete();
+            DB::commit();
 
             return response()->json([
                 'message' => 'Data deleted successfully.',
@@ -209,7 +210,8 @@ class OpsCustomerInvoiceController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($customer_invoice->preventDeletionIfRelated(), 422);
         }
     }
 }

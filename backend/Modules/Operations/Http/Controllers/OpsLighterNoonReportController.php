@@ -154,8 +154,10 @@ class OpsLighterNoonReportController extends Controller
     {
         try
         {
+            DB::beginTransaction();            
             $lighter_noon_report->opsBunkers()->delete();
             $lighter_noon_report->delete();
+            DB::commit();
 
             return response()->json([
                 'message' => 'Data deleted successfully.',
@@ -163,7 +165,8 @@ class OpsLighterNoonReportController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($lighter_noon_report->preventDeletionIfRelated(), 422);
         }
     }
      

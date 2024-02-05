@@ -233,18 +233,21 @@ class OpsVoyageController extends Controller
     {
         try
         {
+            DB::beginTransaction();
             $voyage->opsVoyageSectors()->delete();
             $voyage->opsVoyagePortSchedules()->delete();
             // $voyage->opsBunkers()->delete();
-            $voyage->delete();
-
+            $voyage->delete();            
+            DB::commit();
+            
             return response()->json([
                 'message' => 'Data deleted Successfully.',
             ], 204);
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($voyage->preventDeletionIfRelated(), 422);
         }
     }
 

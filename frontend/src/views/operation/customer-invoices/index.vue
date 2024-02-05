@@ -33,7 +33,7 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 let filterOptions = ref({
-  // "business_unit": businessUnit.value,
+  "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
   "isFilter": false,
@@ -158,9 +158,9 @@ onMounted(() => {
                   <td>{{ customerInvoice?.voyage_name }}</td>
                   <td><nobr>{{ formatDate(customerInvoice?.date) }}</nobr></td>
                   <td>{{ numberFormat(customerInvoice?.grand_total) }}</td>
-                  <!-- <td>
+                  <td>
                     <span :class="customerInvoice?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ customerInvoice?.business_unit }}</span>
-                  </td> -->
+                  </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <action-button :action="'show'" :to="{ name: 'ops.customer-invoices.show', params: { customerInvoiceId: customerInvoice.id } }"></action-button>

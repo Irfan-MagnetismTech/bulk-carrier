@@ -132,7 +132,7 @@
 
 
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Appraisal Date</span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Appraisal Date <span class="text-red-500">*</span></span>
             <VueDatePicker v-model="form.appraisal_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
             <Error v-if="errors?.appraisal_date" :errors="errors.appraisal_date" />
         </label>
@@ -495,22 +495,5 @@ import { formatDate } from "../../utils/helper";
 
   td label{
     font-size: 12px;
-  }
-
-  >>> {
-    --vs-controls-color: #374151;
-    --vs-border-color: #4b5563;
-
-    --vs-dropdown-bg: #282c34;
-    --vs-dropdown-color: #eeeeee;
-    --vs-dropdown-option-color: #eeeeee;
-
-    --vs-selected-bg: #664cc3;
-    --vs-selected-color: #374151;
-
-    --vs-search-input-color: #4b5563;
-
-    --vs-dropdown-option--active-bg: #664cc3;
-    --vs-dropdown-option--active-color: #eeeeee;
   }
   </style>

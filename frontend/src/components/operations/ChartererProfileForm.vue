@@ -50,7 +50,7 @@
       
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Website</span>
-          <input type="url" v-model.trim="form.website" placeholder="Website" class="form-input" autocomplete="off" />
+          <input type="url" v-model.trim="form.website" placeholder="http://example.com" class="form-input" autocomplete="off" />
       </label>
     </div>
     

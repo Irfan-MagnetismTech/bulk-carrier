@@ -158,17 +158,20 @@ class OpsVoyageExpenditureController extends Controller
     {
         try
         {
+            DB::beginTransaction();            
             $voyage_expenditure->opsVoyageExpenditureEntries()->delete();
             $this->fileUpload->deleteFile($voyage_expenditure->attachment);
             $voyage_expenditure->delete();
-
+            DB::commit();
+            
             return response()->json([
                 'message' => 'Successfully deleted voyage expenditure.',
             ], 204);
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($voyage_expenditure->preventDeletionIfRelated(), 422);
         }
     }
 
