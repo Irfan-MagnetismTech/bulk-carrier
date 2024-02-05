@@ -76,6 +76,7 @@ export default function useChartererContract() {
     const filterParams = ref(null);
 	const isTableLoading = ref(false);
 	const isContractLoading = ref(false);
+	const isContractVoyageLoading = ref(false);
 
 	async function getChartererContracts(filterOptions) {
 		//NProgress.start();
@@ -294,7 +295,7 @@ export default function useChartererContract() {
 
 	//get contract wise voyage
 	async function getContractWiseVoyage(contractId) {
-		isContractLoading.value = true
+		isContractVoyageLoading.value = true
 
 		try {
 			const { data, status } = await Api.get(`/ops/get-voyage-by-contract?contract_id=${contractId}`);
@@ -308,7 +309,7 @@ export default function useChartererContract() {
 			//loader.hide();
 			//isLoading.value = false;
 			//NProgress.done();
-			isContractLoading.value = false
+			isContractVoyageLoading.value = false
 
 		}
 	}
@@ -352,6 +353,7 @@ export default function useChartererContract() {
 		chartererContracts,
 		chartererContract,
 		isContractLoading,
+		isContractVoyageLoading,
 		opsChartererLocalAgentObject,
 		getChartererContracts,
 		storeChartererContract,
