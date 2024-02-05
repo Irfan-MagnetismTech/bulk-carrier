@@ -559,7 +559,7 @@ class ScmWcsController extends Controller
 
         if (isset($request->searchParam)) {
             $wcs = ScmWcs::query()
-                ->with('scmWcsVendors', 'scmWcsServices', 'scmWcsVendorServices')
+                ->with('scmWcsVendors', 'scmWcsServices', 'scmWcsVendorServices','scmWos')
                 ->whereHas('scmWcsServices.scmWr', function ($query) use ($request) {
                     $query->where(function ($query) use ($request) {
                         $query->where('ref_no', 'like', '%' . $request->searchParam . '%')
@@ -568,13 +568,14 @@ class ScmWcsController extends Controller
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
+                ->doesntHave('scmWos')
                 ->has('selectedVendors')
                 ->orderByDesc('ref_no')
                 ->get();
                 
         } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center)) {
             $wcs = ScmWcs::query()
-                ->with('scmWcsVendors', 'scmWcsServices', 'scmWcsVendorServices')
+                ->with('scmWcsVendors', 'scmWcsServices', 'scmWcsVendorServices','scmWos')
                 ->whereHas('scmWcsServices.scmWr', function ($query) use ($request) {
                     $query->where(function ($query) use ($request) {
                         $query->where('business_unit', $request->business_unit)
@@ -582,6 +583,7 @@ class ScmWcsController extends Controller
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
+                ->doesntHave('scmWos')
                 ->has('selectedVendors')
                 ->orderByDesc('ref_no')
                 ->get();
