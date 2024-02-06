@@ -107,11 +107,11 @@ class ScmMrrController extends Controller
     public function show($id): JsonResponse
     {
         $scmMrr = ScmMrr::query()->find($id);
-        $scmMrr->load('scmMrrLines.scmMrrLineItems.scmMaterial', "scmMrrLines.scmPr", 'scmWarehouse', 'scmMrrLineItems', 'createdBy', 'scmMrrLines.scmMrrLineItems.scmPoItem.scmMaterial');
+        $scmMrr->load('scmMrrLines.scmMrrLineItems.scmMaterial', "scmMrrLines.scmPr", 'scmWarehouse', 'scmMrrLineItems', 'createdBy', 'scmMrrLines.scmMrrLineItems.scmPoItem.scmMaterial','scmPo');
         $scmMrrLines = $scmMrr->scmMrrLines->map(function ($items) {
             $datas = $items;
             $adas = $items->scmMrrLineItems->map(function ($item) {
-                    $max_quantity = $item?->scmPoItem?->quantity ?? 0 -  $item?->scmPoItem?->scmMrrLineItems->sum('quantity')  ?? 0 + $item->quantity;
+                    $max_quantity = ($item?->scmPoItem?->quantity ?? 0) -  ($item?->scmPoItem?->scmMrrLineItems->sum('quantity')  ?? 0) + $item->quantity;
                         return [
                             'id' => $item['id'],
                             'scm_material_id' => $item['scm_material_id'],
@@ -129,6 +129,7 @@ class ScmMrrController extends Controller
                             'pr_composite_key' => $item['pr_composite_key'],
                             'mrr_composite_key' => $item['mrr_composite_key'],
                             'max_quantity' => $max_quantity,
+                            'remaining_quantity' => $max_quantity,
                             'pr_qty' => $item->scmPrLine->quantity,
                             'po_qty' => $item?->scmPoItem?->quantity ?? 0,
                         ];
@@ -174,13 +175,14 @@ class ScmMrrController extends Controller
     {
         try {
             DB::beginTransaction();
-
+            // $materialReceiptReport->load('scmMrrLines.scmMrrLineItems','scmMrrLineItems');
             $materialReceiptReport->update($request->all());
-            $materialReceiptReport->scmMrrLines()->createUpdateOrDelete($request->scmMrrLines);
-
             $materialReceiptReport->stockable()->delete();
-            StockLedgerData::insert($materialReceiptReport, $request->scmMrrLines);
 
+            $materialReceiptReport->scmMrrLineItems()->delete();
+            $materialReceiptReport->scmMrrLines()->delete();
+
+            $this->createScmMrrLinesAndItems($request, $materialReceiptReport);
             DB::commit();
 
             return response()->success('Data updated sucessfully!', $materialReceiptReport, 202);
@@ -199,12 +201,18 @@ class ScmMrrController extends Controller
     public function destroy(ScmMrr $materialReceiptReport): JsonResponse
     {
         try {
+            DB::beginTransaction();
+
+            $materialReceiptReport->scmMrrLineItems()->delete();
             $materialReceiptReport->scmMrrLines()->delete();
             $materialReceiptReport->delete();
+            $materialReceiptReport->stockable()->delete();
+
+            DB::commit();
 
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (\Exception $e) {
-
+            DB::rollBack();
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -372,7 +380,7 @@ class ScmMrrController extends Controller
                     $data['po_composite_key'] = null;
                     $data['current_stock'] = CurrentStock::count($item->scmMaterial->id, request()->scm_warehouse_id);
                     if (request()->scm_mrr_id) {
-                        $data['mrr_quantity'] = $item->scmMrrLines->where('scm_mrr_id', request()->scm_mrr_id)->where('pr_composite_key', $item->pr_composite_key)->first()->quantity;
+                        $data['mrr_quantity'] = $item->scmMrrLines->where('scm_mrr_id', request()->scm_mrr_id)->where('pr_composite_key', $item->pr_composite_key)->first()?->quantity ?? 0;
                     } else {
                         $data['mrr_quantity'] = 0;
                     }
@@ -395,7 +403,7 @@ class ScmMrrController extends Controller
                     $data['unit'] = $item->unit;
                     $data['quantity'] = $item->quantity;
                     if (request()->scm_mrr_id) {
-                        $data['mrr_quantity'] = $item->scmMrrLines->where('scm_mrr_id', request()->scm_mrr_id)->where('po_composite_key', $item->po_composite_key)->quantity;
+                        $data['mrr_quantity'] = $item->scmMrrLines->where('scm_mrr_id', request()->scm_mrr_id)->where('po_composite_key', $item->po_composite_key)->first()?->quantity ?? 0;
                     } else {
                         $data['mrr_quantity'] = 0;
                     }
