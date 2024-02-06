@@ -301,10 +301,16 @@ onMounted(() => {
     </label>
     <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700">Currency <span class="text-red-500">*</span></span>
-        <select v-model.trim="form.currency" class="form-input" required>
-          <option selected value="" disabled>--Choose an option--</option>
-          <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
-        </select>
+        <v-select :options="currencies" :loading="isCurrencyLoading" placeholder="--Choose an option--" v-model="form.currency" class="block form-input">
+                <template #search="{attributes, events}">
+                    <input
+                        class="vs__search"
+                        :required="!form.currency"
+                        v-bind="attributes"
+                        v-on="events"
+                        />
+                </template>
+            </v-select>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700">Exchange Rate (To USD) </span>
