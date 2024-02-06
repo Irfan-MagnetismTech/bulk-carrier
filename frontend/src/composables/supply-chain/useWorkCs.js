@@ -249,7 +249,7 @@ export default function useWorkCs() {
         }
     }
 
-    async function searchWcs(business_unit, scm_warehouse_id = null, purchase_center = null, searchParam = '') { 
+    async function searchWcs(business_unit, scm_warehouse_id = null, purchase_center = null, scmWoId = null,searchParam = '') { 
         //NProgress.start();
         // const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -260,6 +260,7 @@ export default function useWorkCs() {
                     scm_warehouse_id: scm_warehouse_id,
                     purchase_center: purchase_center,
                     searchParam: searchParam,
+                    scm_wo_id: scmWoId,
                 },
             });
             filteredWorkCs.value = data.value;
