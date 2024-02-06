@@ -121,7 +121,7 @@ export default function useBunkerBill() {
 		let showAlert = false;
 		form.opsBunkerBillLines.reduce((acc, billLine) => {
 			return acc + billLine.opsBunkerBillLineItems.reduce((innerAcc, lineItem) => {
-			  if(!(lineItem.amount_bdt > 0) || !(lineItem.amount_usd > 0)) {
+			  if(!(lineItem.amount_bdt > 0)) {
 				
 				showAlert = true;
 			  }
@@ -188,7 +188,7 @@ export default function useBunkerBill() {
 		let showAlert = false;
 		form.opsBunkerBillLines.reduce((acc, billLine) => {
 			return acc + billLine.opsBunkerBillLineItems.reduce((innerAcc, lineItem) => {
-			  if(!(lineItem.amount_bdt > 0) || !(lineItem.amount_usd > 0)) {
+			  if(!(lineItem.amount_bdt > 0)) {
 				
 				showAlert = true;
 			  }

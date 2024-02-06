@@ -313,7 +313,7 @@ const isNotBDTCurrency = (index) => {
 watch(() => props.form.opsBunkerBillLines, (newValue, oldValue) => {
   let sub_total = 0;
   props.form.opsBunkerBillLines.forEach((item,index) => {
-    item?.opsBunkerBillLineItems.forEach((lineItem,index) => {
+    item?.opsBunkerBillLineItems?.forEach((lineItem,index) => {
       sub_total += parseFloat(item.amount);
     });
   });
@@ -439,7 +439,7 @@ function CalculateAll() {
   console.log("Calculate All")
 
   let totalAmount = props.form.opsBunkerBillLines.reduce((acc, billLine) => {
-    return acc + billLine.opsBunkerBillLineItems.reduce((innerAcc, lineItem) => {
+    return acc + billLine.opsBunkerBillLineItems?.reduce((innerAcc, lineItem) => {
       return innerAcc + (lineItem.amount_bdt || 0);
     }, 0);
   }, 0);
