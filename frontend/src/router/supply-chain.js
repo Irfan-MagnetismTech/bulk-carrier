@@ -1,4 +1,5 @@
 import Store from './../store/index.js';
+import supplyChain2 from './supply-chain2.js';
 const USER = Store.getters.getCurrentUser;
 
 const BASE = "scm";
@@ -682,5 +683,6 @@ export default [
     //     meta: { requiresAuth: true, role: ROLE, permission: 'quotations-index' },
     //     props: (route) => ({ page: parseInt(route.query.page) || 1 }),
     // },
-   
+
+    ...supplyChain2
 ];
