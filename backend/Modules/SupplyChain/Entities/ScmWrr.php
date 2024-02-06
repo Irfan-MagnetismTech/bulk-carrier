@@ -5,6 +5,7 @@ namespace Modules\SupplyChain\Entities;
 use App\Models\User;
 use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
+use App\Traits\UniqueKeyGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,11 +14,11 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class ScmWrr extends Model
 {
-    use HasFactory, GlobalSearchTrait, DeletableModel;
+    use HasFactory, GlobalSearchTrait, DeletableModel, UniqueKeyGenerator;
 
     protected $fillable = [
         'ref_no',
-        'type',,
+        'type',
         'date',
         'scm_wo_id',
         // 'scm_wr_id',

@@ -556,7 +556,6 @@ class ScmWcsController extends Controller
     public function searchWorkCs(Request $request)
     {
         $wcs = [];
-
         if (isset($request->searchParam)) {
             $wcs = ScmWcs::query()
                 ->with('scmWcsVendors', 'scmWcsServices.scmWoItems', 'scmWcsVendorServices')
@@ -573,22 +572,13 @@ class ScmWcsController extends Controller
                 ->get()
                 ->filter(function ($item) use ($request) {
                     return $item->scmWcsServices->filter(function ($service) use ($request) {
-                        $getService=0;
+                        $getService=null;
                         if(!empty($request->scm_wo_id)){
                             $getService = $service->scmWoItems?->where('scm_wo_id',$request->scm_wo_id)->first();
                         } 
-                        return $service->quantity + $getService?->quantity > $service->scmWoItems->sum('quantity');
-                        // $quantity=0;
-                        // if(isset($request->scm_wo_id)){
-                        //     $quantity = $service->scmWoItems->where('scm_wo_id',$request->scm_wo_id)->first()->quantity;
-                        // }else{
-                        //     $quantity=0;
-                        // }      
-                        // return $service->quantity + $quantity > $service->scmWoItems->sum('quantity');
+                        return $service->quantity + ((!empty($getService))?$getService->quantity:0) > $service->scmWoItems->sum('quantity');
                     })->isNotEmpty();
-                })
-                ->values()
-                ->toArray();
+                })->values()->toArray();
                 
         } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center)) {
             $wcs = ScmWcs::query()
@@ -605,12 +595,11 @@ class ScmWcsController extends Controller
                 ->get()
                 ->filter(function ($item) use ($request) {
                     return $item->scmWcsServices->filter(function ($service) use ($request) {   
-                        // $request['scm_wo_id'] = 11;    
-                        $getService=0;
+                        $getService=null;
                         if(!empty($request->scm_wo_id)){
                             $getService = $service->scmWoItems?->where('scm_wo_id',$request->scm_wo_id)->first();
                         } 
-                        return $service->quantity + $getService?->quantity > $service->scmWoItems->sum('quantity');
+                        return $service->quantity + ((!empty($getService))?$getService->quantity:0) > $service->scmWoItems->sum('quantity');
                     })->isNotEmpty();
                 })
                 ->values()
