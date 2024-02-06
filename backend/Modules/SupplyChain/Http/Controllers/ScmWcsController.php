@@ -573,18 +573,18 @@ class ScmWcsController extends Controller
                 ->get()
                 ->filter(function ($item) use ($request) {
                     return $item->scmWcsServices->filter(function ($service) use ($request) {
-                        $quantity=0;
-                        if(isset($request->scm_wo_id)){
-                            $quantity = $service->scmWoItems->where('scm_wo_id',$request->scm_wo_id)->first()->quantity;
-                            // if($service->scmWoItems->where('scm_wo_id',$request->scm_wo_id)->isNotEmpty()){
-                            //     return 1;
-                            // }else{
-                            //     return $service->quantity > $service->scmWoItems->sum('quantity');
-                            // }
-                        }else{
-                            $quantity=0;
-                        }      
-                        return $service->quantity + $quantity > $service->scmWoItems->sum('quantity');
+                        $getService=0;
+                        if(!empty($request->scm_wo_id)){
+                            $getService = $service->scmWoItems?->where('scm_wo_id',$request->scm_wo_id)->first();
+                        } 
+                        return $service->quantity + $getService?->quantity > $service->scmWoItems->sum('quantity');
+                        // $quantity=0;
+                        // if(isset($request->scm_wo_id)){
+                        //     $quantity = $service->scmWoItems->where('scm_wo_id',$request->scm_wo_id)->first()->quantity;
+                        // }else{
+                        //     $quantity=0;
+                        // }      
+                        // return $service->quantity + $quantity > $service->scmWoItems->sum('quantity');
                     })->isNotEmpty();
                 })
                 ->values()
