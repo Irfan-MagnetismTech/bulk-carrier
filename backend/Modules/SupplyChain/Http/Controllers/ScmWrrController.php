@@ -96,11 +96,11 @@ class ScmWrrController extends Controller
      */
     public function show(ScmWrr $work_receipt_report): JsonResponse
     {       
-        $work_receipt_report->load('scmWrrLines.scmWrrLineItems.scmService', "scmWrrLines.scmWr", 'scmWarehouse', 'scmWrrLineItems', 'createdBy', 'scmWrrLines.scmWrrLineItems.scmWoItem.scmService');
+        $work_receipt_report->load('scmWrrLines.scmWrrLineItems.scmService', "scmWrrLines.scmWr", 'scmWarehouse', 'scmWrrLineItems', 'createdBy', 'scmWrrLines.scmWrrLineItems.scmWoItem.scmService', 'scmWo');
         $scmWrrLines = $work_receipt_report->scmWrrLines->map(function ($items) {
             $datas = $items;
             $adas = $items->scmWrrLineItems->map(function ($item) {
-                    $max_quantity = ($item?->scmWoItem?->quantity ?? 0) -  $item?->scmWoItem?->scmWrrLineItems?->sum('quantity')  ?? 0 + $item->quantity;
+                    $max_quantity = ($item?->scmWoItem?->quantity ?? 0) -  ($item?->scmWoItem?->scmWrrLineItems?->sum('quantity')  ?? 0) + $item->quantity;
                         return [
                             'id' => $item['id'],
                             'scm_service_id' => $item['scm_service_id'],
@@ -140,14 +140,13 @@ class ScmWrrController extends Controller
      */
     public function update(ScmWrrRequest $request, ScmWrr $work_receipt_report): JsonResponse
     {
-        $requestData = $request->except('ref_no');
         $work_receipt_report->load('scmWrrLines','scmWrrLineItems');
         try {
             DB::beginTransaction();
 
-            $work_receipt_report->update($requestData);
-            $work_receipt_report->scmWrrLines()->delete();
+            $work_receipt_report->update($$request->all());
             $work_receipt_report->scmWrrLineItems()->delete();
+            $work_receipt_report->scmWrrLines()->delete();
 
             $this->createScmWrrLinesAndItems($request, $work_receipt_report);
 
@@ -171,9 +170,9 @@ class ScmWrrController extends Controller
         $work_receipt_report->load('scmWrrLines','scmWrrLineItems');
         try {
             DB::beginTransaction();
-            $work_receipt_report->delete();
-            $work_receipt_report->scmWrrLines()->delete();
             $work_receipt_report->scmWrrLineItems()->delete();
+            $work_receipt_report->scmWrrLines()->delete();
+            $work_receipt_report->delete();
             DB::commit();
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (\Exception $e) {

@@ -43,6 +43,6 @@ class ScmWrrItem extends Model
 
     public function scmWoItem(): BelongsTo
     {
-        return $this->belongsTo(ScmWoItem::class);
+        return $this->belongsTo(ScmWoItem::class, 'wo_composite_key', 'wo_composite_key');
     }
 }
