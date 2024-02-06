@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 class ScmWrr extends Model
 {
     use HasFactory, GlobalSearchTrait, DeletableModel, UniqueKeyGenerator;
-
+    protected $refKeyPrefix = 'WRR';
     protected $fillable = [
         'ref_no',
         'type',

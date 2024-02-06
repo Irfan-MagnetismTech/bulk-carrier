@@ -111,10 +111,11 @@ class ScmWrrController extends Controller
                             'net_rate' => $item['net_rate'],
                             'wo_composite_key' => $item['wo_composite_key'],
                             'wr_composite_key' => $item['wr_composite_key'],
-                            'wrr_composite_key' => $item['wrr_composite_key'],
                             'max_quantity' => $max_quantity,
+                            'remaining_quantity' => $max_quantity,
                             'wr_qty' => $item?->scmWrLine?->quantity,
                             'wo_qty' => ($item?->scmWoItem?->quantity ?? 0),
+
                         ];
             });
             data_forget($items, 'scmWrrLineItems');
@@ -144,7 +145,7 @@ class ScmWrrController extends Controller
         try {
             DB::beginTransaction();
 
-            $work_receipt_report->update($$request->all());
+            $work_receipt_report->update($request->all());
             $work_receipt_report->scmWrrLineItems()->delete();
             $work_receipt_report->scmWrrLines()->delete();
 
@@ -293,7 +294,7 @@ class ScmWrrController extends Controller
 
             $data = $scmWo->scmWoItems->map(function ($item) {
                 if (request()->scm_wrr_id) {
-                    $wrrQuantity = $item->scmWrrLineItems->where('scm_wrr_id', request()->scm_wrr_id)->where('wo_composite_key', $item->wo_composite_key)->first?->quantity ?? 0;
+                    $wrrQuantity = $item->scmWrrLineItems->where('scm_wrr_id', request()->scm_wrr_id)->where('wo_composite_key', $item->wo_composite_key)->first()?->quantity ?? 0;
                 } else {
                     $wrrQuantity = 0;
                 }
@@ -331,14 +332,15 @@ class ScmWrrController extends Controller
 
         $data = $scmWo->scmWoItems->map(function ($item) {
             if (request()->scm_wrr_id) {
-                $wrrQuantity = $item->scmWrrLineItems->where('scm_wrr_id', request()->scm_wrr_id)->where('wo_composite_key', $item->wo_composite_key)->first?->quantity ?? 0;
+                $wrrQuantity = $item->scmWrrLineItems->where('scm_wrr_id', request()->scm_wrr_id)->where('wo_composite_key', $item->wo_composite_key)->first()?->quantity ?? 0;
             } else {
                 $wrrQuantity = 0;
             }
 
-            $totalWrrQuantity = $item?->scmMrrLineItems?->sum('quantity');
+            $totalWrrQuantity = $item?->scmMrrLineItems?->sum('quantity') ?? 0;
 
             $remainingQuantity = $item->quantity - $totalWrrQuantity + $wrrQuantity;
+
             $data = $item->scmService;
             $data['quantity'] = $remainingQuantity;
             $data['rate'] = $item->rate;

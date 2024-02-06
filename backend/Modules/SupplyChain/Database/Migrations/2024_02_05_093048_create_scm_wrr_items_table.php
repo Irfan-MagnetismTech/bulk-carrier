@@ -18,8 +18,8 @@ return new class extends Migration
             $table->foreignId('scm_wrr_id')->constrained('scm_wrrs');
             $table->unsignedBigInteger('scm_wrr_line_id')->nullable();
             $table->unsignedBigInteger('scm_service_id');
-            $table->bigInteger('quantity')->nullable();
-            $table->bigInteger('rate')->nullable();
+            $table->float('quantity', 20, 2)->nullable();
+            $table->float('rate', 20, 2)->nullable();
             $table->string('wo_composite_key')->nullable();
             $table->string('wr_composite_key')->nullable();
             $table->decimal('net_rate', 10, 2)->nullable();
