@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Modules\Maintenance\Entities\MntItem;
 use Modules\Maintenance\Entities\MntItemGroup;
 use Modules\Maintenance\Entities\MntJob;
+use  Mccarlosen\LaravelMpdf\Facades\LaravelMpdf as PDF;
 
 class MntReportController extends Controller
 {
@@ -19,8 +20,8 @@ class MntReportController extends Controller
     public function reportAllJobs()
     {
         try {
-            $mntShipDepartmentId = request()->mnt_ship_department_id; // Replace with the actual ID of the MntShipDepartment
-            $opsVesselId = request()->ops_vessel_id; // Replace with the actual ID of the MntShipDepartment
+            $mntShipDepartmentId = 1;// request()->mnt_ship_department_id; 
+            $opsVesselId = 6;//request()->ops_vessel_id; 
 
             $mntItemGroups = MntItemGroup::whereHas('mntItems.mntJobs.mntJobLines', function ($query) use ($mntShipDepartmentId, $opsVesselId) {
                 $query->whereHas('mntJob.mntItem.mntItemGroup', function ($query) use ($mntShipDepartmentId) {
@@ -190,5 +191,16 @@ class MntReportController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+    public function getPdfAllJobs(){
+        $allJobs = $this->reportAllJobs();
+        $allJobsData = $allJobs->getData();
+        $data['data'] = $allJobsData->value;
+
+        $pdf = PDF::loadView('pdf.all-jobs', $data);
+
+        return $pdf->stream('document.pdf');
+    }
+
 
 }
