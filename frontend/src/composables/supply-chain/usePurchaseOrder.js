@@ -427,7 +427,7 @@ export default function usePurchaseOrder() {
                 materialArray.push(material_key);
                 form.scmPoLines[scmPoLineIndex].scmPoItems[scmPoitemIndex].isAspectDuplicate = false;
               } else {
-                let data = `Duplicate Material Name Having Purchase Requisition ${scmPoLine.scmPr.ref_no} in ${scmPoLineIndex} Block Row: ${scmPoitemIndex + 1}`;
+                let data = `Duplicate Material Name Having Purchase Requisition ${scmPoLine.scmPr.ref_no} in ${scmPoLineIndex + 1} Block Row: ${scmPoitemIndex + 1}`;
                 messages.value.push(data);
                 form.scmPoLines[scmPoLineIndex].scmPoItems[scmPoitemIndex].isAspectDuplicate = true;
               }
