@@ -11,9 +11,9 @@ import useHeroIcon from "../../assets/heroIcon";
 import RemarksComponet from '../../components/utils/RemarksComponent.vue';
 import useVendor from "../../composables/supply-chain/useVendor.js";
 
-const { vessel, vessels, getVesselList, showVessel } = useVessel();
-const { voyages, searchVoyages } = useVoyage();
-const { currencies, getCurrencies } = useBusinessInfo();
+const { vessel, vessels, getVesselList, showVessel, isVesselLoading } = useVessel();
+const { voyages, searchVoyages, isVoyageLoading } = useVoyage();
+const { currencies, getCurrencies, isCurrencyLoading } = useBusinessInfo();
 const {vendor, vendors, showVendor, searchVendor, isLoading: vendorLoader } = useVendor();
 
 const icons = useHeroIcon();
@@ -257,7 +257,7 @@ onMounted(() => {
   <div class="flex w-full md:flex-row md:gap-2">
     <label class="block w-1/2 mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
-              <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
+              <v-select :options="vessels" :loading="isVesselLoading" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -271,7 +271,7 @@ onMounted(() => {
     </label> 
     <label class="block w-1/2 mt-2 text-sm" v-if="form.usage_type=='Voyage Wise'">
               <span class="text-gray-700 dark-disabled:text-gray-300">Voyage No <span class="text-red-500">*</span></span>
-              <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
+              <v-select :options="voyages" :loading="isVoyageLoading" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
