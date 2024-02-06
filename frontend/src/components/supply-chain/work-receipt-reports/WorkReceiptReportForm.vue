@@ -33,7 +33,7 @@ import { formatDate } from '../../../config/setting';
       scmWrrLineItemObject: { type: Object, required: false },
       termsObject: { type: Object, required: false },
       page: { required: false, default: {} },
-      mrrLineObject: { type: Object, required: false },
+      scmWrrLineObject: { type: Object, required: false },
       materialList: { type: [Object, Array], required: false },
       woServiceList: { type: [Object, Array], required: false },
     });
@@ -44,19 +44,19 @@ import { formatDate } from '../../../config/setting';
       props.form.scmWrrLines[index].scmWrrLineItems.push(clonedObj);
     }
 
-    function removeMaterial(index,itemIndex){
+    function removeService(index,itemIndex){
       props.form.scmWrrLines[index].scmWrrLineItems.splice(itemIndex, 1);
     }
 
     function addBlock() {
-      let lineLength = props.form.scmMrrLines.length;
-      const clonedObj = cloneDeep(props.mrrLineObject);
-      props.form.scmMrrLines.push(clonedObj);
-      props.poMaterialList.push([]);
+      let lineLength = props.form.scmWrrLines.length;
+      const clonedObj = cloneDeep(props.scmWrrLineObject);
+      props.form.scmWrrLines.push(clonedObj);
+      props.woServiceList.push([]);
     }
 
     function removeBlock(index) {
-      props.form.scmMrrLines.splice(index, 1);
+      props.form.scmWrrLines.splice(index, 1);
     }
 
     
@@ -505,12 +505,12 @@ watch(() => wrList.value, (newVal, oldVal) => {
             <table class="w-full whitespace-no-wrap" >
               <tbody>
                 <tr class="w-full">
-                    <th class="py-3 align-center !w-3/12">Material Details <br/> <span class="!text-[8px]"></span></th>
+                    <th class="py-3 align-center !w-5/12">Service Details <br/> <span class="!text-[8px]"></span></th>
                     <th class="py-3 align-center !w-3/12">Other Info</th>
-                    <th class="py-3 align-center !w-2/12">tolerence</th>
+                    <!-- <th class="py-3 align-center !w-2/12">tolerence</th> -->
                     <th class="py-3 align-center !w-3/12">Order Details</th>
                     <th class="!w-1/12" ref="TargetButtonWidth">
-                      <button type="button" @click="addMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                      <button type="button" @click="addService(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                           <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
                         </svg>
@@ -521,16 +521,16 @@ watch(() => wrList.value, (newVal, oldVal) => {
                 <template v-for="(lineItem, itemIndex) in form.scmWrrLines[index].scmWrrLineItems" :key="itemIndex">
                   <tr class="table_tr">
                     <td class="">
-                      <table>
+                      <table class="w-full">
                         <tr>
-                          <td><nobr>Service - Code</nobr></td>
-                          <td>
+                          <td class="w-1/4"><nobr>Service - Code</nobr></td>
+                          <td class="w-3/4">
                             <div class="relative">
-                            <v-select :options="woServiceList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmWrrLines[index].scmWrrLineItems[itemIndex].scmMaterial" label="service_name_and_code" class="block form-input-sm" :menu-props="{ minWidth: '250px', minHeight: '400px' }" @update:modelValue="changeService(index,itemIndex)">
+                            <v-select :options="woServiceList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmWrrLines[index].scmWrrLineItems[itemIndex].scmService" label="service_name_and_code" class="block form-input-sm" :menu-props="{ minWidth: '250px', minHeight: '400px' }" @update:modelValue="changeService(index,itemIndex)">
                               <template #search="{attributes, events}">
                                   <input
                                       class="vs__search"
-                                      :required="!form.scmWrrLines[index].scmWrrLineItems[itemIndex].scmMaterial"
+                                      :required="!form.scmWrrLines[index].scmWrrLineItems[itemIndex].scmService"
                                       v-bind="attributes"
                                       v-on="events"
                                       />
@@ -540,7 +540,7 @@ watch(() => wrList.value, (newVal, oldVal) => {
                           </td>
                           
                         </tr>
-                        <tr>
+                        <!-- <tr>
                           <td>Unit</td>
                           <td>
                             <input type="text" readonly v-model="form.scmWrrLines[index].scmWrrLineItems[itemIndex].unit" class="vms-readonly-input form-input-sm">
@@ -557,21 +557,21 @@ watch(() => wrList.value, (newVal, oldVal) => {
                           <td>
                               <input type="text" v-model="form.scmWrrLines[index].scmWrrLineItems[itemIndex].model" class="form-input-sm vms-readonly-input" readonly>
                           </td>
-                        </tr>
+                        </tr> -->
                       </table>
                     </td>
                     <td>
                       <table>
                         <tr>
-                          <td>PR Qty</td>
+                          <td>WR Qty</td>
                           <td>
-                            <input type="number" required :value="form.scmWrrLines[index].scmWrrLineItems[itemIndex].pr_qty" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
+                            <input type="number" required :value="form.scmWrrLines[index].scmWrrLineItems[itemIndex].wr_qty" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
                           </td>
                         </tr>
                         <tr>
-                          <td>PO Qty</td>
+                          <td>WO Qty</td>
                           <td>
-                            <input type="number" required :value="form.scmWrrLines[index].scmWrrLineItems[itemIndex].po_qty" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
+                            <input type="number" required :value="form.scmWrrLines[index].scmWrrLineItems[itemIndex].wo_qty" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
                           </td>
                         </tr>
                         
@@ -583,7 +583,7 @@ watch(() => wrList.value, (newVal, oldVal) => {
                         </tr>
                       </table>
                     </td>
-                    <td>
+                    <!-- <td>
                       <tr>
                           <td>Qty</td>
                           <td>
@@ -596,7 +596,7 @@ watch(() => wrList.value, (newVal, oldVal) => {
                             <input type="number" required :value="form.scmWrrLines[index].scmWrrLineItems[itemIndex].tolerence_level" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
                           </td>
                         </tr>
-                    </td>
+                    </td> -->
                     <td>
                       <table>
                         <tr>
@@ -615,7 +615,7 @@ watch(() => wrList.value, (newVal, oldVal) => {
                     </td>
                    
                     <td class="px-1 py-1 text-center">
-                      <button type="button" @click="removeMaterial(index,itemIndex)" class="remove_button">
+                      <button type="button" @click="removeService(index,itemIndex)" class="remove_button">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                         </svg>

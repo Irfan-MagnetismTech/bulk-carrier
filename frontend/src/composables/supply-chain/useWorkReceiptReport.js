@@ -95,6 +95,34 @@ export default function useMaterialReceiptReport() {
         //     }
         // ],
     });
+
+
+    const scmWrrLineObject = {
+            scm_wr_id: null,
+            scmWr: null,
+            scmWrrLineItems: [
+                {
+                    scmWrrLineItems: null,
+                    scm_wrr_item_id: null,
+                    scmService: null,
+                    scm_service_id: null,
+                    // unit: null,
+                    // brand: null,
+                    // model: null,
+                    quantity: 0.0,
+                    // tolerence: 0.0,
+                    // tolerence_qty: 0.0,
+                    rate: 0.0,
+                    net_rate: 0.0,
+                    wo_qty: 0.0,
+                    wr_qty: 0.0,
+                    current_stock: 0.0,
+                    wo_composite_key: null,
+                    wr_composite_key: null
+                }
+            ],
+        };
+
     const scmWrrLineItemObject = {
         scmWrrLineItems: null,
         scm_wrr_item_id: null,
@@ -544,6 +572,7 @@ export default function useMaterialReceiptReport() {
         materialList,
         // materialObject,
         scmWrrLineItemObject,
+        scmWrrLineObject,
         searchMrr,
         isTableLoading,
         // getPoList,
