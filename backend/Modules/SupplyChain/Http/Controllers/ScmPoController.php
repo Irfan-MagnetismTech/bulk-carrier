@@ -86,9 +86,9 @@ class ScmPoController extends Controller
 
                 $adas = $items->scmPoItems->map(function ($item) {
                     if (isset($item['cs_composite_key'])) {
-                        $max_quantity = $item->scmCsMaterial->quantity -  $item->scmCsMaterial->scmPoItems->sum('quantity') + $item->quantity;
+                        $max_quantity = ($item->scmCsMaterial?->quantity ?? 0) -  $item->scmCsMaterial->scmPoItems->sum('quantity') + $item->quantity;
                     } else {
-                        $max_quantity =  $item->scmPrLine->quantity -  $item->scmPrLine->scmPoItems->sum('quantity') + $item->quantity;
+                        $max_quantity =  ($item->scmPrLine?->quantity ?? 0) -  $item->scmPrLine->scmPoItems->sum('quantity') + $item->quantity;
                     }
                     return [
                         'id' => $item['id'],
