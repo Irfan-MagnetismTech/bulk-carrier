@@ -262,8 +262,17 @@ class ScmWoController extends Controller
                 'scm_wr_id' => $values['scm_wr_id'],
             ]);
 
+            $wr = ScmWr::find($values['scm_wr_id']);
+            if ($wr->status == 'Pending') {
+                $wr->update(['status' => 'WIP']);
+            }
+
             foreach ($values['scmWoItems'] as $index => $value) {
                 $this->createScmWoItem($request, $scmWoLine, $workOrder, $value, $index);
+                $lineData = ScmWrLine::where('scm_wr_id', $values['scm_wr_id'])->where('wr_composite_key', $value['wr_composite_key'])->get();
+                if ($lineData[0]->status == 'Pending') {
+                    $lineData[0]->update(['status' => 'WIP']);
+                }
             }
         }
     }

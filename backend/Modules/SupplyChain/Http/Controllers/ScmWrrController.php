@@ -100,7 +100,7 @@ class ScmWrrController extends Controller
         $scmWrrLines = $work_receipt_report->scmWrrLines->map(function ($items) {
             $datas = $items;
             $adas = $items->scmWrrLineItems->map(function ($item) {
-                    $max_quantity = ($item?->scmWoItem?->quantity ?? 0) -  ($item?->scmWoItem?->scmWrrLineItems?->sum('quantity')  ?? 0) + $item->quantity;
+                    $max_quantity = ($item?->scmWoItem?->quantity ?? 0) - ($item?->scmWoItem?->scmWrrLineItems?->sum('quantity')  ?? 0) + $item->quantity;
                         return [
                             'id' => $item['id'],
                             'scm_service_id' => $item['scm_service_id'],
