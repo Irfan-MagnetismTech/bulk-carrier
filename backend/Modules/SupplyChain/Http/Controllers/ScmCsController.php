@@ -629,6 +629,12 @@ class ScmCsController extends Controller
                     });
                 })
                 ->whereDate('expire_date', '>=', date('Y-m-d'))
+                ->doesntHave('scmPo')
+                ->filter(function($item){
+                    return $item->scmCsMaterials->filter(function($material){
+                        return $material->quantity > $material->scmPoItems->sum('quantity');
+                    })->isNotEmpty();
+                })
                 ->orderByDesc('ref_no')
                 ->get();
         } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center)) {

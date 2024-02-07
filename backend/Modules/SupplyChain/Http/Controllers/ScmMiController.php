@@ -66,6 +66,7 @@ class ScmMiController extends Controller
             $linesData = CompositeKey::generateArray($request->scmMiLines, $scmMi->id, 'scm_material_id', 'mi');
 
             $scmMi->scmMiLines()->createMany($linesData);
+            $composite = collect($linesData)->pluck('mi_composite_key')->toArray();
 
             if ($request->scmMiShortage['shortage_type'] != "") {
                 $scmMi->scmMiShortage()->create($request->scmMiShortage);
@@ -102,7 +103,7 @@ class ScmMiController extends Controller
                 }
             }
 
-            StockLedgerData::insert($scmMi, $request->scmMiLines);
+            StockLedgerData::insert($scmMi, $request->scmMiLines, $composite);
 
             DB::commit();
 
@@ -206,8 +207,11 @@ class ScmMiController extends Controller
             $linesData = CompositeKey::generateArray($request->scmMiLines, $movementIn->id, 'scm_material_id', 'mi');
 
             $movementIn->scmMiLines()->createMany($linesData);
+            $composite = collect($linesData)->pluck('mi_composite_key')->toArray();
 
-            StockLedgerData::insert($movementIn, $request->scmMiLines);
+            StockLedgerData::insert($movementIn, $request->scmMiLines, $composite);
+
+
 
             if ($request->scmMiShortage['shortage_type'] == "") {
 

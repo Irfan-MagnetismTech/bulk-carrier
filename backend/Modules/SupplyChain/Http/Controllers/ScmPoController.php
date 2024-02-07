@@ -413,9 +413,10 @@ class ScmPoController extends Controller
     {
         if (!request()->has('cs_id')) {
             $prMaterials = ScmPrLine::query()
-                ->with('scmMaterial')
+                ->with('scmMaterial', 'scmPoItems', 'scmCsmaterials')
                 ->where('scm_pr_id', request()->pr_id)
                 ->whereNot('status', 'Closed')
+                ->doesntHave('scmCsmaterials')
                 ->get()
                 ->map(function ($item) {
                     $data = $item->scmMaterial;
@@ -518,8 +519,10 @@ class ScmPoController extends Controller
     {
         if (!request()->has('cs_id')) {
             $scmPr = ScmPrLine::query()
+                ->with('scmMaterial', 'scmPoItems', 'scmCsmaterials')
                 ->where('scm_pr_id', request()->pr_id)
                 ->whereNot('status', 'Closed')
+                ->doesntHave('scmCsmaterials')
                 ->get()
                 ->map(function ($item) {
                     $data['scm_material_id'] = $item->scmMaterial->id;

@@ -8,6 +8,7 @@ import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
 import { merge } from 'lodash';
 import { loaderSetting as LoaderConfig} from '../../config/setting.js';
+import Swal from 'sweetalert2';
 
 export default function useMaterialReceiptReport() {
     const BASE = 'scm' 
@@ -46,7 +47,6 @@ export default function useMaterialReceiptReport() {
                 scmPr: null,
                 scmMrrLineItems: [
                     {
-                        scmMrrLineItems: null,
                         scm_mrr_item_id: null,
                         scmMaterial: null,
                         scm_material_id: null,
@@ -68,8 +68,33 @@ export default function useMaterialReceiptReport() {
             }
         ],
     });
+    const mrrLineObject = {
+        scm_pr_id: null,
+        scmPr: null,
+        scmMrrLineItems: [
+            {
+                scm_mrr_item_id: null,
+                scmMaterial: null,
+                scm_material_id: null,
+                unit: null,
+                brand: null,
+                model: null,
+                quantity: 0.0,
+                tolerence: 0.0,
+                tolerence_qty: 0.0,
+                rate: 0.0,
+                net_rate: 0.0,
+                po_qty: 0.0,
+                pr_qty: 0.0,
+                current_stock: 0.0,
+                po_composite_key: null,
+                pr_composite_key: null,
+                isAspectDuplicate: false,
+            }
+        ],
+    }
+
     const materialObject = {
-        scmMrrLineItems: null,
         scm_mrr_item_id: null,
         scmMaterial: null,
         scm_material_id: null,
@@ -85,7 +110,8 @@ export default function useMaterialReceiptReport() {
         pr_qty: 0.0,
         current_stock: 0.0,
         po_composite_key: null,
-        pr_composite_key: null
+        pr_composite_key: null,
+        isAspectDuplicate: false,
     }
 
     const poMaterialList = ref([]);
@@ -132,7 +158,7 @@ export default function useMaterialReceiptReport() {
         }
     }
     async function storeMaterialReceiptReport(form) {
-
+        if (!checkUniqueArray(form)) return;
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -169,6 +195,7 @@ export default function useMaterialReceiptReport() {
     }
 
     async function updateMaterialReceiptReport(form, materialReceiptReportId) {
+        if (!checkUniqueArray(form)) return;
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -204,6 +231,47 @@ export default function useMaterialReceiptReport() {
         } finally {
             // loader.hide();
             // isLoading.value = false;
+        }
+    }
+
+    function checkUniqueArray(form) {
+        let isHasError = false;
+        const messages = ref([]);
+        let materialArray = [];
+        form.scmMrrLines.map((scmMrrLine, scmMrrLineIndex) => {
+             
+            scmMrrLine.scmMrrLineItems.map((scmMrrLineItem, scmMrrLineItemIndex) => {
+            let material_key = scmMrrLineItem.po_composite_key;
+            if (materialArray.indexOf(material_key) === -1) {
+                materialArray.push(material_key);
+                form.scmMrrLines[scmMrrLineIndex].scmMrrLineItems[scmMrrLineItemIndex].isAspectDuplicate = false;
+              } else {
+                let data = `Duplicate Material Name Having Purchase Requisition ${scmMrrLine.scmPr.ref_no} in ${scmMrrLineIndex} Block Row: ${scmMrrLineItemIndex + 1}`;
+                messages.value.push(data);
+                form.scmMrrLines[scmMrrLineIndex].scmMrrLineItems[scmMrrLineItemIndex].isAspectDuplicate = true;
+              }
+            });
+        });
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
         }
     }
 
@@ -446,6 +514,7 @@ export default function useMaterialReceiptReport() {
         getMrrLineData,
         getPoMaterialList,
         poMaterialList,
+        mrrLineObject,
         errors,
     };
     

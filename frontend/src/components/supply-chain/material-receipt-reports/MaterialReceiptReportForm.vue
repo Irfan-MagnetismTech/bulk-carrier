@@ -35,7 +35,7 @@
       poMaterialList: { type: [Object, Array], required: false },
     });
 
-    const editinitaiated = ref(false); 
+    const editinitiated = ref(false); 
     
     function addMaterial(index) {
       const clonedObj = cloneDeep(props.materialObject);
@@ -183,6 +183,7 @@
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolerence_quantity = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.tolerence_quantity ?? 0;
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].remaining_quantity = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.remaining_quantity ?? 0;
       props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].rate = props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].scmMaterial?.rate ?? 0;
+      props.form.scmMrrLines[index].scmMrrLineItems[itemIndex].isAspectDuplicate = false;
       
       
     }
@@ -273,12 +274,13 @@
   props.form.scmMrrLines = [];
   // props.materialList.splice(0,props.materialList.length)
   getPoWisePrList(props.form.scmPo.id);
+  props.form.date = null
 }   
 watch(() => prlist.value, (newVal, oldVal) => {
   if (props.formType === 'create') {
-    editinitaiated.value = true;
+    editinitiated.value = true;
   }
-  if (editinitaiated.value) {
+  if (editinitiated.value) {
       if(newVal.length > 0){
         props.form.scmMrrLines = [];
         // props.materialList.splice(0,props.materialList.length);
@@ -298,7 +300,7 @@ watch(() => prlist.value, (newVal, oldVal) => {
         });
       }
     }
-    editinitaiated.value = true;
+    editinitiated.value = true;
 });
 </script>
 <template>
@@ -343,16 +345,6 @@ watch(() => prlist.value, (newVal, oldVal) => {
           </v-select>
       </label>
       <label class="label-group">
-          <span class="label-item-title">Receive Date<span class="text-red-500">*</span></span>
-          <!-- <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" /> -->
-          <VueDatePicker v-model="form.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd"></VueDatePicker>
-      </label> 
-      <label class="label-group">
-          <span class="label-item-title">Challan No<span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.challan_no" required class="form-input"/>
-         
-      </label>  
-      <label class="label-group">
         <span class="label-item-title">PO Ref <span class="text-red-500">*</span></span>
          <v-select :options="polist" placeholder="--Choose an option--" :loading="poloading" v-model="form.scmPo" label="ref_no" class="block form-input" @update:modelValue="changePo">
           <template #search="{attributes, events}">
@@ -366,10 +358,18 @@ watch(() => prlist.value, (newVal, oldVal) => {
           </v-select>
       </label>
       <label class="label-group">
+          <span class="label-item-title">Receive Date<span class="text-red-500">*</span></span>
+          <!-- <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" /> -->
+          <VueDatePicker v-model="form.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd-mm-yyyy" format="dd-MM-yyyy" model-type="yyyy-MM-dd" :min-date="form.scmPo?.date"></VueDatePicker>
+      </label> 
+      <label class="label-group">
         <span class="label-item-title">PO Date<span class="text-red-500">*</span></span>
         <input type="text" class="form-input vms-readonly-input" readonly :value="form.scmPo?.date"/>
       </label>
-    
+      <label class="label-group">
+          <span class="label-item-title">Challan No<span class="text-red-500">*</span></span>
+          <input type="text" v-model="form.challan_no" required class="form-input"/>
+      </label>  
     <label class="label-group col-start-1 col-span-2">
          <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
     </label>
@@ -413,7 +413,7 @@ watch(() => prlist.value, (newVal, oldVal) => {
                     <!-- <th class="py-3 align-center !w-2/12"><nobr>Required Date</nobr></th> -->
                     <th class="py-3 align-center !w-3/12">Other Info</th>
                     <!-- <th class="py-3 align-center !w-1/12">tolerence <br/> (%)</th> -->
-                    <th class="py-3 align-center !w-2/12">tolerence</th>
+                    <th class="py-3 align-center !w-2/12">Tolerence</th>
                     <th class="py-3 align-center !w-3/12">Order Details</th>
                     <th class="!w-1/12" ref="TargetButtonWidth">
                       <button type="button" @click="addMaterial(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
@@ -442,7 +442,7 @@ watch(() => prlist.value, (newVal, oldVal) => {
                                       />
                               </template>
                           </v-select>
-                          <!-- <span v-show="form.scmMrrLines[index].scmMrrLineItems[itemIndex].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-1" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span> -->
+                          <span v-show="form.scmMrrLines[index].scmMrrLineItems[itemIndex].isAspectDuplicate" class="text-yellow-600 pl-1 absolute top-2 left-[7.5rem]" title="Duplicate Aspect" v-html="icons.ExclamationTriangle"></span>
                           </div>
                           </td>
                           
@@ -492,15 +492,15 @@ watch(() => prlist.value, (newVal, oldVal) => {
                     </td>
                     <td>
                       <tr>
-                          <td>Qty</td>
-                          <td>
-                            <input type="number" required :value="form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolerence_quantity" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
-                          </td>
-                        </tr>
-                        <tr>
                           <td>Level (%)</td>
                           <td>
                             <input type="number" required :value="form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolerence_level" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
+                          </td>
+                        </tr>
+                      <tr>
+                          <td>Qty</td>
+                          <td>
+                            <input type="number" required :value="form.scmMrrLines[index].scmMrrLineItems[itemIndex].tolerence_quantity" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
                           </td>
                         </tr>
                     </td>

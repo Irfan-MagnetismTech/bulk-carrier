@@ -16,6 +16,7 @@ use Modules\SupplyChain\Entities\ScmMrrLine;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
 use Modules\SupplyChain\Entities\ScmMrrLineItem;
+use Modules\SupplyChain\Entities\ScmPoItem;
 use Modules\SupplyChain\Services\StockLedgerData;
 use Modules\SupplyChain\Http\Requests\ScmMrrRequest;
 
@@ -59,6 +60,10 @@ class ScmMrrController extends Controller
             DB::beginTransaction();
 
             $scmMrr = ScmMrr::create($requestData);
+            $po = ScmPo::find($request->scm_po_id);
+            if ($po->status == 'Pending') {
+                $po->update(['status' => 'WIP']);
+            }
             $this->createScmMrrLinesAndItems($request, $scmMrr);
 
 
@@ -78,7 +83,14 @@ class ScmMrrController extends Controller
             $scmMrrLine = $scmMrr->scmMrrLines()->create([
                 'scm_pr_id' => $values['scm_pr_id'],
             ]);
+            $composite = [];
             foreach ($values['scmMrrLineItems'] as $index => $value) {
+                $lineData = ScmPoItem::where('po_composite_key', $values['scmMrrLineItems'][$index]['po_composite_key'])->get();
+                if ($lineData[0]->status == 'Pending') {
+                    $lineData[0]->update(['status' => 'WIP']);
+                }
+                $composite_key = CompositeKey::generate($index,  $scmMrr->id, 'mrr', $value['scm_material_id'], $lineData->id);
+                $composite[] = $composite_key;
                 ScmMrrLineItem::create([
                     'scm_material_id' => $values['scmMrrLineItems'][$index]['scm_material_id'],
                     'scm_mrr_line_id' => $scmMrrLine->id,
@@ -91,11 +103,12 @@ class ScmMrrController extends Controller
                     'rate' => $values['scmMrrLineItems'][$index]['rate'],
                     'po_composite_key' => $values['scmMrrLineItems'][$index]['po_composite_key'],
                     'pr_composite_key' => $values['scmMrrLineItems'][$index]['pr_composite_key'],
+                    'mrr_composite_key' => $composite_key,
                     'net_rate' => $values['scmMrrLineItems'][$index]['net_rate'],
                 ]);
 
             }
-            StockLedgerData::insert($scmMrr, $values['scmMrrLineItems']);
+            StockLedgerData::insert($scmMrr, $values['scmMrrLineItems'], $composite);
         }
     }
 
@@ -111,7 +124,9 @@ class ScmMrrController extends Controller
         $scmMrrLines = $scmMrr->scmMrrLines->map(function ($items) {
             $datas = $items;
             $adas = $items->scmMrrLineItems->map(function ($item) {
-                    $max_quantity = ($item?->scmPoItem?->quantity ?? 0) -  ($item?->scmPoItem?->scmMrrLineItems->sum('quantity')  ?? 0) + $item->quantity;
+                    $tolerance_quantity = ($item?->scmPoItem?->quantity ?? 0) * ($item?->scmPoItem?->tolerence_level ?? 0) / 100;
+                    $max_quantity = ($item?->scmPoItem?->quantity ?? 0) -  ($item?->scmPoItem?->scmMrrLineItems->sum('quantity')  ?? 0) + $item->quantity + $tolerance_quantity;
+                    $remainingQuantity = ($item?->scmPoItem?->quantity ?? 0) -  ($item?->scmPoItem?->scmMrrLineItems->sum('quantity')  ?? 0) + $item->quantity;
                         return [
                             'id' => $item['id'],
                             'scm_material_id' => $item['scm_material_id'],
@@ -129,9 +144,10 @@ class ScmMrrController extends Controller
                             'pr_composite_key' => $item['pr_composite_key'],
                             'mrr_composite_key' => $item['mrr_composite_key'],
                             'max_quantity' => $max_quantity,
-                            'remaining_quantity' => $max_quantity,
+                            'remaining_quantity' => $remainingQuantity,
                             'pr_qty' => $item->scmPrLine->quantity,
                             'po_qty' => $item?->scmPoItem?->quantity ?? 0,
+                            'isAspectDuplicate' => false,
                         ];
             });
             data_forget($items, 'scmMrrLineItems');
@@ -178,7 +194,10 @@ class ScmMrrController extends Controller
             // $materialReceiptReport->load('scmMrrLines.scmMrrLineItems','scmMrrLineItems');
             $materialReceiptReport->update($request->all());
             $materialReceiptReport->stockable()->delete();
-
+            $po = ScmPo::find($request->scm_po_id);
+            if ($po->status == 'Pending') {
+                $po->update(['status' => 'WIP']);
+            }
             $materialReceiptReport->scmMrrLineItems()->delete();
             $materialReceiptReport->scmMrrLines()->delete();
 
@@ -205,8 +224,8 @@ class ScmMrrController extends Controller
 
             $materialReceiptReport->scmMrrLineItems()->delete();
             $materialReceiptReport->scmMrrLines()->delete();
-            $materialReceiptReport->delete();
             $materialReceiptReport->stockable()->delete();
+            $materialReceiptReport->delete();
 
             DB::commit();
 
@@ -432,30 +451,32 @@ class ScmMrrController extends Controller
                 ->first();
             $data = $scmPo->scmPoItems->map(function ($item) {
                 if (request()->scm_mrr_id) {
-                    $mrrQuantity = $item->scmMrrLineItems->where('scm_mrr_id', request()->scm_mrr_id)->where('po_composite_key', $item->po_composite_key)->first->quantity;
+                    $mrrQuantity = $item->scmMrrLineItems->where('scm_mrr_id', request()->scm_mrr_id)->where('po_composite_key', $item->po_composite_key)->first()?->quantity ?? 0;
                 } else {
                     $mrrQuantity = 0;
                 }
                 $totalMrrQuantity = $item->scmMrrLineItems->sum('quantity');
                 $tolerence_quantity = floor($item->quantity * ($item?->tolerence_level ?? 0) / 100);
 
-                $remainingQuantity = $item->quantity - $totalMrrQuantity + $mrrQuantity + $tolerence_quantity;
+                $remainingQuantity = $item->quantity - $totalMrrQuantity + $mrrQuantity;
+                $maxQuantity = $item->quantity - $totalMrrQuantity + $mrrQuantity + $tolerence_quantity;
                 return [
                     'scmMaterial' => $item->scmMaterial,
                     'scm_material_id' => $item->scm_material_id,
                     'unit' => $item->unit,
                     'brand' => $item->brand,
                     'model' => $item->model,
-                    'quantity' => $remainingQuantity,
+                    'quantity' => $maxQuantity,
                     'rate' => $item->rate,
                     'net_rate' => $item->net_rate,
                     'po_qty' => $item->quantity,
                     'pr_qty' => $item->scmPrLine->quantity,
                     'po_composite_key' => $item->po_composite_key,
                     'pr_composite_key' => $item->pr_composite_key,
-                    'mrr_quantity' => $remainingQuantity,
+                    'mrr_quantity' => $maxQuantity,
                     'remaining_quantity' => $remainingQuantity,
-                    'max_quantity' => $remainingQuantity,
+                    'max_quantity' => $maxQuantity,
+                    'isAspectDuplicate' => false,
                     'tolerence_level' => $item->tolerence_level,
                     'tolerence_quantity' => $tolerence_quantity,
                 ];
@@ -483,21 +504,22 @@ class ScmMrrController extends Controller
             $totalMrrQuantity = $item->scmMrrLineItems->sum('quantity');
             $tolerence_quantity = floor($item->quantity * ($item?->tolerence_level ?? 0) / 100);
 
-            $remainingQuantity = $item->quantity - $totalMrrQuantity + $mrrQuantity + $tolerence_quantity;
+            $remainingQuantity = $item->quantity - $totalMrrQuantity + $mrrQuantity;
+            $maxQuantity = $item->quantity - $totalMrrQuantity + $mrrQuantity + $tolerence_quantity;
             $data = $item->scmMaterial;
             $data['brand'] = $item->brand;
             $data['model'] = $item->model;
             $data['unit'] = $item->unit;
-            $data['quantity'] = $remainingQuantity;
+            $data['quantity'] = $maxQuantity;
             $data['rate'] = $item->rate;
             $data['net_rate'] = $item->net_rate;
             $data['po_qty'] = $item->quantity;
             $data['pr_qty'] = $item->scmPrLine->quantity;
             $data['po_composite_key'] = $item->po_composite_key;
             $data['pr_composite_key'] = $item->pr_composite_key;
-            $data['mrr_quantity'] = $remainingQuantity;
+            $data['mrr_quantity'] = $maxQuantity;
             $data['remaining_quantity'] = $remainingQuantity;
-            $data['max_quantity'] = $remainingQuantity;
+            $data['max_quantity'] = $maxQuantity;
             $data['tolerence_level'] = $item->tolerence_level;
             $data['tolerence_quantity'] = $tolerence_quantity;
             return $data;
