@@ -54,17 +54,7 @@ class ScmPo extends Model
     protected $skipForDeletionCheck = ['scmPoLines', 'scmPoTerms', 'scmPoItems'];
 
     protected $features = 'CS, LC Records and MRR';
-
-    //on deleting po, static::deleting() will be called
-    // protected static function boot()
-    // {
-    //     parent::boot();
-
-    //     static::deleting(function ($model) {
-    //         return $model->preventDeletionIfRelated();
-    //     });
-    // }
-
+    
     public function scmPoLines(): HasMany
     {
         return $this->hasMany(ScmPoLine::class);
