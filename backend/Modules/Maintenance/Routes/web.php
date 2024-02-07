@@ -11,6 +11,10 @@
 |
 */
 
-Route::prefix('maintenance')->group(function() {
+use Illuminate\Support\Facades\Route;
+use Modules\Maintenance\Http\Controllers\MntReportController;
+
+Route::prefix('mnt')->group(function() {
     Route::get('/', 'MaintenanceController@index');
+    Route::get('/get-pdf', [MntReportController::class, 'getPdfAllJobs']);
 });

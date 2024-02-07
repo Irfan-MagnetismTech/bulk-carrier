@@ -1,7 +1,10 @@
 @extends('pdf.layout')
 
 @section('content')
-    From module view
+<div style="text-align: center;">
+    <h3>Maintenance All Jobs Report</h3>
+</div>
+
 @foreach($data as $d)
 <h4>{{ $d->name }}</h4>
 <table >

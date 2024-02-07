@@ -5,6 +5,7 @@ namespace Modules\Maintenance\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Modules\Maintenance\Entities\MntItem;
 use Modules\Maintenance\Entities\MntItemGroup;
 use Modules\Maintenance\Entities\MntJob;
@@ -196,11 +197,12 @@ class MntReportController extends Controller
         $allJobs = $this->reportAllJobs();
         $allJobsData = $allJobs->getData();
         $data['data'] = $allJobsData->value;
-
         
-        $pdf = PDF::loadView('maintenance::pdf.all-jobs', $data);
+        $pdf = PDF::loadView('maintenance::pdf.all-jobs', $data, [], [
+            'title' => 'Maintenance | All Jobs'
+        ]);
 
-        return $pdf->stream('document.pdf');
+        return $pdf->stream('mnt-all-jobs-report.pdf');
     }
 
 
