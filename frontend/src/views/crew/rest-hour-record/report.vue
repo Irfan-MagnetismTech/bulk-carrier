@@ -87,7 +87,7 @@ onMounted(() => {
           <label for="" class="text-xs" style="margin-left: .01rem">Crew Name<span class="text-red-500">*</span></label>
           <select class="block w-full rounded form-input" v-model.trim="searchParams.crw_crew_id" required>
             <option value="" selected disabled>--Choose an option--</option>
-            <option :value="crew?.crw_crew_id" v-for="(crew,index) in vesselAssignedCrews">{{ crew?.crwCrew?.full_name }}</option>
+            <option :value="crew?.crw_crew_id" v-for="(crew,index) in vesselAssignedCrews">{{ crew?.crwCrewProfile?.full_name }}</option>
           </select>
         </div>
         <div>

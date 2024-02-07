@@ -147,8 +147,9 @@ export default function usePayrollBatch() {
 
             //prepare data
             data.value.crwPayrollBatchLines.forEach((batchLine,batchLineIndex) => {
-                batchLine.crw_full_name = batchLine?.crwCrew?.full_name;
-                batchLine.crw_contact_no = batchLine?.crwCrew?.pre_mobile_no;
+                batchLine.crw_full_name = batchLine?.crwCrewProfile?.full_name;
+                batchLine.crw_current_rank = batchLine?.crwCrewProfile?.crwCurrentRank?.name;
+                batchLine.crw_contact_no = batchLine?.crwCrewProfile?.pre_mobile_no;
                 batchLine.net_salary = batchLine?.crwSalaryStructure?.net_amount;
                 batchLine.present_days = batchLine?.crwAttendanceLine?.present_days;
                 batchLine.absent_days = batchLine?.crwAttendanceLine?.absent_days;
@@ -163,6 +164,7 @@ export default function usePayrollBatch() {
                     let batchLineObj = {
                         crew_id: batchLine?.crw_crew_id,
                         crew_name: batchLine?.crw_full_name,
+                        crw_current_rank: batchLine?.crwCrewProfile?.crwCurrentRank?.name,
                         crw_contact_no: batchLine?.crw_contact_no,
                         amount: '',
                         head_type: 'addition',
@@ -177,6 +179,7 @@ export default function usePayrollBatch() {
                     let batchLineObj = {
                         crew_id: batchLine?.crw_crew_id,
                         crew_name: batchLine?.crw_full_name,
+                        crw_current_rank: batchLine?.crwCrewProfile?.crwCurrentRank?.name,
                         crw_contact_no: batchLine?.crw_contact_no,
                         amount: '',
                         head_type: 'deduction',
