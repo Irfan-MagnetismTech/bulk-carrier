@@ -219,6 +219,18 @@ export default [
 		meta: { requiresAuth: true, role: ROLE, permission: 'inventory-report' },
 	},
 	/* Inventory Report End*/
+
+    
+	/* Stock History Report Start*/
+	{
+		path: `/${BASE}/reports/stock-history-report`,
+		name: `${BASE}.reports.stock-history-report`,
+		component: () => import(`../views/${PATH_BASE}/reports/stock-history-report/report.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'stock-history-report' },
+	},
+	/* Stock History Report End*/
+
+
 	
 	/* Report End */
 
