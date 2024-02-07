@@ -103,22 +103,6 @@ let filterOptions = ref( {
 			},
       {
 			"relation_name": null,
-			"field_name": null,
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
-			},
-      {
-			"relation_name": null,
-			"field_name": null,
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
-			},
-      {
-			"relation_name": null,
 			"field_name": 'business_unit',
 			"search_param": "",
 			"action": null,
@@ -233,30 +217,12 @@ onMounted(() => {
               </th>
               <th>
                 <div class="flex justify-evenly items-center">
-                  <nobr>Current Status</nobr>
+                  <nobr>Business Unit</nobr>
                   <div class="flex flex-col cursor-pointer">
                     <div v-html="icons.descIcon" @click="setSortingState(5,'asc', filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'asc' }" class=" font-semibold"></div>
                     <div v-html="icons.ascIcon" @click="setSortingState(5,'desc', filterOptions)" :class="{'text-gray-800' : filterOptions.filter_options[5].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[5].order_by !== 'desc' }" class=" font-semibold"></div>
                   </div>
                 </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                  <nobr>Dry Docking Left (Days)</nobr>
-                  <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(6,'asc', filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[6].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[6].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(6,'desc', filterOptions)" :class="{'text-gray-800' : filterOptions.filter_options[6].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[6].order_by !== 'desc' }" class=" font-semibold"></div>
-                  </div>
-                </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                    <nobr>Business Unit</nobr>
-                    <div class="flex flex-col cursor-pointer">
-                      <div v-html="icons.descIcon" @click="setSortingState(7,'asc', filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[7].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[7].order_by !== 'asc' }" class=" font-semibold"></div>
-                      <div v-html="icons.ascIcon" @click="setSortingState(7,'desc', filterOptions)" :class="{'text-gray-800' : filterOptions.filter_options[7].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[7].order_by !== 'desc' }" class=" font-semibold"></div>
-                    </div>
-                  </div>
               </th>
               <th>
                 Action
@@ -278,7 +244,6 @@ onMounted(() => {
               <th><input v-model.trim="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model.trim="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model.trim="filterOptions.filter_options[5].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model.trim="filterOptions.filter_options[6].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th>
                 <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
               </th>
@@ -296,8 +261,6 @@ onMounted(() => {
                   <td>{{ vessel?.vessel_type }}</td>
                   <td>{{ vessel?.imo }}</td>
                   <td>{{ vessel?.capacity }}</td>
-                  <td></td>
-                  <td></td>
                   <td>
                     <span :class="vessel?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ vessel?.business_unit }}</span>
                   </td>

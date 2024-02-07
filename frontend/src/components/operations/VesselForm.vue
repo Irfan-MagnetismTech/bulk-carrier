@@ -135,7 +135,20 @@
         <span class="text-gray-700 dark-disabled:text-gray-300">Capacity <span class="text-red-500">*</span></span>
         <input type="number" step="0.001" v-model="form.capacity" placeholder="Capacity" class="form-input" required autocomplete="off" />
       </label>
-      <label class="block w-full mt-2 text-sm"></label>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Dry Docking <span class="text-red-500">*</span></span>
+        <select v-model.trim="form.dry_docking_months" class="form-input" required>
+          <option value="" disabled>--Choose an option--</option>
+          <option value="3">3 Months</option>
+          <option value="6">6 Months</option>
+          <option value="12">1 Year</option>
+          <option value="24">2 Years</option>
+          <option value="36">3 Years</option>
+          <option value="48">4 Years</option>
+          <option value="60">5 Years</option>
+          <option value="120">10 Years</option>
+        </select>
+      </label>
       <label class="block w-full mt-2 text-sm"></label>
       
     </div>

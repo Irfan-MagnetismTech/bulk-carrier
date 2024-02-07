@@ -162,38 +162,6 @@
                 <th class="w-52">Total Voyage</th>
                 <td></td>
               </tr>
-              <tr>
-                <th class="w-52">Total Inventory</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Total Revenue</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Total Expenditure</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Total Billable Amount</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Total Due Amount</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Total Over Due Amount</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Total Collection</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Profit/Loss</th>
-                <td></td>
-              </tr>
             </tbody>
           </table>
         </div>

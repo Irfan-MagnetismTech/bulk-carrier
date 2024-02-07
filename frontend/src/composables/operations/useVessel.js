@@ -42,7 +42,8 @@ export default function useVessel() {
 		live_tracking_config: '',
 		remarks: '',
 		opsVesselCertificates: [],
-		opsBunkers: []
+		opsBunkers: [],
+		dry_docking_months: ''
 	});
 	const maritimeCertificateObject = {
 		ops_vessel_certificate_id: '',
