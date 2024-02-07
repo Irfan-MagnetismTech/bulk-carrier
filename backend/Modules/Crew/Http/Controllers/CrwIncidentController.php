@@ -25,7 +25,7 @@ class CrwIncidentController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwIncidents = CrwIncident::with('crwIncidentParticipants.crwCrew','opsVessel')->globalSearch($request->all());
+            $crwIncidents = CrwIncident::with('crwIncidentParticipants.crwCrewProfile','opsVessel')->globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $crwIncidents, 200);
         }
@@ -70,7 +70,7 @@ class CrwIncidentController extends Controller
     public function show(CrwIncident $crwIncident)
     {
         try {
-            return response()->success('Retrieved successfully', $crwIncident->load('crwIncidentParticipants.crwCrew','opsVessel:id,name'), 200);
+            return response()->success('Retrieved successfully', $crwIncident->load('crwIncidentParticipants.crwCrewProfile','opsVessel:id,name'), 200);
         }
         catch (QueryException $e)
         {

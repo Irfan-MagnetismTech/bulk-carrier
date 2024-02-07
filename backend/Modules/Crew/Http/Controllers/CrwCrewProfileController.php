@@ -28,7 +28,7 @@ class CrwCrewProfileController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwCrewProfiles = CrwCrewProfile::with('educations', 'trainings', 'experiences', 'languages', 'references', 'nominees', 'crewRank')
+            $crwCrewProfiles = CrwCrewProfile::with('educations', 'trainings', 'experiences', 'languages', 'references', 'nominees', 'crwRank', 'crwCurrentRank')
                 ->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwCrewProfiles, 200);
@@ -84,7 +84,7 @@ class CrwCrewProfileController extends Controller
     public function show(CrwCrewProfile $crwCrewProfile)
     {
         try {
-            return response()->success('Retrieved successfully', $crwCrewProfile->load('crewRank','crewRecruitmentApproval','crewAgency','educations', 'trainings', 'experiences', 'languages', 'references', 'nominees',  'crewRank', 'crewRecruitmentApproval', 'crewAgency'), 200);
+            return response()->success('Retrieved successfully', $crwCrewProfile->load('crwRank', 'crwCurrentRank','crewRecruitmentApproval','crewAgency','educations', 'trainings', 'experiences', 'languages', 'references', 'nominees'), 200);
         }
         catch (QueryException $e)
         {

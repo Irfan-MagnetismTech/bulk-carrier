@@ -170,9 +170,8 @@ class CrwCommonController extends Controller
      */
     public function getVesselAssignedCrews(Request $request)
     {
-
         try {
-            $vesselAssignedCrews = CrwCrewAssignment::with('crwCrew:id,full_name,pre_mobile_no')
+            $vesselAssignedCrews = CrwCrewAssignment::with('crwCrewProfile:id,full_name,pre_mobile_no,crw_rank_id')
                 ->where('ops_vessel_id', $request->ops_vessel_id)
                 ->where('status', 'Onboard')
                 ->get();
