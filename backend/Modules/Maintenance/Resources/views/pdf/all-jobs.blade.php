@@ -1,19 +1,7 @@
-<style>
-table, th, td {
-    border: 0.5px solid #333;
-    border-collapse: collapse;
-    font-family: 'Inter', sans-serif;
-    padding: 0.375rem;
-    font-size: 0.75rem;
-    line-height: 1rem;
-}
-table {
-    width: 100%;
-}
-th {
-    background-color: #ccc;
-}
-</style>
+@extends('pdf.layout')
+
+@section('content')
+    From module view
 @foreach($data as $d)
 <h4>{{ $d->name }}</h4>
 <table >
@@ -52,3 +40,5 @@ th {
     @endforeach
 </table>
 @endforeach
+
+@endsection

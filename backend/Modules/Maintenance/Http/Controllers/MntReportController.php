@@ -197,7 +197,8 @@ class MntReportController extends Controller
         $allJobsData = $allJobs->getData();
         $data['data'] = $allJobsData->value;
 
-        $pdf = PDF::loadView('pdf.all-jobs', $data);
+        
+        $pdf = PDF::loadView('maintenance::pdf.all-jobs', $data);
 
         return $pdf->stream('document.pdf');
     }
