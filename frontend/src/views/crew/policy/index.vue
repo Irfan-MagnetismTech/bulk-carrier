@@ -214,7 +214,7 @@ onMounted(() => {
             <td class="text-left">{{ crwPolicy?.name }}</td>
             <td class="text-left">{{ crwPolicy?.type }}</td>
             <td>
-              <a v-html="icons.Attachment" type="button" v-if="typeof crwPolicy?.attachment === 'string'" class="text-green-800" target="_blank" :href="env.BASE_API_URL+'/'+crwPolicy?.attachment"></a>
+              <a v-html="icons.Attachment" type="button" v-if="typeof crwPolicy?.attachment === 'string' && crwPolicy?.attachment !== 'null'" class="text-green-800" target="_blank" :href="env.BASE_API_URL+'/'+crwPolicy?.attachment"></a>
               <a v-else>---</a>
             </td>
             <td>

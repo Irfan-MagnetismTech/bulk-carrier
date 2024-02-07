@@ -6,6 +6,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
+import { formatDate } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 
@@ -59,7 +60,7 @@ onMounted(() => {
             </tr>
             <tr>
               <th class="w-40"> Process Date </th>
-              <td>{{ payrollBatch?.process_date }}</td>
+              <td>{{ formatDate(payrollBatch?.process_date) }}</td>
             </tr>
             <tr>
               <th class="w-40"> Currency </th>
