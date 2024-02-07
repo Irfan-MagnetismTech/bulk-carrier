@@ -84,7 +84,7 @@ class CrwCrewProfileController extends Controller
     public function show(CrwCrewProfile $crwCrewProfile)
     {
         try {
-            return response()->success('Retrieved successfully', $crwCrewProfile->load('crwRank', 'crwCurrentRank','crewRecruitmentApproval','crewAgency','educations', 'trainings', 'experiences', 'languages', 'references', 'nominees'), 200);
+            return response()->success('Retrieved successfully', $crwCrewProfile->load('crwRank', 'crwCurrentRank','crwRecruitmentApproval','crwAgency','educations', 'trainings', 'experiences', 'languages', 'references', 'nominees'), 200);
         }
         catch (QueryException $e)
         {

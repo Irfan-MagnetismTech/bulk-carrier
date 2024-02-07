@@ -28,12 +28,12 @@ class CrwCrewProfile extends Model
         return $this->belongsTo(CrwRank::class, 'crw_rank_id', 'id');
     }
 
-    public function crewRecruitmentApproval(){
+    public function crwRecruitmentApproval(){
         return $this->belongsTo(CrwRecruitmentApproval::class);
     }
 
-    public function crewAgency(){
-        return $this->belongsTo(CrwAgency::class);
+    public function crwAgency(){
+        return $this->belongsTo(CrwAgency::class, 'agency_id', 'id');
     }
 
     public function educations(){
