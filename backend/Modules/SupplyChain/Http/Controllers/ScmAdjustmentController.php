@@ -29,7 +29,7 @@ class ScmAdjustmentController extends Controller
 
     /**
      * Display a listing of the resource.
-     * 
+     *
      * @return JsonResponse
      */
     public function index(): JsonResponse
@@ -51,7 +51,7 @@ class ScmAdjustmentController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * 
+     *
      * @return JsonResponse
      */
     public function store(ScmAdjustmentRequest $request): JsonResponse
@@ -66,9 +66,10 @@ class ScmAdjustmentController extends Controller
 
             $linesData = CompositeKey::generateArray($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
             $adjustment->scmAdjustmentLines()->createMany($linesData);
+            $composite = collect($linesData)->pluck('ajt_composite_key')->toArray();
 
             if ($request->type === 'Addition') {
-                StockLedgerData::insert($adjustment, $linesData);
+                StockLedgerData::insert($adjustment, $linesData, $composite);
             } else {
                 $dataForStock = [];
                 foreach ($request->scmAdjustmentLines as $key => $value) {
@@ -91,7 +92,7 @@ class ScmAdjustmentController extends Controller
 
     /**
      * Show the specified resource.
-     * 
+     *
      * @param ScmAdjustment $movementRequisition
      * @return JsonResponse
      */
@@ -108,7 +109,7 @@ class ScmAdjustmentController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * 
+     *
      * @param ScmAdjustmentRequest $request
      * @param ScmAdjustment $movementRequisition
      * @return JsonResponse
@@ -126,9 +127,10 @@ class ScmAdjustmentController extends Controller
             $linesData = CompositeKey::generateArray($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
 
             $adjustment->scmAdjustmentLines()->createMany($linesData);
+            $composite = collect($linesData)->pluck('ajt_composite_key')->toArray();
 
             if ($request->type === 'Addition') {
-                StockLedgerData::insert($adjustment, $linesData);
+                StockLedgerData::insert($adjustment, $linesData, $composite);
             } else {
                 $dataForStock = [];
                 foreach ($request->scmAdjustmentLines as $key => $value) {
@@ -148,7 +150,7 @@ class ScmAdjustmentController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     * 
+     *
      * @param ScmAdjustment $movementRequisition
      * @return JsonResponse
      */

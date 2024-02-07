@@ -83,11 +83,14 @@ class ScmMrrController extends Controller
             $scmMrrLine = $scmMrr->scmMrrLines()->create([
                 'scm_pr_id' => $values['scm_pr_id'],
             ]);
+            $composite = [];
             foreach ($values['scmMrrLineItems'] as $index => $value) {
                 $lineData = ScmPoItem::where('po_composite_key', $values['scmMrrLineItems'][$index]['po_composite_key'])->get();
                 if ($lineData[0]->status == 'Pending') {
                     $lineData[0]->update(['status' => 'WIP']);
                 }
+                $composite_key = CompositeKey::generate($index,  $scmMrr->id, 'mrr', $value['scm_material_id'], $lineData->id);
+                $composite[] = $composite_key;
                 ScmMrrLineItem::create([
                     'scm_material_id' => $values['scmMrrLineItems'][$index]['scm_material_id'],
                     'scm_mrr_line_id' => $scmMrrLine->id,
@@ -100,11 +103,12 @@ class ScmMrrController extends Controller
                     'rate' => $values['scmMrrLineItems'][$index]['rate'],
                     'po_composite_key' => $values['scmMrrLineItems'][$index]['po_composite_key'],
                     'pr_composite_key' => $values['scmMrrLineItems'][$index]['pr_composite_key'],
+                    'mrr_composite_key' => $composite_key,
                     'net_rate' => $values['scmMrrLineItems'][$index]['net_rate'],
                 ]);
 
             }
-            StockLedgerData::insert($scmMrr, $values['scmMrrLineItems']);
+            StockLedgerData::insert($scmMrr, $values['scmMrrLineItems'], $composite);
         }
     }
 
