@@ -608,7 +608,6 @@ export default [
         component: () => import(`../views/${PATH_BASE}/material-cs/show.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'material-cs-show'  },
     },
-    /* Material Cs end */
     
     {
         path: `/${BASE}/quotations/:csId/create`,
@@ -650,7 +649,7 @@ export default [
         component: () => import(`../views/${PATH_BASE}/supplier-selection/show.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'supplier-selection-show' },
     },
-     /* Material Cs end */
+    
     
      {
         path: `/${BASE}/cs-cost-projection/:csId/create`,
@@ -676,6 +675,8 @@ export default [
         component: () => import(`../views/${PATH_BASE}/cs-cost-projection/show.vue`),
         meta: { requiresAuth: true, role: ROLE, permission: 'cs-cost-projection-show'  },
     },
+
+     /* Material Cs end */
     // {
     //     path: `/${BASE}/quotations/:csId/index`,
     //     name: `${BASE}.quotations.index`,
@@ -683,6 +684,34 @@ export default [
     //     meta: { requiresAuth: true, role: ROLE, permission: 'quotations-index' },
     //     props: (route) => ({ page: parseInt(route.query.page) || 1 }),
     // },
+    /* Vendor Bill start */
+
+    {
+        path: `/${BASE}/vendor-bills`,
+        name: `${BASE}.vendor-bills.index`,
+        component: () => import(`../views/${PATH_BASE}/vendor-bills/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'vendor-bills-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/vendor-bills/create`,
+        name: `${BASE}.vendor-bills.create`,
+        component: () => import(`../views/${PATH_BASE}/vendor-bills/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'vendor-bills-create' },
+    },
+    {
+        path: `/${BASE}/vendor-bills/:vendorBillId/edit`,
+        name: `${BASE}.vendor-bills.edit`,
+        component: () => import(`../views/${PATH_BASE}/vendor-bills/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'vendor-bills-edit' },
+    },
+    {
+        path: `/${BASE}/vendor-bills/:vendorBillId`,
+        name: `${BASE}.vendor-bills.show`,
+        component: () => import(`../views/${PATH_BASE}/vendor-bills/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'vendor-bills-show'  },
+    },
+    /* Vendor Bill end */
 
     ...supplyChain2
 ];
