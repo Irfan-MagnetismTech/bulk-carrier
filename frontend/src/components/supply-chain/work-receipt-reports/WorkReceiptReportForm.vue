@@ -38,6 +38,7 @@ import { formatDate } from '../../../config/setting';
       woServiceList: { type: [Object, Array], required: false },
     });
 
+    const editinitaiated = ref(false); 
     
     function addService(index) {
       const clonedObj = cloneDeep(props.scmWrrLineItemObject);
@@ -294,20 +295,20 @@ import { formatDate } from '../../../config/setting';
   });
 
   if(props.formType == 'edit'){
-        const editDatas = watch(()=> props.form.scmMrrLines, (newVal, oldVal) => {
-        getPoWisePrList(props.form?.scmPo?.id);
-        props.poMaterialList.splice(0,props.poMaterialList.length);
-      //   if(props.form.scmMrrLines.length > 0){
-      //   props.form.scmMrrLines.forEach((line, index) => {
-      //     props.poMaterialList.push([]);
-      //     props.poMaterialList[index] = [];
-      //     if (line.scmPr) {
-      //       getPoMaterialList(props.form.scmPo.id, line.id).then((res) => {
-      //         props.poMaterialList[index] = res;
-      //       });        
-      //      }
-      //   });
-      // }
+        const editDatas = watch(()=> props.form.scmWrrLines, (newVal, oldVal) => {
+        getWoWiseWrList(props.form?.scmWo?.id);
+        props.woServiceList.splice(0,props.woServiceList.length);
+        if(props.form.scmWrrLines.length > 0){
+        props.form.scmWrrLines.forEach((line, index) => {
+          props.woServiceList.push([]);
+          props.woServiceList[index] = [];
+          if (line.scmWr) {
+            getWoServiceList(props.form.scmWo.id, line.scmWr.id, line.id).then((res) => {
+              props.woServiceList[index] = res;
+            });        
+           }
+        });
+      }
       console.log(props.form.scmMrrLines);
         editDatas();
       });
@@ -360,25 +361,31 @@ import { formatDate } from '../../../config/setting';
 
 watch(() => wrList.value, (newVal, oldVal) => {
   console.log("newVal", newVal);
-  if(newVal.length > 0){
-    props.form.scmWrrLines = [];
-    // props.materialList.splice(0,props.materialList.length);
-    newVal.forEach((line, index) => {
-      props.form.scmWrrLines.push({
-        scmWr: line,
-        scm_wr_id: line.id,
-        scmWrrLineItems: [],
-      });
-      props.woServiceList.push([]);
-      getWrrLineData(props.form.scmWo?.id, line?.id).then((res) => {
-        props.form.scmWrrLines[index].scmWrrLineItems = res;
-        console.log(res);
-      }); 
-      getWoServiceList(props.form.scmWo.id, line.id).then((res) => {
-        props.woServiceList[index] = res;
-      });
-    });
+  if (props.formType === 'create') {
+    editinitaiated.value = true;
   }
+  if (editinitaiated.value) {
+    if(newVal.length > 0){
+      props.form.scmWrrLines = [];
+      // props.materialList.splice(0,props.materialList.length);
+      newVal.forEach((line, index) => {
+        props.form.scmWrrLines.push({
+          scmWr: line,
+          scm_wr_id: line.id,
+          scmWrrLineItems: [],
+        });
+        props.woServiceList.push([]);
+        getWrrLineData(props.form.scmWo?.id, line?.id).then((res) => {
+          props.form.scmWrrLines[index].scmWrrLineItems = res;
+          // console.log("test res",res);
+        }); 
+        getWoServiceList(props.form.scmWo.id, line.id).then((res) => {
+          props.woServiceList[index] = res;
+        });
+      });
+    }
+  }
+  editinitaiated.value = true;
 });
 
 
@@ -393,13 +400,13 @@ watch(() => wrList.value, (newVal, oldVal) => {
   <div class="justify-center w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-2">
       <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
 
-      <label class="label-group">
-          <span class="label-item-title">WRR Ref<span class="text-red-500">*</span></span>
+      <label class="label-group col-start-1" v-if="page == 'edit'">
+          <span class="label-item-title">WRR Ref</span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'" />
           <!-- <Error v-if="errors?.ref_no" :errors="errors.ref_no"  /> -->
       </label>
 
-      <label class="label-group col-start-1">
+      <label class="label-group" :class="{'col-start-1': page != 'edit'}">
         <span class="label-item-title">Purchase Center <span class="text-red-500">*</span></span>
         <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input" @update:modelValue="changePurchaseCenter">
           <template #search="{attributes, events}">
@@ -469,13 +476,12 @@ watch(() => wrList.value, (newVal, oldVal) => {
           <input type="text" :value="formatDate(form.scmWo?.date)" class="form-input vms-readonly-input" readonly>
           <!-- <Error v-if="errors?.date" :errors="errors.date"  /> -->
       </label>
-
-      <RemarksComponent v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponent>
+      <RemarksComponent class="col-span-1 md:col-span-2 lg:col-span-3" v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponent>
       
-      <RemarksComponent v-model="form.qc_remarks" :maxlength="300" :fieldLabel="'Qc Remarks'"></RemarksComponent>
+      <RemarksComponent class="col-span-1 md:col-span-2 lg:col-span-3" v-model="form.qc_remarks" :maxlength="300" :fieldLabel="'Qc Remarks'"></RemarksComponent>
   </div>
 
-  <div class="mt-3 md:mt-8" v-if="form.scmWrrLines?.length">
+  <div class="mt-3 md:mt-8" v-if="form?.scmWrrLines?.length">
       <h4 class="text-md font-semibold uppercase mb-2 text-center border-2 rounded-md border-gray-400 py-2 mb-0">Work Receive Report Information</h4>
       
       <div v-for="(scmWoLine, index) in form.scmWrrLines" :key="index"  class="w-full mx-auto p-2 border rounded-md border-gray-400 mb-5 shadow-md">
@@ -517,7 +523,7 @@ watch(() => wrList.value, (newVal, oldVal) => {
                       </button>
                     </th>
                   </tr>
-                  <template v-if="form.scmWrrLines[index].scmWrrLineItems.length">
+                  <template v-if="form.scmWrrLines[index].scmWrrLineItems?.length">
                 <template v-for="(lineItem, itemIndex) in form.scmWrrLines[index].scmWrrLineItems" :key="itemIndex">
                   <tr class="table_tr">
                     <td class="">

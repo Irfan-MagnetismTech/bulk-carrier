@@ -16,9 +16,10 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 
 import { useRouter } from 'vue-router';
+import { formatDate } from '../../../config/setting';
 
 // const { getMaterialReceiptReports, materialReceiptReports, deleteMaterialReceiptReport, isLoading,isTableLoading } = useMaterialReceiptReport();
-const { getWorkReceiptReports, workReceiptReport, deleteWorkReceiptReport, isLoading, isTableLoading } = useWorkReceiptReport();
+const { getWorkReceiptReports, workReceiptReports, deleteWorkReceiptReport, isLoading, isTableLoading } = useWorkReceiptReport();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -54,27 +55,27 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "MRR No",
+      "label": "WRR No",
       "filter_type": "input" 
     },
     {
-      "relation_name": "scmPo",
+      "relation_name": "scmWo",
       "field_name": "ref_no",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "PO No",
+      "label": "Wo No",
       "filter_type": "input" 
     },
     {
-      "relation_name": "scmPr",
+      "relation_name": "scmWr",
       "field_name": "ref_no",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "PR No",
+      "label": "WR No",
       "filter_type": "input" 
     },
     {
@@ -184,17 +185,17 @@ function confirmDelete(id) {
             <tr v-for="(workReceiptReport,index) in (workReceiptReports?.data ? workReceiptReports?.data : workReceiptReports)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ workReceiptReport?.ref_no }}</td>
-              <td>{{ workReceiptReport?.scmPo?.ref_no ?? "N/A" }}</td>
-              <td>{{ workReceiptReport?.scmPr?.ref_no ?? "N/A" }}</td>
+              <td>{{ workReceiptReport?.scmWo?.ref_no ?? "N/A" }}</td>
+              <td>{{ workReceiptReport?.scmWr?.ref_no ?? "N/A" }}</td>
               <td>{{ workReceiptReport?.scmWarehouse?.name ?? "N/A" }}</td>
-              <td>{{ workReceiptReport?.date }}</td>
+              <td>{{ formatDate(workReceiptReport?.date) }}</td>
               <td>
                 <span :class="workReceiptReport?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ workReceiptReport?.business_unit }}</span>
               </td>
               <td>
                 <nobr>
-                <action-button :action="'show'" :to="{ name: 'scm.material-receipt-reports.show', params: { workReceiptReportId: workReceiptReport.id } }"></action-button>
-                <action-button :action="'edit'" :to="{ name: 'scm.material-receipt-reports.edit', params: { workReceiptReportId: workReceiptReport.id } }"></action-button>
+                <action-button :action="'show'" :to="{ name: 'scm.work-receipt-reports.show', params: { workReceiptReportId: workReceiptReport.id } }"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'scm.work-receipt-reports.edit', params: { workReceiptReportId: workReceiptReport.id } }"></action-button>
                 <action-button @click="confirmDelete(workReceiptReport.id)" :action="'delete'"></action-button>
                </nobr>
               </td>
