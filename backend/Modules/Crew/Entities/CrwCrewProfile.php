@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Crew\Entities\CrwCrewEducation;
 use App\Traits\GlobalSearchTrait;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CrwCrewProfile extends Model
 {
@@ -14,8 +15,9 @@ class CrwCrewProfile extends Model
 
 	protected $fillable = ['crw_recruitment_approval_id', 'hired_by', 'agency_id', 'department_name', 'crw_rank_id', 'employee_type', 'is_officer', 'first_name', 'last_name', 'full_name', 'father_name', 'mother_name', 'date_of_birth', 'gender', 'religion', 'marital_status', 'nationality', 'nid_no', 'passport_no', 'passport_issue_date', 'blood_group', 'height', 'weight', 'pre_address', 'pre_city', 'pre_mobile_no', 'pre_email', 'per_address', 'per_city', 'per_mobile_no', 'per_email', 'picture', 'attachment', 'business_unit'];
 
-    public function crewRank(){
-        return $this->hasOne(CrwRank::class, 'id', 'crw_rank_id');
+    public function crewRank() : BelongsTo
+    {
+        return $this->belongsTo(CrwRank::class, 'crw_rank_id', 'id');
     }
 
     public function crewRecruitmentApproval(){

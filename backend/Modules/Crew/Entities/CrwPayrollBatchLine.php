@@ -26,4 +26,9 @@ class CrwPayrollBatchLine extends Model
     {
         return $this->belongsTo(CrwAttendanceLine::class);
     }
+
+    public function crwBankAccount()
+    {
+        return $this->belongsTo(CrwBankAccount::class);
+    }
 }

@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Crew\Entities\CrwRank;
 use Modules\Crew\Http\Requests\CrwRankRequest;
 
@@ -96,13 +97,16 @@ class CrwRankController extends Controller
     public function destroy(CrwRank $crwRank)
     {
         try {
-            $crwRank->delete();
+            DB::beginTransaction();
 
+            $crwRank->delete();
+            DB::commit();
             return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($crwRank->preventDeletionIfRelated(), 422);            
         }
     }
 }
