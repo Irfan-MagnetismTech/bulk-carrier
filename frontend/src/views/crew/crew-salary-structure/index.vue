@@ -42,7 +42,7 @@ let filterOptions = ref( {
   "isFilter": false,
   "filter_options": [
     {
-      "relation_name": "crwCrew",
+      "relation_name": "crwCrewProfile",
       "field_name": "full_name",
       "search_param": "",
       "action": null,
@@ -52,7 +52,7 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     {
-      "relation_name": "crwCrew.crwCurrentRank",
+      "relation_name": "crwCrewProfile.crwCurrentRank",
       "field_name": "name",
       "search_param": "",
       "action": null,
@@ -62,7 +62,7 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     {
-      "relation_name": "crwCrew",
+      "relation_name": "crwCrewProfile",
       "field_name": "pre_mobile_no",
       "search_param": "",
       "action": null,
@@ -206,9 +206,9 @@ onMounted(() => {
         <tbody class="relative">
         <tr v-for="(crewSalaryStructureData,index) in crewSalaryStructures?.data" :key="index">
           <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-          <td class="!text-left">{{ crewSalaryStructureData?.crwCrew?.full_name }}</td>
-          <td class="!text-left">{{ crewSalaryStructureData?.crwCrew?.crwCurrentRank?.name }}</td>
-          <td>{{ crewSalaryStructureData?.crwCrew?.pre_mobile_no }}</td>
+          <td class="!text-left">{{ crewSalaryStructureData?.crwCrewProfile?.full_name }}</td>
+          <td class="!text-left">{{ crewSalaryStructureData?.crwCrewProfile?.crwCurrentRank?.name }}</td>
+          <td>{{ crewSalaryStructureData?.crwCrewProfile?.pre_mobile_no }}</td>
           <td class="!text-right">{{ crewSalaryStructureData?.gross_salary }}</td>
           <td class="!text-right">{{ crewSalaryStructureData?.addition }}</td>
           <td class="!text-right">{{ crewSalaryStructureData?.deduction }}</td>

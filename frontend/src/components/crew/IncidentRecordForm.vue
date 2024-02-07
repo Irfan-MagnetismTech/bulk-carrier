@@ -27,20 +27,6 @@ const selectedFile = (event) => {
   props.form.attachment = event.target.files[0];
 };
 
-// watch(() => props.form, (value) => {
-//   if(value){
-//     props.form.ops_vessel_id = props.form?.ops_vessel_name?.id ?? '';
-//     props.form.ops_vessel_name = value?.opsVessel;
-//     value?.crwIncidentParticipants?.forEach((line, index) => {
-//       props.form.crwIncidentParticipants[index].crw_crew_id = props.form.crwIncidentParticipants[index]?.crw_crew_name?.id ?? '';
-//
-//       props.form.crwIncidentParticipants[index].crw_crew_name = value?.crwIncidentParticipants[index]?.crwCrew ?? '';
-//
-//       props.form.crwIncidentParticipants[index].crw_crew_rank = props.form.crwIncidentParticipants[index].crw_crew_name?.crwCurrentRank?.name ?? '';
-//     });
-//   }
-// }, {deep: true});
-
 function addItem() {
   let obj = {
     crw_crew_id: '',

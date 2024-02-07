@@ -71,35 +71,6 @@ onMounted(() => {
             </tr>
           </tbody>
         </table>
- 
-<!--        <table class="w-full mt-2">-->
-<!--          <thead>-->
-<!--            <tr>-->
-<!--              <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="7"> Assigned Crew List (Attendance) </td>-->
-<!--            </tr>-->
-<!--            <tr class="bg-gray-200">-->
-<!--              <th class="w-40 !text-center">Crew Name</th>-->
-<!--              <th class="w-40 !text-center">Contact</th>-->
-<!--              <th class="w-40 !text-center">Net Salary</th>-->
-<!--              <th class="w-40 !text-center">Present Days</th>-->
-<!--              <th class="w-40 !text-center">Absent Days</th>-->
-<!--              <th class="w-40 !text-center">Payable Days</th>-->
-<!--              <th class="w-40 !text-center">Payable Amount</th>-->
-<!--            </tr>-->
-<!--          </thead>-->
-<!--          <tbody>-->
-<!--            <tr v-for="(crwPayrollBatchLine, crwPayrollBatchLineIndex) in payrollBatch?.crwPayrollBatchLines" :key="crwPayrollBatchLineIndex">-->
-<!--              <td class="text-left"> <nobr>{{ crwPayrollBatchLine?.crwCrew?.full_name }}</nobr> </td>-->
-<!--              <td class="text-left"> {{ crwPayrollBatchLine?.crwCrew?.pre_mobile_no }} </td>-->
-<!--              <td class="!text-right"> {{ crwPayrollBatchLine?.crwSalaryStructure?.net_amount }} </td>-->
-<!--              <td class="!text-center"> {{ crwPayrollBatchLine?.crwAttendanceLine?.present_days }} </td>-->
-<!--              <td class="!text-center"> {{ crwPayrollBatchLine?.crwAttendanceLine?.absent_days }} </td>-->
-<!--              <td class="!text-center"> {{ crwPayrollBatchLine?.crwAttendanceLine?.payable_days }} </td>-->
-<!--              <td class="!text-right"> {{ crwPayrollBatchLine?.payable_amount }} </td>-->
-<!--            </tr>-->
-<!--          </tbody>-->
-<!--        </table>-->
-
         <template v-if="payrollBatch?.crwPayrollBatchLines?.length">
           <div class="border-b-2 border-purple-700 mt-3"></div>
           <div class="dark-disabled:border-gray-700">

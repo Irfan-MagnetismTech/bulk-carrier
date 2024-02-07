@@ -53,12 +53,16 @@ onMounted(() => {
               </tr>
              <tr>
                 <th class="w-40">Crew Name</th>
-                <td>{{ appraisalRecord?.crwCrew?.full_name }}</td>
+                <td>{{ appraisalRecord?.crwCrewProfile?.full_name }}</td>
+              </tr>
+              <tr>
+                <th class="w-40">Current Rank</th>
+                <td>{{ appraisalRecord?.crwCrewProfile?.crwCurrentRank?.name }}</td>
               </tr>
               
              <tr>
                 <th class="w-40">Crew Contact</th>
-                <td>{{ appraisalRecord?.crwCrew?.pre_mobile_no }}</td>
+                <td>{{ appraisalRecord?.crwCrewProfile?.pre_mobile_no }}</td>
               </tr>
 
              <tr>
@@ -67,7 +71,7 @@ onMounted(() => {
               </tr>
               <tr>
                 <th class="w-40">Passport No</th>
-                <td>{{ appraisalRecord?.crwCrew?.passport_no }}</td>
+                <td>{{ appraisalRecord?.crwCrewProfile?.passport_no }}</td>
               </tr>
 
               
@@ -79,7 +83,7 @@ onMounted(() => {
               
               <tr>
                 <th class="w-40">Crew Nationality</th>
-                <td>{{ appraisalRecord?.crwCrew?.nationality }}</td>
+                <td>{{ appraisalRecord?.crwCrewProfile?.nationality }}</td>
               </tr>
 
               <tr>

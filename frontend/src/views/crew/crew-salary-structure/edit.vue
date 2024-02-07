@@ -20,7 +20,7 @@ setTitle('Edit Crew Salary Structure');
 
 watch(crewSalaryStructure, (value) => {
   if(value) {
-    crewSalaryStructure.value.crw_crew_name = crewSalaryStructure?.value?.crwCrew;
+    crewSalaryStructure.value.crw_crew_name = crewSalaryStructure?.value?.crwCrewProfile;
   }
 });
 
