@@ -15,7 +15,10 @@ return new class extends Migration
     {
         Schema::create('scm_costing_allocations', function (Blueprint $table) {
             $table->id();
-            
+            $table->foreignId('scm_costing_id')->constrained('scm_costings')->cascadeOnDelete();
+            $table->unsignedBigInteger('scm_mrr_id');
+            $table->integer('value');
+            $table->integer('allocated_amount');
             $table->timestamps();
         });
     }
