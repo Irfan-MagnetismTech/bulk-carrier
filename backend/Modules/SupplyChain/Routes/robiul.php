@@ -6,6 +6,7 @@ use Modules\SupplyChain\Http\Controllers\ScmWoController;
 use Modules\SupplyChain\Http\Controllers\ScmWrController;
 use Modules\SupplyChain\Http\Controllers\ScmWcsController;
 use Modules\SupplyChain\Http\Controllers\ScmWrrController;
+use Modules\SupplyChain\Http\Controllers\ScmReportController;
 use Modules\SupplyChain\Http\Controllers\ScmLcRecordStatusController;
 
 Route::middleware(['auth:api'])->prefix('scm')->group(function () {
@@ -58,6 +59,9 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('get-wrr-line-data', [ScmWrrController::class, "getWrrLineData"])->name('getWrrLineData');
     Route::get('get-wo-service-list', [ScmWrrController::class, "getWoServiceList"])->name('getWoServiceList');
     Route::get('get-service-for-wrr', [ScmWrrController::class, "getServiceByWrrId"])->name('getServiceForWrrId');
+    
+    Route::get('inventory-report', [ScmReportController::class, "inventoryReport"])->name('inventoryReport');
+
 
 
 });
