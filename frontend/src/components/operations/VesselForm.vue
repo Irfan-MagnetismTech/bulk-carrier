@@ -149,7 +149,14 @@
           <option value="120">10 Years</option>
         </select>
       </label>
-      <label class="block w-full mt-2 text-sm"></label>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Status <span class="text-red-500">*</span></span>
+        <select v-model.trim="form.status" class="form-input" required>
+          <option value="" disabled>--Choose an option--</option>
+          <option value="Available">Available</option>
+          <option value="Unavailable">Unavailable</option>
+        </select>
+      </label>
       
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">

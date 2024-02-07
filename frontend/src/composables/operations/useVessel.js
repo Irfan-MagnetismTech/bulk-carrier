@@ -43,7 +43,8 @@ export default function useVessel() {
 		remarks: '',
 		opsVesselCertificates: [],
 		opsBunkers: [],
-		dry_docking_months: ''
+		dry_docking_months: '',
+		status: ''
 	});
 	const maritimeCertificateObject = {
 		ops_vessel_certificate_id: '',

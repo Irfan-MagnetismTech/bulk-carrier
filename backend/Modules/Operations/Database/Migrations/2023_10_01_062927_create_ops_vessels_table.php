@@ -43,6 +43,7 @@ return new class extends Migration
             $table->string('live_tracking_config')->nullable();
             $table->text('remarks')->nullable();
             $table->integer('dry_docking_months')->nullable();
+            $table->string('status');
             $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();           
             $table->timestamps();
         });
