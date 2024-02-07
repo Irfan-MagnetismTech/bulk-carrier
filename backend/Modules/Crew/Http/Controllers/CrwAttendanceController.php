@@ -62,7 +62,7 @@ class CrwAttendanceController extends Controller
     public function show(CrwAttendance $crwAttendance)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwAttendance->load('opsVessel:id,name', 'crwAttendanceLines.crwCrewAssignment.crwCrew'), 200);
+            return response()->success('Retrieved succesfully', $crwAttendance->load('opsVessel:id,name', 'crwAttendanceLines.crwCrewAssignment.crwCrewProfile'), 200);
         }
         catch (QueryException $e)
         {

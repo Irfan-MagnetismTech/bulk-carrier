@@ -19,8 +19,7 @@ class CrwCrewAssignmentController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwCrewAssignments = CrwCrewAssignment::with('opsVessel:id,name','crwCrew:id,full_name,pre_mobile_no,crw_rank_id', 'opsPort', 'crwCrew:crwCurrentRank')
-            // ->get();
+            $crwCrewAssignments = CrwCrewAssignment::with('opsVessel:id,name','crwCrewProfile:id,full_name,pre_mobile_no,crw_rank_id', 'opsPort')
             ->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwCrewAssignments, 200);
@@ -62,7 +61,7 @@ class CrwCrewAssignmentController extends Controller
     public function show(CrwCrewAssignment $crwCrewAssignment)
     {
         try {
-            return response()->success('Retrieved successfully', $crwCrewAssignment->load('opsVessel','crwCrew.crwCurrentRank','opsPort'), 200);
+            return response()->success('Retrieved successfully', $crwCrewAssignment->load('opsVessel','crwCrewProfile.crwCurrentRank','opsPort'), 200);
         }
         catch (QueryException $e)
         {

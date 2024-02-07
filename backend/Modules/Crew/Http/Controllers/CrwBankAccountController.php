@@ -23,7 +23,7 @@ class CrwBankAccountController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwBankAccounts = CrwBankAccount::with('crwCrew')->globalSearch($request->all());
+            $crwBankAccounts = CrwBankAccount::with('crwCrewProfile')->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwBankAccounts, 200);
         }
@@ -64,7 +64,7 @@ class CrwBankAccountController extends Controller
     public function show(CrwBankAccount $crwBankAccount)
     {
         try {
-            return response()->success('Retrieved Succesfully', $crwBankAccount->load('crwCrew'), 200);
+            return response()->success('Retrieved Succesfully', $crwBankAccount->load('crwCrewProfile'), 200);
         }
         catch (QueryException $e)
         {
