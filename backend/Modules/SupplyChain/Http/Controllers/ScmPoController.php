@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Nwidart\Modules\Facades\Module;
+use Illuminate\Support\Facades\File;
 use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmCs;
 use Modules\SupplyChain\Entities\ScmPo;
@@ -244,11 +246,15 @@ class ScmPoController extends Controller
      * @param ScmPo $purchaseOrder
      * @return JsonResponse
      */
-    public function destroy(ScmPo $purchaseOrder)
+    public function destroy(ScmPo $purchaseOrder): JsonResponse
     {
         $purchaseOrder->load('scmPoLines.scmPoItems');
         try {
             DB::beginTransaction();
+
+            // return response()->json($purchaseOrder->preventDeletionIfRelated(), 422);
+            // if ($purchaseOrder->preventDeletionIfRelated()) {
+            // }
 
             $purchaseOrder->scmPoLines()->delete();
             $purchaseOrder->scmPoItems()->delete();
@@ -261,14 +267,7 @@ class ScmPoController extends Controller
         } catch (QueryException $e) {
             DB::rollBack();
 
-            return response()->json($purchaseOrder->preventDeletionIfRelated(), 422);
-
-            // return response()->json($e, 422);
-            // if ($e->errorInfo[1] == 1451) {
-            //     // Custom error response for foreign key constraint violation
-            //     return response()->json(['error' => 'Cannot delete parent record because it has related child records.'], 422);
-            // }
-            // return response()->error($e->getMessage(), 500);
+            return response()->error($e->getMessage(), 500);
         }
     }
 
@@ -645,7 +644,8 @@ class ScmPoController extends Controller
         }
     }
 
-    public function getPoListForMrr(){
+    public function getPoListForMrr()
+    {
         try {
             $scmPo = ScmPo::query()
                 ->with('scmPoLines.scmPoItems.scmMaterial', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPoItems.scmMaterial')
@@ -663,7 +663,8 @@ class ScmPoController extends Controller
         }
     }
 
-    public function getPoWisePrList(){
+    public function getPoWisePrList()
+    {
         try {
             $scmPo = ScmPr::query()
                 ->with('scmPoLines')

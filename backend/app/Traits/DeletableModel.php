@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use ReflectionClass;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 trait DeletableModel
 {
@@ -12,29 +13,33 @@ trait DeletableModel
      *
      * @return array
      */
-    public function preventDeletionIfRelated(): array
+    public function preventDeletionIfRelated(): ?array
     {
-        $methods = $this->getRelationMethods();
+        $allMethods = $this->getRelationMethods();
 
-        $models = [];
+        $methods = [];
+        if (property_exists($this, 'skipForDeletionCheck')) {
+            $methods = array_diff($allMethods, $this->skipForDeletionCheck ?? []);
+        }
+
+        $totalCount = 0;
         foreach ($methods as $method) {
             $relation = $this->{$method}();
-
             if ($relation instanceof Relation && $relation->count() > 0) {
-                $finalModelName = implode(' ', preg_split('/(?=[A-Z])/', class_basename($relation->getRelated()), -1, PREG_SPLIT_NO_EMPTY));
-
-                $models[] = $finalModelName;
+                $totalCount += $relation->count();
             }
         }
 
-        $modelNames = count($models) > 1 ? implode(', ', array_slice($models, 0, -1)) . ' and ' . end($models) : implode('', $models);
+        if ($totalCount > 0) {
+            throw new HttpResponseException(response()->json([
+                "message" => "Data could not be deleted! It has references in the {$this->features} table.",
+                "errors" => [
+                    "id" => ["Data is in use and cannot be deleted!"]
+                ]
+            ], 422));
+        }
 
-        return [
-            "message" => "Data could not be deleted! It has references in the {$modelNames} table.",
-            "errors" => [
-                "id" => ["Data is in use and cannot be deleted!"]
-            ]
-        ];
+        return null;
     }
 
     /**

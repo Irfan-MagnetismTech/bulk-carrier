@@ -3,16 +3,15 @@
 namespace Modules\SupplyChain\Entities;
 
 use App\Models\User;
+use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
 use App\Traits\UniqueKeyGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmPo;
-use Modules\SupplyChain\Entities\ScmPr;
 use Modules\SupplyChain\Entities\ScmMrrLine;
 use Modules\SupplyChain\Entities\ScmLcRecord;
 use Modules\SupplyChain\Entities\ScmWarehouse;
 use Modules\SupplyChain\Entities\ScmStockLedger;
-use Modules\Accounts\Entities\AccCashRequisition;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
