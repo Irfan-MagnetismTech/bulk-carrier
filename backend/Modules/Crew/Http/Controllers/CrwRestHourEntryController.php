@@ -79,11 +79,9 @@ class CrwRestHourEntryController extends Controller
      */
     public function show(CrwRestHourEntry $crwRestHourEntry)
     {
-        // dd($crwRestHourEntry);
-
         try {
             return response()->success('Retrieved succesfully',
-                $crwRestHourEntry->load('opsVessel:id,name', 'crwRestHourEntryLines.crwCrew:id,full_name,pre_mobile_no', 'crwRestHourEntryLines.crwCrewAssignment'), 200);
+                $crwRestHourEntry->load('opsVessel:id,name', 'crwRestHourEntryLines.crwCrewProfile:id,full_name,pre_mobile_no,crw_rank_id', 'crwRestHourEntryLines.crwCrewAssignment'), 200);
         }
         catch (QueryException $e)
         {

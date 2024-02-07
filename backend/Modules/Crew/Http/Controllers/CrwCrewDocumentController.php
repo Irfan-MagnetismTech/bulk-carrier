@@ -30,7 +30,7 @@ class CrwCrewDocumentController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwCrewDocuments = CrwCrewProfile::with('crewDocuments:id,crw_crew_profile_id,document_name', 'crwCurrentRank', 'crwRank')->globalSearch($request->all());
+            $crwCrewDocuments = CrwCrewProfile::with('crewDocuments:id,crw_crew_profile_id,document_name', 'crwCurrentRank')->globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $crwCrewDocuments, 200);
         }
@@ -161,7 +161,7 @@ class CrwCrewDocumentController extends Controller
         try {
             $leftDays = request()->left_days ?? 30; 
 
-            $documents = CrwCrewDocument::with('crwCrewDocumentRenewal', 'crwCrewProfile:id,full_name,pre_mobile_no,pre_email')            
+            $documents = CrwCrewDocument::with('crwCrewDocumentRenewal', 'crwCrewProfile:id,full_name,pre_mobile_no,pre_email,crw_rank_id')            
             ->where('validity_period_in_month', '>', 0)
             ->get();
 
