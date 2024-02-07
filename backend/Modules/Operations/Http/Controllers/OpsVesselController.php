@@ -175,6 +175,9 @@ class OpsVesselController extends Controller
             return $bunker;
         });
 
+        $vessel->total_voyages = $vessel->opsVoyages->count();
+        $vessel->currentCharterer =  $vessel->currentCharterer;
+
         try
         {
             return response()->success('Data retrieved successfully.', $vessel, 200);

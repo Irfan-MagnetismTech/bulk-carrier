@@ -53,6 +53,8 @@ class OpsVesselRequest extends FormRequest
             'capacity'        => ['required', 'numeric'],
             'total_cargo_hold'=> ['required', 'numeric'],
             'live_tracking_config'=> ['nullable', 'string', 'max:5000'],
+            'dry_docking_months' => ['required', 'numeric'],
+            'status' => ['required'],
             'remarks'         => ['nullable', 'string', 'max:500'],
             'opsVesselCertificates.*.ops_maritime_certification_id' => ['nullable', 'numeric', 'max:255', 'distinct'],           
             'opsBunkers.*.scm_material_id' => ['nullable', 'numeric', 'max:255', 'distinct'],

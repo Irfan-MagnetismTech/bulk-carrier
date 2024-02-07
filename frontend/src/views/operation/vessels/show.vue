@@ -152,7 +152,9 @@
             <tbody>
               <tr>
                 <th class="w-52">Current Charterer Owner</th>
-                <td></td>
+                <td>
+                  {{ vessel?.currentCharterer?.opsChartererProfile?.name }}
+                </td>
               </tr>
               <tr>
                 <th class="w-52">All Charterer History</th>
@@ -160,7 +162,9 @@
               </tr>
               <tr>
                 <th class="w-52">Total Voyage</th>
-                <td></td>
+                <td>
+                  {{ vessel?.total_voyages }}
+                </td>
               </tr>
             </tbody>
           </table>
