@@ -9,7 +9,7 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">      
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage <span class="text-red-500">*</span></span>
+              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage No <span class="text-red-500">*</span></span>
               <v-select :options="voyages" placeholder="--Choose an option--" :loading="isVoyageLoading"  v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
@@ -23,8 +23,8 @@
               <input type="hidden" v-model="form.ops_voyage_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel</span>
-              <input type="text" readonly v-model.trim="form.vessel_name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
+              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name</span>
+              <input type="text" readonly v-model.trim="form.vessel_name" placeholder="Vessel Name" class="form-input bg-gray-100" autocomplete="off" />
         </label>
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">      
@@ -104,9 +104,9 @@ const props = defineProps({
 });
 
 
-function fetchVoyages(searchParam, loading) {
+function fetchVoyages(searchParam) {
   // loading(true)
-  searchVoyages(searchParam, props.form.business_unit, loading)
+  searchVoyages(searchParam, props.form.business_unit)
 }
 
 watch(() => props.form.business_unit, (value) => {

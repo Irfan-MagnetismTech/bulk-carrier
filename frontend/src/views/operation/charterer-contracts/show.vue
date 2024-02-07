@@ -26,7 +26,7 @@
                       <td>{{  chartererContract.contract_type }}</td>
                   </tr>
                   <tr>
-                      <th class="w-40">Vessel</th>
+                      <th class="w-40">Vessel Name</th>
                       <td>{{  chartererContract.opsVessel?.name }}</td>
                   </tr>
                   <tr>
@@ -131,7 +131,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <th class="w-40">Port</th>
+                    <th class="w-40">Port Code</th>
                     <td>{{ chartererContract.opsChartererContractsLocalAgents[0].opsPort?.code_name }}</td>
                 </tr>
                 <tr>

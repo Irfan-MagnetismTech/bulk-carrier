@@ -70,8 +70,8 @@ watch(() => form.value.ops_vessel_id, (newValue, oldValue) => {
 
 }, { deep: true });
 
-function fetchVesselWiseVoyages(ops_vessel_id, loading) {
-  searchVoyages("", form.value.business_unit, loading, ops_vessel_id)
+function fetchVesselWiseVoyages(ops_vessel_id) {
+  searchVoyages("", form.value.business_unit, ops_vessel_id)
 }
 </script>
 <template>
@@ -100,7 +100,7 @@ function fetchVesselWiseVoyages(ops_vessel_id, loading) {
 
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700">Vessel <span class="text-red-500">*</span></span>
+            <span class="text-gray-700">Vessel Name <span class="text-red-500">*</span></span>
               <v-select :options="vessels" placeholder="--Choose an option--" :loading="isVesselLoading"  v-model="form.ops_vessel_id" label="name" class="block form-input" :reduce="vessel=>vessel.id">
                   <template #search="{attributes, events}">
                       <input
@@ -113,7 +113,7 @@ function fetchVesselWiseVoyages(ops_vessel_id, loading) {
               </v-select>
           </label>
           <label class="block w-full mt-2 text-sm">
-                <span class="text-gray-700 dark-disabled:text-gray-300">Voyage </span>
+                <span class="text-gray-700 dark-disabled:text-gray-300">Voyage No</span>
                 <v-select :options="voyages" placeholder="--Choose an option--" multiple v-model="form.ops_voyage_id" label="voyage_sequence" class="block form-input" :reduce="voyage=>voyage.id">
                     <template #search="{attributes, events}">
                         <input

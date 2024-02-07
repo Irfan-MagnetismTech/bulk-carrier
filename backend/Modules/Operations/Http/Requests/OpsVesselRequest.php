@@ -49,7 +49,7 @@ class OpsVesselRequest extends FormRequest
             'mmsi'            => ['required',Rule::unique('ops_vessels')->ignore($this->route('vessel'), 'id')],
             'overall_length'  => ['required'],
             'overall_width'   => ['required'],
-            'year_built'      => ['required', 'numeric', 'min:1900', 'max:3000'],
+            'year_built'      => ['required', 'numeric', 'min:1901', 'max:2155'],
             'capacity'        => ['required', 'numeric'],
             'total_cargo_hold'=> ['required', 'numeric'],
             'live_tracking_config'=> ['nullable', 'string', 'max:5000'],

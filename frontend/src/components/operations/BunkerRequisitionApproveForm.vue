@@ -143,8 +143,8 @@ const props = defineProps({
 });
 
 
-function fetchVoyages(searchParam, loading) {
-  searchVoyages(searchParam, props.form.business_unit, loading);
+function fetchVoyages(searchParam) {
+  searchVoyages(searchParam, props.form.business_unit);
 }
 
 

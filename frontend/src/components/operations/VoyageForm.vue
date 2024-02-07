@@ -48,7 +48,7 @@
                 <input type="text" v-model.trim="form.mother_vessel" placeholder="Mother Vessel Name" class="form-input" required autocomplete="off" />
           </label>
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
             <v-select :options="vessels" placeholder="--Choose an option--" :loading="isVesselLoading"  v-model="form.ops_vessel_name" label="name" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
                 <template #search="{attributes, events}">
                     <input
@@ -66,11 +66,11 @@
 
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-1/2 mt-2 text-sm">
-                <span class="text-gray-700 dark-disabled:text-gray-300">Voyage No <span class="text-red-500">*</span></span>
+                <span class="text-gray-700 dark-disabled:text-gray-300">Voyage Sequence <span class="text-red-500">*</span></span>
                 <input type="text" v-model.trim="form.voyage_no" placeholder="Voyage No" class="form-input" required autocomplete="off" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" />
             </label>
             <label class="block w-1/2 mt-2 text-sm">
-                <span class="text-gray-700 dark-disabled:text-gray-300">Voyage Sequence <span class="text-red-500">*</span></span>
+                <span class="text-gray-700 dark-disabled:text-gray-300">Voyage No <span class="text-red-500">*</span></span>
                 <input type="text" v-model.trim="form.voyage_sequence" readonly class="form-input bg-gray-100" required autocomplete="off" />
             </label>
             <label class="block w-full mt-2 text-sm">
@@ -194,7 +194,7 @@
 
 <span class="text-gray-700 dark-disabled:text-gray-300">Port Code <span class="text-red-500">*</span></span>
 
-<v-select :options="ports" placeholder="Search Port" :loading="isPortLoading"  v-model="form.opsVoyagePortSchedules[index].port_code" label="code_name" class="block form-input" :reduce="port=>port.code">
+<v-select :options="ports" placeholder="--Choose an option--" :loading="isPortLoading"  v-model="form.opsVoyagePortSchedules[index].port_code" label="code_name" class="block form-input" :reduce="port=>port.code">
   <template #search="{attributes, events}">
       <input
           class="vs__search"
@@ -211,7 +211,7 @@
             <span class="text-gray-700 dark-disabled:text-gray-300">Operation Type <span class="text-red-500">*</span></span>
 
             <select v-model="form.opsVoyagePortSchedules[index].operation_type" class="form-input" required>
-              <option value="" selected disabled>Select Type</option>
+              <option value="" selected disabled>--Choose an option--</option>
               <option value="Loading">Loading</option>
               <option value="Discharge">Discharge</option>
             </select>

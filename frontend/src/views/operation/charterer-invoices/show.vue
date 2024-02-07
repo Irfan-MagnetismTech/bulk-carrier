@@ -18,15 +18,15 @@
                           <td><span :class="chartererInvoice?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chartererInvoice?.business_unit }}</span></td>
                       </tr>
                       <tr>
-                          <th class="w-40">Charterer Owner</th>
+                          <th class="w-40">Charterer Name</th>
                           <td>{{ chartererInvoice?.opsChartererProfile?.name_and_code }}</td>
                       </tr>
                       <tr>
-                          <th class="w-40">Contract</th>
+                          <th class="w-40">Contract Name</th>
                           <td>{{ chartererInvoice?.opsChartererContract?.contract_name  }}</td>
                       </tr>
                       <tr>
-                          <th class="w-40">Vessel</th>
+                          <th class="w-40">Vessel Name</th>
                           <td>{{ chartererInvoice.opsChartererContract?.opsVessel?.name  }}</td>
                       </tr>
                       <tr v-if="chartererInvoice.contract_type == 'Day Wise'">

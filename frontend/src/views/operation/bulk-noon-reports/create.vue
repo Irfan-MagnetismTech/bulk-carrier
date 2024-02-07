@@ -2,7 +2,7 @@
   <!-- Heading -->
   
   <div class="flex items-center justify-between w-full my-3" v-once>
-        <h2 class="text-2xl font-semibold text-gray-700 dark-dsiabled:text-gray-200">Add Bulk Noon Reports</h2>
+        <h2 class="text-2xl font-semibold text-gray-700 dark-dsiabled:text-gray-200">Create Bulk Noon Report</h2>
       <default-button :title="'Bulk Noon Reports List'" :to="{ name: 'ops.bulk-noon-reports.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-dsiabled:bg-gray-800">
@@ -25,7 +25,7 @@ const icons = useHeroIcon();
 const { bulkNoonReport, portObject, cargoTankObject, engineObject, storeBulkNoonReport, isLoading, errors } = useBulkNoonReport();
 const { setTitle } = Title();
 
-setTitle('Create Bulk Noon Reports');
+setTitle('Create Bulk Noon Report');
 
 const formType = 'create';
 

@@ -112,8 +112,6 @@ class OpsVesselController extends Controller
                 $bunker['quantity'] = $bunker->opening_balance;
                 return $bunker;
             });
-
-            (new StockLedgerData)->insert($vessel, $bunkers);
             
             $ware_house->scmWarehouseContactPersons()->create($wareHouseContact);
 
@@ -155,13 +153,25 @@ class OpsVesselController extends Controller
             $certificate->validity  =$certificate->opsMaritimeCertification->validity;
             $certificate->name = $certificate->opsMaritimeCertification->name;
             $certificate->id = $certificate->opsMaritimeCertification->id;
+            $certificate->certificate = [
+                'type' => $certificate->opsMaritimeCertification->type,
+                'validity'  => $certificate->opsMaritimeCertification->validity,
+                'name' => $certificate->opsMaritimeCertification->name,
+                'id' => $certificate->opsMaritimeCertification->id,
+            ];
             return $certificate;
         });
+        
 
         $vessel->opsBunkers->map(function($bunker) {
             $bunker->id = $bunker->scmMaterial->id;
             $bunker->name = $bunker->scmMaterial->name;
             $bunker->is_readonly = true;
+            $bunker->bunker = [
+                'id' => $bunker->scmMaterial->id,
+                'name' => $bunker->scmMaterial->name,
+                'unit' => $bunker->scmMaterial->unit,
+            ];
             return $bunker;
         });
 

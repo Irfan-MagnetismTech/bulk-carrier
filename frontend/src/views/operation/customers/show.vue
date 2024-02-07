@@ -22,7 +22,7 @@
                         <td>{{  customer.code }}</td>
                     </tr>
                     <tr>
-                        <th class="w-40">Name</th>
+                        <th class="w-40">Customer Name</th>
                         <td>{{ customer?.name }}</td>
                     </tr>
                     <tr>

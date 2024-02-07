@@ -18,7 +18,7 @@
                   <td><span :class="vesselExpenseHead?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ vesselExpenseHead?.business_unit }}</span></td>
               </tr>
               <tr>
-                  <th class="w-40">Vessel</th>
+                  <th class="w-40">Vessel Name</th>
                   <td>{{ vesselExpenseHead?.opsVessel?.name }}</td>
               </tr>
               
