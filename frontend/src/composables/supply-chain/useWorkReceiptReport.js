@@ -8,6 +8,7 @@ import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
 import { merge } from 'lodash';
 import { loaderSetting as LoaderConfig} from '../../config/setting.js';
+import Swal from 'sweetalert2';
 
 export default function useMaterialReceiptReport() {
     const BASE = 'scm' 
@@ -188,6 +189,8 @@ export default function useMaterialReceiptReport() {
     }
     async function storeWorkReceiptReport(form) {
 
+        if (!checkUniqueArray(form)) return;
+
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -224,6 +227,8 @@ export default function useMaterialReceiptReport() {
     }
 
     async function updateWorkReceiptReport(form, workReceiptReportId) {
+
+        if (!checkUniqueArray(form)) return;
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -554,6 +559,56 @@ export default function useMaterialReceiptReport() {
             //loader.hide();
             isLoading.value = false;
             //NProgress.done();
+        }
+    }
+
+    function checkUniqueArray(form) {
+        
+        const messages = ref([]);
+        let scmWrrLineArray = [];
+
+        form.scmWrrLines.forEach((scmWrrLine, scmWrrLineIndex) => {
+            scmWrrLine?.scmWrrLineItems?.forEach((scmWrrLineItem, scmWrrLineItemIndex) => {
+                // console.log("scmWrrLine?.scmWrrLineItems", scmWrrLine?.scmWrrLineItems, "length =>", scmWrrLine?.scmWrrLineItems?.filter(val => val.wo_composite_key === scmWrrLineItem?.wo_composite_key).length);
+
+                let prevService = scmWrrLineArray?.find(val => val.wo_composite_key === scmWrrLineItem?.wo_composite_key);
+
+                if(prevService){
+                    // let data = `Duplicate Service [WR No: ${scmWoLine?.scmWr?.ref_no}] [Service - Code : ${scmWoItem?.scmService?.service_name_and_code}]`;
+                    let data = `Duplicate Service Name Having Work Requisition ${scmWrrLine.scmWr.ref_no} in ${scmWrrLineIndex} Block Row: ${scmWrrLineItemIndex + 1}`;
+                    messages.value.push(data);
+                    scmWrrLineItem.isServiceDuplicate = true;
+                    prevService.isServiceDuplicate = true;
+                }
+                else {
+                    scmWrrLineItem.isServiceDuplicate = false;
+                    }
+                scmWrrLineArray.push(scmWrrLineItem);
+            });
+            
+            
+        });
+
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
         }
     }
 

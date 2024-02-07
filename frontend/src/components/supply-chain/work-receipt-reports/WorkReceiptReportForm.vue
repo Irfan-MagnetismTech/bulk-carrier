@@ -542,6 +542,7 @@ watch(() => wrList.value, (newVal, oldVal) => {
                                       />
                               </template>
                           </v-select>
+                          <span v-show="form.scmWrrLines[index].scmWrrLineItems[itemIndex].isServiceDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-10" title="Duplicate Service" v-html="icons.ExclamationTriangle"></span>
                           </div>
                           </td>
                           
