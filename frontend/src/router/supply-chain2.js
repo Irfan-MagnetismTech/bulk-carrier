@@ -210,6 +210,18 @@ export default [
 
     /* Work Receipt Report end */
 
+    /* Report Start */
+	/* Inventory Report Start*/
+	{
+		path: `/${BASE}/reports/inventory-report`,
+		name: `${BASE}.reports.inventory-report`,
+		component: () => import(`../views/${PATH_BASE}/reports/inventory-report/report.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'inventory-report' },
+	},
+	/* Inventory Report End*/
+	
+	/* Report End */
+
 
     
 ];
