@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Nwidart\Modules\Facades\Module;
+use Illuminate\Support\Facades\File;
 use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmCs;
 use Modules\SupplyChain\Entities\ScmPo;
@@ -244,22 +246,54 @@ class ScmPoController extends Controller
      * @param ScmPo $purchaseOrder
      * @return JsonResponse
      */
-    public function destroy(ScmPo $purchaseOrder)
+    public function destroy(ScmPo $purchaseOrder): JsonResponse
     {
+        // $directories = [
+        //     base_path('App/Models'), // Laravel's default model location
+        // ];
+
+        // // Get the directories of the Entities in each enabled module
+        // $modules = Module::allEnabled();
+        // foreach ($modules as $module) {
+        //     $directories[] = $module->getPath() . '/Entities';
+        // }
+
+        // // return response()->json($directories, 422);
+
+
+        // foreach ($directories as $directory) {
+        //     if (File::isDirectory($directory)) {
+        //         $models = collect(File::allFiles($directory))
+        //             ->map(function ($item) use ($directory) {
+        //                 // Get the namespace of the models based on the directory
+        //                 $namespace = str_replace('/', '\\', str_replace(base_path(), '', $directory) . '\\');
+        //                 return $namespace . $item->getBasename('.php');
+        //             });
+        //         return response()->json($models, 422);
+        //     }
+        // }
+
+
         $purchaseOrder->load('scmPoLines.scmPoItems');
         try {
             DB::beginTransaction();
+
+            // return response()->json($purchaseOrder->preventDeletionIfRelated(), 422);
+            // if ($purchaseOrder->preventDeletionIfRelated()) {
+            // }
 
             $purchaseOrder->scmPoLines()->delete();
             $purchaseOrder->scmPoItems()->delete();
             $purchaseOrder->scmPoTerms()->delete();
             $purchaseOrder->delete();
+            // return response()->json('hey there', 422);
 
             DB::commit();
 
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (QueryException $e) {
             DB::rollBack();
+            // return response()->json('Lol there', 422);
 
             return response()->json($purchaseOrder->preventDeletionIfRelated(), 422);
 
@@ -642,7 +676,8 @@ class ScmPoController extends Controller
         }
     }
 
-    public function getPoListForMrr(){
+    public function getPoListForMrr()
+    {
         try {
             $scmPo = ScmPo::query()
                 ->with('scmPoLines.scmPoItems.scmMaterial', 'scmPoTerms', 'scmVendor', 'scmWarehouse', 'scmPoItems.scmMaterial')
@@ -660,7 +695,8 @@ class ScmPoController extends Controller
         }
     }
 
-    public function getPoWisePrList(){
+    public function getPoWisePrList()
+    {
         try {
             $scmPo = ScmPr::query()
                 ->with('scmPoLines')
