@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\SupplyChain\Entities\ScmVendorBill;
 use Modules\SupplyChain\Http\Controllers\ScmCsController;
 use Modules\SupplyChain\Http\Controllers\ScmMiController;
 use Modules\SupplyChain\Http\Controllers\ScmMoController;
@@ -23,6 +22,7 @@ use Modules\SupplyChain\Http\Controllers\ScmAdjustmentController;
 use Modules\SupplyChain\Http\Controllers\ScmStockLedgerController;
 use Modules\SupplyChain\Http\Controllers\ScmOpeningStockController;
 use Modules\SupplyChain\Http\Controllers\ScmMaterialCategoryController;
+use Modules\SupplyChain\Http\Controllers\ScmVendorBillController;
 
 Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::apiResources([
@@ -45,7 +45,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
         'movement-ins' => ScmMiController::class,
         'material-cs' => ScmCsController::class,
         'adjustments' => ScmAdjustmentController::class,
-        'vendor-bills' => ScmVendorBill::class,
+        'vendor-bills' => ScmVendorBillController::class,
     ]);
 
     //Search Apis

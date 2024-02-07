@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('scm_vendor_bill_lines', function (Blueprint $table) {
             $table->id();
-            
+            $table->unsignedBigInteger('vendor_bill_id');
+            $table->string('ref_no')->unique();
+            $table->date('date');
             $table->timestamps();
         });
     }
