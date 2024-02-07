@@ -5,6 +5,7 @@ namespace Modules\SupplyChain\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\SupplyChain\Entities\ScmVendorBill;
 
 class ScmVendorBillController extends Controller
 {
@@ -72,8 +73,9 @@ class ScmVendorBillController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(ScmVendorBill $vendorBill)
     {
-        //
+        $vendorBill->delete();
+        return response()->json(['message' => 'Vendor Bill has been deleted successfully!']);
     }
 }

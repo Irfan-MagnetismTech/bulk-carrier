@@ -34,7 +34,7 @@ trait DeletableModel
             throw new HttpResponseException(response()->json([
                 "message" => "Data could not be deleted! It has references in the {$this->features} table.",
                 "errors" => [
-                    "id" => ["Data is in use and cannot be deleted!"]
+                    "id" => ["Data is in use and cannot be deleted! It has references in the {$this->features}."]
                 ]
             ], 422));
         }
