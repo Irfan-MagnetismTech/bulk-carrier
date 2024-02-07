@@ -91,8 +91,12 @@ onMounted(() => {
                 <td>{{ crewProfile?.department_name }}</td>
               </tr>
               <tr>
-                <th>Rank</th>
-                <td>{{ crewProfile?.crewRank?.name }}</td>
+                <th>Joining Rank</th>
+                <td>{{ crewProfile?.crwRank?.name }}</td>
+              </tr>
+              <tr>
+                <th>Current Rank</th>
+                <td>{{ crewProfile?.crwCurrentRank?.name }}</td>
               </tr>
               <tr>
                 <th>Attachment</th>

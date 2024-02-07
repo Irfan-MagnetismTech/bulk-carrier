@@ -99,6 +99,16 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     {
+      "relation_name": "crwCrewProfile.crwCurrentRank",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Current Rank",
+      "filter_type": "input"
+    },
+    {
       "relation_name": "crwCrewProfile",
       "field_name": "pre_mobile_no",
       "search_param": "",
@@ -194,6 +204,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
             <th> Expire Date </th>
             <th> Left Days</th>
             <th> Crew Name </th>
+            <th> Current Rank </th>
             <th> Crew Contact </th>
             <th> Business Unit</th>
             <th> Action </th>
@@ -206,6 +217,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
             <td>{{ formatDate(crwDocument?.crwCrewDocumentRenewal?.expire_date) }}</td>
             <td>{{ crwDocument?.crwCrewDocumentRenewal?.left_days }}</td>
             <td class="!text-left">{{ crwDocument?.crwCrewProfile?.full_name }}</td>
+            <td class="!text-left">{{ crwDocument?.crwCrewProfile?.crwCurrentRank?.name }}</td>
             <td>{{ crwDocument?.crwCrewProfile?.pre_mobile_no }}</td>
             <td>
               <span :class="crwDocument?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwDocument?.business_unit }}</span>

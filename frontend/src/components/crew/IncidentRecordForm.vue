@@ -13,6 +13,7 @@ import useHeroIcon from "../../assets/heroIcon";
 const icons = useHeroIcon();
 
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
+const dateTimeFormat = ref(Store.getters.getVueDatePickerTextInputFormat.dateTime);
 const props = defineProps({
   form: {
     required: false,
@@ -104,7 +105,8 @@ onMounted(() => {
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Incident Date & Time <span class="text-red-500">*</span></span>
-        <VueDatePicker v-model.trim="form.date_time" utc class="form-input" required auto-apply  :enable-time-picker = "true" placeholder="Select Date Time" :text-input="{ format: dateFormat }"></VueDatePicker>
+<!--        <input type="datetime-local" class="form-input"  v-model.trim="form.date_time">-->
+        <VueDatePicker v-model.trim="form.date_time" class="form-input" required auto-apply   format="dd/MM/yyyy hh:mm a" placeholder="Select Date Time" model-type="yyyy-MM-dd HH:mm:ss" :is-24="false"  :flow="['calendar', 'time']" :text-input="{ format: dateTimeFormat }" ></VueDatePicker>
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Incident Type <span class="text-red-500">*</span></span>

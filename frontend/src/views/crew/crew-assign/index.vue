@@ -76,6 +76,16 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     {
+      "relation_name": "crwCrew.crwCurrentRank",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Current Rank",
+      "filter_type": "input"
+    },
+    {
       "relation_name": "crwCrew",
       "field_name": "pre_mobile_no",
       "search_param": "",
@@ -243,6 +253,7 @@ onMounted(() => {
               <td class="!text-left"> <nobr> {{ crwAssign?.assignment_code }} </nobr> </td>
               <td class="!text-left"> <nobr> {{ crwAssign?.opsVessel?.name }} </nobr> </td>
               <td class="!text-left"> <nobr> {{ crwAssign?.crwCrew?.full_name }} </nobr> </td>
+              <td class="!text-left"> <nobr> {{ crwAssign?.crwCrew?.crwCurrentRank?.name }} </nobr> </td>
               <td> <nobr> {{ crwAssign?.crwCrew?.pre_mobile_no }} </nobr> </td>
               <td class="!text-left"> <nobr> {{ crwAssign?.position_onboard }} </nobr> </td>
               <td> <nobr> {{ formatDate(crwAssign?.joining_date) }} </nobr> </td>

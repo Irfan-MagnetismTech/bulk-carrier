@@ -33,6 +33,14 @@ let renewFormData = ref({
 });
 
 function closeCrewDocumentAddModal(){
+
+  if (globalFileEvent && globalFileEvent.target) {
+    const inputElement = globalFileEvent.target;
+    inputElement.value = ''; // Clear the selected file
+    inputElement.type = 'text'; // Change the type to text
+    inputElement.type = 'file'; // Change it back to file
+    globalFileEvent = null;
+  }
   isDocumentEditModal.value = 0;
   isCrewDocumentAddModalOpen.value = 0;
   resetCrewDocumentModalData();
@@ -95,6 +103,15 @@ function showCrewDocumentRenewModal(crwDocumentId){
 }
 
 function closeCrewDocumentRenewModal(){
+
+  if (globalFileRenewEvent && globalFileRenewEvent.target) {
+    const inputElement = globalFileRenewEvent.target;
+    inputElement.value = ''; // Clear the selected file
+    inputElement.type = 'text'; // Change the type to text
+    inputElement.type = 'file'; // Change it back to file
+    globalFileRenewEvent = null;
+  }
+
   isCrewDocumentRenewModalOpen.value = 0;
   currentCrewDocRenewData.value = null;
   resetCrewDocumentRenewModalData();
@@ -107,11 +124,16 @@ function resetCrewDocumentRenewModalData(){
   renewFormData.value.attachment = null;
 }
 
+let globalFileEvent;
+let globalFileRenewEvent;
+
 const selectedFile = (event) => {
+  globalFileEvent = event;
   props.form.attachment = event.target.files[0];
 };
 
 const selectedRenewFile = (event) => {
+  globalFileRenewEvent = event;
   renewFormData.value.attachment = event.target.files[0];
 };
 

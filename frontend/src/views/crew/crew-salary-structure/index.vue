@@ -52,13 +52,23 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     {
+      "relation_name": "crwCrew.crwCurrentRank",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Current Rank",
+      "filter_type": "input"
+    },
+    {
       "relation_name": "crwCrew",
       "field_name": "pre_mobile_no",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Crew Contact",
+      "label": "Contact",
       "filter_type": "input"
     },
     {
@@ -197,6 +207,7 @@ onMounted(() => {
         <tr v-for="(crewSalaryStructureData,index) in crewSalaryStructures?.data" :key="index">
           <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
           <td class="!text-left">{{ crewSalaryStructureData?.crwCrew?.full_name }}</td>
+          <td class="!text-left">{{ crewSalaryStructureData?.crwCrew?.crwCurrentRank?.name }}</td>
           <td>{{ crewSalaryStructureData?.crwCrew?.pre_mobile_no }}</td>
           <td class="!text-right">{{ crewSalaryStructureData?.gross_salary }}</td>
           <td class="!text-right">{{ crewSalaryStructureData?.addition }}</td>
