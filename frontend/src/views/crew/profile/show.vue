@@ -65,9 +65,9 @@ onMounted(() => {
                 <th>Recruitment Approval</th>
                 <td>
                   [
-                  <strong>Applied Date:</strong> {{ formatDate(crewProfile?.crewRecruitmentApproval?.applied_date) }},
-                  <strong>Page Title:</strong> {{ crewProfile?.crewRecruitmentApproval?.page_title }},
-                  <strong>Total Approved:</strong> {{ crewProfile?.crewRecruitmentApproval?.total_approved }}
+                  <strong>Applied Date:</strong> {{ formatDate(crewProfile?.crwRecruitmentApproval?.applied_date) }},
+                  <strong>Page Title:</strong> {{ crewProfile?.crwRecruitmentApproval?.page_title }},
+                  <strong>Total Approved:</strong> {{ crewProfile?.crwRecruitmentApproval?.total_approved }}
                   ]
 <!--                  <router-link v-if="crewProfile?.crw_recruitment_approval_id" class="text-blue-600 hover:underline" target="_blank" :to="{ name: 'crw.recruitmentApprovals.edit', params: { recruitmentApprovalId: crewProfile?.crw_recruitment_approval_id }}">Show More</router-link>-->
                 </td>
@@ -78,9 +78,9 @@ onMounted(() => {
                   {{ crewProfile?.hired_by }}
                   <template v-if="crewProfile?.hired_by === 'Agency'">
                     [
-                    <strong>Name:</strong> {{ crewProfile?.crewAgency?.agency_name }},
-                    <strong>Legal Name:</strong> {{ crewProfile?.crewAgency?.legal_name }},
-                    <strong>Phone:</strong> {{ crewProfile?.crewAgency?.phone }}
+                    <strong>Name:</strong> {{ crewProfile?.crwAgency?.agency_name }},
+                    <strong>Legal Name:</strong> {{ crewProfile?.crwAgency?.legal_name }},
+                    <strong>Phone:</strong> {{ crewProfile?.crwAgency?.phone }}
                     ]
 <!--                    <router-link class="text-blue-600 hover:underline" v-if="crewProfile?.agency_id" target="_blank" :to="{ name: 'crw.agencies.edit', params: { agencyId: crewProfile?.agency_id }}">Show More</router-link>-->
                   </template>
