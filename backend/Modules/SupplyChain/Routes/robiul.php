@@ -61,6 +61,8 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('get-service-for-wrr', [ScmWrrController::class, "getServiceByWrrId"])->name('getServiceForWrrId');
     
     Route::get('inventory-report', [ScmReportController::class, "inventoryReport"])->name('inventoryReport');
+    Route::get('stock-history-report', [ScmReportController::class, "stockHistoryReport"])->name('stockHistoryReport');
+    Route::get('purchase-requisition-report', [ScmReportController::class, "purchaseRequisitionReport"])->name('purchaseRequisitionReport');
 
 
 
