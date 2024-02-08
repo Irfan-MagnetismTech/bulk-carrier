@@ -12,6 +12,9 @@ const { getWorkReceiptReports, showWorkReceiptReport, workReceiptReport, updateW
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 import { formatDate } from "../../../config/setting";
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
+
 
 const icons = useHeroIcon();
 
@@ -19,6 +22,52 @@ const { setTitle } = Title();
 const route = useRoute();
 const workReceiptReportId = route.params.workReceiptReportId;
 const formType = 'edit';
+
+function generate(){
+    var doc = new jsPDF('l', 'pt', "a4");
+    var htmlstring = '';
+    var tempVarToCheckPageHeight = 0;
+    var pageHeight = 0;
+    pageHeight = doc.internal.pageSize.height;
+
+    // specialElementHandlers = {
+    //             // element with id of "bypass" - jQuery style selector
+    //             '#bypassme': function(element, renderer) {
+    //                 // true = "handled elsewhere, bypass text extraction"
+    //                 return true
+    //             }
+    //         };
+           var margins = {
+                top: 250,
+                bottom: 200,
+                left: 40,
+                right: 40,
+                width: 90
+            };
+            var y = 20;
+            doc.setLineWidth(2);
+            doc.text(330, y = y + 30, "Cash Book By Incomehead");
+            // doc.text(330, y = y + 30, " {!! $from_year !!} - {!! $to_year !!}");
+            
+            var res = doc.autoTableHtmlToJson(document.getElementById("bascExample2"), true);
+            console.log("res" , res);
+            console.log("col" , res.columns);
+            console.log("data" , res.data);
+            doc.autoTable( {
+                head: [[{content: res.columns[0], colSpan: 2, styles: { halign: 'center' }}]],
+                body: res.data,
+                margin: {
+                    top: 100
+                }
+            });
+            // var res2 = doc.autoTableHtmlToJson(document.getElementById("bascExample2"), true);
+            // doc.autoTable(res2.columns, res2.data, {
+            //     margin: {
+            //         top: 20
+            //     }
+            // });
+            doc.save('cashbook.pdf');
+}
 
 setTitle('Work Receipt Report Details');
 
@@ -31,11 +80,12 @@ onMounted(() => {
   <div class="flex items-center justify-between w-full my-3" v-once>
       <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Work Receipt Report Details</h2>
       <default-button :title="'Work Receipt Report List'" :to="{ name: 'scm.work-receipt-reports.index' }" :icon="icons.DataBase"></default-button>
+      <button @click="generate">Generate</button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
           <!-- <material-receipt-report-show v-model:form="materialReceiptReport"></material-receipt-report-show> -->
           <div class="w-full">
-            <table class="w-full">
+            <table class="w-full" id="bascExample">
                 <thead>
                     <tr>
                         <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="2">Basic Info</td>
@@ -104,11 +154,11 @@ onMounted(() => {
         
         <div class="md:flex md:gap-2 ">
           <div class="w-full mt-2">
-            <table class="w-full">
+            <table class="w-full" id="bascExample2">
                 <thead>
-                    <tr>
+                    <!-- <tr>
                         <th class="!text-center font-bold bg-green-600 uppercase text-white" colspan="8">Work Receive Report Information</th>
-                    </tr>
+                    </tr> -->
                     
                     <tr>
                         <th class="!text-center">WR No.</th>
