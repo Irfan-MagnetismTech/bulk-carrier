@@ -87,10 +87,10 @@
           <table class="w-full">
             <thead>
             <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-              <th class="py-3 align-center">MRR No  <span class="text-red-500">*</span></th>
+              <th class="py-3 align-center">MRR No <span class="text-red-500">*</span></th>
               <th class="py-3 align-center">Challan No</th>
               <th class="py-3 align-center">PO No / LC No</th>
-              <th class="py-3 align-center">Amount</th>
+              <th class="py-3 align-center">Amount <span class="text-red-500">*</span></th>
               <th class="py-3 align-center">Amount USD</th>
               <th class="py-3 align-center">Amount BDT</th>
               <th class="py-3 text-center align-center">
@@ -132,7 +132,7 @@
                 </td>
                 <td>
                   <label class="block w-full mt-2 text-sm">
-                    <input type="number" v-model="form.scmVendorBillLines[index].amount" class="form-input !text-right" min="1" required>
+                    <input type="number" required v-model="form.scmVendorBillLines[index].amount" class="form-input !text-right" min="1">
                   </label>
                 </td>
                 <td>
@@ -156,6 +156,36 @@
                 </td>
               </tr>
             </tbody>
+
+            <tfoot>
+              <tr class="text-gray-700 dark-disabled:text-gray-400">
+                <td colspan="5" class="text-right pr-2">
+                  Sub Total
+                </td>
+                <td>
+                    <input type="text" v-model="form.sub_total" readonly placeholder="Sub Total" class="!text-right vms-readonly-input form-input" autocomplete="off" />
+                </td>
+                <td></td>
+              </tr>
+              <tr class="text-gray-700 dark-disabled:text-gray-400">
+                <td colspan="5" class="text-right pr-2">
+                  Discount
+                </td>
+                <td>
+                    <input type="number" v-model="form.discount" placeholder="Discount" class="!text-right form-input" autocomplete="off" />
+                </td>
+                <td></td>
+              </tr>
+              <tr class="text-gray-700 dark-disabled:text-gray-400">
+                <td colspan="5" class="text-right pr-2">
+                  Net Amount
+                </td>
+                <td>
+                    <input type="text" v-model="form.net_amount" readonly placeholder="Net Amount" class="!text-right vms-readonly-input form-input" autocomplete="off" />
+                </td>
+                <td></td>
+              </tr>
+            </tfoot>
           </table>
         </fieldset>
       </div>
