@@ -15,6 +15,7 @@ import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import {useRouter} from "vue-router";
 import moment from "moment";
 import useHelper from "../../../composables/useHelper";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
 
 
 const { vesselBunkers, getVesselBunkers, deleteVesselBunker, isLoading, isTableLoading, errors } = useVesselBunker();
@@ -124,8 +125,10 @@ onMounted(() => {
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
-});
-
+  });
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 });
 
 </script>

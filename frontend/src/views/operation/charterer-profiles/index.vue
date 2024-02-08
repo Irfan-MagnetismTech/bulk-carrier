@@ -13,6 +13,7 @@ import useGlobalFilter from "../../../composables/useGlobalFilter";
 import {useRouter} from "vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
 
 
 const { chartererProfiles, getChartererProfiles, deleteChartererProfile, isLoading, isTableLoading } = useChartererProfile();
@@ -34,8 +35,6 @@ const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const { showFilter, swapFilter, setSortingState, clearFilter } = useGlobalFilter();
 const router = useRouter();
 
-const currentPage = ref(1);
-const paginatedPage = ref(1);
 
 function confirmDelete(id) {
   Swal.fire({
@@ -62,47 +61,59 @@ let filterOptions = ref( {
 		{
 			"relation_name": null,
 			"field_name": "name",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Charterer Name",
+      "filter_type": "input"
 		},
     {
 			"relation_name": null,
 			"field_name": "owner_code",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Charterer Owner Code",
+      "filter_type": "input"
 		},
     {
 			"relation_name": null,
 			"field_name": "country",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Country",
+      "filter_type": "input"
 		},
     {
 			"relation_name": null,
 			"field_name": "email",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Email",
+      "filter_type": "input"
 		},
     {
 			"relation_name": null,
 			"field_name": "contact_no",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Contact",
+      "filter_type": "input"
 		},
     
 	]
 });
 
+const currentPage = ref(1);
+const paginatedPage = ref(1);
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 
@@ -155,7 +166,7 @@ onMounted(() => {
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <thead>
+          <!-- <thead>
             <tr class="w-full">
               <th class="w-16">
                 <div class="w-full flex items-center justify-between">
@@ -234,7 +245,8 @@ onMounted(() => {
                 <button title="Clear Filter" @click="clearFilter(filterOptions)" type="button" v-html="icons.NotFilterIcon"></button>
               </th>
             </tr>
-          </thead>
+          </thead> -->
+          <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="chartererProfiles?.data?.length" class="relative">
               <tr v-for="(chartererProfile, index) in chartererProfiles.data" :key="chartererProfile?.id">
                 

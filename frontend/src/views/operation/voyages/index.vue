@@ -64,7 +64,7 @@ watch(
     }
 );
 let filterOptions = ref( {
-  "business_unit": null,
+  "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
   "isFilter": false,
@@ -105,7 +105,6 @@ let filterOptions = ref( {
       "label": "Voyage No",
       "filter_type": "input"
     },
-
     
     {
       "rel_type": null,
@@ -118,17 +117,11 @@ let filterOptions = ref( {
       "label": "Cargo Type",
       "filter_type": "input"
     },
-
-
-
-    
-    
-
   ]
 });
-let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 const currentPage = ref(1);
 const paginatedPage = ref(1);
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 
 onMounted(() => {
@@ -192,39 +185,25 @@ onMounted(() => {
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <!-- <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>Mother Vessel</th>
-            <th>Vessel</th>
-            <th>Voyage No</th>
-            <th>Cargo Type</th>
-            <th>POL</th>
-            <th>FPOD</th> -->
-            <!-- <th>Initial Load</th>
-            <th>Actual Load</th> -->
-            <!-- Its Hidden cause when there will be multiple sectors, it won't be useful anymore as there will be multiple initial and actual loads -->
-            <!-- <th>Voyage Status</th>
-            <th>Action</th>
-          </tr>
-          </thead> -->
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="voyages?.data?.length" class="relative">
               <tr v-for="(voyage, index) in voyages.data" :key="voyage?.id">
-                <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-                  <td>{{ voyage?.mother_vessel }}</td>
-                  <td>{{ voyage?.opsVessel?.name }}</td>
-                  <td>{{ voyage?.voyage_sequence }}</td>
-                  <td>{{ voyage?.opsCargoType?.cargo_type }}</td>
-
-                  <td class="items-center justify-center space-x-1 text-gray-600">
-                    <nobr>
-                      <action-button :action="'show'" :to="{ name: 'ops.voyages.show', params: { voyageId: voyage.id } }"></action-button>
-                      <action-button :action="'edit'" :to="{ name: 'ops.voyages.edit', params: { voyageId: voyage.id } }"></action-button>
-                      <action-button @click="confirmDelete(voyage.id)" :action="'delete'"></action-button>
-                      <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
-                    </nobr>
-                  </td>
+                <td class="text-center">{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+                <td>{{ voyage?.mother_vessel }}</td>
+                <td>{{ voyage?.opsVessel?.name }}</td>
+                <td>{{ voyage?.voyage_sequence }}</td>
+                <td>{{ voyage?.opsCargoType?.cargo_type }}</td>
+                <td class="text-center">
+                  <span :class="voyage?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ voyage?.business_unit }}</span>
+                </td>
+                <td class="items-center text-center justify-center space-x-1 text-gray-600">
+                  <nobr>
+                    <action-button :action="'show'" :to="{ name: 'ops.voyages.show', params: { voyageId: voyage.id } }"></action-button>
+                    <action-button :action="'edit'" :to="{ name: 'ops.voyages.edit', params: { voyageId: voyage.id } }"></action-button>
+                    <action-button @click="confirmDelete(voyage.id)" :action="'delete'"></action-button>
+                    <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
+                  </nobr>
+                </td>
               </tr>
               <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && voyages?.data?.length"></LoaderComponent>
           </tbody>
@@ -248,3 +227,8 @@ onMounted(() => {
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
+<style>
+  table > tbody> tr > td {
+      text-align: left;
+  }
+</style>

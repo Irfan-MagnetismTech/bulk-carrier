@@ -13,6 +13,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import useHelper from "../../../composables/useHelper";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
 
 const { chartererInvoices, getChartererInvoices, deleteChartererInvoice, isLoading,isTableLoading ,errors } = useChartererInvoice();
 const { numberFormat } = useHelper();
@@ -138,7 +139,11 @@ onMounted(() => {
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
-});
+  });
+
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 
 });
 

@@ -38,7 +38,7 @@ class OpsVesselParticularRequest extends FormRequest
             'previous_name'     => ['nullable', 'string', 'max:255'],
             
             'call_sign'         =>['nullable', 'string', 'max:255', Rule::unique('ops_vessel_particulars')->ignore($this->route('vessel_particular'), 'id')],
-            'attachment'        => 'nullable|mimes:xlsx',
+            'attachment'        =>'nullable|mimes:pdf,doc,docx,jpeg,png,gif,xlsx|max:2048', 
             'owner_name'        => ['nullable', 'string', 'max:255'],
             'classification'    => ['nullable', 'string'],
             'flag'              => ['nullable', 'string', 'max:255'],
@@ -72,7 +72,8 @@ class OpsVesselParticularRequest extends FormRequest
             'call_sign.unique' => 'Call sign is already taken.',
             'imo.unique' => 'IMO is already taken.',
             'imo.digits_between' => 'IMO number must be between :min and :max characters.',         
-            'attachment.mimes' => 'Attachment field must be an excel file of type: xlsx.',
+            'attachment.mimes' => 'Attachment must be an excel file of type: pdf,doc,docx,jpeg,png,gif,xlsx.',
+            'attachment.max' => 'Attachment should not exceed 2048 kilobytes (2 MB).',
             'official_number.unique' => 'Official number is already taken.',
             'official_number.digits_between' => 'Official Number must be between :min and :max characters.',
             'year_built.integer' => 'Year built must be an integer.',

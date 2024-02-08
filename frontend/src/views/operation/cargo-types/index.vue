@@ -128,7 +128,9 @@ onMounted(() => {
     });
     
   });
-
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 });
 
 </script>

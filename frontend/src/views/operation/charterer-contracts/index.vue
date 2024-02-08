@@ -146,7 +146,10 @@ onMounted(() => {
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
-});
+  });
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 
 });
 
@@ -164,16 +167,16 @@ onMounted(() => {
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="chartererContracts?.data?.length" class="relative">
               <tr v-for="(chartererContract, index) in chartererContracts.data" :key="chartererContract?.id">
-                  <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-                  <td class="text-left">{{ chartererContract?.contract_type }}</td>
-                  <td class="text-left">{{ chartererContract?.opsChartererProfile?.name }}</td>
-                  <td class="text-left">{{ chartererContract?.contract_name }}</td>
-                  <td class="text-left">{{ chartererContract?.email }}</td>
-                  <td>
+                  <td class="text-center">{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+                  <td>{{ chartererContract?.contract_type }}</td>
+                  <td>{{ chartererContract?.opsChartererProfile?.name }}</td>
+                  <td>{{ chartererContract?.contract_name }}</td>
+                  <td>{{ chartererContract?.email }}</td>
+                  <td class="text-center">
                     <span :class="chartererContract?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chartererContract?.business_unit }}</span>
 
                   </td>
-                  <td class="items-center justify-center space-x-1 text-gray-600">
+                  <td class="items-center text-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <action-button :action="'show'" :to="{ name: 'ops.charterer-contracts.show', params: { chartererContractId: chartererContract.id } }"></action-button>
                       <action-button :action="'edit'" :to="{ name: 'ops.charterer-contracts.edit', params: { chartererContractId: chartererContract.id } }"></action-button>
@@ -203,3 +206,8 @@ onMounted(() => {
     <Paginate :data="chartererContracts" to="ops.charterer-contracts.index" :page="page"></Paginate>
   </div>
 </template>
+<style>
+  table > tbody> tr > td {
+      text-align: left;
+  }
+</style>

@@ -31,6 +31,7 @@ class OpsVoyageBoatNoteRequest extends FormRequest
             'water_density'      => ['nullable', 'numeric'],
             'opsVoyageBoatNoteLines.*.voyage_note_type' =>  ['nullable', 'string'],
             'opsVoyageBoatNoteLines.*.quantity' =>  ['nullable', 'numeric'],
+            'opsVoyageBoatNoteLines.*.attachment' =>  'nullable|mimes:pdf,doc,docx,jpeg,png,gif,xlsx|max:2048',
         ];
     }
 
@@ -47,6 +48,9 @@ class OpsVoyageBoatNoteRequest extends FormRequest
             'ops_vessel_id.required' => 'Vessel is required.',
             'vessel_draft.numeric' => 'Draft must be numeric.',
             'water_density.numeric' => 'Density must be numeric.',
+
+            'opsVoyageBoatNoteLines.*.attachment.mimes' => 'Attachment must be an excel file of type: pdf,doc,docx,jpeg,png,gif,xlsx for row is :position.',
+            'opsVoyageBoatNoteLines.*.attachment.max' => 'Attachment should not exceed 2048 kilobytes (2 MB) for row is :position.',
             // 'opsVoyageBoatNoteLines.*.voyage_note_type.required' => 'Boat note type is required for row is :position.',
             // 'opsVoyageBoatNoteLines.*.quantity.required' => 'Quantity is required for row is :position.',
         ];

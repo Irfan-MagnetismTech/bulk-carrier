@@ -168,8 +168,10 @@ onMounted(() => {
     .catch((error) => {
       console.error("Error fetching data.", error);
     });
-});
-
+  });
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 });
 
 </script>
@@ -188,38 +190,36 @@ onMounted(() => {
 
           <tbody v-if="deliveryRedeliveries?.data?.length" class="relative">
               <tr v-for="(deliveryRedelivery, index) in deliveryRedeliveries.data" :key="deliveryRedelivery?.id">
-                <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-                  <td>{{ deliveryRedelivery?.opsChartererProfile?.name }}</td>
-                  <td>{{ deliveryRedelivery?.opsVessel?.name }}</td>
-                  
-                  <td>{{ deliveryRedelivery?.note_type }}</td>
-                  <td>
+                <td class="text-center">{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+                <td>{{ deliveryRedelivery?.opsChartererProfile?.name }}</td>
+                <td>{{ deliveryRedelivery?.opsVessel?.name }}</td>
+                
+                <td>{{ deliveryRedelivery?.note_type }}</td>
+                <td>
+                  {{ numberFormat((deliveryRedelivery?.opsBunkers.reduce((accumulator, currentObject) => {
+                    return accumulator + (currentObject.amount_usd ? parseFloat(currentObject.amount_usd) : 0);
+                  }, 0)) || 0) }}
+
+                </td>
+                <td>                  
                     {{ numberFormat((deliveryRedelivery?.opsBunkers.reduce((accumulator, currentObject) => {
-  return accumulator + (currentObject.amount_usd ? parseFloat(currentObject.amount_usd) : 0);
-}, 0)) || 0) }}
+                      return accumulator + (currentObject.amount_bdt ? parseFloat(currentObject.amount_bdt) : 0);
+                    }, 0)) || 0) }}
 
-                  </td>
-                  <td>
-                  
-{{ numberFormat((deliveryRedelivery?.opsBunkers.reduce((accumulator, currentObject) => {
-  return accumulator + (currentObject.amount_bdt ? parseFloat(currentObject.amount_bdt) : 0);
-}, 0)) || 0) }}
+                </td>
+                <td class="text-center">
+                  <span :class="deliveryRedelivery?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ deliveryRedelivery?.business_unit }}</span>
 
+                </td>
 
-                  </td>
-                  <td>
-                    <span :class="deliveryRedelivery?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ deliveryRedelivery?.business_unit }}</span>
-
-                  </td>
-
-                  <td class="items-center justify-center space-x-1 text-gray-600">
-                      <nobr>
-                        <action-button :action="'show'" :to="{ name: 'ops.delivery-redelivery.show', params: { deliveryRedeliveryId: deliveryRedelivery.id } }"></action-button>
-                        <action-button :action="'edit'" :to="{ name: 'ops.delivery-redelivery.edit', params: { deliveryRedeliveryId: deliveryRedelivery.id } }"></action-button>
-                        <action-button @click="confirmDelete(deliveryRedelivery.id)" :action="'delete'"></action-button>
-                      <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
-                      </nobr>
-                  </td>
+                <td class="items-center text-center justify-center space-x-1 text-gray-600">
+                    <nobr>
+                      <action-button :action="'show'" :to="{ name: 'ops.delivery-redelivery.show', params: { deliveryRedeliveryId: deliveryRedelivery.id } }"></action-button>
+                      <action-button :action="'edit'" :to="{ name: 'ops.delivery-redelivery.edit', params: { deliveryRedeliveryId: deliveryRedelivery.id } }"></action-button>
+                      <action-button @click="confirmDelete(deliveryRedelivery.id)" :action="'delete'"></action-button>
+                    <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
+                    </nobr>
+                </td>
               </tr>
               <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && deliveryRedeliveries?.data?.length"></LoaderComponent>
           </tbody>
@@ -242,3 +242,8 @@ onMounted(() => {
     <Paginate :data="deliveryRedeliveries" to="ops.delivery-redelivery.index" :page="page"></Paginate>
   </div>
 </template>
+<style>
+  table > tbody> tr > td {
+      text-align: left;
+  }
+</style>

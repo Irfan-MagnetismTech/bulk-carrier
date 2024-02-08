@@ -192,30 +192,17 @@ onMounted(() => {
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <!-- <thead v-once>
-          <tr class="w-full">
-            <th>#</th>
-            <th>Vessel</th>
-            <th>Voyage No</th>
-            <th>Cargo tarrif</th>
-            <th>Customer</th>
-            <th>Charterer Profile</th>
-            <th>Contract Cntract</th>
-            <th>Action</th>
-          </tr>
-          </thead> -->
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="contractAssigns?.data?.length" class="relative">
               <tr v-for="(contractAssign, index) in contractAssigns.data" :key="contractAssign?.id">
-                  <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+                  <td class="text-center">{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ contractAssign?.opsVessel?.name }}</td>
                   <td>{{ contractAssign?.opsVoyage?.voyage_sequence }}</td>
                   <td>{{ contractAssign?.opsCustomer?.name }}</td>
                   <td>{{ contractAssign?.opsChartererProfile?.name }}</td>
                   <td>{{ contractAssign?.opsChartererContract?.contract_name }}</td>
-                  <td>
+                  <td class="text-center">
                     <span :class="contractAssign?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ contractAssign?.business_unit }}</span>
-
                   </td>
                    <!-- <td>{{ contractAssign?.opsVessel?.name }}</td>
                   <td>{{ contractAssign?.opsVoyage?.voyage_no }}</td>
@@ -234,7 +221,7 @@ onMounted(() => {
 }, 0)
                   }}  
                   </td> -->
-                  <td class="items-center justify-center space-x-1 text-gray-600">
+                  <td class="items-center text-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <action-button :action="'show'" :to="{ name: 'ops.contract-assigns.show', params: { contractAssignId: contractAssign.id } }"></action-button>
                       <action-button :action="'edit'" :to="{ name: 'ops.contract-assigns.edit', params: { contractAssignId: contractAssign.id } }"></action-button>
@@ -265,3 +252,8 @@ onMounted(() => {
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
+<style>
+  table > tbody> tr > td {
+      text-align: left;
+  }
+</style>

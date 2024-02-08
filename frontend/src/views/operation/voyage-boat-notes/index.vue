@@ -192,16 +192,16 @@ onMounted(() => {
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="voyageBoatNotes?.data?.length" class="relative">
               <tr v-for="(voyageBoatNote, index) in voyageBoatNotes.data" :key="voyageBoatNote?.id">
-                  <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+                  <td class="text-center">{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ voyageBoatNote?.opsVoyage?.voyage_sequence }}</td>
                   <td>{{ voyageBoatNote?.opsVessel?.name }}</td>
 
                   <td>{{ voyageBoatNote?.vessel_draft }}</td>
                   <td>{{ voyageBoatNote?.water_density }}</td>
-                  <td>
+                  <td class="text-center">
                     <span :class="voyageBoatNote?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ voyageBoatNote?.business_unit }}</span>
                   </td>
-                  <td class="items-center justify-center space-x-1 text-gray-600">
+                  <td class="items-center text-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <action-button :action="'show'" :to="{ name: 'ops.voyage-boat-notes.show', params: { voyageBoatNoteId: voyageBoatNote.id } }"></action-button>
                       <action-button :action="'edit'" :to="{ name: 'ops.voyage-boat-notes.edit', params: { voyageBoatNoteId: voyageBoatNote.id } }"></action-button>
@@ -232,3 +232,8 @@ onMounted(() => {
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
+<style>
+  table > tbody> tr > td {
+      text-align: left;
+  }
+</style>

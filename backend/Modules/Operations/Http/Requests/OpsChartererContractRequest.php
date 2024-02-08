@@ -82,6 +82,7 @@ class OpsChartererContractRequest extends FormRequest
             'currency.max' => 'Currency may not be greater than :max characters.',
             'status.max' => 'Status not be greater than :max characters.',
             'attachment.mimes' => 'Attachment must be a file allowed types are pdf,doc,docx,jpeg,png,gif,xlsx.',
+            'attachment.max'   => 'Attachment should not exceed 2048 kilobytes (2 MB).',
         ];
     }
 
