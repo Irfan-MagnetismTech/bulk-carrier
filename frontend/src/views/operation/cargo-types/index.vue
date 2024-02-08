@@ -10,6 +10,8 @@ import useHeroIcon from "../../../assets/heroIcon";
 import useCargoType from '../../../composables/operations/useCargoType';
 import Store from './../../../store/index.js';
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const { cargoTypes, getCargoTypes, deleteCargoType, isLoading, isTableLoading } = useCargoType();
@@ -45,46 +47,41 @@ watch(
 	}
 );
 
-let filterOptions = ref( {
-"items_per_page": 15,
-"page": props.page,
-"isFilter": false,
-"filter_options": [
-
-			{
-			"relation_name": null,
-			"field_name": "cargo_type",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
-			},
-      {
-			"relation_name": null,
-			"field_name": "description",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
-			}
-	]
+let filterOptions = ref({
+  "business_unit": businessUnit.value,
+  "items_per_page": 15,
+  "page": props.page,
+  "isFilter": false,
+  "filter_options": [
+    {
+      "relation_name": null,
+      "field_name": "cargo_type",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Cargo Type",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": null,
+      "field_name": "description",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Description",
+      "filter_type": "input"
+    },
+  
+  ]
 });
+
+const currentPage = ref(1);
+const paginatedPage = ref(1);
 
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
-function setSortingState(index, order) {
-  filterOptions.value.filter_options.forEach(function (t) {
-    t.order_by = null;
-  });
-  filterOptions.value.filter_options[index].order_by = order;
-}
-
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
-}
 
 function confirmDelete(id) {
   Swal.fire({
@@ -102,19 +99,17 @@ function confirmDelete(id) {
   })
 }
 
-const currentPage = ref(1);
-const paginatedPage = ref(1);
 
 onMounted(() => {
-  watchPostEffect(() => {
-  
+  watchPostEffect(() => { 
+
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
+      router.push({ name: 'ops.cargo-types.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
     currentPage.value = props.page;
-
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
@@ -133,9 +128,6 @@ onMounted(() => {
     });
     
   });
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-  });
 
 });
 
@@ -153,57 +145,15 @@ onMounted(() => {
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <thead>
-            <tr class="w-full">
-              <th class="w-16">
-                  <div class="w-full flex items-center justify-between">
-                    # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
-                  </div>
-                </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                    <span>Cargo Type</span>
-                    <div class="flex flex-col cursor-pointer">
-                      <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
-                      <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
-                    </div>
-                  </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                    <span>Description</span>
-                    <div class="flex flex-col cursor-pointer">
-                      <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
-                      <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
-                    </div>
-                  </div>
-              </th>
-              <th>
-                Action
-              </th>
-            </tr>
-            <tr class="w-full" v-if="showFilter">
-
-              <th>
-                <select v-model="filterOptions.items_per_page" class="filter_input">
-                  <option value="15">15</option>
-                  <option value="30">30</option>
-                  <option value="50">50</option>
-                  <option value="100">100</option>
-                </select>
-              </th>
-              <th><input v-model.trim="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th>
-                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
-              </th>
-            </tr>
-          </thead>
+          <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="cargoTypes?.data?.length" class="relative">
               <tr v-for="(cargoType, index) in cargoTypes.data" :key="cargoType?.id">
                 <td class="text-center">{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                 <td>{{ cargoType?.cargo_type }}</td>
                 <td>{{ cargoType?.description }}</td>
+                <td class="text-center">
+                  <span :class="cargoType?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ cargoType?.business_unit }}</span>
+                </td>
                 <td class="items-center justify-center text-center space-x-1 text-gray-600">
                   <nobr>
                     <action-button :action="'show'" :to="{ name: 'ops.configurations.cargo-types.show', params: { cargoTypeId: cargoType.id } }"></action-button>

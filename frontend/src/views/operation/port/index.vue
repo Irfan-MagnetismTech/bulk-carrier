@@ -11,6 +11,7 @@ import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
 
 const props = defineProps({
   page: {
@@ -63,7 +64,8 @@ watch(
     }
 );
 
-let filterOptions = ref( {
+
+let filterOptions = ref({
   "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
@@ -75,7 +77,9 @@ let filterOptions = ref( {
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Port/Ghat Code",
+      "filter_type": "input"
     },
     {
       "relation_name": null,
@@ -83,51 +87,33 @@ let filterOptions = ref( {
       "search_param": "",
       "action": null,
       "order_by": null,
-      "date_from": null
+      "date_from": null,
+      "label": "Port/Ghat Name",
+      "filter_type": "input"
     },
-    {
-      "relation_name": null,
-      "field_name": "business_unit",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null
-    }
+  
   ]
 });
 
-let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
-
-function setSortingState(index, order) {
-  filterOptions.value.filter_options.forEach(function (t) {
-    t.order_by = null;
-  });
-  filterOptions.value.filter_options[index].order_by = order;
-}
-
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
-}
 
 const currentPage = ref(1);
 const paginatedPage = ref(1);
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
 
 onMounted(() => {
   watchPostEffect(() => {
     
-    if(currentPage.value == props.page && currentPage.value != 1) {
-      filterOptions.value.page = 1;
-    } else {
-      filterOptions.value.page = props.page;
-    }
-    currentPage.value = props.page;
-
-    if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
-      filterOptions.value.isFilter = true;
-    }
+      if(currentPage.value == props.page && currentPage.value != 1) {
+        filterOptions.value.page = 1;
+        router.push({ name: 'ops.ports.index', query: { page: filterOptions.value.page } });
+      } else {
+        filterOptions.value.page = props.page;
+      }
+      currentPage.value = props.page;
+      if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
+        filterOptions.value.isFilter = true;
+      }
 
       getPorts(filterOptions.value)
       .then(() => {
@@ -146,10 +132,6 @@ onMounted(() => {
       });
   });
 
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-  });
-
 });
 
 </script>
@@ -164,76 +146,8 @@ onMounted(() => {
   <div id="customDataTable" class="mb-6">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
-          <thead>
-            <tr class="w-full">
-              <th class="w-16">
-                <div class="w-full flex items-center justify-between">
-                  # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
-                </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                  <span>Port/Ghat Code</span>
-                  <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
-                  </div>
-                </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                  <span>Port/Ghat Name</span>
-                  <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
-                  </div>
-                </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                  <span>Business Unit</span>
-                  <div class="flex flex-col cursor-pointer">
-                    <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
-                    <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
-                  </div>
-                </div>
-              </th>
-              <th>
-                  Action
-              </th>
-            </tr>
-            <tr class="w-full" v-if="showFilter">
-
-              <th>
-
-                <select v-model="filterOptions.items_per_page" class="filter_input">
-                
-                  <option value="15">15</option>
-                  
-                  <option value="30">30</option>
-                  
-                  <option value="50">50</option>
-                  
-                  <option value="100">100</option>
-                
-                </select>
-
-              </th>
-
-              <th><input v-model.trim="filterOptions.filter_options[0].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-
-              <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-
-              <th>
-                <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
-              </th>
-              <th>
-                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
-              </th>
-
-            </tr>
-          </thead>
+      <table class="w-full whitespace-no-wrap" >        
+          <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="ports?.data?.length" class="relative">
               <tr v-for="(port, index) in ports.data" :key="port?.id">
                   <td class="text-center">{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>

@@ -12,6 +12,7 @@ import Store from './../../../store/index.js';
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import useGlobalFilter from "../../../composables/useGlobalFilter";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import {useRouter} from "vue-router";
 
 const router = useRouter();
@@ -31,9 +32,6 @@ const props = defineProps({
 
 const { setTitle } = Title();
 setTitle('Vessel List');
-
-const currentPage = ref(1);
-const paginatedPage = ref(1);
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
@@ -64,54 +62,58 @@ let filterOptions = ref( {
 			{
 			"relation_name": null,
 			"field_name": "name",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Vessel Name",
+      "filter_type": "input"
 			},
       {
 			"relation_name": null,
 			"field_name": "short_code",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Vessel Short Code",
+      "filter_type": "input"
 			},
       {
 			"relation_name": null,
 			"field_name": "vessel_type",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Vessel Type",
+      "filter_type": "input"
 			},
       {
 			"relation_name": null,
 			"field_name": "imo",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "IMO",
+      "filter_type": "input"
 			},
       {
 			"relation_name": null,
 			"field_name": "capacity",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Capacity (MT)",
+      "filter_type": "input"
 			},
-      {
-			"relation_name": null,
-			"field_name": 'business_unit',
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
-			}
 	]
 });
 
+const currentPage = ref(1);
+const paginatedPage = ref(1);
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 onMounted(() => {
@@ -119,7 +121,6 @@ onMounted(() => {
   
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-
       router.push({ name: 'ops.vessels.index', query: { page: filterOptions.value.page } });
 
     } else {
@@ -145,9 +146,6 @@ onMounted(() => {
     });
     
 });
-    filterOptions.value.filter_options.forEach((option, index) => {
-      filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-    });
 });
 
 </script>
@@ -163,7 +161,7 @@ onMounted(() => {
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <thead>
+          <!-- <thead>
             <tr class="w-full">
               <th class="w-16">
                   <div class="w-full flex items-center justify-between">
@@ -252,19 +250,20 @@ onMounted(() => {
               </th>
 
             </tr>
-          </thead>
+          </thead> -->
+          <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="vessels?.data?.length" class="relative">
               <tr v-for="(vessel, index) in vessels.data" :key="vessel?.id">
-                  <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+                  <td class="text-center">{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ vessel?.name }}</td>
                   <td>{{ vessel?.short_code }}</td>
                   <td>{{ vessel?.vessel_type }}</td>
                   <td>{{ vessel?.imo }}</td>
                   <td>{{ vessel?.capacity }}</td>
-                  <td>
+                  <td class="text-center">
                     <span :class="vessel?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ vessel?.business_unit }}</span>
                   </td>
-                  <td class="items-center justify-center space-x-1 text-gray-600">
+                  <td class="items-center text-center justify-center space-x-1 text-gray-600">
                       <nobr>
                         <action-button :action="'show'" :to="{ name: 'ops.vessels.show', params: { vesselId: vessel.id } }"></action-button>
                         <action-button :action="'edit'" :to="{ name: 'ops.vessels.edit', params: { vesselId: vessel.id } }"></action-button>
@@ -296,3 +295,9 @@ onMounted(() => {
     <Paginate :data="vessels" to="ops.vessels.index" :page="page"></Paginate>
   </div>
 </template>
+
+<style>
+  table > tbody> tr > td {
+      text-align: left;
+  }
+</style>

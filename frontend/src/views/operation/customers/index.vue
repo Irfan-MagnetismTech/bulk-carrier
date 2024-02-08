@@ -11,6 +11,7 @@ import Store from './../../../store/index.js';
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import useCustomer from '../../../composables/operations/useCustomer';
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
 
 const icons = useHeroIcon();
 const { customers, getCustomers, deleteCustomer, isLoading, isTableLoading } = useCustomer();
@@ -63,6 +64,7 @@ watch(
 	}
 );
 
+
 let filterOptions = ref( {
 "business_unit": businessUnit.value,
 "items_per_page": 15,
@@ -73,84 +75,71 @@ let filterOptions = ref( {
 			{
 			"relation_name": null,
 			"field_name": "code",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Customer Code",
+      "filter_type": "input"
 			},
       {
 			"relation_name": null,
 			"field_name": "name",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Customer Name",
+      "filter_type": "input"
 			},
       {
 			"relation_name": null,
 			"field_name": "legal_name",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Legal Name",
+      "filter_type": "input"
 			},
       {
 			"relation_name": null,
 			"field_name": "phone",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Phone",
+      "filter_type": "input"
 			},
       {
 			"relation_name": null,
 			"field_name": "email_general",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Email",
+      "filter_type": "input"
 			},
-      {
-			"relation_name": null,
-			"field_name": "business_unit",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
-			}
 	]
 });
 
-let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
-
-
-function setSortingState(index, order) {
-  filterOptions.value.filter_options.forEach(function (t) {
-    t.order_by = null;
-  });
-  filterOptions.value.filter_options[index].order_by = order;
-}
-
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
-}
-
 const currentPage = ref(1);
 const paginatedPage = ref(1);
+let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
+
 
 onMounted(() => {
   watchPostEffect(() => {
   
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
+      router.push({ name: 'ops.customers.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
     currentPage.value = props.page;
-
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
@@ -168,11 +157,6 @@ onMounted(() => {
       console.error("Error fetching data.", error);
     });
 });
-
-filterOptions.value.filter_options.forEach((option, index) => {
-	filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-});
-
 });
 
 </script>
@@ -188,7 +172,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
       <table class="w-full whitespace-no-wrap" >
-          <thead>
+          <!-- <thead>
             <tr class="w-full">
               <th class="w-16">
                   <div class="w-full flex items-center justify-between">
@@ -275,26 +259,27 @@ filterOptions.value.filter_options.forEach((option, index) => {
                 <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
               </th>
             </tr>
-          </thead>
+          </thead> -->
+          <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="customers?.data?.length" class="relative">
               <tr v-for="(customer, index) in customers.data" :key="customer?.id">
-                  <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+                  <td class="text-center">{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ customer?.code }}</td>
                   <td>{{ customer?.name }}</td>
                   <td>{{ customer?.legal_name }}</td>
                   <td>{{ customer?.phone }}</td>
                   <td>{{ customer?.email_general }}</td>
-                  <td>
+                  <td class="text-center">
                     <span :class="customer?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ customer?.business_unit }}</span>
                   </td>
-                  <td class="items-center justify-center space-x-1 text-gray-600">
+                  <td class="items-center text-center justify-center space-x-1 text-gray-600">
                       <nobr>
                         <action-button :action="'show'" :to="{ name: 'ops.configurations.customers.show', params: { customerId: customer.id } }"></action-button>
                         <action-button :action="'edit'" :to="{ name: 'ops.configurations.customers.edit', params: { customerId: customer.id } }"></action-button>
                         <action-button @click="confirmDelete(customer.id)" :action="'delete'"></action-button>
                       </nobr>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
-                  </td>                  
+                  </td>
                 </tr>
                 <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && customers?.data?.length"></LoaderComponent>
           </tbody>
@@ -317,3 +302,8 @@ filterOptions.value.filter_options.forEach((option, index) => {
     <Paginate :data="customers" to="ops.configurations.customers.index" :page="page"></Paginate>
   </div>
 </template>
+<style>
+  table > tbody> tr > td {
+      text-align: left;
+  }
+</style>
