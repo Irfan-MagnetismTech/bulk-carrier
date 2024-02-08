@@ -90,6 +90,6 @@ class ScmVendorBillController extends Controller
             ->with('scmPo')
             ->get();
 
-        return response()->json($vendorWiseMrr, 200);
+        return response()->success('Data retrieved successfully.', $vendorWiseMrr, 200);
     }
 }
