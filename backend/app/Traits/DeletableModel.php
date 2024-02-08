@@ -9,7 +9,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 trait DeletableModel
 {
     /**
-     * Prevents deletion of data if it is related to other models.
+     * Prevents deletion of data if it is related to other models
      *
      * @return array
      */
@@ -43,7 +43,7 @@ trait DeletableModel
     }
 
     /**
-     * Retrieves an array of all the relation methods in the class.
+     * Retrieves an array of all the relation methods in the class
      *
      * @return array
      */
@@ -62,7 +62,7 @@ trait DeletableModel
     }
 
     /**
-     * Checks if a given method is a relation method.
+     * Checks if a given method is a relation method
      *
      * @param mixed
      * @return bool

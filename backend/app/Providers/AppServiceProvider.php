@@ -65,7 +65,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Register the Global Observer for all the models
         $directories = [
-            base_path('App/Models'), // Laravel's default model location
+            base_path('App/Models'), // Laravel's default model
         ];
 
         // Get the directories of the Entities in each enabled module
