@@ -38,7 +38,7 @@ const icons = useHeroIcon();
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
-setTitle('Vendor Bills');
+setTitle('Vendor Bill List');
 // Code for global search starts here
 
 let filterOptions = ref({
@@ -177,8 +177,8 @@ function confirmDelete(id) {
   <!-- Heading -->
  
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Store Requisition List</h2>
-    <default-button :title="'Create Store Requisition'" :to="{ name: 'scm.store-requisitions.create' }" :icon="icons.AddIcon"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700">Vendor Bill List</h2>
+    <default-button :title="'Create Vendor Bill'" :to="{ name: 'scm.vendor-bills.create' }" :icon="icons.AddIcon"></default-button>
   </div>
 
   <!-- Table -->
@@ -202,9 +202,9 @@ function confirmDelete(id) {
                   <button @click="navigateToSICreate(vendorBill.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create SI</button>
                   <!-- <button @click="navigateToPOCreate(vendorBill.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
                   <button @click="navigateToMRRCreate(vendorBill.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
-                  <action-button :action="'show'" :to="{ name: 'scm.store-requisitions.show', params: { vendorBillId: vendorBill.id } }"></action-button>
-                  <!-- <action-button :action="'edit'" :to="{ name: 'scm.store-requisitions.edit', params: { vendorBillId: vendorBill.id } }" v-if="(vendorBill?.scmSis.length <= 0)"></action-button> -->
-                   <action-button :action="'edit'" :to="{ name: 'scm.store-requisitions.edit', params: { vendorBillId: vendorBill.id } }"></action-button>
+                  <action-button :action="'show'" :to="{ name: 'scm.vendor-bills.show', params: { vendorBillId: vendorBill.id } }"></action-button>
+                  <!-- <action-button :action="'edit'" :to="{ name: 'scm.vendor-bills.edit', params: { vendorBillId: vendorBill.id } }" v-if="(vendorBill?.scmSis.length <= 0)"></action-button> -->
+                   <action-button :action="'edit'" :to="{ name: 'scm.vendor-bills.edit', params: { vendorBillId: vendorBill.id } }"></action-button>
                   <action-button @click="confirmDelete(vendorBill.id)" :action="'delete'"></action-button>
                 </div>
               </nobr>
@@ -226,7 +226,7 @@ function confirmDelete(id) {
         </tfoot>
       </table>
     </div>
-    <Paginate :data="vendorBills" to="scm.store-requisitions.index" :page="page"></Paginate>
+    <Paginate :data="vendorBills" to="scm.vendor-bills.index" :page="page"></Paginate>
   </div>
   <!-- Heading -->
   

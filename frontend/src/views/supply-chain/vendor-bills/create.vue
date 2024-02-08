@@ -8,7 +8,6 @@ import VendorBillForm from "../../../components/supply-chain/vendor-bills/Vendor
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 
-
 const icons = useHeroIcon();
 
 const { getVendorBill, vendorBill, storeVendorBill,materialObject, errors, isLoading } = useVendorBill();
@@ -21,7 +20,7 @@ setTitle('Create Vendor Bill');
     <!-- Heading -->
     <div class="flex items-center justify-between w-full my-3" v-once>
         <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Create Vendor Bill</h2>
-        <default-button :title="'Vendor Bill List'" :to="{ name: 'scm.store-requisitions.index' }" :icon="icons.DataBase"></default-button>
+        <default-button :title="'Vendor Bill List'" :to="{ name: 'scm.vendor-bills.index' }" :icon="icons.DataBase"></default-button>
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="storeVendorBill(vendorBill)">
