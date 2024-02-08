@@ -61,11 +61,11 @@
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700"><nobr>Exchange Rate</nobr> (To USD)</span>
-      <input type="text" v-model="form.exchange_rate_usd" placeholder="Exchange Rate" class="form-input" autocomplete="off" :readonly="isUSDCurrency"/>
+      <input type="text" v-model="form.exchange_rate_usd" placeholder="Exchange Rate" class="form-input" autocomplete="off" :readonly="isUSDCurrency()"/>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700"><nobr>Exchange Rate</nobr> (USD To BDT)</span>
-      <input type="text" v-model="form.exchange_rate_bdt" placeholder="Exchange Rate" class="form-input" autocomplete="off" :readonly="isBDTCurrency"/>
+      <input type="text" v-model="form.exchange_rate_bdt" placeholder="Exchange Rate" class="form-input" autocomplete="off" :readonly="isBDTCurrency()"/>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700">Upload File </span>
