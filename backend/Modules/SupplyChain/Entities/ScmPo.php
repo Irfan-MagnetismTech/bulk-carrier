@@ -53,7 +53,7 @@ class ScmPo extends Model
 
     protected $skipForDeletionCheck = ['scmPoLines', 'scmPoTerms', 'scmPoItems'];
 
-    protected $features = 'CS, LC Records and MRR';
+    protected $features = 'CS, LC Record and MRR';
     
     public function scmPoLines(): HasMany
     {

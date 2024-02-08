@@ -89,7 +89,7 @@ class ScmMrrController extends Controller
                 if ($lineData[0]->status == 'Pending') {
                     $lineData[0]->update(['status' => 'WIP']);
                 }
-                $composite_key = CompositeKey::generate($index,  $scmMrr->id, 'mrr', $value['scm_material_id'], $lineData->id);
+                $composite_key = CompositeKey::generate($index,  $scmMrr->id, 'mrr', $value['scm_material_id'], $lineData[0]->id);
                 $composite[] = $composite_key;
                 ScmMrrLineItem::create([
                     'scm_material_id' => $values['scmMrrLineItems'][$index]['scm_material_id'],
