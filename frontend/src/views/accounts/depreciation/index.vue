@@ -61,7 +61,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Cost Center",
+      "label": "Cost Center Name",
       "filter_type": "input"
     },
   ]
@@ -137,8 +137,8 @@ onMounted(() => {
           <tbody class="relative">
                 <tr v-for="(depreciationData, index) in depreciations?.data" :key="index">
                   <td> {{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }} </td>
-                  <td class="text-left"> {{ formatMonthYear(depreciationData?.month_year) }} </td>
-                  <td class="text-left"> {{ formatDate(depreciationData?.applied_date) }} </td>
+                  <td> {{ formatMonthYear(depreciationData?.month_year) }} </td>
+                  <td> {{ formatDate(depreciationData?.applied_date) }} </td>
                   <td class="text-left"> {{ depreciationData?.costCenter?.name }} </td>
                 <td>
                   <span :class="depreciationData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">

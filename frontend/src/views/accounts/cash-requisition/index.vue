@@ -44,7 +44,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Cost Center",
+      "label": "Cost Center Name",
       "filter_type": "input"
     },
     {
@@ -169,10 +169,10 @@ onMounted(() => {
           <tbody class="relative">
                 <tr v-for="(cashRequisition, index) in cashRequisitions?.data" :key="index">
                   <td> {{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }} </td>
-                  <td> {{ cashRequisition?.costCenter?.name }} </td>
+                  <td class="text-left"> {{ cashRequisition?.costCenter?.name }} </td>
                   <td> {{ cashRequisition?.id }} </td>
                   <td> {{ formatDate(cashRequisition?.applied_date) }} </td>
-                  <td> {{ cashRequisition?.scmPr?.ref_no }} </td>
+                  <td class="text-left"> {{ cashRequisition?.scmPr?.ref_no }} </td>
                   <td class="text-left"> {{ cashRequisition?.requisitor?.name }} </td>
                   <td class="text-right">  {{ cashRequisition?.total_amount }} </td>
                 <td>

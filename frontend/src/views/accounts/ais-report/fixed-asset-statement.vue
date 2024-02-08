@@ -66,8 +66,8 @@ onMounted(() => {
     <table class="w-full whitespace-no-wrap top_table">
       <thead>
       <tr class="text-sm font-semibold tracking-wide text-center">
-        <th class="bg-green-600 text-white" rowspan="2">Particulars</th>
-        <th class="bg-green-600 text-white" rowspan="2">Dep. rate</th>
+        <th class="bg-green-600 text-white" rowspan="2">Particular</th>
+        <th class="bg-green-600 text-white" rowspan="2">Dep. Rate</th>
         <th class="bg-green-600 text-white" rowspan="2">Acquisition Date</th>
         <th class="bg-green-600 text-white" colspan="4">Cost</th>
         <th class="bg-green-600 text-white" colspan="4">Depreciation</th>
@@ -86,18 +86,18 @@ onMounted(() => {
       </thead>
       <tbody class="bg-white dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
       <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(fixedAssetData,index) in fixedAssetStatements" :key="index">
-        <td class="text-sm">{{ fixedAssetData?.particular }}</td>
+        <td class="text-sm !text-left">{{ fixedAssetData?.particular }}</td>
         <td class="text-sm">{{ fixedAssetData?.dep_rate }}</td>
         <td class="text-sm">{{ formatDate(fixedAssetData?.acquisition_date) }}</td>
-        <td class="text-sm">{{ fixedAssetData?.opening_cost }}</td>
-        <td class="text-sm">{{ fixedAssetData?.addition_cost }}</td>
-        <td class="text-sm">{{ fixedAssetData?.delation_cost }}</td>
-        <td class="text-sm">{{ fixedAssetData?.closing_cost }}</td>
-        <td class="text-sm">{{ fixedAssetData?.opening_depreciation }}</td>
-        <td class="text-sm">{{ fixedAssetData?.addition_depreciation }}</td>
-        <td class="text-sm">{{ fixedAssetData?.delation_depreciation }}</td>
-        <td class="text-sm">{{ fixedAssetData?.closing_depreciation }}</td>
-        <td class="text-sm">{{ fixedAssetData?.wdv }}</td>
+        <td class="text-sm !text-right">{{ fixedAssetData?.opening_cost }}</td>
+        <td class="text-sm !text-right">{{ fixedAssetData?.addition_cost }}</td>
+        <td class="text-sm !text-right">{{ fixedAssetData?.delation_cost }}</td>
+        <td class="text-sm !text-right">{{ fixedAssetData?.closing_cost }}</td>
+        <td class="text-sm !text-right">{{ fixedAssetData?.opening_depreciation }}</td>
+        <td class="text-sm !text-right">{{ fixedAssetData?.addition_depreciation }}</td>
+        <td class="text-sm !text-right">{{ fixedAssetData?.delation_depreciation }}</td>
+        <td class="text-sm !text-right">{{ fixedAssetData?.closing_depreciation }}</td>
+        <td class="text-sm !text-right">{{ fixedAssetData?.wdv }}</td>
       </tr>
       </tbody>
       <tfoot v-if="!fixedAssetStatements?.length" class="bg-white dark:bg-gray-800">

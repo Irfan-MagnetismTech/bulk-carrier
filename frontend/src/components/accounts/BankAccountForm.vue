@@ -35,33 +35,33 @@ onMounted(() => {
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Bank Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model.trim="form.bank_name" placeholder="Bank name" class="form-input" autocomplete="off" required />
+        <input type="text" v-model.trim="form.bank_name" placeholder="Bank Name" class="form-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Branch Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model.trim="form.branch_name" placeholder="Bank name" class="form-input" autocomplete="off" required />
+        <input type="text" v-model.trim="form.branch_name" placeholder="Branch Name" class="form-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Account Type <span class="text-red-500">*</span></span>
-        <input type="text" v-model.trim="form.account_type" placeholder="Account type" class="form-input" autocomplete="off" required />
+        <input type="text" v-model.trim="form.account_type" placeholder="Account Type" class="form-input" autocomplete="off" required />
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Account Name <span class="text-red-500">*</span></span>
-        <input type="text" v-model.trim="form.account_name" placeholder="Account name" class="form-input" autocomplete="off" required />
+        <input type="text" v-model.trim="form.account_name" placeholder="Account Name" class="form-input" autocomplete="off" required />
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Account No <span class="text-red-500">*</span></span>
-      <input type="text" v-model.trim="form.account_number" placeholder="Account no" class="form-input" autocomplete="off" required />
+      <input type="text" v-model.trim="form.account_number" placeholder="Account No" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Routing No <span class="text-red-500">*</span></span>
-      <input type="text" v-model.trim="form.routing_number" placeholder="Routing no" class="form-input" autocomplete="off" required />
+      <input type="text" v-model.trim="form.routing_number" placeholder="Routing No" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Contact No <span class="text-red-500">*</span></span>
-      <input type="text" v-model.trim="form.contact_number" placeholder="Contact no" class="form-input" autocomplete="off" required />
+      <input type="text" v-model.trim="form.contact_number" placeholder="Contact No" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Opening Date <span class="text-red-500">*</span></span>
@@ -72,7 +72,7 @@ onMounted(() => {
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Opening Balance <span class="text-red-500">*</span></span>
-      <input type="number" step=".01" v-model.trim="form.opening_balance" placeholder="Opening balance" class="form-input" autocomplete="off" required />
+      <input type="number" step=".01" v-model.trim="form.opening_balance" placeholder="Opening Balance" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm"></label>
     <label class="block w-full mt-2 text-sm"></label>
