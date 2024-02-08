@@ -84,7 +84,9 @@ class ScmVendorBillController extends Controller
     public function getVendorWiseMrr(): JsonResponse
     {
         $vendorWiseMrr = ScmMrr::query()
-            ->where('scm_vendor_id', request('scm_vendor_id'))
+            ->whereHas('scmPo', function ($query) {
+                $query->where('scm_vendor_id', request()->scm_vendor_id);
+            })
             ->with('scmPo')
             ->get();
 
