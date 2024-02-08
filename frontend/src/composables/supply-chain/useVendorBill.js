@@ -24,33 +24,21 @@ export default function useVendorBill() {
     // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const vendorBill = ref( {
-        ref_no: '',
         date: '',
+        scmVendor: '',
+        scm_vendor_id: '',
         scmWarehouse: '',
         scm_warehouse_id: '',
-        department_id: '',
-        acc_cost_center_id: '',
-        remarks: '',
+        bill_no: '',
+        currency: '',
+        exchange_rate_bdt: null,
+        exchange_rate_usd: null,
         business_unit: '',
-        scmSrLines: [
-            {
-                scmMaterial: '',
-                scm_material_id: '',
-                unit: '',
-                specification: '',
-                quantity: 0.0
-            }
-        ],
+        attachment: '',
+        scmVendorBillLines: [],
     });
-    const materialObject = {
-        scmMaterial: '',
-        scm_material_id: '',
-        unit: '',
-        specification: '',
-        quantity: 0.0,
-    }
 
-    const errors = ref('');
+    const errors = ref();
     const isLoading = ref(false);
     const filterParams = ref(null);
 
@@ -186,7 +174,7 @@ export default function useVendorBill() {
         }
     }
 
-    const fetchSrWiseMaterials = async (vendorBillId,vendorBillId = null) => {
+    const fetchSrWiseMaterials = async (vendorBillId = null) => {
         // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
         try {
@@ -219,7 +207,6 @@ export default function useVendorBill() {
         deleteVendorBill,
         fetchSrWiseMaterials,
         srWiseMaterials,
-        materialObject,
         isTableLoading,
         isLoading,
         errors,

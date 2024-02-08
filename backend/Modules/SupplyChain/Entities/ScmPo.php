@@ -53,8 +53,11 @@ class ScmPo extends Model
 
     protected $skipForDeletionCheck = ['scmPoLines', 'scmPoTerms', 'scmPoItems'];
 
-    protected $features = 'CS, LC Record and MRR';
-    
+    protected $features = [
+        'scmLcRecords' => 'LC Records',
+        'scmMrrs' => 'Material Receipt Reports',
+    ];
+
     public function scmPoLines(): HasMany
     {
         return $this->hasMany(ScmPoLine::class);
@@ -110,5 +113,3 @@ class ScmPo extends Model
         return $this->belongsTo(User::class, 'created_by', 'id');
     }
 }
-
-// change in scm
