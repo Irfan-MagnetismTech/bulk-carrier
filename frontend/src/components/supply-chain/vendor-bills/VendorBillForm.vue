@@ -72,7 +72,7 @@
       <input type="file" @change="selectedFile" placeholder="Upload File" class="form-input" autocomplete="off" />
     </label>
   </div>
-  <div class="input-group !w-2/3">
+  <div class="input-group !w-1/2">
     <label class="label-group">
           <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
     </label>
@@ -84,7 +84,7 @@
       <div class="table-responsive min-w-screen">
         <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
           <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials</legend>
-          <table class="">
+          <table class="w-full">
             <thead>
             <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
               <th class="py-3 align-center">MRR No  <span class="text-red-500">*</span></th>
@@ -104,37 +104,57 @@
             </thead>
 
             <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-            <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmSrLine, index) in form.scmSrLines" :key="index">
-              <td class="!w-72">
-               
-              </td>
-              <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="text" readonly v-model="form.scmSrLines[index].unit" class="vms-readonly-input form-input">
-                </label>
-                
-              </td>
-            
-              <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="text" v-model="form.scmSrLines[index].specification" class="form-input">
-                </label>
-                
-              </td>
-              <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="number" v-model="form.scmSrLines[index].quantity" class="form-input" min="1" required>
-                </label>
-              </td>
-              <td class="px-1 py-1 text-center">
-                <button type="button" @click="removeMrr(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-                  </svg>
-                </button>
-                
-              </td>
-            </tr>
+              <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(billLine, index) in form.scmVendorBillLines" :key="index">
+                <td class="!w-72">
+                  <v-select :options="scmVendorMrrs" :loading="isMrrLoading" placeholder="--Choose an option--" v-model="form.scmVendorBillLines[index]" class="block form-input">
+                      <template #search="{attributes, events}">
+                          <input
+                              class="vs__search"
+                              :required="!form.scmVendorBillLines[index]"
+                              v-bind="attributes"
+                              v-on="events"
+                              />
+                      </template>
+                  </v-select>
+                </td>
+                <td>
+                  <label class="block w-full mt-2 text-sm">
+                    <input type="text" readonly v-model="form.scmVendorBillLines[index].challan_no" class="vms-readonly-input form-input">
+                  </label>
+                  
+                </td>
+              
+                <td>
+                  <label class="block w-full mt-2 text-sm">
+                    <input type="text" readonly v-model="form.scmVendorBillLines[index].po_no" class="vms-readonly-input form-input">
+                  </label>
+                  
+                </td>
+                <td>
+                  <label class="block w-full mt-2 text-sm">
+                    <input type="number" v-model="form.scmVendorBillLines[index].amount" class="form-input !text-right" min="1" required>
+                  </label>
+                </td>
+                <td>
+                  <label class="block w-full mt-2 text-sm">
+                    <input type="text" readonly v-model="form.scmVendorBillLines[index].amount_usd" class="!text-right vms-readonly-input form-input">
+                  </label>
+                </td>
+                <td>
+                  <label class="block w-full mt-2 text-sm">
+                    <input type="text" readonly v-model="form.scmVendorBillLines[index].amount_bdt" class="!text-right vms-readonly-input form-input">
+                  </label>
+                </td>
+
+                <td class="px-1 py-1 text-center">
+                  <button type="button" @click="removeMrr(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                    </svg>
+                  </button>
+                  
+                </td>
+              </tr>
             </tbody>
           </table>
         </fieldset>
@@ -151,7 +171,6 @@
     import { ref, watch, onMounted,watchEffect,computed, watchPostEffect } from 'vue';
     import Error from "../../Error.vue";
     import DropZone from "../../DropZone.vue";
-    import useMaterial from "../../../composables/supply-chain/useMaterial.js";
     import useVendor from "../../../composables/supply-chain/useVendor.js";
     import useWarehouse from "../../../composables/supply-chain/useWarehouse.js";
     import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
@@ -164,8 +183,7 @@
     import useBusinessInfo from "../../../composables/useBusinessInfo"
 
 
-    const { materials, searchMaterial, isLoading: materialLoading } = useMaterial();
-    const { vendors, searchVendor, isLoading } = useVendor();
+    const { vendors, searchVendor, searchMrrByVendor, isLoading } = useVendor();
     const { warehouses, searchWarehouse } = useWarehouse();
     const { getCurrencies, currencies, isCurrencyLoading } = useBusinessInfo();
 
@@ -174,7 +192,6 @@
       form: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
       formType: { type: String, required : false },
-      materialObject: { type: Object, required: false },
       page: {required: false, default: {} },
 
     });
@@ -184,8 +201,7 @@
     };
 
     function addMrr() {
-      const clonedObj = cloneDeep(props.materialObject);
-      props.form.scmVendorBillLines.push(clonedObj);
+      props.form.scmVendorBillLines.push({});
     }
 
     function removeMrr(index){
@@ -220,6 +236,10 @@
 
   function fetchWarehouses(search) {
     searchWarehouse(search, props.form.business_unit);
+  }
+
+  function fetchMrrByVendor() {
+    searchMrrByVendor(props.form.scm_vendor_id);
   }
 
   watch(() => props.form.currency, (value) => {

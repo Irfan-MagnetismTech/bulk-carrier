@@ -37,13 +37,6 @@ export default function useVendorBill() {
         attachment: '',
         scmVendorBillLines: [],
     });
-    const materialObject = {
-        scmMaterial: '',
-        scm_material_id: '',
-        unit: '',
-        specification: '',
-        quantity: 0.0,
-    }
 
     const errors = ref();
     const isLoading = ref(false);
@@ -214,7 +207,6 @@ export default function useVendorBill() {
         deleteVendorBill,
         fetchSrWiseMaterials,
         srWiseMaterials,
-        materialObject,
         isTableLoading,
         isLoading,
         errors,
