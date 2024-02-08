@@ -170,17 +170,17 @@ onMounted(() => {
           </tbody>
           
           <tfoot v-if="!cargoTypes?.data?.length" class="relative h-[250px]">
-          <tr v-if="isLoading">
-            <td colspan="6">Loading...</td>
-          </tr>
-          <tr v-else-if="isTableLoading">
-              <td colspan="6">
-                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
-              </td>
-          </tr>
-          <tr v-else-if="!cargoTypes?.data?.length">
-            <td colspan="6">No data found.</td>
-          </tr>
+            <tr v-if="isLoading">
+              <td colspan="6">Loading...</td>
+            </tr>
+            <tr v-else-if="isTableLoading">
+                <td colspan="6">
+                  <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+                </td>
+            </tr>
+            <tr v-else-if="!cargoTypes?.data?.length">
+              <td colspan="6">No data found.</td>
+            </tr>
           </tfoot>
       </table>
     </div>

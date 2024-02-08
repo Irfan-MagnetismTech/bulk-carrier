@@ -12,6 +12,7 @@ import Store from "../../../store";
 import moment from 'moment';
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import useDebouncedRef from "../../../composables/useDebouncedRef";
 
 const { bulkNoonReports, getBulkNoonReports, deleteBulkNoonReport, isLoading, isTableLoading } = useBulkNoonReport();
 const icons = useHeroIcon();
@@ -140,7 +141,9 @@ onMounted(() => {
       });
 
   });
-
+  filterOptions.value.filter_options.forEach((option, index) => {
+    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
+  });
 });
 
 </script>
@@ -159,7 +162,7 @@ onMounted(() => {
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="bulkNoonReports?.data?.length" class="relative">
               <tr v-for="(bulkNoonReport, index) in bulkNoonReports.data" :key="bulkNoonReport?.id">
-                  <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
+                  <td class="text-center">{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
 
                   <!-- <td>
                     <nobr>{{ bulkNoonReport?.date_time ? moment(bulkNoonReport?.date_time).format('DD-MM-YYYY hh:mm A') : null }}</nobr>
@@ -167,8 +170,8 @@ onMounted(() => {
                   <td>{{ bulkNoonReport?.opsVessel?.name }}</td>
                   <td>{{ bulkNoonReport?.opsVoyage?.voyage_sequence }}</td>
                   <td><nobr>{{ bulkNoonReport?.latitude }}</nobr></td>
-                  <td><nobr>{{ bulkNoonReport?.ship_master }}</nobr></td>
-                  <td class="items-center justify-center space-x-1 text-gray-600">
+                  <td><nobr>{{ bulkNoonReport?.ship_master }} - {{ isTableLoading }}</nobr></td>
+                  <td class="items-center text-center justify-center space-x-1 text-gray-600">
                       <nobr>
                         <!-- <action-button :action="'copy'" :to="{ name: 'ops.bulk-noon-reports.copy', params: { bulkNoonReportId: bulkNoonReport.id } }"></action-button> -->
                         <action-button :action="'show'" :to="{ name: 'ops.bulk-noon-reports.show', params: { bulkNoonReportId: bulkNoonReport.id } }"></action-button>
@@ -183,20 +186,25 @@ onMounted(() => {
           </tbody>
           
           <tfoot v-if="!bulkNoonReports?.data?.length"  class="relative h-[250px]">
-          <tr v-if="isLoading">
-            <td colspan="7">Loading...</td>
-          </tr>
-          <tr v-else-if="isTableLoading">
-              <td colspan="7">
-                <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
-              </td>
-          </tr>
-          <tr v-else-if="!bulkNoonReports?.data?.length">
-            <td colspan="7">No data found.</td>
-          </tr>
+            <tr v-if="isLoading">
+              <td colspan="7">Loading...</td>
+            </tr>
+            <tr v-else-if="isTableLoading">
+                <td colspan="7">
+                  <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
+                </td>
+            </tr>
+            <tr v-else-if="!bulkNoonReports?.data?.length">
+              <td colspan="7">No data found.</td>
+            </tr>
           </tfoot>
       </table>
     </div>
     <Paginate :data="bulkNoonReports" to="ops.bulk-noon-reports.index" :page="page"></Paginate>
   </div>
 </template>
+<style>
+  table > tbody> tr > td {
+      text-align: left;
+  }
+</style>

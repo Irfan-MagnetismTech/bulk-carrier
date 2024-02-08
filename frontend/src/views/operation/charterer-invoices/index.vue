@@ -164,16 +164,16 @@ onMounted(() => {
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="chartererInvoices?.data?.length" class="relative">
               <tr v-for="(chartererInvoice, index) in chartererInvoices.data" :key="chartererInvoice?.id">
-                  <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
+                  <td class="text-center">{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
                   <td>{{ chartererInvoice?.opsChartererProfile?.name }}</td>
                   <td>{{ chartererInvoice?.opsChartererContract?.contract_name }}</td>
                   <td>{{ chartererInvoice?.opsChartererContract?.opsVessel?.name }}</td>
                   <td>{{ chartererInvoice?.contract_type }}</td>
                   <td>{{ numberFormat(chartererInvoice?.grand_total) }}</td>
-                  <td>
+                  <td class="text-center">
                     <span :class="chartererInvoice?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chartererInvoice?.business_unit }}</span>
                   </td>
-                  <td class="items-center justify-center space-x-1 text-gray-600">
+                  <td class="items-center text-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <action-button :action="'show'" :to="{ name: 'ops.charterer-invoices.show', params: { chartererInvoiceId: chartererInvoice.id } }"></action-button>
                       <action-button :action="'edit'" :to="{ name: 'ops.charterer-invoices.edit', params: { chartererInvoiceId: chartererInvoice.id } }"></action-button>
@@ -201,3 +201,8 @@ onMounted(() => {
     <Paginate :data="chartererInvoices" to="ops.charterer-invoices.index" :page="page"></Paginate>
   </div>
 </template>
+<style>
+  table > tbody> tr > td {
+      text-align: left;
+  }
+</style>
