@@ -23,18 +23,25 @@ trait DeletableModel
         }
 
         $totalCount = 0;
-        foreach ($methods as $method) {
+        $relatedAsString = '';
+        foreach ($methods as $key => $method) {
             $relation = $this->{$method}();
             if ($relation instanceof Relation && $relation->count() > 0) {
+                $relatedAsString .= $this->features[$method] . ', ';
                 $totalCount += $relation->count();
             }
         }
 
+        if ($relatedAsString !== '') {
+            $relatedAsString = rtrim($relatedAsString, ', ');
+            $relatedAsString = preg_replace('/,([^,]*)$/', ' and$1', $relatedAsString);
+        }
+
         if ($totalCount > 0) {
             throw new HttpResponseException(response()->json([
-                "message" => "Data could not be deleted! It has references in the {$this->features} table.",
+                "message" => "Data could not be deleted! It has references in the {$relatedAsString} table.",
                 "errors" => [
-                    "id" => ["Data is in use and cannot be deleted! It has references in the {$this->features}."]
+                    "id" => ["Data is in use and cannot be deleted! It has references in the {$relatedAsString}."]
                 ]
             ], 422));
         }

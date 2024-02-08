@@ -3,8 +3,10 @@
 namespace Modules\SupplyChain\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\SupplyChain\Entities\ScmMrr;
 use Modules\SupplyChain\Entities\ScmVendorBill;
 
 class ScmVendorBillController extends Controller
@@ -77,5 +79,15 @@ class ScmVendorBillController extends Controller
     {
         $vendorBill->delete();
         return response()->json(['message' => 'Vendor Bill has been deleted successfully!']);
+    }
+
+    public function getVendorWiseMrr(): JsonResponse
+    {
+        $vendorWiseMrr = ScmMrr::query()
+            ->where('scm_vendor_id', request('scm_vendor_id'))
+            ->with('scmPo')
+            ->get();
+
+        return response()->json($vendorWiseMrr, 200);
     }
 }

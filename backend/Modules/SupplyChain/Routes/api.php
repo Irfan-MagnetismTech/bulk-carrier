@@ -74,10 +74,6 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
 
     Route::get('search-mrr', [ScmMrrController::class, "searchMrr"])->name('searchMrr');
 
-
-
-
-
     Route::get('search-mmr', [ScmMmrController::class, "searchMmr"])->name('searchMmr');
     Route::get('search-mo', [ScmMoController::class, "searchMo"])->name('searchMo');
 
@@ -85,9 +81,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('get-mrr-line-data', [ScmMrrController::class, "getMrrLineData"])->name('getMrrLineData');
     Route::get('get-po-material-list', [ScmMrrController::class, "getPoMaterialList"])->name('getPoMaterialList');
     Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse');
-
-
-
+    Route::get('get-vendor-wise-mrr', [ScmVendorBillController::class, "getVendorWiseMrr"])->name('getVendorWiseMrr');
 
     //Business Info Apis
     Route::get('store-categories', fn () => config('businessinfo.store_category'));
@@ -95,8 +89,6 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('lc-cost-heads', fn () => config('businessinfo.lc_cost_heads'));
 
     //Laravel Excel Apis
-
-
 
     //Current Stock Apis
     Route::get('current-stock-by-material', [ScmStockLedgerController::class, "currentStock"])->name('currentStock');
