@@ -712,6 +712,32 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: 'vendor-bills-show'  },
     },
     /* Vendor Bill end */
-
+    /* Material Costing Start */
+    {
+        path: `/${BASE}/material-costings`,
+        name: `${BASE}.material-costings.index`,
+        component: () => import(`../views/${PATH_BASE}/material-costings/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-costings-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/material-costings/create`,
+        name: `${BASE}.material-costings.create`,
+        component: () => import(`../views/${PATH_BASE}/material-costings/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-costings-create' },
+    },
+    {
+        path: `/${BASE}/material-costings/:materialCostingId/edit`,
+        name: `${BASE}.material-costings.edit`,
+        component: () => import(`../views/${PATH_BASE}/material-costings/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-costings-edit' },
+    },
+    {
+        path: `/${BASE}/material-costings/:materialCostingId`,
+        name: `${BASE}.material-costings.show`,
+        component: () => import(`../views/${PATH_BASE}/material-costings/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'material-costings-show'  },
+    },
+     /* Material Costing End */
     ...supplyChain2
 ];
