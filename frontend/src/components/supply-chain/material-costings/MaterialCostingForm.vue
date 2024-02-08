@@ -6,15 +6,14 @@
   </div>
   <div class="input-group !w-1/3">
     <label class="label-group">
-          <span class="label-item-title">SR Ref</span>
+          <span class="label-item-title">Costing Ref</span>
           <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'"/>
-          <!-- <Error v-if="errors?.ref_no" :errors="errors.ref_no"  /> -->
       </label>
   </div>
   <div class="input-group">
       
       <label class="label-group">
-        <span class="label-item-title">Warehouse <span class="text-red-500">*</span></span>
+        <span class="label-item-title">PO Ref<span class="text-red-500">*</span></span>
           <!-- <v-select :options="warehouses" placeholder="--Choose an option--" @search="fetchWarehouse"  v-model="form.scmWarehouse" label="name" class="block form-input"> -->
           <v-select :options="warehouses" placeholder="--Choose an option--" :loading="isLoading" v-model="form.scmWarehouse" label="name" class="block form-input">
           <template #search="{attributes, events}">
@@ -26,27 +25,6 @@
               />
           </template>
           </v-select>
-          <!-- <Error v-if="errors?.unit" :errors="errors.unit" /> -->
-      </label>
-      <label class="label-group">
-        <span class="label-item-title">Department <span class="text-red-500">*</span></span>
-         <v-select :options="DEPARTMENTS" placeholder="--Choose an option--" v-model="form.department_id" label="name" class="block form-input" :reduce="DEPARTMENTS => DEPARTMENTS.id">
-          <template #search="{attributes, events}">
-              <input
-                  class="vs__search"
-                  :required="!form.department_id"
-                  v-bind="attributes"
-                  v-on="events"
-              />
-          </template>
-          </v-select>
-          <!-- <select class="form-input" v-model.trim="form.department_id" autocomplete="off" required >
-            <option value="" disabled selected>Select</option>
-            <option value="1">Store Department</option>
-            <option value="2">Engine Department</option>
-            <option value="3">Provision Department</option>
-          </select> -->
-          <!-- <Error v-if="errors?.unit" :errors="errors.unit" /> -->
       </label>
       <label class="label-group">
           <span class="label-item-title">Date<span class="text-red-500">*</span></span>

@@ -15,15 +15,15 @@ export default function useMaterialCosting() {
     const BASE = 'scm' 
     const { downloadFile } = useHelper();
     const router = useRouter();
-    const storeRequisitions = ref([]);
-    const filteredStoreRequisitions = ref([]);
+    const materialCostings = ref([]);
+    const filteredMaterialCostings = ref([]);
     const srWiseMaterials = ref([]);
     const $loading = useLoading();
     const isTableLoading = ref(false);
     const notification = useNotification();
     // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
-    const storeRequisition = ref( {
+    const materialCosting = ref( {
         ref_no: '',
         date: '',
         scmWarehouse: '',
@@ -54,7 +54,7 @@ export default function useMaterialCosting() {
     const isLoading = ref(false);
     const filterParams = ref(null);
 
-    async function getStoreRequisitions(filterOptions) {
+    async function getMaterialCostings(filterOptions) {
         let loader = null;
         if (!filterOptions.isFilter) {
             loader = $loading.show(LoaderConfig);
@@ -68,14 +68,14 @@ export default function useMaterialCosting() {
         }
         filterParams.value = filterOptions;
         try {
-            const {data, status} = await Api.get(`/${BASE}/store-requisitions`,{
+            const {data, status} = await Api.get(`/${BASE}/material-costings`,{
                 params: {
                    page: filterOptions.page,
                    items_per_page: filterOptions.items_per_page,
                    data: JSON.stringify(filterOptions)
                 }
             });
-            storeRequisitions.value = data.value;
+            materialCostings.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -91,7 +91,7 @@ export default function useMaterialCosting() {
             }
         }
     }
-    async function storeStoreRequisition(form) {
+    async function storeMaterialCosting(form) {
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -100,10 +100,10 @@ export default function useMaterialCosting() {
         formData.append('data', JSON.stringify(form));
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/store-requisitions`, formData);
-            storeRequisition.value = data.value;
+            const { data, status } = await Api.post(`/${BASE}/material-costings`, formData);
+            materialCosting.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.store-requisitions.index` });
+            router.push({ name: `${BASE}.material-costings.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -113,14 +113,14 @@ export default function useMaterialCosting() {
         }
     }
 
-    async function showStoreRequisition(storeRequisitionId) {
+    async function showMaterialCosting(materialCostingId) {
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/${BASE}/store-requisitions/${storeRequisitionId}`);
-            storeRequisition.value = data.value;
+            const { data, status } = await Api.get(`/${BASE}/material-costings/${materialCostingId}`);
+            materialCosting.value = data.value;
 
         } catch (error) {
             const { data, status } = error.response;
@@ -131,7 +131,7 @@ export default function useMaterialCosting() {
         }
     }
 
-    async function updateStoreRequisition(form, storeRequisitionId) {
+    async function updateMaterialCosting(form, materialCostingId) {
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -140,10 +140,10 @@ export default function useMaterialCosting() {
         formData.append('_method', 'PUT');
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/store-requisitions/${storeRequisitionId}`, formData);
-            storeRequisition.value = data.value;
+            const { data, status } = await Api.post(`/${BASE}/material-costings/${materialCostingId}`, formData);
+            materialCosting.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.store-requisitions.index` });
+            router.push({ name: `${BASE}.material-costings.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -153,15 +153,15 @@ export default function useMaterialCosting() {
         }
     }
 
-    async function deleteStoreRequisition(storeRequisitionId) {
+    async function deleteMaterialCosting(materialCostingId) {
 
         // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/${BASE}/store-requisitions/${storeRequisitionId}`);
+            const { data, status } = await Api.delete( `/${BASE}/material-costings/${materialCostingId}`);
             notification.showSuccess(status);
-            await getStoreRequisitions(filterParams.value);
+            await getMaterialCostings(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -171,12 +171,12 @@ export default function useMaterialCosting() {
         }
     }
 
-    async function searchStoreRequisition(searchParam, loading) {
+    async function searchMaterialCosting(searchParam, loading) {
         
         isLoading.value = true;
         try {
-            const {data, status} = await Api.get(`/${BASE}/search-store-requisitions`,searchParam);
-            filteredStoreRequisitions.value = data.value;
+            const {data, status} = await Api.get(`/${BASE}/search-material-costings`,searchParam);
+            filteredMaterialCostings.value = data.value;
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -186,13 +186,13 @@ export default function useMaterialCosting() {
         }
     }
 
-    const fetchSrWiseMaterials = async (storeRequisitionId,storeIssueId = null) => {
+    const fetchSrWiseMaterials = async (materialCostingId,storeIssueId = null) => {
         // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
         try {
             const { data, status } = await Api.get(`/${BASE}/search-sr-wise-material`, {
                 params: {
-                    sr_id: storeRequisitionId,
+                    sr_id: materialCostingId,
                     si_id: storeIssueId
                 }
             });
@@ -208,15 +208,15 @@ export default function useMaterialCosting() {
     
 
     return {
-        storeRequisitions,
-        storeRequisition,
-        filteredStoreRequisitions,
-        searchStoreRequisition,
-        getStoreRequisitions,
-        storeStoreRequisition,
-        showStoreRequisition,
-        updateStoreRequisition,
-        deleteStoreRequisition,
+        materialCostings,
+        materialCosting,
+        filteredMaterialCostings,
+        searchMaterialCosting,
+        getMaterialCostings,
+        storeMaterialCosting,
+        showMaterialCosting,
+        updateMaterialCosting,
+        deleteMaterialCosting,
         fetchSrWiseMaterials,
         srWiseMaterials,
         materialObject,
