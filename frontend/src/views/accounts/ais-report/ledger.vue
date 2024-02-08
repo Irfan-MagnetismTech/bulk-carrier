@@ -5,6 +5,7 @@ import {onMounted, ref, watchEffect} from "vue";
 import useAisReport from "../../../composables/accounts/useAisReport";
 import useAccountCommonApiRequest from "../../../composables/accounts/useAccountCommonApiRequest";
 import Store from "../../../store";
+import { formatMonthYear, formatDate } from "../../../utils/helper.js";
 
 const { ledgers, getLedgers, isLoading} = useAisReport();
 const { bgColor } = useTransaction();
@@ -47,7 +48,7 @@ onMounted(() => {
       <fieldset class="w-full grid grid-cols-4 gap-1 px-2 pb-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Ledger</legend>
         <div>
-          <label for="" class="text-xs" style="margin-left: .01rem">Account <span class="text-red-500">*</span></label>
+          <label for="" class="text-xs" style="margin-left: .01rem">Account Name <span class="text-red-500">*</span></label>
           <v-select :options="allAccountLists" placeholder="--Choose an option--" @search="fetchAccounts"  v-model="searchParams.acc_account_id" label="account_name" :reduce="allAccountLists=> allAccountLists.acc_account_id" class="block w-full rounded form-input">
             <template #search="{attributes, events}">
               <input class="vs__search" :required="!searchParams.acc_account_id" v-bind="attributes" v-on="events"/>
@@ -74,10 +75,10 @@ onMounted(() => {
     <div class="w-full overflow-x-auto">
       <table class="w-full whitespace-no-wrap">
         <thead v-once>
-        <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+        <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
           <th class="px-4 py-3">#</th>
           <th class="px-4 py-3"> Date </th>
-          <th class="px-4 py-3"> Particulars </th>
+          <th class="px-4 py-3"> Particular </th>
           <th class="px-4 py-3"> Voucher Type </th>
           <th class="px-4 py-3"> Voucher No </th>
           <th class="px-4 py-3"> Debit Amount </th>
@@ -85,16 +86,16 @@ onMounted(() => {
         </tr>
         </thead>
         <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-            <tr v-if="ledgers?.currentLedgers?.length" style="background-color: #369382;color: white" id="opening_tr">
-              <td colspan="5" class="text-gray-700 dark-disabled:text-gray-400 font-bold bg-green-600 text-white">Opening Balance</td>
-              <td class="text-gray-700 dark-disabled:text-gray-400 font-bold bg-green-600 text-white">{{ ledgers?.opening_dr_amount }}</td>
-              <td class="text-gray-700 dark-disabled:text-gray-400 font-bold bg-green-600 text-white">{{ ledgers?.opening_cr_amount }}</td>
+            <tr v-if="ledgers?.currentLedgers?.length">
+              <td colspan="5" class="text-gray-700 dark-disabled:text-gray-400 font-bold bg-white-600">Opening Balance</td>
+              <td class="text-gray-700 dark-disabled:text-gray-400 font-bold !text-right">{{ parseFloat(ledgers?.opening_dr_amount).toFixed(2) }}</td>
+              <td class="text-gray-700 dark-disabled:text-gray-400 font-bold !text-right">{{ parseFloat(ledgers?.opening_cr_amount).toFixed(2) }}</td>
             </tr>
             <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(ledgerData, index) in ledgers?.currentLedgers" :key="index"
                 :class="{'bg-white': index % 2 === 0, 'bg-gray-100': index % 2 !== 0}"
             >
                 <td class="text-sm"> {{ ++index }} </td>
-                <td class="text-sm"> {{ ledgerData?.transaction?.transaction_date }} </td>
+                <td class="text-sm"> {{ formatDate(ledgerData?.transaction?.transaction_date) }} </td>
                 <td class="text-sm !text-left"> {{ ledgers?.account_name }} </td>
               <td class="text-sm"> {{ ledgerData?.transaction?.voucher_type }} </td>
               <td class="text-sm transaction_col" style="color: blueviolet">
@@ -102,13 +103,13 @@ onMounted(() => {
                   {{ ledgerData?.transaction?.id }}
                 </router-link>
               </td>
-              <td class="text-sm"> {{ ledgerData?.dr_amount }} </td>
-              <td class="text-sm"> {{ ledgerData?.cr_amount }} </td>
+              <td class="text-sm !text-right"> {{ ledgerData?.dr_amount }} </td>
+              <td class="text-sm !text-right"> {{ ledgerData?.cr_amount }} </td>
               </tr>
             <tr v-if="ledgers?.currentLedgers?.length" style="background-color: #369382;" id="close_tr">
               <td colspan="5" class="text-gray-700 dark-disabled:text-gray-400 font-bold bg-green-600 text-white">Closing Balance</td>
-              <td class="text-gray-700 dark-disabled:text-gray-400 font-bold bg-green-600 text-white">{{ ledgers?.closing_dr_amount }}</td>
-              <td class="text-gray-700 dark-disabled:text-gray-400 font-bold bg-green-600 text-white">{{ ledgers?.closing_cr_amount }}</td>
+              <td class="text-gray-700 dark-disabled:text-gray-400 font-bold bg-green-600 text-white !text-right">{{ parseFloat(ledgers?.closing_dr_amount).toFixed(2) }}</td>
+              <td class="text-gray-700 dark-disabled:text-gray-400 font-bold bg-green-600 text-white !text-right">{{ parseFloat(ledgers?.closing_cr_amount).toFixed(2) }}</td>
             </tr>
         </tbody>
         <tfoot v-if="!ledgers?.currentLedgers?.length" class="bg-white dark-disabled:bg-gray-800">

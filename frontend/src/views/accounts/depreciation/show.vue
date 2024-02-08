@@ -6,6 +6,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
+import { formatMonthYear, formatDate } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 
@@ -47,11 +48,11 @@ onMounted(() => {
           </tr>
           <tr>
             <th class="w-40">Year</th>
-            <td>{{ depreciation?.month_year ?? '---' }}</td>
+            <td>{{ formatMonthYear(depreciation?.month_year) ?? '---' }}</td>
           </tr>
           <tr>
             <th class="w-40">Applied Date</th>
-            <td>{{ depreciation?.applied_date ?? '---' }}</td>
+            <td>{{ formatDate(depreciation?.applied_date) ?? '---' }}</td>
           </tr>
           </tbody>
         </table>

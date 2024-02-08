@@ -12,6 +12,7 @@ import Store from "../../../store";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import { formatMonthYear, formatDate } from "../../../utils/helper.js";
 const icons = useHeroIcon();
 
 const props = defineProps({
@@ -53,7 +54,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Cost Center",
+      "label": "Cost Center Name",
       "filter_type": "input"
     },
     {
@@ -155,11 +156,11 @@ onMounted(() => {
           <tbody class="relative">
                 <tr v-for="(advanceAdjustment, index) in advanceAdjustments?.data" :key="index">
                   <td> {{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }} </td>
-                  <td> {{ advanceAdjustment?.adjustment_date }} </td>
-                  <td> {{ advanceAdjustment?.costCenter?.name }} </td>
+                  <td> {{ formatDate(advanceAdjustment?.adjustment_date) }} </td>
+                  <td class="text-left"> {{ advanceAdjustment?.costCenter?.name }} </td>
                   <td> {{ advanceAdjustment?.accCashRequisition?.id }} </td>
-                  <td> {{ advanceAdjustment?.accCashRequisition?.total_amount }} </td>
-                  <td> {{ advanceAdjustment?.adjustment_amount }} </td>
+                  <td class="text-right"> {{ advanceAdjustment?.accCashRequisition?.total_amount }} </td>
+                  <td class="text-right"> {{ advanceAdjustment?.adjustment_amount }} </td>
                 <td>
                   <span :class="advanceAdjustment?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">
                     {{ advanceAdjustment?.business_unit }}

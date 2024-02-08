@@ -179,7 +179,7 @@ onMounted(() => {
           <tbody class="relative">
           <tr v-for="(account,index) in cashAccounts?.data" :key="index">
             <td>{{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }}</td>
-            <td>{{ account?.name }}</td>
+            <td class="text-left">{{ account?.name }}</td>
             <td>
               <span :class="account?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ account?.business_unit }}</span>
             </td>

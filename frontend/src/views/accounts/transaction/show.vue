@@ -6,6 +6,8 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
+import { formatDate } from "../../../utils/helper.js";
+
 
 const icons = useHeroIcon();
 
@@ -51,7 +53,7 @@ onMounted(() => {
           </tr>
           <tr>
             <th class="w-40"> Transaction Date </th>
-            <td>{{ transaction?.transaction_date }}</td>
+            <td>{{ formatDate(transaction?.transaction_date) }}</td>
           </tr>
           <tr>
             <th class="w-40"> Instrument Type </th>
@@ -97,8 +99,8 @@ onMounted(() => {
           <tr v-for="(transactionEntry, index) in transaction?.ledgerEntries" :key="index">
             <td class="text-left"> {{ transactionEntry?.account?.account_name }} </td>
             <td class="text-left"> {{ transactionEntry?.ref_bill }} </td>
-            <td class="text-left"> {{ transactionEntry?.dr_amount }} </td>
-            <td class="text-left"> {{ transactionEntry?.cr_amount }} </td>
+            <td class="!text-right"> {{ transactionEntry?.dr_amount }} </td>
+            <td class="!text-right"> {{ transactionEntry?.cr_amount }} </td>
             <td class="text-left"> {{ transactionEntry?.remarks }} </td>
           </tr>
           </tbody>

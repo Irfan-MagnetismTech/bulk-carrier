@@ -6,7 +6,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
-
+import { formatMonthYear, formatDate } from "../../../utils/helper.js";
 const icons = useHeroIcon();
 
 const route = useRoute();
@@ -43,8 +43,8 @@ onMounted(() => {
             <td><span :class="administrativeSalary?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ administrativeSalary?.business_unit }}</span></td>
           </tr>
           <tr>
-            <th class="w-40">Year-Month</th>
-            <td>{{ administrativeSalary?.year_month }}</td>
+            <th class="w-40">Month - Year</th>
+            <td>{{ formatMonthYear(administrativeSalary?.year_month) }}</td>
           </tr>
           <tr>
             <th class="w-40">Remarks</th>
