@@ -80,3 +80,5 @@ trait DeletableModel
         return $method->hasReturnType() && in_array($method->getReturnType()->getName(), $expectedTypes);
     }
 }
+
+// changes in scm
