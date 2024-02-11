@@ -197,7 +197,7 @@ onMounted(() => {
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="maritimeCertificates?.data?.length" class="relative">
               <tr v-for="(maritimeCertificate, index) in maritimeCertificates.data" :key="maritimeCertificate?.id">
-                  <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+                  <td class="text-center">{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ maritimeCertificate?.authority }}</td>
                   <td>{{ maritimeCertificate?.name }}</td>
                   <td>{{ maritimeCertificate?.type }}</td>
@@ -212,7 +212,7 @@ onMounted(() => {
                     <span v-if="maritimeCertificate?.validity=='60'">5 Years</span>  
                     <span v-if="maritimeCertificate?.validity=='120'">10 Years</span>  
                   </td>
-                  <td class="items-center justify-center space-x-1 text-gray-600">
+                  <td class="items-center text-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <action-button :action="'edit'" :to="{ name: 'ops.maritime-certifications.edit', params: { maritimeCertificateId: maritimeCertificate.id } }"></action-button>
                       <action-button @click="confirmDelete(maritimeCertificate.id)" :action="'delete'"></action-button>
@@ -241,3 +241,8 @@ onMounted(() => {
     <Paginate :data="maritimeCertificates" to="ops.configurations.maritime-certificates.index" :page="page"></Paginate>
   </div>
 </template>
+<style>
+  table > tbody> tr > td {
+      text-align: left;
+  }
+</style>

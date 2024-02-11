@@ -14,9 +14,9 @@ class OpsVoyageBudgetRequest extends FormRequest
     public function rules(): array
     {     
         return [
-            'ops_vessel_id'         => ['required', 'numeric'],
-            'ops_voyage_id'         => ['required', 'numeric'],
-            'ops_expense_head_id'   => ['nullable', 'numeric'],
+            'ops_vessel_id'         => ['required', 'numeric','exists:ops_vessels,id'],
+            'ops_voyage_id'         => ['required', 'numeric','exists:ops_voyages,id'],
+            'ops_expense_head_id'   => ['nullable', 'numeric','exists:ops_expense_heads,id'],
             'title'                 => ['required', 'string'],
             'currency'              => ['required'],
             'effective_from'              => ['required'],
@@ -39,7 +39,10 @@ class OpsVoyageBudgetRequest extends FormRequest
     {
         return [
             'ops_vessel_id.required' => 'Vessel is required',
+            'ops_vessel_id.exists'   => 'Vessel is not valid',
             'ops_voyage_id.required' => 'Voyage is required',
+            'ops_voyage_id.exists'   => 'Voyage is not valid',
+            'ops_expense_head_id.exists'   => 'Expense head is not valid',
             // 'ops_expense_head_id.required' => 'Expense head is required',
             'title.required' => 'Title is required',
             'total.required' => 'Total is required',

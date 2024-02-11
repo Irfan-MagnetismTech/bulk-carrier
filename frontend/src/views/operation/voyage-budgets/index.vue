@@ -175,7 +175,7 @@ onMounted(() => {
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="voyageBudgets?.data?.length" class="relative">
               <tr v-for="(voyageBudget, index) in voyageBudgets.data" :key="voyageBudget?.id">
-                  <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
+                  <td class="text-center">{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
                   <td>{{ voyageBudget?.title }}</td>
                   <td>{{ voyageBudget?.opsVessel?.name }}</td>
                   <td>{{ voyageBudget?.opsVoyage?.voyage_sequence }}</td>
@@ -190,10 +190,10 @@ onMounted(() => {
   return accumulator + (currentObject.amount_bdt ? parseFloat(currentObject.amount_bdt) : 0);
 }, 0)) || 0) }}
                   </td>
-                  <td>
+                  <td class="text-center">
                     <span :class="voyageBudget?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ voyageBudget?.business_unit }}</span>
                   </td>
-                  <td class="items-center justify-center space-x-1 text-gray-600">
+                  <td class="items-center text-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <action-button :action="'show'" :to="{ name: 'ops.voyage-budgets.show', params: { voyageBudgetId: voyageBudget.id } }"></action-button>
                       <action-button :action="'edit'" :to="{ name: 'ops.voyage-budgets.edit', params: { voyageBudgetId: voyageBudget.id } }"></action-button>
@@ -221,3 +221,8 @@ onMounted(() => {
     <Paginate :data="voyageBudgets" to="ops.voyage-budgets.index" :page="page"></Paginate>
   </div>
 </template>
+<style>
+  table > tbody> tr > td {
+      text-align: left;
+  }
+</style>

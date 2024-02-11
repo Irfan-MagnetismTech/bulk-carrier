@@ -215,8 +215,8 @@ onMounted(() => {
             
             <template v-for="(certificates, key, index) in vesselCertificates">
               <tr v-for="(item, itemIndex) in certificates">
-                <td :rowspan="certificates.length" v-if="itemIndex == 0">{{ index+1 }}</td>
-                <!-- <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td> -->
+                <!-- <td :rowspan="certificates.length" v-if="itemIndex == 0">{{ index+1 }}</td> -->
+                <td class="text-center" :rowspan="certificates.length" v-if="itemIndex == 0">{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                 <td :rowspan="certificates.length" v-if="itemIndex == 0">{{ item?.opsVessel?.name }}</td>
                 <td>
                   {{ item?.opsMaritimeCertification?.name }}
@@ -245,7 +245,7 @@ onMounted(() => {
                     </a>
                   </div>
                 </td> -->
-                <td>
+                <td class="text-center">
                   <nobr>
                     <button type="button" class="bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
                     <router-link :to="{ name: 'ops.vessel-certificates.history', params: { vesselId: certificates[0].opsVessel?.id, certificateId: item.opsMaritimeCertification.id } }" >
@@ -283,3 +283,8 @@ onMounted(() => {
     <Paginate :data="vesselCertificates" to="ops.vessel-certificates.index" :page="page"></Paginate>
   </div>
 </template>
+<style>
+  table > tbody> tr > td {
+      text-align: left;
+  }
+</style>

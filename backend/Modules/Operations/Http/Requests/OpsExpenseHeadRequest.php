@@ -16,9 +16,10 @@ class OpsExpenseHeadRequest extends FormRequest
     {   
         // dd($this);
         return [
-            'billing_type'                  => ['nullable', 'string', 'max:255'],
-            'head_id'                       => ['nullable', 'numeric', 'max:50'],
-            'name'                          => [
+            'billing_type'  => ['nullable', 'string', 'max:255'],
+            'head_id'       => 'nullable|numeric|max:50|exists:ops_expense_heads,id',
+            // 'head_id'                       => ['nullable', 'numeric', 'max:50','exists:ops_expense_heads,id'],
+            'name'          => [
                 'required',
                 'string',
                 'max:255',
@@ -27,7 +28,7 @@ class OpsExpenseHeadRequest extends FormRequest
                 // }),
             ],
             // 'is_visible_in_voyage_report'   => ['boolean'],
-            'business_unit'                 => ['required', 'string', 'max:255'],
+            'business_unit' => ['required', 'string', 'max:255'],
         ];
     }
 
@@ -41,13 +42,11 @@ class OpsExpenseHeadRequest extends FormRequest
         return [
             'billing_type.max' => 'Billing type may not be greater than :max characters.',
             'head_id.numeric' => 'Head must be numeric.',
+            'head_id.exists' => 'Head is not valid',
             'name.required' => 'Name is required.',
             'name.unique' => 'This expense group name is already used.',
             'name.max' => 'Name may not be greater than :max characters.',
             // 'head_id.max' => 'Head may not be greater than :max characters.',
-            // 'code.required' => 'code is required',
-            // 'code.unique' => 'Port code is already taken',
-            // 'code.max' => 'Port code may not be greater than :max characters.',
         ];
     }
 

@@ -120,7 +120,7 @@ onMounted(() => {
           </thead>
           <tbody v-if="vesselCertificates?.opsVesselCertificates?.length">
             <tr v-for="(item, itemIndex) in vesselCertificates.opsVesselCertificates">
-                <td>{{ itemIndex+1 }}</td>
+                <td class="text-center">{{ itemIndex+1 }}</td>
                 <td :rowspan="vesselCertificates.opsVesselCertificates.length" v-if="itemIndex == 0">{{ vesselCertificates?.name }}</td>
                 <td>
                   {{ item?.opsMaritimeCertification?.name }}
@@ -156,7 +156,7 @@ onMounted(() => {
                     </a>
                   </div>
                 </td>
-                <td class="items-center justify-center space-x-2 text-gray-600">
+                <td class="items-center text-center justify-center space-x-2 text-gray-600">
                    <nobr>
                     <action-button :action="'edit'" :to="{ name: 'ops.vessel-certificates.edit', params: { vesselCertificateId: item?.id } }"></action-button>
                     <action-button @click="confirmDelete(vessel.id)" :action="'delete'"></action-button>
@@ -178,3 +178,8 @@ onMounted(() => {
     <Paginate :data="vesselCertificates" to="ops.vessel-certificates.index" :page="page"></Paginate>
   </div>
 </template>
+<style>
+  table > tbody> tr > td {
+      text-align: left;
+  }
+</style>

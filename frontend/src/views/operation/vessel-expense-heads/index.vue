@@ -121,13 +121,13 @@ onMounted(() => {
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="vesselExpenseHeads?.data?.length" class="relative">
               <tr v-for="(vesselExpenseHead, index) in vesselExpenseHeads.data" :key="vesselExpenseHead?.id">
-                  <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
+                  <td class="text-center">{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
                   <td class="!text-left">{{ vesselExpenseHead?.opsVessel?.name }}</td>
                   
-                  <td>
+                  <td class="text-center">
                     <span :class="vesselExpenseHead?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ vesselExpenseHead?.business_unit }}</span>
                   </td>
-                  <td class="items-center justify-center space-x-1 text-gray-600">
+                  <td class="items-center text-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <action-button :action="'show'" :to="{ name: 'ops.vessel-expense-heads.show', params: { vesselExpenseHeadId: vesselExpenseHead.id } }"></action-button>
                       <action-button :action="'edit'" :to="{ name: 'ops.vessel-expense-heads.edit', params: { vesselExpenseHeadId: vesselExpenseHead.id } }"></action-button>
@@ -155,3 +155,8 @@ onMounted(() => {
     <Paginate :data="vesselExpenseHeads" to="ops.vessel-expense-heads.index" :page="page"></Paginate>
   </div>
 </template>
+<style>
+  table > tbody> tr > td {
+      text-align: left;
+  }
+</style>

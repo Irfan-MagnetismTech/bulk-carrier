@@ -147,15 +147,15 @@ onMounted(() => {
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="bunkerBills?.data?.length" class="relative">
               <tr v-for="(bunkerBill, index) in bunkerBills.data" :key="bunkerBill?.id">
-                  <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+                  <td class="text-center">{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                   <td>{{ bunkerBill?.scmVendor?.name }}</td>
                   <td>{{ bunkerBill?.vendor_bill_no }}</td>
 
                   <!-- <td>{{ bunkerBill?.date }}</td> -->
-                  <td>
+                  <td class="text-center">
                     <span :class="bunkerBill?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ bunkerBill?.business_unit }}</span>
                   </td>
-                  <td class="items-center justify-center space-x-1 text-gray-600">
+                  <td class="items-center text-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <action-button :action="'show'" :to="{ name: 'ops.bunker-bills.show', params: { bunkerBillId: bunkerBill.id } }"></action-button>
                       <!-- <action-button :action="'approved'" :to="{ name: 'ops.bunker-bills.approved', params: { bunkerBillId: bunkerBill.id } }"></action-button> -->
@@ -187,3 +187,8 @@ onMounted(() => {
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
+<style>
+  table > tbody> tr > td {
+      text-align: left;
+  }
+</style>

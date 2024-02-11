@@ -153,15 +153,15 @@ onMounted(() => {
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="customerInvoices?.data?.length" class="relative">
               <tr v-for="(customerInvoice, index) in customerInvoices.data" :key="customerInvoice?.id">
-                  <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
+                  <td class="text-center">{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
                   <td>{{ customerInvoice?.opsCustomer?.name_code }}</td>
                   <td>{{ customerInvoice?.voyage_name }}</td>
                   <td><nobr>{{ formatDate(customerInvoice?.date) }}</nobr></td>
-                  <td>{{ numberFormat(customerInvoice?.grand_total) }}</td>
-                  <td>
+                  <td class="text-right">{{ numberFormat(customerInvoice?.grand_total) }}</td>
+                  <td class="text-center">
                     <span :class="customerInvoice?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ customerInvoice?.business_unit }}</span>
                   </td>
-                  <td class="items-center justify-center space-x-1 text-gray-600">
+                  <td class="items-center text-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <action-button :action="'show'" :to="{ name: 'ops.customer-invoices.show', params: { customerInvoiceId: customerInvoice.id } }"></action-button>
                       <action-button :action="'edit'" :to="{ name: 'ops.customer-invoices.edit', params: { customerInvoiceId: customerInvoice.id } }"></action-button>
@@ -189,3 +189,9 @@ onMounted(() => {
     <Paginate :data="customerInvoices" to="ops.customer-invoices.index" :page="page"></Paginate>
   </div>
 </template>
+
+<style>
+  table > tbody> tr > td {
+      text-align: left;
+  }
+</style>

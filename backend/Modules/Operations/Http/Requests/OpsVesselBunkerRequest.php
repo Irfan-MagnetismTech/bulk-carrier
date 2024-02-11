@@ -14,7 +14,7 @@ class OpsVesselBunkerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ops_vessel_id'                 => ['required'],
+            'ops_vessel_id'                 => ['required','exists:ops_vessels,id'],
             'type'                          => ['nullable', 'string', 'max:255'],
             'usage_type'                    => ['nullable', 'string', 'max:255'],
             'currency'                      => ['nullable', 'string', 'max:255'],
@@ -40,7 +40,14 @@ class OpsVesselBunkerRequest extends FormRequest
     public function messages(): array
     {
         return [
-            //
+            'ops_vessel_id.required' => 'Vessel is required.',
+            'ops_vessel_id.exists' => 'Vessel is not valid',
+            'date.required' => 'Date is required.',
+            'date.date' => 'Date must be a date.',
+            'from_date.date' => 'From Date must be a date.',
+            'to_date.date' => 'To Date must be a date.',
+            'type.max' => 'Type may not be greater than :max characters.',
+            'usage_type.max' => 'Usage Type may not be greater than :max characters.',
         ];
     }
 

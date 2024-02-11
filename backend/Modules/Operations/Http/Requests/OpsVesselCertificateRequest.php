@@ -23,13 +23,13 @@ class OpsVesselCertificateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ops_vessel_id' => ['required', 'numeric', 'max:50'],
-            'ops_maritime_certification_id' => ['required', 'numeric', 'max:50'],
+            'ops_vessel_id' => ['required','exists:ops_vessels,id'],
+            'ops_maritime_certification_id' => ['required', 'exists:ops_maritime_certifications,id'],
             'issue_date' => ['required'],
             'expire_date' => Rule::requiredIf(function () {
                 return $this->type != 'Permanent';
             }),
-            'attachment' => ['nullable'],
+            'attachment' => 'nullable|mimes:pdf,doc,docx,jpeg,png,gif,xlsx|max:2048',
             'status' => ['nullable'],
             'reference_number' => ['required'],
             'created_by' => ['nullable'],
@@ -45,10 +45,14 @@ class OpsVesselCertificateRequest extends FormRequest
     {
         return [
             'ops_vessel_id.required' => 'Vessel is required',
+            'ops_vessel_id.exists' => 'Vessel is not valid',
             'ops_maritime_certification_id.required' => 'Certification is required',
+            'ops_maritime_certification_id.exists' => 'Certification is not valid',
             'issue_date.required' => 'Issue date is required',
             'expire_date.required' => 'Expire date is required',
             'reference_number.required' => 'Reference number is already taken',
+            'attachment.mimes' => 'Attachment must be a file allowed types are pdf,doc,docx,jpeg,png.',
+            'attachment.max' => 'Attachment should not exceed 2048 kilobytes (2 MB).',
            
         ];
     }

@@ -25,7 +25,6 @@ const props = defineProps({
 
 const { setTitle } = Title();
 setTitle('Bulk Noon Report List');
-
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -128,12 +127,12 @@ onMounted(() => {
       getBulkNoonReports(filterOptions.value)
       .then(() => {
       
-      paginatedPage.value = filterOptions.value.page;
-      const customDataTable = document.getElementById("customDataTable");
-    
-      if (customDataTable) {
-        tableScrollWidth.value = customDataTable.scrollWidth;
-      }
+        paginatedPage.value = filterOptions.value.page;
+        const customDataTable = document.getElementById("customDataTable");
+      
+        if (customDataTable) {
+          tableScrollWidth.value = customDataTable.scrollWidth;
+        }
 
       })
       .catch((error) => {
@@ -170,7 +169,7 @@ onMounted(() => {
                   <td>{{ bulkNoonReport?.opsVessel?.name }}</td>
                   <td>{{ bulkNoonReport?.opsVoyage?.voyage_sequence }}</td>
                   <td><nobr>{{ bulkNoonReport?.latitude }}</nobr></td>
-                  <td><nobr>{{ bulkNoonReport?.ship_master }} - {{ isTableLoading }}</nobr></td>
+                  <td><nobr>{{ bulkNoonReport?.ship_master }}</nobr></td>
                   <td class="items-center text-center justify-center space-x-1 text-gray-600">
                       <nobr>
                         <!-- <action-button :action="'copy'" :to="{ name: 'ops.bulk-noon-reports.copy', params: { bulkNoonReportId: bulkNoonReport.id } }"></action-button> -->
