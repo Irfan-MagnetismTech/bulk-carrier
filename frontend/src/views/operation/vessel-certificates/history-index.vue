@@ -167,7 +167,6 @@ onMounted(() => {
           
           <tfoot v-if="!vesselCertificates?.opsVesselCertificates?.length">
           <tr v-if="isLoading">
-            <td colspan="14">Loading...</td>
           </tr>
           <tr v-else-if="!vesselCertificates?.opsVesselCertificates?.length">
             <td colspan="14">No data found.</td>

@@ -283,7 +283,6 @@ function getFilteredResult() {
           
           <tfoot v-if="!Object.keys(vesselCertificates)?.length"  class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="14">Loading...</td>
           </tr>
           <tr v-else-if="isTableLoading">
               <td colspan="8">

@@ -16,7 +16,7 @@ export default function useCustomerInvoice() {
 	const notification = useNotification();
 
 	const customerInvoice = ref({
-		business_unit: '',
+		business_unit: 'TSLL',
 		ops_customer_profile_id: null,
 		opsCustomerProfile: null,
 		ops_customer_contract_id: null,

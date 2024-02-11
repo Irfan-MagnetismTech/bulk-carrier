@@ -205,7 +205,6 @@ onMounted(() => {
           
           <tfoot v-if="!lighterNoonReports?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="8">Loading...</td>
           </tr>
           <tr v-else-if="isTableLoading">
               <td colspan="8">

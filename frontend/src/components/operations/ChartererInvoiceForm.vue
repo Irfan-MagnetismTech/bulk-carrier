@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
+      <business-unit-input v-model="form.business_unit" :page="'edit'"></business-unit-input>
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
@@ -478,7 +478,7 @@
       <table class="w-full whitespace-no-wrap" >
         <thead v-once>
               <tr class="w-full">
-                <th>Subtotal</th>
+                <th>Sub Total</th>
                 <th>Total Service Fee (Deduction)</th>
                 <th>Discount (Deduction)</th>
                 <th>Grand Total</th>
