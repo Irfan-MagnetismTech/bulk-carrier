@@ -26,21 +26,15 @@ export default function useMaterialCosting() {
     const materialCosting = ref( {
         ref_no: '',
         date: '',
+        scmPo: '',
+        scm_po_id: '',
         scmWarehouse: '',
         scm_warehouse_id: '',
-        department_id: '',
         acc_cost_center_id: '',
-        remarks: '',
-        business_unit: '',
-        scmSrLines: [
-            {
-                scmMaterial: '',
-                scm_material_id: '',
-                unit: '',
-                specification: '',
-                quantity: 0.0
-            }
-        ],
+        business_unit: null,
+        purchase_center: '',
+        total_allocateable: 0.0,
+        scmCostingLines: [],
     });
     const materialObject = {
         scmMaterial: '',
@@ -206,6 +200,20 @@ export default function useMaterialCosting() {
         }
     }
     
+    const fetchTry = async () => {
+        // const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+        try {
+            const { data, status } = await Api.get(`/${BASE}/fetch-try`);
+            return data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            // isLoading.value = false;
+        }
+    }
 
     return {
         materialCostings,
@@ -219,6 +227,7 @@ export default function useMaterialCosting() {
         deleteMaterialCosting,
         fetchSrWiseMaterials,
         srWiseMaterials,
+        fetchTry,
         materialObject,
         isTableLoading,
         isLoading,
