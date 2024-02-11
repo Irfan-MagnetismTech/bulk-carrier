@@ -2,10 +2,13 @@
 
 namespace Modules\SupplyChain\Entities;
 
+use App\Models\User;
 use App\Traits\UniqueKeyGenerator;
 use Illuminate\Database\Eloquent\Model;
+use Modules\SupplyChain\Entities\ScmVendor;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\SupplyChain\Entities\ScmVendorBillLine;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmVendorBill extends Model
@@ -13,7 +16,7 @@ class ScmVendorBill extends Model
     use HasFactory, UniqueKeyGenerator;
 
     protected $refKeyPrefix = 'VB';
-    
+
     protected $fillable = [
         'scm_vendor_id',
         'ref_no',
@@ -39,5 +42,15 @@ class ScmVendorBill extends Model
     public function scmVendorBillLines(): HasMany
     {
         return $this->hasMany(ScmVendorBillLine::class);
+    }
+
+    public function scmVendor(): BelongsTo
+    {
+        return $this->belongsTo(ScmVendor::class);
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by', 'id');
     }
 }

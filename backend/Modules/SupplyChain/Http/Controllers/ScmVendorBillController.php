@@ -21,7 +21,7 @@ class ScmVendorBillController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $vendorBills = ScmVendorBill::with('scmVendorBillLines.scmMaterial', 'scmWarehouse', 'createdBy', 'scmSis')
+            $vendorBills = ScmVendorBill::with('scmVendorBillLines.scmMrr', 'scmVendorBillLines.scmPo', 'scmVendorBillLines.scmLcRecord', 'scmVendor', 'createdBy')
                 ->globalSearch($request->all());
 
             return response()->success('Data list', $vendorBills, 200);
@@ -63,7 +63,7 @@ class ScmVendorBillController extends Controller
     public function show(ScmVendorBill $vendorBill): JsonResponse
     {
         try {
-            return response()->success('data', $vendorBill->load('scmVendorBillLines.scmMaterial', 'scmWarehouse', 'createdBy'), 200);
+            return response()->success('data', $vendorBill->load('scmVendorBillLines.scmMrr', 'scmVendorBillLines.scmPo', 'scmVendorBillLines.scmLcRecord', 'scmVendor', 'createdBy'), 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
