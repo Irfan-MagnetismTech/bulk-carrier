@@ -17,7 +17,7 @@ class OpsExpenseHeadRequest extends FormRequest
         // dd($this);
         return [
             'billing_type'  => ['nullable', 'string', 'max:255'],
-            'head_id'       => 'nullable|numeric|max:50|exists:ops_expense_heads,id',
+            'head_id'       => 'nullable|exists:ops_expense_heads,id',
             // 'head_id'                       => ['nullable', 'numeric', 'max:50','exists:ops_expense_heads,id'],
             'name'          => [
                 'required',

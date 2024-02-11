@@ -14,8 +14,8 @@ class OpsLighterNoonReportRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ops_vessel_id'         => ['required', 'max:20'],
-            'ops_voyage_id'         => ['nullable', 'max:20'],
+            'ops_vessel_id'         => ['required','exists:ops_vessels,id'],
+            'ops_voyage_id'         => ['nullable','exists:ops_voyages,id'],
             'ship_master'           => ['required', 'string', 'max:255'],
             'chief_engineer'        => ['required', 'string', 'max:255'],
             'noon_position'         => ['required', 'string', 'max:255'],
@@ -39,6 +39,8 @@ class OpsLighterNoonReportRequest extends FormRequest
     {
         return [
             'ops_vessel_id.required' => 'Vessel is required.',
+            'ops_vessel_id.exists' => 'Vessel is not valid.',
+            'ops_voyage_id.exists' => 'Voyage is not valid.',
             'ship_master.required' => 'Ship master is required.',
             'ship_master.max' =>  'Ship master may not be greater than :max characters.',
             'chief_engineer.required' => 'Chief engineer is required.',

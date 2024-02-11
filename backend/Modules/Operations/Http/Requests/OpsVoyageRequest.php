@@ -15,10 +15,10 @@ class OpsVoyageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'ops_customer_id'       => ['required'],
-            'ops_vessel_id'         => ['required'],
+            // 'ops_customer_id'       => ['required','exists:ops_customers,id'],
+            'ops_vessel_id'         => ['required','exists:ops_vessels,id'],
             'mother_vessel'         => ['nullable'],
-            'ops_cargo_type_id'     => ['required'],
+            'ops_cargo_type_id'     => ['required','exists:ops_cargo_types,id'],
             'voyage_no' 	        => ['required',Rule::unique('ops_voyages')->where('ops_vessel_id',$this->ops_vessel_id)->ignore($this->route('voyage'), 'id')],
             'voyage_sequence' 	    => ['required',Rule::unique('ops_voyages')->where('ops_vessel_id',$this->ops_vessel_id)->ignore($this->route('voyage'), 'id')],
             'route'                 => ['required', 'max:255'],
@@ -38,19 +38,22 @@ class OpsVoyageRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'ops_customer_id.required' => 'Customer Name is required',
-            'ops_vessel_id.required' => 'Vessel is required',
-            'ops_cargo_type_id.required' => 'Cargo Type is required',    
-            'voyage_no.required' => 'Voyage No. is required',
+            'ops_customer_id.required' => 'Customer Name is required.',
+            'ops_customer_id.exists' => 'Customer Name is not valid.',
+            'ops_vessel_id.required' => 'Vessel is required.',
+            'ops_vessel_id.exists' => 'Vessel is not valid.',
+            'ops_cargo_type_id.required' => 'Cargo Type is required.',    
+            'ops_cargo_type_id.exists' => 'Cargo Type is not valid.',    
+            'voyage_no.required' => 'Voyage No. is required.',
             'voyage_no.unique' => 'Voyage No. is already taken to this vessel.',
-            'voyage_sequence.required' => 'Voyage sequence is required',
+            'voyage_sequence.required' => 'Voyage sequence is required.',
             'voyage_sequence.unique' => 'Voyage sequence is already taken to this vessel.',
-            'route.required' => 'Route is required',
+            'route.required' => 'Route is required.',
             'route.max' => 'Route may not be greater than :max characters.',
-            'load_port_distance.required' => 'Load Port Distance (NM) is required',
+            'load_port_distance.required' => 'Load Port Distance (NM) is required.',
             'load_port_distance.max' => 'Load Port Distance (NM) may not be greater than :max characters.',
-            'sail_date.required' => 'Sail Date is required',
-            'transit_date.required' => 'Transit Date is required',
+            'sail_date.required' => 'Sail Date is required.',
+            'transit_date.required' => 'Transit Date is required.',
             'remarks.max' => 'Remarks may not be greater than :max characters.',
         ];
     }

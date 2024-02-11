@@ -23,7 +23,7 @@ class OpsVesselParticularRequest extends FormRequest
     public function rules(): array
     {
         return [  
-            'ops_vessel_id'     => ['nullable', 'numeric','max:50', Rule::unique('ops_vessel_particulars')->ignore($this->route('vessel_particular'), 'id')],
+            'ops_vessel_id'     => ['nullable','exists:ops_vessels,id', Rule::unique('ops_vessel_particulars')->ignore($this->route('vessel_particular'), 'id')],
             'short_code'        => ['nullable', 'string','max:20', Rule::unique('ops_vessel_particulars')->ignore($this->route('vessel_particular'), 'id')],
             'vessel_type'       => ['nullable', 'string', 'max:255'],
             'class_no'          => ['nullable', 'string', 'max:255'],
@@ -65,6 +65,7 @@ class OpsVesselParticularRequest extends FormRequest
         return [
             'ops_vessel_id.required' => 'Vessel is required.',
             'ops_vessel_id.unique' => 'Vessel is already taken.',
+            'ops_vessel_id.exists' => 'Vessel is not valid.',
             'short_code.unique' => 'Vessel short code is already taken.',
             'depth.numeric' => 'Depth must be numeric.',
             'loa.numeric' => 'LOA must be numeric.',

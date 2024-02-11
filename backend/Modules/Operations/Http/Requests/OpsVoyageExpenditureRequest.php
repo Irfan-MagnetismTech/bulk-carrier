@@ -33,6 +33,7 @@ class OpsVoyageExpenditureRequest extends FormRequest
             'expense_json'          => ['nullable', 'string'],
             'date'                  => ['nullable', 'date'],
             'business_unit'         => ['required', 'string', 'max:255'],
+            'attachment'        =>'nullable|mimes:pdf,doc,docx,jpeg,png,gif,xlsx|max:2048', 
 
             'opsVoyageExpenditureEntries.*.ops_voyage_id'   => ['required', 'exists:ops_voyages,id'],
             'opsVoyageExpenditureEntries.*.ops_voyage_expenditure_id'   => ['required', 'exists:ops_voyage_expenditures,id'],
@@ -69,6 +70,9 @@ class OpsVoyageExpenditureRequest extends FormRequest
             'grand_total_bdt.required'   => 'Grand total (BDT) is required',
             'grand_total_bdt.numeric'   => 'Grand total (BDT) must be numeric',
             'date.date' => 'Date must be a date.',
+            'attachment.mimes' => 'Attachment must be an excel file of type: pdf,doc,docx,jpeg,png,gif,xlsx.',
+            'attachment.max' => 'Attachment should not exceed 2048 kilobytes (2 MB).',
+
 
             'opsVoyageExpenditureEntries.*.ops_voyage_id.required' => 'Voyage is required for row is :position.',
             'opsVoyageExpenditureEntries.*.ops_voyage_id.exists'   => 'Voyage is not valid for row is :position.',

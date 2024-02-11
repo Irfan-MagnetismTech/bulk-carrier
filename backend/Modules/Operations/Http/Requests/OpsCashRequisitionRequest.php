@@ -45,14 +45,15 @@ class OpsCashRequisitionRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'date.required' => 'Date is required',
-            'requisition_by.required' => 'Requisiton by is required',
-            'serial.required' => 'Serial no is required',
-            'amount.required' => 'Amount is required',
-            'amount_in_words.required' => 'Amount in words is required',
-            'salary_unit.required' => 'Salary unit is required',
-            'mobile_no.required' => 'Mobile no is required',
-            'mobile_no.digits_between' => 'Mobile no must be between :min and :max characters',
+            'date.required' => 'Date is required.',
+            'date.date' => 'Date must be a date.',
+            'requisition_by.required' => 'Requisiton by is required.',
+            'serial.required' => 'Serial no is required.',
+            'amount.required' => 'Amount is required.',
+            'amount_in_words.required' => 'Amount in words is required.',
+            'salary_unit.required' => 'Salary unit is required.',
+            'mobile_no.required' => 'Mobile no is required.',
+            'mobile_no.digits_between' => 'Mobile no must be between :min and :max characters.',
         ];
     }
 

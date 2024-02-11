@@ -19,8 +19,8 @@ class OpsChartererInvoiceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ops_charterer_profile_id'      => ['required', 'numeric', 'max:20'],
-            'ops_charterer_contract_id'     => ['required', 'numeric'],
+            'ops_charterer_profile_id'      => ['required','exists:ops_charterer_profiles,id'],
+            'ops_charterer_contract_id'     => ['required','exists:ops_charterer_contracts,id'],
             // 'ops_voyage_id'                 => 'required_if:contract_type,==,Voyage Wise|nullable|max:20',
             'contract_type'                 => ['nullable', 'string', 'max:255'],
             'bill_from'                     => 'required_if:contract_type,==,Day Wise|nullable',
@@ -33,7 +33,7 @@ class OpsChartererInvoiceRequest extends FormRequest
             // 'discount_unit'                 => ['required', 'string'],
             'discounted_amount'             => ['nullable', 'numeric'],
             'grand_total'                   => ['required', 'numeric'],
-            'opsChartererInvoiceVoyages.*.ops_voyage_id' => 'required_if:contract_type,==,Voyage Wise|nullable|max:20',
+            'opsChartererInvoiceVoyages.*.ops_voyage_id' => 'required_if:contract_type,==,Voyage Wise|nullable|max:20|exists:ops_voyages,id',
             // 'business_unit'                 => ['required', 'string', 'max:255'],
         ];
     }
@@ -47,10 +47,13 @@ class OpsChartererInvoiceRequest extends FormRequest
     {
         return [
             'ops_charterer_profile_id.required' => 'Charterer name  is required',
+            'ops_charterer_profile_id.exists' => 'Charterer is not valid',
             'ops_charterer_contract_id.required' => 'Charterer owner code is required',
+            'ops_charterer_contract_id.exists' => 'Charterer owner code is not valid',
             'contract_type.required' => 'Contract type is required',
             'bill_from.required' => 'Contract type is required',
             'opsChartererInvoiceVoyages.*.ops_voyage_id.required_if' => 'Voyage is required for row :position.',
+            'opsChartererInvoiceVoyages.*.ops_voyage_id.exists' => 'Voyage is not valid for row :position.',
         ];
     }
 

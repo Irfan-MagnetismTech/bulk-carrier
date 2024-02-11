@@ -27,8 +27,8 @@ class OpsChartererContractRequest extends FormRequest
         return [
             'contract_type'                 => ['required', 'string', 'max:255'],
             'contract_name'                 => ['required','string', 'max:255', Rule::unique('ops_charterer_contracts')->where('ops_charterer_profile_id',$this->ops_charterer_profile_id)->ignore($this->route('charterer_contract'), 'id')],
-            'ops_vessel_id'                 => ['required', 'numeric'],
-            'ops_charterer_profile_id'      => ['nullable', 'numeric'],
+            'ops_vessel_id'                 => ['required','exists:ops_vessels,id'],
+            'ops_charterer_profile_id'      => ['nullable','exists:ops_charterer_profiles,id'],
             'country'                       => ['required', 'string', 'max:255'],
             'address'                       => ['required', 'string', 'max:255'],
             'billing_address'               => ['required', 'string', 'max:255'],
@@ -64,7 +64,9 @@ class OpsChartererContractRequest extends FormRequest
             'contract_name.unique' => 'Contract name is already taken to this charterer.',
             'contract_name.max' => 'Contract name may not be greater than :max characters.',
             'ops_vessel_id.required' => 'Vessel is required.',
+            'ops_vessel_id.exists' => 'Vessel is not valid.',
             'ops_charterer_profile_id.required' => 'Charterer is required.',
+            'ops_charterer_profile_id.exists' => 'Charterer is not valid.',
             'country.required' => 'Country is required.',
             'country.max' => 'Country may not be greater than :max characters.',
             'address.required' => 'Address is required.',
@@ -81,6 +83,7 @@ class OpsChartererContractRequest extends FormRequest
             'routing_no.max' => 'Routing No may not be greater than :max characters.',
             'currency.max' => 'Currency may not be greater than :max characters.',
             'status.max' => 'Status not be greater than :max characters.',
+            
             'attachment.mimes' => 'Attachment must be a file allowed types are pdf,doc,docx,jpeg,png,gif,xlsx.',
             'attachment.max'   => 'Attachment should not exceed 2048 kilobytes (2 MB).',
         ];

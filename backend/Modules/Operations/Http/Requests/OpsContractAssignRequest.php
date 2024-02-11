@@ -20,13 +20,13 @@ class OpsContractAssignRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ops_vessel_id'             => ['required', 'max:20'],
-            'ops_voyage_id'             => ['required', 'max:20',Rule::unique('ops_contract_assigns')->ignore($this->route('contract_assign'), 'id')],
-            'ops_charterer_contract_id' => 'required_if:contract_assign_type,==,Charterer|nullable|max:20',
-            'ops_charterer_profile_id'  => 'required_if:contract_assign_type,==,Charterer|nullable|max:20',
-            'ops_customer_id'           => 'required_if:contract_assign_type,==,Customer|nullable|max:20',
+            'ops_vessel_id'             => ['required', 'exists:ops_vessels,id'],
+            'ops_voyage_id'             => ['required', 'exists:ops_voyages,id',Rule::unique('ops_contract_assigns')->ignore($this->route('contract_assign'), 'id')],
+            'ops_charterer_contract_id' => 'required_if:contract_assign_type,==,Charterer|nullable|max:20|exists:ops_charterer_contracts,id',
+            'ops_charterer_profile_id'  => 'required_if:contract_assign_type,==,Charterer|nullable|max:20|exists:ops_charterer_profiles,id',
+            'ops_customer_id'           => 'required_if:contract_assign_type,==,Customer|nullable|max:20|exists:ops_customers,id',
             'assign_date'               => ['required'],
-            'opsVoyage.opsContractTariffs.*.ops_cargo_tariff_id'    =>  'required_if:contract_assign_type,==,Customer|nullable|max:20',
+            'opsVoyage.opsContractTariffs.*.ops_cargo_tariff_id'    =>  'required_if:contract_assign_type,==,Customer|nullable|max:20|exists:ops_cargo_tariffs,id',
         ];
     }
 
@@ -39,13 +39,19 @@ class OpsContractAssignRequest extends FormRequest
     {
         return [
             'ops_vessel_id.required' => 'Vessel is required.',
+            'ops_vessel_id.exists' => 'Vessel is not valid.',
             'ops_voyage_id.unique' => 'Voyage is already taken.',
             'ops_voyage_id.required' => 'Voyage is required.',
+            'ops_voyage_id.exists' => 'Voyage is not valid.',
             'ops_charterer_profile_id.required' => 'Charterer is required.',
+            'ops_charterer_profile_id.exists' => 'Charterer is not valid.',
             'ops_charterer_contract_id.required' => 'Charterer Contract is required.',
+            'ops_charterer_contract_id.exists' => 'Charterer Contract is not valid.',
             'ops_customer_id.required' => 'Customer is required.',
+            'ops_customer_id.exists' => 'Customer is not valid.',
             'assign_date.required' => 'Assign Date is required.',
             'opsVoyage.opsContractTariffs.*.ops_cargo_tariff_id.required_if' => 'Cargo Tarrif can not be null.',
+            'opsVoyage.opsContractTariffs.*.ops_cargo_tariff_id.exists' => 'Cargo Tarrif is not valid.',
         ];
     }
 

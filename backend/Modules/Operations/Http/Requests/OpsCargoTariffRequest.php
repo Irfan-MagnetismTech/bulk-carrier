@@ -19,10 +19,10 @@ class OpsCargoTariffRequest extends FormRequest
         // dd(count($this->opsCargoTariffLines));
         return [
             'tariff_name'       => ['required', 'string', 'max:255',Rule::unique('ops_cargo_tariffs')->ignore($this->route('cargo_tariff'), 'id')],
-            'ops_vessel_id'     => ['required', 'numeric', 'max:50'],
+            'ops_vessel_id'     => ['required','exists:scm_vessels,id'],
             'loading_point'     => ['required', 'string', 'max:255'],
             'unloading_point'   => ['required', 'string', 'max:255','different:loading_point'],
-            'ops_cargo_type_id' => ['required', 'numeric', 'max:50'],
+            'ops_cargo_type_id' => ['required','exists:ops_cargo_types,id'],
             'currency'          => ['required', 'string', 'max:255'],
             'status'            => ['required', 'string', 'max:50'],
             'business_unit'     => ['required', 'string', 'max:255'],
@@ -56,7 +56,9 @@ class OpsCargoTariffRequest extends FormRequest
             'tariff_name.required' => 'Tariff name is required.',
             'tariff_name.max' => 'Tariff name may not be greater than :max characters.',
             'ops_vessel_id.required' => 'Vessel is required.',
+            'ops_vessel_id.exists' => 'Vessel is not valid.',
             'ops_cargo_type_id.required' => 'Cargo type is required.',
+            'ops_cargo_type_id.exists' => 'Cargo type is not valid.',
             'loading_point.required' => 'Loading point is required.',
             'loading_point.max' => 'Loading point may not be greater than :max characters.',
             'unloading_point.required' => 'Unloading point is required.',

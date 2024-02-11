@@ -24,8 +24,8 @@ class OpsVoyageBoatNoteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ops_voyage_id'      => ['required', Rule::unique('ops_voyage_boat_notes')->ignore($this->route('voyage_boat_note'), 'id')],
-            'ops_vessel_id'      => ['required'],
+            'ops_voyage_id'      => ['required','exists:ops_voyages,id', Rule::unique('ops_voyage_boat_notes')->ignore($this->route('voyage_boat_note'), 'id')],
+            'ops_vessel_id'      => ['required','exists:ops_vessels,id'],
             'type'               => ['nullable'],
             'vessel_draft'       => ['nullable', 'numeric'],
             'water_density'      => ['nullable', 'numeric'],
@@ -44,8 +44,10 @@ class OpsVoyageBoatNoteRequest extends FormRequest
     {
         return [
             'ops_voyage_id.required' => 'Voyage is required.',
+            'ops_voyage_id.exists' => 'Voyage is not valid.',
             'ops_voyage_id.unique' => 'Voyage is already taken.',
             'ops_vessel_id.required' => 'Vessel is required.',
+            'ops_vessel_id.exists' => 'Vessel is not valid.',
             'vessel_draft.numeric' => 'Draft must be numeric.',
             'water_density.numeric' => 'Density must be numeric.',
 

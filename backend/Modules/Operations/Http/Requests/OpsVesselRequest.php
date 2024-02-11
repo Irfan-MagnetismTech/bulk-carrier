@@ -56,8 +56,8 @@ class OpsVesselRequest extends FormRequest
             'dry_docking_months' => ['required', 'numeric'],
             'status' => ['required'],
             'remarks'         => ['nullable', 'string', 'max:500'],
-            'opsVesselCertificates.*.ops_maritime_certification_id' => ['nullable', 'numeric', 'max:255', 'distinct'],           
-            'opsBunkers.*.scm_material_id' => ['nullable', 'numeric', 'max:255', 'distinct'],
+            'opsVesselCertificates.*.ops_maritime_certification_id' => ['nullable','exists:ops_maritime_certifications,id', 'distinct'],           
+            'opsBunkers.*.scm_material_id' => ['nullable','exists:scm_materials,id', 'distinct'],
             'opsBunkers.*.unit' => ['nullable', 'string', 'max:255'],
             // 'opsBunkers.*.opening_balance' => ['nullable', 'numeric'],
         ];
@@ -116,7 +116,9 @@ class OpsVesselRequest extends FormRequest
             'remarks.max' => 'Remarks may not be greater than :max characters.',
 
             'opsVesselCertificates.*.ops_maritime_certification_id.distinct' => 'Certificate cannot be duplicate. Error encountered in row :position',
+            'opsVesselCertificates.*.ops_maritime_certification_id.exists' => 'Certificate is not valid in row :position',
             'opsBunkers.*.scm_material_id.distinct' => 'Bunker cannot be duplicate. Error encountered in row :position.',
+            'opsBunkers.*.scm_material_id.exists' => 'Bunker is not valid in row :position.',
             // 'opsBunkers.*.unit.max' => 'Unit not be greater than :max characters for row is :position.',            
             // 'opsBunkers.*.opening_balance.integer' => 'Opening balance must be an integer for row is :position.',
             // 'opsBunkers.*.opening_balance.max' => 'Opening balance must not exceed :max for row is :position.',

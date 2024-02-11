@@ -14,8 +14,8 @@ class OpsHandoverTakeoverRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ops_vessel_id'             => ['required'],
-            'ops_charterer_profile_id'  => ['required'],
+            'ops_vessel_id'             => ['required','exists:ops_voyages,id'],
+            'ops_charterer_profile_id'  => ['required','exists:ops_charterer_profiles,id'],
             'note_type'                 => ['required', 'string', 'max:255'],
             'effective_date'            => ['required', 'string', 'max:255'],
             // 'exchange_rate'             => ['required', 'numeric'],
@@ -33,7 +33,9 @@ class OpsHandoverTakeoverRequest extends FormRequest
     {
         return [
             'ops_vessel_id.required' => 'Vessel is required.',
+            'ops_vessel_id.exists' => 'Vessel is not valid.',
             'ops_charterer_profile_id.required' => 'Charterer is required.',
+            'ops_charterer_profile_id.exists' => 'Charterer is not valid.',
             'note_type.required' => 'Note type is required.',
             'note_type.max' => 'Note type may not be greater than :max characters.',
             'effective_date.required' => 'Effective date is required.',
