@@ -371,7 +371,7 @@
       <table class="w-full whitespace-no-wrap" >
         <thead v-once>
               <tr class="w-full">
-                <th>Subtotal</th>
+                <th>Sub Total</th>
                 <th>Total Service Fee (Deduction)</th>
                 <th>Discount (Deduction)</th>
                 <th>Grand Total</th>
