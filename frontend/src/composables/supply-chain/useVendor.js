@@ -188,7 +188,7 @@ export default function useVendor() {
         isMrrLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`${BASE}/search-vendor-mrrs`, {params: { searchParam: searchParam }});
+            const { data, status } = await Api.get(`${BASE}/get-vendor-wise-mrr`, {params: { scm_vendor_id: scmVendorId }});
             scmVendorMrrs.value = data.value;
             notification.showSuccess(status);
         } catch (error) {

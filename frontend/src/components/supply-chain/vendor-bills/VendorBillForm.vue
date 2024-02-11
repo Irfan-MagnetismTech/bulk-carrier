@@ -48,7 +48,7 @@
   <div class="input-group">
     <label for="" class="label-group">
       <span class="label-item-title">Currency <span class="text-red-500">*</span></span>
-      <v-select :options="currencies" :loading="isCurrencyLoading" placeholder="--Choose an option--" v-model="form.currency" class="block form-input">
+      <v-select :options="currencies" @update:modelValue="currencyChange" :loading="isCurrencyLoading" placeholder="--Choose an option--" v-model="form.currency" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -61,11 +61,11 @@
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700"><nobr>Exchange Rate</nobr> (To USD)</span>
-      <input type="text" v-model="form.exchange_rate_usd" placeholder="Exchange Rate" class="form-input" autocomplete="off" :readonly="isUSDCurrency()"/>
+      <input type="text" @input="redoFullCalculation" v-model="form.exchange_rate_usd" placeholder="Exchange Rate" class="form-input" autocomplete="off" :readonly="isUSDCurrency()"/>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700"><nobr>Exchange Rate</nobr> (USD To BDT)</span>
-      <input type="text" v-model="form.exchange_rate_bdt" placeholder="Exchange Rate" class="form-input" autocomplete="off" :readonly="isBDTCurrency()"/>
+      <input type="text" @input="redoFullCalculation" v-model="form.exchange_rate_bdt" placeholder="Exchange Rate" class="form-input" autocomplete="off" :readonly="isBDTCurrency()"/>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700">Upload File </span>
@@ -89,7 +89,7 @@
             <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
               <th class="py-3 align-center">MRR No <span class="text-red-500">*</span></th>
               <th class="py-3 align-center">Challan No</th>
-              <th class="py-3 align-center">PO No / LC No</th>
+              <th class="py-3 align-center">PO No</th>
               <th class="py-3 align-center">Amount <span class="text-red-500">*</span></th>
               <th class="py-3 align-center">Amount USD</th>
               <th class="py-3 align-center">Amount BDT</th>
@@ -105,8 +105,8 @@
 
             <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
               <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(billLine, index) in form.scmVendorBillLines" :key="index">
-                <td class="!w-72">
-                  <v-select :options="scmVendorMrrs" :loading="isMrrLoading" placeholder="--Choose an option--" v-model="form.scmVendorBillLines[index]" class="block form-input">
+                <td class="!w-56 relative">
+                  <v-select :options="scmVendorMrrs" @update:modelValue="setScmVendorMrrId(index)" :loading="isMrrLoading" label="ref_no" placeholder="--Choose an option--" v-model="form.scmVendorBillLines[index]" class="block form-input">
                       <template #search="{attributes, events}">
                           <input
                               class="vs__search"
@@ -116,23 +116,30 @@
                               />
                       </template>
                   </v-select>
+                  <input type="hidden" v-model="form.scmVendorBillLines[index].scm_vendor_mrr_id" />
+                  <span v-show="form.scmVendorBillLines[index].isMrrDuplicate" class="text-yellow-600 absolute top-5 right-12 " title="Duplicate Warning" v-html="icons.ExclamationTriangle"></span>
+
                 </td>
-                <td>
+                <td class="!w-32">
                   <label class="block w-full mt-2 text-sm">
-                    <input type="text" readonly v-model="form.scmVendorBillLines[index].challan_no" class="vms-readonly-input form-input">
+                    <span class="vms-readonly-input form-input show-block !bg-[#e7e6e6]">
+                      <nobr>{{ form.scmVendorBillLines[index]?.challan_no }}</nobr>
+                    </span>
                   </label>
                   
                 </td>
               
-                <td>
+                <td class="!w-32">
                   <label class="block w-full mt-2 text-sm">
-                    <input type="text" readonly v-model="form.scmVendorBillLines[index].po_no" class="vms-readonly-input form-input">
+                    <span class="vms-readonly-input form-input show-block !bg-[#e7e6e6]">
+                      <nobr>{{ form.scmVendorBillLines[index]?.scmPo?.ref_no }}</nobr>
+                    </span>
                   </label>
                   
                 </td>
                 <td>
                   <label class="block w-full mt-2 text-sm">
-                    <input type="number" required v-model="form.scmVendorBillLines[index].amount" class="form-input !text-right" min="1">
+                    <input type="number" @input="calculateSingleItem(index)" required v-model="form.scmVendorBillLines[index].amount" class="form-input !text-right" min="1">
                   </label>
                 </td>
                 <td>
@@ -172,7 +179,7 @@
                   Discount
                 </td>
                 <td>
-                    <input type="number" v-model="form.discount" placeholder="Discount" class="!text-right form-input" autocomplete="off" />
+                    <input type="number" @input="CalculateAll" v-model="form.discount" placeholder="Discount" class="!text-right form-input" autocomplete="off" />
                 </td>
                 <td></td>
               </tr>
@@ -211,15 +218,19 @@
     import env from '../../../config/env';
     import cloneDeep from 'lodash/cloneDeep';
     import useBusinessInfo from "../../../composables/useBusinessInfo"
+    import useHeroIcon from "../../../assets/heroIcon";
+    import Swal from "sweetalert2";
 
 
-    const { vendors, searchVendor, searchMrrByVendor, isLoading } = useVendor();
+    const icons = useHeroIcon();
+    const { vendors, searchVendor, scmVendorMrrs, searchMrrByVendor, isLoading, isMrrLoading } = useVendor();
     const { warehouses, searchWarehouse } = useWarehouse();
     const { getCurrencies, currencies, isCurrencyLoading } = useBusinessInfo();
 
 
     const props = defineProps({
       form: { type: Object, required: true },
+      billLineObject: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
       formType: { type: String, required : false },
       page: {required: false, default: {} },
@@ -231,7 +242,7 @@
     };
 
     function addMrr() {
-      props.form.scmVendorBillLines.push({});
+      props.form.scmVendorBillLines.push({...props.billLineObject});
     }
 
     function removeMrr(index){
@@ -279,40 +290,90 @@
 
   watch(() => props.form.scmVendor, (value) => {
         props.form.scm_vendor_id = value?.id ?? null;
+        fetchMrrByVendor()
   });
 
   watch(() => props.form.scmWarehouse, (value) => {
         props.form.scm_warehouse_id = value?.id ?? null;
   });
 
-  watch(() => props.form.scmSrLines, (newLines) => {
 
-//   const materialArray = [];
-//   if (newLines) {
-//   newLines.forEach((line, index) => {
-//     // const previousLine = previousLines.value[index];
-//     let material_key = line.scm_material_id;
-//     if (materialArray.indexOf(material_key) === -1) {
-//       materialArray.push(material_key);
-//     } else {
-//       alert("Duplicate Material Found");
-//       props.form.scmSrLines.splice(index, 1);
-//     } 
-//     if (line.scmMaterial) {
-//       const selectedMaterial = materials.value.find(material => material.id === line.scmMaterial.id);
-//       if (selectedMaterial) {
-//         if ( line.scm_material_id !== selectedMaterial.id
-//         ) {
-//           props.form.scmSrLines[index].unit = selectedMaterial.unit;
-//           props.form.scmSrLines[index].scm_material_id = selectedMaterial.id;
-//         }
-//       }
-//     }
-//   });
-// }
-  // previousLines.value = cloneDeep(newLines);
-}, { deep: true });
+const setScmVendorMrrId = (index) => {
+  props.form.scmVendorBillLines[index].scm_vendor_mrr_id = props.form.scmVendorBillLines[index]?.scmVendorMrr?.id
+}
 
+const redoFullCalculation = () => {
+  props?.form?.scmVendorBillLines.forEach((element, index) => {
+    calculateSingleItem(index);
+  });
+}
+
+const currencyChange = () => {
+  if(props.form.currency != '') {
+    props.form.exchange_rate_bdt = null;
+    props.form.exchange_rate_usd = null;
+    redoFullCalculation()
+  }
+}
+
+const calculateSingleItem = (index) => {
+
+  const { amount, amount_usd, amount_bdt } = calculateInCurrency(props.form.scmVendorBillLines[index]);
+
+  props.form.scmVendorBillLines[index].amount_usd = (amount_usd > 0) ? amount_usd : 0;
+  props.form.scmVendorBillLines[index].amount_bdt = (amount_bdt > 0) ? amount_bdt : 0;
+  props.form.scmVendorBillLines[index].amount = (amount > 0) ? amount : 0;
+
+  calculateSubTotal();
+}
+
+const calculateSubTotal = () => {
+  let sub_total = 0.00;
+
+  props?.form?.scmVendorBillLines.forEach(element => {
+      sub_total += (element.amount_bdt > 0) ? parseFloat(element.amount_bdt) : 0
+  });
+  console.log("calculating sub total", sub_total)
+
+  props.form.sub_total = parseFloat(sub_total).toFixed(2);
+
+  CalculateAll();
+}
+
+function CalculateAll() {
+ let net_amount = (props.form.sub_total * 1) - ((props.form.discount > 0) ? props.form.discount : 0);
+ props.form.net_amount = parseFloat((net_amount > 0) ? net_amount : 0).toFixed(2)
+}
+
+const calculateInCurrency = (item) => {
+  let currency = props.form.currency;
+  let toUsdRate = props.form.exchange_rate_usd
+  let toBdtRate = props.form.exchange_rate_bdt
+
+  if(currency == '') {
+    Swal.fire({
+                    icon: "",
+        title: "Correct Please!",
+        html: `Please choose a currency`,
+        customClass: "swal-width",
+    });
+    return false;
+  } else {
+    
+  }
+
+  if(currency == 'USD'){
+    item.amount_usd = parseFloat(item?.amount).toFixed(2);
+    item.amount_bdt = parseFloat(item?.amount * toBdtRate).toFixed(2);
+  } else if(currency == 'BDT'){
+    item.amount_usd = parseFloat(item?.amount * toUsdRate).toFixed(2);
+    item.amount_bdt = parseFloat(item?.amount).toFixed(2);
+  } else {
+    item.amount_usd = parseFloat(item?.amount * toUsdRate).toFixed(2);
+    item.amount_bdt = parseFloat(item?.amount * toUsdRate * toBdtRate).toFixed(2);
+  }
+  return {amount: (item.amount > 0) ? item.amount : 0, amount_usd: (item.amount_usd > 0) ? item.amount_usd : 0, amount_bdt: (item.amount_bdt > 0) ? item.amount_bdt : 0};
+}
 
   watch(() => props.form.business_unit, (newValue, oldValue) => {
     
