@@ -273,7 +273,6 @@ onMounted(() => {
           
           <tfoot v-if="!chartererProfiles?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="7">Loading...</td>
           </tr>
           <tr v-else-if="isTableLoading">
             <td colspan="7">

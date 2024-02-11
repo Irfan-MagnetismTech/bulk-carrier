@@ -191,7 +191,6 @@ onMounted(() => {
           
           <tfoot v-if="!vessels?.data?.length"  class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="9">Loading...</td>
           </tr>
           <tr v-else-if="isTableLoading">
               <td colspan="9">
