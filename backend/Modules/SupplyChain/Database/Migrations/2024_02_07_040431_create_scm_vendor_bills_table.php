@@ -15,8 +15,25 @@ return new class extends Migration
     {
         Schema::create('scm_vendor_bills', function (Blueprint $table) {
             $table->id();
-            $table->string('ref_no')->unique();
-            $table->date('date');
+            $table->bigInteger('scm_vendor_id')->nullable();
+            $table->string('ref_no')->nullable();
+            $table->date('date')->nullable();
+            $table->string('remarks')->nullable();
+            $table->string('attachment')->nullable();
+            $table->decimal('sub_total', 20, 2)->nullable();
+            $table->decimal('carring_cost', 20, 2)->nullable();
+            $table->decimal('loading_unloading', 20, 2)->nullable();
+            $table->decimal('clearence_charge', 20, 2)->nullable();
+            $table->decimal('port_charge', 20, 2)->nullable();
+            $table->decimal('grand_total', 20, 2)->nullable();
+            $table->decimal('discount', 20, 2)->nullable();
+            $table->decimal('net_amount', 20, 2)->nullable();
+            $table->string('business_unit')->comment('psml,tsll')->nullable();
+            $table->bigInteger('created_by')->comment('user_id')->nullable();
+            $table->tinyInteger('is_paid')->nullable();
+            $table->string('currency')->nullable();
+            $table->decimal('usd_to_bdt', 20, 2)->nullable();
+            $table->decimal('currency_to_usd', 20, 2)->nullable();
             $table->timestamps();
         });
     }
