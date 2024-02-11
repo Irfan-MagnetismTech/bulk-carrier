@@ -8,8 +8,7 @@ import Store from './../../store/index.js';
 import NProgress from 'nprogress';
 import { loaderSetting as LoaderConfig} from '../../config/setting.js';
 import useHelper from '../useHelper';
-
-
+import Swal from "sweetalert2";
 
 export default function useVendorBill() {
     const BASE = 'scm' 
@@ -23,6 +22,15 @@ export default function useVendorBill() {
     const notification = useNotification();
     // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
+    const billLineObject = {
+        scm_vendor_mrr_id : null,
+        challan_no : null,
+        ref_no : null,
+        amount : null,
+        amount_usd : null,
+        amount_bdt : null,
+    }
+
     const vendorBill = ref( {
         date: '',
         scmVendor: '',
@@ -35,7 +43,7 @@ export default function useVendorBill() {
         exchange_rate_usd: null,
         business_unit: '',
         attachment: '',
-        scmVendorBillLines: [],
+        scmVendorBillLines: [{...billLineObject}],
     });
 
     const errors = ref();
@@ -80,6 +88,8 @@ export default function useVendorBill() {
         }
     }
     async function storeVendorBill(form) {
+
+        if (!checkUniqueArray(form)) return;
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -195,9 +205,47 @@ export default function useVendorBill() {
     }
     
 
+    function checkUniqueArray(form) {
+
+        let isHasError = false;
+        const messages = ref([]);
+        const hasDuplicates = form.scmVendorBillLines.some((billLine, index) => {
+            if (form.scmVendorBillLines.filter(val => val.ops_expense_head_id === billLine.ops_expense_head_id)?.length > 1) {
+                let data = `Duplicate MRR [MRR Data line no: ${index + 1}]`;
+                messages.value.push(data);
+                form.scmVendorBillLines[index].isMrrDuplicate = true;
+            } else {
+                form.scmVendorBillLines[index].isMrrDuplicate = false;
+            }
+		});
+
+		if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
+        }
+	}
+
     return {
         vendorBills,
         vendorBill,
+        billLineObject,
         filteredVendorBills,
         searchVendorBill,
         getVendorBills,
