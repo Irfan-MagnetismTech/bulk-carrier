@@ -7,6 +7,7 @@ import Store from "../../store";
 import useAccountCommonApiRequest from "../../composables/accounts/useAccountCommonApiRequest";
 import ErrorComponent from '../utils/ErrorComponent.vue';
 import RemarksComponent from "../utils/RemarksComponent.vue";
+import { formatMonthYear, formatDate } from "../../utils/helper.js";
 import useHeroIcon from "../../assets/heroIcon";
 import useCashRequisition from "../../composables/accounts/useCashRequisition";
 const { vessels, searchVessels } = useVessel();
@@ -39,7 +40,7 @@ watch(() => props.form.acc_cash_requisition_id, (value) => {
 
 watch(() => cashRequisition.value, (value) => {
   if(value){
-    props.form.acc_requisition_date = value?.applied_date;
+    props.form.acc_requisition_date = formatDate(value?.applied_date);
     props.form.acc_requisition_amount = value?.total_amount;
     props.form.acc_cost_center_name = value?.costCenter?.name;
     props.form.acc_cost_center_id = value?.costCenter?.id;

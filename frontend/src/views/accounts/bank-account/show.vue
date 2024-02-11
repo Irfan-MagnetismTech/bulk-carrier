@@ -30,9 +30,13 @@ onMounted(() => {
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
       <div class="flex md:gap-4">
         <div class="w-full">
-          <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Bank Information</h2>
+          <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Basic Information</h2>
           <table class="w-full">
             <tbody>
+            <tr>
+              <th class="w-32">Business Unit</th>
+              <td><span :class="bankAccount?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ bankAccount?.business_unit }}</span></td>
+            </tr>
               <tr>
                 <th class="w-32">Bank Name</th>
                 <td>{{ bankAccount?.bank_name }}</td>
@@ -68,10 +72,6 @@ onMounted(() => {
               <tr>
                 <th class="w-32">Opening Balance</th>
                 <td>{{ bankAccount?.opening_balance }}</td>
-              </tr>
-              <tr>
-                <th class="w-32">Business Unit</th>
-                <td><span :class="bankAccount?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ bankAccount?.business_unit }}</span></td>
               </tr>
             </tbody>
           </table>

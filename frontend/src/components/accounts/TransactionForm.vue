@@ -224,10 +224,10 @@ onMounted(() => {
           <input type="text" v-model.trim="form.ledgerEntries[index].ref_bill" placeholder="Ref Bill" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
-          <input type="number" step=".01" v-model.trim="form.ledgerEntries[index].dr_amount" placeholder="Ex: 1500" required class="form-input" autocomplete="off" />
+          <input type="number" step=".01" v-model.trim="form.ledgerEntries[index].dr_amount" placeholder="Ex: 1500" required class="form-input text-right" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
-          <input type="number" step=".01" v-model.trim="form.ledgerEntries[index].cr_amount" placeholder="Ex: 1500" required class="form-input" autocomplete="off" />
+          <input type="number" step=".01" v-model.trim="form.ledgerEntries[index].cr_amount" placeholder="Ex: 1500" required class="form-input text-right" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
           <input type="text" v-model.trim="form.ledgerEntries[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
@@ -248,10 +248,10 @@ onMounted(() => {
       <tr class="text-gray-700 dark-disabled:text-gray-400">
         <td class="px-1 py-1 font-bold text-right" colspan="2">Total Amount</td>
         <td class="px-1 py-1 font-bold text-right">
-          <input type="text" v-model.trim="form.total_debit_amount" class="block w-full rounded form-input vms-readonly-input" readonly>
+          <input type="text" v-model.trim="form.total_debit_amount" class="block w-full rounded form-input text-right vms-readonly-input" readonly>
         </td>
         <td class="px-1 py-1 font-bold text-right">
-          <input type="text" v-model.trim="form.total_credit_amount" class="block w-full rounded form-input vms-readonly-input" readonly>
+          <input type="text" v-model.trim="form.total_credit_amount" class="block w-full rounded form-input text-right vms-readonly-input" readonly>
         </td>
         <td class="px-1 py-1 font-bold text-right" colspan="2"></td>
       </tr>

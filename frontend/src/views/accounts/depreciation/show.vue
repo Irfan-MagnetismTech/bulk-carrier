@@ -25,7 +25,7 @@ onMounted(() => {
 
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Depreciation Details  # {{depreciationId}} </h2>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Depreciation Details </h2>
     <default-button :title="'Depreciation List'" :to="{ name: 'acc.depreciations.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
@@ -59,9 +59,10 @@ onMounted(() => {
         <table class="w-full mt-2">
           <thead>
           <tr>
-            <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="6">Depreciation Line List </td>
+            <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="7">Depreciation Lines </td>
           </tr>
           <tr>
+            <th class="w-40 !text-center">#</th>
             <th class="w-40 !text-center">Asset Name</th>
             <th class="w-40 !text-center">Asset Tag</th>
             <th class="w-40 !text-center">Useful Life (Year)</th>
@@ -72,12 +73,13 @@ onMounted(() => {
           </thead>
           <tbody>
           <tr v-for="(depreciationLine, index) in depreciation?.accDepreciationLines" :key="index">
+            <td class="!text-center"> {{ index + 1 }} </td>
             <td class="text-left"> {{ depreciationLine?.accFixedAsset?.scmMaterial?.name }} </td>
             <td class="text-left"> {{ depreciationLine?.accFixedAsset?.asset_tag }} </td>
-            <td class="text-left"> {{ depreciationLine?.accFixedAsset?.useful_life }} </td>
-            <td class="text-left"> {{ depreciationLine?.accFixedAsset?.depreciation_rate }} </td>
-            <td class="text-left"> {{ depreciationLine?.accFixedAsset?.acquisition_cost }} </td>
-            <td class="text-left"> {{ depreciationLine?.amount }} </td>
+            <td class="!text-center"> {{ depreciationLine?.accFixedAsset?.useful_life }} </td>
+            <td class="!text-right"> {{ depreciationLine?.accFixedAsset?.depreciation_rate }} </td>
+            <td class="!text-right"> {{ depreciationLine?.accFixedAsset?.acquisition_cost }} </td>
+            <td class="!text-right"> {{ depreciationLine?.amount }} </td>
           </tr>
           </tbody>
         </table>
