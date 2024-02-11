@@ -12,9 +12,11 @@ class ScmVendorBillLine extends Model
     use HasFactory;
 
     protected $fillable = [
+        'scm_mrr_id',
         'scm_vendor_bill_id',
-        'ref_no',
-        'date'
+        'scm_po_id',
+        'scm_lc_record_id',
+        'amount',
     ];
 
     public function scmVendorBill(): BelongsTo
