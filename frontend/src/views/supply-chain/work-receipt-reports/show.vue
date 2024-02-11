@@ -28,6 +28,8 @@ function generate(){
     var htmlstring = '';
     var tempVarToCheckPageHeight = 0;
     var pageHeight = 0;
+    var pageNumber = doc.internal.getNumberOfPages();
+    console.log("pageNumber=|>",pageNumber);
     pageHeight = doc.internal.pageSize.height;
 
     // specialElementHandlers = {
@@ -53,13 +55,21 @@ function generate(){
             console.log("res" , res);
             console.log("col" , res.columns);
             console.log("data" , res.data);
-            doc.autoTable( {
-                head: [[{content: res.columns[0], colSpan: 2, styles: { halign: 'center' }}]],
-                body: res.data,
-                margin: {
+            // doc.autoTable( {
+            //     head: [[{content: res.columns[0], colSpan: 2, styles: { halign: 'center' }}]],
+            //     body: res.data,
+            //     margin: {
+            //         top: 100
+            //     }
+            // });
+            doc.autoTable({ html: '#bascExample', margin: {
                     top: 100
-                }
-            });
+                }, useCss: true, showHead: 'firstPage', });
+                doc.setPage(pageNumber);
+            doc.autoTable({ html: '#bascExample2', margin: {
+                    top: 50
+                }, useCss: true });
+                
             // var res2 = doc.autoTableHtmlToJson(document.getElementById("bascExample2"), true);
             // doc.autoTable(res2.columns, res2.data, {
             //     margin: {
@@ -156,9 +166,9 @@ onMounted(() => {
           <div class="w-full mt-2">
             <table class="w-full" id="bascExample2">
                 <thead>
-                    <!-- <tr>
-                        <th class="!text-center font-bold bg-green-600 uppercase text-white" colspan="8">Work Receive Report Information</th>
-                    </tr> -->
+                    <tr>
+                        <th class="!text-center font-bold bg-green-600 uppercase text-white" colspan="8" style="text-align: center;">Work Receive Report Information</th>
+                    </tr>
                     
                     <tr>
                         <th class="!text-center">WR No.</th>

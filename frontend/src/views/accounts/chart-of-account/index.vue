@@ -173,6 +173,162 @@ onMounted(() => {
 
 });
 
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
+import env from "../../../config/env";
+
+
+function imgToBase64(url, callback) {
+    if (!window.FileReader) {
+      callback(null);
+      return;
+    }
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'blob';
+    xhr.onload = function() {
+      var reader = new FileReader();
+      reader.onloadend = function() {
+        callback(reader.result.replace('text/xml', 'image/jpeg'));
+      };
+      reader.readAsDataURL(xhr.response);
+    };
+    xhr.open('GET', url);
+    xhr.send();
+  }
+
+  var base64Img;
+
+  // Convert the image to base64
+  imgToBase64('../torony-logo.png', function(base64) {
+    base64Img = base64;
+  });
+
+function generate(){
+    var doc = new jsPDF('l', 'pt', "a4");
+    var htmlstring = '';
+    var tempVarToCheckPageHeight = 0;
+    var pageHeight = 0;
+    pageHeight = doc.internal.pageSize.height;
+
+    // specialElementHandlers = {
+    //             // element with id of "bypass" - jQuery style selector
+    //             '#bypassme': function(element, renderer) {
+    //                 // true = "handled elsewhere, bypass text extraction"
+    //                 return true
+    //             }
+    //         };
+           var margins = {
+                top: 250,
+                bottom: 200,
+                left: 40,
+                right: 40,
+                width: 90
+            };
+            var y = 20;
+            doc.setLineWidth(2);
+              var pageSize = doc.internal.pageSize;
+                  var width = pageSize.width ? pageSize.width : pageSize.getWidth();
+                  var height = pageSize.height ? pageSize.height : pageSize.getHeight();
+                  if (base64Img) {
+                    doc.addImage(base64Img, 'JPEG', width/2 - 40, 5, 80, 80);
+                  }
+            // doc.text(330, y = y + 100, "Cash Book By Incomehead");
+            var text = "Cash Book By";
+    
+            // var xOffset = (doc.internal.pageSize.width / 2) - (doc.getStringUnitWidth(text) * doc.internal.getFontSize() / 2); 
+            doc.text((doc.internal.pageSize.width / 2) - (doc.getStringUnitWidth(text) * doc.internal.getFontSize() / 2), y = y + 100, text);
+            
+            // doc.setMargins(200, 300, 400, 500);
+            // doc.text(330, y = y + 30, " {!! $from_year !!} - {!! $to_year !!}");
+            
+            // var res = doc.autoTableHtmlToJson(document.getElementById("bascExample2"), true);
+            // console.log("res" , res);
+            // console.log("col" , res.columns);
+            // console.log("data" , res.data);
+            // doc.autoTable( {
+            //     head: [[{content: res.columns[0], colSpan: 2, styles: { halign: 'center' }}]],
+            //     body: res.data,
+            //     margin: {
+            //         top: 100
+            //     }
+            // });
+            var res = doc.autoTableHtmlToJson(document.getElementById('exampleTable'), true);
+            // var base64Img = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyBAMAAADsEZWCAAAAG1BMVEXMzMyWlpaqqqq3t7exsbGcnJy+vr6jo6PFxcUFpPI/AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAQUlEQVQ4jWNgGAWjgP6ASdncAEaiAhaGiACmFhCJLsMaIiDAEQEi0WXYEiMCOCJAJIY9KuYGTC0gknpuHwXDGwAA5fsIZw0iYWYAAAAASUVORK5CYII='
+            var totalPagesExp = '{total_pages_count_string}'
+            doc.autoTable({ 
+              head: [res.columns.slice(0, -1)],
+              body: res.data,
+              theme: 'grid', 
+              // margin: {
+              //       top: 200
+              //   },
+              startY: 150,
+                headStyles: {
+                  fillColor : '#F2F2F7',
+                  lineWidth: 0.5,
+                  lineColor: '#E2E4E8',
+                  textColor: '#4c4f52',
+                  halign: 'center'
+
+              },
+                useCss: true, 
+                rowPageBreak: 'auto',
+                didDrawPage: function(data) {
+                  // image start
+                  // var pageSize = doc.internal.pageSize;
+                  // var width = pageSize.width ? pageSize.width : pageSize.getWidth();
+                  // var height = pageSize.height ? pageSize.height : pageSize.getHeight();
+                  // if (base64Img) {
+                  //   doc.addImage(base64Img, 'JPEG', width/2 - 20, 5, 80, 80);
+                  // }
+                  // image end
+                  // Footer
+      var str = 'Page ' + doc.internal.getNumberOfPages()
+      // Total page number plugin only available in jspdf v1.0+
+      if (typeof doc.putTotalPages === 'function') {
+        str = str + ' of ' + totalPagesExp
+      }
+      doc.setFontSize(10)
+
+      // jsPDF 1.4+ uses getHeight, <1.4 uses .height
+      var pageSize = doc.internal.pageSize
+      var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight()
+      doc.text(str, data.settings.margin.left, pageHeight - 10)
+                },
+                willDrawCell: function (data) {
+                  if (data.row.section === 'head') {
+                    // if (data.cell.raw > 750) {
+                    //   doc.setTextColor(231, 76, 60) // Red
+                    // }
+                    if (data.pageCount > 1) {
+                      return false;
+                    }
+                  }
+                  if (data.row.section === 'body' ) {
+                    console.log("object", data.column);
+                    if(data.pageCount == 1){
+                      
+                    }
+                  }
+                },
+      });
+      if (typeof doc.putTotalPages === 'function') {
+    doc.putTotalPages(totalPagesExp)
+  }
+                
+            // doc.autoTable({ html: '#bascExample2', margin: {
+            //         top: 50
+            //     } });
+            // var res2 = doc.autoTableHtmlToJson(document.getElementById("bascExample2"), true);
+            // doc.autoTable(res2.columns, res2.data, {
+            //     margin: {
+            //         top: 20
+            //     }
+            // });
+            doc.save('cashbook.pdf');
+}
+
+
 </script>
 
 <template>
@@ -180,6 +336,7 @@ onMounted(() => {
   <div class="flex items-center justify-between w-full my-3">
     <h2 class="text-2xl font-semibold text-gray-700">Chart of Accounts List</h2>
     <default-button :title="'Create Chart of Accounts'" :to="{ name: 'acc.chart-of-accounts.create' }" :icon="icons.AddIcon"></default-button>
+    <button @click="generate">Generate</button>
   </div>
 <!--  <div class="flex items-center justify-between mb-2 select-none">-->
 <!--    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>-->
@@ -197,7 +354,7 @@ onMounted(() => {
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap"  id="exampleTable">
           <thead>
             <tr class="w-full">
               <th class="w-16">
