@@ -14,7 +14,7 @@ export default function useChartererInvoice() {
 	const notification = useNotification();
 
 	const chartererInvoice = ref({
-		business_unit: null,
+		business_unit: 'PSML',
 		ops_charterer_profile_id: null,
 		opsChartererProfile: null,
 		ops_charterer_contract_id: null,
