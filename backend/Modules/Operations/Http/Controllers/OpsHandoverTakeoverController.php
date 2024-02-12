@@ -122,7 +122,7 @@ class OpsHandoverTakeoverController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
- 
+
  
     /**
      * Update the specified resource in storage.

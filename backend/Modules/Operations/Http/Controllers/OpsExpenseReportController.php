@@ -39,7 +39,6 @@ class OpsExpenseReportController extends Controller
         $voyages = OpsVoyage::query()
                             // ->whereBetween('transit_date', [$start, $end])
                             ->whereBetween('transit_date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
-
                             ->where('business_unit', $business_unit)
                             ->get();
 
@@ -60,19 +59,19 @@ class OpsExpenseReportController extends Controller
         $heads = OpsExpenseHead::whereIn('id', $findingHeads)->where('head_id', null)->with('opsSubHeads')->get();
 
         $heads->map(function ($item) use($vesselExpenseHeads) {
-                                    $subheads = $item->opsSubHeads->map(function($subhead) use($vesselExpenseHeads) {
-                                        if(in_array($subhead['id'],$vesselExpenseHeads)) {
-                                            return $subhead;
-                                        } else {
-                                            return null;
-                                        }
-                                    })->filter();
+            $subheads = $item->opsSubHeads->map(function($subhead) use($vesselExpenseHeads) {
+                if(in_array($subhead['id'],$vesselExpenseHeads)) {
+                    return $subhead;
+                } else {
+                    return null;
+                }
+            })->filter();
 
-                                    data_forget($item, 'opsSubHeads');
-                                    $item['opsSubHeads'] = $subheads;
-                                    return $item;
-                                        
-                                });
+            data_forget($item, 'opsSubHeads');
+            $item['opsSubHeads'] = $subheads;
+            return $item;
+                
+        });
 
         
         $entries = OpsVoyageExpenditureEntry::with('opsExpenseHead.opsSubHeads')
@@ -119,7 +118,7 @@ class OpsExpenseReportController extends Controller
         $end = date($request->end);
         $ops_vessel_id = $request->ops_vessel_id;
 
-        $voyages = OpsVoyage::when($ops_vessel_id, function($voyage) use ($ops_vessel_id) {
+        $voyages =  OpsVoyage::when($ops_vessel_id, function($voyage) use ($ops_vessel_id) {
                         $voyage->where('ops_vessel_id', $ops_vessel_id);
                     })
                     ->whereBetween('sail_date', [Carbon::parse($start)->startOfDay(), Carbon::parse($end)->endOfDay()])
