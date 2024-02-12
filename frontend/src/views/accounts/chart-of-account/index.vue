@@ -210,13 +210,7 @@ function generate(){
     var pageHeight = 0;
     pageHeight = doc.internal.pageSize.height;
 
-    // specialElementHandlers = {
-    //             // element with id of "bypass" - jQuery style selector
-    //             '#bypassme': function(element, renderer) {
-    //                 // true = "handled elsewhere, bypass text extraction"
-    //                 return true
-    //             }
-    //         };
+    
            var margins = {
                 top: 250,
                 bottom: 200,
@@ -252,7 +246,8 @@ function generate(){
             //         top: 100
             //     }
             // });
-            var res = doc.autoTableHtmlToJson(document.getElementById('exampleTable'), true);
+            var res = doc.autoTableHtmlToJson(document.getElementById('exampleTable'), true );
+            console.log(res);
             // var base64Img = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyBAMAAADsEZWCAAAAG1BMVEXMzMyWlpaqqqq3t7exsbGcnJy+vr6jo6PFxcUFpPI/AAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAQUlEQVQ4jWNgGAWjgP6ASdncAEaiAhaGiACmFhCJLsMaIiDAEQEi0WXYEiMCOCJAJIY9KuYGTC0gknpuHwXDGwAA5fsIZw0iYWYAAAAASUVORK5CYII='
             var totalPagesExp = '{total_pages_count_string}'
             doc.autoTable({ 
@@ -261,6 +256,11 @@ function generate(){
               theme: 'grid', 
               margin: {
                     bottom: 100
+                },
+                columnStyles:{
+                  4:{
+                      halign: 'center'
+                    },
                 },
               startY: 150,
                 headStyles: {
@@ -496,7 +496,7 @@ function generate(){
                   <span><nobr>Business Unit</nobr></span>
                 </div>
               </th>
-              <th class="w-20">Action</th>
+              <th class="w-20" id="bypassme">Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
               <th>
@@ -531,11 +531,11 @@ function generate(){
           <tbody  class="relative">
           <tr v-for="(chartAccountData,index) in chartOfAccounts?.data" :key="index">
             <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-            <td class="text-left">{{ chartAccountData?.balanceIncome?.line_text }}</td>
+            <td class="!text-left">{{ chartAccountData?.balanceIncome?.line_text }}</td>
             <td>{{ chartAccountData?.balanceIncome?.line_type }}</td>
-            <td>{{ chartAccountData?.parent?.account_name ?? '---' }}</td>
+            <td style="text-align: center;">{{ chartAccountData?.parent?.account_name ?? '---' }}</td>
             <td>{{ chartAccountData?.account_code }}</td>
-            <td class="text-left">{{ chartAccountData?.account_name }}</td>
+            <td class="!text-left">{{ chartAccountData?.account_name }}</td>
             <td>
               <span v-if="chartAccountData?.account_type===1" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-200 rounded-full dark-disabled:text-gray-100 dark-disabled:bg-gray-700">Assets</span>
               <span v-if="chartAccountData?.account_type===2" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-green-200 rounded-full dark-disabled:text-gray-100 dark-disabled:bg-gray-700">Liabilities</span>
