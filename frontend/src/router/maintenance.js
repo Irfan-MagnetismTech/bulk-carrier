@@ -10,7 +10,7 @@ export default [
 		path: `/${BASE}/ship-departments`,
 		name: `${BASE}.ship-departments.index`,
 		component: () => import(`../views/${VIEWBASE}/ship-department/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-ship-department-index' },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-ship-department-view' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
@@ -29,7 +29,7 @@ export default [
 		path: `/${BASE}/ship-departments/:shipDepartmentId`,
 		name: `${BASE}.ship-departments.show`,
 		component: () => import(`../views/${VIEWBASE}/ship-department/show.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-ship-department-index'  },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-ship-department-view'  },
 	},
 
 	/* Ship Department Route end */
@@ -39,7 +39,7 @@ export default [
 		path: `/${BASE}/item-groups`,
 		name: `${BASE}.item-groups.index`,
 		component: () => import(`../views/${VIEWBASE}/item-group/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-item-group-index' },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-item-group-view' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
@@ -58,7 +58,7 @@ export default [
 		path: `/${BASE}/item-groups/:itemGroupId`,
 		name: `${BASE}.item-groups.show`,
 		component: () => import(`../views/${VIEWBASE}/item-group/show.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-item-group-index'  },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-item-group-view'  },
 	},
 
 	/* Item Group end */
@@ -68,7 +68,7 @@ export default [
 		path: `/${BASE}/items`,
 		name: `${BASE}.items.index`,
 		component: () => import(`../views/${VIEWBASE}/item/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-item-index' },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-item-view' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
@@ -87,7 +87,7 @@ export default [
 		path: `/${BASE}/items/:itemId`,
 		name: `${BASE}.items.show`,
 		component: () => import(`../views/${VIEWBASE}/item/show.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-item-index'  },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-item-view'  },
 	},
 
 	/* Item end */
@@ -97,7 +97,7 @@ export default [
 		path: `/${BASE}/jobs`,
 		name: `${BASE}.jobs.index`,
 		component: () => import(`../views/${VIEWBASE}/job/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-job-list-index' },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-job-list-view' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
@@ -116,7 +116,7 @@ export default [
 		path: `/${BASE}/jobs/:jobId`,
 		name: `${BASE}.jobs.show`,
 		component: () => import(`../views/${VIEWBASE}/job/show.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-job-list-index'  },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-job-list-view'  },
 	},
 
 	/* Job end */
@@ -126,7 +126,7 @@ export default [
 		path: `/${BASE}/run-hours`,
 		name: `${BASE}.run-hours.index`,
 		component: () => import(`../views/${VIEWBASE}/run-hour/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-running-hour-entry-index' },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-running-hour-entry-view' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
@@ -145,7 +145,7 @@ export default [
 		path: `/${BASE}/run-hours/:runHourId`,
 		name: `${BASE}.run-hours.show`,
 		component: () => import(`../views/${VIEWBASE}/run-hour/show.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-running-hour-entry-index'  },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-running-hour-entry-view'  },
 	},
 
 	/* Run Hour end */
@@ -157,7 +157,7 @@ export default [
 		path: `/${BASE}/work-requisitions`,
 		name: `${BASE}.work-requisitions.index`,
 		component: () => import(`../views/${VIEWBASE}/work-requisition/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-work-requisition-pending-index' },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-work-requisition-pending-view' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
@@ -176,7 +176,7 @@ export default [
 		path: `/${BASE}/work-requisitions/:workRequisitionId`,
 		name: `${BASE}.work-requisitions.show`,
 		component: () => import(`../views/${VIEWBASE}/work-requisition/show.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-work-requisition-pending-index'  },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-work-requisition-pending-view'  },
 	},
 
 	/* Work Requisition end */
@@ -187,7 +187,7 @@ export default [
 		path: `/${BASE}/wip-work-requisitions`,
 		name: `${BASE}.wip-work-requisitions.index`,
 		component: () => import(`../views/${VIEWBASE}/wip-work-requisition/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-work-requisition-wip-index' },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-work-requisition-wip-view' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	// {
@@ -206,7 +206,7 @@ export default [
 		path: `/${BASE}/wip-work-requisitions/:wipWorkRequisitionId`,
 		name: `${BASE}.wip-work-requisitions.show`,
 		component: () => import(`../views/${VIEWBASE}/wip-work-requisition/show.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-work-requisition-wip-index'  },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-work-requisition-wip-view'  },
 	},
 
 	/* Work Requisition wip end */
@@ -217,7 +217,7 @@ export default [
 		path: `/${BASE}/done-work-requisitions`,
 		name: `${BASE}.done-work-requisitions.index`,
 		component: () => import(`../views/${VIEWBASE}/done-work-requisition/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-work-requisition-done-index' },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-work-requisition-done-view' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	// {
@@ -236,7 +236,7 @@ export default [
 		path: `/${BASE}/done-work-requisitions/:doneWorkRequisitionId`,
 		name: `${BASE}.done-work-requisitions.show`,
 		component: () => import(`../views/${VIEWBASE}/done-work-requisition/show.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-work-requisition-done-index'  },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-work-requisition-done-view'  },
 	},
 
 	/* Work Requisition Done end */
@@ -246,7 +246,7 @@ export default [
 		path: `/${BASE}/critical-functions`,
 		name: `${BASE}.critical-functions.index`,
 		component: () => import(`../views/${VIEWBASE}/critical-function/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-function-index' },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-function-view' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
@@ -265,7 +265,7 @@ export default [
 		path: `/${BASE}/critical-functions/:criticalFunctionId`,
 		name: `${BASE}.critical-functions.show`,
 		component: () => import(`../views/${VIEWBASE}/critical-function/show.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-function-index'  },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-function-view'  },
 	},
 
 	/* Critical Ship Function end */
@@ -276,7 +276,7 @@ export default [
 		path: `/${BASE}/critical-item-categories`,
 		name: `${BASE}.critical-item-categories.index`,
 		component: () => import(`../views/${VIEWBASE}/critical-item-category/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-item-category-index' },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-item-category-view' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
@@ -295,7 +295,7 @@ export default [
 		path: `/${BASE}/critical-item-categories/:criticalItemCategoryId`,
 		name: `${BASE}.critical-item-categories.show`,
 		component: () => import(`../views/${VIEWBASE}/critical-item-category/show.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-item-category-index'  },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-item-category-view'  },
 	},
 
 	/* Critical Item Categories End */
@@ -306,7 +306,7 @@ export default [
 		path: `/${BASE}/critical-items`,
 		name: `${BASE}.critical-items.index`,
 		component: () => import(`../views/${VIEWBASE}/critical-item/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-item-index' },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-item-view' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
@@ -325,7 +325,7 @@ export default [
 		path: `/${BASE}/critical-items/:criticalItemId`,
 		name: `${BASE}.critical-items.show`,
 		component: () => import(`../views/${VIEWBASE}/critical-item/show.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-item-index'  },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-item-view'  },
 	},
 
 	/* Critical Items End */
@@ -336,7 +336,7 @@ export default [
 		path: `/${BASE}/critical-vessel-items`,
 		name: `${BASE}.critical-vessel-items.index`,
 		component: () => import(`../views/${VIEWBASE}/critical-vessel-item/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-vessel-item-index' },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-vessel-item-view' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
@@ -355,7 +355,7 @@ export default [
 		path: `/${BASE}/critical-vessel-items/:criticalVesselItemId`,
 		name: `${BASE}.critical-vessel-items.show`,
 		component: () => import(`../views/${VIEWBASE}/critical-vessel-item/show.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-vessel-item-index'  },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-vessel-item-view'  },
 	},
 
 	/* Critical Vessel Items End */
@@ -366,7 +366,7 @@ export default [
 		path: `/${BASE}/critical-spare-lists`,
 		name: `${BASE}.critical-spare-lists.index`,
 		component: () => import(`../views/${VIEWBASE}/critical-spare-list/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-spare-list-index' },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-spare-list-view' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
@@ -385,7 +385,7 @@ export default [
 		path: `/${BASE}/critical-spare-lists/:criticalSpareListId`,
 		name: `${BASE}.critical-spare-lists.show`,
 		component: () => import(`../views/${VIEWBASE}/critical-spare-list/show.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-spare-list-index'  },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-critical-spare-list-view'  },
 	},
 
 	/* Critical Spare List End */
@@ -396,7 +396,7 @@ export default [
 		path: `/${BASE}/survey-items`,
 		name: `${BASE}.survey-items.index`,
 		component: () => import(`../views/${VIEWBASE}/survey-item/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-survey-item-index' },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-survey-item-view' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
@@ -415,7 +415,7 @@ export default [
 		path: `/${BASE}/survey-items/:surveyItemId`,
 		name: `${BASE}.survey-items.show`,
 		component: () => import(`../views/${VIEWBASE}/survey-item/show.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-survey-item-index'  },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-survey-item-view'  },
 	},
 
 	/* Survey Items End */
@@ -426,7 +426,7 @@ export default [
 		path: `/${BASE}/survey-types`,
 		name: `${BASE}.survey-types.index`,
 		component: () => import(`../views/${VIEWBASE}/survey-type/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-survey-type-index' },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-survey-type-view' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
@@ -445,7 +445,7 @@ export default [
 		path: `/${BASE}/survey-types/:surveyTypeId`,
 		name: `${BASE}.survey-types.show`,
 		component: () => import(`../views/${VIEWBASE}/survey-type/show.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-survey-type-index'  },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-survey-type-view'  },
 	},
 
 	/* Survey Types End */
@@ -455,7 +455,7 @@ export default [
 		path: `/${BASE}/surveys`,
 		name: `${BASE}.surveys.index`,
 		component: () => import(`../views/${VIEWBASE}/survey/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-survey-index' },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-survey-view' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
@@ -474,7 +474,7 @@ export default [
 		path: `/${BASE}/surveys/:surveyId`,
 		name: `${BASE}.surveys.show`,
 		component: () => import(`../views/${VIEWBASE}/survey/show.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-survey-index'  },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-survey-view'  },
 	},
 
 	/* Survey End */
@@ -485,7 +485,7 @@ export default [
 		path: `/${BASE}/survey-entries`,
 		name: `${BASE}.survey-entries.index`,
 		component: () => import(`../views/${VIEWBASE}/survey-entry/index.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-survey-entry-index' },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-survey-entry-view' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
@@ -504,7 +504,7 @@ export default [
 		path: `/${BASE}/survey-entries/:surveyEntryId`,
 		name: `${BASE}.survey-entries.show`,
 		component: () => import(`../views/${VIEWBASE}/survey-entry/show.vue`),
-		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-survey-entry-index'  },
+		meta: { requiresAuth: true, role: ROLE, permission: 'mnt-survey-entry-view'  },
 	},
 
 	/* Survey Entry End */
