@@ -21,6 +21,7 @@ use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Entities\ScmVendor;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Entities\ScmCsMaterial;
+use Modules\SupplyChain\Entities\ScmMrr;
 use Modules\SupplyChain\Http\Requests\ScmPoRequest;
 
 class ScmPoController extends Controller
@@ -675,6 +676,19 @@ class ScmPoController extends Controller
                 ->get();
 
             return response()->success('Data list', $scmPo, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getPoWiseMrr(){
+        try {
+            $scmMrr = ScmMrr::query()
+                ->with('scmPo')
+                ->where('scm_po_id', request()->scm_po_id)
+                ->get();
+
+            return response()->success('Data list', $scmMrr, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }

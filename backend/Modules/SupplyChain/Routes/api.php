@@ -145,6 +145,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
         Route::post('close-po', "closePo")->name('closePo');
         Route::post('close-poline', "closePoLine")->name('closePoLine');
         Route::get('get-po-wise-pr-list', "getPoWisePrList")->name('getPoWisePrList');
+        Route::get('get-po-wise-mrr', "getPoWiseMrr")->name('getPoWiseMrr');
     });
 
     Route::controller(ScmCostingController::class)->group(function () {

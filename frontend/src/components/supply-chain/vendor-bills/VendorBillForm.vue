@@ -48,7 +48,7 @@
   <div class="input-group">
     <label for="" class="label-group">
       <span class="label-item-title">Currency <span class="text-red-500">*</span></span>
-      <v-select :options="currencies" @update:modelValue="currencyChange" :loading="isCurrencyLoading" placeholder="--Choose an option--" v-model="form.currency" class="block form-input">
+      <v-select :options="currencies" :loading="isCurrencyLoading" placeholder="--Choose an option--" v-model="form.currency" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -61,11 +61,11 @@
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700"><nobr>Exchange Rate</nobr> (To USD)</span>
-      <input type="text" @input="redoFullCalculation" v-model="form.exchange_rate_usd" placeholder="Exchange Rate" class="form-input" autocomplete="off" :readonly="isUSDCurrency()"/>
+      <input type="text" @input="redoFullCalculation" v-model="form.currency_to_usd" placeholder="Exchange Rate" class="form-input" autocomplete="off" :readonly="isUSDCurrency()"/>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700"><nobr>Exchange Rate</nobr> (USD To BDT)</span>
-      <input type="text" @input="redoFullCalculation" v-model="form.exchange_rate_bdt" placeholder="Exchange Rate" class="form-input" autocomplete="off" :readonly="isBDTCurrency()"/>
+      <input type="text" @input="redoFullCalculation" v-model="form.usd_to_bdt" placeholder="Exchange Rate" class="form-input" autocomplete="off" :readonly="isBDTCurrency()"/>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700">Upload File </span>
@@ -106,24 +106,24 @@
             <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
               <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(billLine, index) in form.scmVendorBillLines" :key="index">
                 <td class="!w-56 relative">
-                  <v-select :options="scmVendorMrrs" @update:modelValue="setScmVendorMrrId(index)" :loading="isMrrLoading" label="ref_no" placeholder="--Choose an option--" v-model="form.scmVendorBillLines[index]" class="block form-input">
+                  <v-select :options="scmVendorMrrs" :loading="isMrrLoading" label="ref_no" placeholder="--Choose an option--" v-model="form.scmVendorBillLines[index].scmMrr" @update:modelValue="setScmVendorMrrId(index)" class="block form-input">
                       <template #search="{attributes, events}">
                           <input
                               class="vs__search"
-                              :required="!form.scmVendorBillLines[index]"
+                              :required="!form.scmVendorBillLines[index].scmMrr"
                               v-bind="attributes"
                               v-on="events"
                               />
                       </template>
                   </v-select>
-                  <input type="hidden" v-model="form.scmVendorBillLines[index].scm_vendor_mrr_id" />
+                  <input type="hidden" v-model="form.scmVendorBillLines[index].scm_mrr_id" />
                   <span v-show="form.scmVendorBillLines[index].isMrrDuplicate" class="text-yellow-600 absolute top-5 right-12 " title="Duplicate Warning" v-html="icons.ExclamationTriangle"></span>
 
                 </td>
                 <td class="!w-32">
                   <label class="block w-full mt-2 text-sm">
                     <span class="vms-readonly-input form-input show-block !bg-[#e7e6e6]">
-                      <nobr>{{ form.scmVendorBillLines[index]?.challan_no }}</nobr>
+                      <nobr>{{ form.scmVendorBillLines[index]?.scmMrr?.challan_no }}</nobr>
                     </span>
                   </label>
                   
@@ -237,6 +237,8 @@
 
     });
 
+    const editInitiated = ref(0);
+
     const selectedFile = (event) => {
       props.form.attachment = event.target.files[0];
     };
@@ -284,36 +286,36 @@
   }
 
   watch(() => props.form.currency, (value) => {
-        props.form.exchange_rate_bdt = null;
-        props.form.exchange_rate_usd = null;
+        
+        if(props.form.currency != '' && (editInitiated.value == 1 || props.formType == 'create')) {
+          props.form.usd_to_bdt = null;
+          props.form.currency_to_usd = null;
+          redoFullCalculation()
+        }
   });
 
   watch(() => props.form.scmVendor, (value) => {
-        props.form.scm_vendor_id = value?.id ?? null;
-        fetchMrrByVendor()
+        fetchMrrByVendor();
+        if(editInitiated.value == 1) {
+          props.form.scm_vendor_id = value?.id ?? null;
+        }
   });
 
   watch(() => props.form.scmWarehouse, (value) => {
-        props.form.scm_warehouse_id = value?.id ?? null;
+        if(editInitiated.value == 1) {
+          props.form.scm_warehouse_id = value?.id ?? null;
+        }
   });
 
 
 const setScmVendorMrrId = (index) => {
-  props.form.scmVendorBillLines[index].scm_vendor_mrr_id = props.form.scmVendorBillLines[index]?.scmVendorMrr?.id
+  props.form.scmVendorBillLines[index].scm_mrr_id = props.form.scmVendorBillLines[index]?.id
 }
 
 const redoFullCalculation = () => {
   props?.form?.scmVendorBillLines.forEach((element, index) => {
     calculateSingleItem(index);
   });
-}
-
-const currencyChange = () => {
-  if(props.form.currency != '') {
-    props.form.exchange_rate_bdt = null;
-    props.form.exchange_rate_usd = null;
-    redoFullCalculation()
-  }
 }
 
 const calculateSingleItem = (index) => {
@@ -347,8 +349,8 @@ function CalculateAll() {
 
 const calculateInCurrency = (item) => {
   let currency = props.form.currency;
-  let toUsdRate = props.form.exchange_rate_usd
-  let toBdtRate = props.form.exchange_rate_bdt
+  let toUsdRate = props.form.currency_to_usd
+  let toBdtRate = props.form.usd_to_bdt
 
   if(currency == '') {
     Swal.fire({
@@ -377,18 +379,19 @@ const calculateInCurrency = (item) => {
 
   watch(() => props.form.business_unit, (newValue, oldValue) => {
     
-    props.form.scmWarehouse = null;
-    props.form.scmVendor = null;
+    if(props.formType == 'create') {
+      props.form.scmWarehouse = null;
+      props.form.scmVendor = null;
 
-    warehouses.value = []
-    vendors.value = []
+      warehouses.value = []
+      vendors.value = []
 
-    fetchVendors("");
-    fetchWarehouses("");
+      fetchVendors("");
+      fetchWarehouses("");
+    }
+    
 
-  if(newValue !== oldValue && oldValue != '' && oldValue != null){
-    props.form.scmWarehouse = null;
-  }
+    
 });
 
 

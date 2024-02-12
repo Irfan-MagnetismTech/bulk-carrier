@@ -73,6 +73,7 @@ class ScmCostingController extends Controller
                 }
                 $data->scmCostingLines()->createMany($lines);
             }
+            $data->scmCostingAllocations()->createMany($request->scmCostingAllocations);
             DB::commit();
 
         }catch (\Exception $e) {
@@ -93,7 +94,7 @@ class ScmCostingController extends Controller
     {
         try {
         $data = ScmCosting::find($id);
-        $data->load('scmCostingLines.scmLcRecord','scmPo','scmWarehouse');
+        $data->load('scmCostingLines.scmLcRecord','scmPo','scmWarehouse','scmCostingAllocations.scmMrr');
         if($data->scmPo->purchase_center == 'Foreign'){
             $data2[] = $data->scmCostingLines->groupBy(['scm_lc_record_id', 'type']);
             data_forget($data, 'scmCostingLines');
@@ -129,6 +130,7 @@ class ScmCostingController extends Controller
             DB::beginTransaction();
             $data = ScmCosting::find($id);
             $data->scmCostingLines()->delete();
+            $data->scmCostingAllocations()->delete();
             $data->update($request->all());
             if($request->purchase_center == 'Foreign'){
                 $lines = [];
@@ -156,6 +158,7 @@ class ScmCostingController extends Controller
                 }
                 $data->scmCostingLines()->createMany($lines);
             }
+            $data->scmCostingAllocations()->createMany($request->scmCostingAllocations);
             DB::commit();
         }catch (\Exception $e) {
             DB::rollBack();

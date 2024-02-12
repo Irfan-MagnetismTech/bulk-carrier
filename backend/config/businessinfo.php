@@ -52,7 +52,7 @@ return [
             ],
             'tti' => [
                 'Customs Duty (CD)',
-                'Regulatoey Duty (RD)',
+                'Regulatory Duty (RD)',
                 'Supplimentary Duty (SD)',
                 'Value Added Tax (VAT)',
                 'Advance Tax (AT)',

@@ -456,6 +456,20 @@ export default function usePurchaseOrder() {
         }
     }
 
+    async function getPoWiseMrr(poId) {
+        try {
+            const { data, status } = await Api.get(`/${BASE}/get-po-wise-mrr`, {
+                params: {
+                    scm_po_id: poId
+                }
+            });
+            return data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        }
+    }
+
 
 
     return {
@@ -482,6 +496,7 @@ export default function usePurchaseOrder() {
         closePo,
         closePoLines,
         materialList,
+        getPoWiseMrr,
         isLoading,
         errors,
     };

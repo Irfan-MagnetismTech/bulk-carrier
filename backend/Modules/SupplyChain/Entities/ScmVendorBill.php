@@ -25,11 +25,11 @@ class ScmVendorBill extends Model
         'remarks',
         'attachment',
         'sub_total',
-        'carring_cost',
-        'loading_unloading',
-        'clearence_charge',
-        'port_charge',
-        'grand_total',
+        // 'carring_cost',
+        // 'loading_unloading',
+        // 'clearence_charge',
+        // 'port_charge',
+        // 'grand_total',
         'discount',
         'net_amount',
         'business_unit',
@@ -38,6 +38,8 @@ class ScmVendorBill extends Model
         'currency',
         'usd_to_bdt',
         'currency_to_usd',
+        'scm_warehouse_id',
+        'bill_no'
     ];
 
     public function scmVendorBillLines(): HasMany

@@ -35,6 +35,7 @@ export default function useMaterialReceiptReport() {
         // scm_pr_no: null,      
         scm_warehouse_id: null,
         scmWarehouse: null,
+        total_value: 0.0,
         remarks: null,
         challan_no: null,
         qc_remarks: null,
