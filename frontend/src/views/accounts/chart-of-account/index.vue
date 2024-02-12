@@ -233,7 +233,7 @@ function generate(){
                     doc.addImage(base64Img, 'JPEG', width/2 - 40, 5, 80, 80);
                   }
             // doc.text(330, y = y + 100, "Cash Book By Incomehead");
-            var text = "Cash Book By";
+            var text = "Chart of Accounts List";
     
             // var xOffset = (doc.internal.pageSize.width / 2) - (doc.getStringUnitWidth(text) * doc.internal.getFontSize() / 2); 
             doc.text((doc.internal.pageSize.width / 2) - (doc.getStringUnitWidth(text) * doc.internal.getFontSize() / 2), y = y + 100, text);
@@ -259,9 +259,9 @@ function generate(){
               head: [res.columns.slice(0, -1)],
               body: res.data,
               theme: 'grid', 
-              // margin: {
-              //       top: 200
-              //   },
+              margin: {
+                    bottom: 100
+                },
               startY: 150,
                 headStyles: {
                   fillColor : '#F2F2F7',
@@ -282,6 +282,83 @@ function generate(){
                   //   doc.addImage(base64Img, 'JPEG', width/2 - 20, 5, 80, 80);
                   // }
                   // image end
+
+                  // Signature Start
+
+                
+                  let startSignX, signWidth, signRectY = height - 90, rectHeight = 60, gap = 8, total_sign = 4;
+                  let rectWidth = (width -data.settings.margin.left-data.settings.margin.right - (gap*(total_sign+1)))/total_sign;
+                  doc.setLineWidth(1);
+                  doc.setFontSize(12);
+
+                  //sign 1 start
+                  startSignX = data.settings.margin.left + gap;
+                  doc.rect(startSignX, signRectY, rectWidth, rectHeight );
+                  doc.line(startSignX + 2, signRectY + 40, startSignX + rectWidth - 2, signRectY + 40  )
+                  var signText = "Signature";
+                  var textWidth = doc.getStringUnitWidth(signText) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                  var startTextX = ((startSignX + (startSignX+rectWidth)) - textWidth) / 2;
+                  console.log("startSignX =>", startSignX, "rectWidth =>",rectWidth, "textWidth=>", textWidth, "startTextX =>" ,startTextX);
+                  doc.text(signText,startTextX, signRectY + 50);
+                  //sign 1 end
+
+                  
+                  //sign 2 start
+                  console.log(startSignX, rectWidth);
+                  startSignX = startSignX + gap + rectWidth;
+                  doc.rect(startSignX, signRectY, rectWidth, rectHeight );
+                  doc.line(startSignX + 2, signRectY + 40, startSignX + rectWidth - 2, signRectY + 40  )
+                  var signText = "Signature2";
+                  var textWidth = doc.getStringUnitWidth(signText) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                  var startTextX = ((startSignX + (startSignX+rectWidth)) - textWidth) / 2;
+                  console.log("startSignX =>", startSignX, "rectWidth =>",rectWidth, "textWidth=>", textWidth, "startTextX =>" ,startTextX);
+                  doc.text(signText,startTextX, signRectY + 50);
+                  //sign 2 end
+
+                  
+                  
+                  //sign 2 start
+                  console.log(startSignX, rectWidth);
+                  startSignX = startSignX + gap + rectWidth;
+                  doc.rect(startSignX, signRectY, rectWidth, rectHeight );
+                  doc.line(startSignX + 2, signRectY + 40, startSignX + rectWidth - 2, signRectY + 40  )
+                  var signText = "Signature3";
+                  var textWidth = doc.getStringUnitWidth(signText) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                  var startTextX = ((startSignX + (startSignX+rectWidth)) - textWidth) / 2;
+                  console.log("startSignX =>", startSignX, "rectWidth =>",rectWidth, "textWidth=>", textWidth, "startTextX =>" ,startTextX);
+                  doc.text(signText,startTextX, signRectY + 50);
+                  //sign 2 end
+
+                  
+                  
+                  //sign 2 start
+                  console.log(startSignX, rectWidth);
+                  startSignX = startSignX + gap + rectWidth;
+                  doc.rect(startSignX, signRectY, rectWidth, rectHeight );
+                  doc.line(startSignX + 2, signRectY + 40, startSignX + rectWidth - 2, signRectY + 40  )
+                  var signText = "Signature4";
+                  var textWidth = doc.getStringUnitWidth(signText) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+                  var startTextX = ((startSignX + (startSignX+rectWidth)) - textWidth) / 2;
+                  console.log("startSignX =>", startSignX, "rectWidth =>",rectWidth, "textWidth=>", textWidth, "startTextX =>" ,startTextX);
+                  doc.text(signText,startTextX, signRectY + 50);
+                  //sign 2 end
+
+                  
+                  
+
+
+
+
+
+
+
+                  
+                  // doc.setLineWidth(1);
+                  // doc.rect(data.settings.margin.left+signWidth+5, height - 90, 50, 60);
+                  // doc.setFontSize(12);
+                  // doc.line(data.settings.margin.left+signWidth+7, height-50, data.settings.margin.left+signWidth+7+46, height-50);
+                  // doc.text("Signature",data.settings.margin.left+signWidth+5,height - 40);
+                  // Signature End
                   // Footer
       var str = 'Page ' + doc.internal.getNumberOfPages()
       // Total page number plugin only available in jspdf v1.0+
@@ -297,12 +374,10 @@ function generate(){
                 },
                 willDrawCell: function (data) {
                   if (data.row.section === 'head') {
-                    // if (data.cell.raw > 750) {
-                    //   doc.setTextColor(231, 76, 60) // Red
+                    
+                    // if (data.pageCount > 1) {
+                    //   return false;
                     // }
-                    if (data.pageCount > 1) {
-                      return false;
-                    }
                   }
                   if (data.row.section === 'body' ) {
                     console.log("object", data.column);
@@ -313,8 +388,8 @@ function generate(){
                 },
       });
       if (typeof doc.putTotalPages === 'function') {
-    doc.putTotalPages(totalPagesExp)
-  }
+        doc.putTotalPages(totalPagesExp)
+      }
                 
             // doc.autoTable({ html: '#bascExample2', margin: {
             //         top: 50
@@ -325,7 +400,7 @@ function generate(){
             //         top: 20
             //     }
             // });
-            doc.save('cashbook.pdf');
+            doc.save('Chart_of_Accounts_List.pdf');
 }
 
 
