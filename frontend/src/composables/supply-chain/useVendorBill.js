@@ -39,8 +39,8 @@ export default function useVendorBill() {
         scm_warehouse_id: '',
         bill_no: '',
         currency: '',
-        exchange_rate_bdt: null,
-        exchange_rate_usd: null,
+        currency_to_usd: null,
+        usd_to_bdt: null,
         business_unit: '',
         attachment: '',
         scmVendorBillLines: [{...billLineObject}],
@@ -95,6 +95,7 @@ export default function useVendorBill() {
         isLoading.value = true;
 
         let formData = new FormData();
+		formData.append('attachment', form.attachment);
         formData.append('data', JSON.stringify(form));
 
         try {
@@ -134,6 +135,7 @@ export default function useVendorBill() {
         isLoading.value = true;
 
         let formData = new FormData();
+		formData.append('attachment', form.attachment);
         formData.append('data', JSON.stringify(form));
         formData.append('_method', 'PUT');
 
@@ -210,7 +212,7 @@ export default function useVendorBill() {
         let isHasError = false;
         const messages = ref([]);
         const hasDuplicates = form.scmVendorBillLines.some((billLine, index) => {
-            if (form.scmVendorBillLines.filter(val => val.ops_expense_head_id === billLine.ops_expense_head_id)?.length > 1) {
+            if (form.scmVendorBillLines.filter(val => val.id === billLine.scm_mrr_id)?.length > 1) {
                 let data = `Duplicate MRR [MRR Data line no: ${index + 1}]`;
                 messages.value.push(data);
                 form.scmVendorBillLines[index].isMrrDuplicate = true;
