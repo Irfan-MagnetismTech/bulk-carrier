@@ -15,15 +15,15 @@ use Modules\Operations\Http\Requests\OpsPortRequest;
 
 class OpsPortController extends Controller
 {
-    // use HasRoles;
+    use HasRoles;
 
-    // function __construct()
-    // {
-    //     $this->middleware('permission:port-create|port-edit|port-show|port-delete', ['only' => ['index','show']]);
-    //     $this->middleware('permission:port-create', ['only' => ['store']]);
-    //     $this->middleware('permission:port-edit', ['only' => ['update']]);
-    //     $this->middleware('permission:port-delete', ['only' => ['destroy']]);
-    // }
+    function __construct()
+    {
+        $this->middleware('permission:ops-port-create|ops-port-edit|ops-port-view|ops-port-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:ops-port-create', ['only' => ['store']]);
+        $this->middleware('permission:ops-port-edit', ['only' => ['update']]);
+        $this->middleware('permission:ops-port-delete', ['only' => ['destroy']]);
+    }
 
     /**
      * get all users with their roles.

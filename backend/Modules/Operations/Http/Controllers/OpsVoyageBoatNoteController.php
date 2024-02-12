@@ -17,14 +17,14 @@ use Modules\Operations\Http\Requests\OpsVoyageBoatNoteRequest;
 
 class OpsVoyageBoatNoteController extends Controller
 {
-   // use HasRoles;
+   use HasRoles;
    
    function __construct(private FileUploadService $fileUpload)
    {
-   //     $this->middleware('permission:voyage-boat-note-create|voyage-boat-note-edit|voyage-boat-note-show|voyage-boat-note-delete', ['only' => ['index','show']]);
-   //     $this->middleware('permission:voyage-boat-note-create', ['only' => ['store']]);
-   //     $this->middleware('permission:voyage-boat-note-edit', ['only' => ['update']]);
-   //     $this->middleware('permission:voyage-boat-note-delete', ['only' => ['destroy']]);
+       $this->middleware('permission:ops-voyage-boat-note-create|ops-voyage-boat-note-edit|ops-voyage-boat-note-view|ops-voyage-boat-note-delete', ['only' => ['index','show']]);
+       $this->middleware('permission:ops-voyage-boat-note-create', ['only' => ['store']]);
+       $this->middleware('permission:ops-voyage-boat-note-edit', ['only' => ['update']]);
+       $this->middleware('permission:ops-voyage-boat-note-delete', ['only' => ['destroy']]);
    }
    /**
     * get all users with their roles.

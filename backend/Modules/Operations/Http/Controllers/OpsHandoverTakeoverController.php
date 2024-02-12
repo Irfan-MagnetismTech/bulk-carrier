@@ -16,15 +16,15 @@ use Modules\Operations\Http\Requests\OpsHandoverTakeoverRequest;
 
 class OpsHandoverTakeoverController extends Controller
 {
-  //    use HasRoles;
- 
-//    function __construct(private FileUploadService $fileUpload)
-//    {
-//        $this->middleware('permission:handover-takeover-create|handover-takeover-edit|handover-takeover-show|handover-takeover-delete', ['only' => ['index','show']]);
-//        $this->middleware('permission:handover-takeover-create', ['only' => ['store']]);
-//        $this->middleware('permission:handover-takeover-edit', ['only' => ['update']]);
-//        $this->middleware('permission:handover-takeover-delete', ['only' => ['destroy']]);
-//    }
+    use HasRoles;
+    
+    function __construct(private FileUploadService $fileUpload)
+    {
+        $this->middleware('permission:ops-delivery-redelivery-create|ops-delivery-redelivery-edit|ops-delivery-redelivery-view|ops-delivery-redelivery-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:ops-delivery-redelivery-create', ['only' => ['store']]);
+        $this->middleware('permission:ops-delivery-redelivery-edit', ['only' => ['update']]);
+        $this->middleware('permission:ops-delivery-redelivery-delete', ['only' => ['destroy']]);
+    }
    /**
     * get all users with their roles.
     * @param Request $request

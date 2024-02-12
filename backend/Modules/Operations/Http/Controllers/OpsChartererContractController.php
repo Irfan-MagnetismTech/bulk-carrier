@@ -15,14 +15,14 @@ use Modules\Operations\Http\Requests\OpsChartererContractRequest;
 
 class OpsChartererContractController extends Controller
 {
-   // use HasRoles;
+    use HasRoles;
    
-   function __construct(private FileUploadService $fileUpload)
-   {
-    //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
-    //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
-    //     $this->middleware('permission:charterer-contract-edit', ['only' => ['update']]);
-    //     $this->middleware('permission:charterer-contract-delete', ['only' => ['destroy']]);
+    function __construct(private FileUploadService $fileUpload)
+    {
+        $this->middleware('permission:ops-charterer-contract-create|ops-charterer-contract-edit|ops-charterer-contract-view|ops-charterer-contract-delete', ['only' => ['index','show','downloadContractAttachment']]);
+        $this->middleware('permission:ops-charterer-contract-create', ['only' => ['store']]);
+        $this->middleware('permission:ops-charterer-contract-edit', ['only' => ['update']]);
+        $this->middleware('permission:ops-charterer-contract-delete', ['only' => ['destroy']]);
     }
     /**
         * get all users with their roles.

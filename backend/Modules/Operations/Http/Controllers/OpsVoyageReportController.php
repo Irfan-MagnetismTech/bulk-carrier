@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\Services\FileUploadService;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
@@ -21,6 +22,14 @@ use Modules\Operations\Services\OpsVesselBunkerService;
 
 class OpsVoyageReportController extends Controller
 {
+    use HasRoles;
+   
+    function __construct(private FileUploadService $fileUpload)
+    {
+        $this->middleware('permission:ops-lighter-voyage-report', ['only' => ['lighterVoyageReport']]);
+        $this->middleware('permission:ops-bulk-voyage-report', ['only' => ['bulkVoyageReport']]);
+
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable

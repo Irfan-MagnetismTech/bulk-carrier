@@ -18,15 +18,15 @@ use Modules\Operations\Http\Requests\OpsVesselRequest;
 
 class OpsVesselController extends Controller
 {
-    // use HasRoles;
+    use HasRoles;
 
-    // function __construct()
-    // {
-    //     $this->middleware('permission:vessel-create|vessel-edit|vessel-show|vessel-delete', ['only' => ['index','show']]);
-    //     $this->middleware('permission:vessel-create', ['only' => ['store']]);
-    //     $this->middleware('permission:vessel-edit', ['only' => ['update']]);
-    //     $this->middleware('permission:vessel-delete', ['only' => ['destroy']]);
-    // }
+    function __construct()
+    {
+        $this->middleware('permission:ops-vessel-create|ops-vessel-edit|ops-vessel-view|ops-vessel-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:ops-vessel-create', ['only' => ['store']]);
+        $this->middleware('permission:ops-vessel-edit', ['only' => ['update']]);
+        $this->middleware('permission:ops-vessel-delete', ['only' => ['destroy']]);
+    }
 
     /**
      * Display a listing of the vessel.

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Services\FileUploadService;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
@@ -16,15 +17,15 @@ use Modules\Operations\Http\Requests\OpsBunkerRequisitionRequest;
 
 class OpsBunkerRequisitionController extends Controller
 {
-   // use HasRoles;
+   use HasRoles;
    
-//    function __construct(private FileUploadService $fileUpload)
-//    {
-   //     $this->middleware('permission:bunker-requisition-create|bunker-requisition-edit|bunker-requisition-show|bunker-requisition-delete', ['only' => ['index','show']]);
-   //     $this->middleware('permission:bunker-requisition-create', ['only' => ['store']]);
-   //     $this->middleware('permission:bunker-requisition-edit', ['only' => ['update']]);
-   //     $this->middleware('permission:bunker-requisition-delete', ['only' => ['destroy']]);
-//    }
+   function __construct(private FileUploadService $fileUpload)
+   {
+       $this->middleware('permission:ops-purchase-requisition-create|ops-purchase-requisition-edit|ops-purchase-requisition-view|ops-purchase-requisition-delete', ['only' => ['index','show']]);
+       $this->middleware('permission:ops-purchase-requisition-create', ['only' => ['store']]);
+       $this->middleware('permission:ops-purchase-requisition-edit', ['only' => ['update']]);
+       $this->middleware('permission:ops-purchase-requisition-delete', ['only' => ['destroy']]);
+   }
    /**
     * get all users with their roles.
     * @param Request $request

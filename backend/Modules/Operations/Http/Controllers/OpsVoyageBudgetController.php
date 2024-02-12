@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Services\FileUploadService;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
@@ -14,15 +15,15 @@ use Modules\Operations\Http\Requests\OpsVoyageBudgetRequest;
 
 class OpsVoyageBudgetController extends Controller
 {
-    // use HasRoles;
+    use HasRoles;
 
-    //    function __construct(private FileUploadService $fileUpload)
-    //    {
-    //     $this->middleware('permission:voyage-budget-create|voyage-budget-edit|voyage-budget-show|voyage-budget-delete', ['only' => ['index','show']]);
-    //     $this->middleware('permission:voyage-budget-create', ['only' => ['store']]);
-    //     $this->middleware('permission:voyage-budget-edit', ['only' => ['update']]);
-    //     $this->middleware('permission:voyage-budget-delete', ['only' => ['destroy']]);
-    //    }
+    function __construct(private FileUploadService $fileUpload)
+    {
+        $this->middleware('permission:ops-voyage-budget-create|ops-voyage-budget-edit|ops-voyage-budget-show|ops-voyage-budget-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:ops-voyage-budget-create', ['only' => ['store']]);
+        $this->middleware('permission:ops-voyage-budget-edit', ['only' => ['update']]);
+        $this->middleware('permission:ops-voyage-budget-delete', ['only' => ['destroy']]);
+    }
     /**
     * get all users with their roles.
     * @param Request $request

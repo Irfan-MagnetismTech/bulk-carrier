@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Modules\Operations\Entities\OpsVoyage;
 use Modules\Operations\Entities\OpsContractAssign;
@@ -15,15 +16,15 @@ use Modules\Operations\Http\Requests\OpsContractAssignRequest;
 
 class OpsContractAssignController extends Controller
 {
-    // use HasRoles;   
+    use HasRoles;   
     
-    // function __construct()
-    // {
-    //     $this->middleware('permission:contract-assign-create|contract-assign-edit|contract-assign-show|contract-assign-delete', ['only' => ['index','show']]);
-    //     $this->middleware('permission:contract-assign-create', ['only' => ['store']]);
-    //     $this->middleware('permission:contract-assign-edit', ['only' => ['update']]);
-    //     $this->middleware('permission:contract-assign-delete', ['only' => ['destroy']]);
-    // }
+    function __construct()
+    {
+        $this->middleware('permission:ops-contract-assign-create|ops-contract-assign-edit|ops-contract-assign-view|ops-contract-assign-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:ops-contract-assign-create', ['only' => ['store']]);
+        $this->middleware('permission:ops-contract-assign-edit', ['only' => ['update']]);
+        $this->middleware('permission:ops-contract-assign-delete', ['only' => ['destroy']]);
+    }
 
     /**
      * get all users with their roles.

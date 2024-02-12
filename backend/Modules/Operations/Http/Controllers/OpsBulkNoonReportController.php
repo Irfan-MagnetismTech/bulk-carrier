@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Services\FileUploadService;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
@@ -16,16 +17,15 @@ use Modules\Operations\Http\Requests\OpsBulkNoonReportRequest;
 
 class OpsBulkNoonReportController extends Controller
 {
-   // use HasRoles;
+   use HasRoles;   
    
-   
-//    function __construct(private FileUploadService $fileUpload)
-//    {
-   //     $this->middleware('permission:bulk-noon-report-create|bulk-noon-report-edit|bulk-noon-report-show|bulk-noon-report-delete', ['only' => ['index','show']]);
-   //     $this->middleware('permission:bulk-noon-report-create', ['only' => ['store']]);
-   //     $this->middleware('permission:bulk-noon-report-edit', ['only' => ['update']]);
-   //     $this->middleware('permission:bulk-noon-report-delete', ['only' => ['destroy']]);
-//    }
+   function __construct(private FileUploadService $fileUpload)
+   {
+       $this->middleware('permission:ops-bulk-noon-report-create|ops-bulk-noon-report-edit|ops-bulk-noon-report-view|ops-bulk-noon-report-delete', ['only' => ['index','show']]);
+       $this->middleware('permission:ops-bulk-noon-report-create', ['only' => ['store']]);
+       $this->middleware('permission:ops-bulk-noon-report-edit', ['only' => ['update']]);
+       $this->middleware('permission:ops-bulk-noon-report-delete', ['only' => ['destroy']]);
+   }
    /**
     * get all users with their roles.
     * @param Request $request

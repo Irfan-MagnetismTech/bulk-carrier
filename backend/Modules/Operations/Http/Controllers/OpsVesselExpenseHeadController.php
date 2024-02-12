@@ -17,15 +17,15 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class OpsVesselExpenseHeadController extends Controller
 {
-    // use HasRoles;   
+    use HasRoles;
     
-    // function __construct()
-    // {
-    //     $this->middleware('permission:vessel-expense-head-create|vessel-expense-head-edit|vessel-expense-head-show|vessel-expense-head-delete', ['only' => ['index','show']]);
-    //     $this->middleware('permission:vessel-expense-head-create', ['only' => ['store']]);
-    //     $this->middleware('permission:vessel-expense-head-edit', ['only' => ['update']]);
-    //     $this->middleware('permission:vessel-expense-head-delete', ['only' => ['destroy']]);
-    // }
+    function __construct()
+    {
+        $this->middleware('permission:ops-vessel-expense-head-create|ops-vessel-expense-head-edit|ops-vessel-expense-head-view|ops-vessel-expense-head-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:ops-vessel-expense-head-create', ['only' => ['store']]);
+        $this->middleware('permission:ops-vessel-expense-head-edit', ['only' => ['update']]);
+        $this->middleware('permission:ops-vessel-expense-head-delete', ['only' => ['destroy']]);
+    }
 
     /**
      * get all users with their roles.

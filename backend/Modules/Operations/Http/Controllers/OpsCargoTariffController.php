@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Services\FileUploadService;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
@@ -15,15 +16,15 @@ use Modules\Operations\Http\Requests\OpsCargoTariffLineRequest;
 
 class OpsCargoTariffController extends Controller
 {
-   // use HasRoles;
+   use HasRoles;
    
-//    function __construct(private FileUploadService $fileUpload)
-//    {
-   //     $this->middleware('permission:cargo-tariff-create|cargo-tariff-edit|cargo-tariff-show|cargo-tariff-delete', ['only' => ['index','show']]);
-   //     $this->middleware('permission:cargo-tariff-create', ['only' => ['store']]);
-   //     $this->middleware('permission:cargo-tariff-edit', ['only' => ['update']]);
-   //     $this->middleware('permission:cargo-tariff-delete', ['only' => ['destroy']]);
-//    }
+   function __construct(private FileUploadService $fileUpload)
+   {
+       $this->middleware('permission:ops-cargo-tariff-create|ops-cargo-tariff-edit|ops-cargo-tariff-view|ops-cargo-tariff-delete', ['only' => ['index','show']]);
+       $this->middleware('permission:ops-cargo-tariff-create', ['only' => ['store']]);
+       $this->middleware('permission:ops-cargo-tariff-edit', ['only' => ['update']]);
+       $this->middleware('permission:ops-cargo-tariff-delete', ['only' => ['destroy']]);
+   }
    /**
     * get all users with their roles.
     * @param Request $request

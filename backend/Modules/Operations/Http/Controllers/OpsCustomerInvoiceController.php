@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Services\FileUploadService;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
@@ -16,15 +17,15 @@ use Modules\Operations\Http\Requests\OpsCustomerInvoiceUpdateRequest;
 
 class OpsCustomerInvoiceController extends Controller
 {
-   // use HasRoles;
+   use HasRoles;
    
-//    function __construct(private FileUploadService $fileUpload)
-//    {
-   //     $this->middleware('permission:customer-invoice-create|customer-invoice-edit|customer-invoice-show|customer-invoice-delete', ['only' => ['index','show']]);
-   //     $this->middleware('permission:customer-invoice-create', ['only' => ['store']]);
-   //     $this->middleware('permission:customer-invoice-edit', ['only' => ['update']]);
-   //     $this->middleware('permission:customer-invoice-delete', ['only' => ['destroy']]);
-//    }
+   function __construct(private FileUploadService $fileUpload)
+   {
+       $this->middleware('permission:ops-customer-invoice-create|ops-customer-invoice-edit|ops-customer-invoice-view|ops-customer-invoice-delete', ['only' => ['index','show']]);
+       $this->middleware('permission:ops-customer-invoice-create', ['only' => ['store']]);
+       $this->middleware('permission:ops-customer-invoice-edit', ['only' => ['update']]);
+       $this->middleware('permission:ops-customer-invoice-delete', ['only' => ['destroy']]);
+   }
    /**
     * get all users with their roles.
     * @param Request $request

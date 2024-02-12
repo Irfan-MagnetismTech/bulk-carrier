@@ -15,14 +15,14 @@ use Modules\Operations\Http\Requests\OpsBunkerBillRequest;
 
 class OpsBunkerBillController extends Controller
 {
-   // use HasRoles;
+   use HasRoles;
 
    function __construct(private FileUploadService $fileUpload)
    {
-   //     $this->middleware('permission:bunker-bill-create|bunker-bill-edit|bunker-bill-show|bunker-bill-delete', ['only' => ['index','show']]);
-   //     $this->middleware('permission:bunker-bill-create', ['only' => ['store']]);
-   //     $this->middleware('permission:bunker-bill-edit', ['only' => ['update']]);
-   //     $this->middleware('permission:bunker-bill-delete', ['only' => ['destroy']]);
+       $this->middleware('permission:ops-bunker-bill-create|ops-bunker-bill-edit|ops-bunker-bill-view|ops-bunker-bill-delete', ['only' => ['index','show']]);
+       $this->middleware('permission:ops-bunker-bill-create', ['only' => ['store']]);
+       $this->middleware('permission:ops-bunker-bill-edit', ['only' => ['update']]);
+       $this->middleware('permission:ops-bunker-bill-delete', ['only' => ['destroy']]);
    }
    /**
     * get all users with their roles.

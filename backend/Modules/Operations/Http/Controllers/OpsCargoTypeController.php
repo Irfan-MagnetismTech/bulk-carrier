@@ -14,15 +14,15 @@ use Modules\Operations\Http\Requests\OpsCargoTypeRequest;
 
 class OpsCargoTypeController extends Controller
 {
-   // use HasRoles;
+    use HasRoles;
 
-    // function __construct()
-    // {
-    //     $this->middleware('permission:cargo-type-create|cargo-type-edit|cargo-type-show|cargo-type-delete', ['only' => ['index','show']]);
-    //     $this->middleware('permission:cargo-type-create', ['only' => ['store']]);
-    //     $this->middleware('permission:cargo-type-edit', ['only' => ['update']]);
-    //     $this->middleware('permission:cargo-type-delete', ['only' => ['destroy']]);
-    // }
+    function __construct()
+    {
+        $this->middleware('permission:ops-cargo-type-create|ops-cargo-type-edit|ops-cargo-type-view|ops-cargo-type-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:ops-cargo-type-create', ['only' => ['store']]);
+        $this->middleware('permission:ops-cargo-type-edit', ['only' => ['update']]);
+        $this->middleware('permission:ops-cargo-type-delete', ['only' => ['destroy']]);
+    }
 
     /**
      * get all users with their roles.

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Services\FileUploadService;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
@@ -14,16 +15,15 @@ use Modules\Operations\Http\Requests\OpsExpenseHeadRequest;
 
 class OpsExpenseHeadController extends Controller
 {
-    // use HasRoles;
-    
-    
-//    function __construct(private FileUploadService $fileUpload)
-//    {
-   //     $this->middleware('permission:expense-head-create|expense-head-edit|expense-head-show|expense-head-delete', ['only' => ['index','show']]);
-   //     $this->middleware('permission:expense-head-create', ['only' => ['store']]);
-   //     $this->middleware('permission:expense-head-edit', ['only' => ['update']]);
-   //     $this->middleware('permission:expense-head-delete', ['only' => ['destroy']]);
-//    }
+    use HasRoles;        
+        
+    function __construct(private FileUploadService $fileUpload)
+    {
+        $this->middleware('permission:ops-expense-head-create|ops-expense-head-edit|ops-expense-head-view|ops-expense-head-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:ops-expense-head-create', ['only' => ['store']]);
+        $this->middleware('permission:ops-expense-head-edit', ['only' => ['update']]);
+        $this->middleware('permission:ops-expense-head-delete', ['only' => ['destroy']]);
+    }
    /**
     * get all users with their roles.
     * @param Request $request

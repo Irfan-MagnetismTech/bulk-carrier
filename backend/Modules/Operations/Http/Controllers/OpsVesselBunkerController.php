@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmWarehouse;
@@ -15,15 +16,15 @@ use Modules\Operations\Http\Requests\OpsVesselBunkerRequest;
 
 class OpsVesselBunkerController extends Controller
 {
-    // use HasRoles;
+    use HasRoles;
 
-    // function __construct()
-    // {
-    //     $this->middleware('permission:vessel-bunker-create|vessel-bunker-edit|vessel-bunker-show|vessel-bunker-delete', ['only' => ['index','show']]);
-    //     $this->middleware('permission:vessel-bunker-create', ['only' => ['store']]);
-    //     $this->middleware('permission:vessel-bunker-edit', ['only' => ['update']]);
-    //     $this->middleware('permission:vessel-bunker-delete', ['only' => ['destroy']]);
-    // }
+    function __construct()
+    {
+        $this->middleware('permission:ops-vessel-bunker-create|ops-vessel-bunker-edit|ops-vessel-bunker-view|ops-vessel-bunker-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:ops-vessel-bunker-create', ['only' => ['store']]);
+        $this->middleware('permission:ops-vessel-bunker-edit', ['only' => ['update']]);
+        $this->middleware('permission:ops-vessel-bunker-delete', ['only' => ['destroy']]);
+    }
 
     /**
      * Display a listing of the vessel_bunker.

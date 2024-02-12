@@ -14,15 +14,15 @@ use Modules\Operations\Http\Requests\OpsMaritimeCertificationRequest;
 
 class OpsMaritimeCertificationController extends Controller
 {
-    // use HasRoles;
+    use HasRoles;
     
-    // function __construct()
-    // {
-    //     $this->middleware('permission:maritime-certification-create|maritime-certification-edit|maritime-certification-show|maritime-certification-delete', ['only' => ['index','show']]);
-    //     $this->middleware('permission:maritime-certification-create', ['only' => ['store']]);
-    //     $this->middleware('permission:maritime-certification-edit', ['only' => ['update']]);
-    //     $this->middleware('permission:maritime-certification-delete', ['only' => ['destroy']]);
-    // }
+    function __construct()
+    {
+        $this->middleware('permission:ops-maritime-certificate-create|ops-maritime-certificate-edit|ops-maritime-certificate-view|ops-maritime-certificate-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:ops-maritime-certificate-create', ['only' => ['store']]);
+        $this->middleware('permission:ops-maritime-certificate-edit', ['only' => ['update']]);
+        $this->middleware('permission:ops-maritime-certificate-delete', ['only' => ['destroy']]);
+    }
     /**
      * get all users with their roles.
      * @param Request $request

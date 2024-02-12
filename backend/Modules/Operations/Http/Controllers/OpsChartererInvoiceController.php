@@ -16,15 +16,15 @@ use Modules\Operations\Http\Requests\OpsChartererInvoiceRequest;
 
 class OpsChartererInvoiceController extends Controller
 {
-   // use HasRoles;
+   use HasRoles;
   
-//    function __construct()
-//    {
-   //     $this->middleware('permission:charterer-invoice-create|charterer-invoice-edit|charterer-invoice-show|charterer-invoice-delete', ['only' => ['index','show']]);
-   //     $this->middleware('permission:charterer-invoice-create', ['only' => ['store']]);
-   //     $this->middleware('permission:charterer-invoice-edit', ['only' => ['update']]);
-   //     $this->middleware('permission:charterer-invoice-delete', ['only' => ['destroy']]);
-//    }
+   function __construct()
+   {
+       $this->middleware('permission:ops-charterer-invoice-create|ops-charterer-invoice-edit|ops-charterer-invoice-view|ops-charterer-invoice-delete', ['only' => ['index','show']]);
+       $this->middleware('permission:ops-charterer-invoice-create', ['only' => ['store']]);
+       $this->middleware('permission:ops-charterer-invoice-edit', ['only' => ['update']]);
+       $this->middleware('permission:ops-charterer-invoice-delete', ['only' => ['destroy']]);
+   }
    /**
     * get all users with their roles.
     * @param Request $request

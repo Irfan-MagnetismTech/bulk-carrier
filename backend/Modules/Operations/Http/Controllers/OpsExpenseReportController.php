@@ -5,88 +5,29 @@ namespace Modules\Operations\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use App\Services\FileUploadService;
+use Spatie\Permission\Traits\HasRoles;
+use Modules\Operations\Entities\OpsVessel;
 use Modules\Operations\Entities\OpsVoyage;
 use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Support\Facades\DB;
-use Modules\Accounts\Entities\AccCashRequisition;
 use Modules\Accounts\Entities\AccCostCenter;
-use Modules\Operations\Entities\OpsExpenseHead;
-use Modules\Operations\Entities\OpsVessel;
-use Modules\Operations\Entities\OpsVesselExpenseHead;
-use Modules\Operations\Entities\OpsVoyageExpenditureEntry;
-use Modules\Operations\Services\OpsVesselBunkerService;
 use Modules\SupplyChain\Services\CurrentStock;
+use Modules\Operations\Entities\OpsExpenseHead;
+use Modules\Accounts\Entities\AccCashRequisition;
 use Modules\SupplyChain\Services\StockLedgerData;
+use Modules\Operations\Entities\OpsVesselExpenseHead;
+use Modules\Operations\Services\OpsVesselBunkerService;
+use Modules\Operations\Entities\OpsVoyageExpenditureEntry;
 
 class OpsExpenseReportController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
-    public function index()
+    use HasRoles;        
+        
+    function __construct(private FileUploadService $fileUpload)
     {
-        return view('operations::index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('operations::create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
-        return view('operations::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('operations::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
+        $this->middleware('permission:ops-port-wise-expense-report', ['only' => ['portWiseExpenditureReport']]);
+        $this->middleware('permission:ops-month-wise-expense-report', ['only' => ['monthWiseExpenseReport']]);
     }
 
     public function portWiseExpenditureReport(Request $request) {

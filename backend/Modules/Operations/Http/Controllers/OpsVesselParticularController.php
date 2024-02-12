@@ -18,13 +18,13 @@ use Modules\Operations\Http\Requests\OpsVesselParticularRequest;
 
 class OpsVesselParticularController extends Controller
 {
-   // use HasRoles;
-   function __construct(private FileUploadService $fileUpload)
-   {
-    //     $this->middleware('permission:vessel-particular-create|vessel-particular-edit|vessel-particular-show|vessel-particular-delete', ['only' => ['index','show']]);
-    //     $this->middleware('permission:vessel-particular-create', ['only' => ['store']]);
-    //     $this->middleware('permission:vessel-particular-edit', ['only' => ['update']]);
-    //     $this->middleware('permission:vessel-particular-delete', ['only' => ['destroy']]);
+    use HasRoles;
+    function __construct(private FileUploadService $fileUpload)
+    {
+        $this->middleware('permission:ops-vessel-particular-create|ops-vessel-particular-edit|ops-vessel-particular-view|ops-vessel-particular-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:ops-vessel-particular-create', ['only' => ['store']]);
+        $this->middleware('permission:ops-vessel-particular-edit', ['only' => ['update']]);
+        $this->middleware('permission:ops-vessel-particular-delete', ['only' => ['destroy']]);
     }
     /**
      * get all users with their roles.

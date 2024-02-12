@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Services\FileUploadService;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
@@ -14,15 +15,15 @@ use Modules\Operations\Http\Requests\OpsLighterNoonReportRequest;
 
 class OpsLighterNoonReportController extends Controller
 {
-  // use HasRoles;
+    use HasRoles;
   
-//    function __construct(private FileUploadService $fileUpload)
-//    {
-   //     $this->middleware('permission:lighter-noon-report-create|lighter-noon-report-edit|lighter-noon-report-show|lighter-noon-report-delete', ['only' => ['index','show']]);
-   //     $this->middleware('permission:lighter-noon-report-create', ['only' => ['store']]);
-   //     $this->middleware('permission:lighter-noon-report-edit', ['only' => ['update']]);
-   //     $this->middleware('permission:lighter-noon-report-delete', ['only' => ['destroy']]);
-//    }
+    function __construct(private FileUploadService $fileUpload)
+    {
+        $this->middleware('permission:ops-lighter-noon-report-create|ops-lighter-noon-report-edit|ops-lighter-noon-report-view|ops-lighter-noon-report-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:ops-lighter-noon-report-create', ['only' => ['store']]);
+        $this->middleware('permission:ops-lighter-noon-report-edit', ['only' => ['update']]);
+        $this->middleware('permission:ops-lighter-noon-report-delete', ['only' => ['destroy']]);
+    }
    /**
     * get all users with their roles.
     * @param Request $request

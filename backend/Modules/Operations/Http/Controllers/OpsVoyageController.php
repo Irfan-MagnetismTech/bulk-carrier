@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use App\Services\FileUploadService;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Modules\Operations\Entities\OpsVoyage;
@@ -15,15 +16,15 @@ use Modules\Operations\Http\Requests\OpsVoyageRequest;
 
 class OpsVoyageController extends Controller
 {
-//    use HasRoles;
+   use HasRoles;
    
-//    function __construct(private FileUploadService $fileUpload)
-//    {
-//        $this->middleware('permission:voyage-create|voyage-edit|voyage-show|voyage-delete', ['only' => ['index','show']]);
-//        $this->middleware('permission:voyage-create', ['only' => ['store']]);
-//        $this->middleware('permission:voyage-edit', ['only' => ['update']]);
-//        $this->middleware('permission:voyage-delete', ['only' => ['destroy']]);
-//    }
+   function __construct(private FileUploadService $fileUpload)
+   {
+       $this->middleware('permission:ops-voyage-create|ops-voyage-edit|ops-voyage-view|ops-voyage-delete', ['only' => ['index','show']]);
+       $this->middleware('permission:ops-voyage-create', ['only' => ['store']]);
+       $this->middleware('permission:ops-voyage-edit', ['only' => ['update']]);
+       $this->middleware('permission:ops-voyage-delete', ['only' => ['destroy']]);
+   }
    /**
     * get all users with their roles.
     * @param Request $request

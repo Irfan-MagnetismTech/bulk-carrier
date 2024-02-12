@@ -14,15 +14,15 @@ use Modules\Operations\Http\Requests\OpsCustomerRequest;
 
 class OpsCustomerController extends Controller
 {
-    // use HasRoles;
+    use HasRoles;
     
-    // function __construct()
-    // {
-    //     $this->middleware('permission:customer-create|customer-edit|customer-show|customer-delete', ['only' => ['index','show']]);
-    //     $this->middleware('permission:customer-create', ['only' => ['store']]);
-    //     $this->middleware('permission:customer-edit', ['only' => ['update']]);
-    //     $this->middleware('permission:customer-delete', ['only' => ['destroy']]);
-    // }
+    function __construct()
+    {
+        $this->middleware('permission:ops-customer-create|ops-customer-edit|ops-customer-view|ops-customer-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:ops-customer-create', ['only' => ['store']]);
+        $this->middleware('permission:ops-customer-edit', ['only' => ['update']]);
+        $this->middleware('permission:ops-customer-delete', ['only' => ['destroy']]);
+    }
 
     /**
      * get all users with their roles.
