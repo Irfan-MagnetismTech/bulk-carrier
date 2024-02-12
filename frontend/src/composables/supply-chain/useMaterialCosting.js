@@ -35,6 +35,7 @@ export default function useMaterialCosting() {
         purchase_center: '',
         total_allocateable: 0.0,
         scmCostingLines: [],
+        scmCostingAllocations: [],
     });
     const materialObject = {
         scmMaterial: '',

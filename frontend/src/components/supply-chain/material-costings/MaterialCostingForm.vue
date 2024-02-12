@@ -28,11 +28,11 @@
       </label>
       <label class="label-group">
           <span class="label-item-title">Purchase Center</span>
-          <input type="text" readonly :value="form.scmPo?.purchase_center" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'"/>
+          <input type="text" readonly :value="form?.scmPo?.purchase_center" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'"/>
       </label>
       <label class="label-group">
           <span class="label-item-title">Warehouse</span>
-          <input type="text" readonly :value="form.scmWarehouse.name" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'"/>
+          <input type="text" readonly :value="form?.scmWarehouse?.name" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'"/>
       </label>
       <label class="label-group">
           <span class="label-item-title">Date<span class="text-red-500">*</span></span>
@@ -42,9 +42,9 @@
   </div>
   <ul class="flex flex-wrap -mb-px"  v-if="form.scmPo?.purchase_center == 'Foreign'">
     <template v-for="(scmSrLine, index ,key) in form.scmCostingLines" :key="index">
-      <li class="mr-2"  v-for="(lines,index1,key1) in scmSrLine" :key="index1">
+      <li class="mr-2" v-for="(lines,index1,key1) in scmSrLine" :key="index1">
         <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-on:click="toggleTabs(index1)" v-bind:class="{'text-purple-600 bg-white': openTab !== index1, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 bg-gray-100': openTab === index1}">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>{{ index1 }}
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>{{ form.scmCostingLines[index][index1]['cfr'][0]['scmLcRecord']['lc_no']}}
         </a>
       </li>
     </template>
@@ -216,13 +216,49 @@
                 <tfoot>
                   <tr>
                     <td class="text-right">Total</td>
-                    <td><input type="number" :value="form.total_allocateable"/></td>
+                    <td><input type="number" :value="form.total_allocateable" class="form-input"/></td>
                     <td></td>
                   </tr>
                 </tfoot>
               </table>
             </fieldset>
           </template>
+    </div>
+  </div>
+
+  <div id="" v-if="form.scmCostingAllocations?.length">
+    <div id="">
+      <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
+              <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Allocation</legend>
+              <table class="">
+                <thead>
+                  <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
+                      <th class="py-3 align-center">Particulars  asd<span class="text-red-500">*</span></th>
+                      <th class="py-3 align-center">Amount</th>
+                      <th class="py-3 text-center align-center">Action </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+                  <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmCostingAllocation, index) in form.scmCostingAllocations" :key="index">
+                    <td>
+                      <label class="block w-full mt-2 text-sm">
+                        <input type="text" :value="form.scmCostingAllocations[index]?.scmMrr?.ref_no" class="form-input">
+                      </label>
+                    </td>
+                    <td>
+                      <label class="block w-full mt-2 text-sm">
+                        <input type="text" :value="form.scmCostingAllocations[index].value" class="form-input">
+                      </label>
+                    </td>
+                    <td>
+                      <label class="block w-full mt-2 text-sm">
+                        <input type="text" v-model="form.scmCostingAllocations[index].allocated_amount" class="form-input">
+                      </label>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </fieldset>
     </div>
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>  
@@ -242,7 +278,7 @@
     import DropZoneV2 from '../../DropZoneV2.vue';
     import {useStore} from "vuex";
     import env from '../../../config/env';
-    import cloneDeep from 'lodash/cloneDeep';
+    import { merge, cloneDeep, first} from "lodash";
     import usePurchaseOrder from '../../../composables/supply-chain/usePurchaseOrder';
     import useBusinessInfo from '../../../composables/useBusinessInfo';
     import { objectPick } from '@vueuse/core';
@@ -250,7 +286,7 @@
         
     const { materials, searchMaterial,isLoading: materialLoading } = useMaterial();
     const { warehouses, searchWarehouse,isLoading } = useWarehouse();
-    const { searchPurchaseOrder,filteredPurchaseOrders } = usePurchaseOrder();
+    const { searchPurchaseOrder,filteredPurchaseOrders,getPoWiseMrr } = usePurchaseOrder();
     const {fetchTry} = useMaterialCosting();
     const {getMaterialCostingHead} = useBusinessInfo ();
     const props = defineProps({
@@ -264,6 +300,7 @@
 
     const DEPARTMENTS = ref(null);
     const editinitaiated = ref(false); 
+    const editinitaiated2 = ref(false); 
     function addMaterial() {
       // const clonedObj = cloneDeep(props.materialObject);
       props.form.scmCostingLines.push({
@@ -438,9 +475,44 @@
       });
       props.form.total_allocateable = total;
     }
+  }else{
+    if(props.form.purchase_center == 'Foreign'){
+        props.form.scmCostingLines.forEach((element,index) => {
+            Object.keys(element).forEach((key) => {
+                if(index == 0){
+                    openTab.value = (key).toString();
+                }
+            })
+        })
+    }
+
   }
   editinitaiated.value = true;
   }, { deep: true });
+
+
+  function allocateAmount(){
+    var grand_total_value = 0;
+        props.form.scmCostingAllocations.forEach((element) => {
+            grand_total_value += parseFloat(element.value);
+            console.log(grand_total_value);
+        });
+
+        if (grand_total_value > 0) {
+            props.form.scmCostingAllocations.forEach((element) => {
+                element.allocated_amount = element.value / grand_total_value * props.form.total_allocateable;
+            });
+        }
+  }
+  watch(() => props.form.total_allocateable, (newValue, oldValue) => {
+    if (props.formType === 'create') {
+    editinitaiated2.value = true;
+    }
+    if (editinitaiated2.value) {
+        allocateAmount();
+    }
+    editinitaiated2.value = true;
+  });
 
 
   watch(() => props.form?.business_unit, (newValue, oldValue) => {
@@ -490,10 +562,11 @@ function changePoRef() {
   props.form.acc_cost_center_id = props.form.scmPo?.scmWarehouse?.acc_cost_center_id;
   props.form.purchase_center = props.form.scmPo?.purchase_center;
   props.form.scmCostingLines.splice(0, props.form.scmCostingLines.length);
+    props.form.scmCostingAllocations.splice(0, props.form.scmCostingAllocations.length);
   if(props.form.scmPo?.purchase_center == 'Foreign'){
     getMaterialCostingHead().then((data) => {
     var parentData = [];
-    props.form?.scmPo?.scmLcRecords.forEach((element) => {
+    props.form?.scmPo?.scmLcRecords.forEach((element,index) => {
       let mainData = {};
       let keyData = Object.keys(data).map((key) => {
         let adada = data[key].map((element2) => {
@@ -508,7 +581,7 @@ function changePoRef() {
             exchange_rate: 0,
             usd_amount: 0,
             bdt_amount: bdt_amount,
-            scmLcRecords: element,
+            scmLcRecord: element,
             scm_lc_record_id: element.id,
             type: key,
           };
@@ -519,6 +592,9 @@ function changePoRef() {
         return innerObject;
       });
       props.form.scmCostingLines.push({ [element.id] : mainData });
+      if(index == 0){
+        openTab.value = (element.id).toString();
+        }
     });
 
     }).catch((error) => {
@@ -527,6 +603,22 @@ function changePoRef() {
   }else if(props.form.scmPo?.purchase_center == 'Local' || props.form.scmPo?.purchase_center == 'Plant'){
     addMaterial();
   }
+  getPoWiseMrr(props.form.scmPo?.id).then((data) => {
+    if(data.length > 0){
+      data.forEach((element) => {
+        props.form.scmCostingAllocations.push({
+          scm_mrr_id: element.id,
+          scmMrr: element,
+          value: element.total_value,
+          allocated_amount: 0,
+        });
+      });
+      allocateAmount();
+    }
+  }).catch((error) => {
+    console.log(error);
+  });
+
 }
 
 // function tableWidth() {
