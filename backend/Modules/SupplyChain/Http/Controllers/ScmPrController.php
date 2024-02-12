@@ -190,9 +190,7 @@ class ScmPrController extends Controller
     {
         $requestData = $request->except('ref_no', 'pr_composite_key', 'created_by');
 
-        $linesData = CompositeKey::generateArray($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
-
-        return response()->json($linesData, 422);
+        $linesData = CompositeKey::generateArray($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');        
 
         try {
             DB::beginTransaction();
