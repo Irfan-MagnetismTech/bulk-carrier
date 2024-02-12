@@ -6,14 +6,21 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Services\FileUploadService;
 use Modules\SupplyChain\Entities\ScmMrr;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Entities\ScmVendorBill;
 use Modules\SupplyChain\Http\Requests\ScmVendorBillRequest;
 
 class ScmVendorBillController extends Controller
 {
+    function __construct(private FileUploadService $fileUpload)
+    {
+        //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
+        //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
+        //     $this->middleware('permission:charterer-contract-edit', ['only' => ['update']]);
+        //     $this->middleware('permission:charterer-contract-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -38,6 +45,8 @@ class ScmVendorBillController extends Controller
     public function store(ScmVendorBillRequest $request): JsonResponse
     {
         $requestData = $request->except('ref_no');
+        $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/vbs');
+        $requestData['attachment'] = $attachment;
 
         try {
             DB::beginTransaction();
