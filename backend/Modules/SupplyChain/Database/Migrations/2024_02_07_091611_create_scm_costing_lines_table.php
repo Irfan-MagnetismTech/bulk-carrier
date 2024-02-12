@@ -19,8 +19,8 @@ return new class extends Migration
             $table->unsignedBigInteger('scm_lc_record_id')->nullable();
             $table->string('particulars');
             $table->double('exchange_rate', 15, 2)->default(0);
-            $table->double('rate_usd', 15, 2)->default(0);
-            $table->double('rate_bdt', 15, 2)->default(0);
+            $table->double('usd_amount', 15, 2)->default(0);
+            $table->double('bdt_amount', 15, 2)->default(0);
             $table->string('type');
             $table->timestamps();
         });

@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreignId('scm_po_id')->constrained('scm_pos')->cascadeOnDelete();
             $table->string('purchase_center')->nullable();
             $table->date('date');
+            $table->string('total_allocateable');
+            $table->unsignedBigInteger('scm_warehouse_id')->nullable();
             $table->timestamps();
         });
     }

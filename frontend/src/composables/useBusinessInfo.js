@@ -86,12 +86,22 @@ export default function useBusinessInfo() {
     }
   };
 
+  const getMaterialCostingHead = async () => {
+    try {
+      const { data } = await Api.get(`/scm/material-costing-heads`);
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   return {
     getAllStoreCategories,
     getAllProductTypes,
     getCurrencies,
     currencies,
     getLcCostHeads,
+    getMaterialCostingHead,
     lc_cost_heads
   };
 }
