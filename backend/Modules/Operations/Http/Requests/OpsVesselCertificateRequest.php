@@ -25,10 +25,10 @@ class OpsVesselCertificateRequest extends FormRequest
         return [
             'ops_vessel_id' => ['required','exists:ops_vessels,id'],
             'ops_maritime_certification_id' => ['required', 'exists:ops_maritime_certifications,id'],
-            'issue_date' => ['required'],
-            'expire_date' => Rule::requiredIf(function () {
+            'issue_date' => ['required', 'date'],
+            'expire_date' => [Rule::requiredIf(function () {
                 return $this->type != 'Permanent';
-            }),
+            }),'date'],
             'attachment' => 'nullable|mimes:pdf,doc,docx,jpeg,png,gif,xlsx|max:2048',
             'status' => ['nullable'],
             'reference_number' => ['required'],
@@ -49,7 +49,9 @@ class OpsVesselCertificateRequest extends FormRequest
             'ops_maritime_certification_id.required' => 'Certification is required',
             'ops_maritime_certification_id.exists' => 'Certification is not valid',
             'issue_date.required' => 'Issue date is required',
+            'issue_date.date' => 'Issue date must be a date.',
             'expire_date.required' => 'Expire date is required',
+            'expire_date.date' => 'Expire date must be a date.',
             'reference_number.required' => 'Reference number is already taken',
             'attachment.mimes' => 'Attachment must be a file allowed types are pdf,doc,docx,jpeg,png.',
             'attachment.max' => 'Attachment should not exceed 2048 kilobytes (2 MB).',

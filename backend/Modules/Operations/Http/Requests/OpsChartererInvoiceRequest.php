@@ -21,7 +21,7 @@ class OpsChartererInvoiceRequest extends FormRequest
         return [
             'ops_charterer_profile_id'      => ['required','exists:ops_charterer_profiles,id'],
             'ops_charterer_contract_id'     => ['required','exists:ops_charterer_contracts,id'],
-            // 'ops_voyage_id'                 => 'required_if:contract_type,==,Voyage Wise|nullable|max:20',
+            // 'ops_voyage_id'                 => 'required_if:contract_type,==,Voyage Wise|nullable|exists:ops_voyages,id',
             'contract_type'                 => ['nullable', 'string', 'max:255'],
             'bill_from'                     => 'required_if:contract_type,==,Day Wise|nullable',
             'bill_till'                     => 'required_if:contract_type,==,Day Wise|nullable',

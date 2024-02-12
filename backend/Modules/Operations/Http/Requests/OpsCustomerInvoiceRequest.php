@@ -46,6 +46,7 @@ class OpsCustomerInvoiceRequest extends FormRequest
             'discounted_amount.numeric' => 'Discount must be numeric.',
             'grand_total.required' => 'Grand total is required.',
             'date.required' => 'Date is required.',
+            'date.date' => 'Date must be a date.',
             'opsCustomerInvoiceLines.*.amount.numeric' => 'Amount must be numeric. Invalid data in row :position.',
             'opsCustomerInvoiceVoyages.*.ops_voyage_id.unique' => 'One or more voyages is already invoiced. Invalid data in row :position.',
             'opsCustomerInvoiceVoyages.*.ops_voyage_id.exists' => 'Voyage is not valid in row :position.',

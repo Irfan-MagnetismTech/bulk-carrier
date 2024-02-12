@@ -28,7 +28,6 @@ class OpsVoyageReportController extends Controller
     {
         $this->middleware('permission:ops-lighter-voyage-report', ['only' => ['lighterVoyageReport']]);
         $this->middleware('permission:ops-bulk-voyage-report', ['only' => ['bulkVoyageReport']]);
-
     }
     /**
      * Display a listing of the resource.
@@ -164,6 +163,7 @@ class OpsVoyageReportController extends Controller
                         'type'=>['Report not found.',]
                         ]
                     ];
+
                 return response()->json($error, 422);
             }
 

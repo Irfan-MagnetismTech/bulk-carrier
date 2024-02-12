@@ -19,6 +19,7 @@ use Modules\Operations\Http\Requests\OpsVesselParticularRequest;
 class OpsVesselParticularController extends Controller
 {
     use HasRoles;
+    
     function __construct(private FileUploadService $fileUpload)
     {
         $this->middleware('permission:ops-vessel-particular-create|ops-vessel-particular-edit|ops-vessel-particular-view|ops-vessel-particular-delete', ['only' => ['index','show']]);

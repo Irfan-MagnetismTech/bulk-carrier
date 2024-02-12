@@ -19,6 +19,7 @@ use Modules\Operations\Services\OpsVesselBunkerService;
 class OpsBunkerReportController extends Controller
 {
     use HasRoles;
+    
     function __construct(private FileUploadService $fileUpload)
     {
         $this->middleware('permission:ops-voyage-bunker-report', ['only' => ['vesselBunkerReport']]);

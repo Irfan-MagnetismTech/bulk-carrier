@@ -71,6 +71,7 @@ class OpsVesselParticularRequest extends FormRequest
             'loa.numeric' => 'LOA must be numeric.',
             'bhp.numeric' => 'BHP must be numeric.',
             'call_sign.unique' => 'Call sign is already taken.',
+            'email.email' => 'Please enter a valid email.',
             'imo.unique' => 'IMO is already taken.',
             'imo.digits_between' => 'IMO number must be between :min and :max characters.',         
             'attachment.mimes' => 'Attachment must be an excel file of type: pdf,doc,docx,jpeg,png,gif,xlsx.',

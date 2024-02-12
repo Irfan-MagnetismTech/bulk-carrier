@@ -51,6 +51,7 @@ class OpsLighterNoonReportRequest extends FormRequest
             'lat_long.max' =>  'Lat/Long may not be greater than :max characters.',
             'engine_running_hours.max' => 'Engine running hours is required.',
             'date.max' => 'Date is required.',
+            'date.date' => 'Date must be a date.',
             'last_port.max' => 'Last Port is required.',
             'next_port.max' => 'Next Port is required.',
             'remarks.max' => 'Remarks is required.',

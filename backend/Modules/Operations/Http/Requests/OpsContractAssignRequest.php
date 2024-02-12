@@ -25,7 +25,7 @@ class OpsContractAssignRequest extends FormRequest
             'ops_charterer_contract_id' => 'required_if:contract_assign_type,==,Charterer|nullable|max:20|exists:ops_charterer_contracts,id',
             'ops_charterer_profile_id'  => 'required_if:contract_assign_type,==,Charterer|nullable|max:20|exists:ops_charterer_profiles,id',
             'ops_customer_id'           => 'required_if:contract_assign_type,==,Customer|nullable|max:20|exists:ops_customers,id',
-            'assign_date'               => ['required'],
+            'assign_date'               => ['required', 'date'],
             'opsVoyage.opsContractTariffs.*.ops_cargo_tariff_id'    =>  'required_if:contract_assign_type,==,Customer|nullable|max:20|exists:ops_cargo_tariffs,id',
         ];
     }
@@ -50,6 +50,7 @@ class OpsContractAssignRequest extends FormRequest
             'ops_customer_id.required' => 'Customer is required.',
             'ops_customer_id.exists' => 'Customer is not valid.',
             'assign_date.required' => 'Assign Date is required.',
+            'assign_date.date' => 'Assign Date must be a date.',
             'opsVoyage.opsContractTariffs.*.ops_cargo_tariff_id.required_if' => 'Cargo Tarrif can not be null.',
             'opsVoyage.opsContractTariffs.*.ops_cargo_tariff_id.exists' => 'Cargo Tarrif is not valid.',
         ];
