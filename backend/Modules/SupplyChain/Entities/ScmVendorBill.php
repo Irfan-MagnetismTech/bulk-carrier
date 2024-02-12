@@ -3,6 +3,7 @@
 namespace Modules\SupplyChain\Entities;
 
 use App\Models\User;
+use App\Traits\GlobalSearchTrait;
 use App\Traits\UniqueKeyGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmVendor;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmVendorBill extends Model
 {
-    use HasFactory, UniqueKeyGenerator;
+    use HasFactory, GlobalSearchTrait, UniqueKeyGenerator;
 
     protected $refKeyPrefix = 'VB';
 

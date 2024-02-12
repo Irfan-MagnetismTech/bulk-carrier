@@ -103,6 +103,7 @@
     const SourceButtonWidth = ref(null);
     const TargetButtonWidth = ref(null);
     const minPoDate = ref('');
+    const editinitaiated = ref(false);
 
     // function setMaterialOtherData(index){
     //   let material = materials.value.find((material) => material.id === props.form.materials[index].material_id);
@@ -236,6 +237,24 @@
     // } 
 
     onMounted(() => {
+
+      watch(()=> props.form.scmMrrLines, (newVal, oldVal) => {
+        if(props.form.formType == 'create'){
+          editinitaiated.value = true;
+        }
+        if(editinitaiated.value){
+        var total_value = 0;
+        newVal.forEach((line, index) => {
+          line.scmMrrLineItems.forEach((item, itemIndex) => {
+            total_value += item.quantity * item.rate;
+            console.log(total_value);
+          });
+        });
+        props.form.total_value = total_value;
+      }
+      editinitaiated.value = true;
+      }, { deep: true });
+
       watch(() => props.form.business_unit, (newValue, oldValue) => {
       if(newValue !== oldValue && oldValue != '' && oldValue != null){
         console.log(oldValue);

@@ -8,6 +8,7 @@ use Modules\SupplyChain\Entities\ScmPo;
 use Modules\SupplyChain\Entities\ScmWarehouse;
 use Modules\SupplyChain\Entities\ScmCostingLine;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\SupplyChain\Entities\ScmCostingAllocation;
 
 class ScmCosting extends Model
 {
@@ -25,6 +26,11 @@ class ScmCosting extends Model
     public function scmCostingLines()
     {
         return $this->hasMany(ScmCostingLine::class);
+    }
+
+    public function scmCostingAllocations()
+    {
+        return $this->hasMany(ScmCostingAllocation::class);
     }
 
     public function scmPo()
