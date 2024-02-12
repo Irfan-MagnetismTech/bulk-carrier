@@ -139,17 +139,17 @@
                 </td>
                 <td>
                   <label class="block w-full mt-2 text-sm">
-                    <input type="number" @input="calculateSingleItem(index)" required v-model="form.scmVendorBillLines[index].amount" class="form-input !text-right" min="1">
+                    <input type="number" step="0.01" @input="calculateSingleItem(index)" required v-model="form.scmVendorBillLines[index].amount" class="form-input !text-right" min="1">
                   </label>
                 </td>
                 <td>
                   <label class="block w-full mt-2 text-sm">
-                    <input type="text" readonly v-model="form.scmVendorBillLines[index].amount_usd" class="!text-right vms-readonly-input form-input">
+                    <input type="number" step="0.01" readonly v-model="form.scmVendorBillLines[index].amount_usd" class="!text-right vms-readonly-input form-input">
                   </label>
                 </td>
                 <td>
                   <label class="block w-full mt-2 text-sm">
-                    <input type="text" readonly v-model="form.scmVendorBillLines[index].amount_bdt" class="!text-right vms-readonly-input form-input">
+                    <input type="number" step="0.01" readonly v-model="form.scmVendorBillLines[index].amount_bdt" class="!text-right vms-readonly-input form-input">
                   </label>
                 </td>
 
@@ -170,7 +170,7 @@
                   Sub Total
                 </td>
                 <td>
-                    <input type="text" v-model="form.sub_total" readonly placeholder="Sub Total" class="!text-right vms-readonly-input form-input" autocomplete="off" />
+                    <input type="number" step="0.01" v-model="form.sub_total" readonly placeholder="Sub Total" class="!text-right vms-readonly-input form-input" autocomplete="off" />
                 </td>
                 <td></td>
               </tr>
@@ -179,7 +179,7 @@
                   Discount
                 </td>
                 <td>
-                    <input type="number" @input="CalculateAll" v-model="form.discount" placeholder="Discount" class="!text-right form-input" autocomplete="off" />
+                    <input type="number" step="0.01" @input="CalculateAll" v-model="form.discount" placeholder="Discount" class="!text-right form-input" autocomplete="off" />
                 </td>
                 <td></td>
               </tr>
@@ -188,7 +188,7 @@
                   Net Amount
                 </td>
                 <td>
-                    <input type="text" v-model="form.net_amount" readonly placeholder="Net Amount" class="!text-right vms-readonly-input form-input" autocomplete="off" />
+                    <input type="number" step="0.01" v-model="form.net_amount" readonly placeholder="Net Amount" class="!text-right vms-readonly-input form-input" autocomplete="off" />
                 </td>
                 <td></td>
               </tr>
@@ -232,8 +232,7 @@
       form: { type: Object, required: true },
       billLineObject: { type: Object, required: true },
       errors: { type: [Object, Array], required: false },
-      formType: { type: String, required : false },
-      page: {required: false, default: {} },
+      page: { type: String, required : false },
 
     });
 
@@ -249,6 +248,7 @@
 
     function removeMrr(index){
       props.form.scmVendorBillLines.splice(index, 1);
+      redoFullCalculation();
     }
 
     const tableScrollWidth = ref(null);
@@ -282,12 +282,14 @@
   }
 
   function fetchMrrByVendor() {
-    searchMrrByVendor(props.form.scm_vendor_id);
+    searchMrrByVendor(props.form.scm_vendor_id).then(() => {
+      editInitiated.value = 1;
+    });
   }
 
   watch(() => props.form.currency, (value) => {
         
-        if(props.form.currency != '' && (editInitiated.value == 1 || props.formType == 'create')) {
+        if(props.form.currency != '' && (editInitiated.value == 1 || props.page == 'create')) {
           props.form.usd_to_bdt = null;
           props.form.currency_to_usd = null;
           redoFullCalculation()
@@ -295,22 +297,37 @@
   });
 
   watch(() => props.form.scmVendor, (value) => {
-        fetchMrrByVendor();
-        if(editInitiated.value == 1) {
+        if(editInitiated.value == 1 || props.page == 'create') {
           props.form.scm_vendor_id = value?.id ?? null;
         }
+        fetchMrrByVendor();
+
   });
 
   watch(() => props.form.scmWarehouse, (value) => {
-        if(editInitiated.value == 1) {
+        if(editInitiated.value == 1 || props.page == 'create') {
           props.form.scm_warehouse_id = value?.id ?? null;
         }
   });
 
 
-const setScmVendorMrrId = (index) => {
-  props.form.scmVendorBillLines[index].scm_mrr_id = props.form.scmVendorBillLines[index]?.id
+  const setScmVendorMrrId = (index) => {
+  let chosenMrr = scmVendorMrrs.value.filter(item => item.id === props.form.scmVendorBillLines[index].scmMrr.id);
+
+  // Check if chosenMrr is not empty before accessing its elements
+  if (chosenMrr.length > 0) {
+    // Update state using Vue.js reactive data or dispatch an action for state management
+    props.form.scmVendorBillLines[index].scm_mrr_id = chosenMrr[0].id;
+    props.form.scmVendorBillLines[index].scmPo = chosenMrr[0].scmPo;
+    props.form.scmVendorBillLines[index].scm_po_id = chosenMrr[0]?.scmPo?.id;
+
+  } else {
+    // Handle the case where chosenMrr is empty (no matching item found)
+    // For example, set some default values or show an error message
+    console.error("No matching MRR found for the given ID.");
+  }
 }
+
 
 const redoFullCalculation = () => {
   props?.form?.scmVendorBillLines.forEach((element, index) => {
@@ -322,9 +339,9 @@ const calculateSingleItem = (index) => {
 
   const { amount, amount_usd, amount_bdt } = calculateInCurrency(props.form.scmVendorBillLines[index]);
 
-  props.form.scmVendorBillLines[index].amount_usd = (amount_usd > 0) ? amount_usd : 0;
-  props.form.scmVendorBillLines[index].amount_bdt = (amount_bdt > 0) ? amount_bdt : 0;
-  props.form.scmVendorBillLines[index].amount = (amount > 0) ? amount : 0;
+  props.form.scmVendorBillLines[index].amount_usd = parseFloat((amount_usd > 0) ? amount_usd : 0).toFixed(2);
+  props.form.scmVendorBillLines[index].amount_bdt = parseFloat((amount_bdt > 0) ? amount_bdt : 0).toFixed(2);
+  props.form.scmVendorBillLines[index].amount = parseFloat((amount > 0) ? amount : 0).toFixed(2);
 
   calculateSubTotal();
 }
@@ -379,16 +396,16 @@ const calculateInCurrency = (item) => {
 
   watch(() => props.form.business_unit, (newValue, oldValue) => {
     
-    if(props.formType == 'create') {
+    if(props.page == 'create') {
       props.form.scmWarehouse = null;
       props.form.scmVendor = null;
 
       warehouses.value = []
       vendors.value = []
-
-      fetchVendors("");
-      fetchWarehouses("");
     }
+
+    fetchVendors("");
+    fetchWarehouses("");
     
 
     

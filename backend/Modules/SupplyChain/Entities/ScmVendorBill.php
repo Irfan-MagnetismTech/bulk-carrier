@@ -7,6 +7,7 @@ use App\Traits\GlobalSearchTrait;
 use App\Traits\UniqueKeyGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmVendor;
+use Modules\SupplyChain\Entities\ScmWarehouse;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\SupplyChain\Entities\ScmVendorBillLine;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -55,5 +56,10 @@ class ScmVendorBill extends Model
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+
+    public function scmWarehouse(): BelongsTo
+    {
+        return $this->belongsTo(ScmWarehouse::class);
     }
 }

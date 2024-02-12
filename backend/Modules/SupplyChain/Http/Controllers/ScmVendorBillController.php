@@ -72,7 +72,7 @@ class ScmVendorBillController extends Controller
     public function show(ScmVendorBill $vendorBill): JsonResponse
     {
         try {
-            return response()->success('data', $vendorBill->load('scmVendorBillLines.scmMrr', 'scmVendorBillLines.scmPo', 'scmVendorBillLines.scmLcRecord', 'scmVendor', 'createdBy'), 200);
+            return response()->success('data', $vendorBill->load('scmWarehouse', 'scmVendorBillLines.scmMrr', 'scmVendorBillLines.scmPo', 'scmVendorBillLines.scmLcRecord', 'scmVendor', 'createdBy'), 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
