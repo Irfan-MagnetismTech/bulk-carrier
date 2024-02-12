@@ -224,6 +224,22 @@ class AisReportController extends Controller
         }
     }
 
+    public function costCenterbreakup(Request $request): JsonResponse
+    {
+        try {
+            $ledgerEntries = (new TrialBalanceService)->handleTrialBalanceService('trial_balance');
+
+            return response()->json([
+                'status' => 'success',
+                'value'  => $ledgerEntries,
+            ], 200);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }    
+
     public function paymentReceiptSummary(Request $request){
         try{
             $paymentReceipts = (new PaymentReceiptService)->handlePaymentReceiptSummary($request); 
