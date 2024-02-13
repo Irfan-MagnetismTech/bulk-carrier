@@ -6,6 +6,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
+import { showPdfExport } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 
@@ -22,16 +23,17 @@ onMounted(() => {
 });
 </script>
 
-<template>
+<template >
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Crew Profile Details</h2>
     <default-button :title="'Crew Profile List'" :to="{ name: 'crw.profiles.index' }" :icon="icons.DataBase"></default-button>
+    <button @click="showPdfExport(businessUnit,'l', 'Lorem Ipsum',['exampleTable', 'exampleTable2', 'profileDetailTable', 'profileDetailTable2', 'profileDetailTable3', 'profileDetailTable4', 'profileDetailTable5'], false, true);">Generate</button>
   </div>
-  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800" >
       <div class="flex md:gap-4">
         <div class="w-full">
           <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Crew Profile Information</h2>
-          <table class="w-full">
+          <table class="w-full" id="exampleTable">
             <thead>
             <tr>
               <td class="!text-center bg-gray-200 font-bold" colspan="2">Personal Info</td>
@@ -215,7 +217,7 @@ onMounted(() => {
               </tr>
             </tbody>
           </table>
-          <table class="w-full mt-1" id="profileDetailTable">
+          <table class="w-full mt-1" id="exampleTable2">
             <thead>
             <tr>
               <td class="!text-center bg-gray-200 font-bold" colspan="8">Educations</td>
@@ -281,7 +283,7 @@ onMounted(() => {
             </tr>
             </tfoot>
           </table>
-          <table class="w-full mt-1" id="profileDetailTable">
+          <table class="w-full mt-1" id="profileDetailTable2">
             <thead>
             <tr>
               <td class="!text-center bg-gray-200 font-bold" colspan="6">Experiences</td>
@@ -311,7 +313,7 @@ onMounted(() => {
             </tr>
             </tfoot>
           </table>
-          <table class="w-full mt-1" id="profileDetailTable">
+          <table class="w-full mt-1" id="profileDetailTable3">
             <thead>
             <tr>
               <td class="!text-center bg-gray-200 font-bold" colspan="6">Others</td>
@@ -341,7 +343,7 @@ onMounted(() => {
             </tr>
             </tfoot>
           </table>
-          <table class="w-full mt-1" id="profileDetailTable">
+          <table class="w-full mt-1" id="profileDetailTable4">
             <thead>
             <tr>
               <td class="!text-center bg-gray-200 font-bold" colspan="8">References</td>
@@ -375,7 +377,7 @@ onMounted(() => {
             </tr>
             </tfoot>
           </table>
-          <table class="w-full mt-1" id="profileDetailTable">
+          <table class="w-full mt-1" id="profileDetailTable5">
             <thead>
             <tr>
               <td class="!text-center bg-gray-200 font-bold" colspan="8">Nominees</td>
