@@ -30,6 +30,9 @@ const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
+const rightAlign = [];
+const leftAlign = [1,5];
+
 function confirmDelete(id) {
   Swal.fire({
     title: 'Are you sure?',
@@ -202,13 +205,15 @@ function imgToBase64(url, callback) {
   imgToBase64('../torony-logo.png', function(base64) {
     base64Img = base64;
   });
-
+  import { indexPdfExport } from "../../../utils/helper.js";
 function generate(){
-    var doc = new jsPDF('l', 'pt', "a4");
+  indexPdfExport(businessUnit,'l', 'Lorem Ipsum','exampleTable', leftAlign, rightAlign, true, true, false);
+  return;
+    var doc = new jsPDF('l','pt', "a4");
     var htmlstring = '';
     var tempVarToCheckPageHeight = 0;
-    var pageHeight = 0;
-    pageHeight = doc.internal.pageSize.height;
+    var pageHeight = 0; //pending
+    pageHeight = doc.internal.pageSize.height; //pending
 
     
            var margins = {
@@ -372,6 +377,29 @@ function generate(){
       var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight()
       doc.text(str, data.settings.margin.left, pageHeight - 10)
                 },
+
+                didParseCell: function (data) {
+                  if (data.column.dataKey === 2 && data.row.section === 'body') {
+                    data.cell.styles.textColor = 'red';
+                  }
+
+                  if (
+                    (data.row.section === 'head' || data.row.section === 'foot') &&
+                    data.column.dataKey === 'expenses'
+                  ) {
+                    data.cell.text = '' // Use an icon in didDrawCell instead
+                  }
+
+                  if (data.column.dataKey === 'city') {
+                    data.cell.styles.font = 'mitubachi'
+                    if (data.row.section === 'head') {
+                      data.cell.text = 'シティ'
+                    }
+                    if (data.row.index === 0 && data.row.section === 'body') {
+                      data.cell.text = 'とうきょう'
+                    }
+                  }
+                },
                 willDrawCell: function (data) {
                   if (data.row.section === 'head') {
                     
@@ -411,7 +439,7 @@ function generate(){
   <div class="flex items-center justify-between w-full my-3">
     <h2 class="text-2xl font-semibold text-gray-700">Chart of Accounts List</h2>
     <default-button :title="'Create Chart of Accounts'" :to="{ name: 'acc.chart-of-accounts.create' }" :icon="icons.AddIcon"></default-button>
-    <button @click="generate">Generate</button>
+    <button @click="indexPdfExport(businessUnit,'l', 'Lorem Ipsum','exampleTable', leftAlign, rightAlign, true, true, false);">Generate</button>
   </div>
 <!--  <div class="flex items-center justify-between mb-2 select-none">-->
 <!--    <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>-->
@@ -531,11 +559,11 @@ function generate(){
           <tbody  class="relative">
           <tr v-for="(chartAccountData,index) in chartOfAccounts?.data" :key="index">
             <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-            <td class="!text-left">{{ chartAccountData?.balanceIncome?.line_text }}</td>
+            <td :class= "{'!text-left' : leftAlign.indexOf(this.cellIndex)}">{{ chartAccountData?.balanceIncome?.line_text }}</td>
             <td>{{ chartAccountData?.balanceIncome?.line_type }}</td>
-            <td style="text-align: center;">{{ chartAccountData?.parent?.account_name ?? '---' }}</td>
+            <td>{{ chartAccountData?.parent?.account_name ?? '---' }}</td>
             <td>{{ chartAccountData?.account_code }}</td>
-            <td class="!text-left">{{ chartAccountData?.account_name }}</td>
+            <td :class= "{'!text-left' : leftAlign.indexOf(this.cellIndex)}">{{ chartAccountData?.account_name }}</td>
             <td>
               <span v-if="chartAccountData?.account_type===1" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-200 rounded-full dark-disabled:text-gray-100 dark-disabled:bg-gray-700">Assets</span>
               <span v-if="chartAccountData?.account_type===2" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-green-200 rounded-full dark-disabled:text-gray-100 dark-disabled:bg-gray-700">Liabilities</span>
