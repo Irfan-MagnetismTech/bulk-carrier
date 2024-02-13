@@ -715,15 +715,15 @@ export default [
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	{
-		path: `/${BASE}/reports/vessel-bunker-report`,
-		name: `${BASE}.reports.vessel-bunker-report`,
-		component: () => import (`../views/${ViEWBASE}/reports/vessel-bunker-report.vue`),
+		path: `/${BASE}/reports/voyage-bunker-report`,
+		name: `${BASE}.reports.voyage-bunker-report`,
+		component: () => import (`../views/${ViEWBASE}/reports/voyage-bunker-report.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	{
-		path: `/${BASE}/reports/gross-bunker-report`,
-		name: `${BASE}.reports.gross-bunker-report`,
-		component: () => import (`../views/${ViEWBASE}/reports/gross-bunker-report.vue`),
+		path: `/${BASE}/reports/vessel-bunker-report`,
+		name: `${BASE}.reports.vessel-bunker-report`,
+		component: () => import (`../views/${ViEWBASE}/reports/vessel-bunker-report.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	{

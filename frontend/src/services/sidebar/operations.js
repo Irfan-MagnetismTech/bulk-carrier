@@ -339,7 +339,7 @@ export default [
                 permissionKey: '',
                 subSubMenu: [
                     {
-                        route: 'ops.reports.vessel-bunker-report',
+                        route: 'ops.reports.voyage-bunker-report',
                         label: 'Voyage Bunker Report',
                         preIcon: '',
                         postIcon: icons.DownArrow,
@@ -349,7 +349,7 @@ export default [
                         subSubMenu: []
                     },
                     {
-                        route: 'ops.reports.gross-bunker-report',
+                        route: 'ops.reports.vessel-bunker-report',
                         label: 'Vessel Bunker Report',
                         preIcon: '',
                         postIcon: icons.DownArrow,
