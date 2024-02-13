@@ -54,7 +54,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Ref No",
+      "label": "Bill No",
       "filter_type": "input"
     },
     {
@@ -64,47 +64,28 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Raised Date",
+      "label": "Date",
       "filter_type": "date" 
     },
     {
-      "relation_name": "scmWarehouse",
+      "relation_name": "scmVendor",
       "field_name": "name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Warehouse",
+      "label": "Vendor Name",
       "filter_type": "input"
     },
     {
       "relation_name": null,
-      "field_name": "department_id",
+      "field_name": null,
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Department",
-      "filter_type": "dropdown",
-      "select_options": [
-        {
-          label: "All",
-          value: "",
-          defaultSelected : true
-        },
-        {
-          label: "Store Department",
-          value: 1
-        },
-        {
-          label: "Engine Department",
-          value: 2
-        },
-        {
-          label: "Provision Department",
-          value: 3
-        }
-      ]
+      "label": "Total",
+      "filter_type": null
     }
   ]
 });
@@ -191,22 +172,19 @@ function confirmDelete(id) {
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
               <td>{{ vendorBill?.ref_no }}</td>
               <td><no-br>{{ formatDate(vendorBill?.date) }}</no-br></td>
-              <td>{{ vendorBill?.scmWarehouse?.name?? '' }}</td>
-              <td>{{ DEPARTMENTS[vendorBill.department_id] ?? '' }}</td>
+              <td>{{ vendorBill?.scmVendor?.name?? '' }}</td>
+              <td>{{ vendorBill.net_amount }}</td>
               <td>
                 <span :class="vendorBill?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ vendorBill?.business_unit }}</span>
               </td>
-              <td>
+              <td class="items-center justify-center space-x-1 text-gray-600">
                 <nobr>
-                <div class="grid grid-flow-col-dense gap-x-2">
-                  <button @click="navigateToSICreate(vendorBill.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create SI</button>
                   <!-- <button @click="navigateToPOCreate(vendorBill.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
                   <button @click="navigateToMRRCreate(vendorBill.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
                   <action-button :action="'show'" :to="{ name: 'scm.vendor-bills.show', params: { vendorBillId: vendorBill.id } }"></action-button>
                   <!-- <action-button :action="'edit'" :to="{ name: 'scm.vendor-bills.edit', params: { vendorBillId: vendorBill.id } }" v-if="(vendorBill?.scmSis.length <= 0)"></action-button> -->
                    <action-button :action="'edit'" :to="{ name: 'scm.vendor-bills.edit', params: { vendorBillId: vendorBill.id } }"></action-button>
                   <action-button @click="confirmDelete(vendorBill.id)" :action="'delete'"></action-button>
-                </div>
               </nobr>
               </td>
             </tr>

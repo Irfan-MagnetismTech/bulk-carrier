@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Services\FileUploadService;
+use Faker\Provider\ar_EG\Person;
 use Modules\SupplyChain\Entities\ScmMrr;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmVendorBill;
@@ -72,7 +73,7 @@ class ScmVendorBillController extends Controller
     public function show(ScmVendorBill $vendorBill): JsonResponse
     {
         try {
-            return response()->success('data', $vendorBill->load('scmVendorBillLines.scmMrr', 'scmVendorBillLines.scmPo', 'scmVendorBillLines.scmLcRecord', 'scmVendor', 'createdBy'), 200);
+            return response()->success('data', $vendorBill->load('scmWarehouse', 'scmVendorBillLines.scmMrr', 'scmVendorBillLines.scmPo', 'scmVendorBillLines.scmLcRecord', 'scmVendor', 'createdBy'), 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
@@ -87,10 +88,14 @@ class ScmVendorBillController extends Controller
      */
     public function update(ScmVendorBillRequest $request, ScmVendorBill $vendorBill): JsonResponse
     {
+        $requestData = $request->except('ref_no');
+        $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs', $vendorBill->attachment);
+        $requestData['attachment'] = $attachment;
+
         try {
             DB::beginTransaction();
 
-            $vendorBill->update($request->all());
+            $vendorBill->update($requestData);
             $vendorBill->scmVendorBillLines()->delete();
             $vendorBill->scmVendorBillLines()->createMany($request->scmVendorBillLines);
 

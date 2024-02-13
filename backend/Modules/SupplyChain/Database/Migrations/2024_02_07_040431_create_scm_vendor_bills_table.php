@@ -16,16 +16,13 @@ return new class extends Migration
         Schema::create('scm_vendor_bills', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('scm_vendor_id')->nullable();
+            $table->bigInteger('scm_warehouse_id')->nullable();
             $table->string('ref_no')->nullable();
+            $table->string('bill_no')->nullable();
             $table->date('date')->nullable();
             $table->string('remarks')->nullable();
             $table->string('attachment')->nullable();
-            $table->decimal('sub_total', 20, 2)->nullable();
-            $table->decimal('carring_cost', 20, 2)->nullable();
-            $table->decimal('loading_unloading', 20, 2)->nullable();
-            $table->decimal('clearence_charge', 20, 2)->nullable();
-            $table->decimal('port_charge', 20, 2)->nullable();
-            $table->decimal('grand_total', 20, 2)->nullable();
+            $table->decimal('sub_total', 20, 2)->nullable();        
             $table->decimal('discount', 20, 2)->nullable();
             $table->decimal('net_amount', 20, 2)->nullable();
             $table->string('business_unit')->comment('psml,tsll')->nullable();

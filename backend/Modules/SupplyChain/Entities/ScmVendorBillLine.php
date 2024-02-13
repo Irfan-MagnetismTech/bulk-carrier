@@ -18,8 +18,10 @@ class ScmVendorBillLine extends Model
         'scm_vendor_bill_id',
         'scm_mrr_id',
         'scm_po_id',
-        'scm_lc_record_id',
+        // 'scm_lc_record_id',
         'amount',
+        'amount_bdt',
+        'amount_usd',
     ];
 
     public function scmVendorBill(): BelongsTo

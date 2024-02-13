@@ -15,11 +15,12 @@ return new class extends Migration
     {
         Schema::create('scm_vendor_bill_lines', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('scm_mrr_id')->nullable();
             $table->bigInteger('scm_vendor_bill_id')->nullable();
+            $table->bigInteger('scm_mrr_id')->nullable();
             $table->bigInteger('scm_po_id')->nullable();
-            $table->bigInteger('scm_lc_record_id')->nullable();
             $table->decimal('amount', 20, 2)->nullable();
+            $table->decimal('amount_bdt', 20, 2)->nullable();
+            $table->decimal('amount_usd', 20, 2)->nullable();
             $table->timestamps();
         });
     }
