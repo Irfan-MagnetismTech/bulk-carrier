@@ -21,6 +21,17 @@ class OpsVessel extends Model
      *
      * @var string[]
      */
+
+    //  protected $skipForDeletionCheck = ['opsBunkers','opsVesselCertificates'];
+
+    //  protected $features = [
+    //      'mntCriticalVesselItems' => 'Critical Vessel Records',
+    //      'opsCargoTariffs' => 'Cargo Tariff Records', 
+    //      'scmWareHouse' => 'Warehouse Records',
+    //  ];
+
+
+
     protected $fillable = [
         'vessel_type',
         'name',

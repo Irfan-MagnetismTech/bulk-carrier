@@ -33,6 +33,7 @@ class OpsBunker extends Model
         'fuel_con_voyage',
         'currency',
         'status',
+        'vb_composite_key',
         'particular'
     ];
 

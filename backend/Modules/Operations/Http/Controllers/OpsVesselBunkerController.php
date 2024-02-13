@@ -10,6 +10,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmWarehouse;
+use Modules\SupplyChain\Services\CompositeKey;
 use Modules\Operations\Entities\OpsVesselBunker;
 use Modules\SupplyChain\Services\StockLedgerData;
 use Modules\Operations\Http\Requests\OpsVesselBunkerRequest;
@@ -86,11 +87,19 @@ class OpsVesselBunkerController extends Controller
             })->values()->all();
             
 
+            $composite = [];
+            foreach($bunkers as $index => $value){
+                $composite_key = CompositeKey::generate($index,  $warehouse->id, 'vb', $value['scm_material_id'], null);
+                $bunkers[$index]['vb_composite_key']=$composite_key;
+                $composite[] = $composite_key;
+            }
+
 
             $vessel_bunker->opsBunkers()->createMany($bunkers);
             
             if($request->type=="Stock In") {
                 (new StockLedgerData)->insert($vessel_bunker, $bunkers);
+                // StockLedgerData::insert($vessel_bunker, $bunkers, $composite);
             }else if($request->type=="Stock Out"){
                 $dataForStock = [];
                 foreach ($bunkers as $key => $value) {
@@ -164,6 +173,17 @@ class OpsVesselBunkerController extends Controller
             );
             $vessel_bunker->update($vessel_bunkerInfo);
             $vessel_bunker->opsBunkers()->delete();
+            $bunkers= collect($request->opsBunkers)->map(function($bunker) use ($vessel_bunker){
+                return $bunker;
+            })->values()->all();
+            
+            $composite = [];
+            foreach($bunkers as $index => $value){
+                $composite_key = CompositeKey::generate($index,  $vessel_bunker->scm_warehouse_id, 'vb', $value['scm_material_id'], null);
+                $bunkers[$index]['vb_composite_key']=$composite_key;
+                $composite[] = $composite_key;
+            }
+
             $vessel_bunker->opsBunkers()->createMany($request->opsBunkers);
             DB::commit();
             return response()->success('Data updated successfully.', $vessel_bunker, 202);

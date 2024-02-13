@@ -26,7 +26,7 @@ class OpsVoyageReportController extends Controller
    
     function __construct(private FileUploadService $fileUpload)
     {
-        $this->middleware('permission:ops-lighter-voyage-report', ['only' => ['lighterVoyageReport']]);
+        $this->middleware('permission:ops-lighterage-voyage-report', ['only' => ['lighterVoyageReport']]);
         $this->middleware('permission:ops-bulk-voyage-report', ['only' => ['bulkVoyageReport']]);
     }
     /**
