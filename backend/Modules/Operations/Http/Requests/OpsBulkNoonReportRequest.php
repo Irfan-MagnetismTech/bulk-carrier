@@ -15,8 +15,8 @@ class OpsBulkNoonReportRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ops_vessel_id'     => ['required','exists:scm_vessels,id'],
-            'ops_voyage_id'     => ['required','exists:scm_voyages,id'],
+            'ops_vessel_id'     => ['required','exists:ops_vessels,id'],
+            'ops_voyage_id'     => ['required','exists:ops_voyages,id'],
             'ship_master'       => ['nullable', 'string'],
             'chief_engineer'    => ['nullable', 'string'],
             'wind_condition'    => ['nullable', 'string'],

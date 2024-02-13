@@ -29,7 +29,7 @@ const props = defineProps({
 });
 
 const { setTitle } = Title();
-setTitle('Lighter Noon Report List');
+setTitle('Lighterage Noon Report List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -166,7 +166,7 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Lighter Noon Report List</h2>
+    <h2 class="text-2xl font-semibold text-gray-700">Lighterage Noon Report List</h2>
     <default-button :title="'Create Lighter Noon Report'" :to="{ name: 'ops.lighter-noon-reports.create' }" :icon="icons.AddIcon"></default-button>
   </div>
 

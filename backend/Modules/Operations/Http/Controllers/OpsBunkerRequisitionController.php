@@ -177,7 +177,7 @@ class OpsBunkerRequisitionController extends Controller
         catch (QueryException $e)
         {
             DB::rollBack();
-            return response()->json($bunker_requisition->preventDeletionIfRelated(), 422);
+            return response()->error($e->getMessage(), 500);
         }
     }
 

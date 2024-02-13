@@ -20,10 +20,10 @@ class OpsCargoTariffController extends Controller
    
    function __construct(private FileUploadService $fileUpload)
    {
-       $this->middleware('permission:ops-cargo-tariff-create|ops-cargo-tariff-edit|ops-cargo-tariff-view|ops-cargo-tariff-delete', ['only' => ['index','show']]);
-       $this->middleware('permission:ops-cargo-tariff-create', ['only' => ['store']]);
-       $this->middleware('permission:ops-cargo-tariff-edit', ['only' => ['update']]);
-       $this->middleware('permission:ops-cargo-tariff-delete', ['only' => ['destroy']]);
+    //    $this->middleware('permission:ops-cargo-tariff-create|ops-cargo-tariff-edit|ops-cargo-tariff-view|ops-cargo-tariff-delete', ['only' => ['index','show']]);
+    //    $this->middleware('permission:ops-cargo-tariff-create', ['only' => ['store']]);
+    //    $this->middleware('permission:ops-cargo-tariff-edit', ['only' => ['update']]);
+    //    $this->middleware('permission:ops-cargo-tariff-delete', ['only' => ['destroy']]);
    }
    /**
     * get all users with their roles.
@@ -156,7 +156,7 @@ class OpsCargoTariffController extends Controller
         catch (QueryException $e)
         {
             DB::rollBack();
-            return response()->json($cargo_tariff->preventDeletionIfRelated(), 422);  
+            return response()->error($e->getMessage(), 500);
         }
     }
     

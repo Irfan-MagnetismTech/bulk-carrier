@@ -39,7 +39,7 @@ function getReport() {
 </script>
 <template>
   <!-- Basic information -->
-  <h2 class="my-5 text-2xl font-semibold">Voyage Report (Lighter)</h2>
+  <h2 class="my-5 text-2xl font-semibold">Voyage Report (Lighterage)</h2>
 
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800" style="max-width: 98%">
 

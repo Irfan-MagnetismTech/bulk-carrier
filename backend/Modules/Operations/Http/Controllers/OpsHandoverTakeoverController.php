@@ -203,7 +203,7 @@ class OpsHandoverTakeoverController extends Controller
         catch (QueryException $e)
         {
             DB::rollBack();
-            return response()->json($handover_takeover->preventDeletionIfRelated(), 422);
+            return response()->error($e->getMessage(), 500);
         }
     }
 

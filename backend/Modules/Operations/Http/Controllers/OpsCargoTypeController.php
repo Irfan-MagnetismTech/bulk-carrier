@@ -18,10 +18,10 @@ class OpsCargoTypeController extends Controller
 
     function __construct()
     {
-        $this->middleware('permission:ops-cargo-type-create|ops-cargo-type-edit|ops-cargo-type-view|ops-cargo-type-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:ops-cargo-type-create', ['only' => ['store']]);
-        $this->middleware('permission:ops-cargo-type-edit', ['only' => ['update']]);
-        $this->middleware('permission:ops-cargo-type-delete', ['only' => ['destroy']]);
+        // $this->middleware('permission:ops-cargo-type-create|ops-cargo-type-edit|ops-cargo-type-view|ops-cargo-type-delete', ['only' => ['index','show']]);
+        // $this->middleware('permission:ops-cargo-type-create', ['only' => ['store']]);
+        // $this->middleware('permission:ops-cargo-type-edit', ['only' => ['update']]);
+        // $this->middleware('permission:ops-cargo-type-delete', ['only' => ['destroy']]);
     }
 
     /**
@@ -124,7 +124,7 @@ class OpsCargoTypeController extends Controller
         catch (QueryException $e)
         {
             DB::rollBack();
-            return response()->json($cargo_type->preventDeletionIfRelated(), 422);  
+            return response()->error($e->getMessage(), 500);  
         }
     }
 
