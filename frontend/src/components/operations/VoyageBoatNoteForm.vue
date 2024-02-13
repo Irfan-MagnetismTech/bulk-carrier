@@ -27,8 +27,8 @@
               <input type="hidden" v-model="form.ops_voyage_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel</span>
-              <input type="text" readonly v-model.trim="form.vessel_name" placeholder="Vessel" class="form-input bg-gray-100" autocomplete="off" />
+              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name</span>
+              <input type="text" readonly v-model.trim="form.vessel_name" placeholder="Vessel Name" class="form-input bg-gray-100" autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Draft</span>
@@ -107,9 +107,9 @@ const props = defineProps({
 });
 
 
-function fetchVoyages(searchParam, loading) {
+function fetchVoyages(searchParam) {
   // loading(true)
-  searchVoyages(searchParam, props.form.business_unit, loading)
+  searchVoyages(searchParam, props.form.business_unit)
 }
 
 watch(() => props.form.business_unit, (value) => {

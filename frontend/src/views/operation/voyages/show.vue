@@ -26,7 +26,7 @@
                 <td>{{ voyage?.mother_vessel }}</td>
               </tr>
               <tr>
-                <th class="w-32">Vessel</th>
+                <th class="w-32">Vessel Name</th>
                 <td>{{ voyage?.opsVessel?.name }}</td>
               </tr>
               <!-- <tr>

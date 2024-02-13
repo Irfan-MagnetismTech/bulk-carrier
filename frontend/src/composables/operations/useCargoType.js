@@ -170,6 +170,7 @@ export default function useCargoType() {
 
 	async function getCargoTypeList() {
 		//NProgress.start();
+		isCargoTypeLoading.value = true;
 
 		try {
 			const { data, status } = await Api.get(`/ops/get-search-cargo-types`);
@@ -181,6 +182,8 @@ export default function useCargoType() {
 		} finally {
 			// loading(false)
 			//NProgress.done();
+			isCargoTypeLoading.value = false;
+
 		}
 	}
 

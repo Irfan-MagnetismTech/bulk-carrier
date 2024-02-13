@@ -12,6 +12,7 @@ export default function useVesselExpenseHead() {
 	const $loading = useLoading();
     const isTableLoading = ref(false);
 	const notification = useNotification();
+	const isExpenseHeadLoading = ref(false);
 
 	const vesselExpenseHead = ref( {
 		business_unit: null,
@@ -188,7 +189,7 @@ export default function useVesselExpenseHead() {
 		//NProgress.start();
 		// const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		// isLoading.value = true;
-
+		isExpenseHeadLoading.value = true;
 		try {
 			const { data, status } = await Api.get(`/ops/show-flatten-vessel-expense-heads?ops_vessel_id=${ops_vessel_id}`);
 			vesselExpenseHeads.value = data.value;
@@ -200,6 +201,7 @@ export default function useVesselExpenseHead() {
 			// loader.hide();
 			// isLoading.value = false;
 			//NProgress.done();
+			isExpenseHeadLoading.value = false;
 		}
 	}
 
@@ -216,6 +218,7 @@ export default function useVesselExpenseHead() {
 		searchVesselExpenseHeads,
 		isTableLoading,
 		isLoading,
+		isExpenseHeadLoading,
 		errors,
 	};
 }

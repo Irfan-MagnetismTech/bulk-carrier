@@ -75,7 +75,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Vendor",
+      "label": "Vendor Name",
       "filter_type": "input"
     },
     

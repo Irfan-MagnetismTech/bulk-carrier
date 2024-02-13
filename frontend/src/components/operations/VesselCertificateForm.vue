@@ -3,8 +3,8 @@
       <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
 
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-        <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
+        <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
+        <v-select :options="vessels" :loading="isVesselLoading" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -20,7 +20,7 @@
 
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Certificate <span class="text-red-500">*</span></span>
-        <v-select :options="maritimeCertificates" placeholder="--Choose an option--" v-model="form.opsMaritimeCertification" label="name" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
+        <v-select :options="maritimeCertificates" :loading="isCertificateLoading" placeholder="--Choose an option--" v-model="form.opsMaritimeCertification" label="name" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -34,7 +34,7 @@
 
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Certificate Type </span>
-          <input type="text" v-model.trim="form.type" placeholder="Certificate Type" class="form-input bg-gray-300" readonly autocomplete="off" />
+          <input type="text" v-model.trim="form.type" placeholder="Certificate Type" class="form-input bg-[#e7e6e6]" readonly autocomplete="off" />
         </label>
     </div>
 
@@ -42,7 +42,20 @@
         
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Validity Period <span class="text-red-500">*</span></span>
-            <input type="text" v-model.trim="form.validity_period" required placeholder="Validity Period" class="form-input bg-gray-300" readonly disabled autocomplete="off" />
+            <div v-if="form.validity_period != ''">
+              <span class="!bg-[#e7e6e6] show-block" v-if="form?.validity_period=='0'">Permanent</span>  
+              <span class="!bg-[#e7e6e6] show-block" v-if="form?.validity_period=='3'">3 Months</span>  
+              <span class="!bg-[#e7e6e6] show-block" v-if="form?.validity_period=='6'">6 Months</span>  
+              <span class="!bg-[#e7e6e6] show-block" v-if="form?.validity_period=='12'">1 Years</span>  
+              <span class="!bg-[#e7e6e6] show-block" v-if="form?.validity_period=='24'">2 Years</span>  
+              <span class="!bg-[#e7e6e6] show-block" v-if="form?.validity_period=='36'">3 Years</span>  
+              <span class="!bg-[#e7e6e6] show-block" v-if="form?.validity_period=='48'">4 Years</span>  
+              <span class="!bg-[#e7e6e6] show-block" v-if="form?.validity_period=='60'">5 Years</span>  
+              <span class="!bg-[#e7e6e6] show-block" v-if="form?.validity_period=='120'">10 Years</span> 
+            </div> 
+            <div v-else>
+              <span class="!bg-[#e7e6e6] show-block"></span> 
+            </div>
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Reference Number <span class="text-red-500">*</span></span>
@@ -98,8 +111,8 @@ const props = defineProps({
     formType: { type: String, required : false }
 });
 
-const { vessel, vessels, searchVessels, showVessel } = useVessel();
-const { searchMaritimeCertificates, maritimeCertificates } = useMaritimeCertificate();
+const { vessel, vessels, searchVessels, showVessel, isVesselLoading } = useVessel();
+const { searchMaritimeCertificates, maritimeCertificates, isCertificateLoading } = useMaritimeCertificate();
 
 function fetchVessels(search, loading) {
   searchVessels(search, props.form.business_unit, loading);
@@ -158,14 +171,16 @@ watch(dropZoneFile, (value) => {
   }
 });
 
-onMounted(() => {
-    watchEffect(() => {
-      if(props.form.business_unit && props.form.business_unit != 'ALL'){
+watch(() => props.form.business_unit, (newValue, oldValue) => {
+  if(props.form.business_unit && props.form.business_unit != 'ALL' && props.formType == 'create') {
+        vessels.value = []
+        props.form.opsVessel = null;
+        props.form.ops_vessel_id = null;
         fetchVessels("", false);
       }
-
-      fetchCertificates("", false)
-    });
+}, { deep: true})
+onMounted(() => {
+    fetchCertificates("", false)
 });
 
 </script>

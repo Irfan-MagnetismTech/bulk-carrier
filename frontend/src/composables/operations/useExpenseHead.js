@@ -169,8 +169,10 @@ export default function useExpenseHead() {
 		}
 	}
 
-	async function getAllExpenseHeads(business_unit, loading) {
+	async function getAllExpenseHeads(business_unit) {
 		//NProgress.start();
+		// const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+		isLoading.value = true;
 
 		try {
 			const { data, status } = await Api.get(`/ops/get-expense-heads?business_unit=${business_unit}`);
@@ -180,9 +182,8 @@ export default function useExpenseHead() {
 			const { data, status } = error.response;
 			notification.showError(status);
 		} finally {
-			if(loading) {
-				loading(false)				
-			}
+			// loader.hide();
+			isLoading.value = false;
 			//NProgress.done();
 		}
 	}

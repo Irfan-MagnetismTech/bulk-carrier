@@ -11,9 +11,9 @@ import useHeroIcon from "../../assets/heroIcon";
 import RemarksComponet from '../../components/utils/RemarksComponent.vue';
 import useVendor from "../../composables/supply-chain/useVendor.js";
 
-const { vessel, vessels, getVesselList, showVessel } = useVessel();
-const { voyages, searchVoyages } = useVoyage();
-const { currencies, getCurrencies } = useBusinessInfo();
+const { vessel, vessels, getVesselList, showVessel, isVesselLoading } = useVessel();
+const { voyages, searchVoyages, isVoyageLoading } = useVoyage();
+const { currencies, getCurrencies, isCurrencyLoading } = useBusinessInfo();
 const {vendor, vendors, showVendor, searchVendor, isLoading: vendorLoader } = useVendor();
 
 const icons = useHeroIcon();
@@ -50,8 +50,8 @@ function fetchVesselDetails(ops_vessel_id, loading) {
     })
 }
 
-function fetchVesselWiseVoyages(ops_vessel_id, loading) {
-  searchVoyages("", props.form.business_unit, loading, ops_vessel_id)
+function fetchVesselWiseVoyages(ops_vessel_id) {
+  searchVoyages("", props.form.business_unit, ops_vessel_id)
 }
 
 watch(() => props.form.opsVoyage, (newValue, oldValue) => {
@@ -205,7 +205,7 @@ onMounted(() => {
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700">Type <span class="text-red-500">*</span></span>
         <select v-model="form.type" class="form-input" required>
-          <option disabled selected value="">Select Option</option>
+          <option disabled selected value="">--Choose an option--</option>
           <option value="Stock In">Stock In</option>
           <option value="Stock Out">Stock Out</option>
           <option value="Reconciliation">Reconciliation</option>
@@ -214,7 +214,7 @@ onMounted(() => {
       <label v-if="form.type != ''" class="block w-full mt-2 text-sm">
         <span class="text-gray-700">{{ form.type }} Type <span class="text-red-500">*</span></span>
         <select v-model="form.usage_type" class="form-input" required>
-          <option disabled selected value="">Select Option</option>
+          <option disabled selected value="">--Choose an option--</option>
           <option value="Idle">Idle</option>
           <option value="Voyage Wise">Voyage Wise</option>
         </select>
@@ -223,7 +223,7 @@ onMounted(() => {
       <label class="block w-full mt-2 text-sm" v-if="form.type=='Reconciliation'">
         <span class="text-gray-700">Reconfiliation Option <span class="text-red-500">*</span></span>
         <select v-model="form.reconciliation_type" class="form-input" required>
-          <option disabled selected value="">Select Option</option>
+          <option disabled selected value="">--Choose an option--</option>
           <option value="Addition">Addition</option>
           <option value="Deletion">Deletion</option>
         </select>
@@ -256,8 +256,8 @@ onMounted(() => {
   </div>
   <div class="flex w-full md:flex-row md:gap-2">
     <label class="block w-1/2 mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-              <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
+              <v-select :options="vessels" :loading="isVesselLoading" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -270,8 +270,8 @@ onMounted(() => {
               <input type="hidden" v-model="form.ops_vessel_id" />
     </label> 
     <label class="block w-1/2 mt-2 text-sm" v-if="form.usage_type=='Voyage Wise'">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage <span class="text-red-500">*</span></span>
-              <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage No <span class="text-red-500">*</span></span>
+              <v-select :options="voyages" :loading="isVoyageLoading" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -286,7 +286,7 @@ onMounted(() => {
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.type=='Stock In'">
     <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Vendor <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Vendor Name <span class="text-red-500">*</span></span>
         <v-select :options="vendors" placeholder="--Choose an option--" :loading="vendorLoader" v-model="form.scmVendor" label="name" class="block form-input" >
             <template #search="{attributes, events}">
                 <input
@@ -301,10 +301,16 @@ onMounted(() => {
     </label>
     <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700">Currency <span class="text-red-500">*</span></span>
-        <select v-model.trim="form.currency" class="form-input" required>
-          <option selected value="" disabled>Select Currency</option>
-          <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
-        </select>
+        <v-select :options="currencies" :loading="isCurrencyLoading" placeholder="--Choose an option--" v-model="form.currency" class="block form-input">
+                <template #search="{attributes, events}">
+                    <input
+                        class="vs__search"
+                        :required="!form.currency"
+                        v-bind="attributes"
+                        v-on="events"
+                        />
+                </template>
+            </v-select>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700">Exchange Rate (To USD) </span>
