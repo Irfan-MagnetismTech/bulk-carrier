@@ -7,9 +7,21 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Accounts\Entities\AccCostCenter;
 use Modules\Accounts\Http\Requests\AccCostCenterRequest;
+use Spatie\Permission\Traits\HasRoles;
+
 
 class AccCostCenterController extends Controller
 {
+    use HasRoles; 
+
+    public function __construct()
+    {
+        $this->middleware('permission:acc-cost-center-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:acc-cost-center-create', ['only' => ['store']]);
+        $this->middleware('permission:acc-cost-center-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:acc-cost-center-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +30,8 @@ class AccCostCenterController extends Controller
     public function index(Request $request)
     {
         try {
-            $accCostCenters = AccCostCenter::globalSearch($request->all());
+            $accCostCenters = AccCostCenter::all();
+            // $accCostCenters = AccCostCenter::globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $accCostCenters, 200);
         }
