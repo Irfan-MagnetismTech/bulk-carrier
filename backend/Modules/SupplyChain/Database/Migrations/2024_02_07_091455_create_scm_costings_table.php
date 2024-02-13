@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('scm_po_id')->constrained('scm_pos')->cascadeOnDelete();
             $table->string('purchase_center')->nullable();
+            $table->string('business_unit')->nullable();
             $table->date('date');
             $table->string('total_allocateable');
             $table->unsignedBigInteger('scm_warehouse_id')->nullable();

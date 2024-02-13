@@ -4,12 +4,6 @@
   <div class="flex flex-col justify-center w-1/3 md:flex-row md:gap-2">
     <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
   </div>
-  <div class="input-group !w-1/3">
-    <label class="label-group">
-          <span class="label-item-title">Costing Ref</span>
-          <input type="text" readonly v-model="form.ref_no" required class="form-input vms-readonly-input" name="ref_no" :id="'ref_no'"/>
-      </label>
-  </div>
   <div class="input-group">
       
       <label class="label-group">
@@ -40,7 +34,7 @@
           <!-- <Error v-if="errors?.date" :errors="errors.date"  /> -->
       </label>
   </div>
-  <ul class="flex flex-wrap -mb-px"  v-if="form.scmPo?.purchase_center == 'Foreign'">
+  <!-- <ul class="flex flex-wrap -mb-px"  v-if="form.scmPo?.purchase_center == 'Foreign'">
     <template v-for="(scmSrLine, index ,key) in form.scmCostingLines" :key="index">
       <li class="mr-2" v-for="(lines,index1,key1) in scmSrLine" :key="index1">
         <a href="#" class="inline-flex px-4 py-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent rounded-t-lg dark-disabled:text-gray-400 group" v-on:click="toggleTabs(index1)" v-bind:class="{'text-purple-600 bg-white': openTab !== index1, 'text-blue-600 rounded-t-lg border-b-2 border-blue-600 bg-gray-100': openTab === index1}">
@@ -48,7 +42,16 @@
         </a>
       </li>
     </template>
-    </ul>
+    </ul> -->
+    <div class="flex justify-between items-center gap-1 pt-4" v-if="form.scmPo?.purchase_center == 'Foreign'">
+        <ul class="flex flex-wrap gap-1 text-gray-700 dark-disabled:text-gray-300">
+          <template v-for="(scmSrLine, index ,key) in form.scmCostingLines" :key="index">
+            <li  v-for="(lines,index1,key1) in scmSrLine" :key="index1">
+              <button type="button" class="px-3 py-1 md:rounded-l-sm bg-gray-200 hover:bg-purple-800 hover:text-white" :class="{ 'bg-purple-800 rounded-sm text-white' : openTab === index1 }" @click="toggleTabs(index1)">{{ form.scmCostingLines[index][index1]['cfr'][0]['scmLcRecord']['lc_no']}}</button>
+            </li>
+          </template>
+        </ul>
+    </div>
   <div id="">
     <div id="">
            <template v-if="form.scmPo?.purchase_center == 'Foreign'">
@@ -56,7 +59,7 @@
               <template v-for="(lines,index1,key1) in scmSrLine" :key="index1">
                 <div class="table-responsive min-w-screen">
                   <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400" v-bind:class="{'hidden': openTab !== index1, 'block': openTab === index1}">
-                  <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials</legend>
+                  <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Costs </legend>
                     <table class="">
                       <thead>
                         <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
@@ -166,8 +169,8 @@
                       </tbody>
                       <tfoot>
                         <tr>
-                          <td colspan="3" class="text-right">Total</td>
-                          <td><input type="number" class="form-input" :value="form.total_allocateable"/></td>
+                          <td colspan="3" class="text-right">Total Allocateable</td>
+                          <td><input type="number" :value="form.total_allocateable" readonly class="form-input vms-readonly-input"/></td>
                         </tr>
                       </tfoot>
                     </table>
@@ -178,11 +181,11 @@
           </template>
           <template v-else-if="form.scmPo?.purchase_center == 'Local' || form.scmPo?.purchase_center == 'Plant'">
             <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-              <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Materials</legend>
-              <table class="">
+              <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Costs </legend>
+              <table class="w-full">
                 <thead>
                   <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-                      <th class="py-3 align-center">Particulars  <span class="text-red-500">*</span></th>
+                      <th class="py-3 align-center">Cost Particulars  <span class="text-red-500">*</span></th>
                       <th class="py-3 align-center">Amount</th>
                       <th class="py-3 text-center align-center">Action </th>
                   </tr>
@@ -215,8 +218,8 @@
                 </tbody>
                 <tfoot>
                   <tr>
-                    <td class="text-right">Total</td>
-                    <td><input type="number" :value="form.total_allocateable" class="form-input"/></td>
+                    <td class="text-right">Total Allocateable</td>
+                    <td><input type="number" :value="form.total_allocateable" readonly class="form-input vms-readonly-input"/></td>
                     <td></td>
                   </tr>
                 </tfoot>
@@ -230,29 +233,29 @@
     <div id="">
       <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
               <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Allocation</legend>
-              <table class="">
+              <table class="w-full">
                 <thead>
                   <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-                      <th class="py-3 align-center">Particulars  asd<span class="text-red-500">*</span></th>
-                      <th class="py-3 align-center">Amount</th>
-                      <th class="py-3 text-center align-center">Action </th>
+                      <th class="py-3 align-center">MRR Ref </th>
+                      <th class="py-3 align-center">Total Value</th>
+                      <th class="py-3 text-center align-center">Allocated Amount </th>
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
                   <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmCostingAllocation, index) in form.scmCostingAllocations" :key="index">
                     <td>
                       <label class="block w-full mt-2 text-sm">
-                        <input type="text" :value="form.scmCostingAllocations[index]?.scmMrr?.ref_no" class="form-input">
+                        <input type="text" :value="form.scmCostingAllocations[index]?.scmMrr?.ref_no" readonly class="form-input vms-readonly-input">
                       </label>
                     </td>
                     <td>
                       <label class="block w-full mt-2 text-sm">
-                        <input type="text" :value="form.scmCostingAllocations[index].value" class="form-input">
+                        <input type="text" :value="form.scmCostingAllocations[index].value" readonly class="form-input vms-readonly-input">
                       </label>
                     </td>
                     <td>
                       <label class="block w-full mt-2 text-sm">
-                        <input type="text" v-model="form.scmCostingAllocations[index].allocated_amount" class="form-input">
+                        <input type="text" v-model="form.scmCostingAllocations[index].allocated_amount" readonly class="form-input vms-readonly-input">
                       </label>
                     </td>
                   </tr>
@@ -561,6 +564,7 @@ function changePoRef() {
   props.form.scm_warehouse_id = props.form.scmPo?.scmWarehouse?.id;
   props.form.acc_cost_center_id = props.form.scmPo?.scmWarehouse?.acc_cost_center_id;
   props.form.purchase_center = props.form.scmPo?.purchase_center;
+  props.form.business_unit = props.form.scmPo?.business_unit;
   props.form.scmCostingLines.splice(0, props.form.scmCostingLines.length);
     props.form.scmCostingAllocations.splice(0, props.form.scmCostingAllocations.length);
   if(props.form.scmPo?.purchase_center == 'Foreign'){

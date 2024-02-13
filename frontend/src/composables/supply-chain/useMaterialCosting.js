@@ -216,6 +216,22 @@ export default function useMaterialCosting() {
         }
     }
 
+    const approveMaterialCosting = async (materialCostingId) => {
+        const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+        try {
+            const { data, status } = await Api.get(`/${BASE}/material-costing-approve/${materialCostingId}`);
+            notification.showSuccess(status);
+            await getMaterialCostings(filterParams.value);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            loader.hide();
+            isLoading.value = false;
+        }
+    }
+
     return {
         materialCostings,
         materialCosting,
@@ -227,6 +243,7 @@ export default function useMaterialCosting() {
         updateMaterialCosting,
         deleteMaterialCosting,
         fetchSrWiseMaterials,
+        approveMaterialCosting,
         srWiseMaterials,
         fetchTry,
         materialObject,

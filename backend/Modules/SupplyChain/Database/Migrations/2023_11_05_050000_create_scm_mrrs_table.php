@@ -33,7 +33,7 @@ return new class extends Migration
             $table->tinyInteger('is_completed')->comment('0, 1')->nullable();
             // $table->bigInteger('acc_cash_requisition_id')->nullable();
             $table->string('purchase_center')->nullable();
-            $table->unsignedBigInteger('total_value')->nullable();
+            $table->double('total_value')->nullable();
             $table->timestamps();
         });
     }

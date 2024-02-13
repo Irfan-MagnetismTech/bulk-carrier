@@ -17,7 +17,7 @@ import moment from 'moment';
 import { formatDate } from '../../../utils/helper';
 
 import { useRouter } from 'vue-router';
-const { getMaterialCostings, materialCostings, deleteMaterialCosting, isLoading,isTableLoading ,errors} = useMaterialCosting();
+const { getMaterialCostings, materialCostings, deleteMaterialCosting, isLoading,isTableLoading ,errors,approveMaterialCosting} = useMaterialCosting();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -48,13 +48,13 @@ let filterOptions = ref({
   "isFilter": false,
   "filter_options": [
     {
-      "relation_name": null,
+      "relation_name": "scmPo",
       "field_name": "ref_no",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Ref No",
+      "label": "Po Ref",
       "filter_type": "input"
     },
     {
@@ -68,6 +68,16 @@ let filterOptions = ref({
       "filter_type": "input" 
     },
     {
+      "relation_name": 'scmWarehouse',
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Warehouse",
+      "filter_type": "input" 
+    },
+    {
       "relation_name": null,
       "field_name": "date",
       "search_param": "",
@@ -77,14 +87,13 @@ let filterOptions = ref({
       "label": "Date",
       "filter_type": "date"
     },{
-      "relation_name": "scmPo",
-      "field_name": "ref_no",
+      "relation_name": null,
+      "field_name": "status",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Po Ref",
-      "filter_type": "input"
+      "label": "Status",
     }
   ]
 });
@@ -123,6 +132,21 @@ onMounted(() => {
   });
 });
 
+function approveData(id) {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You want to approve this data!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      approveMaterialCosting(id);
+    }
+  })
+}
 
 
 function confirmDelete(id) {
@@ -140,17 +164,6 @@ function confirmDelete(id) {
           }
         })
       }
-      const DEPARTMENTS = ['N/A','Store Department', 'Engine Department', 'Provision Department'];
-      const navigateToSICreate = (SrId) => {
-        const sr_id = SrId;
-        const routeOptions = {
-          name: 'scm.store-issues.create',
-          query: {
-            sr_id: sr_id,
-          }
-        };
-        router.push(routeOptions);
-      };
 </script>
 
 <template>
@@ -169,10 +182,11 @@ function confirmDelete(id) {
           <tbody>
             <tr v-for="(materialCosting,index) in (materialCostings?.data ? materialCostings?.data : materialCostings)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-              <td>{{ materialCosting?.ref_no }}</td>
-              <td><no-br>{{ formatDate(materialCosting?.date) }}</no-br></td>
               <td>{{ materialCosting?.scmPo?.ref_no?? '' }}</td>
               <td>{{ materialCosting.purchase_center }}</td>
+              <td>{{ materialCosting.scmWarehouse.name }}</td>
+              <td><no-br>{{ formatDate(materialCosting?.date) }}</no-br></td>
+              <td>{{ materialCosting.status }}</td>
               <td>
                 <!-- <span :class="materialCosting?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialCosting?.business_unit }}</span> -->
               </td>
@@ -182,10 +196,11 @@ function confirmDelete(id) {
                   <!-- <button @click="navigateToSICreate(materialCosting.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create SI</button> -->
                   <!-- <button @click="navigateToPOCreate(materialCosting.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
                   <button @click="navigateToMRRCreate(materialCosting.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
+                  <action-button :action="'approve'" @click="approveData(materialCosting.id)" v-if="materialCosting.status"></action-button>
                   <action-button :action="'show'" :to="{ name: 'scm.material-costings.show', params: { materialCostingId: materialCosting.id } }"></action-button>
                   <!-- <action-button :action="'edit'" :to="{ name: 'scm.material-costings.edit', params: { materialCostingId: materialCosting.id } }" v-if="(materialCosting?.scmSis.length <= 0)"></action-button> -->
-                   <action-button :action="'edit'" :to="{ name: 'scm.material-costings.edit', params: { materialCostingId: materialCosting.id } }"></action-button>
-                  <action-button @click="confirmDelete(materialCosting.id)" :action="'delete'"></action-button>
+                   <action-button :action="'edit'" :to="{ name: 'scm.material-costings.edit', params: { materialCostingId: materialCosting.id } }" v-if="materialCosting.status"></action-button>
+                  <action-button @click="confirmDelete(materialCosting.id)" :action="'delete'" v-if="materialCosting.status"></action-button>
                 </div>
               </nobr>
               </td>

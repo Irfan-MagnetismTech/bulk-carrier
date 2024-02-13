@@ -450,8 +450,9 @@ class ScmPoController extends Controller
     {
         if ($request->business_unit != 'ALL') {
             $scmPo = ScmPo::query()
-                ->with('scmPoLines', 'scmPoTerms', 'scmVendor','scmLcRecords')
+                ->with('scmPoLines', 'scmPoTerms', 'scmVendor','scmLcRecords','scmWarehouse')
                 ->whereBusinessUnit($request->business_unit)
+                ->where('status','Closed')
                 // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
                 // ->limit(10)

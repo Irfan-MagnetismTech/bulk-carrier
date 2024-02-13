@@ -149,7 +149,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     });
 
     Route::controller(ScmCostingController::class)->group(function () {
-        Route::get('fetch-try', "fetchTry")->name('fetchTry');
+        Route::get('material-costing-approve/{materialCostingId}', "approve")->name('material-costings.approve');
     });
 });
 

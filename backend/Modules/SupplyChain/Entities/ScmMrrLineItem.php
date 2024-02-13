@@ -4,6 +4,8 @@ namespace Modules\SupplyChain\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmPoItem;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -22,6 +24,7 @@ class ScmMrrLineItem extends Model
         'rate',
         'po_composite_key',
         'pr_composite_key',
+        'mrr_composite_key',
         'net_rate',
     ];
 
@@ -43,5 +46,10 @@ class ScmMrrLineItem extends Model
     public function scmPoItem(): BelongsTo
     {
         return $this->belongsTo(ScmPoItem::class, 'po_composite_key', 'po_composite_key');
+    }
+
+    public function scmStockLedger(): HasOne
+    {
+        return $this->hasOne(ScmStockLedger::class,'composite_key','mrr_composite_key');
     }
 }

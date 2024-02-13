@@ -22,7 +22,7 @@ const route = useRoute();
 const materialCostingId = route.params.materialCostingId;
 const formType = 'edit';
 
-setTitle('Update Store Requisition');
+setTitle('Update Material Costing');
 
 onMounted(() => {
     showMaterialCosting(materialCostingId);
@@ -31,8 +31,8 @@ onMounted(() => {
 <template>
     <!-- Heading -->
     <div class="flex items-center justify-between w-full my-3" v-once>
-        <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Update Store Requisition</h2>
-        <default-button :title="'Store Requisition List'" :to="{ name: 'scm.store-requisitions.index' }" :icon="icons.DataBase"></default-button>
+        <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Update Material Costing</h2>
+        <default-button :title="'Store Requisition List'" :to="{ name: 'scm.material-costings.index' }" :icon="icons.DataBase"></default-button>
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="updateMaterialCosting(materialCosting, materialCostingId)">

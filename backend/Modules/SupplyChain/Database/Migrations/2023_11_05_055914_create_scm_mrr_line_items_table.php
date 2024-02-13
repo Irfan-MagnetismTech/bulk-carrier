@@ -24,6 +24,7 @@ return new class extends Migration
             $table->bigInteger('rate')->nullable();
             $table->string('po_composite_key')->nullable();
             $table->string('pr_composite_key')->nullable();
+            $table->string('mrr_composite_key')->nullable();
             $table->decimal('net_rate', 10, 2)->nullable();
             $table->timestamps();
         });

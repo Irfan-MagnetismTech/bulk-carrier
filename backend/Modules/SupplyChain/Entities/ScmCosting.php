@@ -19,7 +19,9 @@ class ScmCosting extends Model
         'purchase_center',
         'date',
         'total_allocateable',
+        "business_unit",
         'scm_warehouse_id',
+        'status',
     ];
 
 

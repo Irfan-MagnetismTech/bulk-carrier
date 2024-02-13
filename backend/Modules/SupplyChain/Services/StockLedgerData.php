@@ -31,10 +31,10 @@ class StockLedgerData
                 'quantity' => $line['quantity'],
                 'gross_unit_price' => $line['rate'] ?? null,
                 'net_unit_price' => $os ? $line['rate'] : $line['net_rate'] ?? null,
-                'currency' => $line['currency'] ?? null,
+                'currency' => $parentModel['currency'] ?? "BDT",
                 'date' => now(),
                 'business_unit' => $parentModel->business_unit,
-                'composite' => $composites[$index] ?? null,
+                'composite_key' => $composites[$index] ?? null,
             ];
         });
 
