@@ -10,6 +10,14 @@ use Modules\Accounts\Http\Requests\AccBalanceAndIncomeLineRequest;
 
 class AccBalanceAndIncomeLineController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:acc-balance-income-line-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:acc-balance-income-line-create', ['only' => ['store']]);
+        $this->middleware('permission:acc-balance-income-line-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:acc-balance-income-line-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *

@@ -12,6 +12,13 @@ use Modules\Accounts\Services\AccountService;
 
 class AccFixedAssetController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:acc-fixed-asset-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:acc-fixed-asset-create', ['only' => ['store']]);
+        $this->middleware('permission:acc-fixed-asset-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:acc-fixed-asset-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      *
