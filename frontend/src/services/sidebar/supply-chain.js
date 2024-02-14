@@ -15,7 +15,7 @@ export default [
             subMenu: [
                 {
                     route: '',
-                    label: 'Configuration',
+                    label: 'Configurations',
                     preIcon: icons.User,
                     postIcon: icons.DownArrow,
                     is_active: false,
@@ -24,7 +24,7 @@ export default [
                     subSubMenu: [
                     {
                         route: `${BASE}.units.index`,
-                        label: 'Unit',
+                        label: 'Units',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,
                         is_active: false,
@@ -34,7 +34,7 @@ export default [
                     },
                     {
                         route: `${BASE}.material-category.index`,
-                        label: 'Material Category',
+                        label: 'Material Categories',
                         preIcon: icons.User,
                         postIcon: icons.DownArrow,
                         is_active: false,
@@ -44,7 +44,7 @@ export default [
                     },
                     {
                     route: `${BASE}.material.index`,
-                    label: 'Material',
+                    label: 'Materials',
                     preIcon: icons.User,
                     postIcon: icons.DownArrow,
                     is_active: false,
@@ -54,7 +54,7 @@ export default [
                     },
                     {
                     route: `${BASE}.warehouse.index`,
-                    label: 'Warehouse',
+                    label: 'Warehouses',
                     preIcon: icons.User,
                     postIcon: icons.DownArrow,
                     is_active: false,
@@ -64,7 +64,7 @@ export default [
                     },
                     {
                     route: `${BASE}.service.index`,
-                    label: 'Service',
+                    label: 'Services',
                     preIcon: icons.User,
                     postIcon: icons.DownArrow,
                     is_active: false,
@@ -74,7 +74,7 @@ export default [
                     },
                     {
                     route: `${BASE}.vendor.index`,
-                    label: 'Vendor',
+                    label: 'Vendors',
                     preIcon: icons.User,
                     postIcon: icons.DownArrow,
                     is_active: false,
@@ -105,7 +105,7 @@ export default [
                     subSubMenu: [
                         {
                             route: `${BASE}.purchase-requisitions.index`,
-                            label: 'Purchase Requisition',
+                            label: 'Purchase Requisitions',
                             preIcon: icons.User,
                             postIcon: icons.DownArrow,
                             is_active: false,
@@ -125,7 +125,7 @@ export default [
                         },
                         {
                             route: `${BASE}.purchase-orders.index`,
-                            label: 'Purchase Order',
+                            label: 'Purchase Orders',
                             preIcon: icons.User,
                             postIcon: icons.DownArrow,
                             is_active: false,
@@ -178,7 +178,7 @@ export default [
                 },
                 {
                     route: '',
-                    label: 'Store',
+                    label: 'Stores',
                     preIcon: icons.User,
                     postIcon: icons.DownArrow,
                     is_active: false,

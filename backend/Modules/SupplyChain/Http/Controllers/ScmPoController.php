@@ -471,6 +471,7 @@ class ScmPoController extends Controller
                 ->with('scmPoLines', 'scmPoTerms', 'scmVendor')
                 ->where('purchase_center', 'foreign')
                 ->orWhere('purchase_center', 'FOREIGN')
+                ->whereNot('status','Closed')
                 // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
                 // ->limit(10)
