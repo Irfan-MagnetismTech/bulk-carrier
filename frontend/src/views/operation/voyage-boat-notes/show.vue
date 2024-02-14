@@ -18,11 +18,11 @@
                           <td><span :class="voyageBoatNote?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ voyageBoatNote?.business_unit }}</span></td>
                       </tr>
                       <tr>
-                          <th class="w-40">Voyage</th>
+                          <th class="w-40">Voyage No</th>
                           <td>{{ voyageBoatNote?.opsVoyage?.voyage_sequence }}</td>
                       </tr>
                       <tr>
-                          <th class="w-40">Vessel</th>
+                          <th class="w-40">Vessel Name</th>
                           <td>{{ voyageBoatNote?.opsVessel?.name }}</td>
                       </tr>
                       <tr>

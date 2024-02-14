@@ -26,11 +26,11 @@
                         <td>{{ formatDate(bunkerRequisition?.date) }}</td>
                     </tr>
                     <tr>
-                        <th class="w-40">Voyage</th>
+                        <th class="w-40">Voyage No</th>
                         <td>{{ bunkerRequisition.opsVoyage?.voyage_sequence }}</td>
                     </tr>
                     <tr>
-                        <th class="w-40">Vessel</th>
+                        <th class="w-40">Vessel Name</th>
                         <td>{{ bunkerRequisition.opsVessel?.name }}</td>
                     </tr>
                     <tr>

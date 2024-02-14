@@ -9,8 +9,8 @@
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
 
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-      <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
+      <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
+      <v-select :options="vessels" :loading="isVesselLoading" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -148,7 +148,7 @@
     
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Port of Registry </span>
-      <v-select :options="ports" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.port_of_registry" label="code_name" class="block form-input" :reduce="port=>port.code">
+      <v-select :options="ports" :loading="isPortLoading" placeholder="--Choose an option--" @search="fetchPorts"  v-model="form.port_of_registry" label="code_name" class="block form-input" :reduce="port=>port.code">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -256,8 +256,8 @@ const props = defineProps({
     formType: { type: String, required : false }
 });
 
-const { ports, searchPorts } = usePort();
-const { vessel, vessels, getVesselList, showVessel } = useVessel();
+const { ports, searchPorts, isPortLoading } = usePort();
+const { vessel, vessels, getVesselList, showVessel, isVesselLoading } = useVessel();
 
 watch(() => props.form.opsVessel, (value) => {
   if(value) {
@@ -279,6 +279,8 @@ watch(() => props.form.business_unit, (value) => {
 
   getVesselList(props.form.business_unit);
   searchPorts("", props.form.business_unit);
+  ports.value = []
+  props.form.port_of_registry = null;
 
   
 }, { deep : true })

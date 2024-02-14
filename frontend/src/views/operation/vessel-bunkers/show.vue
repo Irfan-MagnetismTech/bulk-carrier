@@ -19,12 +19,12 @@
                     </tr>
                     
                     <tr>
-                        <th class="w-40">Vessel</th>
+                        <th class="w-40">Vessel Name</th>
                         <td>{{ vesselBunker.opsVessel?.name }}</td>
                     </tr>
 
                     <tr>
-                        <th class="w-40">Voyage</th>
+                        <th class="w-40">Voyage No</th>
                         <td>{{ vesselBunker.opsVoyage?.voyage_sequence }}</td>
                     </tr>
 
@@ -54,7 +54,7 @@
                     </tr>
                     <template v-if="vesselBunker.type == 'Stock In'">
                       <tr>
-                          <th class="w-40">Vendor </th>
+                          <th class="w-40">Vendor Name</th>
                           <td>{{ vesselBunker?.opsBunkers[0]?.scmVendor?.name }}</td>
                       </tr>
                       <tr>

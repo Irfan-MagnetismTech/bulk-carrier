@@ -42,7 +42,9 @@ export default function useVessel() {
 		live_tracking_config: '',
 		remarks: '',
 		opsVesselCertificates: [],
-		opsBunkers: []
+		opsBunkers: [],
+		dry_docking_months: '',
+		status: ''
 	});
 	const maritimeCertificateObject = {
 		ops_vessel_certificate_id: '',
@@ -126,12 +128,12 @@ export default function useVessel() {
 		isLoading.value = true;
 
 		form.opsVesselCertificates.map((element) => {
-			element.ops_maritime_certification_id = element.id
+			element.ops_maritime_certification_id = element?.certificate?.id
 			element.business_unit = form.business_unit
 		})
 
 		form.opsBunkers.map((element) => {
-			element.scm_material_id = element.id
+			element.scm_material_id = element.bunker?.id
 		})
 
 		try {
@@ -182,12 +184,12 @@ export default function useVessel() {
 		isLoading.value = true;
 
 		form.opsVesselCertificates.map((element) => {
-			element.ops_maritime_certification_id = element.id
+			element.ops_maritime_certification_id = element?.certificate?.id
 			element.business_unit = form.business_unit
 		})
 
 		form.opsBunkers.map((element) => {
-			element.scm_material_id = element.id
+			element.scm_material_id = element.bunker?.id
 		})
 		
 		try {
@@ -307,6 +309,7 @@ export default function useVessel() {
 
 	async function getVesselList(businessUnit) {
 		//NProgress.start();
+		isVesselLoading.value = true;
 
 		try {
 			const { data, status } = await Api.get(`/ops/get-search-vessels?business_unit=${businessUnit}`);
@@ -319,6 +322,8 @@ export default function useVessel() {
 		} finally {
 			// loading(false)
 			//NProgress.done();
+			isVesselLoading.value = false;
+
 		}
 	}
 

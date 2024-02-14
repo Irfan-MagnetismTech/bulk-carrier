@@ -42,7 +42,7 @@
                     </tr>
                     
                     <tr>
-                        <th class="w-40">Vessel</th>
+                        <th class="w-40">Vessel Name</th>
                         <td>{{ deliveryRedelivery.opsVessel?.name }}</td>
                     </tr>
                     <tr>

@@ -6,8 +6,10 @@ use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Operations\Entities\OpsPort;
+use Modules\Operations\Entities\OpsVoyage;
 use Modules\SupplyChain\Traits\StockLedger;
 use Modules\SupplyChain\Entities\ScmWarehouse;
+use Modules\Operations\Entities\OpsHandoverTakeover;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Maintenance\Entities\MntCriticalVesselItem;
 
@@ -45,6 +47,8 @@ class OpsVessel extends Model
         'total_cargo_hold',
         'live_tracking_config',
         'remarks',
+        'dry_docking_months',
+        'status',
         'business_unit'
     ];
 
@@ -101,5 +105,20 @@ class OpsVessel extends Model
     
     public function opsVesselBunkers() {
         return $this->hasMany(OpsVesselBunker::class, 'ops_vessel_id','id');
+    }
+
+    public function opsVoyages()
+    {
+        return $this->hasMany(OpsVoyage::class, 'ops_vessel_id', 'id');
+    }
+
+    public function opsHandoverTakeovers()
+    {
+        return $this->hasMany(OpsHandoverTakeover::class, 'ops_vessel_id', 'id');
+    }
+
+    public function scopeCurrentCharterer($query)
+    {
+        return $query->with($this->opsHandoverTakeovers);
     }
 }

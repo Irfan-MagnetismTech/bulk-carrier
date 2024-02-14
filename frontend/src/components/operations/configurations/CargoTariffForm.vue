@@ -12,8 +12,8 @@
             <input type="text" v-model.trim="form.tariff_name" placeholder="Tariff Name" class="form-input" required autocomplete="off" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-            <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
+            <v-select :options="vessels" :loading="isVesselLoading" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -31,7 +31,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300"> Loading Point <span class="text-red-500">*</span></span>
-            <v-select :options="ports" placeholder="--Choose an option--" v-model="form.loadingPoint" label="code_name" class="block form-input">
+            <v-select :options="ports" :loading="isPortLoading" placeholder="--Choose an option--" v-model="form.loadingPoint" label="code_name" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -45,7 +45,7 @@
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Unloading Point <span class="text-red-500">*</span></span>
-            <v-select :options="ports" placeholder="--Choose an option--" v-model="form.unloadingPoint" label="code_name" class="block form-input">
+            <v-select :options="ports" :loading="isPortLoading" placeholder="--Choose an option--" v-model="form.unloadingPoint" label="code_name" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -63,7 +63,7 @@
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Type <span class="text-red-500">*</span></span>
-              <v-select :options="cargoTypes" placeholder="--Choose an option--" v-model="form.opsCargoType" label="cargo_type" class="block form-input">
+              <v-select :options="cargoTypes" :loading="isCargoTypeLoading" placeholder="--Choose an option--" v-model="form.opsCargoType" label="cargo_type" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -78,15 +78,21 @@
           </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Currency <span class="text-red-500">*</span></span>
-              <select name="" id="" required class="form-input" v-model="form.currency">
-                  <option value="" disabled>Select Currency</option>
-                  <option v-for="currency in currencies">{{ currency }}</option>
-              </select>
+              <v-select :options="currencies" :loading="isCurrencyLoading" placeholder="--Choose an option--" v-model="form.currency" class="block form-input">
+                <template #search="{attributes, events}">
+                    <input
+                        class="vs__search"
+                        :required="!form.currency"
+                        v-bind="attributes"
+                        v-on="events"
+                        />
+                </template>
+            </v-select>
           </label>
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Status <span class="text-red-500">*</span></span>
               <select name="" id="" required class="form-input" v-model="form.status">
-                <option value="" disabled>Select Status</option>
+                <option value="" disabled>--Choose an option--</option>
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
               </select>
@@ -115,7 +121,11 @@
                   <th>Nov</th>
                   <th>Dec</th>
                   <th>
-                    Action
+                    <button type="button" @click="addItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                      </svg>
+                    </button>
                   </th>
                 </tr>
               </thead>
@@ -164,16 +174,12 @@
                       <input type="number" step="0.001" v-model.trim="form.opsCargoTariffLines[index].dec" class="form-input" autocomplete="off" />
                     </td>
                     <td>
-                      <button type="button" v-if="index>0" @click="removeItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                      <button type="button" @click="removeItem(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                         </svg>
                       </button> 
-                      <button v-else type="button" @click="addItem()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                      </svg>
-                    </button>
+                      
                     </td>
                   </tr>
               </tbody>
@@ -198,10 +204,10 @@ import useBusinessInfo from "../../../composables/useBusinessInfo"
 import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 
-const { getCurrencies, currencies } = useBusinessInfo();
-const { ports, searchPorts } = usePort();
-const { vessels, getVesselList } = useVessel();
-const { cargoTypes, getCargoTypeList } = useCargoType();
+const { getCurrencies, currencies, isCurrencyLoading } = useBusinessInfo();
+const { ports, searchPorts, isPortLoading } = usePort();
+const { vessels, getVesselList, isVesselLoading } = useVessel();
+const { cargoTypes, getCargoTypeList, isCargoTypeLoading } = useCargoType();
 
 const props = defineProps({
     form: {
@@ -287,7 +293,9 @@ watch(() => props.form, (value) => {
 onMounted(() => {
   getCurrencies();
   getCargoTypeList();
-  getVesselList(props.form.business_unit);
+  if(props.form.business_unit) {
+    getVesselList(props.form.business_unit);
+  }
   // searchPorts(null, true);
   // searchCargoTypes(null,);
 })

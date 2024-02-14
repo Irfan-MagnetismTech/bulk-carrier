@@ -4,7 +4,7 @@
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700">Assignment Type </span>
           <select v-model="form.contract_assign_type" class="form-input" :disabled="formType=='edit'">
-            <option value="" selected disabled>Select Type</option>
+            <option value="" selected disabled>--Choose an option--</option>
             <option value="Customer">Customer</option>
             <option value="Charterer">Charterer</option>
           </select>
@@ -23,8 +23,8 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Vessel <span class="text-red-500">*</span></span>
-              <v-select :options="vessels" :readonly="formType=='edit'" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" @update:modelValue="opsVesselChange">
+              <span class="text-gray-700 ">Vessel Name <span class="text-red-500">*</span></span>
+              <v-select :options="vessels" :loading="isVesselLoading" :readonly="formType=='edit'" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" @update:modelValue="opsVesselChange">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -37,8 +37,8 @@
               <input type="hidden" v-model="form.ops_vessel_id" />
       </label>
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Voyage <span class="text-red-500">*</span></span>
-              <v-select :options="voyages" :readonly="formType=='edit'" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input" @update:modelValue="opsVoyageChange">
+              <span class="text-gray-700 ">Voyage No <span class="text-red-500">*</span></span>
+              <v-select :options="voyages" :loading="isVoyageLoading" :readonly="formType=='edit'" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input" @update:modelValue="opsVoyageChange">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -67,8 +67,8 @@
               </v-select>
       </label> -->
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Customer <span class="text-red-500">*</span></span>
-              <v-select :options="customers" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsCustomer" label="name_code" class="block form-input">
+              <span class="text-gray-700 ">Customer Name<span class="text-red-500">*</span></span>
+              <v-select :options="customers" :loading="isCustomerLoading" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsCustomer" label="name_code" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -83,8 +83,8 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2" v-if="form.contract_assign_type=='Charterer'">
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Charterer <span class="text-red-500">*</span></span>
-              <v-select :options="chartererProfiles" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name" class="block form-input">
+              <span class="text-gray-700 ">Charterer Name <span class="text-red-500">*</span></span>
+              <v-select :options="chartererProfiles" :loading="isChartererLoading" :disabled="formType=='edit'" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -96,8 +96,8 @@
               </v-select>
       </label>
       <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 ">Charterer Contract <span class="text-red-500">*</span></span>
-              <v-select :options="chartererContracts" placeholder="--Choose an option--" v-model="form.opsChartererContract" label="contract_name" class="block form-input">
+              <span class="text-gray-700 ">Contract Name <span class="text-red-500">*</span></span>
+              <v-select :options="chartererContracts" :loading="isContractLoading" placeholder="--Choose an option--" v-model="form.opsChartererContract" label="contract_name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -118,7 +118,7 @@
               <th class="w-2/12 px-4 py-3 align-bottom">Loading Point</th>
               <th class="w-2/12 px-4 py-3 align-bottom">Unloading Point</th>
               <th class="w-1/12 px-4 py-3 align-bottom">Quantity</th>
-              <th class="w-3/12 px-4 py-3 align-bottom">Tariff <span class="text-red-500">*</span></th>
+              <th class="w-3/12 px-4 py-3 align-bottom">Tariff Name <span class="text-red-500">*</span></th>
               <th class="w-1/12 px-4 py-3 align-bottom">Rate</th>
               <th class="w-3/12 px-4 py-3 align-bottom text-center">Month - Total Rate <span class="text-red-500">*</span></th>
             </tr>
@@ -150,7 +150,7 @@
               <td>
                 <div v-if="opsContractTariff?.ops_cargo_tariff_id">
                   <select class="form-input" v-model="opsContractTariff.tariff_month" autocomplete="off" required @change = "opsTariffMonthChange(opsContractTariff)" >
-                    <option  value="" disabled selected>Select</option>
+                    <option  value="" disabled selected>--Choose an option--</option>
                     <option v-if="opsContractTariff.ops_cargo_tariff_id" value="jan"> Jan - {{opsContractTariff?.opsCargoTariff?.["jan"]}} </option>
                     <option v-if="opsContractTariff.ops_cargo_tariff_id" value="feb"> Feb - {{opsContractTariff?.opsCargoTariff?.["feb"]}} </option>
                     <option v-if="opsContractTariff.ops_cargo_tariff_id" value="mar"> Mar - {{opsContractTariff?.opsCargoTariff?.["mar"]}} </option>
@@ -198,11 +198,11 @@ const editInitiated = ref(false);
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const { currencies, getCurrencies } = useBusinessInfo();
-const { getChartererByBusinessUnit, chartererProfiles } = useChartererProfile();
-const { getChartererContractsByCharterOwner, chartererContracts } = useChartererContract();
-const { voyage, voyages, showVoyage, getVoyageList,searchVoyages } = useVoyage();
-const { vessel, vessels, getVesselList, showVessel } = useVessel();
-const { getCustomersByBusinessUnit, customers } = useCustomer();
+const { getChartererByBusinessUnit, chartererProfiles, isChartererLoading } = useChartererProfile();
+const { getChartererContractsByCharterOwner, chartererContracts, isContractLoading } = useChartererContract();
+const { voyage, voyages, showVoyage, getVoyageList,searchVoyages, isVoyageLoading } = useVoyage();
+const { vessel, vessels, getVesselList, showVessel, isVesselLoading } = useVessel();
+const { getCustomersByBusinessUnit, customers, isCustomerLoading } = useCustomer();
 const { getCargoTariffsByVessel, cargoTariffs, getCargoTariffsByVoyage } = useCargoTariff();
 
 const props = defineProps({
@@ -220,6 +220,7 @@ watch(() => props.form.business_unit, (value) => {
 if(props?.formType != 'edit') {
   cleanThings()
   vessels.value = [];
+  voyages.value = [];
 
   if(props.form.contract_assign_type == 'Charterer') {
       getChartererByBusinessUnit(props.form.business_unit);
@@ -246,7 +247,7 @@ watch(() => props.form.contract_assign_type, (value) => {
 
   if(props?.formType != 'edit') {
     cleanThings()
-
+    voyages.value = [];
     if(props.form.contract_assign_type == 'Charterer') {
       getChartererByBusinessUnit(props.form.business_unit);
     } else if(props.form.contract_assign_type == 'Customer') {

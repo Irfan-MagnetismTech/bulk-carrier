@@ -23,11 +23,11 @@
                           <td><nobr>{{ formatDateTime(lighterNoonReport?.date) }}</nobr></td>
                       </tr>
                       <tr>
-                          <th class="w-40">Vessel</th>
+                          <th class="w-40">Vessel Name</th>
                           <td>{{ lighterNoonReport.opsVessel?.name }}</td>
                       </tr>
                       <tr>
-                          <th class="w-40">Voyage</th>
+                          <th class="w-40">Voyage No</th>
                           <td>{{ lighterNoonReport?.opsVoyage?.voyage_sequence }}</td>
                       </tr>
                       <tr>
@@ -51,11 +51,11 @@
                           <td>{{ lighterNoonReport?.lat_long }}</td>
                       </tr>
                       <tr>
-                          <th class="w-40">Last Port</th>
+                          <th class="w-40">Last Port Code</th>
                           <td>{{ lighterNoonReport.last_port }}</td>
                       </tr>
                       <tr>
-                          <th class="w-40">Next Port</th>
+                          <th class="w-40">Next Port Code</th>
                           <td>{{ lighterNoonReport.next_port }}</td>
                       </tr>
                       <tr>

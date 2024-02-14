@@ -39,9 +39,9 @@
             </thead>
             <thead v-once>
               <tr class="w-full">
-                <th class="">Voyage</th>
+                <th class="">Voyage No</th>
                 <th class="">
-                  <nobr>Vessel</nobr>
+                  <nobr>Vessel Name</nobr>
                 </th>
                 <th class="">
                   <nobr>Cargo Type</nobr>

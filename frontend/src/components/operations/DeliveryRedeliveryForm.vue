@@ -12,7 +12,7 @@
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Note Type <span class="text-red-500">*</span></span>
               <select v-model="form.note_type" required class="form-input" :disabled="formType == 'edit'">
-                <option value="">Select Type</option>
+                <option value="" selected disabled>--Choose an option--</option>
                 <option>Delivery</option>
                 <option>Re-delivery</option>
               </select>
@@ -27,10 +27,17 @@
 
           <label class="block w-full mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Currency <span class="text-red-500">*</span></span>
-                <select v-model="form.currency" class="form-input" required>
-                  <option value="" selected disabled>Select Currency</option>
-                  <option v-for="currency in currencies" :key="currency">{{ currency }}</option>
-                </select>
+                
+                <v-select :options="currencies" :loading="isCurrencyLoading" placeholder="--Choose an option--" v-model="form.currency" class="block form-input">
+                <template #search="{attributes, events}">
+                    <input
+                        class="vs__search"
+                        :required="!form.currency"
+                        v-bind="attributes"
+                        v-on="events"
+                        />
+                </template>
+            </v-select>
           </label>
 
           <label class="block w-full mt-2 text-sm" v-if="form.currency != 'USD' && form.currency != ''">
@@ -49,8 +56,8 @@
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-              <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
+              <v-select :options="vessels" :loading="isVesselLoading" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -81,8 +88,8 @@
       </div>
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Select Charterer <span class="text-red-500">*</span></span>
-              <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name" class="block form-input">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Name <span class="text-red-500">*</span></span>
+              <v-select :options="chartererProfiles" :loading="isChartererLoading" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -189,10 +196,10 @@ import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
 const editInitiated = ref(false);
-const { getCurrencies, currencies } = useBusinessInfo();
-const { getAllChartererProfiles, chartererProfiles } = useChartererProfile();
-const { voyage, voyages, showVoyage, getVoyageList } = useVoyage();
-const { vessel, vessels, getVesselList, showVessel } = useVessel();
+const { getCurrencies, currencies, isCurrencyLoading } = useBusinessInfo();
+const { getAllChartererProfiles, chartererProfiles, isChartererLoading } = useChartererProfile();
+const { voyage, voyages, showVoyage, getVoyageList, isVoyageLoading } = useVoyage();
+const { vessel, vessels, getVesselList, showVessel, isVesselLoading } = useVessel();
 const props = defineProps({
     form: {
         required: false,

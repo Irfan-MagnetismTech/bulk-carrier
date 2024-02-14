@@ -191,6 +191,8 @@ export default function useCustomer() {
 
 	async function getCustomersByBusinessUnit(businessUnit) {
 		//NProgress.start();
+		isCustomerLoading.value = true;
+
 
 		try {
 			const { data, status } = await Api.get(`/ops/search-customers?business_unit=${businessUnit}`);
@@ -202,6 +204,8 @@ export default function useCustomer() {
 		} finally {
 			//loading(false)
 			//NProgress.done();
+			isCustomerLoading.value = false;
+
 		}
 	}
 
