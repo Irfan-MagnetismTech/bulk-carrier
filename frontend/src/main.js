@@ -18,6 +18,7 @@ import 'vue-toast-notification/dist/theme-sugar.css';
 import JsonExcel from "vue-json-excel3";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
+import Swal from "sweetalert2";
 
 NProgress.configure({ showSpinner: false });
 
@@ -34,6 +35,14 @@ axios.interceptors.response.use(
 
             // Redirect to login page
             Router.go({ name: 'login' });
+        }
+        if (error.response && error.response.status === 403) {
+            Swal.fire({
+                icon: "",
+                title: "Forbidden!",
+                html: `<ul class="text-left list-disc text-red-500 mb-2 px-2 text-base"> <li>You do not have permission to access this resource.</li></ul>`,
+                customClass: "swal-width",
+            });
         }
         return Promise.reject(error);
     }

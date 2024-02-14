@@ -122,7 +122,7 @@ onMounted(() => {
         <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
           <th rowspan="2"> Cost Center Name </th>
           <th rowspan="2"> Opening Balance </th>
-          <th colspan="2"> Transactions </th>
+          <th colspan="2"> Transaction </th>
           <th rowspan="2"> Closing Balance </th>
         </tr>
         <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
@@ -132,18 +132,18 @@ onMounted(() => {
         </thead>
         <tbody class="bg-white dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
         <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(costCenterLine, summaryDataIndex) in costCenterSummary?.cost_center_lines" :key="summaryDataIndex">
-          <td>{{costCenterLine?.cost_center_name}}</td>
-          <td>{{costCenterLine?.opening_balance}}</td>
-          <td>{{costCenterLine?.current_dr}}</td>
-          <td>{{costCenterLine?.current_cr}}</td>
-          <td>{{costCenterLine?.closing_balance}}</td>
+          <td class="!text-left">{{costCenterLine?.cost_center_name}}</td>
+          <td class="!text-right">{{costCenterLine?.opening_balance.toFixed(2)}}</td>
+          <td  class="!text-right">{{costCenterLine?.current_dr.toFixed(2)}}</td>
+          <td  class="!text-right">{{costCenterLine?.current_cr.toFixed(2)}}</td>
+          <td  class="!text-right">{{costCenterLine?.closing_balance.toFixed(2)}}</td>
         </tr>
         <tr class="text-gray-700 dark-disabled:text-gray-400">
-          <th>Total</th>
-          <th>{{costCenterSummary?.ttl_opening}}</th>
-          <th>{{costCenterSummary?.ttl_dr}}</th>
-          <th>{{costCenterSummary?.ttl_cr}}</th>
-          <th>{{costCenterSummary?.ttl_closing}}</th>
+          <th class="!text-right">Total</th>
+          <th  class="!text-right">{{costCenterSummary?.ttl_opening.toFixed(2)}}</th>
+          <th  class="!text-right">{{costCenterSummary?.ttl_dr.toFixed(2)}}</th>
+          <th  class="!text-right">{{costCenterSummary?.ttl_cr.toFixed(2)}}</th>
+          <th  class="!text-right">{{costCenterSummary?.ttl_closing.toFixed(2)}}</th>
         </tr>
         </tbody>
         <tfoot v-if="!costCenterSummary?.cost_center_lines?.length" class="bg-white dark-disabled:bg-gray-800">

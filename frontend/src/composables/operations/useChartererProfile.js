@@ -45,6 +45,7 @@ export default function useChartererProfile() {
 	const indexBusinessUnit = ref(null);
 	const filterParams = ref(null);
 	const isTableLoading = ref(false);
+	const isChartererLoading = ref(false)
 
 	async function getChartererProfiles(filterOptions) {
 		let loader = null;
@@ -169,7 +170,7 @@ export default function useChartererProfile() {
 
 	async function searchChartererProfiles(searchParam, loading) {
 		//NProgress.start();
-
+		isChartererLoading.value = true
 		try {
 			const { data, status } = await Api.get(`/ops/search-charterer-profiles?name_or_code=${searchParam}`);
 			chartererProfiles.value = data.value;
@@ -180,12 +181,15 @@ export default function useChartererProfile() {
 		} finally {
 			loading(false)
 			//NProgress.done();
+		isChartererLoading.value = false
+
 		}
 	}
 
 
 	async function getAllChartererProfiles(businessUnit = null) {
 		//NProgress.start();
+		isChartererLoading.value = true
 
 		try {
 			const { data, status } = await Api.get(`/ops/get-search-charterer-profiles?business_unit=${businessUnit}`);
@@ -196,13 +200,15 @@ export default function useChartererProfile() {
 			notification.showError(status);
 		} finally {
 			//NProgress.done();
+		isChartererLoading.value = false
+
 		}
 	}
 
 	//get charterer by buisness unit
 		async function getChartererByBusinessUnit(business_unit) {
 			//NProgress.start();
-
+			isChartererLoading.value = true
 			try {
 				// const { data, status } = await Api.get(`/ops/charterer-profiles-by-business-unit/${businessUnitId}`);
 				const { data, status } = await Api.get(`/ops/get-search-charterer-profiles`, {
@@ -218,6 +224,7 @@ export default function useChartererProfile() {
 				notification.showError(status);
 			} finally {
 				//NProgress.done();
+				isChartererLoading.value = false
 			}
 		}
 
@@ -233,6 +240,7 @@ export default function useChartererProfile() {
 		searchChartererProfiles,
 		getAllChartererProfiles,
 		getChartererByBusinessUnit,
+		isChartererLoading,
 		isLoading,
 		isTableLoading,
 		errors,

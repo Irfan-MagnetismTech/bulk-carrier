@@ -90,26 +90,21 @@ onMounted(() => {
             <input class="vs__search w-full" style="width: 50%" v-bind="attributes" v-on="events"/>
           </template>
         </v-select>
-<!--        <select class="form-input" v-model="form.parent_account_id" autocomplete="off">-->
-<!--          <option value="" disabled selected>Select</option>-->
-<!--          <option v-for="balanceIncomeAccountLine in balanceIncomeAccountLists" :value="balanceIncomeAccountLine.id" :key="balanceIncomeAccountLine.id">{{ balanceIncomeAccountLine.account_name }}</option>-->
-<!--        </select>-->
-<!--        <Error v-if="errors?.parent_account_id" :errors="errors.parent_account_id" />-->
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Account Code <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.account_code" placeholder="A/C Code" class="form-input vms-readonly-input" readonly autocomplete="off" required />
+      <input type="text" v-model="form.account_code" placeholder="Account Code" class="form-input vms-readonly-input" readonly autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Account Name <span class="text-red-500">*</span></span>
-      <input type="text" v-model="form.account_name" @input="checkWhitespace" placeholder="A/C name" class="form-input" autocomplete="off" required />
+      <input type="text" v-model="form.account_name" @input="checkWhitespace" placeholder="Account Name" class="form-input" autocomplete="off" required />
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Account Type <span class="text-red-500">*</span></span>
       <select class="form-input" v-model="form.account_type" autocomplete="off" required>
-        <option value="" disabled selected>Select</option>
+        <option value="" disabled selected>--Choose an option--</option>
         <option value="1"> Assets </option>
         <option value="2"> Liabilities </option>
         <option value="3"> Equity </option>

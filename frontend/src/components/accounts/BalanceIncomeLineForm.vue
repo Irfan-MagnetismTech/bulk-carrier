@@ -55,7 +55,7 @@ onMounted(() => {
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Value Type <span class="text-red-500">*</span></span>
         <select class="form-input" v-model.trim="form.value_type" autocomplete="off" required >
-          <option value="" disabled selected>Select</option>
+          <option value="" disabled selected>--Choose an Option--</option>
           <option value="D">Debit</option>
           <option value="C">Credit</option>
         </select>
@@ -63,7 +63,7 @@ onMounted(() => {
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Line Type <span class="text-red-500">*</span></span>
         <select class="form-input" v-model.trim="form.line_type" autocomplete="off" required >
-          <option value="" disabled selected>Select</option>
+          <option value="" disabled selected>--Choose an Option--</option>
           <option value="base_header">base_header</option>
           <option value="balance_header">balance_header</option>
           <option value="income_header">income_header</option>

@@ -18,55 +18,39 @@ use Modules\Accounts\Services\TrialBalanceService;
 
 class AisReportController extends Controller
 {
-    /**
-     * @param Request $request
-     */
-    public function dayBook(Request $request): JsonResponse
+    public function __construct()
     {
-        try {
-            $ledgerEntries = (new DayBookService)->handleDayBookService();
-
-            return response()->json([
-                'status' => 'success',
-                'value'  => $ledgerEntries,
-            ], 200);
-        }
-        catch (\Exception $e)
-        {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
-        }
+        $this->middleware('permission:acc-balance-sheet', ['only' => ['balanceSheet']]);
+        $this->middleware('permission:acc-income-statement', ['only' => ['incomeStatement']]);
+        $this->middleware('permission:acc-ledger', ['only' => ['ledger']]);
+        $this->middleware('permission:acc-trial-balance', ['only' => ['trialBalance']]);
+        $this->middleware('permission:acc-day-book', ['only' => ['dayBook']]);
+        $this->middleware('permission:acc-fixed-asset-statement', ['only' => ['fixedAssetStatement']]);
+        $this->middleware('permission:acc-cost-center-summary', ['only' => ['costCenterSummary']]);
+        $this->middleware('permission:acc-cost-center-breakup', ['only' => ['costCenterbreakup']]);
+        $this->middleware('permission:acc-receipt-payment', ['only' => ['paymentReceiptSummary']]);
     }
 
-    /**
-     * @param Request $request
-     */
-    public function ledger(Request $request): JsonResponse
+    public function balanceSheet()
     {
         try {
-            $ledgerEntries = (new LedgerService)->handleLedgerService();
+            $balancesheets = (new TrialBalanceService)->handleTrialBalanceService('balancesheet')->groupBy('value_type')->mapWithKeys(function ($items, $key)
+            {
+                $key == 'C' ? $key = 'liabilities' : $key = 'assets';
+
+                return [$key => $items];
+            });
+
+            $balancesheets['income'] = (new TrialBalanceService)->calculateIncomeGrowthRate();
+
+            $liabilitiesTotalAmount                   = $balancesheets['liabilities']->pluck('closing_balance_amount')->sum();
+            $assetsTotalAmount                        = $balancesheets['assets']->pluck('closing_balance_amount')->sum();
+            $balancesheets['grand_total_liabilities'] = round($liabilitiesTotalAmount + $balancesheets['income']['curr_year_opening'] + $balancesheets['income']['curr_year_income'], 2);
+            $balancesheets['grand_total_assets']      = round($assetsTotalAmount, 2);
 
             return response()->json([
                 'status' => 'success',
-                'value'  => $ledgerEntries,
-            ], 200);
-        }
-        catch (\Exception $e)
-        {
-            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
-        }
-    }
-
-    /**
-     * @param Request $request
-     */
-    public function trialBalance(Request $request): JsonResponse
-    {
-        try {
-            $ledgerEntries = (new TrialBalanceService)->handleTrialBalanceService('trial_balance');
-
-            return response()->json([
-                'status' => 'success',
-                'value'  => $ledgerEntries,
+                'value'  => $balancesheets,
             ], 200);
         }
         catch (\Exception $e)
@@ -116,27 +100,56 @@ class AisReportController extends Controller
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
     }
-
-    public function balanceSheet()
+    
+    /**
+     * @param Request $request
+     */
+    public function ledger(Request $request): JsonResponse
     {
         try {
-            $balancesheets = (new TrialBalanceService)->handleTrialBalanceService('balancesheet')->groupBy('value_type')->mapWithKeys(function ($items, $key)
-            {
-                $key == 'C' ? $key = 'liabilities' : $key = 'assets';
-
-                return [$key => $items];
-            });
-
-            $balancesheets['income'] = (new TrialBalanceService)->calculateIncomeGrowthRate();
-
-            $liabilitiesTotalAmount                   = $balancesheets['liabilities']->pluck('closing_balance_amount')->sum();
-            $assetsTotalAmount                        = $balancesheets['assets']->pluck('closing_balance_amount')->sum();
-            $balancesheets['grand_total_liabilities'] = round($liabilitiesTotalAmount + $balancesheets['income']['curr_year_opening'] + $balancesheets['income']['curr_year_income'], 2);
-            $balancesheets['grand_total_assets']      = round($assetsTotalAmount, 2);
+            $ledgerEntries = (new LedgerService)->handleLedgerService();
 
             return response()->json([
                 'status' => 'success',
-                'value'  => $balancesheets,
+                'value'  => $ledgerEntries,
+            ], 200);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function trialBalance(Request $request): JsonResponse
+    {
+        try {
+            $ledgerEntries = (new TrialBalanceService)->handleTrialBalanceService('trial_balance');
+
+            return response()->json([
+                'status' => 'success',
+                'value'  => $ledgerEntries,
+            ], 200);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function dayBook(Request $request): JsonResponse
+    {
+        try {
+            $ledgerEntries = (new DayBookService)->handleDayBookService();
+
+            return response()->json([
+                'status' => 'success',
+                'value'  => $ledgerEntries,
             ], 200);
         }
         catch (\Exception $e)
@@ -224,6 +237,22 @@ class AisReportController extends Controller
         }
     }
 
+    public function costCenterbreakup(Request $request): JsonResponse
+    {
+        try {
+            $ledgerEntries = (new TrialBalanceService)->handleTrialBalanceService('trial_balance');
+
+            return response()->json([
+                'status' => 'success',
+                'value'  => $ledgerEntries,
+            ], 200);
+        }
+        catch (\Exception $e)
+        {
+            return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
+        }
+    }    
+
     public function paymentReceiptSummary(Request $request){
         try{
             $paymentReceipts = (new PaymentReceiptService)->handlePaymentReceiptSummary($request); 
@@ -237,11 +266,6 @@ class AisReportController extends Controller
         {
             return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
         }
-
-
-
-        // return $currentLedgers; 
-
     }
 
 }

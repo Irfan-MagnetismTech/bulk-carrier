@@ -309,12 +309,12 @@ onMounted(() => {
                 <tr v-for="(loan,index) in loans?.data" :key="index">
                   <td>{{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }}</td>
                   <td>{{ loan?.loanable_type }}</td>
-                  <td>{{ loan?.bank?.bank_name }}</td>
-                  <td>{{ loan?.loan_type }}</td>
-                  <td>{{ loan?.loan_number }}</td>
-                  <td>{{ loan?.loan_name }}</td>
-                  <td>{{ loan?.total_sanctioned }}</td>
-                  <td>{{ loan?.sanctioned_limit }}</td>
+                  <td class="text-left" >{{ loan?.bank?.bank_name }}</td>
+                  <td class="text-left">{{ loan?.loan_type }}</td>
+                  <td class="text-left">{{ loan?.loan_number }}</td>
+                  <td class="text-left">{{ loan?.loan_name }}</td>
+                  <td class="text-right">{{ loan?.total_sanctioned }}</td>
+                  <td class="text-right">{{ loan?.sanctioned_limit }}</td>
                 <td>
                   <span :class="loan?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">
                     {{ loan?.business_unit }}

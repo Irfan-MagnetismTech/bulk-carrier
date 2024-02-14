@@ -14,7 +14,7 @@
                 <td>{{ vessel?.vessel_type }}</td>
               </tr>
               <tr>
-                <th class="w-32">Name</th>
+                <th class="w-32">Vessel Name</th>
                 <td>{{ vessel?.name }}</td>
               </tr>
               <tr>
@@ -115,14 +115,14 @@
               <th class="w-10">SL</th>
               <th class="w-52">Certificate Name</th>
               <th class="w-52">Certificate Type</th>
-              <th class="w-52">Validity Period</th>
+              <!-- <th class="w-52">Validity Period</th> -->
             </tr>
             <tbody>
               <tr v-for="(bunker, index) in vessel.opsVesselCertificates">
                 <td>{{ index+1 }}</td>
                 <td>{{ vessel.opsVesselCertificates[index]?.opsMaritimeCertification?.name }}</td>
                 <td>{{ vessel.opsVesselCertificates[index]?.type }}</td>
-                <td>{{ vessel.opsVesselCertificates[index]?.validity }}</td>
+                <!-- <td>{{ vessel.opsVesselCertificates[index]?.validity }}</td> -->
               </tr>
              
             </tbody>
@@ -152,7 +152,9 @@
             <tbody>
               <tr>
                 <th class="w-52">Current Charterer Owner</th>
-                <td></td>
+                <td>
+                  {{ vessel?.currentCharterer?.opsChartererProfile?.name }}
+                </td>
               </tr>
               <tr>
                 <th class="w-52">All Charterer History</th>
@@ -160,39 +162,9 @@
               </tr>
               <tr>
                 <th class="w-52">Total Voyage</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Total Inventory</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Total Revenue</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Total Expenditure</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Total Billable Amount</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Total Due Amount</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Total Over Due Amount</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Total Collection</th>
-                <td></td>
-              </tr>
-              <tr>
-                <th class="w-52">Profit/Loss</th>
-                <td></td>
+                <td>
+                  {{ vessel?.total_voyages }}
+                </td>
               </tr>
             </tbody>
           </table>

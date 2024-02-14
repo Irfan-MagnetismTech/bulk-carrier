@@ -6,6 +6,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
+import { formatDate } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 
@@ -24,7 +25,7 @@ onMounted(() => {
 
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">  Fixed Asset Details  # {{fixedAssetId}} </h2>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">  Fixed Asset Details </h2>
     <default-button :title="'Fixed Asset List'" :to="{ name: 'acc.fixed-assets.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
@@ -46,12 +47,16 @@ onMounted(() => {
             <td>{{ fixedAsset?.costCenter?.name ?? '---' }}</td>
           </tr>
           <tr>
-            <th class="w-40">Mrr No</th>
+            <th class="w-40">MRR No</th>
             <td>{{ fixedAsset?.scmMrr?.ref_no ?? '---' }}</td>
           </tr>
           <tr>
             <th class="w-40">Asset Name</th>
             <td>{{ fixedAsset?.scmMaterial?.name ?? '---' }}</td>
+          </tr>
+          <tr>
+            <th class="w-40">Account Name</th>
+            <td>{{ fixedAsset?.account?.account_name ?? '---' }}</td>
           </tr>
           <tr>
             <th class="w-40">Asset Category</th>
@@ -60,6 +65,10 @@ onMounted(() => {
           <tr>
             <th class="w-40">Asset Tag</th>
             <td>{{ fixedAsset?.asset_tag ?? '---' }}</td>
+          </tr>
+          <tr>
+            <th class="w-40">Brand</th>
+            <td>{{ fixedAsset?.brand ?? '---' }}</td>
           </tr>
           <tr>
             <th class="w-40">Model</th>
@@ -79,7 +88,7 @@ onMounted(() => {
           </tr>
           <tr>
             <th class="w-40">Acquisition Date</th>
-            <td>{{ fixedAsset?.acquisition_date ?? '---' }}</td>
+            <td>{{ formatDate(fixedAsset?.acquisition_date) ?? '---' }}</td>
           </tr>
           <tr>
             <th class="w-40">Location</th>
@@ -93,6 +102,7 @@ onMounted(() => {
             <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="5">Fixed Asset Cost List </td>
           </tr>
           <tr>
+            <th class="w-40 !text-center">#</th>
             <th class="w-40 !text-center">Particular</th>
             <th class="w-40 !text-center">Amount</th>
             <th class="w-40 !text-center">Remarks</th>
@@ -100,6 +110,7 @@ onMounted(() => {
           </thead>
           <tbody>
           <tr v-for="(fixedAssetCost, index) in fixedAsset?.fixedAssetCosts" :key="index">
+            <td class="!text-center"> {{ index + 1 }} </td>
             <td class="text-left"> {{ fixedAssetCost?.particular }} </td>
             <td class="!text-center"> {{ fixedAssetCost?.amount }} </td>
             <td class="text-left"> {{ fixedAssetCost?.remarks }} </td>

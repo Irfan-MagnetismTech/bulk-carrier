@@ -126,7 +126,7 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">VAT </span>
-          <input type="text" v-model="form.vat" class="form-input" required/>
+          <input type="text" v-model="form.vat" class="form-input"/>
       </label>
   </div>
 
@@ -135,7 +135,7 @@
      
       <label class="label-group">
         <span class="label-item-title">AIT</span>
-          <input type="text" v-model="form.ait" class="form-input" required/>
+          <input type="text" v-model="form.ait" class="form-input"/>
       </label>
       <label class="label-group">
         <span class="label-item-title">Warranty</span>

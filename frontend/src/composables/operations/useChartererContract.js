@@ -75,6 +75,8 @@ export default function useChartererContract() {
 	const indexBusinessUnit = ref(null);
     const filterParams = ref(null);
 	const isTableLoading = ref(false);
+	const isContractLoading = ref(false);
+	const isContractVoyageLoading = ref(false);
 
 	async function getChartererContracts(filterOptions) {
 		//NProgress.start();
@@ -247,9 +249,9 @@ export default function useChartererContract() {
 		}
 	}
 
-	async function searchChartererContracts(searchParam, loading) {
+	async function searchChartererContracts(searchParam) {
 		//NProgress.start();
-
+		isContractLoading.value = true
 		try {
 			const { data, status } = await Api.get(`/ops/search-charterer-contracts?name=${searchParam}`);
 			chartererContracts.value = data.value;
@@ -258,12 +260,16 @@ export default function useChartererContract() {
 			const { data, status } = error.response;
 			notification.showError(status);
 		} finally {
-			loading(false)
+			// loading(false)
 			//NProgress.done();
+			isContractLoading.value = false
+
 		}
 	}
 
 	async function getChartererContractsByCharterOwner(chartererProfileId, opsVesselId  = '', filter = '') {
+		isContractLoading.value = true
+
 		try {
 			const { data, status } = await Api.get(`/ops/get-charterer-contract-by-profile?ops_charterer_profile_id=${chartererProfileId}&ops_vessel_id=${opsVesselId}`);
 
@@ -282,11 +288,15 @@ export default function useChartererContract() {
 			//loader.hide();
 			//isLoading.value = false;
 			//NProgress.done();
+			isContractLoading.value = false
+
 		}
 	}
 
 	//get contract wise voyage
 	async function getContractWiseVoyage(contractId) {
+		isContractVoyageLoading.value = true
+
 		try {
 			const { data, status } = await Api.get(`/ops/get-voyage-by-contract?contract_id=${contractId}`);
 			voyages.value = data.value;
@@ -299,6 +309,8 @@ export default function useChartererContract() {
 			//loader.hide();
 			//isLoading.value = false;
 			//NProgress.done();
+			isContractVoyageLoading.value = false
+
 		}
 	}
 
@@ -340,6 +352,8 @@ export default function useChartererContract() {
 	return {
 		chartererContracts,
 		chartererContract,
+		isContractLoading,
+		isContractVoyageLoading,
 		opsChartererLocalAgentObject,
 		getChartererContracts,
 		storeChartererContract,

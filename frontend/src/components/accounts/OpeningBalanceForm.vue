@@ -64,7 +64,7 @@ onMounted(() => {
   </div>
     <div class="flex flex-col justify-center md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm w-1/3">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Cost Center <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Cost Center Name<span class="text-red-500">*</span></span>
         <v-select :options="allCostCenterLists" :loading="isLoading" placeholder="--Choose an option--" v-model.trim="form.acc_cost_center_name" label="name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.acc_cost_center_name" v-bind="attributes" v-on="events"/>

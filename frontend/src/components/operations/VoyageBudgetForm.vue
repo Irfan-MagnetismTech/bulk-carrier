@@ -13,10 +13,10 @@ import useHeroIcon from "../../assets/heroIcon";
 
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const { voyageBudgets, expenseHeadObject, getVoyageBudgets, showHead, isLoading } = useVoyageBudget();
-const { vessel, vessels, getVesselList, showVessel } = useVessel();
-const { voyages, searchVoyages } = useVoyage();
-const { vesselExpenseHeads, showFlatVesselExpenseHead } = useVesselExpenseHead();
-const { currencies, getCurrencies } = useBusinessInfo();
+const { vessel, vessels, getVesselList, showVessel, isVesselLoading } = useVessel();
+const { voyages, searchVoyages, isVoyageLoading } = useVoyage();
+const { vesselExpenseHeads, showFlatVesselExpenseHead, isExpenseHeadLoading } = useVesselExpenseHead();
+const { currencies, getCurrencies, isCurrencyLoading } = useBusinessInfo();
 
 const icons = useHeroIcon();
 
@@ -32,8 +32,8 @@ const props = defineProps({
 
 const editInitiated = ref(0)
 
-function fetchVesselExpenseHeads(ops_vessel_id, loading) {
-  showFlatVesselExpenseHead(ops_vessel_id, loading).then(() => {
+function fetchVesselExpenseHeads(ops_vessel_id) {
+  showFlatVesselExpenseHead(ops_vessel_id).then(() => {
      editInitiated.value = 1
       // if(props.formType == 'create') {
       //   props.form.opsVoyageBudgetEntries = vesselExpenseHeads.value
@@ -42,8 +42,8 @@ function fetchVesselExpenseHeads(ops_vessel_id, loading) {
     })
 }
 
-function fetchVesselWiseVoyages(ops_vessel_id, loading) {
-  searchVoyages("", props.form.business_unit, loading, ops_vessel_id)
+function fetchVesselWiseVoyages(ops_vessel_id) {
+  searchVoyages("", props.form.business_unit, ops_vessel_id)
 }
 
 watch(() => props.form.opsVoyage, (newValue, oldValue) => {
@@ -56,20 +56,23 @@ watch(() => props.form.opsVoyage, (newValue, oldValue) => {
 
 watch(() => props.form.opsVessel, (newValue, oldValue) => {
 
+    
     props.form.ops_vessel_id = null;
     // props.form.ops_vessel_id = newValue?.id;
     if(editInitiated.value == 1 || props.formType == 'create') {
       voyages.value = []
       props.form.opsVoyage = null;
       props.form.ops_voyage_id = null
+      props.form.opsVoyageBudgetEntries = []
+      vesselExpenseHeads.value = []
     }
     
 
     if(newValue){
       props.form.ops_vessel_id = newValue?.id;
       
-      fetchVesselExpenseHeads(newValue?.id, false);
-      fetchVesselWiseVoyages(props.form.ops_vessel_id, false);
+      fetchVesselExpenseHeads(newValue?.id);
+      fetchVesselWiseVoyages(props.form.ops_vessel_id);
     }
 
 }, { deep: true });
@@ -208,8 +211,8 @@ onMounted(() => {
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-1/2 mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-              <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
+              <v-select :options="vessels" :loading="isVesselLoading" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -222,8 +225,8 @@ onMounted(() => {
               <input type="hidden" v-model="form.ops_vessel_id" />
     </label> 
     <label class="block w-1/2 mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage <span class="text-red-500">*</span></span>
-              <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Voyage No <span class="text-red-500">*</span></span>
+              <v-select :options="voyages" :loading="isVoyageLoading" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -239,10 +242,17 @@ onMounted(() => {
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700">Currency <span class="text-red-500">*</span></span>
-        <select v-model.trim="form.currency" class="form-input" required>
-          <option selected value="" disabled>Select Currency</option>
-          <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
-        </select>
+
+        <v-select :options="currencies" :loading="isCurrencyLoading" placeholder="--Choose an option--" v-model="form.currency" class="block form-input">
+                <template #search="{attributes, events}">
+                    <input
+                        class="vs__search"
+                        :required="!form.currency"
+                        v-bind="attributes"
+                        v-on="events"
+                        />
+                </template>
+            </v-select>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700">Exchange Rate (To USD) </span>
@@ -281,7 +291,7 @@ onMounted(() => {
           <tbody>
             <tr v-for="(head, index) in form.opsVoyageBudgetEntries" :key="index">
               <td class="relative">
-                <v-select :options="vesselExpenseHeads" placeholder="--Choose an option--" v-model="form.opsVoyageBudgetEntries[index].opsExpenseHead" label="name" class="block form-input" >
+                <v-select :options="vesselExpenseHeads" :loading="isExpenseHeadLoading" placeholder="--Choose an option--" v-model="form.opsVoyageBudgetEntries[index].opsExpenseHead" label="name" class="block form-input" >
                     <template #search="{attributes, events}">
                         <input
                             class="vs__search"

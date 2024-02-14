@@ -12,6 +12,14 @@ use Modules\Accounts\Http\Requests\AccAccountOpeningBalanceRequest;
 
 class AccAccountOpeningBalanceController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:acc-opening-balance-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:acc-opening-balance-create', ['only' => ['store']]);
+        $this->middleware('permission:acc-opening-balance-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:acc-opening-balance-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *

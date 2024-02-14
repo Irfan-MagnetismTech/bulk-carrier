@@ -15,11 +15,10 @@ class AccBankAccountController extends Controller
 
     public function __construct()
     {
-        // $this->middleware('permission:configuration-bank-account-create', ['only' => ['store']]);
-        // $this->middleware('permission:configuration-bank-account-index', ['only' => ['index']]);
-        // $this->middleware('permission:configuration-bank-account-show', ['only' => ['show']]);
-        // $this->middleware('permission:configuration-bank-account-edit', ['only' => ['show', 'update']]);
-        // $this->middleware('permission:configuration-bank-account-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:acc-bank-account-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:acc-bank-account-create', ['only' => ['store']]);
+        $this->middleware('permission:acc-bank-account-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:acc-bank-account-delete', ['only' => ['destroy']]);
     }
 
     public function index(Request $request)

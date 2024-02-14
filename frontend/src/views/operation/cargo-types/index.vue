@@ -201,10 +201,10 @@ onMounted(() => {
           </thead>
           <tbody v-if="cargoTypes?.data?.length" class="relative">
               <tr v-for="(cargoType, index) in cargoTypes.data" :key="cargoType?.id">
-                <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
+                <td class="text-center">{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
                 <td>{{ cargoType?.cargo_type }}</td>
                 <td>{{ cargoType?.description }}</td>
-                <td class="items-center justify-center space-x-1 text-gray-600">
+                <td class="items-center justify-center text-center space-x-1 text-gray-600">
                   <nobr>
                     <action-button :action="'show'" :to="{ name: 'ops.configurations.cargo-types.show', params: { cargoTypeId: cargoType.id } }"></action-button>
                     <action-button :action="'edit'" :to="{ name: 'ops.configurations.cargo-types.edit', params: { cargoTypeId: cargoType.id } }"></action-button>
@@ -235,3 +235,9 @@ onMounted(() => {
     <Paginate :data="cargoTypes" to="ops.configurations.cargo-types.index" :page="page"></Paginate>
   </div>
 </template>
+
+<style>
+  table > tbody> tr > td {
+      text-align: left;
+  }
+</style>

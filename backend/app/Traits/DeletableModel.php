@@ -4,41 +4,53 @@ namespace App\Traits;
 
 use ReflectionClass;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 trait DeletableModel
 {
     /**
-     * Prevents deletion of data if it is related to other models.
+     * Prevents deletion of data if it is related to other models
      *
      * @return array
      */
-    public function preventDeletionIfRelated(): array
+    public function preventDeletionIfRelated(): ?array
     {
-        $methods = $this->getRelationMethods();
+        $allMethods = $this->getRelationMethods();
 
-        $models = [];
-        foreach ($methods as $method) {
+        $methods = [];
+        if (property_exists($this, 'skipForDeletionCheck')) {
+            $methods = array_diff($allMethods, $this->skipForDeletionCheck ?? []);
+        }
+
+        $totalCount = 0;
+        $relatedAsString = '';
+        foreach ($methods as $key => $method) {
             $relation = $this->{$method}();
-
             if ($relation instanceof Relation && $relation->count() > 0) {
-                $finalModelName = implode(' ', preg_split('/(?=[A-Z])/', class_basename($relation->getRelated()), -1, PREG_SPLIT_NO_EMPTY));
-
-                $models[] = $finalModelName;
+                $relatedAsString .= $this->features[$method] . ', ';
+                $totalCount += $relation->count();
             }
         }
 
-        $modelNames = count($models) > 1 ? implode(', ', array_slice($models, 0, -1)) . ' and ' . end($models) : implode('', $models);
+        if ($relatedAsString !== '') {
+            $relatedAsString = rtrim($relatedAsString, ', ');
+            $relatedAsString = preg_replace('/,([^,]*)$/', ' and$1', $relatedAsString);
+        }
 
-        return [
-            "message" => "Data could not be deleted! It has references in the {$modelNames} table.",
-            "errors" => [
-                "id" => ["Data is in use and cannot be deleted!"]
-            ]
-        ];
+        if ($totalCount > 0) {
+            throw new HttpResponseException(response()->json([
+                "message" => "Data could not be deleted! It has references in the {$relatedAsString} table.",
+                "errors" => [
+                    "id" => ["Data is in use and cannot be deleted! It has references in the {$relatedAsString}."]
+                ]
+            ], 422));
+        }
+
+        return null;
     }
 
     /**
-     * Retrieves an array of all the relation methods in the class.
+     * Retrieves an array of all the relation methods in the class
      *
      * @return array
      */
@@ -57,7 +69,7 @@ trait DeletableModel
     }
 
     /**
-     * Checks if a given method is a relation method.
+     * Checks if a given method is a relation method
      *
      * @param mixed
      * @return bool

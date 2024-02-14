@@ -193,7 +193,7 @@ class ScmPrController extends Controller
 
         $linesData = CompositeKey::generateArray($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
 
-        return response()->json($linesData, 422);
+        // return response()->json($linesData, 422);
 
         try {
             DB::beginTransaction();
