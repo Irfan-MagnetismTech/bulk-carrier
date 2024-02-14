@@ -78,6 +78,7 @@ export const indexPdfExport = ( businessUnit, pageOridentation, heading, tableId
             startY: !useAllPageLogoAndHeading ? 130 : '',
             rowPageBreak: 'auto',
             useCss: true, 
+            // tableWidth: 'wrap',
             headStyles: {
                 fillColor : '#F2F2F7',
                 lineWidth: 0.5,
@@ -87,6 +88,7 @@ export const indexPdfExport = ( businessUnit, pageOridentation, heading, tableId
             },
             bodyStyles: {
                 halign: 'center',
+                valign: 'middle'
             },
             didDrawPage: function(data) {
                 // All Page Logo & Heading start
