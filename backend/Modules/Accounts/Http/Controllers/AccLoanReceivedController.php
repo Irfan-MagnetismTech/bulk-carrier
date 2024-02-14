@@ -11,6 +11,13 @@ use Modules\Accounts\Http\Requests\AccLoanReceivedRequest;
 
 class AccLoanReceivedController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:acc-loan-received-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:acc-loan-received-create', ['only' => ['store']]);
+        $this->middleware('permission:acc-loan-received-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:acc-loan-received-delete', ['only' => ['destroy']]);
+    }
 
     /**
      * @param Request $request
