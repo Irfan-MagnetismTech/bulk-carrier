@@ -37,6 +37,11 @@ class ScmWr extends Model
 
     protected $refKeyPrefix = 'WR';
 
+    public function scmWoLines(): HasMany
+    {
+        return $this->hasMany(ScmWoLine::class);
+    }
+
     public function scmWrLines(): HasMany
     {
         return $this->hasMany(ScmWrLine::class)->latest();

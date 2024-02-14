@@ -405,7 +405,7 @@
     
       if(props.formType == 'edit'){
         const editDatas = watch(()=> [props.form.business_unit,props.form.scm_warehouse_id,props.form.purchase_center,props.form.scm_wcs_id,props.form.scmWoLines], (newVal, oldVal) => {
-        searchWcs(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, null);
+        searchWcs(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, props.form?.id, null);
         if(props.form.scm_wcs_id){
           getWcsWiseVendorList(props.form.scm_wcs_id);
         }
@@ -480,7 +480,7 @@
       props.form.scm_wcs_id = null;
       props.form.wcs_no = null;
       wcsWiseVendorList.value = [];
-      searchWcs(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, null);
+      searchWcs(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, props.form?.id, null);
     }
 
 

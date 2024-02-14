@@ -136,6 +136,8 @@ class ScmWoController extends Controller
         try {
             $workOrder->load('scmWoLines.scmWoItems.scmService', "scmWoLines.scmWr", 'scmWoTerms', 'scmVendor', 'scmWarehouse','closedBy', 'scmWoItems.closedBy', 'scmWcs', 'scmWoLines.scmWoItems.scmWcsService.scmService', 'scmWoLines.scmWoItems.scmWrLine.scmService','scmWoLines.scmWoItems.scmWrLine.scmWr');
 
+            // dd($workOrder);
+
             $scmWoLines = $workOrder->scmWoLines->map(function ($items) {
                 $datas = $items;
                 $adas = $items->scmWoItems->map(function ($item) use ($items){
@@ -260,8 +262,17 @@ class ScmWoController extends Controller
                 'scm_wr_id' => $values['scm_wr_id'],
             ]);
 
+            $wr = ScmWr::find($values['scm_wr_id']);
+            if ($wr->status == 'Pending') {
+                $wr->update(['status' => 'WIP']);
+            }
+
             foreach ($values['scmWoItems'] as $index => $value) {
                 $this->createScmWoItem($request, $scmWoLine, $workOrder, $value, $index);
+                $lineData = ScmWrLine::where('scm_wr_id', $values['scm_wr_id'])->where('wr_composite_key', $value['wr_composite_key'])->get();
+                if ($lineData[0]->status == 'Pending') {
+                    $lineData[0]->update(['status' => 'WIP']);
+                }
             }
         }
     }
@@ -397,15 +408,15 @@ class ScmWoController extends Controller
             ->doesntHave('scmWcsServices')
             ->get()
             ->map(function ($item) {
-
                 $data = $item->scmService;
                 $data['wr_composite_key'] = $item->wr_composite_key;
                 $data['wr_quantity'] = $item->quantity;
                 if (request()->scm_wo_id) {
-                    $data['wo_quantity'] = $item->scmWoItems->where('scm_wo_id', request()->scm_wo_id)->where('wr_composite_key', $item->wr_composite_key)->first()->quantity;
+                    $data['wo_quantity'] = $item->scmWoItems->where('scm_wo_id', request()->scm_wo_id)->where('wr_composite_key', $item->wr_composite_key)->first()?->quantity ?? 0;
                 } else {
                     $data['wo_quantity'] = 0;
                 }
+                
                 $data['quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
                 $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
                 $data['wo_quantity'] = $data['wo_quantity'] ?? 0;
@@ -429,18 +440,21 @@ class ScmWoController extends Controller
                     $data['wr_composite_key'] = $item->wr_composite_key;
                     $data['wr_quantity'] = $item->scmWrLine->quantity;
                     if (request()->scm_wo_id) {
-                        $data['wo_quantity'] = $item->scmWoItems->where('scm_wo_id', request()->scm_wo_id)->where('wcs_composite_key', $item->wcs_composite_key)->first()->quantity;
+                        $data['wo_quantity'] = $item->scmWoItems->where('scm_wo_id', request()->scm_wo_id)->where('wcs_composite_key', $item->wcs_composite_key)->first()?->quantity ?? 0;
                     } else {
                         $data['wo_quantity'] = 0;
                     }
-
+                    
                     $data['quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
                     $data['max_quantity'] = $item->quantity - $item->scmWoItems->sum('quantity') + $data['wo_quantity'];
 
                     return $data;
-                })->filter(function($item){
+                })
+                ->filter(function($item){
                     return ($item['max_quantity'] > 0);
                 });
+
+
         }
 
 
@@ -507,7 +521,7 @@ class ScmWoController extends Controller
                 $data['wr_quantity'] = $item->quantity;
                 
                 if (request()->scm_wo_id) {
-                    $data['wo_quantity'] = $item->scmWoItems->where('scm_wo_id', request()->scm_wo_id)->where('wr_composite_key', $item->wr_composite_key)->first()->quantity;
+                    $data['wo_quantity'] = $item->scmWoItems->where('scm_wo_id', request()->scm_wo_id)->where('wr_composite_key', $item->wr_composite_key)->first()?->quantity ?? 0;
                 } else {
                     $data['wo_quantity'] = 0;
                 }
@@ -661,4 +675,19 @@ class ScmWoController extends Controller
         }
     }
 
+    public function getWoWiseWrList(){
+        try {
+            $scmWo = ScmWr::query()
+                ->with('scmWoLines')
+                ->has('scmWoLines')
+                ->whereHas('scmWoLines', function ($query) {
+                    $query->where('scm_wo_id', request()->scm_wo_id);
+                })
+                ->get();
+
+            return response()->success('Data list', $scmWo, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
 }

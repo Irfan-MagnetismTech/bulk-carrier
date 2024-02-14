@@ -42,6 +42,18 @@ export default [
                             permissionKey: '',
                             subSubMenu: []
                         },
+                        
+                        {
+                            route: `${BASE}.work-receipt-reports.index`,
+                            label: 'Work Receipt Report',
+                            preIcon: icons.User,
+                            postIcon: icons.DownArrow,
+                            is_active: false,
+                            is_open: false,
+                            permissionKey: '',
+                            subSubMenu: []
+                        },
+
             
                     ]
                 },
@@ -54,7 +66,28 @@ export default [
                     is_open: false,
                     permissionKey: '',
                     subSubMenu: [
+                        {
+                            route: `${BASE}.reports.inventory-report`,
+                            label: 'Inventory Report',
+                            preIcon: icons.User,
+                            postIcon: icons.DownArrow,
+                            is_active: false,
+                            is_open: false,
+                            permissionKey: '',
+                            subSubMenu: []
+                        },
                         
+                        {
+                            route: `${BASE}.reports.stock-history-report`,
+                            label: 'Stock History Report',
+                            preIcon: icons.User,
+                            postIcon: icons.DownArrow,
+                            is_active: false,
+                            is_open: false,
+                            permissionKey: '',
+                            subSubMenu: []
+                        },
+
                     ]
                 },
              ]
