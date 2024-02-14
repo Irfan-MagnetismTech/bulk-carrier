@@ -6,6 +6,7 @@ use Modules\SupplyChain\Http\Controllers\ScmWoController;
 use Modules\SupplyChain\Http\Controllers\ScmWrController;
 use Modules\SupplyChain\Http\Controllers\ScmWcsController;
 use Modules\SupplyChain\Http\Controllers\ScmWrrController;
+use Modules\SupplyChain\Http\Controllers\ScmWcsqController;
 use Modules\SupplyChain\Http\Controllers\ScmReportController;
 use Modules\SupplyChain\Http\Controllers\ScmLcRecordStatusController;
 
@@ -29,13 +30,14 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('work-requisitions-close', [ScmWrController::class, "wrCloseIndex"])->name('wrCloseIndex');
 
 
-    Route::post('wcs-quotations', [ScmWcsController::class, "storeWcsQuotation"])->name('wcs-quotations.create');
-    Route::get('wcs-quotations/{quotationId}', [ScmWcsController::class, "showWcsQuotation"])->name('wcs-quotations.show');
-    Route::get('wcs-quotations', [ScmWcsController::class, "getWcsQuotations"])->name('wcs-quotations.index');
-    Route::put('wcs-quotations/{quotationId}', [ScmWcsController::class, "updateWcsQuotation"])->name('wcs-quotations.update');
-    Route::delete('wcs-quotations/{quotationId}', [ScmWcsController::class, "deleteWcsQuotation"])->name('quotations.delete');
+    Route::post('wcs-quotations', [ScmWcsqController::class, "storeWcsQuotation"])->name('wcs-quotations.create');
+    Route::get('wcs-quotations/{quotationId}', [ScmWcsqController::class, "showWcsQuotation"])->name('wcs-quotations.show');
+    Route::get('wcs-quotations', [ScmWcsqController::class, "getWcsQuotations"])->name('wcs-quotations.index');
+    Route::put('wcs-quotations/{quotationId}', [ScmWcsqController::class, "updateWcsQuotation"])->name('wcs-quotations.update');
+    Route::delete('wcs-quotations/{quotationId}', [ScmWcsqController::class, "deleteWcsQuotation"])->name('quotations.delete');
+    Route::post('wcs-selected-supplier', [ScmWcsqController::class, "wcsSelectedSupplierstore"])->name('wcsselectedSupplier.store');
+
     Route::get('search-work-cs', [ScmWcsController::class, "searchWorkCs"])->name('searchWorkCs');
-    Route::post('wcs-selected-supplier', [ScmWcsController::class, "wcsSelectedSupplierstore"])->name('wcsselectedSupplier.store');
     Route::get('wcs-wise-vendor-list', [ScmWcsController::class, "wcsWiseVendorList"])->name('wcs-wise-vendor-list');
     Route::get('get-wcs-data/{id}', [ScmWcsController::class, "getWcsWiseData"])->name('getWcsWiseData');
     Route::get('getWcsData/{csId}', [ScmWcsController::class, "getWcsData"])->name('getWcsData');
