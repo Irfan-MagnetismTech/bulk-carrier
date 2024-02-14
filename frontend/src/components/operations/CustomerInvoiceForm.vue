@@ -451,6 +451,7 @@
                     <nobr>{{ detail.tariff_name }}</nobr>
                   </router-link>
                 </td>
+                <td v-else></td>
                 <td>
                   {{ detail.loading_point }}
                 </td>
