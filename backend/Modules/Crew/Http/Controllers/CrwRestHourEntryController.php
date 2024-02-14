@@ -15,6 +15,14 @@ use Modules\Operations\Entities\OpsVessel;
 
 class CrwRestHourEntryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:crw-rest-hour-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:crw-rest-hour-create', ['only' => ['store']]);
+        $this->middleware('permission:crw-rest-hour-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:crw-rest-hour-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:crw-rest-hour-record', ['only' => ['crwRestHourReport']]);
+    }    
     /**
      * Display a listing of the resource.
      *

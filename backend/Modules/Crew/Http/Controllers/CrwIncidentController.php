@@ -14,7 +14,10 @@ class CrwIncidentController extends Controller
 {
     public function __construct(private FileUploadService $fileUpload)
     {
-
+        $this->middleware('permission:crw-incident-record-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:crw-incident-record-create', ['only' => ['store']]);
+        $this->middleware('permission:crw-incident-record-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:crw-incident-record-delete', ['only' => ['destroy']]);
     }
 
     /**

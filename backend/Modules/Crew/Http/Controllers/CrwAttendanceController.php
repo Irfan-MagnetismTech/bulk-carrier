@@ -12,6 +12,13 @@ use Modules\Crew\Http\Requests\CrwAttendanceRequest;
 
 class CrwAttendanceController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:crw-attendance-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:crw-attendance-create', ['only' => ['store']]);
+        $this->middleware('permission:crw-attendance-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:crw-attendance-delete', ['only' => ['destroy']]);
+    }    
     /**
      * Display a listing of the resource.
      *

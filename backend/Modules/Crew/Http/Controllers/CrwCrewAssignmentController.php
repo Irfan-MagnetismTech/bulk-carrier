@@ -11,6 +11,13 @@ use Modules\SupplyChain\Services\UniqueId;
 
 class CrwCrewAssignmentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:crw-assignment-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:crw-assignment-create', ['only' => ['store']]);
+        $this->middleware('permission:crw-assignment-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:crw-assignment-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      *

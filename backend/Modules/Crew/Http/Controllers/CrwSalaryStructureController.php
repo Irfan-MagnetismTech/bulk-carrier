@@ -11,6 +11,13 @@ use Modules\Crew\Http\Requests\CrwSalaryStructureRequest;
 
 class CrwSalaryStructureController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:crw-salary-structure-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:crw-salary-structure-create', ['only' => ['store']]);
+        $this->middleware('permission:crw-salary-structure-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:crw-salary-structure-delete', ['only' => ['destroy']]);
+    }    
     /**
      * Display a listing of the resource.
      *

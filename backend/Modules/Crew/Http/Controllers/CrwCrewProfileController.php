@@ -17,7 +17,10 @@ class CrwCrewProfileController extends Controller
      */
     public function __construct(private FileUploadService $fileUpload)
     {
-
+        $this->middleware('permission:crw-profile-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:crw-profile-create', ['only' => ['store']]);
+        $this->middleware('permission:crw-profile-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:crw-profile-delete', ['only' => ['destroy']]);
     }
 
     /**

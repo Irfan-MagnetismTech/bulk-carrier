@@ -13,7 +13,10 @@ class CrwBankAccountController extends Controller
 {
     public function __construct(private FileUploadService $fileUpload)
     {
-    
+        $this->middleware('permission:crw-bank-account-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:crw-bank-account-create', ['only' => ['store']]);
+        $this->middleware('permission:crw-bank-account-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:crw-bank-account-delete', ['only' => ['destroy']]);    
     }
     /**
      * Display a listing of the resource.

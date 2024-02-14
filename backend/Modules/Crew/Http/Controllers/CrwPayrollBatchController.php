@@ -12,6 +12,13 @@ use Modules\Crew\Entities\CrwPayrollBatchHeadLine;
 
 class CrwPayrollBatchController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:crw-salary-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:crw-salary-create', ['only' => ['store']]);
+        $this->middleware('permission:crw-salary-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:crw-salary-delete', ['only' => ['destroy']]);
+    }    
     /**
      * @param Request $request
      */

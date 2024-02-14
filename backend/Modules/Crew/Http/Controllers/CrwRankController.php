@@ -12,6 +12,13 @@ use Modules\Crew\Http\Requests\CrwRankRequest;
 
 class CrwRankController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:crw-rank-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:crw-rank-create', ['only' => ['store']]);
+        $this->middleware('permission:crw-rank-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:crw-rank-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      *

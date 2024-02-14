@@ -12,6 +12,13 @@ use Modules\Crew\Http\Requests\AppraisalRecordRequest;
 
 class AppraisalRecordController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:crw-apprisal-record-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:crw-apprisal-record-create', ['only' => ['store']]);
+        $this->middleware('permission:crw-apprisal-record-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:crw-apprisal-record-delete', ['only' => ['destroy']]);
+    }    
     /**
      * Display a listing of the resource.
      *
