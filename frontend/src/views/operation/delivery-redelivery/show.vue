@@ -8,75 +8,75 @@
         <div class="w-full">
             <table class="w-full">
                 <thead>
-                    <tr>
-                        <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="2">Basic Info</td>
-                    </tr>
+                  <tr>
+                      <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="2">Basic Info</td>
+                  </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th class="w-40">Business Unit</th>
-                        <td><span :class="deliveryRedelivery?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ deliveryRedelivery?.business_unit }}</span></td>
-                    </tr>
-                    <tr>
-                        <th class="w-40">Note Type</th>
-                        <td>{{ deliveryRedelivery.note_type }}</td>
-                    </tr>
-                    <tr>
-                        <th class="w-40">Effective Date</th>
-                        <td><span>
-                          <nobr>{{ formatDate(deliveryRedelivery.effective_date) }}</nobr>
-                          </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="w-40">Currency</th>
-                        <td>{{ deliveryRedelivery.currency }}</td>
-                    </tr>
-                    <tr>
-                        <th class="w-40">Exchange Rate <small>[To USD]</small></th>
-                        <td>{{ deliveryRedelivery.exchange_rate_usd }}</td>
-                    </tr>
-                    <tr>
-                        <th class="w-40">Exchange Rate <small>[To BDT]</small></th>
-                        <td>{{ deliveryRedelivery.exchange_rate_bdt }}</td>
-                    </tr>
-                    
-                    <tr>
-                        <th class="w-40">Vessel Name</th>
-                        <td>{{ deliveryRedelivery.opsVessel?.name }}</td>
-                    </tr>
-                    <tr>
-                        <th class="w-40">Vessel Code</th>
-                        <td>{{ deliveryRedelivery?.opsVessel?.short_code }}</td>
-                    </tr>
-                    <tr>
-                        <th class="w-40">Vessel Owner Name</th>
-                        <td>{{ deliveryRedelivery?.opsVessel?.owner_name}}</td>
-                    </tr>
-                    <tr>
-                        <th class="w-40">Vessel Capacity</th>
-                        <td>{{ deliveryRedelivery?.opsVessel?.capacity }}</td>
-                    </tr>
-                    <tr>
-                        <th class="w-40">Charterer Name</th>
-                        <td>{{ deliveryRedelivery.opsChartererProfile?.name }}</td>
-                    </tr>
-                    <tr>
-                        <th class="w-40">Charterer Owner Code</th>
-                        <td>{{ deliveryRedelivery.opsChartererProfile?.owner_code }}</td>
-                    </tr>
-                    <tr>
-                        <th class="w-40">Charterer Email</th>
-                        <td>{{ deliveryRedelivery.opsChartererProfile?.email }}</td>
-                    </tr>
-                    <tr>
-                        <th class="w-40">Contact No.</th>
-                        <td>{{ deliveryRedelivery.opsChartererProfile?.contact_no }}</td>
-                    </tr>
-                    <tr>
-                        <th class="w-40">Remarks</th>
-                        <td>{{ deliveryRedelivery.remarks }}</td>
-                    </tr>
+                  <tr>
+                      <th class="w-40">Business Unit</th>
+                      <td><span :class="deliveryRedelivery?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ deliveryRedelivery?.business_unit }}</span></td>
+                  </tr>
+                  <tr>
+                      <th class="w-40">Note Type</th>
+                      <td>{{ deliveryRedelivery.note_type }}</td>
+                  </tr>
+                  <tr>
+                      <th class="w-40">Effective Date</th>
+                      <td><span>
+                        <nobr>{{ formatDate(deliveryRedelivery.effective_date) }}</nobr>
+                        </span>
+                      </td>
+                  </tr>
+                  <tr>
+                      <th class="w-40">Currency</th>
+                      <td>{{ deliveryRedelivery.currency }}</td>
+                  </tr>
+                  <tr>
+                      <th class="w-40">Exchange Rate <small>[To USD]</small></th>
+                      <td>{{ deliveryRedelivery.exchange_rate_usd }}</td>
+                  </tr>
+                  <tr>
+                      <th class="w-40">Exchange Rate <small>[To BDT]</small></th>
+                      <td>{{ deliveryRedelivery.exchange_rate_bdt }}</td>
+                  </tr>
+                  
+                  <tr>
+                      <th class="w-40">Vessel Name</th>
+                      <td>{{ deliveryRedelivery.opsVessel?.name }}</td>
+                  </tr>
+                  <tr>
+                      <th class="w-40">Vessel Code</th>
+                      <td>{{ deliveryRedelivery?.opsVessel?.short_code }}</td>
+                  </tr>
+                  <tr>
+                      <th class="w-40">Vessel Owner Name</th>
+                      <td>{{ deliveryRedelivery?.opsVessel?.owner_name}}</td>
+                  </tr>
+                  <tr>
+                      <th class="w-40">Vessel Capacity</th>
+                      <td>{{ deliveryRedelivery?.opsVessel?.capacity }}</td>
+                  </tr>
+                  <tr>
+                      <th class="w-40">Charterer Name</th>
+                      <td>{{ deliveryRedelivery.opsChartererProfile?.name }}</td>
+                  </tr>
+                  <tr>
+                      <th class="w-40">Charterer Owner Code</th>
+                      <td>{{ deliveryRedelivery.opsChartererProfile?.owner_code }}</td>
+                  </tr>
+                  <tr>
+                      <th class="w-40">Charterer Email</th>
+                      <td>{{ deliveryRedelivery.opsChartererProfile?.email }}</td>
+                  </tr>
+                  <tr>
+                      <th class="w-40">Contact No.</th>
+                      <td>{{ deliveryRedelivery.opsChartererProfile?.contact_no }}</td>
+                  </tr>
+                  <tr>
+                      <th class="w-40">Remarks</th>
+                      <td>{{ deliveryRedelivery.remarks }}</td>
+                  </tr>
                 </tbody>
             </table>
         </div>
@@ -113,30 +113,30 @@
                   <span v-if="deliveryRedelivery.opsBunkers[index]?.unit">{{ deliveryRedelivery.opsBunkers[index]?.unit }}</span>
                 </td>
                 <td>
-                <span>
+                  <span>
                     {{ numberFormat(deliveryRedelivery.opsBunkers[index].quantity) }}
                   </span>
-              </td>
-              <td>
-                <span>
-                  {{ numberFormat(deliveryRedelivery.opsBunkers[index].rate) }}
-                </span>
-              </td>
-              <td>
-                <span>
-                  {{ numberFormat(deliveryRedelivery.opsBunkers[index].amount) }}
-                </span>
-              </td>
-              <td>
-                <span>
-                  {{ numberFormat(deliveryRedelivery.opsBunkers[index].amount_usd) }}
-                </span>
-              </td>
-              <td>
-                <span>
-                  {{ numberFormat(deliveryRedelivery.opsBunkers[index].amount_bdt) }}
-                </span>
-              </td>
+                </td>
+                <td>
+                  <span>
+                    {{ numberFormat(deliveryRedelivery.opsBunkers[index].rate) }}
+                  </span>
+                </td>
+                <td>
+                  <span>
+                    {{ numberFormat(deliveryRedelivery.opsBunkers[index].amount) }}
+                  </span>
+                </td>
+                <td>
+                  <span>
+                    {{ numberFormat(deliveryRedelivery.opsBunkers[index].amount_usd) }}
+                  </span>
+                </td>
+                <td>
+                  <span>
+                    {{ numberFormat(deliveryRedelivery.opsBunkers[index].amount_bdt) }}
+                  </span>
+                </td>
               </tr>
             </tbody>
           </table>
