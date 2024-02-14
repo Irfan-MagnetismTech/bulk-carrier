@@ -90,7 +90,7 @@
             </td>
             <td>
               <label class="block w-full mt-2 text-sm">
-                 <input type="number" v-model="form.scmAdjustmentLines[index].rate" min="1" class="form-input">
+                 <input type="number" v-model="form.scmAdjustmentLines[index].rate" min="1" class="form-input" :readonly="form.type == 'Deduction'">
                </label>
             </td>
             <td>

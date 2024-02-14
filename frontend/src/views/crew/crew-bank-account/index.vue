@@ -30,7 +30,7 @@ const debouncedValue = useDebouncedRef('', 800);
 
 const { setTitle } = Title();
 
-setTitle('Crew Bank Accounts');
+setTitle('Crew Bank Account');
 
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
@@ -175,11 +175,11 @@ onMounted(() => {
           <tbody>
             <tr v-for="(crewBankAccount,index) in crewBankAccounts?.data" :key="index">
               <td> {{ index + 1 }} </td>
-              <td> {{ crewBankAccount?.crwCrew?.full_name }} </td>
+              <td class="!text-left"> {{ crewBankAccount?.crwCrew?.full_name }} </td>
               <td> {{ crewBankAccount?.crwCrew?.pre_mobile_no }} </td>
-              <td> {{ crewBankAccount?.bank_name }} </td>
-              <td> {{ crewBankAccount?.account_name }} </td>
-              <td> {{ crewBankAccount?.account_number }} </td>
+              <td class="!text-left"> {{ crewBankAccount?.bank_name }} </td>
+              <td class="!text-left"> {{ crewBankAccount?.account_name }} </td>
+              <td class="!text-left"> {{ crewBankAccount?.account_number }} </td>
               <td>
                 <span v-if="!crewBankAccount?.is_active" class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700">Deactive</span>
                 <span v-else class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">Active</span>

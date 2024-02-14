@@ -54,7 +54,8 @@ export default function useMaterialCs() {
                 unit : null,
                 quantity : null,
             }
-        ]
+        ],
+        scmCsStockQuantity: [],
     });
 
     const materialObj = {

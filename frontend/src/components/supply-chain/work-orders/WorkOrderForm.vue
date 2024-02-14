@@ -11,6 +11,7 @@
     import ErrorComponent from "../../utils/ErrorComponent.vue";
     import cloneDeep from 'lodash/cloneDeep';
     import useBusinessInfo from '../../../composables/useBusinessInfo';
+    import useHeroIcon from '../../../assets/heroIcon';
     // import usePurchaseOrder from '../../../composables/supply-chain/usePurchaseOrder';
     import useWorkOrder from '../../../composables/supply-chain/useWorkOrder';
     import RemarksComponent from '../../utils/RemarksComponent.vue';
@@ -44,7 +45,9 @@
     });
 
     const csVendors = ref([]);
+    const minWoDate = ref('');
 
+    const icons = useHeroIcon();
     
     function addMaterial(index) {
       const clonedObj = cloneDeep(props.materialObject);
@@ -301,11 +304,47 @@
       props.form.scm_vendor_id = null;
       props.form.scmVendor = null;
       wcsWiseVendorList.value = [];
+      if(props.form?.scmWcs?.id){
+        minWoDate.value = props.form?.scmWcs?.effective_date;
+        // console.log("props.form?.scmWcs", props.form?.scmWcs?.effective_date);
+      }
+      else{
+        minWoDate.value = '';
+      }
+      checkWoDate();
       getWr();
       if(props.form.scm_wcs_id){
         getWcsWiseVendorList(props.form.scmWcs.id);
       }
     }
+
+    function checkWoDate(){
+      if(props.form.date < minWoDate.value) props.form.date = '';
+    }
+
+    function woDateChange(){
+      props.form.scmWoLines?.forEach(scmWoLine => {
+        scmWoLine?.scmWoItems?.forEach(scmWoItem => {
+          if(scmWoItem.required_date < props.form.date)
+            scmWoItem.required_date = '';
+        })
+        // if ((minWoDate.value < scmWoLine?.scmWr?.approved_date || minWoDate.value == '') && scmWoLine?.scmWr) {
+        //   minWoDate.value = scmWoLine?.scmWr?.approved_date;
+        // }
+      });
+    }
+
+    watch(() => props.form.scmWoLines, (scmWoLines) => {
+      minWoDate.value = '' || props.form?.scmWcs?.effective_date;
+      scmWoLines?.forEach(scmWoLine => {
+        if ((minWoDate.value < scmWoLine?.scmWr?.approved_date || minWoDate.value == '' || !minWoDate.value) && scmWoLine?.scmWr) {
+          minWoDate.value = scmWoLine?.scmWr?.approved_date;
+        }
+      });
+
+    checkWoDate();
+
+}, { deep: true });
 
 
 
@@ -335,7 +374,9 @@
       // props.form.scmWoLines[index].scmWoItems[itemIndex].unit = props.form.scmWoLines[index].scmWoItems[itemIndex].scmService.unit;
       // props.form.scmWoLines[index].scmWoItems[itemIndex].brand = props.form.scmWoLines[index].scmWoItems[itemIndex].scmService.brand;
       // props.form.scmWoLines[index].scmWoItems[itemIndex].model = props.form.scmWoLines[index].scmWoItems[itemIndex].scmService.model;
+      // console.log("", props.form.scmWoLines[index].scmWoItems[itemIndex].scmService.quantity);
       props.form.scmWoLines[index].scmWoItems[itemIndex].max_quantity = props.form.scmWoLines[index].scmWoItems[itemIndex].scmService.max_quantity;
+      props.form.scmWoLines[index].scmWoItems[itemIndex].wr_quantity = props.form.scmWoLines[index].scmWoItems[itemIndex].scmService.wr_quantity;
       props.form.scmWoLines[index].scmWoItems[itemIndex].quantity = props.form.scmWoLines[index].scmWoItems[itemIndex].scmService.quantity;
       props.form.scmWoLines[index].scmWoItems[itemIndex].wr_composite_key = props.form.scmWoLines[index].scmWoItems[itemIndex].scmService.wr_composite_key;
       
@@ -526,9 +567,9 @@
       </v-select>
     </label>
     <label class="label-group">
-          <span class="label-item-title">WO Date<span class="text-red-500">*</span></span>
+          <span class="label-item-title">WO Date <span class="text-red-500">*</span></span>
           <!-- <input type="date" v-model="form.date" required class="form-input" name="date" :id="'date'" /> -->
-          <VueDatePicker v-model="form.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" ></VueDatePicker>
+          <VueDatePicker v-model="form.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :min-date="minWoDate" @update:modelValue="woDateChange"></VueDatePicker>
     </label>    
     <label class="label-group" v-if="form.cs_no != null">
       <span class="label-item-title">Vendor Name<span class="text-red-500">*</span></span>
@@ -594,18 +635,21 @@
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-1/4 mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">WR No. <span class="text-red-500">*</span></span>
-          <v-select :options="filteredWorkRequisitions" placeholder="--Choose an option--" v-model="scmWoLine.scmWr" label="ref_no" class="block form-input"
-          @update:modelValue="changeWr(index)"
-          >
-            <template #search="{attributes, events}">
-                <input
-                    class="vs__search"
-                    :required="!scmWoLine.scmWr"
-                    v-bind="attributes"
-                    v-on="events"
-                    />
-            </template>
-          </v-select>
+          <div class="relative">
+            <v-select :options="filteredWorkRequisitions" placeholder="--Choose an option--" v-model="scmWoLine.scmWr" label="ref_no" class="block form-input"
+            @update:modelValue="changeWr(index)"
+            >
+              <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      :required="!scmWoLine.scmWr"
+                      v-bind="attributes"
+                      v-on="events"
+                      />
+              </template>
+            </v-select>
+            <span v-show="scmWoLine.isWrDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-10" title="Duplicate Service" v-html="icons.ExclamationTriangle"></span>
+          </div>
         </label>
         <label class="block w-1/4 mt-2 text-sm">
             <span class="text-gray-700">WR Date </span>
@@ -640,16 +684,19 @@
                       <tr>
                         <th class="w-1/4">Service - Code <span class="text-red-500">*</span></th>
                         <td class="w-3/4">
-                          <v-select :options="serviceList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="scmWoItem.scmService" label="service_name_and_code" class="block form-input w-full" :menu-props="{ minWidth: '250px', minHeight: '400px' }" @update:modelValue="changeService(index,itemIndex)">
-                            <template #search="{attributes, events}">
-                                <input
-                                    class="vs__search"
-                                    :required="!scmWoItem.scmService"
-                                    v-bind="attributes"
-                                    v-on="events"
-                                    />
-                            </template>
-                        </v-select>
+                          <div class="relative">
+                              <v-select :options="serviceList[index]" placeholder="--Choose an option--" :loading="isLoading" v-model="scmWoItem.scmService" label="service_name_and_code" class="block form-input w-full" :menu-props="{ minWidth: '250px', minHeight: '400px' }" @update:modelValue="changeService(index,itemIndex)">
+                                <template #search="{attributes, events}">
+                                    <input
+                                        class="vs__search"
+                                        :required="!scmWoItem.scmService"
+                                        v-bind="attributes"
+                                        v-on="events"
+                                        />
+                                </template>
+                            </v-select>
+                            <span v-show="scmWoItem.isServiceDuplicate" class="text-yellow-600 pl-1 absolute top-2 right-10" title="Duplicate Service" v-html="icons.ExclamationTriangle"></span>
+                          </div>
                         </td>
                         
                       </tr>
@@ -657,7 +704,7 @@
                       <tr>
                         <th class="w-1/4">Required Date <span class="text-red-500">*</span></th>
                         <td class="w-3/4">
-                          <VueDatePicker v-model="scmWoItem.required_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd"  required></VueDatePicker>
+                          <VueDatePicker v-model="scmWoItem.required_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd"  required :min-date="form.date"></VueDatePicker>
                         </td>
                         
                       </tr>

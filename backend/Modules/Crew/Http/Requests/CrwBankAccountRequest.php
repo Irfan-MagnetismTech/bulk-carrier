@@ -25,7 +25,7 @@ class CrwBankAccountRequest extends FormRequest
      */
     public function rules(): array {
         return [
-            'crw_crew_id'      => ['required', 'integer', 
+            'crw_crew_id'      => ['required', 'integer', 'exists:crw_crew_profiles,id', 
                                     $this->is_active == 1 ? Rule::unique('crw_bank_accounts')->where('is_active', true)->ignore($this->id) : null],
             'bank_name'        => 'required|string|max:255',
             'branch_name'      => 'required|string|max:255',
@@ -46,6 +46,7 @@ class CrwBankAccountRequest extends FormRequest
     public function messages(): array {
         return [
             'crw_crew_id.unique' => 'The Crew already has an active account. Please deactivate that account first.',
+            'crw_crew_id.exists'   => 'The Crew Name does not exists[:position].',            
         ];
     }
 

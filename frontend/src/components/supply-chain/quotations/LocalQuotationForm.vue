@@ -47,10 +47,25 @@
     </label>
     <label class="label-group">
         <span class="label-item-title">Sourcing History <span class="text-red-500">*</span></span>
-        <select v-model="form.sourcing" class="form-input" required>
+        <!-- <select v-model="form.sourcing" class="form-input" required>
             <option value="Existing">Existing</option>
             <option value="New">New</option>
-        </select>
+        </select> -->
+        <v-select
+            :options="sourcing_array"
+            placeholder="--Choose an option--"
+            v-model="form.sourcing"
+            label="Product Source Type"
+            class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      :required="!form.sourcing"
+                      v-bind="attributes"
+                      v-on="events"
+                      />
+              </template>
+          </v-select>
     </label>   
   </div>
   <div class="input-group">
@@ -64,7 +79,7 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Vendor Quotation No <span class="text-red-500">*</span></span>
-          <input type="text" v-model="form.quotation_ref" class="form-input" name="scm_department_id" :id="'scm_department_id'" min=1/>
+          <input type="text" v-model="form.quotation_ref" class="form-input" name="scm_department_id" :id="'scm_department_id'" required/>
           <!-- <Error v-if="errors?.scm_department_id" :errors="errors.scm_department_id" /> -->
         </label>
         <label class="label-group">
@@ -77,26 +92,41 @@
   <div class="input-group">
       <label class="label-group">
         <span class="label-item-title">Payment Method <span class="text-red-500">*</span></span>
-         <select v-model="form.payment_method" class="form-input" required>
+         <!-- <select v-model="form.payment_method" class="form-input" required>
             <option value="Cash">Cash</option>
             <option value="Credit">Credit</option>
-        </select>
+        </select> -->
+        <v-select
+            :options="payment_term"
+            placeholder="--Choose an option--"
+            v-model="form.payment_method"
+            label="Product Source Type"
+            class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input" @update:modelValue="handlePaymentTerm">
+            <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      :required="!form.payment_method"
+                      v-bind="attributes"
+                      v-on="events"
+                      />
+              </template>
+          </v-select>
       </label>
       <!-- <label class="label-group">
         <span class="label-item-title">Currency <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.currency" class="form-input" required/>
       </label> -->
       <label class="label-group">
-        <span class="label-item-title">Carrying Charge Bear By </span>
+        <span class="label-item-title">Carrying Charge Bear By <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.carring_cost_bear_by" class="form-input" required/>
       </label>
       <label class="label-group">
-        <span class="label-item-title">Unloading Charge Bear By</span>
+        <span class="label-item-title">Unloading Charge Bear By <span class="text-red-500">*</span></span>
           <input type="text" v-model="form.unloading_cost_bear_by" class="form-input" required/>
       </label>
       <label class="label-group">
         <span class="label-item-title">VAT </span>
-          <input type="text" v-model="form.vat" class="form-input" required/>
+          <input type="text" v-model="form.vat" class="form-input"/>
       </label>
   </div>
 
@@ -105,7 +135,7 @@
      
       <label class="label-group">
         <span class="label-item-title">AIT</span>
-          <input type="text" v-model="form.ait" class="form-input" required/>
+          <input type="text" v-model="form.ait" class="form-input"/>
       </label>
       <label class="label-group">
         <span class="label-item-title">Warranty</span>
@@ -156,8 +186,8 @@
               <th class="py-3 align-center">Brand</th>
               <th class="py-3 align-center">Model</th>
               <th class="py-3 align-center">Warranty Period</th>
-              <th class="py-3 align-center">Offer Price</th>
-              <th class="py-3 align-center">Negotiated Price</th>
+              <th class="py-3 align-center">Offer Price <br/> <span class="text-[0.6rem]">( Per Unit )</span></th>
+              <th class="py-3 align-center">Negotiated Price <br/> <span class="text-[0.6rem]">( Per Unit )</span><span class="text-red-500">*</span></th>
             </tr>
             </thead>
 
@@ -182,10 +212,10 @@
                       <input type="text" v-model="form.scmCsMaterialVendors[indexa][index].warranty_period" class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" step="0.01" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" class="form-input"/>
+                      <input type="number" step="0.01" v-model="form.scmCsMaterialVendors[indexa][index].offered_price" min=0 class="form-input"/>
                     </td>
                     <td v-if="form.scmCsMaterialVendors[indexa][index]" :rowspan="lines.length">
-                      <input type="number" step="0.01" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input" min="1"/>
+                      <input type="number" step="0.01" v-model="form.scmCsMaterialVendors[indexa][index].negotiated_price" class="form-input" min=1 required/>
                     </td>
               
                   </tr>
@@ -275,8 +305,9 @@
     }); 
 
     const route = useRoute();
-    const CSID = route.params.csId;
-
+    const CSID = route?.params?.csId;
+    const payment_term = ['Cash', 'Credit'];
+    const sourcing_array = ['Existing', 'New'];
     watch(() => materialCs.value, (newVal, oldVal) => {
           props.form.scmCs = newVal;
           props.form.scm_cs_id = newVal?.id;
@@ -325,7 +356,11 @@
 
 
 
-
+function handlePaymentTerm(){
+  if(props.form.payment_method == 'Cash'){
+    props.form.credit_term = null;
+  }
+}
 
 
 

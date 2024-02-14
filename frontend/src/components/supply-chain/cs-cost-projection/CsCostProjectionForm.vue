@@ -311,13 +311,13 @@ onMounted(() => {
                           <input type="number" v-model="form.selectedVendors[index].scmCsPaymentInfo.exchange_rate" required class="form-input text-center" name="exchange_rate" :id="'exchange_rate'"  min="1"/>
                         </td>
                       </tr>
-                      <tr class="text-center">
+                      <!-- <tr class="text-center">
                         <td class="align-center font-bold bg-gray-100">Market Rate (BDT/USD)</td>
                         <td class="align-center">
                           <input type="number" v-model="form.selectedVendors[index].scmCsPaymentInfo.market_rate" required class="form-input text-center" name="market_rate" :id="'market_rate'"  min="1"/>
 
                         </td>
-                      </tr>
+                      </tr> -->
                     </tbody>
                   </table>
               <!-- </fieldset> -->
@@ -343,7 +343,7 @@ onMounted(() => {
                       <tr class="text-center">
                         <td class="align-center font-bold bg-gray-100 !w-3/4">Product Price as Per PI</td>
                         <td class="align-center text-center !w-1/4">
-                          <input type="number" v-model="form.selectedVendors[index].scmCsLandedCost.lc_type" required class="form-input text-center" name="lc_type" :id="'lc_type'" />
+                          <input type="number" v-model="form.selectedVendors[index].scmCsLandedCost.price_per_pi" required class="form-input text-center" name="lc_type" :id="'lc_type'" />
                         </td>
                       </tr>
                       <tr class="text-center">

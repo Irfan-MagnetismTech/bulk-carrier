@@ -6,6 +6,7 @@ import useNotification from '../useNotification.js';
 import Store from '../../store/index.js';
 import { merge } from 'lodash';
 import { loaderSetting as LoaderConfig} from '../../config/setting.js';
+import Swal from 'sweetalert2';
 
 export default function usePurchaseOrder() {
     const BASE = 'scm' 
@@ -63,6 +64,7 @@ export default function usePurchaseOrder() {
                         remaining_quantity: 0.0,
                         max_quantity: 0.0,
                         quantity: 0.0,
+                        isAspectDuplicate: false,
                         rate: 0.0,
                         total_price: 0.0,
                     }
@@ -88,6 +90,7 @@ export default function usePurchaseOrder() {
                 pr_composite_key: null,
                 cs_composite_key: null,
                 pr_quantity: 0.0,
+                isAspectDuplicate: false,
                 remaining_quantity: 0.0,
                 max_quantity: 0.0,
                 quantity: 0.0,
@@ -168,7 +171,7 @@ export default function usePurchaseOrder() {
         }
     }
     async function storePurchaseOrder(form) {
-
+        if (!checkUniqueArray(form)) return;
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -209,6 +212,7 @@ export default function usePurchaseOrder() {
     }
 
     async function updatePurchaseOrder(form, purchaseOrderId) {
+        if (!checkUniqueArray(form)) return;
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -411,7 +415,48 @@ export default function usePurchaseOrder() {
             isLoading.value = false;
         }
     }
-        
+    function checkUniqueArray(form) {
+        let isHasError = false;
+        const messages = ref([]);
+        let materialArray = [];
+        form.scmPoLines.map((scmPoLine, scmPoLineIndex) => {
+             
+            scmPoLine.scmPoItems.map((scmPoitem, scmPoitemIndex) => {
+            let material_key = scmPoitem.pr_composite_key;
+            if (materialArray.indexOf(material_key) === -1) {
+                materialArray.push(material_key);
+                form.scmPoLines[scmPoLineIndex].scmPoItems[scmPoitemIndex].isAspectDuplicate = false;
+              } else {
+                let data = `Duplicate Material Name Having Purchase Requisition ${scmPoLine.scmPr.ref_no} in ${scmPoLineIndex} Block Row: ${scmPoitemIndex + 1}`;
+                messages.value.push(data);
+                form.scmPoLines[scmPoLineIndex].scmPoItems[scmPoitemIndex].isAspectDuplicate = true;
+              }
+            });
+        });
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
+
 
     return {
         purchaseOrders,

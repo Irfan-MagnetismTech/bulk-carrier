@@ -32,7 +32,7 @@ onMounted(() => {
 
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Payroll Batch Details  # {{crewPayrollBatchId}} </h2>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Salary Details</h2>
     <default-button :title="'Payroll Batch List'" :to="{ name: 'crw.crewPayrollBatches.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
@@ -134,7 +134,7 @@ onMounted(() => {
                   <thead>
                   <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
                     <th class="px-4 py-3 align-bottom"><nobr>Crew Name</nobr></th>
-                    <th class="px-4 py-3 align-bottom"><nobr>Contact</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Crew Contact</nobr></th>
                     <th class="px-4 py-3 align-bottom"><nobr>Net Salary</nobr></th>
                     <th class="px-4 py-3 align-bottom"><nobr>Present Days</nobr></th>
                     <th class="px-4 py-3 align-bottom"><nobr>Absent Days</nobr></th>

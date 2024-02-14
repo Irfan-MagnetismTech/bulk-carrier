@@ -13,12 +13,12 @@ class CrwCrewProfileRequest extends FormRequest
         $data      = request('data');
         $dataArray = json_decode($data, true);
 
-        $picture = is_object(request('picture')) ? request('picture') : null;
+        $picture    = is_object(request('picture')) ? request('picture') : null;
         $attachment = is_object(request('attachment')) ? request('attachment') : null;
 
         $mergeData = array_merge($dataArray, [
-            'picture' => $picture,
-            'attachment' => $attachment
+            'picture'    => $picture,
+            'attachment' => $attachment,
         ]);
 
         $this->replace($mergeData);
@@ -31,10 +31,10 @@ class CrwCrewProfileRequest extends FormRequest
      */
     public function rules(): array {
         return [
-            'crw_recruitment_approval_id'    => 'numeric',
-            'agency_id'                      => 'nullable|numeric',
+            'crw_recruitment_approval_id'    => 'integer|exists:crw_recruitment_approvals,id',
+            'agency_id'                      => 'nullable|integer|exists:crw_agencies,id',
             'department_name'                => 'required|string|max:50',
-            'crw_rank_id'                    => 'numeric',
+            'crw_rank_id'                    => ['required', 'numeric', 'exists:crw_ranks,id'],
             'employee_type'                  => 'required|string|max:255',
             'is_officer'                     => 'required|boolean',
             'first_name'                     => 'required|string|max:100',
@@ -129,8 +129,11 @@ class CrwCrewProfileRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            'pre_mobile_no.unique'         => 'The Present Contact:mobile no has already been taken.',
-            'per_mobile_no.unique'         => 'The Permanent Contact:mobile no has already been taken.',
+            'crw_agency_id'               => 'The Agency Name does not exists.',
+            'crw_recruitment_approval_id' => 'The Recruitment Approval does not exists.',
+            'pre_mobile_no.unique'        => 'The Present Contact:mobile no has already been taken.',
+            'per_mobile_no.unique'        => 'The Permanent Contact:mobile no has already been taken.',
+            'crw_rank_id.exists'          => 'The Rank does not exists.',
         ];
     }
 

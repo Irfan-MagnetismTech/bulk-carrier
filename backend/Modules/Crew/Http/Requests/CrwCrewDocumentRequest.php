@@ -24,10 +24,11 @@ class CrwCrewDocumentRequest extends FormRequest
      */
     public function rules(): array {
         return [
-            'document_name'            => ['required', 'string', 'max:255', 
-                                            Rule::unique('crw_crew_documents')->where('business_unit', $this->business_unit)
-                                            ->where('crw_crew_profile_id', $this->crw_crew_profile_id)->ignore($this->id)
-                                        ],
+            'crw_crew_profile_id'      => ['required', 'integer', 'exists:crw_crew_profiles,id'],
+            'document_name'            => ['required', 'string', 'max:255',
+                Rule::unique('crw_crew_documents')->where('business_unit', $this->business_unit)
+                    ->where('crw_crew_profile_id', $this->crw_crew_profile_id)->ignore($this->id),
+            ],
             'issuing_authority'        => 'required|string|max:255',
             'validity_period'          => 'required|string|max:255',
             'validity_period_in_month' => 'required|numeric|min:0',
@@ -48,7 +49,7 @@ class CrwCrewDocumentRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            //
+            'crw_crew_profile_id.exists' => 'The Crew Name does not exists.',
         ];
     }
 

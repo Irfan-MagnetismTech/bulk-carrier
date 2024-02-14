@@ -447,4 +447,5 @@ export default [
         meta: { requiresAuth: true, role: ROLE, permission: '' },
         props: (route) => ({ page: parseInt(route.query.page) || 1 }),
     },
+
 ];

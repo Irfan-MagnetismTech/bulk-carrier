@@ -373,7 +373,7 @@ onMounted(() => {
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Attendance Month <span class="text-red-500">*</span></span>
         <select v-model.trim="form.crw_attendance_id" class="form-input" autocomplete="off" required>
-          <option value="">Select</option>
+          <option value="" selected disabled>--Choose an option--</option>
           <option :value="vesselMonthAttendance?.id" v-for="(vesselMonthAttendance,index) in vesselWiseMonthlyAttendances">{{ vesselMonthAttendance?.month_year_name }}</option>
         </select>
       </label>
@@ -468,7 +468,7 @@ onMounted(() => {
             <thead>
             <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
               <th class="px-4 py-3 align-bottom"><nobr>Crew Name</nobr></th>
-              <th class="px-4 py-3 align-bottom"><nobr>Contact</nobr></th>
+              <th class="px-4 py-3 align-bottom"><nobr>Crew Contact</nobr></th>
               <th class="px-4 py-3 align-bottom"><nobr>Net Salary</nobr></th>
               <th class="px-4 py-3 align-bottom"><nobr>Present Days</nobr></th>
               <th class="px-4 py-3 align-bottom"><nobr>Absent Days</nobr></th>

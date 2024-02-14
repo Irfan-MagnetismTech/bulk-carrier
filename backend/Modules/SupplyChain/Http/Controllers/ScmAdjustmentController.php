@@ -29,7 +29,7 @@ class ScmAdjustmentController extends Controller
 
     /**
      * Display a listing of the resource.
-     * 
+     *
      * @return JsonResponse
      */
     public function index(): JsonResponse
@@ -51,7 +51,7 @@ class ScmAdjustmentController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * 
+     *
      * @return JsonResponse
      */
     public function store(ScmAdjustmentRequest $request): JsonResponse
@@ -66,8 +66,8 @@ class ScmAdjustmentController extends Controller
 
             $adjustment = ScmAdjustment::create($requestData);
 
-            $ref_no = UniqueId::generate($adjustment->id, 'AJT');
-            $adjustment->update(['ref_no' => $ref_no]);
+            // $ref_no = UniqueId::generate($adjustment->id, 'AJT');
+            // $adjustment->update(['ref_no' => $ref_no]);
 
             $linesData = CompositeKey::generateArray($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
             $adjustment->scmAdjustmentLines()->createMany($linesData);
@@ -96,7 +96,7 @@ class ScmAdjustmentController extends Controller
 
     /**
      * Show the specified resource.
-     * 
+     *
      * @param ScmAdjustment $movementRequisition
      * @return JsonResponse
      */
@@ -113,7 +113,7 @@ class ScmAdjustmentController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * 
+     *
      * @param ScmAdjustmentRequest $request
      * @param ScmAdjustment $movementRequisition
      * @return JsonResponse
@@ -153,7 +153,7 @@ class ScmAdjustmentController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     * 
+     *
      * @param ScmAdjustment $movementRequisition
      * @return JsonResponse
      */
@@ -168,12 +168,5 @@ class ScmAdjustmentController extends Controller
 
             return response()->json($adjustment->preventDeletionIfRelated(), 422);
         }
-    }
-
-    public function testStock()
-    {
-        TestStock::create([
-            'ref_no' => UniqueId::generate(TestStock::class, 'TS')
-        ]);
     }
 }

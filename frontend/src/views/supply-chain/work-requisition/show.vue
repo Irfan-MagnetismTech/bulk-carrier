@@ -96,13 +96,12 @@ onMounted(() => {
                 <th class="w-40">Purchase Center</th>
                 <td>{{ workRequisition?.purchase_center }}</td>
               </tr>
-
+              
 
               <tr>
                 <th class="w-40">User Department</th>
                 <td>{{ workRequisition?.user_department }}</td>
               </tr>
-              
               
               <tr>
                 <th class="w-40">Attachment</th>
@@ -121,9 +120,9 @@ onMounted(() => {
                 <td>{{ workRequisition?.remarks }}</td>
               </tr>
               <tr>
-                        <th class="w-40">Requested By </th>
-                        <td>{{ workRequisition?.createdBy?.name }}</td>
-                    </tr>
+                  <th class="w-40">Requested By </th>
+                  <td>{{ workRequisition?.createdBy?.name }}</td>
+              </tr>
 
               <tr>
                   <th class="w-40">Status </th>
