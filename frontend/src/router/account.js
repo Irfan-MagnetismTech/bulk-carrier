@@ -10,20 +10,20 @@ export default [
         path: `/${BASE}/cost-centers`,
         name: `${BASE}.cost-centers.index`,
         component: () => import(`../views/${VIEW_BASE}/cost-center/index.vue`),
-        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        meta: { requiresAuth: true, role: ROLE, permission: 'acc-cost-center-view' },
         props: (route) => ({ page: parseInt(route.query.page) || 1 }),
     },
     {
         path: `/${BASE}/cost-centers/create`,
         name: `${BASE}.cost-centers.create`,
         component: () => import(`../views/${VIEW_BASE}/cost-center/create.vue`),
-        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        meta: { requiresAuth: true, role: ROLE, permission: 'acc-cost-center-create' },
     },
     {
         path: `/${BASE}/cost-centers/:costCenterId/edit`,
         name: `${BASE}.cost-centers.edit`,
         component: () => import(`../views/${VIEW_BASE}/cost-center/edit.vue`),
-        meta: { requiresAuth: true, role: ROLE, permission: '' },
+        meta: { requiresAuth: true, role: ROLE, permission: 'acc-cost-center-edit' },
     },
 
     /* Account Balance Income Line Routes */
