@@ -258,7 +258,8 @@ export default [
                 },
 
                 
-                supplyChain2[0],
+                ...supplyChain2,
+                // supplyChain2[0],
                
         ]
     },

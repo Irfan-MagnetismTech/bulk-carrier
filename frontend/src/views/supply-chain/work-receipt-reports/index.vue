@@ -3,6 +3,7 @@ import {onMounted, watchEffect,watch,ref, watchPostEffect} from 'vue';
 import ActionButton from '../../../components/buttons/ActionButton.vue';
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
 import useMaterialReceiptReport from "../../../composables/supply-chain/useMaterialReceiptReport";
+import useWorkReceiptReport from "../../../composables/supply-chain/useWorkReceiptReport";
 import useHelper from "../../../composables/useHelper.js";
 import Title from "../../../services/title";
 import useDebouncedRef from '../../../composables/useDebouncedRef';
@@ -15,8 +16,10 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 
 import { useRouter } from 'vue-router';
+import { formatDate } from '../../../config/setting';
 
-const { getMaterialReceiptReports, materialReceiptReports, deleteMaterialReceiptReport, isLoading,isTableLoading } = useMaterialReceiptReport();
+// const { getMaterialReceiptReports, materialReceiptReports, deleteMaterialReceiptReport, isLoading,isTableLoading } = useMaterialReceiptReport();
+const { getWorkReceiptReports, workReceiptReports, deleteWorkReceiptReport, isLoading, isTableLoading } = useWorkReceiptReport();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -36,7 +39,7 @@ const icons = useHeroIcon();
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
-setTitle('Material Receipt Reports');
+setTitle('Work Receipt Reports');
 // Code for global search starts here
 
 let filterOptions = ref({
@@ -52,27 +55,27 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "MRR No",
+      "label": "WRR No",
       "filter_type": "input" 
     },
     {
-      "relation_name": "scmPo",
+      "relation_name": "scmWo",
       "field_name": "ref_no",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "PO No",
+      "label": "Wo No",
       "filter_type": "input" 
     },
     {
-      "relation_name": "scmPr",
+      "relation_name": "scmWr",
       "field_name": "ref_no",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "PR No",
+      "label": "WR No",
       "filter_type": "input" 
     },
     {
@@ -113,7 +116,7 @@ onMounted(() => {
   watchPostEffect(() => {
     if(currentPage.value == props.page && currentPage.value != 1) {
       filterOptions.value.page = 1;
-      router.push({ name: 'scm.material-receipt-reports.index', query: { page: filterOptions.value.page } });
+      router.push({ name: 'scm.work-receipt-reports.index', query: { page: filterOptions.value.page } });
     } else {
       filterOptions.value.page = props.page;
     }
@@ -121,7 +124,7 @@ onMounted(() => {
     if (JSON.stringify(filterOptions.value) !== stringifiedFilterOptions) {
       filterOptions.value.isFilter = true;
     }
-    getMaterialReceiptReports(filterOptions.value)
+    getWorkReceiptReports(filterOptions.value)
       .then(() => {
         paginatedPage.value = filterOptions.value.page;
       const customDataTable = document.getElementById("customDataTable");
@@ -130,7 +133,7 @@ onMounted(() => {
       }
     })
     .catch((error) => {
-      console.error("Error fetching PR:", error);
+      console.error("Error fetching Work Receipt Report:", error);
     });
 });
 });
@@ -148,7 +151,7 @@ function confirmDelete(id) {
           confirmButtonText: 'Yes'
         }).then((result) => {
           if (result.isConfirmed) {
-            deleteMaterialReceiptReport(id);
+            deleteWorkReceiptReport(id);
           }
         })
       }
@@ -158,8 +161,8 @@ function confirmDelete(id) {
   <!-- Heading -->
  
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Material Receipt Report List</h2>
-    <!-- <default-button :title="'Create Material Receipt Report'" :to="{ name: 'scm.material-receipt-reports.create' }" :icon="icons.AddIcon"></default-button> -->
+    <h2 class="text-2xl font-semibold text-gray-700">Work Receipt Report List</h2>
+    <default-button :title="'Create Work Receipt Report'" :to="{ name: 'scm.work-receipt-reports.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <!-- Table -->
   <div id="customDataTable">
@@ -179,27 +182,27 @@ function confirmDelete(id) {
           </thead> -->
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
-            <tr v-for="(materialReceiptReport,index) in (materialReceiptReports?.data ? materialReceiptReports?.data : materialReceiptReports)" :key="index">
+            <tr v-for="(workReceiptReport,index) in (workReceiptReports?.data ? workReceiptReports?.data : workReceiptReports)" :key="index">
               <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-              <td>{{ materialReceiptReport?.ref_no }}</td>
-              <td>{{ materialReceiptReport?.scmPo?.ref_no ?? "N/A" }}</td>
-              <td>{{ materialReceiptReport?.scmPr?.ref_no ?? "N/A" }}</td>
-              <td>{{ materialReceiptReport?.scmWarehouse?.name ?? "N/A" }}</td>
-              <td>{{ materialReceiptReport?.date }}</td>
+              <td>{{ workReceiptReport?.ref_no }}</td>
+              <td>{{ workReceiptReport?.scmWo?.ref_no ?? "N/A" }}</td>
+              <td>{{ workReceiptReport?.scmWr?.ref_no ?? "N/A" }}</td>
+              <td>{{ workReceiptReport?.scmWarehouse?.name ?? "N/A" }}</td>
+              <td>{{ formatDate(workReceiptReport?.date) }}</td>
               <td>
-                <span :class="materialReceiptReport?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialReceiptReport?.business_unit }}</span>
+                <span :class="workReceiptReport?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ workReceiptReport?.business_unit }}</span>
               </td>
               <td>
                 <nobr>
-                <action-button :action="'show'" :to="{ name: 'scm.material-receipt-reports.show', params: { materialReceiptReportId: materialReceiptReport.id } }"></action-button>
-                <action-button :action="'edit'" :to="{ name: 'scm.material-receipt-reports.edit', params: { materialReceiptReportId: materialReceiptReport.id } }"></action-button>
-                <action-button @click="confirmDelete(materialReceiptReport.id)" :action="'delete'"></action-button>
+                <action-button :action="'show'" :to="{ name: 'scm.work-receipt-reports.show', params: { workReceiptReportId: workReceiptReport.id } }"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'scm.work-receipt-reports.edit', params: { workReceiptReportId: workReceiptReport.id } }"></action-button>
+                <action-button @click="confirmDelete(workReceiptReport.id)" :action="'delete'"></action-button>
                </nobr>
               </td>
             </tr>
-            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && materialReceiptReports?.data?.length"></LoaderComponent>
+            <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && workReceiptReports?.data?.length"></LoaderComponent>
           </tbody>
-          <tfoot v-if="!materialReceiptReports?.data?.length" class="relative h-[250px]">
+          <tfoot v-if="!workReceiptReports?.data?.length" class="relative h-[250px]">
             <tr v-if="isLoading">
             </tr>
             <tr v-else-if="isTableLoading">
@@ -207,13 +210,13 @@ function confirmDelete(id) {
                   <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
                 </td>
             </tr>
-            <tr v-else-if="!materialReceiptReports?.data?.length">
+            <tr v-else-if="!workReceiptReports?.data?.length">
               <td colspan="7">No Data found.</td>
             </tr>
         </tfoot>
       </table>
     </div>
-    <Paginate :data="materialReceiptReports" to="scm.material-receipt-reports.index" :page="page"></Paginate>
+    <Paginate :data="workReceiptReports" to="scm.work-receipt-reports.index" :page="page"></Paginate>
   </div>
   <!-- Heading -->
   

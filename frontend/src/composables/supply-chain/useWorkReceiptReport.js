@@ -8,86 +8,146 @@ import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
 import { merge } from 'lodash';
 import { loaderSetting as LoaderConfig} from '../../config/setting.js';
+import Swal from 'sweetalert2';
 
-export default function useWorkReceiptReport() {
+export default function useMaterialReceiptReport() {
     const BASE = 'scm' 
     const router = useRouter();
     const workReceiptReports = ref([]);
-    const workList = ref([]);
+    const materialList = ref([]);
     const filteredWorkReceiptReports = ref([]);
     const filteredCashRequisitions = ref([]);
+    const woList = ref([]);
+    const wrList = ref([]);
     const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
     const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
     // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
-    const workReceiptReport = ref( {    
-        ref_no: null,
+    const workReceiptReport = ref( {
+        ref_no: null,      
         date: null,        
         scm_wo_id: null,        
         scmWo: null,
-        receive_date: null, 
         scm_warehouse_id: null,
         scmWarehouse: null,
-        purchase_center: null,
         remarks: null,
         qc_remarks: null,
+        challan_no: null,
+        purchase_center: null,
         business_unit: null,
-
-        // type: null,        
-        // scm_po_no: null,
-        // scm_po_date: null,
+        scmWrrLines: [
+            {
+                scm_wr_id: null,
+                scmWr: null,
+                scmWrrLineItems: [
+                    {
+                        scmWrrLineItems: null,
+                        scm_wrr_item_id: null,
+                        scmService: null,
+                        scm_service_id: null,
+                        // unit: null,
+                        // brand: null,
+                        // model: null,
+                        quantity: 0.0,
+                        // tolerence: 0.0,
+                        // tolerence_qty: 0.0,
+                        rate: 0.0,
+                        net_rate: 0.0,
+                        wo_qty: 0.0,
+                        wr_qty: 0.0,
+                        current_stock: 0.0,
+                        wo_composite_key: null,
+                        wr_composite_key: null
+                    }
+                ],
+            }
+        ],
         // scmPr: null,
         // scm_pr_id: null,
-        // scm_pr_no: null,
-        // scm_cs_id: null,
-        // scmCs: null,
-        // scm_cs_no: null,
-        // scm_lc_record_id: null,
-        // scmLcRecord: null,        
-        // accCashRequisition: null,
-        // acc_cash_requisition_id: null,
-        // acc_cost_center_id: null,
-        // challan_no: null,
+        // scm_pr_no: null,      
         // attachment: null,
-        // is_completed: 0,
         // scmMrrLines: [
         //     {
-        //         scmMaterial: '',
-        //         scm_material_id: '',
-        //         unit: '',
-        //         brand: '',
-        //         model: '',
-        //         quantity: 0.0,
-        //         rate: 0.0,
-        //         net_rate: 0.0,
-        //         po_qty: 0.0,
-        //         pr_qty: 0.0,
-        //         current_stock: 0.0,
-        //         po_composite_key: '',
-        //         pr_composite_key: ''
+        //         scm_pr_id: null,
+        //         scmPr: null,
+        //         scmMrrLineItems: [
+        //             {
+        //                 scmMrrLineItems: null,
+        //                 scm_mrr_item_id: null,
+        //                 scmMaterial: null,
+        //                 scm_material_id: null,
+        //                 unit: null,
+        //                 brand: null,
+        //                 model: null,
+        //                 quantity: 0.0,
+        //                 tolerence: 0.0,
+        //                 tolerence_qty: 0.0,
+        //                 rate: 0.0,
+        //                 net_rate: 0.0,
+        //                 po_qty: 0.0,
+        //                 pr_qty: 0.0,
+        //                 current_stock: 0.0,
+        //                 po_composite_key: null,
+        //                 pr_composite_key: null
+        //             }
+        //         ],
         //     }
         // ],
     });
-    // const materialObject = {
-    //     scmMaterial: '',
-    //     scm_material_id: '',
-    //     unit: '',
-    //     brand: '',
-    //     model: '',
-    //     quantity: 0.0,
-    //     rate: 0.0,
-    //     net_rate: 0.0,
-    //     po_qty: 0.0,
-    //     pr_qty: 0.0,
-    //     current_stock: 0.0,
-    //     po_composite_key: '',
-    //     pr_composite_key: ''
-    // }
 
+
+    const scmWrrLineObject = {
+            scm_wr_id: null,
+            scmWr: null,
+            scmWrrLineItems: [
+                {
+                    scmWrrLineItems: null,
+                    scm_wrr_item_id: null,
+                    scmService: null,
+                    scm_service_id: null,
+                    // unit: null,
+                    // brand: null,
+                    // model: null,
+                    quantity: 0.0,
+                    // tolerence: 0.0,
+                    // tolerence_qty: 0.0,
+                    rate: 0.0,
+                    net_rate: 0.0,
+                    wo_qty: 0.0,
+                    wr_qty: 0.0,
+                    current_stock: 0.0,
+                    wo_composite_key: null,
+                    wr_composite_key: null
+                }
+            ],
+        };
+
+    const scmWrrLineItemObject = {
+        scmWrrLineItems: null,
+        scm_wrr_item_id: null,
+        scmService: null,
+        scm_service_id: null,
+        // unit: null,
+        // brand: null,
+        // model: null,
+        quantity: 0.0,
+        // tolerence: 0.0,
+        // tolerence_qty: 0.0,
+        rate: 0.0,
+        net_rate: 0.0,
+        wo_qty: 0.0,
+        wr_qty: 0.0,
+        current_stock: 0.0,
+        wo_composite_key: null,
+        wr_composite_key: null
+    }
+
+    const woServiceList = ref([]);
     const errors = ref('');
     const isLoading = ref(false);
+    const isWrLoading = ref(false);
     const filterParams = ref(null);
 
     async function getWorkReceiptReports(filterOptions) {
@@ -111,7 +171,7 @@ export default function useWorkReceiptReport() {
                    data: JSON.stringify(filterOptions)
                 }
             });
-            materialReceiptReports.value = data.value;
+            workReceiptReports.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -127,7 +187,9 @@ export default function useWorkReceiptReport() {
             }
         }
     }
-    async function storeMaterialReceiptReport(form) {
+    async function storeWorkReceiptReport(form) {
+
+        if (!checkUniqueArray(form)) return;
 
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
@@ -135,10 +197,10 @@ export default function useWorkReceiptReport() {
         let formData = new FormData();
         formData.append('data', JSON.stringify(form));
         try {
-            const { data, status } = await Api.post(`/${BASE}/material-receipt-reports`, formData);
-            materialReceiptReport.value = data.value;
+            const { data, status } = await Api.post(`/${BASE}/work-receipt-reports`, formData);
+            workReceiptReport.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.material-receipt-reports.index` });
+            router.push({ name: `${BASE}.work-receipt-reports.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -148,13 +210,13 @@ export default function useWorkReceiptReport() {
         }
     }
 
-    async function showMaterialReceiptReport(materialReceiptReportId) {
+    async function showWorkReceiptReport(workReceiptReportId) {
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
         try {
-            const { data, status } = await Api.get(`/${BASE}/material-receipt-reports/${materialReceiptReportId}`);
-            materialReceiptReport.value = data.value;
-            console.log(materialReceiptReport.value);
+            const { data, status } = await Api.get(`/${BASE}/work-receipt-reports/${workReceiptReportId}`);
+            workReceiptReport.value = data.value;
+            console.log(workReceiptReport.value);
         } catch (error) {
             const { data, status } = error.response;
             notification.showError(status);
@@ -164,7 +226,9 @@ export default function useWorkReceiptReport() {
         }
     }
 
-    async function updateMaterialReceiptReport(form, materialReceiptReportId) {
+    async function updateWorkReceiptReport(form, workReceiptReportId) {
+
+        if (!checkUniqueArray(form)) return;
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -173,10 +237,10 @@ export default function useWorkReceiptReport() {
         formData.append('_method', 'PUT');
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/material-receipt-reports/${materialReceiptReportId}`, formData);
-            materialReceiptReport.value = data.value;
+            const { data, status } = await Api.post(`/${BASE}/work-receipt-reports/${workReceiptReportId}`, formData);
+            workReceiptReport.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.material-receipt-reports.index` });
+            router.push({ name: `${BASE}.work-receipt-reports.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -186,14 +250,14 @@ export default function useWorkReceiptReport() {
         }
     }
 
-    async function deleteMaterialReceiptReport(materialReceiptReportId) {
+    async function deleteWorkReceiptReport(workReceiptReportId) {
 
         // const loader = $loading.show(LoaderConfig);
         // isLoading.value = true;
         try {
-            const { data, status } = await Api.delete( `/${BASE}/material-receipt-reports/${materialReceiptReportId}`);
+            const { data, status } = await Api.delete( `/${BASE}/work-receipt-reports/${workReceiptReportId}`);
             notification.showSuccess(status);
-            await getMaterialReceiptReports(filterParams.value);
+            await getWorkReceiptReports(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -316,25 +380,273 @@ export default function useWorkReceiptReport() {
         }
     }
 
+    async function getPoList(business_unit ,purchase_center,scm_warehouse_id) {
+        //NProgress.start();
+        //const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+        console.log(business_unit, purchase_center, scm_warehouse_id);
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-po-list`,{
+                params: {
+                    business_unit: business_unit,
+                    purchase_center: purchase_center,
+                    scm_warehouse_id: scm_warehouse_id,
+                },
+            });
+            polist.value = data.value;
+            console.log(polist.value);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            //loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
+    
+    async function getWoList(businessUnit ,purchaseCenter,scmWarehouseId) {
+        //NProgress.start();
+        //const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+        // console.log(business_unit, purchase_center, scm_warehouse_id);
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-wo-list`,{
+                params: {
+                    business_unit: businessUnit,
+                    purchase_center: purchaseCenter,
+                    scm_warehouse_id: scmWarehouseId,
+                },
+            });
+            woList.value = data.value;
+            // console.log(polist.value);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            //loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
+
+
+    async function getPoWisePrList(po_id) {
+        //NProgress.start();
+        //const loader = $loading.show(LoaderConfig);
+        isPrLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-po-wise-pr-list`,{
+                params: {
+                    po_id: po_id,
+                },
+            });
+            prlist.value = data.value;
+            console.log(prlist.value);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            //loader.hide();
+            isPrLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
+    
+    async function getWoWiseWrList(woId) {
+        //NProgress.start();
+        //const loader = $loading.show(LoaderConfig);
+        isWrLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-wo-wise-wr-list`,{
+                params: {
+                    scm_wo_id: woId,
+                },
+            });
+            wrList.value = data.value;
+            // console.log(prlist.value);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            //loader.hide();
+            isWrLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
+
+
+    async function getMrrLineData(po_id, pr_id, mrr_id = null) {
+        //NProgress.start();
+        //const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-mrr-line-data`,{
+                params: {
+                    scm_pr_id: pr_id,
+                    scm_po_id: po_id,
+                    scm_mrr_id: mrr_id,
+                },
+            });
+            console.log(data.value);
+            return data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            //loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
+    
+    async function getWrrLineData(woId, wrId, wrrId = null) {
+        //NProgress.start();
+        //const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-wrr-line-data`,{
+                params: {
+                    scm_wr_id: wrId,
+                    scm_wo_id: woId,
+                    scm_wrr_id: wrrId,
+                },
+            });
+            console.log(data.value);
+            return data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            //loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
+
+
+    async function getWoServiceList(woId, wrId, wrrId = null) {
+        //NProgress.start();
+        //const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-wo-service-list`,{
+                params: {
+                    scm_wr_id: wrId,
+                    scm_wo_id: woId,
+                    scm_wrr_id: wrrId,
+                },
+            });
+            console.log(data.value);
+            return data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            //loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
+    function checkUniqueArray(form) {
+        
+        const messages = ref([]);
+        let scmWrrLineArray = [];
+
+        form.scmWrrLines.forEach((scmWrrLine, scmWrrLineIndex) => {
+            scmWrrLine?.scmWrrLineItems?.forEach((scmWrrLineItem, scmWrrLineItemIndex) => {
+                // console.log("scmWrrLine?.scmWrrLineItems", scmWrrLine?.scmWrrLineItems, "length =>", scmWrrLine?.scmWrrLineItems?.filter(val => val.wo_composite_key === scmWrrLineItem?.wo_composite_key).length);
+
+                let prevService = scmWrrLineArray?.find(val => val.wo_composite_key === scmWrrLineItem?.wo_composite_key);
+
+                if(prevService){
+                    // let data = `Duplicate Service [WR No: ${scmWoLine?.scmWr?.ref_no}] [Service - Code : ${scmWoItem?.scmService?.service_name_and_code}]`;
+                    let data = `Duplicate Service Name Having Work Requisition ${scmWrrLine.scmWr.ref_no} in ${scmWrrLineIndex} Block Row: ${scmWrrLineItemIndex + 1}`;
+                    messages.value.push(data);
+                    scmWrrLineItem.isServiceDuplicate = true;
+                    prevService.isServiceDuplicate = true;
+                }
+                else {
+                    scmWrrLineItem.isServiceDuplicate = false;
+                    }
+                scmWrrLineArray.push(scmWrrLineItem);
+            });
+            
+            
+        });
+
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
     return {
-        materialReceiptReports,
-        filteredMaterialReceiptReports,
-        materialReceiptReport,
-        getMaterialReceiptReports,
-        storeMaterialReceiptReport,
-        showMaterialReceiptReport,
-        updateMaterialReceiptReport,
-        deleteMaterialReceiptReport,
+        workReceiptReports,
+        filteredWorkReceiptReports,
+        workReceiptReport,
+        getWorkReceiptReports,
+        storeWorkReceiptReport,
+        showWorkReceiptReport,
+        updateWorkReceiptReport,
+        deleteWorkReceiptReport,
         searchMaterialReceiptReport,
         getPrAndPoWiseMrrData,
         getMaterialList,
         materialList,
-        materialObject,
+        // materialObject,
+        scmWrrLineItemObject,
+        scmWrrLineObject,
         searchMrr,
         isTableLoading,
+        // getPoList,
+        // polist,
+        getWoList,
+        woList,
         getCashRequisitionNoList,
         filteredCashRequisitions,
         isLoading,
+        // isPrLoading,
+        isWrLoading,
+        // prlist,
+        wrList,
+        // getPoWisePrList,
+        getWoWiseWrList,
+        // getMrrLineData,
+        getWrrLineData,
+        getWoServiceList,
+        woServiceList,
         errors,
     };
     

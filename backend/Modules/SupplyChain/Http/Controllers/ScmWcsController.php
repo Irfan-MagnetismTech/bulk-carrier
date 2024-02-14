@@ -556,7 +556,6 @@ class ScmWcsController extends Controller
     public function searchWorkCs(Request $request)
     {
         $wcs = [];
-
         if (isset($request->searchParam)) {
             $wcs = ScmWcs::query()
                 ->with('scmWcsVendors', 'scmWcsServices.scmWoItems', 'scmWcsVendorServices')
@@ -570,14 +569,16 @@ class ScmWcsController extends Controller
                 })
                 ->has('selectedVendors')
                 ->orderByDesc('ref_no')
-                ->get();
-                // ->filter(function ($item) {
-                //     return $item->scmWcsServices->filter(function ($service) {
-                //         return $service->quantity > $service->scmWoItems->sum('quantity');
-                //     })->isNotEmpty();
-                // })
-                // ->values()
-                // ->toArray();
+                ->get()
+                ->filter(function ($item) use ($request) {
+                    return $item->scmWcsServices->filter(function ($service) use ($request) {
+                        $getService=null;
+                        if(!empty($request->scm_wo_id)){
+                            $getService = $service->scmWoItems?->where('scm_wo_id',$request->scm_wo_id)->first();
+                        } 
+                        return $service->quantity + ((!empty($getService))?$getService->quantity:0) > $service->scmWoItems->sum('quantity');
+                    })->isNotEmpty();
+                })->values()->toArray();
                 
         } elseif (isset($request->scm_warehouse_id) && isset($request->purchase_center)) {
             $wcs = ScmWcs::query()
@@ -591,14 +592,18 @@ class ScmWcsController extends Controller
                 })
                 ->has('selectedVendors')
                 ->orderByDesc('ref_no')
-                ->get();
-                // ->filter(function ($item) {                    
-                //     return $item->scmWcsServices->filter(function ($service) {
-                //         return $service->quantity > $service->scmWoItems->sum('quantity');
-                //     })->isNotEmpty();
-                // })
-                // ->values()
-                // ->toArray();
+                ->get()
+                ->filter(function ($item) use ($request) {
+                    return $item->scmWcsServices->filter(function ($service) use ($request) {   
+                        $getService=null;
+                        if(!empty($request->scm_wo_id)){
+                            $getService = $service->scmWoItems?->where('scm_wo_id',$request->scm_wo_id)->first();
+                        } 
+                        return $service->quantity + ((!empty($getService))?$getService->quantity:0) > $service->scmWoItems->sum('quantity');
+                    })->isNotEmpty();
+                })
+                ->values()
+                ->toArray();
         }
 
 

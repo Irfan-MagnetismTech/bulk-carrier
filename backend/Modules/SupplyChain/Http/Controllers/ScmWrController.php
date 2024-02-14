@@ -280,11 +280,11 @@ class ScmWrController extends Controller
             }
 
             if($scmWcsService){
-                $max = $item->quantity - $item->scmWcsServices->sum('quantity') + $scmWcsService->quantity - $item->scmWoItems->sum('quantity');
+                $max = $item->quantity - $item->scmWcsServices->sum('quantity') + ($scmWcsService?->quantity ?? 0) - $item->scmWoItems->sum('quantity');
             }else{
                 $max = $item->quantity - $item->scmWoItems->sum('quantity') ;
             }
-            
+
             $data['max_quantity'] = $max;
             return $data;
         });
@@ -494,7 +494,7 @@ class ScmWrController extends Controller
             $work_requisition->load('scmWrLines');
 
             $wrLines = $work_requisition->scmWrLines->count();
-            // $sumIsClosed = $pr->scmWrLines->sum('is_closed');
+            // $sumIsClosed = $work_requisition->scmWrLines->sum('is_closed');
             $sumIsClosed = $work_requisition->scmWrLines->where('status', 'Closed')->count();
 
             if ($wrLines === $sumIsClosed) {

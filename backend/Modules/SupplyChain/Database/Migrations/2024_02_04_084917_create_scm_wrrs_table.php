@@ -16,15 +16,21 @@ return new class extends Migration
         Schema::create('scm_wrrs', function (Blueprint $table) {
             $table->id();
             $table->string('ref_no')->nullable();
+            $table->string('type')->comment('cash,local,foreign')->nullable();
             $table->date('date')->nullable();
-            $table->string('scm_wo_id')->nullable();
-            $table->date('challan_no')->nullable();
-            $table->foreignId('scm_warehouse_id')->constrained('scm_warehouses');
-            $table->bigInteger('purchase_center')->nullable();
+            $table->bigInteger('scm_wo_id')->nullable();
+            // $table->bigInteger('scm_wr_id')->nullable();
+            $table->bigInteger('scm_warehouse_id')->nullable();
+            // $table->bigInteger('scm_wcs_id')->nullable();
+            $table->bigInteger('acc_cost_center_id')->nullable();
             $table->text('remarks')->nullable();
+            $table->string('challan_no')->nullable();
+            $table->bigInteger('is_qc_passed')->nullable();
             $table->text('qc_remarks')->nullable();
-            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable();
+            $table->string('business_unit')->comment('TSLL,PSML')->nullable();
             $table->bigInteger('created_by')->comment('user_id')->nullable();
+            $table->tinyInteger('is_completed')->comment('0, 1')->nullable();
+            $table->string('purchase_center')->nullable();
             $table->timestamps();
         });
     }

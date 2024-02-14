@@ -6,6 +6,7 @@ use Modules\SupplyChain\Http\Controllers\ScmWoController;
 use Modules\SupplyChain\Http\Controllers\ScmWrController;
 use Modules\SupplyChain\Http\Controllers\ScmWcsController;
 use Modules\SupplyChain\Http\Controllers\ScmWrrController;
+use Modules\SupplyChain\Http\Controllers\ScmReportController;
 use Modules\SupplyChain\Http\Controllers\ScmLcRecordStatusController;
 
 Route::middleware(['auth:api'])->prefix('scm')->group(function () {
@@ -43,7 +44,6 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     
     Route::get('get-wo-line-datas', [ScmWoController::class, "getWoLineDatas"])->name('get-wo-line-datas');
     Route::get('search-wr-wise-service', [ScmWoController::class, "getServiceByWrId"])->name('getServiceByWrId');
-    // Route::get('search-pr-wise-material', [ScmWoController::class, "getServiceByWrId"])->name('getServiceByWrId');
     Route::get('search-wo', [ScmWoController::class, "searchWo"])->name('searchWo');
     Route::get('get-wr-wcs-wise-wo-data', [ScmWoController::class, "getWoOrWoWcsWiseWrData"]);
     Route::get('search-wo-for-lc', [ScmWoController::class, "searchWoForLc"])->name('searchWoForLc');
@@ -52,5 +52,18 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::post('confirmation-wo', [ScmWoController::class, "confirmationWo"])->name('confirmationWo');
     Route::get('work-orders-close', [ScmWoController::class, "woCloseIndex"])->name('woCloseIndex');
     Route::get('get-wo-list', [ScmWoController::class, "getWoListForWrr"])->name('getWoListForWrr');
+    Route::get('get-wo-wise-wr-list', [ScmWoController::class, "getWoWiseWrList"])->name('getWoWiseWrList');
+
+
+    Route::get('search-wrr', [ScmWrrController::class, "searchWrr"])->name('searchWrr');
+    Route::get('get-wrr-line-data', [ScmWrrController::class, "getWrrLineData"])->name('getWrrLineData');
+    Route::get('get-wo-service-list', [ScmWrrController::class, "getWoServiceList"])->name('getWoServiceList');
+    Route::get('get-service-for-wrr', [ScmWrrController::class, "getServiceByWrrId"])->name('getServiceForWrrId');
+    
+    Route::get('inventory-report', [ScmReportController::class, "inventoryReport"])->name('inventoryReport');
+    Route::get('stock-history-report', [ScmReportController::class, "stockHistoryReport"])->name('stockHistoryReport');
+    Route::get('purchase-requisition-report', [ScmReportController::class, "purchaseRequisitionReport"])->name('purchaseRequisitionReport');
+
+
 
 });

@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('scm_mrr_line_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('scm_mrr_line_id')->constrained('scm_mrr_lines');$table->unsignedBigInteger('scm_material_id');
+            $table->foreignId('scm_mrr_line_id')->constrained('scm_mrr_lines');
+            $table->unsignedBigInteger('scm_material_id');
             $table->string('unit')->nullable();
             $table->string('brand')->nullable();
             $table->string('model')->nullable();
