@@ -15,7 +15,10 @@ class AccAdvanceAdjustmentController extends Controller
 {
     public function __construct(private FileUploadService $fileUpload)
     {
-
+        $this->middleware('permission:acc-advance-adjustment-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:acc-advance-adjustment-create', ['only' => ['store']]);
+        $this->middleware('permission:acc-advance-adjustment-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:acc-advance-adjustment-delete', ['only' => ['destroy']]);
     }
 
     /**

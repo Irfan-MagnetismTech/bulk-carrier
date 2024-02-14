@@ -10,6 +10,14 @@ use Modules\Accounts\Http\Requests\AccAccountRequest;
 
 class AccAccountController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:acc-chart-of-account-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:acc-chart-of-account-create', ['only' => ['store']]);
+        $this->middleware('permission:acc-chart-of-account-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:acc-chart-of-account-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *

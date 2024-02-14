@@ -30,8 +30,7 @@ class AccCostCenterController extends Controller
     public function index(Request $request)
     {
         try {
-            $accCostCenters = AccCostCenter::all();
-            // $accCostCenters = AccCostCenter::globalSearch($request->all());
+            $accCostCenters = AccCostCenter::globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $accCostCenters, 200);
         }

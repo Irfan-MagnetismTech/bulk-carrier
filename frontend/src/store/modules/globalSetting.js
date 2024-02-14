@@ -104,6 +104,9 @@ export const globalSetting = {
 
 
 
+        },
+        companyLogo : {
+            logo : "../../../torony-logo.png"
         }
     },
     mutations: {
@@ -113,6 +116,9 @@ export const globalSetting = {
     getters: {
         getVueDatePickerTextInputFormat(state) {
             return state.vueDatePickerTextInputFormat;
+        },
+        getCompanyLogo(state){
+            return state.companyLogo;
         }
     }
 };
