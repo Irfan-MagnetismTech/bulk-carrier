@@ -7,7 +7,9 @@ import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import moment from 'moment';
 import useSurvey from '../../../composables/maintenance/useSurvey';
 import useSurveyEntry from '../../../composables/maintenance/useSurveyEntry';
-import { formatDate } from '../../../utils/helper';
+// import { formatDate } from '../../../utils/helper';
+import { formatDate, showPdfExport } from "../../../utils/helper.js";
+
 
 const icons = useHeroIcon();
 
@@ -27,13 +29,18 @@ onMounted(() => {
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Survey Entry Details</h2>
-    <default-button :title="'Survey Entry List'" :to="{ name: 'mnt.survey-entries.index' }" :icon="icons.DataBase"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Survey Entry List'" :to="{ name: 'mnt.survey-entries.index' }" :icon="icons.DataBase"></default-button>
+      <button title="Export PDF" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red" @click="showPdfExport(businessUnit,'l', 'Survey Entry Details',['survey-entry-details'], false, false)">
+        <span v-html="icons.PdfExportIcon"></span>
+      </button>
+    </div>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
       <div class="flex md:gap-4">
         <div class="w-full">
           <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Survey Entry Information</h2>
-          <table class="w-full">
+          <table class="w-full" id="survey-entry-details">
             <!-- <thead>
             <tr>
               <td class="!text-center bg-gray-200 font-bold" colspan="2">Personal Info</td>
