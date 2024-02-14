@@ -34,7 +34,7 @@ const critical = ['No','Yes'];
 // Code for global search start
 
 const icons = useHeroIcon();
-
+const status = ['Unallocated','Allocated'];
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 
@@ -186,9 +186,9 @@ function confirmDelete(id) {
               <td>{{ materialCosting.purchase_center }}</td>
               <td>{{ materialCosting.scmWarehouse.name }}</td>
               <td><no-br>{{ formatDate(materialCosting?.date) }}</no-br></td>
-              <td>{{ materialCosting.status }}</td>
+              <td>{{ status[materialCosting.status] }}</td>
               <td>
-                <!-- <span :class="materialCosting?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialCosting?.business_unit }}</span> -->
+                <span :class="materialCosting?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialCosting?.business_unit }}</span>
               </td>
               <td>
                 <nobr>
@@ -196,11 +196,11 @@ function confirmDelete(id) {
                   <!-- <button @click="navigateToSICreate(materialCosting.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create SI</button> -->
                   <!-- <button @click="navigateToPOCreate(materialCosting.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
                   <button @click="navigateToMRRCreate(materialCosting.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
-                  <action-button :action="'approve'" @click="approveData(materialCosting.id)" v-if="materialCosting.status"></action-button>
-                  <action-button :action="'show'" :to="{ name: 'scm.material-costings.show', params: { materialCostingId: materialCosting.id } }"></action-button>
+                  <action-button :action="'approve'" @click="approveData(materialCosting.id)" v-if="materialCosting.status == 0"></action-button>
+                  <!-- <action-button :action="'show'" :to="{ name: 'scm.material-costings.show', params: { materialCostingId: materialCosting.id } }"></action-button> -->
                   <!-- <action-button :action="'edit'" :to="{ name: 'scm.material-costings.edit', params: { materialCostingId: materialCosting.id } }" v-if="(materialCosting?.scmSis.length <= 0)"></action-button> -->
-                   <action-button :action="'edit'" :to="{ name: 'scm.material-costings.edit', params: { materialCostingId: materialCosting.id } }" v-if="materialCosting.status"></action-button>
-                  <action-button @click="confirmDelete(materialCosting.id)" :action="'delete'" v-if="materialCosting.status"></action-button>
+                   <action-button :action="'edit'" :to="{ name: 'scm.material-costings.edit', params: { materialCostingId: materialCosting.id } }" v-if="materialCosting.status == 0"></action-button>
+                  <action-button @click="confirmDelete(materialCosting.id)" :action="'delete'" v-if="materialCosting.status == 0"></action-button>
                 </div>
               </nobr>
               </td>

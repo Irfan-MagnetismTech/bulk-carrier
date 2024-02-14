@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('business_unit')->nullable();
             $table->date('date');
             $table->string('total_allocateable');
+            $table->string('status')->default('0');
             $table->unsignedBigInteger('scm_warehouse_id')->nullable();
             $table->timestamps();
         });
