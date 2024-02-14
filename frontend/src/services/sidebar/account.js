@@ -18,7 +18,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: '',
+                permissionKey: ['acc-cost-center-view', 'acc-balance-income-line-view', 'acc-chart-of-account-view', 'acc-opening-balance-view','acc-bank-account-view','acc-salary-head-view','acc-cash-account-view'],
                 subSubMenu: [
                     {
                         route: 'acc.cost-centers.index',
@@ -27,7 +27,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'acc-cost-center-view',
                     },
                     {
                         route: 'acc.balance-income-lines.index',
@@ -36,7 +36,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'acc-balance-income-line-view',
                     },
                     {
                         route: 'acc.chart-of-accounts.index',
@@ -45,7 +45,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'acc-chart-of-account-view',
                     },
                     {
                         route: 'acc.opening-balances.index',
@@ -54,7 +54,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'acc-opening-balance-view',
                     },
                     {
                         route: 'acc.bank-accounts.index',
@@ -63,7 +63,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'acc-bank-account-view',
                     },
                     {
                         route: 'acc.salary-heads.index',
@@ -72,7 +72,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'acc-salary-head-view',
                     },
                     {
                         route: 'acc.cash-accounts.index',
@@ -81,7 +81,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'acc-cash-account-view',
                     },
                 ],
             },
@@ -92,7 +92,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: '',
+                permissionKey: 'acc-voucher-view',
                 subSubMenu: [],
             },
             {
@@ -102,7 +102,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: '',
+                permissionKey: 'acc-bank-reconciliation',
                 subSubMenu: [],
             },
             {
@@ -112,7 +112,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: '',
+                permissionKey: 'acc-loan-view',
                 subSubMenu: [],
             },
             {
@@ -122,7 +122,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: '',
+                permissionKey: 'acc-loan-received-view',
                 subSubMenu: [],
             },
             {
@@ -132,7 +132,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: '',
+                permissionKey: 'acc-fixed-asset-view',
                 subSubMenu: [],
             },
             {
@@ -142,7 +142,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: '',
+                permissionKey: 'acc-depreciation-view',
                 subSubMenu: [],
             },
             {
@@ -152,7 +152,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: '',
+                permissionKey: 'acc-cash-requisition-view',
                 subSubMenu: [],
             },
             {
@@ -162,7 +162,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: '',
+                permissionKey: 'acc-advance-adjustment-view',
                 subSubMenu: [],
             },
             {
@@ -172,7 +172,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: '',
+                permissionKey: 'acc-salary-view',
                 subSubMenu: [],
             },
             {
@@ -182,7 +182,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: '',
+                permissionKey: ['acc-balance-sheet','acc-income-statement','acc-ledger','acc-trial-balance','acc-day-book','acc-fixed-asset-statement','acc-cost-center-summary','acc-cost-center-breakup','acc-receipt-payment'],
                 subSubMenu: [
                     {
                         route: 'acc.ais-reports.balance-sheet',
@@ -191,7 +191,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'acc-balance-sheet',
                         subSubMenu: [],
                     },
                     {
@@ -201,7 +201,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'acc-income-statement',
                         subSubMenu: [],
                     },
                     {
@@ -211,7 +211,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'acc-ledger',
                         subSubMenu: [],
                     },
                     {
@@ -221,7 +221,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'acc-trial-balance',
                         subSubMenu: [],
                     },
                     {
@@ -231,7 +231,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'acc-day-book',
                         subSubMenu: [],
                     },
                     {
@@ -241,7 +241,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'acc-fixed-asset-statement',
                         subSubMenu: [],
                     },
                     {
@@ -251,7 +251,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'acc-cost-center-summary',
                         subSubMenu: [],
                     },
                     {
@@ -261,7 +261,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'acc-cost-center-breakup',
                         subSubMenu: [],
                     },
                     {
@@ -271,7 +271,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'acc-receipt-payment',
                         subSubMenu: [],
                     },
 
