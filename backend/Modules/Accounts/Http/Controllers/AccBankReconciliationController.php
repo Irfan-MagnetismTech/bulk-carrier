@@ -11,6 +11,10 @@ use Modules\Accounts\Http\Requests\AccBankReconciliationRequest;
 
 class AccBankReconciliationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:acc-bank-reconciliation', ['only' => ['index', 'store']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -18,8 +22,6 @@ class AccBankReconciliationController extends Controller
      */
     public function index(Request $request)
     {
-        // return AccTransaction::where('voucher_type', '!=', 'Journal')->get(); 
-        
         try {
             $bankBalanceIncomeLineId = config('accounts.balance_income_line.bank');
 
@@ -29,11 +31,7 @@ class AccBankReconciliationController extends Controller
                 $q->where('acc_balance_and_income_line_id', $bankBalanceIncomeLineId);
             })
             ->where('voucher_type', '!=', 'Journal')
-            // ->latest()
-            // ->paginate(10)
-            // ->get()
-            ->globalSearch($request->all())
-            ;  
+            ->globalSearch($request->all());  
 
             return response()->success('Retrieved Successfully', $accTransactions, 200);
         }
@@ -62,72 +60,5 @@ class AccBankReconciliationController extends Controller
         {
             return response()->error($e->getMessage(), 500);
         }        
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\AccBankReconciliation  $accBankReconciliation
-     * @return \Illuminate\Http\Response
-     */
-    public function show(AccBankReconciliation $accBankReconciliation)
-    {
-        // try {
-        //     return response()->json([
-        //         'status' => 'success',
-        //         'value'  => $accBankReconciliation,
-        //     ], 200);
-        // }
-        // catch (\Exception $e)
-        // {
-        //     return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
-        // }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\AccBankReconciliation  $accBankReconciliation
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, AccBankReconciliation $accBankReconciliation)
-    {
-        // try {
-        //     $bankReconciliationData = $request->only('acc_transaction_id', 'date', 'status', 'user_id');
-        //     $accBankReconciliation->update($bankReconciliationData);
-
-        //     return response()->json([
-        //         'status' => 'success',
-        //         'value'  => $accBankReconciliation,
-        //     ], 200);
-        // }
-        // catch (\Exception $e)
-        // {
-        //     return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
-        // }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\AccBankReconciliation  $accBankReconciliation
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(AccBankReconciliation $accBankReconciliation)
-    {
-        // try {
-
-        //     $accBankReconciliation->delete();
-
-        //     return response()->json([
-        //         'status' => 'success',
-        //         'value'  => null,
-        //     ], 200);
-        // }
-        // catch (\Exception $e)
-        // {
-        //     return response()->json(['message' => 'Error: ' . $e->getMessage()], 500);
-        // }
     }
 }

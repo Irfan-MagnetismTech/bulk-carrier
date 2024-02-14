@@ -10,6 +10,14 @@ use Modules\Accounts\Http\Requests\AccSalaryHeadRequest;
 
 class AccSalaryHeadController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:acc-salary-head-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:acc-salary-head-create', ['only' => ['store']]);
+        $this->middleware('permission:acc-salary-head-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:acc-salary-head-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
