@@ -19,10 +19,10 @@ class OpsVoyageExpenditureController extends Controller
    
     function __construct(private FileUploadService $fileUpload)
     {
-        $this->middleware('permission:ops-voyage-expenditure-create|ops-voyage-expenditure-edit|ops-voyage-expenditure-view|ops-voyage-expenditure-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:ops-voyage-expenditure-create', ['only' => ['store']]);
-        $this->middleware('permission:ops-voyage-expenditure-edit', ['only' => ['update']]);
-        $this->middleware('permission:ops-voyage-expenditure-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:ops-voyage-expense-create|ops-voyage-expense-edit|ops-voyage-expense-view|ops-voyage-expense-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:ops-voyage-expense-create', ['only' => ['store']]);
+        $this->middleware('permission:ops-voyage-expense-edit', ['only' => ['update']]);
+        $this->middleware('permission:ops-voyage-expense-delete', ['only' => ['destroy']]);
     }
    /**
     * get all users with their roles.
