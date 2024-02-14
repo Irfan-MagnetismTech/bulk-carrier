@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\SupplyChain\Entities\ScmCosting;
 use Modules\SupplyChain\Http\Controllers\ScmCsController;
 use Modules\SupplyChain\Http\Controllers\ScmMiController;
 use Modules\SupplyChain\Http\Controllers\ScmMoController;
@@ -9,22 +8,23 @@ use Modules\SupplyChain\Http\Controllers\ScmPoController;
 use Modules\SupplyChain\Http\Controllers\ScmPrController;
 use Modules\SupplyChain\Http\Controllers\ScmSiController;
 use Modules\SupplyChain\Http\Controllers\ScmSrController;
+use Modules\SupplyChain\Http\Controllers\ScmCsqController;
 use Modules\SupplyChain\Http\Controllers\ScmMmrController;
 use Modules\SupplyChain\Http\Controllers\ScmMrrController;
 use Modules\SupplyChain\Http\Controllers\ScmSirController;
 use Modules\SupplyChain\Http\Controllers\ScmUnitController;
 use Modules\SupplyChain\Http\Controllers\ScmVendorController;
+use Modules\SupplyChain\Http\Controllers\ScmCostingController;
 use Modules\SupplyChain\Http\Controllers\ScmServiceController;
 use Modules\SupplyChain\Http\Controllers\ScmLcRecordController;
 use Modules\SupplyChain\Http\Controllers\ScmMaterialController;
 use Modules\SupplyChain\Http\Controllers\SupplyChainController;
 use Modules\SupplyChain\Http\Controllers\ScmWarehouseController;
 use Modules\SupplyChain\Http\Controllers\ScmAdjustmentController;
-use Modules\SupplyChain\Http\Controllers\ScmCostingController;
+use Modules\SupplyChain\Http\Controllers\ScmVendorBillController;
 use Modules\SupplyChain\Http\Controllers\ScmStockLedgerController;
 use Modules\SupplyChain\Http\Controllers\ScmOpeningStockController;
 use Modules\SupplyChain\Http\Controllers\ScmMaterialCategoryController;
-use Modules\SupplyChain\Http\Controllers\ScmVendorBillController;
 
 Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::apiResources([
@@ -119,20 +119,22 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::controller(ScmCsController::class)->group(function () {
         Route::post('store-cs-landed-cost', "storeCsLandedCost")->name('storeCsLandedCost');
         Route::post('update-cs-landed-cost', "updateCsLandedCost")->name('updateCsLandedCost');
-        Route::get('get-cs-data/{id}', "getCsWiseData")->name('getCsWiseData');
-
-        // CS quotation
-        Route::post('quotations', "storeQuotation")->name('quotations.create');
-        Route::get('quotations', "getQuotations")->name('quotations.index');
-        Route::get('quotations/{quotationId}', "showQuotation")->name('quotations.show');
-        Route::put('quotations/{quotationId}', "updateQuotation")->name('quotations.update');
-        Route::delete('quotations/{quotationId}', "deleteQuotation")->name('quotations.delete');
+        Route::get('get-cs-data/{id}', "getCsWiseData")->name('getCsWiseData');        
 
         Route::get('cs-wise-vendor-list', "csWiseVendorList")->name('cs-wise-vendor-list');
         Route::get('search-material-cs', "searchMaterialCs")->name('searchMaterialCs');
         Route::get('getCsData/{csId}', "getCsData")->name('getCsData');
         Route::post('selected-supplier', "selectedSupplierstore")->name('selectedSupplier.store');
         Route::get('selected-vendors', "selectedVendors")->name('selectedVendors');
+    });
+
+    // CS quotation
+    Route::controller(ScmCsqController::class)->group(function () {
+        Route::post('quotations', "storeQuotation")->name('quotations.create');
+        Route::get('quotations', "getQuotations")->name('quotations.index');
+        Route::get('quotations/{quotationId}', "showQuotation")->name('quotations.show');
+        Route::put('quotations/{quotationId}', "updateQuotation")->name('quotations.update');
+        Route::delete('quotations/{quotationId}', "deleteQuotation")->name('quotations.delete');
     });
 
     Route::controller(ScmPoController::class)->group(function () {
