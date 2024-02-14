@@ -103,7 +103,7 @@ onMounted(() => {
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <div class="block w-3/6 mt-2 text-sm">
-      <span class="text-gray-700 dark-disabled:text-gray-300"> Month-Year <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 dark-disabled:text-gray-300"> Month - Year <span class="text-red-500">*</span></span>
       <VueDatePicker v-model.trim="form.year_month" month-picker class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="mm/yyyy" format="MMMM/yyyy" model-type="yyyy-MM" :text-input="{ format: dateFormat }"></VueDatePicker>
     </div>
     <label class="block w-3/6 mt-2 text-sm"></label>
@@ -113,7 +113,7 @@ onMounted(() => {
     <RemarksComponent v-model.trim="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
   </div>
     <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Particular List<span class="text-red-500">*</span></legend>
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Particular List <span class="text-red-500">*</span></legend>
         <table class="w-full whitespace-no-wrap" id="table">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">

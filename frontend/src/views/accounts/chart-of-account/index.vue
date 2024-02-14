@@ -300,9 +300,9 @@ onMounted(() => {
           <tr v-for="(chartAccountData,index) in chartOfAccounts?.data" :key="index">
             <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
             <td class="text-left">{{ chartAccountData?.balanceIncome?.line_text }}</td>
-            <td>{{ chartAccountData?.balanceIncome?.line_type }}</td>
-            <td>{{ chartAccountData?.parent?.account_name ?? '---' }}</td>
-            <td>{{ chartAccountData?.account_code }}</td>
+            <td class="text-left">{{ chartAccountData?.balanceIncome?.line_type }}</td>
+            <td class="text-left">{{ chartAccountData?.parent?.account_name ?? '---' }}</td>
+            <td class="text-left">{{ chartAccountData?.account_code }}</td>
             <td class="text-left">{{ chartAccountData?.account_name }}</td>
             <td>
               <span v-if="chartAccountData?.account_type===1" class="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-200 rounded-full dark-disabled:text-gray-100 dark-disabled:bg-gray-700">Assets</span>

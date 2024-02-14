@@ -325,11 +325,11 @@ onMounted(() => {
           <tbody>
           <tr v-for="(account,index) in bankAccounts?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ account?.bank_name }}</td>
-            <td>{{ account?.branch_name }}</td>
+            <td class="text-left">{{ account?.bank_name }}</td>
+            <td class="text-left">{{ account?.branch_name }}</td>
             <td> {{ account?.account_type }} </td>
-            <td> {{ account?.account_name }} </td>
-            <td>{{ account?.account_number }}</td>
+            <td class="text-left"> {{ account?.account_name }} </td>
+            <td class="text-left">{{ account?.account_number }}</td>
 <!--            <td>{{ account?.routing_number }}</td>-->
 <!--            <td>{{ account?.contact_number }}</td>-->
 <!--            <td>{{ account?.opening_date }}</td>-->
