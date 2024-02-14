@@ -21,6 +21,7 @@ use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Entities\ScmVendor;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Entities\ScmCsMaterial;
+use Modules\SupplyChain\Entities\ScmMrr;
 use Modules\SupplyChain\Http\Requests\ScmPoRequest;
 
 class ScmPoController extends Controller
@@ -449,8 +450,9 @@ class ScmPoController extends Controller
     {
         if ($request->business_unit != 'ALL') {
             $scmPo = ScmPo::query()
-                ->with('scmPoLines', 'scmPoTerms', 'scmVendor')
+                ->with('scmPoLines', 'scmPoTerms', 'scmVendor','scmLcRecords','scmWarehouse')
                 ->whereBusinessUnit($request->business_unit)
+                ->where('status','Closed')
                 // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
                 // ->limit(10)
@@ -675,6 +677,19 @@ class ScmPoController extends Controller
                 ->get();
 
             return response()->success('Data list', $scmPo, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    public function getPoWiseMrr(){
+        try {
+            $scmMrr = ScmMrr::query()
+                ->with('scmPo')
+                ->where('scm_po_id', request()->scm_po_id)
+                ->get();
+
+            return response()->success('Data list', $scmMrr, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }

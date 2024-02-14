@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\SupplyChain\Entities\ScmCosting;
 use Modules\SupplyChain\Http\Controllers\ScmCsController;
 use Modules\SupplyChain\Http\Controllers\ScmMiController;
 use Modules\SupplyChain\Http\Controllers\ScmMoController;
@@ -19,6 +20,7 @@ use Modules\SupplyChain\Http\Controllers\ScmMaterialController;
 use Modules\SupplyChain\Http\Controllers\SupplyChainController;
 use Modules\SupplyChain\Http\Controllers\ScmWarehouseController;
 use Modules\SupplyChain\Http\Controllers\ScmAdjustmentController;
+use Modules\SupplyChain\Http\Controllers\ScmCostingController;
 use Modules\SupplyChain\Http\Controllers\ScmStockLedgerController;
 use Modules\SupplyChain\Http\Controllers\ScmOpeningStockController;
 use Modules\SupplyChain\Http\Controllers\ScmMaterialCategoryController;
@@ -46,6 +48,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
         'material-cs' => ScmCsController::class,
         'adjustments' => ScmAdjustmentController::class,
         'vendor-bills' => ScmVendorBillController::class,
+        'material-costings' => ScmCostingController::class,
     ]);
 
     //Search Apis
@@ -74,10 +77,6 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
 
     Route::get('search-mrr', [ScmMrrController::class, "searchMrr"])->name('searchMrr');
 
-
-
-
-
     Route::get('search-mmr', [ScmMmrController::class, "searchMmr"])->name('searchMmr');
     Route::get('search-mo', [ScmMoController::class, "searchMo"])->name('searchMo');
 
@@ -85,18 +84,15 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('get-mrr-line-data', [ScmMrrController::class, "getMrrLineData"])->name('getMrrLineData');
     Route::get('get-po-material-list', [ScmMrrController::class, "getPoMaterialList"])->name('getPoMaterialList');
     Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse');
-
-
-
+    Route::get('get-vendor-wise-mrr', [ScmVendorBillController::class, "getVendorWiseMrr"])->name('getVendorWiseMrr');
 
     //Business Info Apis
     Route::get('store-categories', fn () => config('businessinfo.store_category'));
     Route::get('product-types', fn () => config('businessinfo.product_type'));
     Route::get('lc-cost-heads', fn () => config('businessinfo.lc_cost_heads'));
+    Route::get('material-costing-heads', fn () => config('businessinfo.material_costing_head'));
 
     //Laravel Excel Apis
-
-
 
     //Current Stock Apis
     Route::get('current-stock-by-material', [ScmStockLedgerController::class, "currentStock"])->name('currentStock');
@@ -149,6 +145,11 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
         Route::post('close-po', "closePo")->name('closePo');
         Route::post('close-poline', "closePoLine")->name('closePoLine');
         Route::get('get-po-wise-pr-list', "getPoWisePrList")->name('getPoWisePrList');
+        Route::get('get-po-wise-mrr', "getPoWiseMrr")->name('getPoWiseMrr');
+    });
+
+    Route::controller(ScmCostingController::class)->group(function () {
+        Route::get('material-costing-approve/{materialCostingId}', "approve")->name('material-costings.approve');
     });
 });
 

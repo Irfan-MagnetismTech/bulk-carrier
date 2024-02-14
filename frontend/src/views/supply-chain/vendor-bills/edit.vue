@@ -3,7 +3,7 @@ import {ref,onMounted} from "vue";
 
 import Title from "../../../services/title";
 import useVendorBill from "../../../composables/supply-chain/useVendorBill";
-import VendorBillForm from "../../../components/supply-chain/store-requisitions/VendorBillForm.vue";
+import VendorBillForm from "../../../components/supply-chain/vendor-bills/VendorBillForm.vue";
 import { useRoute } from 'vue-router';
 
 const { getVendorBill, showVendorBill, vendorBill, updateVendorBill,materialObject, errors, isLoading } = useVendorBill();
@@ -16,7 +16,7 @@ const icons = useHeroIcon();
 const { setTitle } = Title();
 const route = useRoute();
 const vendorBillId = route.params.vendorBillId;
-const formType = 'edit';
+const page = 'edit';
 
 setTitle('Update Vendor Bill');
 
@@ -27,12 +27,12 @@ onMounted(() => {
 <template>
     <!-- Heading -->
     <div class="flex items-center justify-between w-full my-3" v-once>
-        <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Update Vendor </h2>
-        <default-button :title="'Vendor  List'" :to="{ name: 'scm.store-requisitions.index' }" :icon="icons.DataBase"></default-button>
+        <h2 class="text-xl font-semibold text-gray-700 dark-disabled:text-gray-200">Update Vendor Bill </h2>
+        <default-button :title="'Vendor Bill List'" :to="{ name: 'scm.vendor-bills.index' }" :icon="icons.DataBase"></default-button>
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
         <form @submit.prevent="updateVendorBill(vendorBill, vendorBillId)">
-            <vendor-bill-form :form="vendorBill" :page="formType" :errors="errors" :formType="formType" :materialObject="materialObject"></vendor-bill-form>
+            <vendor-bill-form :form="vendorBill" :page="page" :errors="errors" :materialObject="materialObject"></vendor-bill-form>
             <!-- Submit button -->
             <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm leading-5 text-white transition-colors duration-150 bg-purple-600  border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update</button>
         </form>

@@ -32,6 +32,7 @@ return new class extends Migration
             $table->string('composite_key')->nullable();
             $table->decimal('exchange_rate')->nullable();
             $table->string('business_unit')->comment('ALL, PSML,TSLL')->nullable();
+            $table->string('composite_key')->nullable();
             $table->timestamp('date')->nullable();
             $table->timestamps();
         });

@@ -6,6 +6,16 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ScmVendorBillRequest extends FormRequest
 {
+    protected function prepareForValidation()
+    {
+        $data =  request('data');
+        $dataArray = json_decode($data, true);
+        $imgData = is_object(request('attachment')) ? request('attachment') : null;
+        $mergeData = array_merge($dataArray, ['attachment' => $imgData]);
+
+        $this->replace($mergeData);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
