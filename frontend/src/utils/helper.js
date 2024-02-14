@@ -48,6 +48,9 @@ function imgToBase64(url, callback) {
     xhr.send();
   }
 
+  import Store from "../store";
+  let logo = '../torony-logo.png'
+
   /**
  * Export HTML table content to a PDF document with customizable options.
  * @param {string} businessUnit - Used for incorporating the logo relevant to the business unit.
@@ -68,7 +71,7 @@ export const indexPdfExport = ( businessUnit, pageOridentation, heading, tableId
     let totalPagesExp = '{total_pages_count_string}';
 
     let base64Img;
-    imgToBase64('../torony-logo.png', function(base64) {
+    imgToBase64(Store.getters.getCompanyLogo.logo, function(base64) {
         base64Img = base64;
         if(!useAllPageLogoAndHeading){ // first page logo & title
             if (base64Img) {
@@ -189,7 +192,7 @@ export const showPdfExport = ( businessUnit, pageOridentation, heading, tableIds
     let currentPage = 0;
 
     let base64Img;
-    imgToBase64('../../../torony-logo.png', function(base64) {
+    imgToBase64(Store.getters.getCompanyLogo.logo, function(base64) {
         base64Img = base64;
         if(!useAllPageLogoAndHeading){ // first page logo & title
             if (base64Img) {
