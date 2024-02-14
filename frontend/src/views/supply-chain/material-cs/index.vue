@@ -256,62 +256,54 @@ function confirmDelete(id) {
           </thead> -->
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
-            <tr v-for="(materialCsdata,index) in (materialCsLists?.data)" :key="index">
-              <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-              <td><nobr>{{ materialCsdata?.ref_no }}</nobr></td>
-              <td>{{ formatDate(materialCsdata?.effective_date) }}</td>
-              <td>{{ formatDate(materialCsdata?.expire_date) }}</td>
-              <td>{{ materialCsdata?.purchase_center }}</td>
-              <td>
-                <template v-if="materialCsdata.selectedVendors.length">
-                  {{ materialCsdata?.selection_ground }}
-                </template>
-                <template v-else>
-                  <span class="text-red-500">No Vendor Selected</span>
-                </template>
-              </td>
-              <td>
-                <template v-if="materialCsdata.selectedVendors.length">
-                  <table class="w-full">
-                    <tr v-for="(vendor,index) in materialCsdata?.selectedVendors" :key="index">
-                      <td>
-                        {{ vendor.scmVendor.name }}
-                      </td>
-                    </tr>
-                  </table>
-                </template>
-                <template v-else>
-                  <span class="text-red-500">No Vendor Selected</span>
-                </template>
-              </td>
-              <td>
-                <template v-if="materialCsdata.scmCsMaterials.length">
-                  <table class="w-full">
-                    <tr v-for="(material,index) in materialCsdata?.scmCsMaterials" :key="index">
-                      <td>
+              <template v-for="(materialCsdata,index) in (materialCsLists?.data)" :key="index">
+                <tr v-for="(material,itemIndex) in materialCsdata?.scmCsMaterials" :key="itemIndex">
+                  <td v-if="itemIndex == 0" :rowspan="materialCsdata?.scmCsMaterials?.length">{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
+                  <td v-if="itemIndex == 0" :rowspan="materialCsdata?.scmCsMaterials?.length"><nobr>{{ materialCsdata?.ref_no }}</nobr></td>
+                  <td v-if="itemIndex == 0" :rowspan="materialCsdata?.scmCsMaterials?.length">{{ formatDate(materialCsdata?.effective_date) }}</td>
+                  <td v-if="itemIndex == 0" :rowspan="materialCsdata?.scmCsMaterials?.length">{{ formatDate(materialCsdata?.expire_date) }}</td>
+                  <td v-if="itemIndex == 0" :rowspan="materialCsdata?.scmCsMaterials?.length">{{ materialCsdata?.purchase_center }}</td>
+                  <td v-if="itemIndex == 0" :rowspan="materialCsdata?.scmCsMaterials?.length">
+                    <template v-if="materialCsdata.selectedVendors.length">
+                      {{ materialCsdata?.selection_ground }}
+                    </template>
+                    <template v-else>
+                      <span class="text-red-500">No Vendor Selected</span>
+                    </template>
+                  </td>
+                  <td v-if="itemIndex == 0" :rowspan="materialCsdata?.scmCsMaterials?.length">
+                    <template v-if="materialCsdata.selectedVendors.length">
+                        <p v-for="(vendor,vendorIndex) in materialCsdata?.selectedVendors" :key="vendorIndex">
+                          <nobr>{{ vendor.scmVendor.name }} <br v-if="materialCsdata?.selectedVendors?.length != vendorIndex"/>
+                          </nobr>
+                        </p>
+                    </template>
+                    <template v-else>
+                      <span class="text-red-500">No Vendor Selected</span>
+                    </template>
+                  </td>
+                  <td>
                         {{ material.scmMaterial.name  }}
-                      </td>
-                    </tr>
-                  </table>
-                </template>
-              </td>
-              <td>{{ materialCsdata?.scmWarehouse?.name?? '' }}</td>
-              <td>
-                <span :class="materialCsdata?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialCsdata?.business_unit }}</span>
-              </td>
-              <td>
-                <div class="grid grid-flow-col-dense gap-x-2">
-                  <button @click="navigateToQuotation(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Quotations</nobr></button>
-                  <!-- <button v-if="materialCsdata.scmPo.length == 0 && materialCsdata?.scmCsVendors?.length" @click="navigateSupplierSelection(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Supplier Selection</nobr></button>
-                  <button v-if="materialCsdata.scmPo.length" @click="navigateSupplierSelectionShow(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Supplier Selection</nobr></button> -->
-                  <action-button :action="'show'" :to="{ name: 'scm.material-cs.show', params: { materialCsId: materialCsdata.id } }"></action-button>
-                  <action-button v-if="materialCsdata?.scmCsVendors?.length == 0" :action="'edit'" :to="{ name: 'scm.material-cs.edit', params: { materialCsId: materialCsdata.id } }"></action-button>
-                  <action-button v-if="materialCsdata?.scmCsVendors?.length == 0" @click="confirmDelete(materialCsdata.id)" :action="'delete'"></action-button>
-                  <action-button v-if="materialCsdata?.scmCsVendors?.length" :action="'disabled_edit'"></action-button>
-                  <action-button v-if="materialCsdata?.scmCsVendors?.length" :action="'disabled_delete'"></action-button>
-                </div>
-              </td>
-            </tr>
+                  </td>
+                  <td v-if="itemIndex == 0" :rowspan="materialCsdata?.scmCsMaterials?.length">{{ materialCsdata?.scmWarehouse?.name?? '' }}</td>
+                  <td v-if="itemIndex == 0" :rowspan="materialCsdata?.scmCsMaterials?.length">
+                    <span :class="materialCsdata?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialCsdata?.business_unit }}</span>
+                  </td>
+                  <td v-if="itemIndex == 0" :rowspan="materialCsdata?.scmCsMaterials?.length">
+                    <div class="grid grid-flow-col-dense gap-x-2">
+                      <button @click="navigateToQuotation(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Quotations</nobr></button>
+                      <!-- <button v-if="materialCsdata.scmPo.length == 0 && materialCsdata?.scmCsVendors?.length" @click="navigateSupplierSelection(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Supplier Selection</nobr></button>
+                      <button v-if="materialCsdata.scmPo.length" @click="navigateSupplierSelectionShow(materialCsdata.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700"><nobr>Supplier Selection</nobr></button> -->
+                      <action-button :action="'show'" :to="{ name: 'scm.material-cs.show', params: { materialCsId: materialCsdata.id } }"></action-button>
+                      <action-button v-if="materialCsdata?.scmCsVendors?.length == 0" :action="'edit'" :to="{ name: 'scm.material-cs.edit', params: { materialCsId: materialCsdata.id } }"></action-button>
+                      <action-button v-if="materialCsdata?.scmCsVendors?.length == 0" @click="confirmDelete(materialCsdata.id)" :action="'delete'"></action-button>
+                      <action-button v-if="materialCsdata?.scmCsVendors?.length" :action="'disabled_edit'"></action-button>
+                      <action-button v-if="materialCsdata?.scmCsVendors?.length" :action="'disabled_delete'"></action-button>
+                    </div>
+                  </td>
+                </tr>
+              </template>
+           
             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && materialCs?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!materialCsLists?.data?.length" class="relative h-[250px]">
