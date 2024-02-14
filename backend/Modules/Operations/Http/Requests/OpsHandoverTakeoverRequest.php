@@ -14,7 +14,7 @@ class OpsHandoverTakeoverRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ops_vessel_id'             => ['required','exists:ops_voyages,id'],
+            'ops_vessel_id'             => ['required','exists:ops_vessels,id'],
             'ops_charterer_profile_id'  => ['required','exists:ops_charterer_profiles,id'],
             'note_type'                 => ['required', 'string', 'max:255'],
             'effective_date'            => ['required', 'string', 'max:255'],
