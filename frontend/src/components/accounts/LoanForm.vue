@@ -67,7 +67,7 @@ onMounted(() => {
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300"> Source Type <span class="text-red-500">*</span></span>
         <select class="label-item-input" v-model.trim="form.loanable_type" required>
-          <option disabled> Select </option>
+          <option disabled> --Choose an option-- </option>
           <option value="Bank" selected> Bank </option>
         </select>
       </label>
@@ -84,7 +84,7 @@ onMounted(() => {
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Loan Type <span class="text-red-500">*</span></span>
         <select class="label-item-input" v-model.trim="form.loan_type" required>
-          <option value="" selected disabled> Select </option>
+          <option value="" selected disabled> --Choose an option-- </option>
           <option value="AC Payee">AC Payee</option>
           <option value="Pay Order">Pay Order</option>
           <option value="Draft">Draft</option>

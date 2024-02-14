@@ -6,6 +6,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
+import { formatMonthYear, formatDate } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 
@@ -30,11 +31,11 @@ onMounted(() => {
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
     <div class="flex md:gap-4">
       <div class="w-full">
-        <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Advance Adjustment Information # {{advanceAdjustmentId}}</h2>
+<!--        <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Advance Adjustment Information # {{advanceAdjustmentId}}</h2>-->
         <table class="w-full">
           <thead>
           <tr>
-            <td class="!text-center bg-gray-200 font-bold" colspan="2">Basic Info</td>
+            <td class="!text-center bg-gray-200 font-bold bg-green-700 text-white" colspan="2">Basic Info</td>
           </tr>
           </thead>
           <tbody>
@@ -48,7 +49,7 @@ onMounted(() => {
           </tr>
           <tr>
             <th class="w-40">Adjustment Date</th>
-            <td>{{ advanceAdjustment?.adjustment_date }}</td>
+            <td>{{ formatDate(advanceAdjustment?.adjustment_date) }}</td>
           </tr>
           <tr>
             <th class="w-40">Cash Requisition No.</th>
@@ -67,10 +68,10 @@ onMounted(() => {
         <table class="w-full mt-1" id="profileDetailTable">
           <thead>
           <tr>
-            <td class="!text-center bg-gray-200 font-bold" colspan="8">Particular List</td>
+            <td class="!text-center bg-gray-200 font-bold bg-green-700 text-white" colspan="8">Particular List</td>
           </tr>
           <tr>
-            <th>Sl.</th>
+            <th>#</th>
             <th>Particular</th>
             <th>Remarks</th>
             <th>Amount</th>
@@ -79,10 +80,10 @@ onMounted(() => {
           </thead>
           <tbody>
           <tr v-for="(adjustmentData,index) in advanceAdjustment?.accAdvanceAdjustmentLines" :key="index">
-            <td>{{ index + 1 }}</td>
+            <td class="!text-center">{{ index + 1 }}</td>
             <td>{{ adjustmentData?.particular }}</td>
             <td>{{ adjustmentData?.remarks }}</td>
-            <td>{{ adjustmentData?.amount }}</td>
+            <td class="!text-right">{{ adjustmentData?.amount }}</td>
             <td>
               <template v-if="adjustmentData?.attachment !== 'null'">
                 <a class="custom_link" :href="env.BASE_API_URL + '/' + adjustmentData?.attachment" target="_blank">Click to view</a>
