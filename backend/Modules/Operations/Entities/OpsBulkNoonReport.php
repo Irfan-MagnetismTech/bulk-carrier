@@ -9,6 +9,10 @@ use Modules\Operations\Entities\OpsBunker;
 use Modules\Operations\Entities\OpsVessel;
 use Modules\Operations\Entities\OpsVoyage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Modules\Operations\Entities\OpsBulkNoonReportPort;
 use Modules\Operations\Entities\OpsBulkNoonReportDistance;
 use Modules\Operations\Entities\OpsBulkNoonReportCargoTank;
@@ -45,52 +49,52 @@ class OpsBulkNoonReport extends Model
     ];
 
 
-    public function opsVessel()
+    public function opsVessel():BelongsTo
     {
         return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
     }
 
-    public function opsVoyage()
+    public function opsVoyage():BelongsTo
     {
         return $this->belongsTo(OpsVoyage::class, 'ops_voyage_id' , 'id');
     }
 
-    public function opsBunkers()
+    public function opsBunkers():MorphMany
     {
         return $this->morphMany(OpsBunker::class, 'bunkerable');
     }
 
-    public function opsBulkNoonReportPorts()
+    public function opsBulkNoonReportPorts():HasMany
     {
         return $this->hasMany(OpsBulkNoonReportPort::class, 'ops_bulk_noon_report_id', 'id');
     }
     
-    public function opsBulkNoonReportCargoTanks()
+    public function opsBulkNoonReportCargoTanks():HasMany
     {
         return $this->hasMany(OpsBulkNoonReportCargoTank::class, 'ops_bulk_noon_report_id', 'id');
     }
 
-    public function opsBulkNoonReportConsumptions()
+    public function opsBulkNoonReportConsumptions():HasMany
     {
         return $this->hasMany(OpsBulkNoonReportConsumption::class, 'ops_bulk_noon_report_id', 'id');
     }
 
-    public function opsBulkNoonReportConsumptionHeads()
+    public function opsBulkNoonReportConsumptionHeads():HasMany
     {
         return $this->hasMany(OpsBulkNoonReportConsumptionHead::class, 'ops_bulk_noon_report_id', 'id');
     }
 
-    public function opsBulkNoonReportDistance()
+    public function opsBulkNoonReportDistance():HasOne
     {
         return $this->hasOne(OpsBulkNoonReportDistance::class, 'ops_bulk_noon_report_id', 'id');
     }
 
-    public function opsBulkNoonReportEngineInputs()
+    public function opsBulkNoonReportEngineInputs():HasMany
     {
         return $this->hasMany(OpsBulkNoonReportEngineInput::class, 'ops_bulk_noon_report_id', 'id');
     }
 
-    // public function opsBulkNoonReportEngineInputTypes()
+    // public function opsBulkNoonReportEngineInputTypes():HasMany
     // {
     //     return $this->hasMany(OpsBulkNoonReportEngineInput::class, 'ops_bulk_noon_report_id', 'id')->whereNotNull('type');
     // }

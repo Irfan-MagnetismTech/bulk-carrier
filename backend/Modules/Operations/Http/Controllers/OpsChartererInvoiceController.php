@@ -20,10 +20,10 @@ class OpsChartererInvoiceController extends Controller
   
    function __construct()
    {
-       $this->middleware('permission:ops-charterer-invoice-create|ops-charterer-invoice-edit|ops-charterer-invoice-view|ops-charterer-invoice-delete', ['only' => ['index','show']]);
-       $this->middleware('permission:ops-charterer-invoice-create', ['only' => ['store']]);
-       $this->middleware('permission:ops-charterer-invoice-edit', ['only' => ['update']]);
-       $this->middleware('permission:ops-charterer-invoice-delete', ['only' => ['destroy']]);
+    //    $this->middleware('permission:ops-charterer-invoice-create|ops-charterer-invoice-edit|ops-charterer-invoice-view|ops-charterer-invoice-delete', ['only' => ['index','show']]);
+    //    $this->middleware('permission:ops-charterer-invoice-create', ['only' => ['store']]);
+    //    $this->middleware('permission:ops-charterer-invoice-edit', ['only' => ['update']]);
+    //    $this->middleware('permission:ops-charterer-invoice-delete', ['only' => ['destroy']]);
    }
    /**
     * get all users with their roles.

@@ -4,6 +4,7 @@ namespace Modules\Operations\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OpsBulkNoonReportCargoTank extends Model
 {
@@ -19,7 +20,7 @@ class OpsBulkNoonReportCargoTank extends Model
         'quantity_mt',
     ];
 
-    public function opsBulkNoonReport()
+    public function opsBulkNoonReport():BelongsTo
     {
         return $this->belongsTo(OpsBulkNoonReport::class, 'ops_bulk_noon_report_id' , 'id');
     }

@@ -13,7 +13,8 @@ class OpsVoyageBoatNoteRequest extends FormRequest
         // dd(request('info'));
         $data=  request('info');
         $dataArray = json_decode($data, true);
-        $mergeData = array_merge($dataArray , ['attachment' => request('attachments')]);
+        $imgData = is_array(request('attachment')) ? request('attachments') : null;
+        $mergeData = array_merge($dataArray , ['attachment' => $imgData]);
         $this->replace($mergeData);
     }
     /**

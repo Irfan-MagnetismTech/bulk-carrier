@@ -12,7 +12,8 @@ class OpsVesselCertificateRequest extends FormRequest
     {
         $data=  request('info');
         $dataArray = json_decode($data, true);
-        $mergeData = array_merge($dataArray , ['attachment' => request('attachment')]);
+        $imgData = is_object(request('attachment')) ? request('attachment') : null;
+        $mergeData = array_merge($dataArray , ['attachment' => $imgData]);
         $this->replace($mergeData);
     }
     /**
