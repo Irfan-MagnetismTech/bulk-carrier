@@ -10,8 +10,8 @@ class OpsVesselParticularRequest extends FormRequest
     protected function prepareForValidation(){
         $data=  request('info');
         $dataArray = json_decode($data, true);
-        
-        $mergeData = array_merge($dataArray , ['attachment' => request('attachment')]);
+        $imgData = is_object(request('attachment')) ? request('attachment') : null;
+        $mergeData = array_merge($dataArray , ['attachment' => $imgData]);
         $this->replace($mergeData);
     }
 
@@ -38,7 +38,7 @@ class OpsVesselParticularRequest extends FormRequest
             'previous_name'     => ['nullable', 'string', 'max:255'],
             
             'call_sign'         =>['nullable', 'string', 'max:255', Rule::unique('ops_vessel_particulars')->ignore($this->route('vessel_particular'), 'id')],
-            'attachment'        =>'nullable|mimes:pdf,doc,docx,jpeg,png,gif,xlsx|max:2048', 
+            'attachment'        =>'nullable|mimes:pdf,doc,docx,jpeg,png,gif,xlsx|max:2048',
             'owner_name'        => ['nullable', 'string', 'max:255'],
             'classification'    => ['nullable', 'string'],
             'flag'              => ['nullable', 'string', 'max:255'],
@@ -50,7 +50,7 @@ class OpsVesselParticularRequest extends FormRequest
             'official_number'   => ['nullable', 'numeric', 'digits_between:10,15',Rule::unique('ops_vessel_particulars')->ignore($this->route('vessel_particular'), 'id')],
             'year_built'        => ['numeric', 'min:1900', 'max:3000'],
             'capacity'          => ['nullable', 'numeric'],
-            'tues_capacity'     => ['nullable', 'numeric'],   
+            'tues_capacity'     => ['nullable', 'numeric'],
 
         ];
     }

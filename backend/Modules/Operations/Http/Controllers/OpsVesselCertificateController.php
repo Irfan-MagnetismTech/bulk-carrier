@@ -21,10 +21,10 @@ class OpsVesselCertificateController extends Controller
         
     function __construct(private FileUploadService $fileUpload)
     {
-        $this->middleware('permission:ops-vessel-certificate-create|ops-vessel-certificate-edit|ops-vessel-certificate-view|ops-vessel-certificate-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:ops-vessel-certificate-create', ['only' => ['store']]);
-        $this->middleware('permission:ops-vessel-certificate-edit', ['only' => ['update']]);
-        $this->middleware('permission:ops-vessel-certificate-delete', ['only' => ['destroy']]);
+        // $this->middleware('permission:ops-vessel-certificate-create|ops-vessel-certificate-edit|ops-vessel-certificate-view|ops-vessel-certificate-delete', ['only' => ['index','show']]);
+        // $this->middleware('permission:ops-vessel-certificate-create', ['only' => ['store']]);
+        // $this->middleware('permission:ops-vessel-certificate-edit', ['only' => ['update']]);
+        // $this->middleware('permission:ops-vessel-certificate-delete', ['only' => ['destroy']]);
     }
 
     /**

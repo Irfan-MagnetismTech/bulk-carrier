@@ -10,7 +10,8 @@ class OpsVoyageExpenditureRequest extends FormRequest
     protected function prepareForValidation(){
         $data=  request('info');
         $dataArray = json_decode($data, true);
-        $mergeData = array_merge($dataArray , ['attachment' => request('attachment')]);
+        $imgData = is_object(request('attachment')) ? request('attachment') : null;
+        $mergeData = array_merge($dataArray , ['attachment' => $imgData]);
         // dd($mergeData['ops_voyage_id']);
         $this->replace($mergeData);
     }

@@ -10,8 +10,10 @@ class OpsBunkerBillRequest extends FormRequest
     protected function prepareForValidation(){
         $data=  request('info');
         $dataArray = json_decode($data, true);
-        $mergeData = array_merge($dataArray , ['attachment' => request('attachment')]);
-        $mergeData = array_merge($mergeData , ['smr_file_path' => request('smr_file_path')]);
+        $imgData = is_object(request('attachment')) ? request('attachment') : null;
+        $imgDataSmr = is_object(request('smr_file_path')) ? request('smr_file_path') : null;
+        $mergeData = array_merge($dataArray , ['attachment' => $imgData]);
+        $mergeData = array_merge($mergeData , ['smr_file_path' => $imgDataSmr]);
         
         // dd($mergeData);
         $this->replace($mergeData);
