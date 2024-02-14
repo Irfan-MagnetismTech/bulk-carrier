@@ -19,7 +19,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: '',
+                permissionKey: ['ops-cargo-tariff-view', 'ops-cargo-type-view', 'ops-expense-head-view', 'ops-maritime-certificate-view', 'ops-port-view'],
                 subSubMenu: [
                     {
                         route: 'ops.configurations.cargo-tariffs.index',
@@ -28,7 +28,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-cargo-tariff-view',
                         subSubMenu: []
                     },
                     {
@@ -38,7 +38,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-cargo-type-view',
                         subSubMenu: []
                     },
                     {
@@ -48,7 +48,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-expense-head-view',
                         subSubMenu: []
                     },
                     {
@@ -58,7 +58,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-maritime-certificate-view',
                         subSubMenu: []
                     },
                     {
@@ -68,7 +68,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-port-view',
                         subSubMenu: []
                     }
                 ],
@@ -80,7 +80,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: '',
+                permissionKey: ['ops-customer-view', 'ops-customer-invoice-view'],
                 subSubMenu: [
                     {
                         route: 'ops.configurations.customers.index',
@@ -89,7 +89,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-customer-view',
                         subSubMenu: []
                     },
                     {
@@ -99,7 +99,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-customer-invoice-view',
                         subSubMenu: []
                     }
                 ],
@@ -111,7 +111,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: '',
+                permissionKey: ['ops-vessel-view', 'ops-vessel-certificate-view', 'ops-vessel-expense-head-view', 'ops-vessel-particular-view'],
                 subSubMenu: [
                     {
                         route: 'ops.vessels.index',
@@ -120,7 +120,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-vessel-view',
                         subSubMenu: []
                     },
                     {
@@ -130,7 +130,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-vessel-certificate-view',
                         subSubMenu: []
                     },
                     {
@@ -140,7 +140,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-vessel-expense-head-view',
                         subSubMenu: []
                     },
                     {
@@ -150,7 +150,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-vessel-particular-view',
                         subSubMenu: []
                     }
                 ],
@@ -162,7 +162,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: '',
+                permissionKey: ['ops-charterer-profile-view', 'ops-charterer-contract-view', 'ops-delivery-redelivery-view', 'ops-charterer-invoice-view'],
                 subSubMenu: [
                     {
                         route: 'ops.charterer-profiles.index',
@@ -171,7 +171,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-charterer-profile-view',
                         subSubMenu: []
                     },
                     {
@@ -181,7 +181,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-charterer-contract-view',
                         subSubMenu: []
                     },
                     {
@@ -191,7 +191,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-delivery-redelivery-view',
                         subSubMenu: []
                     },
                     {
@@ -201,7 +201,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-charterer-invoice-view',
                         subSubMenu: []
                     }
                 ]
@@ -213,7 +213,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: '',
+                permissionKey: ['ops-voyage-view', 'ops-contract-assign-view', 'ops-lighterage-noon-report-view', 'ops-bulk-noon-report-view', 'ops-voyage-boat-note-view', 'ops-voyage-budget-view', 'ops-voyage-expense-view'],
                 subSubMenu: [
                     {
                         route: 'ops.voyages.index',
@@ -222,7 +222,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-voyage-view',
                         subSubMenu: []
                     },
                     {
@@ -232,7 +232,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-contract-assign-view',
                         subSubMenu: []
                     },
                     {
@@ -242,7 +242,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-lighterage-noon-report-view',
                         subSubMenu: []
                     }, 
                     {
@@ -252,7 +252,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-bulk-noon-report-view',
                         subSubMenu: []
                     },
                     {
@@ -262,7 +262,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-voyage-boat-note-view',
                         subSubMenu: []
                     },
                     {
@@ -272,7 +272,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-voyage-budget-view',
                         subSubMenu: []
                     },
                     {
@@ -282,7 +282,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-voyage-expense-view',
                         subSubMenu: []
                     }
                 ]
@@ -295,7 +295,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: '',
+                permissionKey: ['ops-purchase-requisition-view', 'ops-vessel-bunker-view', 'ops-bunker-bill-view'],
                 subSubMenu: [
                     {
                         route: 'ops.bunker-requisitions.index',
@@ -304,7 +304,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-purchase-requisition-view',
                         subSubMenu: []
                     },
                     {
@@ -314,7 +314,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-vessel-bunker-view',
                         subSubMenu: []
                     },
                     {
@@ -324,7 +324,7 @@ export default [
                         postIcon: '',
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-bunker-bill-view',
                         subSubMenu: []
                     },
                 ]
@@ -336,7 +336,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: '',
+                permissionKey: ['ops-voyage-bunker-report', 'ops-vessel-bunker-report', 'ops-lighterage-voyage-report', 'ops-bulk-voyage-report', 'ops-port-wise-expense-report', 'ops-budget-vs-expense-report', 'ops-month-wise-expense-report'],
                 subSubMenu: [
                     {
                         route: 'ops.reports.voyage-bunker-report',
@@ -345,7 +345,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-voyage-bunker-report',
                         subSubMenu: []
                     },
                     {
@@ -355,7 +355,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-vessel-bunker-report',
                         subSubMenu: []
                     },
                     {
@@ -365,7 +365,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-lighterage-voyage-report',
                         subSubMenu: []
                     },
                     {
@@ -375,7 +375,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-bulk-voyage-report',
                         subSubMenu: []
                     },
                     {
@@ -385,7 +385,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-port-wise-expense-report',
                         subSubMenu: []
                     },
                     {
@@ -395,7 +395,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-budget-vs-expense-report',
                         subSubMenu: []
                     },
                     {
@@ -405,7 +405,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'ops-month-wise-expense-report',
                         subSubMenu: []
                     }
                 ]
