@@ -11,6 +11,8 @@ import useChartererContract from '../../../composables/operations/useChartererCo
 import Store from "../../../store";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import { formatDate } from "../../../utils/helper.js"
+import FilterComponent from "../../../components/utils/FilterComponent.vue";
 
 
 const { chartererContracts, getChartererContracts, deleteChartererContract, isLoading, isTableLoading } = useChartererContract();
@@ -64,6 +66,7 @@ function confirmDelete(id) {
 }
 
 let filterOptions = ref( {
+"business_unit": businessUnit.value,
 "items_per_page": 15,
 "page": props.page,
 "isFilter": false,
@@ -75,7 +78,9 @@ let filterOptions = ref( {
 			"search_param": "",
 			"action": null,
 			"order_by": null,
-			"date_from": null
+			"date_from": null,
+      "label": "Contract Type",
+      "filter_type": "input"
 			},
       {
 			"relation_name": "opsChartererProfile",
@@ -83,7 +88,9 @@ let filterOptions = ref( {
 			"search_param": "",
 			"action": null,
 			"order_by": null,
-			"date_from": null
+			"date_from": null,
+      "label": "Charterer Name",
+      "filter_type": "input"
 			},
       {
 			"relation_name": null,
@@ -91,15 +98,9 @@ let filterOptions = ref( {
 			"search_param": "",
 			"action": null,
 			"order_by": null,
-			"date_from": null
-			},
-      {
-			"relation_name": null,
-			"field_name": "country",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
+			"date_from": null,
+      "label": "Contract Name",
+      "filter_type": "input"
 			},
       {
 			"relation_name": null,
@@ -107,35 +108,14 @@ let filterOptions = ref( {
 			"search_param": "",
 			"action": null,
 			"order_by": null,
-			"date_from": null
+			"date_from": null,
+      "label": "Email",
+      "filter_type": "input"
 			},
-      {
-			"relation_name": null,
-			"field_name": "contact_no",
-			"search_param": "",
-			"action": null,
-			"order_by": null,
-			"date_from": null
-			},
-
 	]
 });
 
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
-
-function setSortingState(index, order) {
-  filterOptions.value.filter_options.forEach(function (t) {
-    t.order_by = null;
-  });
-  filterOptions.value.filter_options[index].order_by = order;
-}
-
-function clearFilter(){
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = "";
-    filterOptions.value.filter_options[index].order_by = null;
-  });
-}
 
 
 const currentPage = ref(1);
@@ -167,9 +147,6 @@ onMounted(() => {
       console.error("Error fetching data.", error);
     });
 });
-  filterOptions.value.filter_options.forEach((option, index) => {
-    filterOptions.value.filter_options[index].search_param = useDebouncedRef('', 800);
-  });
 
 });
 
@@ -184,110 +161,14 @@ onMounted(() => {
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       <table class="w-full whitespace-no-wrap" >
-          <thead>
-            <tr class="w-full">
-              <th class="w-20">
-                  <div class="w-full flex items-center justify-between">
-                    # <button @click="swapFilter()" type="button" v-html="icons.FilterIcon"></button>
-                  </div>
-                </th>
-              <th class="w-36">
-                <div class="flex justify-evenly items-center">
-                    <nobr>Contract Type</nobr>
-                    <div class="flex flex-col cursor-pointer">
-                      <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
-                      <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
-                    </div>
-                  </div>
-              </th>
-              <th class="w-48">
-                <div class="flex justify-evenly items-center">
-                    <nobr>Charterer Name</nobr>
-                    <div class="flex flex-col cursor-pointer">
-                      <div v-html="icons.descIcon" @click="setSortingState(1,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[1].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[1].order_by !== 'asc' }" class=" font-semibold"></div>
-                      <div v-html="icons.ascIcon" @click="setSortingState(1,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[1].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[1].order_by !== 'desc' }" class=" font-semibold"></div>
-                    </div>
-                  </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                    <nobr>Contract Name</nobr>
-                    <div class="flex flex-col cursor-pointer">
-                      <div v-html="icons.descIcon" @click="setSortingState(2,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[2].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[2].order_by !== 'asc' }" class=" font-semibold"></div>
-                      <div v-html="icons.ascIcon" @click="setSortingState(2,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[2].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[2].order_by !== 'desc' }" class=" font-semibold"></div>
-                    </div>
-                  </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                    <nobr>Country</nobr>
-                    <div class="flex flex-col cursor-pointer">
-                      <div v-html="icons.descIcon" @click="setSortingState(3,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[3].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[3].order_by !== 'asc' }" class=" font-semibold"></div>
-                      <div v-html="icons.ascIcon" @click="setSortingState(3,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[3].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[3].order_by !== 'desc' }" class=" font-semibold"></div>
-                    </div>
-                  </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                    <nobr>Email</nobr>
-                    <div class="flex flex-col cursor-pointer">
-                      <div v-html="icons.descIcon" @click="setSortingState(4,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[4].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[4].order_by !== 'asc' }" class=" font-semibold"></div>
-                      <div v-html="icons.ascIcon" @click="setSortingState(4,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[4].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[4].order_by !== 'desc' }" class=" font-semibold"></div>
-                    </div>
-                  </div>
-              </th>
-              <th>
-                <div class="flex justify-evenly items-center">
-                    <nobr>Contact</nobr>
-                    <div class="flex flex-col cursor-pointer">
-                      <div v-html="icons.descIcon" @click="setSortingState(5,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[5].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[5].order_by !== 'asc' }" class=" font-semibold"></div>
-                      <div v-html="icons.ascIcon" @click="setSortingState(5,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[5].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[5].order_by !== 'desc' }" class=" font-semibold"></div>
-                    </div>
-                  </div>
-              </th>
-              <th>
-                <nobr>Business Unit</nobr>
-              </th>
-              <th>
-                Action
-              </th>
-            </tr>
-            <tr class="w-full" v-if="showFilter">
-              <th>
-                <select v-model="filterOptions.items_per_page" class="filter_input">
-                  <option value="15">15</option>
-                  <option value="30">30</option>
-                  <option value="50">50</option>
-                  <option value="100">100</option>
-                </select>
-              </th>
-              <th>
-                <select v-model="filterOptions.filter_options[0].search_param" class="filter_input">
-                  <option value="">ALL</option>
-                  <option value="Voyage Wise">Voyage Wise</option>
-                  <option value="Day Wise">Day Wise</option>
-                </select>
-              </th>
-              <th><input v-model.trim="filterOptions.filter_options[1].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model.trim="filterOptions.filter_options[2].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model.trim="filterOptions.filter_options[3].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model.trim="filterOptions.filter_options[4].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><input v-model.trim="filterOptions.filter_options[5].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
-              <th><filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit></th>
-              <th>
-                <button title="Clear Filter" @click="clearFilter()" type="button" v-html="icons.NotFilterIcon"></button>
-              </th>
-            </tr>
-          </thead>
+        <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="chartererContracts?.data?.length" class="relative">
               <tr v-for="(chartererContract, index) in chartererContracts.data" :key="chartererContract?.id">
                   <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-                  <td>{{ chartererContract?.contract_type }}</td>
-                  <td>{{ chartererContract?.opsChartererProfile?.name }}</td>
-                  <td>{{ chartererContract?.contract_name }}</td>
-                  <td>{{ chartererContract?.country }}</td>
-                  <td>{{ chartererContract?.email }}</td>
-                  <td>{{ chartererContract?.contact_no }}</td>
+                  <td class="text-left">{{ chartererContract?.contract_type }}</td>
+                  <td class="text-left">{{ chartererContract?.opsChartererProfile?.name }}</td>
+                  <td class="text-left">{{ chartererContract?.contract_name }}</td>
+                  <td class="text-left">{{ chartererContract?.email }}</td>
                   <td>
                     <span :class="chartererContract?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chartererContract?.business_unit }}</span>
 

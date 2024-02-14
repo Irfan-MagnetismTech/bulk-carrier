@@ -11,7 +11,7 @@
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Type <span class="text-red-500">*</span></span>
             <select name="" id="" class="form-input" v-model="form.vessel_type">
-              <option value="" disabled>Select Type</option>
+              <option value="" disabled>--Choose an option--</option>
               <option value="Lighter">Lighter</option>
               <option value="Bulk Carrier">Bulk Carrier</option>
             </select>
@@ -55,7 +55,7 @@
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Port of Registry <span class="text-red-500">*</span></span>
-        <v-select :options="ports" placeholder="--Choose an option--" v-model="form.portOfRegistry" label="code_name" class="block form-input">
+        <v-select :options="ports" :loading="isPortLoading" placeholder="--Choose an option--" v-model="form.portOfRegistry" label="code_name" class="block form-input">
             <template #search="{attributes, events}">
                 <input
                     class="vs__search"
@@ -120,10 +120,10 @@
         <span class="text-gray-700 dark-disabled:text-gray-300">Width Overall <span class="text-red-500">*</span></span>
         <input type="number" step="0.001" v-model="form.overall_width" placeholder="Width Overall" class="form-input" required autocomplete="off" />
       </label>
-      <label class="block w-full mt-2 text-sm">
+      <div class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Year Built <span class="text-red-500">*</span></span>
-        <input type="number" step="0.001" v-model="form.year_built" placeholder="Year Built" class="form-input" required autocomplete="off" />
-      </label>
+        <VueDatePicker v-model="form.year_built" class="form-input" required auto-apply year-picker :enable-time-picker="false" placeholder="yyyy" format="yyyy" model-type="yyyy"></VueDatePicker>
+      </div>
     </div>
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -135,8 +135,28 @@
         <span class="text-gray-700 dark-disabled:text-gray-300">Capacity <span class="text-red-500">*</span></span>
         <input type="number" step="0.001" v-model="form.capacity" placeholder="Capacity" class="form-input" required autocomplete="off" />
       </label>
-      <label class="block w-full mt-2 text-sm"></label>
-      <label class="block w-full mt-2 text-sm"></label>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Dry Docking <span class="text-red-500">*</span></span>
+        <select v-model.trim="form.dry_docking_months" class="form-input" required>
+          <option value="" disabled>--Choose an option--</option>
+          <option value="3">3 Months</option>
+          <option value="6">6 Months</option>
+          <option value="12">1 Year</option>
+          <option value="24">2 Years</option>
+          <option value="36">3 Years</option>
+          <option value="48">4 Years</option>
+          <option value="60">5 Years</option>
+          <option value="120">10 Years</option>
+        </select>
+      </label>
+      <label class="block w-full mt-2 text-sm">
+        <span class="text-gray-700 dark-disabled:text-gray-300">Status <span class="text-red-500">*</span></span>
+        <select v-model.trim="form.status" class="form-input" required>
+          <option value="" disabled>--Choose an option--</option>
+          <option value="Available">Available</option>
+          <option value="Unavailable">Unavailable</option>
+        </select>
+      </label>
       
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -150,9 +170,9 @@
         <thead v-once>
           <tr class="w-full">
             <th class="!w-12">SL</th>
-            <th class="!w-80">Certificate Name</th>
-            <th>Certificate Type</th>
-            <th>Validity Period</th>
+            <th class="">Certificate Name</th>
+            <th class="!w-80">Certificate Type</th>
+            <!-- <th>Validity Period</th> -->
             <th class="w-16">
               <button type="button" @click="addVesselCertificate()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
@@ -168,11 +188,11 @@
               {{ index+1 }}
             </td>
             <td class="flex items-center">
-              <v-select :options="maritimeCertificates" placeholder="--Choose an option--" v-model="form.opsVesselCertificates[index]" label="name" class="w-full block form-input">
+              <v-select :options="maritimeCertificates" placeholder="--Choose an option--" v-model="form.opsVesselCertificates[index].certificate" label="name" class="w-full block form-input" @update:modelValue="setVesselCertificate(index)">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
-                        :required="!form.opsVesselCertificates[index]"
+                        :required="!form.opsVesselCertificates[index].certificate"
                         v-bind="attributes"
                         v-on="events"
                         />
@@ -184,9 +204,9 @@
             <td>
               <span class="show-block" v-if="form.opsVesselCertificates[index]?.type">{{ form.opsVesselCertificates[index]?.type }}</span>
             </td>
-            <td>
-              <span class="show-block" v-if="form.opsVesselCertificates[index]?.validity">{{ form.opsVesselCertificates[index]?.validity }}</span>
-            </td>
+            <!-- <td>
+              <span class="show-block" v-if="form.opsVesselCertificates[index]?.validity && form.opsVesselCertificates[index]?.validity != 0">{{ form.opsVesselCertificates[index]?.validity }}</span>
+            </td> -->
             <td>
               <button type="button" @click="removeVesselCertificate(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -223,11 +243,11 @@
               {{ index+1 }}
             </td>
             <td class="flex items-center">
-              <v-select v-if="!form.opsBunkers[index]?.is_readonly" :options="materials" placeholder="--Choose an option--" v-model="form.opsBunkers[index]" label="name" class="w-full block form-input">
+              <v-select v-if="!form.opsBunkers[index]?.is_readonly" :options="materials" placeholder="--Choose an option--" v-model="form.opsBunkers[index].bunker" label="name" class="w-full block form-input" @update:modelValue="setVesselBunker(index)">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
-                          :required="!form.opsBunkers[index]"
+                          :required="!form.opsBunkers[index].bunker"
                           v-bind="attributes"
                           v-on="events"
                           />
@@ -279,11 +299,25 @@ const props = defineProps({
 });
 
 const { maritimeCertificates, getMaritimeCertificateList } = useMaritimeCertificates();
-const { ports, searchPorts } = usePort();
+const { ports, searchPorts, isPortLoading } = usePort();
 const { materials, getBunkerList } = useMaterial();
 
 const isCertificateDuplicate = ref(false);
 const isBunkerDuplicate = ref(false);
+
+const setVesselCertificate = (index) => {
+  if(props.form.opsVesselCertificates[index]) {
+    props.form.opsVesselCertificates[index].ops_vessel_certificate_id = props.form.opsVesselCertificates[index].certificate.id
+    props.form.opsVesselCertificates[index].type = props.form.opsVesselCertificates[index].certificate.type
+  }
+}
+
+const setVesselBunker = (index) => {
+  if(props.form.opsBunkers[index]) {
+    props.form.opsBunkers[index].name = props.form.opsBunkers[index].bunker.name
+    props.form.opsBunkers[index].unit = props.form.opsBunkers[index].bunker.unit
+  }
+}
 
 function addVesselCertificate() {
   // console.log(props.maritimeCertificateObject, "dfdf")
@@ -324,18 +358,21 @@ function removeBunker(index){
 // }
 
 watch(() => props.form.business_unit, (value) => {
+  ports.value = []
+  props.form.portOfRegistry = null
   searchPorts("", props.form.business_unit);
 }, { deep : true })
 
 watch(() => props.form.opsVesselCertificates, (value) => {
-  props.form.opsVesselCertificates.some((certificate, index) => {
-            if (props.form.opsVesselCertificates.filter(val => val.name === certificate.name)?.length > 1) {
-              isCertificateDuplicate.value = true;
-            } else {
-              isCertificateDuplicate.value = false;
+    props.form.opsVesselCertificates.some((certificate, index) => {
+      if (certificate.certificate && props.form.opsVesselCertificates.filter(val => val.certificate && val.certificate.id === certificate.certificate.id)?.length > 1) {
+          isCertificateDuplicate.value = true;
+          return true;
+      } else {
+          isCertificateDuplicate.value = false;
+      }
+    })
 
-            }
-          })
 }, { deep : true })
 
 watch(() => props.form.opsBunkers, (value) => {

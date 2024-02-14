@@ -388,7 +388,7 @@
           </v-select>
       </label>
       <label class="label-group">
-          <span class="label-item-title">CS No<span class="text-red-500">*</span></span>
+          <span class="label-item-title">CS No</span>
           <v-select :options="filteredMaterialCs" placeholder="--Choose an option--" label="ref_no"  v-model="form.scmCs" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input" @update:modelValue="changeCs">
             <template #search="{attributes, events}">
                 <input
@@ -439,7 +439,7 @@
       </label>
       
       <label class="label-group">
-        <span class="label-item-title">Currency</span>
+        <span class="label-item-title">Currency<span class="text-red-500">*</span></span>
         <v-select :options="currencies" placeholder="--Choose an option--" v-model="form.currency" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input

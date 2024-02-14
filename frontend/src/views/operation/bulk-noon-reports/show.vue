@@ -22,11 +22,11 @@
                         <td><nobr>{{ formatDateTime(bulkNoonReport?.date_time) }}</nobr></td>
                       </tr>
                       <tr>
-                          <th class="w-40">Vessel</th>
+                          <th class="w-40">Vessel Name</th>
                           <td>{{ bulkNoonReport.opsVessel?.name }}</td>
                       </tr>
                       <tr>
-                          <th class="w-40">Voyage</th>
+                          <th class="w-40">Voyage No</th>
                           <td>{{ bulkNoonReport.opsVoyage?.voyage_no }}</td>
                       </tr>
                       <tr>
@@ -70,24 +70,26 @@
           <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
             <legend class="px-2 rounded !text-center font-bold bg-green-600 uppercase text-white">Upcoming Port</legend>
             <table class="w-full mt-1 md:mt-2" v-for="(port, index) in bulkNoonReport.opsBulkNoonReportPorts">
-              <tr>
-                <th class="w-40">Last Port:</th>
-                <td colspan="2">{{ bulkNoonReport.opsBulkNoonReportPorts[index].last_port ? bulkNoonReport.opsBulkNoonReportPorts[index].last_port :'' }}</td>
-                <th class="w-40">Next Port:</th>
-                <td colspan="2">{{ bulkNoonReport.opsBulkNoonReportPorts[index].next_port ? bulkNoonReport.opsBulkNoonReportPorts[index].next_port :'' }}</td>
-              </tr>
-              <tr>
-                <th class="w-40">ETA:</th>
-                <td class="w-40">{{ bulkNoonReport.opsBulkNoonReportPorts[index].eta }}</td>
-                <th class="w-40">Distance Run:</th>
-                <td class="w-40">{{ bulkNoonReport.opsBulkNoonReportPorts[index].distance_run }}</td>
-                <th class="w-40">DTG:</th>
-                <td class="w-40">{{ bulkNoonReport.opsBulkNoonReportPorts[index].dtg }}</td>
-              </tr>
-              <tr>
-                <th class="w-40">Remarks:</th>
-                <td colspan="5">{{ bulkNoonReport.opsBulkNoonReportPorts[index].remarks }}</td>
-              </tr>
+              <tbody>
+                <tr>
+                  <th class="w-40">Last Port Code</th>
+                  <td colspan="2">{{ bulkNoonReport.opsBulkNoonReportPorts[index].last_port ? bulkNoonReport.opsBulkNoonReportPorts[index].last_port :'' }}</td>
+                  <th class="w-40">Next Port Code</th>
+                  <td colspan="2">{{ bulkNoonReport.opsBulkNoonReportPorts[index].next_port ? bulkNoonReport.opsBulkNoonReportPorts[index].next_port :'' }}</td>
+                </tr>
+                <tr>
+                  <th class="w-40">ETA</th>
+                  <td class="w-40">{{ bulkNoonReport.opsBulkNoonReportPorts[index].eta }}</td>
+                  <th class="w-40">Distance Run</th>
+                  <td class="w-40">{{ bulkNoonReport.opsBulkNoonReportPorts[index].distance_run }}</td>
+                  <th class="w-40">DTG</th>
+                  <td class="w-40">{{ bulkNoonReport.opsBulkNoonReportPorts[index].dtg }}</td>
+                </tr>
+                <tr>
+                  <th class="w-40">Remarks</th>
+                  <td colspan="5">{{ bulkNoonReport.opsBulkNoonReportPorts[index].remarks }}</td>
+                </tr>
+              </tbody>
             </table>
           </fieldset>
         </div>
@@ -98,55 +100,55 @@
             <legend class="px-2 rounded !text-center font-bold bg-green-600 uppercase text-white">Distance and Vessel</legend>
             <table class="w-full mt-1 md:mt-2" v-if="bulkNoonReport?.opsBulkNoonReportDistance">
               <tr>
-                <th class="w-36">CP/Ordered Speed:</th>
+                <th class="w-36">CP/Ordered Speed</th>
                 <td>{{ bulkNoonReport?.opsBulkNoonReportDistance?.cp_ordered_speed }}</td>
-                <th class="w-36">Average RPM:</th>
+                <th class="w-36">Average RPM</th>
                 <td>{{ bulkNoonReport?.opsBulkNoonReportDistance?.average_rpm }}</td>
-                <th class="w-36">Reported Speed:</th>
+                <th class="w-36">Reported Speed</th>
                 <td>{{ bulkNoonReport?.opsBulkNoonReportDistance?.reported_speed }}</td>
-                <th class="w-36">Fwd Draft:</th>
+                <th class="w-36">Fwd Draft</th>
                 <td>{{ bulkNoonReport?.opsBulkNoonReportDistance?.fwd_draft }}</td>
               </tr>
               <tr>
-                <th class="w-36">Observed Distance:</th>
+                <th class="w-36">Observed Distance</th>
                 <td>{{ bulkNoonReport?.opsBulkNoonReportDistance?.observed_distance }}</td>
-                <th class="w-36">Mild Draft:</th>
+                <th class="w-36">Mild Draft</th>
                 <td>{{ bulkNoonReport?.opsBulkNoonReportDistance?.mild_draft }}</td>
-                <th class="w-36">Engine Distance:</th>
+                <th class="w-36">Engine Distance</th>
                 <td>{{ bulkNoonReport?.opsBulkNoonReportDistance?.engine_distance }}</td>
-                <th class="w-36">Aft Draft:</th>
+                <th class="w-36">Aft Draft</th>
                 <td>{{ bulkNoonReport?.opsBulkNoonReportDistance?.aft_draft }}</td>
               </tr>
               <tr>
               </tr>
               <tr>
-                <th class="w-36">Main Engine Revs:</th>
+                <th class="w-36">Main Engine Revs</th>
                 <td>{{ bulkNoonReport?.opsBulkNoonReportDistance?.main_engine_revs }}</td>
-                <th class="w-36">Heading:</th>
+                <th class="w-36">Heading</th>
                 <td>{{ bulkNoonReport?.opsBulkNoonReportDistance?.heading }}</td>
-                <th class="w-36">Slip %:</th>
+                <th class="w-36">Slip %</th>
                 <td>{{ bulkNoonReport?.opsBulkNoonReportDistance?.slip_percent }}</td>
-                <th class="w-36">Steaming Hours:</th>
+                <th class="w-36">Steaming Hours</th>
                 <td>{{ bulkNoonReport?.opsBulkNoonReportDistance?.steaming_hours }}</td>
               </tr>
               <tr>
-                <th class="w-36">Salinity:</th>
+                <th class="w-36">Salinity</th>
                 <td>{{ bulkNoonReport?.opsBulkNoonReportDistance?.salinity}}</td>
-                <th class="w-36">S. DWT:</th>
+                <th class="w-36">S. DWT</th>
                 <td>{{ bulkNoonReport?.opsBulkNoonReportDistance?.s_dwt }}</td>
-                <th class="w-36">Ballast:</th>
+                <th class="w-36">Ballast</th>
                 <td>{{ bulkNoonReport?.opsBulkNoonReportDistance?.ballast }}</td>
-                <th class="w-36">S. Displacement:</th>
+                <th class="w-36">S. Displacement</th>
                 <td>{{ bulkNoonReport?.opsBulkNoonReportDistance?.s_displacement }}</td>
               </tr> 
               <tr>
-                <th class="w-36">FW Last Day Noon ROB:</th>
+                <th class="w-36">FW Last Day Noon ROB</th>
                 <td>{{ bulkNoonReport?.fw_last_day_noon_rob }}</td>
-                <th class="w-36">FW Production:</th>
+                <th class="w-36">FW Production</th>
                 <td>{{ bulkNoonReport?.fw_production }}</td>
-                <th class="w-36">FW Consumption:</th>
+                <th class="w-36">FW Consumption</th>
                 <td>{{ bulkNoonReport?.fw_consumption }}</td>
-                <th class="w-36">FW Today Noon ROB:</th>
+                <th class="w-36">FW Today Noon ROB</th>
                 <td>{{ bulkNoonReport?.fw_today_noon_rob }}</td>
               </tr>
             </table>

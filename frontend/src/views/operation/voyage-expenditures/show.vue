@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Update Voyage Expenditure</h2>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Voyage Expenditure Details</h2>
     <default-button :title="'Expense Head List'" :to="{ name: 'ops.voyage-expenditures.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
@@ -18,15 +18,15 @@
                         <td><span :class="voyageExpenditure?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ voyageExpenditure?.business_unit }}</span></td>
                     </tr>
                     <tr>
-                        <th class="w-40">Port</th>
+                        <th class="w-40">Port Code</th>
                         <td>{{ voyageExpenditure?.port?.name }}</td>
                     </tr>
                     <tr>
-                        <th class="w-40">Vessel </th>
+                        <th class="w-40">Vessel Name </th>
                         <td>{{ voyageExpenditure?.opsVessel?.name }}</td>
                     </tr>
                     <tr>
-                        <th class="w-40">Voyage </th>
+                        <th class="w-40">Voyage No</th>
                         <td>{{ voyageExpenditure?.opsVoyage?.voyage_sequence }}</td>
                     </tr>
                     <tr>

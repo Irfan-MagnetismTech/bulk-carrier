@@ -25,6 +25,8 @@ use Modules\SupplyChain\Http\Requests\CsLandedCostRequest;
 use Modules\SupplyChain\Http\Requests\ScmQuotationRequest;
 use Modules\SupplyChain\Http\Requests\SupplierSelectionRequest;
 
+use function PHPSTORM_META\map;
+
 class ScmCsController extends Controller
 {
     function __construct()
@@ -272,6 +274,9 @@ class ScmCsController extends Controller
                 'unloading_cost_bear_by',
                 'vat',
                 'ait',
+                'brand',
+                'origin',
+                'warranty_period',
                 'credit_term',
                 'quotation_shipment_date',
                 'estimated_shipment',
@@ -407,6 +412,9 @@ class ScmCsController extends Controller
                 'unloading_cost_bear_by',
                 'vat',
                 'ait',
+                'brand',
+                'origin',
+                'warranty_period',
                 'credit_term',
                 'quotation_shipment_date',
                 'estimated_shipment',

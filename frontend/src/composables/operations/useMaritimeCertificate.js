@@ -22,6 +22,7 @@ export default function useMaritimeCertificate() {
 	const errors = ref(null);
 	const isLoading = ref(false);
 	const isTableLoading = ref(false);
+	const isCertificateLoading = ref(false);
 
 	async function getMaritimeCertificates(filterOptions) {
 		//NProgress.start();
@@ -147,7 +148,7 @@ export default function useMaritimeCertificate() {
 
 	async function searchMaritimeCertificates(searchParam, loading) {
 		//NProgress.start();
-
+		isCertificateLoading.value = true;
 		try {
 			const { data, status } = await Api.get(`/ops/search-maritime-certifications?name=${searchParam}`);
 			maritimeCertificates.value = data.value;
@@ -158,6 +159,7 @@ export default function useMaritimeCertificate() {
 		} finally {
 			// loading(false)
 			//NProgress.done();
+			isCertificateLoading.value = false;
 		}
 	}
 
@@ -189,6 +191,7 @@ export default function useMaritimeCertificate() {
 		getMaritimeCertificateList,
 		isLoading,
 		isTableLoading,
+		isCertificateLoading,
 		errors,
 	};
 }

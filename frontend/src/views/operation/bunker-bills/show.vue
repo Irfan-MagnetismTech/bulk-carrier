@@ -22,7 +22,7 @@
                         <td>{{ formatDate(bunkerBill?.date) }}</td>
                     </tr>
                     <tr>
-                        <th class="w-40">Vendor</th>
+                        <th class="w-40">Vendor Name</th>
                         <td>{{ bunkerBill.scmVendor?.name }}</td>
                     </tr>
                     <tr>
