@@ -13,6 +13,17 @@ use Modules\Maintenance\Http\Requests\MntCriticalVesselItemRequest;
 
 class MntCriticalVesselItemController extends Controller
 {
+    
+    use HasRoles; 
+
+    public function __construct()
+    {
+        $this->middleware('permission:mnt-critical-vessel-item-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:mnt-critical-vessel-item-create', ['only' => ['store']]);
+        $this->middleware('permission:mnt-critical-vessel-item-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:mnt-critical-vessel-item-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:mnt-critical-vessel-functions-report', ['only' => ['getCriticalVesselFunctions']]);
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable

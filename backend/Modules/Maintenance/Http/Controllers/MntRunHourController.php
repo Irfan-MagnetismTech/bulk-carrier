@@ -14,6 +14,16 @@ use Modules\Maintenance\Http\Requests\MntRunHourRequest;
 
 class MntRunHourController extends Controller
 {
+    
+    use HasRoles; 
+
+    public function __construct()
+    {
+        $this->middleware('permission:mnt-running-hour-entry-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:mnt-running-hour-entry-create', ['only' => ['store']]);
+        $this->middleware('permission:mnt-running-hour-entry-edit', ['only' => ['show', 'update']]);
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable

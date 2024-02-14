@@ -12,6 +12,16 @@ use Modules\Maintenance\Entities\MntJob;
 class MntReportController extends Controller
 {
     
+    use HasRoles; 
+
+    public function __construct()
+    {
+        $this->middleware('permission:mnt-all-jobs-report', ['only' => ['reportAllJobs']]);
+        $this->middleware('permission:mnt-upcoming-jobs-report', ['only' => ['reportUpcomingJobs']]);
+        $this->middleware('permission:mnt-overdue-jobs-report', ['only' => ['reportOverdueJobs']]);
+    }
+
+    
     /**
      * Display a list of items with all jobs
      * @return Renderable
