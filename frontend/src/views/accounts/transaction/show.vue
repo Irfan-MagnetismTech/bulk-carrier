@@ -6,6 +6,8 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
+import { formatDate } from "../../../utils/helper.js";
+
 
 const icons = useHeroIcon();
 
@@ -24,7 +26,7 @@ onMounted(() => {
 
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">  Voucher Details  # {{transactionId}} </h2>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">  Voucher Details</h2>
     <default-button :title="'Voucher Record List'" :to="{ name: 'acc.transactions.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
@@ -51,7 +53,7 @@ onMounted(() => {
           </tr>
           <tr>
             <th class="w-40"> Transaction Date </th>
-            <td>{{ transaction?.transaction_date }}</td>
+            <td>{{ formatDate(transaction?.transaction_date) }}</td>
           </tr>
           <tr>
             <th class="w-40"> Instrument Type </th>
@@ -83,9 +85,10 @@ onMounted(() => {
         <table class="w-full mt-2">
           <thead>
           <tr>
-            <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="5"> Ledger Entry List </td>
+            <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="6"> Ledger Entries </td>
           </tr>
           <tr>
+            <th class="w-40 !text-center"> # </th>
             <th class="w-40 !text-center"> Account Name </th>
             <th class="w-40 !text-center"> Ref Bill </th>
             <th class="w-40 !text-center"> Debit Amount </th>
@@ -95,10 +98,11 @@ onMounted(() => {
           </thead>
           <tbody>
           <tr v-for="(transactionEntry, index) in transaction?.ledgerEntries" :key="index">
+            <td class="!text-center"> {{ index + 1 }} </td>
             <td class="text-left"> {{ transactionEntry?.account?.account_name }} </td>
             <td class="text-left"> {{ transactionEntry?.ref_bill }} </td>
-            <td class="text-left"> {{ transactionEntry?.dr_amount }} </td>
-            <td class="text-left"> {{ transactionEntry?.cr_amount }} </td>
+            <td class="!text-right"> {{ transactionEntry?.dr_amount }} </td>
+            <td class="!text-right"> {{ transactionEntry?.cr_amount }} </td>
             <td class="text-left"> {{ transactionEntry?.remarks }} </td>
           </tr>
           </tbody>

@@ -72,7 +72,7 @@ onMounted(() => {
       <fieldset class="w-full grid grid-cols-4 gap-1 px-2 pb-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Cost Center Breakup</legend>
         <div>
-          <label for="" class="text-xs" style="margin-left: .01rem">Cost Center <span class="text-red-500">*</span></label>
+          <label for="" class="text-xs" style="margin-left: .01rem">Cost Center Name <span class="text-red-500">*</span></label>
           <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="searchParams.acc_cost_center_id" label="name" :reduce="allCostCenterLists=>allCostCenterLists.id" class="block w-full rounded form-input">
             <template #search="{attributes, events}">
               <input class="vs__search w-full" style="width: 50%" :required="!searchParams.acc_cost_center_id" v-bind="attributes" v-on="events"/>
@@ -100,9 +100,9 @@ onMounted(() => {
       <table class="w-full whitespace-no-wrap mb-8">
         <thead>
         <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-          <th rowspan="2"> Particulars </th>
+          <th rowspan="2"> Particular </th>
           <th rowspan="2"> Opening Balance </th>
-          <th colspan="2"> Transactions </th>
+          <th colspan="2"> Transaction </th>
           <th rowspan="2"> Closing Balance </th>
         </tr>
         <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
