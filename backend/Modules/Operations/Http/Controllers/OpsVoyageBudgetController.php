@@ -157,7 +157,7 @@ class OpsVoyageBudgetController extends Controller
         catch (QueryException $e)
         {
             DB::rollBack();
-            return response()->json($voyage_budget->preventDeletionIfRelated(), 422);
+            return response()->error($e->getMessage(), 500);
         }
     }
 

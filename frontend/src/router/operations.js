@@ -385,32 +385,32 @@ export default [
 	},
 	/* Lighter Noon Report */
 	{
-		path: `/${BASE}/lighter-noon-reports`,
+		path: `/${BASE}/lighterage-noon-reports`,
 		name: `${BASE}.lighter-noon-reports.index`,
 		component: () => import(`../views/${ViEWBASE}/lighter-noon-reports/index.vue`),
 		meta: { requiresAuth: true, role: ROLE, permission: '' },
 		props: (route) => ({ page: parseInt(route.query.page) || 1 }),
 	},
 	{
-		path: `/${BASE}/lighter-noon-reports/create`,
+		path: `/${BASE}/lighterage-noon-reports/create`,
 		name: `${BASE}.lighter-noon-reports.create`,
 		component: () => import (`../views/${ViEWBASE}/lighter-noon-reports/create.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	{
-		path: `/${BASE}/lighter-noon-reports/:lighterNoonReportId/edit`,
+		path: `/${BASE}/lighterage-noon-reports/:lighterNoonReportId/edit`,
 		name: `${BASE}.lighter-noon-reports.edit`,
 		component: () => import (`../views/${ViEWBASE}/lighter-noon-reports/edit.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	{
-		path: `/${BASE}/lighter-noon-reports/:lighterNoonReportId/show`,
+		path: `/${BASE}/lighterage-noon-reports/:lighterNoonReportId/show`,
 		name: `${BASE}.lighter-noon-reports.show`,
 		component: () => import (`../views/${ViEWBASE}/lighter-noon-reports/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	{
-		path: `/${BASE}/lighter-noon-reports/:lighterNoonReportId/copy`,
+		path: `/${BASE}/lighterage-noon-reports/:lighterNoonReportId/copy`,
 		name: `${BASE}.lighter-noon-reports.copy`,
 		component: () => import (`../views/${ViEWBASE}/lighter-noon-reports/copy.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
@@ -703,7 +703,7 @@ export default [
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	{
-		path: `/${BASE}/reports/lighter-voyage-report`,
+		path: `/${BASE}/reports/lighterage-voyage-report`,
 		name: `${BASE}.reports.lighter-voyage-report`,
 		component: () => import (`../views/${ViEWBASE}/reports/lighter-voyage-report.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },

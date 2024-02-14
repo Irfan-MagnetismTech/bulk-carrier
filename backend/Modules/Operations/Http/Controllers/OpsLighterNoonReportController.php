@@ -19,10 +19,10 @@ class OpsLighterNoonReportController extends Controller
   
     function __construct(private FileUploadService $fileUpload)
     {
-        $this->middleware('permission:ops-lighter-noon-report-create|ops-lighter-noon-report-edit|ops-lighter-noon-report-view|ops-lighter-noon-report-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:ops-lighter-noon-report-create', ['only' => ['store']]);
-        $this->middleware('permission:ops-lighter-noon-report-edit', ['only' => ['update']]);
-        $this->middleware('permission:ops-lighter-noon-report-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:ops-lighterage-noon-report-create|ops-lighterage-noon-report-edit|ops-lighterage-noon-report-view|ops-lighterage-noon-report-delete', ['only' => ['index','show']]);
+        $this->middleware('permission:ops-lighterage-noon-report-create', ['only' => ['store']]);
+        $this->middleware('permission:ops-lighterage-noon-report-edit', ['only' => ['update']]);
+        $this->middleware('permission:ops-lighterage-noon-report-delete', ['only' => ['destroy']]);
     }
    /**
     * get all users with their roles.
@@ -155,7 +155,7 @@ class OpsLighterNoonReportController extends Controller
     {
         try
         {
-            DB::beginTransaction();            
+            DB::beginTransaction();
             $lighter_noon_report->opsBunkers()->delete();
             $lighter_noon_report->delete();
             DB::commit();
@@ -167,7 +167,7 @@ class OpsLighterNoonReportController extends Controller
         catch (QueryException $e)
         {
             DB::rollBack();
-            return response()->json($lighter_noon_report->preventDeletionIfRelated(), 422);
+            return response()->error($e->getMessage(), 500);
         }
     }
      

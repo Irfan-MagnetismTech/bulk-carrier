@@ -245,7 +245,7 @@ class OpsVesselController extends Controller
         catch (QueryException $e)
         {
             DB::rollBack();
-            return response()->json($vessel->preventDeletionIfRelated(), 422);
+            return response()->error($e->getMessage(), 500);
         }
     }
 

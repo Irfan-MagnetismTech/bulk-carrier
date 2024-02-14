@@ -270,7 +270,7 @@ class OpsBunkerBillController extends Controller
         catch (QueryException $e)
         {
             DB::rollBack();
-            return response()->json($bunker_bill->preventDeletionIfRelated(), 422);
+            return response()->error($e->getMessage(), 500);
         }
     }
 

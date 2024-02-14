@@ -122,7 +122,7 @@ class OpsCashRequisitionController extends Controller
         catch (QueryException $e)
         {
             DB::rollBack();
-            return response()->json($cash_requisition->preventDeletionIfRelated(), 422); 
+            return response()->error($e->getMessage(), 500); 
         }
     }
 

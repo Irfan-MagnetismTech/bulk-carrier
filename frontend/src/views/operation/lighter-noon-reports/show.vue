@@ -1,6 +1,6 @@
 <template>
    <div class="flex items-center justify-between w-full my-3" v-once>
-      <h2 class="text-2xl font-semibold text-gray-700">Lighter Noon Report Details</h2>
+      <h2 class="text-2xl font-semibold text-gray-700">Lighterage Noon Report Details</h2>
       <default-button :title="'Lighter Noon Report Index'" :to="{ name: 'ops.lighter-noon-reports.index' }" :icon="icons.DataBase"></default-button>
     </div>
 

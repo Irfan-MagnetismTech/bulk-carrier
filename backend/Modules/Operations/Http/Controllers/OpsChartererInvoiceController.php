@@ -223,7 +223,7 @@ class OpsChartererInvoiceController extends Controller
         catch (QueryException $e)
         {
             DB::rollBack();
-            return response()->json($charterer_invoice->preventDeletionIfRelated(), 422);  
+            return response()->error($e->getMessage(), 500);  
         }
     }
      

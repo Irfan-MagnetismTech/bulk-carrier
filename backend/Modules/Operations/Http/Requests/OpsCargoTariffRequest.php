@@ -16,10 +16,10 @@ class OpsCargoTariffRequest extends FormRequest
      */
     public function rules(): array
     {
-        // dd(count($this->opsCargoTariffLines));
+        // dd($this->all());
         return [
             'tariff_name'       => ['required', 'string', 'max:255',Rule::unique('ops_cargo_tariffs')->ignore($this->route('cargo_tariff'), 'id')],
-            'ops_vessel_id'     => ['required','exists:scm_vessels,id'],
+            'ops_vessel_id'     => ['required','exists:ops_vessels,id'],
             'loading_point'     => ['required', 'string', 'max:255'],
             'unloading_point'   => ['required', 'string', 'max:255','different:loading_point'],
             'ops_cargo_type_id' => ['required','exists:ops_cargo_types,id'],
