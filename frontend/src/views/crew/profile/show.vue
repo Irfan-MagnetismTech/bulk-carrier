@@ -27,7 +27,7 @@ onMounted(() => {
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Crew Profile Details</h2>
     <default-button :title="'Crew Profile List'" :to="{ name: 'crw.profiles.index' }" :icon="icons.DataBase"></default-button>
-    <button @click="showPdfExport(businessUnit,'l', 'Lorem Ipsum',['exampleTable', 'exampleTable2', 'profileDetailTable', 'profileDetailTable2', 'profileDetailTable3', 'profileDetailTable4', 'profileDetailTable5'], false, true);">Generate</button>
+    <button @click="showPdfExport(businessUnit,'l', 'Lorem Ipsum',['exampleTable', 'exampleTable2', 'profileDetailTable', 'profileDetailTable2', 'profileDetailTable3', 'profileDetailTable4', 'profileDetailTable5'], true, true);">Generate</button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800" >
       <div class="flex md:gap-4">

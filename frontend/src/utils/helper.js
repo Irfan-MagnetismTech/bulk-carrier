@@ -178,6 +178,7 @@ export const showPdfExport = ( businessUnit, pageOridentation, heading, tableIds
         for (var j = 0; j < tableIds.length; j++) {
 
         var finalY = doc.lastAutoTable.finalY;
+        console.log("finalY: " + finalY);
         console.log(doc.internal, doc.settings);
         doc.autoTable({
             html: `#${tableIds[j]}`,
@@ -187,10 +188,11 @@ export const showPdfExport = ( businessUnit, pageOridentation, heading, tableIds
                 top: useAllPageLogoAndHeading ? 130 : 40,
                 bottom: useSignature ? 100 : 40
             },
-            startY: !useAllPageLogoAndHeading ? finalY ? finalY+20 : 130 : (j==0? 120 : 0)+(finalY||10) +20,
+            startY: !useAllPageLogoAndHeading ? (finalY ? finalY+20 : 130) : (finalY||130) +20,
             didDrawPage: function(data) {
                 // All Page Logo & Heading start
-                if(useAllPageLogoAndHeading){
+                if(useAllPageLogoAndHeading && currentPage < doc.internal.getNumberOfPages()){
+                    // console.log("object"+ currentPage);
                     if (base64Img) {
                         doc.addImage(base64Img, 'JPEG', pageWidth/2 - 40, 10, 80, 80);
                     }
