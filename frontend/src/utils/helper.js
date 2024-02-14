@@ -48,6 +48,18 @@ function imgToBase64(url, callback) {
     xhr.send();
   }
 
+  /**
+ * Export HTML table content to a PDF document with customizable options.
+ * @param {string} businessUnit - Used for incorporating the logo relevant to the business unit.
+ * @param {string} pageOridentation - Page orientation ('l' / 'landscape' / 'p' / 'portrait').
+ * @param {string} heading - Caption or title of the PDF document.
+ * @param {string} tableId - ID of the HTML table from which data is extracted.
+ * @param {Array<number>} leftAlign - Array containing column indices that need left alignment.
+ * @param {Array<number>} rightAlign - Array containing column indices that need right alignment.
+ * @param {boolean} [useAllPageLogoAndHeading=false] - Whether to display the logo and heading on all pages. Possible values: true or false.
+ * @param {boolean} [useSignature=false] - Whether to include a signature section. Possible values: true or false.
+ * @param {boolean} [useAllPageTableHeading=true] - Whether to display the table heading on all pages. Possible values: true or false.
+ */
 export const indexPdfExport = ( businessUnit, pageOridentation, heading, tableId, leftAlign, rightAlign, useAllPageLogoAndHeading = false, useSignature = false, useAllPageTableHeading = true) => {
     let doc = new jsPDF(pageOridentation, 'pt', 'a4');
     let pageSize = doc.internal.pageSize;
@@ -158,6 +170,16 @@ export const indexPdfExport = ( businessUnit, pageOridentation, heading, tableId
 
 }
 
+
+/**
+ * Export content from multiple HTML tables to a PDF document with customizable options.
+ * @param {string} businessUnit - Used for incorporating the logo relevant to the business unit.
+ * @param {string} pageOridentation - Page orientation ('l' or 'landscape' or 'p' or 'portrait').
+ * @param {string} heading - Caption or title of the PDF document.
+ * @param {Array<string>} tableIds - IDs of the HTML tables from which data is extracted.
+ * @param {boolean} [useAllPageLogoAndHeading=false] - Whether to display the logo and heading on all pages. Possible values: true or false.
+ * @param {boolean} [useSignature=false] - Whether to include a signature section. Possible values: true or false.
+ */
 export const showPdfExport = ( businessUnit, pageOridentation, heading, tableIds, useAllPageLogoAndHeading = false, useSignature = false) => {
     let doc = new jsPDF(pageOridentation, 'pt', 'a4');
     let pageSize = doc.internal.pageSize;
