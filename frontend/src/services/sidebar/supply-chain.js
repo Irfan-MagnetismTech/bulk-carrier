@@ -154,16 +154,6 @@ export default [
                             subSubMenu: []
                         },
                         {
-                            route: `${BASE}.vendor-bills.index`,
-                            label: 'Vendor Bills',
-                            preIcon: icons.User,
-                            postIcon: icons.DownArrow,
-                            is_active: false,
-                            is_open: false,
-                            permissionKey: '',
-                            subSubMenu: []
-                        },
-                        {
                             route: `${BASE}.material-costings.index`,
                             label: 'Material Costings',
                             preIcon: icons.User,
@@ -173,6 +163,17 @@ export default [
                             permissionKey: '',
                             subSubMenu: []
                         },
+                        {
+                            route: `${BASE}.vendor-bills.index`,
+                            label: 'Vendor Bills',
+                            preIcon: icons.User,
+                            postIcon: icons.DownArrow,
+                            is_active: false,
+                            is_open: false,
+                            permissionKey: '',
+                            subSubMenu: []
+                        },
+                        
                     ]
                 },
                 {

@@ -164,7 +164,7 @@
       </label>
       <label class="label-group">
         <span class="label-item-title">Brand</span>
-        <input type="number" v-model="form.brand" class="form-input"/>
+        <input type="text" v-model="form.brand" class="form-input"/>
       
       </label>
      
@@ -174,7 +174,7 @@
   <div class="input-group">
     <label class="label-group">
         <span class="label-item-title">Origin</span>
-        <input type="number" v-model="form.origin" class="form-input"/>
+        <input type="text" v-model="form.origin" class="form-input"/>
       
       </label>
       <label class="label-group">

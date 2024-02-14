@@ -282,9 +282,7 @@ function confirmDelete(id) {
                       <span class="text-red-500">No Vendor Selected</span>
                     </template>
                   </td>
-                  <td>
-                        {{ material.scmMaterial.name  }}
-                  </td>
+                  <td>{{ material.scmMaterial.name  }}</td>
                   <td v-if="itemIndex == 0" :rowspan="materialCsdata?.scmCsMaterials?.length">{{ materialCsdata?.scmWarehouse?.name?? '' }}</td>
                   <td v-if="itemIndex == 0" :rowspan="materialCsdata?.scmCsMaterials?.length">
                     <span :class="materialCsdata?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ materialCsdata?.business_unit }}</span>
