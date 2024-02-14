@@ -28,7 +28,7 @@ const props = defineProps({
 
 const { appraisalForms, getAppraisalForms, deleteAppraisalForm, isLoading, isTableLoading, errors } = useAppraisalForm();
 const { setTitle } = Title();
-setTitle('Appraisal Form List');
+setTitle('Appraisal Form');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -193,9 +193,9 @@ onMounted(() => {
             <!-- {{ appraisalForms }} -->
           <tr v-for="(appraisalForm,index) in appraisalForms?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-            <td>{{ appraisalForm?.form_no }}</td>
-            <td>{{ appraisalForm?.form_name }}</td>
-            <td>{{ appraisalForm?.version }}</td>
+            <td class="text-left">{{ appraisalForm?.form_no }}</td>
+            <td class="text-left">{{ appraisalForm?.form_name }}</td>
+            <td class="text-left">{{ appraisalForm?.version }}</td>
             <td>{{ appraisalForm?.total_marks }}</td>
             <td><span :class="appraisalForm?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ appraisalForm?.business_unit }}</span></td>
            

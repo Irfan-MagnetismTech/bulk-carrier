@@ -56,7 +56,7 @@ class ScmWcsController extends Controller
     public function store(ScmWcsRequest $request)
     {
         $requestData = $request->except('ref_no','scmWcsServices');
-        $requestData['ref_no'] = UniqueId::generate(ScmWcs::class, 'WCS');
+        // $requestData['ref_no'] = UniqueId::generate(ScmWcs::class, 'WCS');
         try {
             DB::beginTransaction();
 
@@ -568,6 +568,7 @@ class ScmWcsController extends Controller
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
+                ->has('selectedVendors')
                 ->orderByDesc('ref_no')
                 ->get();
                 
@@ -581,6 +582,7 @@ class ScmWcsController extends Controller
                             ->where('purchase_center', $request->purchase_center);
                     });
                 })
+                ->has('selectedVendors')
                 ->orderByDesc('ref_no')
                 ->get();
         }

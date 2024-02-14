@@ -65,8 +65,8 @@ class ScmMiController extends Controller
 
             $scmMi = ScmMi::create($requestData);
 
-            $ref_no = UniqueId::generate($scmMi->id, 'MI');
-            $scmMi->update(['ref_no' => $ref_no]);
+            // $ref_no = UniqueId::generate($scmMi->id, 'MI');
+            // $scmMi->update(['ref_no' => $ref_no]);
 
             $linesData = CompositeKey::generateArray($request->scmMiLines, $scmMi->id, 'scm_material_id', 'mi');
             $scmMi->scmMiLines()->createMany($linesData);

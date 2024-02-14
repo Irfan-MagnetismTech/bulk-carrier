@@ -81,12 +81,12 @@ onMounted(() => {
             <td><span :class="restHourRecord?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ restHourRecord?.business_unit }}</span></td>
           </tr>
           <tr>
-            <th class="w-40">Vessel</th>
-            <td>{{ restHourRecord?.opsVessel?.name }}</td>
+            <th class="w-40">Vessel Name</th>
+            <td class="!px-1">{{ restHourRecord?.opsVessel?.name }}</td>
           </tr>
           <tr>
             <th class="w-40">Record Date</th>
-            <td>{{ formatDate(restHourRecord?.record_date) }}</td>
+            <td class="!px-1">{{ formatDate(restHourRecord?.record_date) }}</td>
           </tr>
           </tbody>
         </table>
@@ -109,10 +109,7 @@ onMounted(() => {
         <table class="w-full mt-2 table2">
           <thead>
           <tr>
-            <th colspan="55">Crew List</th>
-          </tr>
-          <tr>
-            <th rowspan="2">SL.</th>
+            <th rowspan="2">#</th>
             <th rowspan="2">Seafarer</th>
             <th rowspan="2">Service Start</th>
             <th rowspan="2">Comment</th>
@@ -130,7 +127,7 @@ onMounted(() => {
             <td>{{ entryLine?.crwCrew?.full_name }}</td>
             <td class="text-center">{{ formatDate(entryLine?.crwCrewAssignment?.joining_date) }}</td>
             <td class="!p-1">
-              <input class="form-input !w-auto h-6" type="text" v-model="entryLine.comments">
+              <input class="!w-auto h-6 text-sm" type="text" v-model="entryLine.comments">
             </td>
             <td class="cursor-pointer" :class="{ 'active_hour': record?.is_selected,
                      'inactive_hour': !record?.is_selected }" v-for="(record,hourRecordIndex) in entryLine?.hourly_records"

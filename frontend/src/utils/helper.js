@@ -6,5 +6,11 @@ export const formatDateTime = dateTime => dateTime ? moment(dateTime).format('DD
 
 export const formatMonthYear = dateString => {
     const dateObject = moment(dateString, 'YYYY-MM');
-    return dateObject.isValid() ? dateObject.format('MMMM YYYY') : '';
+    return dateObject.isValid() ? dateObject.format('MMMM, YYYY') : '';
+};
+
+export const formatMonthYearWithTime = dateString => {
+    const dateObject = moment(dateString);
+
+    return dateObject.isValid() ? dateObject.format('DD/MM/YYYY, HH:mm:ss') : '';
 };

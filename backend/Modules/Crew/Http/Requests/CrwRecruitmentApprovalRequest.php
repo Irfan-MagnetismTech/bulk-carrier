@@ -27,6 +27,7 @@ class CrwRecruitmentApprovalRequest extends FormRequest
             'crwRecruitmentApprovalLines.*.candidate_name'    => ['required', 'string', 'max:255'],
             'crwRecruitmentApprovalLines.*.candidate_contact' => ['required', 'string', 'max:255'],
             'crwRecruitmentApprovalLines.*.candidate_email'   => ['max:255'],
+            'crwRecruitmentApprovalLines.*.crw_rank_id'       => ['required', 'numeric', 'exists:crw_ranks,id'],            
         ];
     }
 
@@ -43,6 +44,7 @@ class CrwRecruitmentApprovalRequest extends FormRequest
             'crwRecruitmentApprovalLines.*.candidate_name.max'    => 'The candidate name[:index] field must not exceed 255 characters.',
             'crwRecruitmentApprovalLines.*.candidate_contact.max' => 'The candidate contact[:index] field must not exceed 255 characters.',
             'crwRecruitmentApprovalLines.*.candidate_email.max'   => 'The candidate email[:index] field must not exceed 255 characters.',
+            'crwRecruitmentApprovalLines.*.crw_rank_id.exists'    => 'The Rank does not exists[:position].',            
         ];
     }
 

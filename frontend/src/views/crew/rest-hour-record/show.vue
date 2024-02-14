@@ -58,20 +58,25 @@ onMounted(() => {
   <div class="px-4 py-3 mb-2 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
       <div class="flex md:gap-4">
         <div class="w-full">
-          <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Rest Hour Record Information</h2>
-          <table class="w-full">
+<!--          <h2 class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Rest Hour Record Information</h2>-->
+          <table class="w-full table1">
+            <thead>
+            <tr>
+              <th colspan="2" class="bg-green-600 text-white text-md font-semibold uppercase mb-2 text-center py-2">Basic Info</th>
+            </tr>
+            </thead>
             <tbody>
               <tr>
                 <th class="w-40">Business Unit</th>
                 <td><span :class="restHourRecord?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ restHourRecord?.business_unit }}</span></td>
               </tr>
               <tr>
-                <th class="w-40">Vessel</th>
-                <td>{{ restHourRecord?.opsVessel?.name }}</td>
+                <th class="w-40">Vessel Name</th>
+                <td class="!px-1">{{ restHourRecord?.opsVessel?.name }}</td>
               </tr>
               <tr>
                 <th class="w-40">Record Date</th>
-                <td>{{ formatDate(restHourRecord?.record_date) }}</td>
+                <td class="!px-1">{{ formatDate(restHourRecord?.record_date) }}</td>
               </tr>
             </tbody>
           </table>
@@ -83,11 +88,11 @@ onMounted(() => {
       <div class="w-full">
         <table class="w-full mt-2 table2">
           <thead>
+<!--          <tr>-->
+<!--            <th colspan="55">Crew List</th>-->
+<!--          </tr>-->
           <tr>
-            <th colspan="55">Crew List</th>
-          </tr>
-          <tr>
-            <th rowspan="2">SL.</th>
+            <th rowspan="2">#</th>
             <th rowspan="2">Seafarer</th>
             <th rowspan="2">Service Start</th>
             <th rowspan="2">Comment</th>
@@ -143,7 +148,7 @@ onMounted(() => {
     white-space: nowrap;
   }
 
-  tbody tr,td{
+  .table2 tr,td{
     padding: 0rem;
   }
 

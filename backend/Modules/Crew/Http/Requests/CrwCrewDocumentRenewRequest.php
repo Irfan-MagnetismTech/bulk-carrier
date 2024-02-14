@@ -24,10 +24,11 @@ class CrwCrewDocumentRenewRequest extends FormRequest
      */
     public function rules(): array {
         return [
-            'issue_date'               => 'nullable|date', // Validation for issue_date field
-            'expire_date'              => 'nullable|date|after:issue_date',
-            'reference_no'             => 'nullable|string|max:255',
-            'attachment'               => 'nullable|mimes:pdf,doc,docx,jpeg,png,gif|max:2048',
+            'crw_crew_document_id' => ['required', 'integer', 'exists:crw_crew_documents,id'],
+            'issue_date'           => 'nullable|date',
+            'expire_date'          => 'nullable|date|after:issue_date',
+            'reference_no'         => 'nullable|string|max:255',
+            'attachment'           => 'nullable|mimes:pdf,doc,docx,jpeg,png,gif|max:2048',
         ];
     }
 
@@ -38,7 +39,8 @@ class CrwCrewDocumentRenewRequest extends FormRequest
      */
     public function messages(): array {
         return [
-            //
+            'crw_crew_document_id.exists'   => 'The Document does not exists.',
+
         ];
     }
 

@@ -68,7 +68,7 @@ class ScmPrController extends Controller
         $attachment = $this->fileUpload->handleFile($request->attachment, 'scm/prs');
         $requestData['attachment'] = $attachment;
         $requestData['created_by'] = auth()->user()->id;
-        $requestData['ref_no'] = UniqueId::generate(ScmPr::class, 'PR');
+        // $requestData['ref_no'] = UniqueId::generate(ScmPr::class, 'PR');
 
         try {
             DB::beginTransaction();
@@ -139,11 +139,12 @@ class ScmPrController extends Controller
                 'rob' => $currentStock,
                 'quantity' => $scmPrLine->quantity,
                 'is_closed' => $scmPrLine->is_closed,
-                'closed_by' => (auth()->user()->id == (int)($scmPrLine?->closedBy?->id)) ? 'You' : $scmPrLine?->closedBy?->name,
+                'closed_person' => (auth()->user()->id == (int)($scmPrLine?->closedBy?->id)) ? 'You' : $scmPrLine?->closedBy?->name,
+                'closed_by' => $scmPrLine?->closed_by,
                 'closed_at' => $scmPrLine->closed_at,
                 'closing_remarks' => $scmPrLine->closing_remarks,
                 'required_date' => $scmPrLine->required_date,
-                'status' => $scmPrLine->status,                
+                'status' => $scmPrLine->status,
             ];
             return $lines;
         });
@@ -163,7 +164,8 @@ class ScmPrController extends Controller
             'approved_date' => $purchaseRequisition->approved_date,
             'remarks' => $purchaseRequisition->remarks,
             'is_closed' => $purchaseRequisition->is_closed,
-            'closed_by' => (auth()->user()->id == (int)($purchaseRequisition?->closedBy?->id)) ? 'You' : $purchaseRequisition?->closedBy?->name,
+            'closed_person' => (auth()->user()->id == (int)($purchaseRequisition?->closedBy?->id)) ? 'You' : $purchaseRequisition?->closedBy?->name,
+            'closed_by' => $purchaseRequisition?->closed_by,
             'closed_at' => $purchaseRequisition->closed_at,
             'closing_remarks' => $purchaseRequisition->closing_remarks,
             'status' => $purchaseRequisition->status,
@@ -190,6 +192,8 @@ class ScmPrController extends Controller
         $requestData = $request->except('ref_no', 'pr_composite_key', 'created_by');
 
         $linesData = CompositeKey::generateArray($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
+
+        // return response()->json($linesData, 422);
 
         try {
             DB::beginTransaction();

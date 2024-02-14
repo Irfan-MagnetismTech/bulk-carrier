@@ -10,7 +10,7 @@ class ScmPoRequest extends FormRequest
     {
         $data =  request('data');
         $dataArray = json_decode($data, true);
-
+        // return response()->json($data, 422);
         // $mergeData = array_merge($dataArray, ['attachment' => request('attachment'), 'excel' => request('excel')]);
 
         $this->replace($dataArray);
@@ -28,7 +28,7 @@ class ScmPoRequest extends FormRequest
             'scm_vendor_id' => 'required|integer|exists:scm_vendors,id',
             'currency' => 'required|max:255',
             // 'exchange_rate' => 'required|numeric',
-            'usd_to_bdt' => 'required_if:currency,!=,BDT|numeric',
+            'usd_to_bdt' => 'nullable',
             'foreign_to_usd' => 'required_if:currency,!=,BDT,USD|numeric',
             'discount' => 'numeric',
             'vat' => 'numeric',

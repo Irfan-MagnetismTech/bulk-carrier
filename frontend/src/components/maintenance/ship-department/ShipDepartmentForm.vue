@@ -4,12 +4,12 @@
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Name <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.name" placeholder="Ship Department Name" class="form-input" required/>
-          <Error v-if="errors?.name" :errors="errors.name" />
+          <!-- <Error v-if="errors?.name" :errors="errors.name" /> -->
         </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Short Code <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.short_code" placeholder="Short Code" class="form-input" required/>
-        <Error v-if="errors?.short_code" :errors="errors.short_code" />
+        <!-- <Error v-if="errors?.short_code" :errors="errors.short_code" /> -->
       </label>
     </div>
     <ErrorComponent :errors="errors"></ErrorComponent>

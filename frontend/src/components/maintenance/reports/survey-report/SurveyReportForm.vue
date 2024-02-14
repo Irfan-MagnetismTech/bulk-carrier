@@ -61,7 +61,7 @@
                 </template>
             </v-select>
             <input type="hidden" v-model="form.ops_vessel_id">
-            <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" />
+            <!-- <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" /> -->
         </label>
     </div>
   </template>

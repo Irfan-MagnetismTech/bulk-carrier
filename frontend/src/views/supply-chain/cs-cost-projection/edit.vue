@@ -32,13 +32,13 @@ onMounted(() => {
     
     <div class="flex items-center justify-between w-full my-3" v-once>
         <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Update Projected Cost</h2>
-        <default-button :title="'PO List'" :to="{ name: 'scm.lc-records.index' }" :icon="icons.DataBase"></default-button>
+        <!-- <default-button :title="'PO List'" :to="{ name: 'scm.lc-records.index' }" :icon="icons.DataBase"></default-button> -->
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800 overflow-hidden">
         <form @submit.prevent="updateCostProjection(materialCsCost,csId)">
         <cs-cost-projection-form v-model:form="materialCsCost" :errors="errors" :page="formType" :formType="formType"></cs-cost-projection-form>
             <!-- Submit button -->
-            <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm text-white bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Create</button>
+            <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm text-white bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Update</button>
         </form>
         
     </div>
