@@ -3,7 +3,6 @@
 namespace App\Observers;
 
 use Illuminate\Database\Eloquent\Model;
-use Modules\SupplyChain\Entities\ScmPo;
 
 class GlobalObserver
 {
@@ -11,16 +10,17 @@ class GlobalObserver
      * Handle the Model "deleting" event.
      *
      * @param Model  $model
-     * @return bool|array
+     * @return bool|array|null
      */
-    public function deleting(Model $model): bool|array
+    public function deleting(Model $model): bool|array|null
     {
         if (method_exists($model, 'preventDeletionIfRelated')) {
-            return $model->preventDeletionIfRelated();
-        }
+            $response = $model->preventDeletionIfRelated();
 
+            if ($response === null) {
+                return true;
+            }
+        }
         return true;
     }
 }
-
-// change in scm

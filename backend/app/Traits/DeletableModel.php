@@ -13,13 +13,25 @@ trait DeletableModel
      *
      * @return array
      */
-    public function preventDeletionIfRelated(): ?array
+    public function preventDeletionIfRelated(): array|null
     {
+        if (env('APP_ENV') === 'local') {
+            if (!isset($this->features) && !isset($this->skipForDeletionCheck)) {
+                throw new HttpResponseException(response()->json([
+                    "message" => "Follow the DeletableModel trait documentation to use this trait properly.",
+                    "errors" => [
+                        "id" => ["Follow the DeletableModel trait documentation to use this trait properly."]
+                    ]
+                ], 422));
+            }
+        }
         $allMethods = $this->getRelationMethods();
 
         $methods = [];
         if (property_exists($this, 'skipForDeletionCheck')) {
             $methods = array_diff($allMethods, $this->skipForDeletionCheck ?? []);
+        } else {
+            $methods = $allMethods;
         }
 
         $totalCount = 0;
@@ -27,7 +39,7 @@ trait DeletableModel
         foreach ($methods as $key => $method) {
             $relation = $this->{$method}();
             if ($relation instanceof Relation && $relation->count() > 0) {
-                $relatedAsString .= $this->features[$method] . ', ';
+                $relatedAsString .= isset($this->features[$method]) ? $this->features[$method] : $method . ', ';
                 $totalCount += $relation->count();
             }
         }
