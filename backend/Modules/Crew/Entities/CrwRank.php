@@ -13,11 +13,14 @@ class CrwRank extends Model
 {
     use HasFactory, GlobalSearchTrait, DeletableModel;
 
-    protected $skipForDeletionCheck = ['scmPoLines', 'scmPoTerms', 'scmPoItems'];
-
+    /**
+     * @var array
+     */
     protected $features = [
-        'scmLcRecords' => 'LC Records',
-        'scmMrrs' => 'Material Receipt Reports',
+        'crwVesselRequiredCrewLines'  => 'Vessel Crew Manning',
+        'crwCrewRequisitionLines'     => 'Crew Requisitions',
+        'crwRecruitmentApprovalLines' => 'Recruitment Approvals',
+        'crwCrewProfiles'             => 'Crew Profiles',
     ];
 
     /**
