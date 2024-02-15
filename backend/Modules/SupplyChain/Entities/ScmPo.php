@@ -58,6 +58,15 @@ class ScmPo extends Model
         'scmMrrs' => 'Material Receipt Reports',
     ];
 
+    protected $refKeyPrefix = 'PO';
+
+    protected $skipForDeletionCheck = ['scmPoLines', 'scmPoTerms', 'scmPoItems'];
+
+    protected $features = [
+        'scmLcRecords' => 'LC Records',
+        'scmMrrs' => 'Material Receipt Reports',
+    ];
+
     public function scmPoLines(): HasMany
     {
         return $this->hasMany(ScmPoLine::class);
