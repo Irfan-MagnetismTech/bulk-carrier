@@ -30,7 +30,7 @@
     }
 </style>
 <body>
-    <table>
+    {{-- <table>
         <thead>
             <tr>
                 <td colspan="3" style="text-align: center; 
@@ -52,8 +52,8 @@
             </tr>
 
         </thead>
-    </table>
-
+    </table> --}}
+    {{-- <h2 style="text-align: center; margin: 15px auto; font-weight: 600; font-size: 1.7rem">Bulk Voyage Report</h2> --}}
     <table class="table_css">
         <tbody>
             <h2 style="margin-bottom: -2px; margin-top: 10px; font-size:20px; font:bold;">Basic Information</h2>

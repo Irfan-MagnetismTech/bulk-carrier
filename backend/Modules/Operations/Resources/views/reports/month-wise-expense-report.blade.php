@@ -43,7 +43,7 @@
         </tbody>
     </table>
 
-    <table style="margin-top: 80px;">
+    <table style="margin-top: 20px;">
         <tbody>
             <tr>
                 <th rowspan="2">Summary</th>
