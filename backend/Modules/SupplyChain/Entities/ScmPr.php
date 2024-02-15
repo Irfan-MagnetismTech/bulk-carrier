@@ -28,17 +28,6 @@ class ScmPr extends Model
 
     protected $refKeyPrefix = 'PR';
 
-    protected $skipForDeletionCheck = ['scmPrLines'];
-
-    protected $features = [
-        'scmPos' => 'Purchase Orders',
-        'scmMrrs' => 'Material Receipt Reports',
-        'scmCss' => 'Material CS',
-        'scmCsMaterial' => 'Materials of CS',
-        'scmCsMaterialVendor' => 'Material Vendors of CS',
-        'scmPoLines' => 'Purchase Order Lines',
-    ];
-
     public function scmPrLines(): HasMany
     {
         return $this->hasMany(ScmPrLine::class);
@@ -63,6 +52,7 @@ class ScmPr extends Model
     {
         return $this->hasMany(ScmCs::class);
     }
+
 
     public function scmCsMaterial(): HasMany
     {
