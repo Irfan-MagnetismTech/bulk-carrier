@@ -194,7 +194,7 @@
                   <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(scmCostingLine, index) in form.scmCostingLines" :key="index">
                     <td>
                       <label class="block w-full mt-2 text-sm">
-                        <input type="number" v-model="form.scmCostingLines[index].particulars" class="form-input">
+                        <input type="text" v-model="form.scmCostingLines[index].particulars" class="form-input">
                       </label>
                     </td>
                     <td>

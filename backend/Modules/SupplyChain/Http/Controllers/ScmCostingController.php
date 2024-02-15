@@ -75,7 +75,7 @@ class ScmCostingController extends Controller
             }
             $data->scmCostingAllocations()->createMany($request->scmCostingAllocations);
             DB::commit();
-
+            return response()->success('Data created succesfully', $data, 201);
         }catch (\Exception $e) {
             DB::rollBack();
             return response()->error($e->getMessage(), 500);
@@ -101,7 +101,7 @@ class ScmCostingController extends Controller
             $data['scmCostingLines'] = $data2;
         }
 
-        return response()->success('Data created succesfully', $data, 201);
+        return response()->success('Data created succesfully', $data, 200);
     } catch (\Exception $e) {
 
         return response()->error($e->getMessage(), 500);

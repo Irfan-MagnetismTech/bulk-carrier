@@ -312,7 +312,7 @@ function confirmDelete(id) {
           <tbody>
             <template v-for="(purchaseOrder,index) in (purchaseOrders?.data ? purchaseOrders?.data : purchaseOrders)" :key="index">
               <tr v-for="(line,lineIndex) in purchaseOrder?.scmPoItems" :key="lineIndex">
-                <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
+                <td v-if="lineIndex == 0" :rowspan="purchaseOrder?.scmPoItems?.length">{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
                   <td v-if="lineIndex == 0" :rowspan="purchaseOrder?.scmPoItems?.length">{{ purchaseOrder?.ref_no }}</td>
                   <td v-if="lineIndex == 0" :rowspan="purchaseOrder?.scmPoItems?.length">{{ purchaseOrder?.date }}</td>
                   <td style="text-align: center !important;">
@@ -356,67 +356,7 @@ function confirmDelete(id) {
                   </td>
               </tr>
             </template>
-            <tr v-for="(purchaseOrder,index) in (purchaseOrders?.data ? purchaseOrders?.data : purchaseOrders)" :key="index">
-              <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-              <td>{{ purchaseOrder?.ref_no }}</td>
-              <td>{{ purchaseOrder?.date }}</td>
-              <td style="text-align: center !important;">
-                <table class="w-full">
-                  <tr v-for="(line,index) in purchaseOrder?.scmPoItems" :key="index">
-                    <td><nobr>{{ line?.scmMaterial.name ?? '' }}</nobr></td>
-                  </tr>
-                </table>
-              </td>
-              <td style="text-align: center !important;">
-                <table class="w-full">
-                  <tr v-for="(line,index) in purchaseOrder?.scmPoItems" :key="index">
-                    <td><nobr>{{ line?.scmMaterial.material_code ?? '' }}</nobr></td>
-                  </tr>
-                </table>
-              </td>
-              <td style="text-align: center !important;">
-                <table class="w-full">
-                  <tr v-for="(line,index) in purchaseOrder?.scmPoItems" :key="index">
-                    <td><nobr>{{ line?.quantity ?? '' }}</nobr></td>
-                  </tr>
-                </table>
-              </td>
-              <td style="text-align: center !important;">
-                <table class="w-full">
-                  <tr v-for="(line,index) in purchaseOrder?.scmPoItems" :key="index">
-                    <td><nobr>{{ line?.scmMaterial.unit ?? '' }}</nobr></td>
-                  </tr>
-                </table>
-              </td>
-              <td>{{ purchaseOrder?.scmVendor?.name }}</td>
-              <td>{{ purchaseOrder?.scmVendor?.country_name }}</td>
-              <td>{{ purchaseOrder?.net_amount }}</td>
-              <td>{{ purchaseOrder?.scmCs?.ref_no ?? 'N/A' }}</td>
-              <td>{{ purchaseOrder?.scmWarehouse?.name }}</td>
-              <td>
-                <!-- <button v-if="purchaseRequisition.is_closed == 0" @click="showModal(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Close</button>
-                <span v-else :class="purchaseRequisition?.is_closed === 0 ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.is_closed === 0 ? 'Open' : 'Closed' }}</span> -->
-                <span :class="purchaseOrder?.status === 'Pending' ? 'text-yellow-700 bg-yellow-100' : (purchaseOrder?.status == 'WIP' ? 'text-blue-700 bg-blue-100' : 'text-red-700 bg-red-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseOrder?.status ?? 'Closed' }}</span>
-              </td>
-              
-              <td>
-                <span :class="purchaseOrder?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseOrder?.business_unit }}</span>
-              </td>
-              <td>
-                <nobr>
-                <div class="grid grid-flow-col-dense gap-x-2">
-                  <action-button v-show="purchaseOrder.status !== 'Closed'" @click="showModal(purchaseOrder?.id)" :action="'close'"></action-button>
-                  <!-- <button @click="navigateToMRRCreate(purchaseOrder.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
-                  <action-button :action="'show'" :to="{ name: 'scm.purchase-orders.show', params: { purchaseOrderId: purchaseOrder.id } }"></action-button>
-                  <template>
-                  </template>
-                  <action-button :action="'edit'" :to="{ name: 'scm.purchase-orders.edit', params: { purchaseOrderId: purchaseOrder.id } }"></action-button>
-                 
-                  <action-button @click="confirmDelete(purchaseOrder.id)" :action="'delete'"></action-button>
-                </div>
-              </nobr>
-              </td>
-            </tr>
+           
             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && purchaseOrders?.data?.length"></LoaderComponent>
           </tbody>
           <tfoot v-if="!purchaseOrders?.data?.length" class="relative h-[250px]">
