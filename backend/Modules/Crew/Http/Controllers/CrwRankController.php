@@ -104,16 +104,13 @@ class CrwRankController extends Controller
     public function destroy(CrwRank $crwRank)
     {
         try {
-            DB::beginTransaction();
-
             $crwRank->delete();
-            DB::commit();
+
             return response()->success('Deleted Successfully', null, 204);
         }
         catch (QueryException $e)
         {
-            DB::rollBack();
-            return response()->json($crwRank->preventDeletionIfRelated(), 422);            
-        }
+            return response()->error($e->getMessage(), 500);
+        }        
     }
 }
