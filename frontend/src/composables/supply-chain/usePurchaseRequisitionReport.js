@@ -6,16 +6,18 @@ import Api from "../../apis/Api";
 import useNotification from '../../composables/useNotification.js';
 import Swal from 'sweetalert2';
 
-export default function useInventoryReport() {
+export default function usePurchaseRequisitionReport() {
     const router = useRouter();
-    const inventory = ref([]);
+    const purchaseRequisitions = ref([]);
     const $loading = useLoading();
     const notification = useNotification();
     const formParams = ref( {
-        scm_warehouse_id: null,
-        scmWarehouse: '',
         from_date: null,
         to_date: null,
+        purchase_center: '',
+        scm_warehouse_id: null,
+        scmWarehouse: '',
+        status: '',
         business_unit: '',
     });
 
@@ -25,13 +27,13 @@ export default function useInventoryReport() {
     const isLoading = ref(false);
     const showReport = ref(false);
     
-    async function inventoryReport(form) {
+    async function purchaseRequisitionReport(form) {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
         showReport.value = true;
         try {
-            const { data, status } = await Api.get('/scm/inventory-report', { params: form });
-            inventory.value = data.value;
+            const { data, status } = await Api.get('/scm/purchase-requisition-report', { params: form });
+            purchaseRequisitions.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -43,13 +45,13 @@ export default function useInventoryReport() {
         }
     }
 
-    function downloadInventoryReport(form) {
+    function downloadPurchaseRequisitionReport(form) {
 
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         axios({
-            url: '/mnt/download-inventory-report',
+            url: '/mnt/download-purchase-requisition-report',
             data: form,
             method: 'POST',
             responseType: 'blob', // important
@@ -80,9 +82,9 @@ export default function useInventoryReport() {
 
     return {
         formParams,
-        inventory,
-        inventoryReport,
-        downloadInventoryReport,
+        purchaseRequisitions,
+        purchaseRequisitionReport,
+        downloadPurchaseRequisitionReport,
         isLoading,
         showReport,
         errors,

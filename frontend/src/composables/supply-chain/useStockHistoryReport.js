@@ -13,7 +13,7 @@ export default function useStockHistoryReport() {
     const notification = useNotification();
     const formParams = ref( {
         scm_warehouse_id: null,
-        opsWarehouse: '',
+        scmWarehouse: '',
         from_date: null,
         to_date: null,
         business_unit: '',
