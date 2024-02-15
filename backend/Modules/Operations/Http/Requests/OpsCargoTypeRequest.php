@@ -15,7 +15,7 @@ class OpsCargoTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cargo_type'    => ['required', 'string', 'max:255', Rule::unique('ops_cargo_types')->ignore($this->route('cargo_type'), 'id')],
+            'cargo_type'    => ['required', 'string', 'max:255', Rule::unique('ops_cargo_types')->where('business_unit',$this->business_unit)->ignore($this->route('cargo_type'), 'id')],
             'description'   => ['nullable', 'string', 'max:5000'],
         ];
     }

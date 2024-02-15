@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('cargo_type')->unique();
             $table->text('description')->nullable();
+            $table->enum('business_unit', ['PSML', 'TSLL','ALL'])->nullable(); 
             $table->timestamps();
         });
     }
