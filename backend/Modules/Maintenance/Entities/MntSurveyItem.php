@@ -13,6 +13,12 @@ class MntSurveyItem extends Model
 
     protected $fillable = ['item_name'];
 
+    protected $skipForDeletionCheck = [];
+
+    protected $features = [
+        'mntSurveys' => 'Surveys',
+    ];
+
     public function mntSurveys() : HasMany {
         return $this->hasMany(MntSurvey::class);
     }

@@ -22,6 +22,12 @@ class MntSurvey extends Model
         'survey_name',
     ];
 
+    protected $skipForDeletionCheck = [];
+
+    protected $features = [
+        'mntSurveyEntries' => 'Survey Entries',
+    ];
+
 
     public function mntSurveyItem() : BelongsTo {
         return $this->belongsTo(MntSurveyItem::class);

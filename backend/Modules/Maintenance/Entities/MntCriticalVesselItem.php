@@ -23,13 +23,20 @@ class MntCriticalVesselItem extends Model
         'business_unit'
     ];
 
+    protected $skipForDeletionCheck = [];
+
+    protected $features = [
+        'mntCriticalItemSps' => 'Critical Items Spare Parts',
+        'mntCriticalSpListLines' => 'Critical Spares List',
+    ];
+
     protected $casts = ['is_critical' => 'boolean'];
-    
+
     public function opsVessel () : BelongsTo
     {
         return $this->belongsTo(OpsVessel::class);
     }
-    
+
     public function mntCriticalItem () : BelongsTo
     {
         return $this->belongsTo(MntCriticalItem::class);

@@ -15,12 +15,19 @@ class MntItem extends Model
     use HasFactory, GlobalSearchTrait;
 
     protected $fillable = ['mnt_item_group_id', 'name', 'item_code', 'description', 'has_run_hour', 'business_unit'];
+
+    protected $skipForDeletionCheck = [];
+
+    protected $features = [
+        'mntJobs' => 'Job List',
+    ];
+
     protected $casts = [
         'has_run_hour' => 'boolean',
     ];
     protected $appends = ['item_code_name'];
 
-    
+
     public function mntItemGroup () : BelongsTo
     {
         return $this->belongsTo(MntItemGroup::class);
@@ -36,8 +43,8 @@ class MntItem extends Model
         return $this->hasManyThrough(MntJobLine::class, MntJob::class);
     }
 
-    
-    public function getItemCodeNameAttribute () 
+
+    public function getItemCodeNameAttribute ()
     {
         return '('.$this->item_code.') '.$this->name;
     }

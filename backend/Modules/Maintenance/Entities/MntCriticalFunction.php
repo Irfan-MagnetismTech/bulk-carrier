@@ -14,6 +14,12 @@ class MntCriticalFunction extends Model
 
     protected $fillable = ['function_name','notes'];
 
+    protected $skipForDeletionCheck = [];
+
+    protected $features = [
+        'mntCriticalItemCats' => 'Critical Item Categories',
+    ];
+
     public function mntCriticalItemCats() : HasMany {
         return $this->hasMany(MntCriticalItemCat::class);
     }
