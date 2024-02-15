@@ -11,16 +11,16 @@ class GlobalObserver
      * Handle the Model "deleting" event.
      *
      * @param Model  $model
-     * @return bool|array
+     * @return bool|array|null
      */
-    public function deleting(Model $model): bool|array
+    public function deleting(Model $model): bool|array|null
     {
         if (method_exists($model, 'preventDeletionIfRelated')) {
-            return $model->preventDeletionIfRelated();
-        }
+            $response = $model->preventDeletionIfRelated();
 
-        return true;
+            if ($response === null) {
+                return true;
+            }
+        }
     }
 }
-
-// change in scm
