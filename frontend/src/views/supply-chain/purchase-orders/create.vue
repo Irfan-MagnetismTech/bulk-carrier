@@ -7,14 +7,16 @@ import useHelper from "../../../composables/useHelper.js";
 import PurchaseOrderForm from "../../../components/supply-chain/purchase-orders/PurchaseOrderForm.vue";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from '../../../components/buttons/DefaultButton.vue';
-import { useRoute } from 'vue-router';
-
+import { useRoute,useRouter } from 'vue-router';
+import Store from "../../../store";
 const icons = useHeroIcon();
 const route = useRoute();
+const router = useRouter();
 
 const { getPurchaseOrder, purchaseOrder, storePurchaseOrder,getPrAndCsWisePurchaseOrder,materialObject,termsObject,poLineObject, errors, isLoading,materialList } = usePurchaseOrder();
 const page = ref('create');
 const { setTitle } = Title();
+// const permissionName = ref('create-purchase-order');
 
 // const props = defineProps({
 //   cs_id: {
@@ -32,7 +34,13 @@ const { setTitle } = Title();
 //     getPrAndCsWisePurchaseOrder(props.pr_id, props.cs_id);
 // }); 
 
-
+onMounted(() => {
+    // console.log(Store.getters.getCurrentUser.permissions);
+    // check permission if fail redirect to previous route
+    // if (!Store.getters.getCurrentUser.permissions.includes(permissionName.value)) {
+    //     router.go(-1);
+    // }
+});
 
 setTitle('Create Purchase Order');
 </script>

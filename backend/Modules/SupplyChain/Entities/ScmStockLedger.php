@@ -33,4 +33,6 @@ class ScmStockLedger extends Model
     {
         return $this->belongsTo(ScmMaterial::class, 'scm_material_id' , 'id');
     }
+
+
 }

@@ -22,6 +22,9 @@
     });
     
     const { warehouses, searchWarehouse , isLoading:isWarehouseLoading} = useWarehouse();
+
+    const purchase_center = ['Local', 'Foreign', 'Plant'];
+    const status = ['Pending', 'WIP', 'Closed'];
     
 
 
@@ -56,13 +59,12 @@
     <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2">
         <business-unit-input v-model="form.business_unit"></business-unit-input>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Warehouse <span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Warehouse</span>
             <v-select placeholder="--Choose an option--" :loading="isWarehouseLoading"  :options="warehouses" @search="" 
                             v-model="form.scmWarehouse" label="name" @update:modelValue="warehouseChange"  class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                                 class="vs__search"
-                                :required="!form.scmWarehouse"
                                 v-bind="attributes"
                                 v-on="events"
                             />
@@ -70,6 +72,36 @@
             </v-select>
             <input type="hidden" v-model="form.scm_warehouse_id">
         </label>
+        
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Purchase Center</span>
+            <v-select :options="purchase_center" placeholder="--Choose an option--" v-model="form.purchase_center" label="Product Source Type" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+              <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      v-bind="attributes"
+                      v-on="events"
+                  />  
+              </template>        
+            </v-select>
+        </label>
+
+        
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Status</span>
+            <v-select :options="status" placeholder="--Choose an option--" v-model="form.status" label="Status" class="block w-full mt-1 text-xs rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+              <template #search="{attributes, events}">
+                  <input
+                      class="vs__search"
+                      v-bind="attributes"
+                      v-on="events"
+                  />  
+              </template>        
+            </v-select>
+        </label>
+
+
+
         <div class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">From Date <span class="text-red-500">*</span></span>
           <VueDatePicker v-model="form.from_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" @update:model-value="fromDateChange"></VueDatePicker>
