@@ -17,6 +17,17 @@ use Modules\Maintenance\Http\Requests\MntJobRequest;
 
 class MntJobController extends Controller
 {
+    
+    use HasRoles; 
+
+    public function __construct()
+    {
+        $this->middleware('permission:mnt-job-list-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:mnt-job-list-create', ['only' => ['store']]);
+        $this->middleware('permission:mnt-job-list-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:mnt-job-list-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable

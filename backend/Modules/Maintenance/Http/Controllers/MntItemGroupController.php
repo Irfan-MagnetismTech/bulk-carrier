@@ -11,6 +11,16 @@ use Modules\Maintenance\Http\Requests\MntItemGroupRequest;
 
 class MntItemGroupController extends Controller
 {
+    
+    use HasRoles; 
+
+    public function __construct()
+    {
+        $this->middleware('permission:mnt-item-group-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:mnt-item-group-create', ['only' => ['store']]);
+        $this->middleware('permission:mnt-item-group-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:mnt-item-group-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable

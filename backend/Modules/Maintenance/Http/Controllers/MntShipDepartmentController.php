@@ -13,6 +13,16 @@ use Modules\Maintenance\Http\Requests\MntShipDepartmentRequest;
 class MntShipDepartmentController extends Controller
 {
     
+    use HasRoles; 
+
+    public function __construct()
+    {
+        $this->middleware('permission:mnt-ship-department-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:mnt-ship-department-create', ['only' => ['store']]);
+        $this->middleware('permission:mnt-ship-department-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:mnt-ship-department-delete', ['only' => ['destroy']]);
+    }
+    
     /**
      * get all ship departments.
      * @param Request $request

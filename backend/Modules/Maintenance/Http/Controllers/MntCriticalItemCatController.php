@@ -13,6 +13,16 @@ use Modules\Maintenance\Http\Requests\MntCriticalItemCatRequest;
 
 class MntCriticalItemCatController extends Controller
 {
+    
+    use HasRoles; 
+
+    public function __construct()
+    {
+        $this->middleware('permission:mnt-critical-item-category-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:mnt-critical-item-category-create', ['only' => ['store']]);
+        $this->middleware('permission:mnt-critical-item-category-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:mnt-critical-item-category-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable

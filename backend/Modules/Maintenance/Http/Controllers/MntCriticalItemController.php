@@ -13,6 +13,15 @@ use Modules\Maintenance\Http\Requests\MntCriticalItemRequest;
 
 class MntCriticalItemController extends Controller
 {
+    use HasRoles; 
+
+    public function __construct()
+    {
+        $this->middleware('permission:mnt-critical-item-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:mnt-critical-item-create', ['only' => ['store']]);
+        $this->middleware('permission:mnt-critical-item-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:mnt-critical-item-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable

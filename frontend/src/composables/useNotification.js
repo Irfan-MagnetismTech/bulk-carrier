@@ -36,6 +36,10 @@ export default function useNotification() {
   const showError = (status = null, data = {}, message = null) => {
     let errorMessage = 'Something went wrong.'; // Default message
 
+    if(parseInt(status) === 403){
+      return;
+    }
+
     if (errorCodeWithMessages[status] !== undefined) {
       errorMessage = errorCodeWithMessages[status];
     } else if (parseInt(status) === 204) {

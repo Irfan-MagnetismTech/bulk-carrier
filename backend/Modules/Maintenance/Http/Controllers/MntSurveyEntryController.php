@@ -13,6 +13,18 @@ use Modules\Maintenance\Http\Requests\MntSurveyEntryRequest;
 
 class MntSurveyEntryController extends Controller
 {
+    
+    use HasRoles; 
+
+    public function __construct()
+    {
+        $this->middleware('permission:mnt-survey-entry-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:mnt-survey-entry-create', ['only' => ['store']]);
+        $this->middleware('permission:mnt-survey-entry-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:mnt-survey-entry-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:mnt-survey-entries-report', ['only' => ['getSurveyEntries']]);
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable

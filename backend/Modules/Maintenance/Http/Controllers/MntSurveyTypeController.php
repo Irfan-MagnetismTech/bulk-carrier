@@ -10,6 +10,17 @@ use Modules\Maintenance\Http\Requests\MntSurveyTypeRequest;
 
 class MntSurveyTypeController extends Controller
 {
+    
+    use HasRoles; 
+
+    public function __construct()
+    {
+        $this->middleware('permission:mnt-survey-type-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:mnt-survey-type-create', ['only' => ['store']]);
+        $this->middleware('permission:mnt-survey-type-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:mnt-survey-type-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable

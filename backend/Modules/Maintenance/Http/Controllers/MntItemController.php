@@ -13,6 +13,16 @@ use Modules\Maintenance\Http\Requests\MntItemUpdateRequest;
 
 class MntItemController extends Controller
 {
+    
+    use HasRoles; 
+
+    public function __construct()
+    {
+        $this->middleware('permission:mnt-item-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:mnt-item-create', ['only' => ['store']]);
+        $this->middleware('permission:mnt-item-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:mnt-item-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable

@@ -16,6 +16,24 @@ use Modules\Maintenance\Http\Requests\MntWorkRequisitionWipRequest;
 
 class MntWorkRequisitionController extends Controller
 {
+    
+    use HasRoles; 
+    
+    public function __construct()
+    {
+        $this->middleware('permission:mnt-work-requisition-pending-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:mnt-work-requisition-pending-create', ['only' => ['store']]);
+        $this->middleware('permission:mnt-work-requisition-pending-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:mnt-work-requisition-pending-delete', ['only' => ['destroy']]);
+        
+        $this->middleware('permission:mnt-work-requisition-wip-view', ['only' => ['indexWip', 'show']]);
+        $this->middleware('permission:mnt-work-requisition-wip-edit', ['only' => ['show', 'updateWip', 'updateWipLine']]);
+
+        $this->middleware('permission:mnt-work-requisition-done-view', ['only' => ['index', 'show']]);
+
+    }
+
+
     /**
      * Display a listing of the resource.
      * @return Renderable
