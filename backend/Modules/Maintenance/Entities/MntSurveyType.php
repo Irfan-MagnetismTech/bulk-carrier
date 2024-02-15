@@ -13,6 +13,12 @@ class MntSurveyType extends Model
 
     protected $fillable = ['survey_type_name','due_period','window_period'];
 
+    protected $skipForDeletionCheck = [];
+
+    protected $features = [
+        'mntSurveys' => 'Surveys',
+    ];
+
     public function mntSurveys() : HasMany {
         return $this->hasMany(MntSurvey::class);
     }
