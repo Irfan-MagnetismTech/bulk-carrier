@@ -2,6 +2,7 @@
 
 namespace Modules\SupplyChain\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
@@ -30,10 +31,10 @@ class ScmReportController extends Controller
 
                     'opening_stock' => $items->where('date', '<', request()->from_date)?->sum('quantity') ?? ($items->where('date', '=', request()->from_date)->where('stockable_type', 'Modules\SupplyChain\Entities\ScmOpeningStock')->first()?->quantity ?? 0),
 
-                    'received' => $items->whereNull('parent_id')->whereBetween('date', [request()->from_date, request()->end_date])?->sum('quantity') - (empty($result['opening_stock'])? $items->where('date', '=', request()->from_date)->where('stockable_type', 'Modules\SupplyChain\Entities\ScmOpeningStock')->first()?->quantity ?? 0 : 0),
+                    'received' => $items->whereNull('parent_id')->whereBetween('date', [request()->from_date, request()->to_date])?->sum('quantity') - (empty($result['opening_stock'])? $items->where('date', '=', request()->from_date)->where('stockable_type', 'Modules\SupplyChain\Entities\ScmOpeningStock')->first()?->quantity ?? 0 : 0),
 
                     'consumed' => ($items->whereNotNull('parent_id')
-                        ->whereBetween('date', [request()->from_date, request()->end_date])
+                        ->whereBetween('date', [request()->from_date, request()->to_date])
                         ->sum('quantity') * -1),
                 ];
 
@@ -60,16 +61,18 @@ class ScmReportController extends Controller
         try {
             $datas = [];
             $result = ScmStockLedger::query()
-            ->where('scm_warehouse_id', request()->scm_warehouse_id)
-            ->where('scm_material_id', request()->scm_material_id)
-            ->whereBetween('date', [request()->from_date, request()->end_date])
+            ->where('scm_warehouse_id', $request->scm_warehouse_id)
+            ->where('scm_material_id', $request->scm_material_id)
+            ->whereBetween('date', [$request->from_date, $request->to_date])
             ->get()
-            ->groupBy('date')->values();
+            ->groupBy(function($record) {
+                return Carbon::parse($record->date)->format('Y-m-d');
+            })->values();
 
-
+            dd($result);
             foreach ($result as $items) {
                 $adas = [
-                    'date' => $items[0]->date,
+                    'date' => Carbon::parse($items[0]->date)->format('Y-m-d'),
                     'scmMaterial' => $items[0]->scmMaterial,
                     'scm_warehouse_id' => $items[0]->scm_warehouse_id,
 
@@ -101,33 +104,32 @@ class ScmReportController extends Controller
     public function purchaseRequisitionReport(Request $request): JsonResponse
     {
         try {
-            $datas= ScmPr::with('scmPoLines.scmPo.scmMrrs')->where('id', $request->scm_pr_id)->get();
-            
-            
-            // ->map(function($items){
-            //     $datas= $items;
+            $scm_prs = ScmPr::query()
+                ->with(
+                    'scmPrLines.scmMaterial',
+                    'scmWarehouse',
+                    'closedBy',
+                    'createdBy',
+                    'scmPrLines.closedBy',
+                    'scmPrLines.createdBy'
+                )
+                ->when(request()->has('scm_warehouse_id'), function ($query) {
+                    $query->where('scm_warehouse_id', request()->scm_warehouse_id);
+                })
+                ->when(request()->has('purchase_center'), function ($query) {
+                    $query->where('purchase_center', request()->purchase_center);
+                })
+                ->when(request()->has('status'), function ($query) {
+                    $query->where('status', request()->status);
+                })
+                ->whereBetween('raised_date', [$request->from_date, $request->to_date])
+                ->get();
 
-            //     $items->map(function($item){
-            //         $data= [];
-            //         $mrrData= [];
-            //         $data['ref_no']= $item->ref_no;
-            //         $data['status']= $item->status;
-            //         $data['closed_at']= $item->closed_at;
-            //         $data['date']= $item->date;
-
-            //         $mrrData['ref_no']= $item->ref_no;
-            //         $mrrData['status']= $item->status;
-            //         $mrrData['closed_at']= $item->closed_at;
-            //         $mrrData['date']= $item->date;
-
-            //         $mrrData
-            //     });
-            // });
-
-            return response()->success('data', $datas, 200);
+            return response()->success('Data list', $scm_prs, 200);
         } catch (\Exception $e) {
 
             return response()->error($e->getMessage(), 500);
         }
     }
+
 }
