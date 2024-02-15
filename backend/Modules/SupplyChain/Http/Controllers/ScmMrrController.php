@@ -146,7 +146,7 @@ class ScmMrrController extends Controller
                             'max_quantity' => $max_quantity,
                             'remaining_quantity' => $remainingQuantity,
                             'pr_qty' => $item->scmPrLine->quantity,
-                            'po_qty' => $item?->scmPoItem?->quantity ?? 0,
+                            'po_qty' => $item->scmPrLine->quantity,
                             'isAspectDuplicate' => false,
                         ];
             });

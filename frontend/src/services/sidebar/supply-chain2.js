@@ -14,7 +14,7 @@ export default [
                     subSubMenu: [
                         {
                             route: `${BASE}.work-requisitions.index`,
-                            label: 'Work Requisition',
+                            label: 'Work Requisitions',
                             preIcon: icons.User,
                             postIcon: icons.DownArrow,
                             is_active: false,
@@ -24,7 +24,7 @@ export default [
                         },
                         {
                             route: `${BASE}.work-cs.index`,
-                            label: 'Work Cs',
+                            label: 'Work CS',
                             preIcon: icons.User,
                             postIcon: icons.DownArrow,
                             is_active: false,
@@ -34,7 +34,7 @@ export default [
                         },
                         {
                             route: `${BASE}.work-orders.index`,
-                            label: 'Work Order',
+                            label: 'Work Orders',
                             preIcon: icons.User,
                             postIcon: icons.DownArrow,
                             is_active: false,
@@ -45,7 +45,7 @@ export default [
                         
                         {
                             route: `${BASE}.work-receipt-reports.index`,
-                            label: 'Work Receipt Report',
+                            label: 'Work Receipt Reports',
                             preIcon: icons.User,
                             postIcon: icons.DownArrow,
                             is_active: false,
