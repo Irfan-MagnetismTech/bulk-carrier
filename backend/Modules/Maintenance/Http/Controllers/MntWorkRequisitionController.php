@@ -13,19 +13,20 @@ use Modules\Maintenance\Entities\MntWorkRequisitionItem;
 use Modules\Maintenance\Entities\MntWorkRequisitionLine;
 use Modules\Maintenance\Http\Requests\MntWorkRequisitionRequest;
 use Modules\Maintenance\Http\Requests\MntWorkRequisitionWipRequest;
+use Spatie\Permission\Traits\HasRoles;
 
 class MntWorkRequisitionController extends Controller
 {
-    
-    use HasRoles; 
-    
+
+    use HasRoles;
+
     public function __construct()
     {
         $this->middleware('permission:mnt-work-requisition-pending-view', ['only' => ['index', 'show']]);
         $this->middleware('permission:mnt-work-requisition-pending-create', ['only' => ['store']]);
         $this->middleware('permission:mnt-work-requisition-pending-edit', ['only' => ['show', 'update']]);
         $this->middleware('permission:mnt-work-requisition-pending-delete', ['only' => ['destroy']]);
-        
+
         $this->middleware('permission:mnt-work-requisition-wip-view', ['only' => ['indexWip', 'show']]);
         $this->middleware('permission:mnt-work-requisition-wip-edit', ['only' => ['show', 'updateWip', 'updateWipLine']]);
 
@@ -46,7 +47,7 @@ class MntWorkRequisitionController extends Controller
                         ->globalSearch($request->all());
 
             return response()->success('Work requisitions retrieved successfully', $runHours, 200);
-            
+
         }
         catch (\Exception $e)
         {
@@ -66,7 +67,7 @@ class MntWorkRequisitionController extends Controller
                         ->globalSearch($request->all());
 
             return response()->success('Work requisitions retrieved successfully', $runHours, 200);
-            
+
         }
         catch (\Exception $e)
         {
@@ -119,10 +120,10 @@ class MntWorkRequisitionController extends Controller
             }
             // Store work requisition jobs
             $workRequisitionLines = $workRequisitionItem->mntWorkRequisitionLines()->createMany($added_job_lines);
-            
+
             DB::commit();
             return response()->success('Work requisition created successfully', $workRequisitionLines, 201);
-            
+
         }
         catch (\Exception $e)
         {
@@ -139,7 +140,7 @@ class MntWorkRequisitionController extends Controller
     public function show($id)
     {
         try {
-            
+
             $wr = MntWorkRequisition::with([
                 'opsVessel',
                 'mntWorkRequisitionItem',
@@ -147,13 +148,13 @@ class MntWorkRequisitionController extends Controller
                 'mntWorkRequisitionLines',
                 'mntWorkRequisitionMaterials'
                 ])->find($id);
-            
-                        
+
+
             $results = [];
             array_walk_recursive($wr->mntWorkRequisitionLines, function ($item, $key) use (&$results){$results[$key] = $item;});
             // var_dump($results);
             return response()->success('Work requisition found successfully', $wr, 200);
-            
+
         }
         catch (\Exception $e)
         {
@@ -204,7 +205,7 @@ class MntWorkRequisitionController extends Controller
                                     "present_run_hour" => $input['present_run_hour']
                                 ]);
             $addedJobLines = $input['added_job_lines'];
-            
+
             $workRequisitionItem->mntWorkRequisitionLines()->delete();
             $workRequisitionLines = $workRequisitionItem->mntWorkRequisitionLines()->createMany($addedJobLines);
             if ($workRequisitionLines == null) {
@@ -219,7 +220,7 @@ class MntWorkRequisitionController extends Controller
             }
             DB::commit();
             return response()->success('Work requisition updated successfully', $workRequisition, 202);
-            
+
         }
         catch (\Exception $e)
         {
@@ -247,7 +248,7 @@ class MntWorkRequisitionController extends Controller
             // update work_requisition
             $workRequisition = MntWorkRequisition::findorfail($id);
             $workRequisition->update($wr);
-            
+
             // update work_requisition_materials
             $workRequisitionMaterials = $workRequisition->mntWorkRequisitionMaterials()->createUpdateOrDelete($input['mntWorkRequisitionMaterials']);
 
@@ -255,7 +256,7 @@ class MntWorkRequisitionController extends Controller
             $workRequisitionItem = $input['mntWorkRequisitionItem'];
             $mntJob = MntJob::where(
                                     [
-                                        'ops_vessel_id'=>$input['ops_vessel_id'], 
+                                        'ops_vessel_id'=>$input['ops_vessel_id'],
                                         'mnt_item_id'=>$workRequisitionItem['mnt_item_id']
                                     ])
                                     ->first();
@@ -274,7 +275,7 @@ class MntWorkRequisitionController extends Controller
             }
 
             $wrItemUpdate = $workRequisition->mntWorkRequisitionItem()->update(['present_run_hour'=>$itemPresentRunHour]);
-            
+
             // update work_requisition_lines
             $row = 1;
             $workRequisitionLines = $input['mntWorkRequisitionLines'];
@@ -293,10 +294,10 @@ class MntWorkRequisitionController extends Controller
                 $row++;
             }
 
-            
+
             DB::commit();
             return response()->success('Work requisition updated successfully', $workRequisition, 202);
-            
+
         }
         catch (\Exception $e)
         {
@@ -336,9 +337,9 @@ class MntWorkRequisitionController extends Controller
             $wr['replace'] = $input['replace'] ?? 0;
             $wr['cleaning'] = $input['cleaning'] ?? 0;
             $wr['remarks'] = $input['remarks'];
-            $wr['status'] = ($input['start_date'] == '' || $input['start_date'] == null) 
+            $wr['status'] = ($input['start_date'] == '' || $input['start_date'] == null)
                                 ? 0 : (
-                                    ($input['completion_date'] == '' || $input['completion_date'] == null) 
+                                    ($input['completion_date'] == '' || $input['completion_date'] == null)
                                         ? 1 : 2
                                     );
 
@@ -351,11 +352,11 @@ class MntWorkRequisitionController extends Controller
             $job['last_done'] = $input['completion_date']; // Update job line information
             $job['previous_run_hour'] = $itemPresentRunHour; // Present run hour is previous run hour for next job
             $jobLine->update($job);
-            
+
             // DB::commit();
             // return response()->success('Work requisition updated successfully', $workRequisition, 202);
             return 1;
-            
+
         }
         catch (\Exception $e)
         {
@@ -379,7 +380,7 @@ class MntWorkRequisitionController extends Controller
                 $error = array(
                     "message" => "The requisition could not be deleted",
                     "errors" => [
-                        
+
                     ]
                 );
                 return response()->json($error, 422);
@@ -387,11 +388,11 @@ class MntWorkRequisitionController extends Controller
                 $wr->mntWorkRequisitionLines()->delete();
                 $wr->mntWorkRequisitionItem()->delete();
                 $wr->delete();
-                
+
                 DB::commit();
                 return response()->success('Work requisition is deleted successfully', $wr, 204);
             }
-            
+
         }
         catch (\Exception $e)
         {

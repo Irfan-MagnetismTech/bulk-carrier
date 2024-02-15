@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ScmSr extends Model
 {
-    use HasFactory, GlobalSearchTrait, UniqueKeyGenerator, DeletableModel;
+    use HasFactory, GlobalSearchTrait, DeletableModel;
 
     protected $fillable = [
         'ref_no', 'scm_warehouse_id', 'acc_cost_center_id', 'department_id', 'date', 'remarks', 'business_unit', 'created_by',

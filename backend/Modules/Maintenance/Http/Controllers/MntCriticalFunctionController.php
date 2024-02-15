@@ -9,10 +9,11 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Maintenance\Entities\MntCriticalFunction;
 use Modules\Maintenance\Http\Requests\MntCriticalFunctionRequest;
+use Spatie\Permission\Traits\HasRoles;
 
 class MntCriticalFunctionController extends Controller
 {
-    use HasRoles; 
+    use HasRoles;
 
     public function __construct()
     {
@@ -33,14 +34,14 @@ class MntCriticalFunctionController extends Controller
             $criticalFunctions = MntCriticalFunction::select('*')->globalSearch($request->all());;
 
             return response()->success('Critical functions are retrieved successfully', $criticalFunctions, 200);
-            
+
         }
         catch (\Exception $e)
         {
             return response()->error($e->getMessage(), 500);
         }
     }
-    
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -52,7 +53,7 @@ class MntCriticalFunctionController extends Controller
             $criticalFunctions = MntCriticalFunction::select('*')->get();
 
             return response()->success('Critical functions are retrieved successfully', $criticalFunctions, 200);
-            
+
         }
         catch (\Exception $e)
         {
@@ -78,11 +79,11 @@ class MntCriticalFunctionController extends Controller
     {
         try {
             $input = $request->all();
-            
+
             $criticalFunction = MntCriticalFunction::create($input);
-            
+
             return response()->success('Critical function created successfully', $criticalFunction, 201);
-            
+
         }
         catch (\Exception $e)
         {
@@ -98,11 +99,11 @@ class MntCriticalFunctionController extends Controller
     public function show($id)
     {
         try {
-            
+
             $criticalFunction = MntCriticalFunction::find($id);
-            
+
             return response()->success('Critical function found successfully', $criticalFunction, 200);
-            
+
         }
         catch (\Exception $e)
         {
@@ -130,12 +131,12 @@ class MntCriticalFunctionController extends Controller
     {
         try {
             $input = $request->all();
-            
+
             $criticalFunction = MntCriticalFunction::findorfail($id);
             $criticalFunction->update($input);
-            
+
             return response()->success('Critical function updated successfully', $criticalFunction, 202);
-            
+
         }
         catch (\Exception $e)
         {
@@ -150,12 +151,12 @@ class MntCriticalFunctionController extends Controller
      */
     public function destroy(MntCriticalFunction $criticalFunction)
     {
-        try {            
+        try {
             DB::beginTransaction();
             $criticalFunction->delete();
             DB::commit();
             return response()->success('Critical function deleted successfully', $criticalFunction, 204);
-            
+
         }
         catch (QueryException $e)
         {
