@@ -70,18 +70,18 @@
             </v-select>
             <input type="hidden" v-model="form.scm_warehouse_id">
         </label>
-        <label class="block w-full mt-2 text-sm">
+        <div class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">From Date <span class="text-red-500">*</span></span>
           <VueDatePicker v-model="form.from_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" @update:model-value="fromDateChange"></VueDatePicker>
           <Error v-if="errors?.from_date" :errors="errors.from_date" />
-        </label>
+        </div>
 
         
-        <label class="block w-full mt-2 text-sm">
+        <div class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">To Date <span class="text-red-500">*</span></span>
           <VueDatePicker v-model="form.to_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :min-date="form.from_date"></VueDatePicker>
           <Error v-if="errors?.to_date" :errors="errors.to_date" />
-        </label>
+        </div>
     </div>
   </template>
   

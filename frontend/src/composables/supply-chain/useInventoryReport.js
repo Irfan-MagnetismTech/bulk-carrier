@@ -13,7 +13,7 @@ export default function useInventoryReport() {
     const notification = useNotification();
     const formParams = ref( {
         scm_warehouse_id: null,
-        opsWarehouse: '',
+        scmWarehouse: '',
         from_date: null,
         to_date: null,
         business_unit: '',
@@ -30,7 +30,7 @@ export default function useInventoryReport() {
         isLoading.value = true;
         showReport.value = true;
         try {
-            const { data, status } = await Api.get('/mnt/inventory-report', { params: form });
+            const { data, status } = await Api.get('/scm/inventory-report', { params: form });
             inventory.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
