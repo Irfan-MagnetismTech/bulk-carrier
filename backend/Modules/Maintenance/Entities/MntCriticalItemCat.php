@@ -19,6 +19,12 @@ class MntCriticalItemCat extends Model
         'notes'
     ];
 
+    protected $skipForDeletionCheck = [];
+
+    protected $features = [
+        'mntCriticalItems' => 'Critical Items',
+    ];
+
     public function mntCriticalFunction() : BelongsTo {
         return $this->belongsTo(MntCriticalFunction::class);
     }

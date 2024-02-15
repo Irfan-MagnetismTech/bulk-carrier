@@ -20,6 +20,12 @@ class MntCriticalItem extends Model
         'notes'
     ];
 
+    protected $skipForDeletionCheck = [];
+
+    protected $features = [
+        'MntCriticalVesselItem' => 'Critical Vessel Items',
+    ];
+
     public function mntCriticalItemCat() : BelongsTo {
         return $this->belongsTo(MntCriticalItemCat::class);
     }
@@ -31,7 +37,7 @@ class MntCriticalItem extends Model
     public function mntCriticalItemSps() : HasManyThrough {
         return $this->hasManyThrough(MntCriticalItemSp::class, MntCriticalVesselItem::class);
     }
-    
+
 
     public function mntCriticalSpListLines() : HasManyThrough {
         return $this->hasManyThrough(MntCriticalSpListLine::class, MntCriticalVesselItem::class);

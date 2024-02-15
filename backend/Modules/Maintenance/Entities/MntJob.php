@@ -19,11 +19,17 @@ class MntJob extends Model
     protected $fillable = ['ops_vessel_id','mnt_item_id','present_run_hour','business_unit'];
     protected $appends = ['has_work_requisition'];
 
+    protected $skipForDeletionCheck = ['mntJobLines'];
+
+    protected $features = [
+        'mntWorkRequisitionLines' => 'Work Requisitions',
+    ];
+
     public function opsVessel () : BelongsTo
     {
         return $this->belongsTo(OpsVessel::class);
     }
-    
+
     public function mntItem () : BelongsTo
     {
         return $this->belongsTo(MntItem::class);
