@@ -128,8 +128,8 @@ onMounted(() => {
                     <template v-for="(scmMrrLine, index) in materialReceiptReport.scmMrrLines" :key="index" >
                         <template v-for="(lineItem, itemIndex) in scmMrrLine.scmMrrLineItems" :key="itemIndex">
                           <tr>
-                            <td v-if="itemIndex == 0" :rowspan="scmMrrLine?.scmMrrLineItems?.length ?? 1">{{ scmMrrLine?.scmMrr?.ref_no }}</td>
-                            <td class="!text-center" v-if="itemIndex == 0" :rowspan="scmMrrLine?.scmMrrLineItems?.length ?? 1">{{ formatDate(scmMrrLine?.scmMrr?.raised_date) }}</td>
+                            <td v-if="itemIndex == 0" :rowspan="scmMrrLine?.scmMrrLineItems?.length ?? 1">{{ scmMrrLine?.scmPr?.ref_no }}</td>
+                            <td class="!text-center" v-if="itemIndex == 0" :rowspan="scmMrrLine?.scmMrrLineItems?.length ?? 1">{{ formatDate(scmMrrLine?.scmPr?.raised_date) }}</td>
                             <td>{{ lineItem?.scmMaterial?.material_name_and_code }}</td>
                             <td class="!text-right">{{ lineItem?.pr_qty }}</td>
                             <td class="!text-right">{{ lineItem?.po_qty }}</td>

@@ -192,8 +192,8 @@ function confirmDelete(id) {
               <td>
                 <nobr>
                 <action-button :action="'show'" :to="{ name: 'scm.material-receipt-reports.show', params: { materialReceiptReportId: materialReceiptReport.id } }"></action-button>
-                <action-button :action="'edit'" :to="{ name: 'scm.material-receipt-reports.edit', params: { materialReceiptReportId: materialReceiptReport.id } }"></action-button>
-                <action-button @click="confirmDelete(materialReceiptReport.id)" :action="'delete'"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'scm.material-receipt-reports.edit', params: { materialReceiptReportId: materialReceiptReport.id } }" v-if="materialReceiptReport?.scmCostingAllocations?.length == 0 && materialReceiptReport?.has_stockable_child == 0"></action-button>
+                <action-button @click="confirmDelete(materialReceiptReport.id)" :action="'delete'" v-if="materialReceiptReport?.scmCostingAllocations?.length == 0 && materialReceiptReport?.has_stockable_child == 0"></action-button>
                </nobr>
               </td>
             </tr>

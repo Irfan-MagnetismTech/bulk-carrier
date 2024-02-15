@@ -596,7 +596,7 @@
                           </td>
                         </tr>
                         <tr>
-                          <td><nobr>tolerence ( % )</nobr></td>
+                          <td><nobr>Tolerence ( % )</nobr></td>
                           <td>
                             <input type="number" v-model="form.scmPoLines[index].scmPoItems[itemIndex].tolerence_level" min=0 class="!text-xs form-input text-right">  
                           </td>
