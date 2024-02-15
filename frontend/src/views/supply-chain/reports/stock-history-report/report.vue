@@ -48,7 +48,7 @@ setTitle('Stock History Report');
                 <!-- <h1 class="py-1 font-bold text-center text-white bg-green-500 text-capitalize"> All Jobs </h1> -->
                 <div class="w-full">
                     
-                    <template v-for="(itemGroup, index) in allJobs" :key="index">
+                    <!-- <template v-for="(itemGroup, index) in allJobs" :key="index">
                         <div class="my-2">
                             <h3 class="mb-1 font-bold mt-2" >{{ itemGroup.name  }}</h3>
                             <table id="table" class="w-full whitespace-no-wrap">
@@ -72,22 +72,68 @@ setTitle('Stock History Report');
                                                 <td v-if="jobLineIndex == 0" :rowspan="job.mntJobLines.length ?? 1">{{ job.present_run_hour }} {{ job.present_run_hour!=null ? 'Hrs.' : '' }}</td>
                                                 <td class="text-left">{{ jobLine.job_description }}</td>
                                                 <td>{{ jobLine.cycle }} {{ jobLine.cycle_unit == "Hours" ? 'Hrs.' : jobLine.cycle_unit }}</td>
-                                                <!-- <td>{{ jobLine.next_due }} {{ jobLine.cycle_unit == "Hours" ? 'Hrs.' : '' }}</td>
-                                                <td>{{ jobLine.last_done }}</td> -->
+                                                
                                                 <td>{{ jobLine.cycle_unit == "Hours" ? jobLine.next_due + " Hrs." : formatDate(jobLine.next_due) }}</td>
                                                 <td>{{ formatDate(jobLine.last_done) }}</td>
                                             </tr>
                                             
                                         </template>
                                         
-                                        <!-- <td>{{ item.mntJobs.mntJobLines }}</td> -->
                                     </template>
                                     
                                     
                                 </tbody>
                             </table>
                         </div>
-                    </template>
+                    </template> -->
+                    <div class="grid grid-cols-1 md:grid-cols-3  gap-2 mb-2">
+                        <div class="p-2 text-base">
+                            <span><strong>Warehouse Name:</strong> {{ formParams?.scmWarehouse?.name }}</span>
+                        </div>
+
+                        
+                        <div class="p-2 text-base">
+                            <span><strong>Material Name:</strong> {{ formParams?.scmMaterial?.name }}</span>
+                        </div>
+
+
+                        
+                        <div class="p-2 text-base">
+                            <span><strong>From Date:</strong> {{ formatDate(formParams?.from_date) }}</span>
+                        </div>
+
+                        
+                        <div class="p-2 text-base">
+                            <span><strong>To Date:</strong> {{ formatDate(formParams?.to_date) }}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <table id="table" class="w-full whitespace-no-wrap">
+                            <thead>
+                                <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-200 dark-disabled:bg-gray-700">
+                                    <th class="w-1/12"> # </th>
+                                    <th class="w-2/12"> Date </th>
+                                    <th class="w-2/12"> Opening Stock </th>
+                                    <th class="w-2/12"> Received </th>
+                                    <th class="w-2/12"> Issued </th>
+                                    <th class="w-2/12"> Closing Stock </th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
+                                <tr v-for="(sh, index) in stockHistory" :key="index">
+                                    <td>{{ index+1 }}</td>
+                                    <td class="!text-center">{{ formatDate(sh.date) }}</td>
+                                    <td class="!text-right">{{ sh?.opening_stock }}</td>
+                                    <td class="!text-right">{{ sh?.received }}</td>
+                                    <td class="!text-right">{{ sh?.issued }}</td>
+                                    <td class="!text-right">{{ sh?.closing_stock }}</td>
+                                    
+                                </tr>
+                                
+                                
+                            </tbody>
+                        </table>
+                    </div>
 
                 </div>
             </div>
