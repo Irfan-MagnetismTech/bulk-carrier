@@ -14,6 +14,8 @@ import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import { formatDate } from "../../../utils/helper.js";
+import { indexPdfExport, tableToExcel } from "../../../utils/helper.js";
+
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 const props = defineProps({
@@ -23,6 +25,8 @@ const props = defineProps({
   },
 });
 
+const rightAlign = [];
+const leftAlign = [1,2];
 const { crewRequisitions, getCrewRequisitions, deleteCrewRequisition, isLoading, isTableLoading  } = useCrewRequisition();
 const { setTitle } = Title();
 setTitle('Crew Requisition');
@@ -141,11 +145,19 @@ filterOptions.value.filter_options.forEach((option, index) => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Crew Requisition List</h2>
-    <default-button :title="'Create Item'" :to="{ name: 'crw.crewRequisitions.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Create Item'" :to="{ name: 'crw.crewRequisitions.create' }" :icon="icons.AddIcon"></default-button>
+      <button title="Download PDF" class="pdf_button" @click="indexPdfExport(businessUnit,'l', 'Crew Requisition List','crew-requisition-list', leftAlign, rightAlign, false, false, false);">
+        <span v-html="icons.PdfExportIcon"></span>
+      </button>
+      <button title="Download Excel" class="excel_button" @click="tableToExcel('crew-requisition-list','Crew Requisition List');">
+        <span v-html="icons.ExcelExportIcon"></span>
+      </button>
+    </div>
   </div>
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="crew-requisition-list">
           <thead>
             <tr class="w-full">
               <th class="w-16">

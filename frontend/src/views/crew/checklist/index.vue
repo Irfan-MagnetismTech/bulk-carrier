@@ -14,6 +14,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import useGlobalFilter from "../../../composables/useGlobalFilter";
 import {useRouter} from "vue-router";
 import { formatDate } from "../../../utils/helper.js";
+import { indexPdfExport, tableToExcel } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 
@@ -23,6 +24,10 @@ const props = defineProps({
     default: 1,
   },
 });
+
+const rightAlign = [];
+const leftAlign = [1,2,3];
+
 const router = useRouter();
 const { checklists, getCheckLists, deleteCheckList, isLoading, isTableLoading  } = useCheckList();
 const { showFilter, swapFilter, setSortingState, clearFilter } = useGlobalFilter();
@@ -117,14 +122,22 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Onboard Check List</h2>
-    <default-button :title="'Create Item'" :to="{ name: 'crw.checklists.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Create Item'" :to="{ name: 'crw.checklists.create' }" :icon="icons.AddIcon"></default-button>
+      <button title="Download PDF" class="pdf_button" @click="indexPdfExport(businessUnit,'l', 'Checklist','checklist', leftAlign, rightAlign, false, false, false);">
+        <span v-html="icons.PdfExportIcon"></span>
+      </button>
+      <button title="Download Excel" class="excel_button" @click="tableToExcel('checklist','Checklist');">
+        <span v-html="icons.ExcelExportIcon"></span>
+      </button>
+    </div>
   </div>
     
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="checklist">
           <!-- <thead v-once>
           <tr class="w-full">
             <th>#</th>
