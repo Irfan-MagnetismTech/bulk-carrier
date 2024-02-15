@@ -3,7 +3,6 @@
 namespace App\Observers;
 
 use Illuminate\Database\Eloquent\Model;
-use Modules\SupplyChain\Entities\ScmPo;
 
 class GlobalObserver
 {
@@ -22,5 +21,6 @@ class GlobalObserver
                 return true;
             }
         }
+        return true;
     }
 }
