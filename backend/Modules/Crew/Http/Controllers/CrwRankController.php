@@ -30,9 +30,7 @@ class CrwRankController extends Controller
             $crwRanks = CrwRank::globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwRanks, 200);
-        }
-        catch (QueryException $e)
-        {
+        } catch (QueryException $e) {
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -50,9 +48,7 @@ class CrwRankController extends Controller
             $crwRank     = CrwRank::create($crwRankData);
 
             return response()->success('Created Successfully', $crwRank, 201);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -67,9 +63,7 @@ class CrwRankController extends Controller
     {
         try {
             return response()->success('Retrieved Succesfully', $crwRank, 200);
-        }
-        catch (QueryException $e)
-        {
+        } catch (QueryException $e) {
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -88,9 +82,7 @@ class CrwRankController extends Controller
             $crwRank->update($crwRankData);
 
             return response()->success('Updated Successfully', $crwRank, 202);
-        }
-        catch (QueryException $e)
-        {
+        } catch (QueryException $e) {
             return response()->error($e->getMessage(), 500);
         }
     }
@@ -104,16 +96,10 @@ class CrwRankController extends Controller
     public function destroy(CrwRank $crwRank)
     {
         try {
-            DB::beginTransaction();
-
             $crwRank->delete();
-            DB::commit();
             return response()->success('Deleted Successfully', null, 204);
-        }
-        catch (QueryException $e)
-        {
-            DB::rollBack();
-            return response()->json($crwRank->preventDeletionIfRelated(), 422);            
+        } catch (QueryException $e) {
+            return response()->error($e->getMessage(), 500);
         }
     }
 }

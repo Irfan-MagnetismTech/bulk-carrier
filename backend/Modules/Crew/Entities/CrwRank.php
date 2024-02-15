@@ -4,10 +4,13 @@ namespace Modules\Crew\Entities;
 
 use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Crew\Entities\CrwCrewProfile;
+use Modules\Crew\Entities\CrwCrewRequisitionLine;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Crew\Entities\CrwVesselRequiredCrewLine;
+use Modules\Crew\Entities\CrwRecruitmentApprovalLine;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CrwRank extends Model
 {
@@ -17,6 +20,16 @@ class CrwRank extends Model
      * @var array
      */
     protected $fillable = ['name', 'short_name', 'business_unit'];
+
+    /**
+     * @var array
+     */
+    protected $features = [
+        'crwVesselRequiredCrewLines'  => 'Vessel Crew Manning',
+        'crwCrewRequisitionLines'     => 'Crew Requisitions',
+        'crwRecruitmentApprovalLines' => 'Recruitment Approvals',
+        'crwCrewProfiles'             => 'Crew Profiles',
+    ];
 
     /**
      * @return mixed
