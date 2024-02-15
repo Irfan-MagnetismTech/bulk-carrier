@@ -20,7 +20,9 @@ class ScmReportController extends Controller
 
             $datas = [];
             $result = ScmStockLedger::query()
-                ->where('scm_warehouse_id', request()->scm_warehouse_id)
+                ->when(request()->has('scm_warehouse_id'), function ($query) {
+                    $query->where('scm_warehouse_id', request()->scm_warehouse_id);
+                })
                 ->get()
                 ->groupBy('scm_material_id');
 
@@ -61,15 +63,19 @@ class ScmReportController extends Controller
         try {
             $datas = [];
             $result = ScmStockLedger::query()
-            ->where('scm_warehouse_id', $request->scm_warehouse_id)
-            ->where('scm_material_id', $request->scm_material_id)
+            ->when(request()->has('scm_warehouse_id'), function ($query) {
+                $query->where('scm_warehouse_id', request()->scm_warehouse_id);
+            })
+            ->when(request()->has('scm_material_id'), function ($query) {
+                $query->where('scm_material_id', request()->scm_material_id);
+            })
             ->whereBetween('date', [$request->from_date, $request->to_date])
             ->get()
             ->groupBy(function($record) {
                 return Carbon::parse($record->date)->format('Y-m-d');
             })->values();
 
-            dd($result);
+            // dd($result);
             foreach ($result as $items) {
                 $adas = [
                     'date' => Carbon::parse($items[0]->date)->format('Y-m-d'),
@@ -113,13 +119,13 @@ class ScmReportController extends Controller
                     'scmPrLines.closedBy',
                     'scmPrLines.createdBy'
                 )
-                ->when(request()->has('scm_warehouse_id'), function ($query) {
+                ->when(request()->has('scm_warehouse_id') && isset(request()->scm_warehouse_id), function ($query) {
                     $query->where('scm_warehouse_id', request()->scm_warehouse_id);
                 })
-                ->when(request()->has('purchase_center'), function ($query) {
+                ->when(request()->has('purchase_center') && isset(request()->purchase_center), function ($query) {
                     $query->where('purchase_center', request()->purchase_center);
                 })
-                ->when(request()->has('status'), function ($query) {
+                ->when(request()->has('status') && isset(request()->status), function ($query) {
                     $query->where('status', request()->status);
                 })
                 ->whereBetween('raised_date', [$request->from_date, $request->to_date])
