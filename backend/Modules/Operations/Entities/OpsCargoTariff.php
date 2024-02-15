@@ -24,6 +24,16 @@ class OpsCargoTariff extends Model
         'status',
         'business_unit',
     ];
+
+    protected $skipForDeletionCheck = ['opsCargoType', 'opsCargoTariffLines', 'opsVessel', 'loadingPoint','unloadingPoint'];
+
+    protected $features = [
+        'opsChartererContractsFinancialTerms' => 'Charterer Contracts Financial Terms Records',
+        'opsContractAssigns' => 'Contract Assigns Records',
+        'opsContractTariffs' => 'Contract Tariffs Records',
+        'opsVoyages' => 'Voyages Records',
+        'opsVoyageSectors' => 'Voyage Sectors Records',
+    ];
     
     public function opsCargoType()
     {
@@ -46,5 +56,31 @@ class OpsCargoTariff extends Model
 
     public function unloadingPoint() {
         return $this->belongsTo(OpsPort::class, 'unloading_point', 'code');
+    }
+
+    // for check only deleteable
+    public function opsChartererContractsFinancialTerms()
+    {
+        return $this->hasMany(OpsChartererContractsFinancialTerm::class, 'ops_cargo_tariff_id', 'id');
+    }
+
+    public function opsContractAssigns()
+    {
+        return $this->hasMany(OpsContractAssign::class, 'ops_cargo_tariff_id', 'id');
+    }
+
+    public function opsContractTariffs()
+    {
+        return $this->hasMany(OpsContractTariff::class, 'ops_cargo_tariff_id', 'id');
+    }
+
+    public function opsVoyages()
+    {
+        return $this->hasMany(OpsVoyage::class, 'ops_cargo_tariff_id', 'id');
+    }
+
+    public function opsVoyageSectors()
+    {
+        return $this->hasMany(OpsVoyageSector::class, 'ops_cargo_tariff_id', 'id');
     }
 }
