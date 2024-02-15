@@ -13,6 +13,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import useGlobalFilter from "../../../composables/useGlobalFilter";
 import {useRouter} from "vue-router";
+import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 const props = defineProps({
   page: {
@@ -22,7 +23,7 @@ const props = defineProps({
 });
 const router = useRouter();
 const icons = useHeroIcon();
-const { ranks, getRanks, deleteRank, isLoading, isTableLoading } = useRank();
+const { ranks, getRanks, deleteRank, errors, isLoading, isTableLoading } = useRank();
 const { showFilter, swapFilter, setSortingState, clearFilter } = useGlobalFilter();
 const { setTitle } = Title();
 setTitle('Rank List');
@@ -218,4 +219,5 @@ filterOptions.value.filter_options.forEach((option, index) => {
     </div>
     <Paginate :data="ranks" to="crw.ranks.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
