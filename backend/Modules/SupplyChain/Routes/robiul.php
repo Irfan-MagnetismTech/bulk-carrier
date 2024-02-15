@@ -6,6 +6,7 @@ use Modules\SupplyChain\Http\Controllers\ScmWoController;
 use Modules\SupplyChain\Http\Controllers\ScmWrController;
 use Modules\SupplyChain\Http\Controllers\ScmWcsController;
 use Modules\SupplyChain\Http\Controllers\ScmWrrController;
+use Modules\SupplyChain\Http\Controllers\ScmWcsqController;
 use Modules\SupplyChain\Http\Controllers\ScmReportController;
 use Modules\SupplyChain\Http\Controllers\ScmLcRecordStatusController;
 
@@ -29,19 +30,20 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('work-requisitions-close', [ScmWrController::class, "wrCloseIndex"])->name('wrCloseIndex');
 
 
-    Route::post('wcs-quotations', [ScmWcsController::class, "storeWcsQuotation"])->name('wcs-quotations.create');
-    Route::get('wcs-quotations/{quotationId}', [ScmWcsController::class, "showWcsQuotation"])->name('wcs-quotations.show');
-    Route::get('wcs-quotations', [ScmWcsController::class, "getWcsQuotations"])->name('wcs-quotations.index');
-    Route::put('wcs-quotations/{quotationId}', [ScmWcsController::class, "updateWcsQuotation"])->name('wcs-quotations.update');
-    Route::delete('wcs-quotations/{quotationId}', [ScmWcsController::class, "deleteWcsQuotation"])->name('wcs-quotations.delete');
+    Route::post('wcs-quotations', [ScmWcsqController::class, "store"])->name('wcs-quotations.create');
+    Route::get('wcs-quotations/{quotationId}', [ScmWcsqController::class, "show"])->name('wcs-quotations.show');
+    Route::get('wcs-quotations', [ScmWcsqController::class, "index"])->name('wcs-quotations.index');
+    Route::put('wcs-quotations/{quotationId}', [ScmWcsqController::class, "update"])->name('wcs-quotations.update');
+    Route::delete('wcs-quotations/{quotationId}', [ScmWcsqController::class, "delete"])->name('quotations.delete');
+    Route::post('wcs-selected-supplier', [ScmWcsqController::class, "wcsSelectedSupplierstore"])->name('wcsselectedSupplier.store');
+
     Route::get('search-work-cs', [ScmWcsController::class, "searchWorkCs"])->name('searchWorkCs');
-    Route::post('wcs-selected-supplier', [ScmWcsController::class, "wcsSelectedSupplierstore"])->name('wcsselectedSupplier.store');
     Route::get('wcs-wise-vendor-list', [ScmWcsController::class, "wcsWiseVendorList"])->name('wcs-wise-vendor-list');
     Route::get('get-wcs-data/{id}', [ScmWcsController::class, "getWcsWiseData"])->name('getWcsWiseData');
     Route::get('getWcsData/{csId}', [ScmWcsController::class, "getWcsData"])->name('getWcsData');
-    
+
     Route::get('get-po-material-by-po-id', [ScmPoController::class, "getPoMaterialByPoId"])->name('getPoMaterialByPoId');
-    
+
     Route::get('get-wo-line-datas', [ScmWoController::class, "getWoLineDatas"])->name('get-wo-line-datas');
     Route::get('search-wr-wise-service', [ScmWoController::class, "getServiceByWrId"])->name('getServiceByWrId');
     Route::get('search-wo', [ScmWoController::class, "searchWo"])->name('searchWo');
@@ -59,7 +61,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('get-wrr-line-data', [ScmWrrController::class, "getWrrLineData"])->name('getWrrLineData');
     Route::get('get-wo-service-list', [ScmWrrController::class, "getWoServiceList"])->name('getWoServiceList');
     Route::get('get-service-for-wrr', [ScmWrrController::class, "getServiceByWrrId"])->name('getServiceForWrrId');
-    
+
     Route::get('inventory-report', [ScmReportController::class, "inventoryReport"])->name('inventoryReport');
     Route::get('stock-history-report', [ScmReportController::class, "stockHistoryReport"])->name('stockHistoryReport');
     Route::get('purchase-requisition-report', [ScmReportController::class, "purchaseRequisitionReport"])->name('purchaseRequisitionReport');
