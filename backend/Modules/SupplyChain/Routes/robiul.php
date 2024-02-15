@@ -30,11 +30,11 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('work-requisitions-close', [ScmWrController::class, "wrCloseIndex"])->name('wrCloseIndex');
 
 
-    Route::post('wcs-quotations', [ScmWcsqController::class, "storeWcsQuotation"])->name('wcs-quotations.create');
-    Route::get('wcs-quotations/{quotationId}', [ScmWcsqController::class, "showWcsQuotation"])->name('wcs-quotations.show');
-    Route::get('wcs-quotations', [ScmWcsqController::class, "getWcsQuotations"])->name('wcs-quotations.index');
-    Route::put('wcs-quotations/{quotationId}', [ScmWcsqController::class, "updateWcsQuotation"])->name('wcs-quotations.update');
-    Route::delete('wcs-quotations/{quotationId}', [ScmWcsqController::class, "deleteWcsQuotation"])->name('quotations.delete');
+    Route::post('wcs-quotations', [ScmWcsqController::class, "store"])->name('wcs-quotations.create');
+    Route::get('wcs-quotations/{quotationId}', [ScmWcsqController::class, "show"])->name('wcs-quotations.show');
+    Route::get('wcs-quotations', [ScmWcsqController::class, "index"])->name('wcs-quotations.index');
+    Route::put('wcs-quotations/{quotationId}', [ScmWcsqController::class, "update"])->name('wcs-quotations.update');
+    Route::delete('wcs-quotations/{quotationId}', [ScmWcsqController::class, "delete"])->name('quotations.delete');
     Route::post('wcs-selected-supplier', [ScmWcsqController::class, "wcsSelectedSupplierstore"])->name('wcsselectedSupplier.store');
 
     Route::get('search-work-cs', [ScmWcsController::class, "searchWorkCs"])->name('searchWorkCs');

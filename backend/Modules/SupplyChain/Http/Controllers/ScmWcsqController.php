@@ -19,13 +19,13 @@ class ScmWcsqController extends Controller
 {
     function __construct(private FileUploadService $fileUpload)
     {
-            // $this->middleware('permission:work-cs-quotation-create|work-cs-quotation-edit|work-cs-quotation-show|work-cs-quotation-delete', ['only' => ['getWcsQuotations','showWcsQuotation']]);
-            // $this->middleware('permission:work-cs-quotation-create', ['only' => ['storeWcsQuotation','wcsSelectedSupplierstore']]);
-            // $this->middleware('permission:work-cs-quotation-edit', ['only' => ['updateWcsQuotation','wcsSelectedSupplierstore']]);
-            // $this->middleware('permission:work-cs-quotation-delete', ['only' => ['deleteWcsQuotation']]);
+            // $this->middleware('permission:work-cs-quotation-create|work-cs-quotation-edit|work-cs-quotation-show|work-cs-quotation-delete', ['only' => ['index','show']]);
+            // $this->middleware('permission:work-cs-quotation-create', ['only' => ['store','wcsSelectedSupplierstore']]);
+            // $this->middleware('permission:work-cs-quotation-edit', ['only' => ['update','wcsSelectedSupplierstore']]);
+            // $this->middleware('permission:work-cs-quotation-delete', ['only' => ['destroy']]);
     }
   
-    public function getWcsQuotations(Request $request)
+    public function index(Request $request)
     {
         $scmWcs = ScmWcsVendor::query()
             ->with('scmWcs.scmWcsVendors', 'scmVendor.scmVendorContactPerson', 'scmWcsVendorServices')
@@ -38,7 +38,7 @@ class ScmWcsqController extends Controller
     }
 
 
-    public function storeWcsQuotation(ScmWcsQuotationRequest $request)
+    public function store(ScmWcsQuotationRequest $request)
     {
         try {
             // ScmCs::find($request->scm_cs_id)->update(['status' => 'quotation']);
@@ -106,7 +106,7 @@ class ScmWcsqController extends Controller
     }
 
 
-    public function showWcsQuotation($id)
+    public function show($id)
     {
 
         $scmWcsVendor = ScmWcsVendor::with('scmWcs', 'scmVendor.scmVendorContactPerson', 'scmWcsVendorServices.scmService', 'scmWcsVendorServices.scmWr')->find($id);
@@ -121,7 +121,7 @@ class ScmWcsqController extends Controller
     }
 
     // update quotation
-    public function updateWcsQuotation(ScmWcsQuotationRequest $request, $id)
+    public function update(ScmWcsQuotationRequest $request, $id)
     {
         try {
             // return response()->json( $request->all(), 422);
@@ -190,7 +190,7 @@ class ScmWcsqController extends Controller
     }
 
 
-    public function deleteWcsQuotation($id)
+    public function destroy($id)
     {
         $scmWcsVendor = ScmWcsVendor::with('scmWcsVendorServices')->find($id);
 
