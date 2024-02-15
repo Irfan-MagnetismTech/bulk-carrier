@@ -88,6 +88,20 @@ export default [
                             subSubMenu: []
                         },
 
+                        
+                        {
+                            route: `${BASE}.reports.purchase-requisition-report`,
+                            label: 'Purchase Requisition Report',
+                            preIcon: icons.User,
+                            postIcon: icons.DownArrow,
+                            is_active: false,
+                            is_open: false,
+                            permissionKey: '',
+                            subSubMenu: []
+                        },
+
+
+
                     ]
                 },
              ]
