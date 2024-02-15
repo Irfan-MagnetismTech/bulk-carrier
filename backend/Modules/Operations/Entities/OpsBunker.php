@@ -71,6 +71,6 @@ class OpsBunker extends Model
 
     public function opsBulkNoonReportConsumptions()
     {
-        return $this->hasMany(OpsBulkNoonReportConsumption::class, 'ops_cargo_tariff_id', 'id');
+        return $this->hasMany(OpsBulkNoonReportConsumption::class);
     }
 }
