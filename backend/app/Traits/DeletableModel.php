@@ -20,6 +20,8 @@ trait DeletableModel
         $methods = [];
         if (property_exists($this, 'skipForDeletionCheck')) {
             $methods = array_diff($allMethods, $this->skipForDeletionCheck ?? []);
+        } else {
+            $methods = $allMethods;
         }
 
         $totalCount = 0;
