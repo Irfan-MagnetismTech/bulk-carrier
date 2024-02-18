@@ -12,6 +12,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue"
 
 const props = defineProps({
   page: {
@@ -31,7 +32,8 @@ const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
-
+const rightAlign = [];
+const leftAlign = [2];
 
 function confirmDelete(id) {
   Swal.fire({
@@ -142,13 +144,23 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Port List</h2>
-    <default-button :title="'Create Port'" :to="{ name: 'ops.configurations.ports.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Create Port'" :to="{ name: 'ops.configurations.ports.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+        :businessUnit="businessUnit"
+        :pageOrientation="'l'"
+        :fileName="'Port List'"
+        :tableId="'port-list'"
+        :leftAlign="leftAlign"
+        :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
 
   <div id="customDataTable" class="mb-6">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >        
+      <table class="w-full whitespace-no-wrap" id="port-list">        
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="ports?.data?.length" class="relative">
               <tr v-for="(port, index) in ports.data" :key="port?.id">
