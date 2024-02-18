@@ -28,10 +28,11 @@ class ScmPoController extends Controller
 {
     function __construct()
     {
-        //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
-        //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
-        //     $this->middleware('permission:charterer-contract-edit', ['only' => ['update']]);
-        //     $this->middleware('permission:charterer-contract-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:scm-purchase-order-view|scm-purchase-order-create|scm-purchase-order-edit|scm-purchase-order-delete|scm-purchase-order-close', ['only' => ['index', 'show']]);
+        $this->middleware('permission:scm-purchase-order-create', ['only' => ['store']]);
+        $this->middleware('permission:scm-purchase-order-edit', ['only' => ['update']]);
+        $this->middleware('permission:scm-purchase-order-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:scm-purchase-order-close', ['only' => ['closePo', 'closePoLine']]);
     }
 
     /**
@@ -450,9 +451,9 @@ class ScmPoController extends Controller
     {
         if ($request->business_unit != 'ALL') {
             $scmPo = ScmPo::query()
-                ->with('scmPoLines', 'scmPoTerms', 'scmVendor','scmLcRecords','scmWarehouse')
+                ->with('scmPoLines', 'scmPoTerms', 'scmVendor', 'scmLcRecords', 'scmWarehouse')
                 ->whereBusinessUnit($request->business_unit)
-                ->where('status','Closed')
+                ->where('status', 'Closed')
                 // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
                 // ->limit(10)
@@ -471,7 +472,7 @@ class ScmPoController extends Controller
                 ->with('scmPoLines', 'scmPoTerms', 'scmVendor')
                 ->where('purchase_center', 'foreign')
                 ->orWhere('purchase_center', 'FOREIGN')
-                ->whereNot('status','Closed')
+                ->whereNot('status', 'Closed')
                 // ->where('ref_no', 'LIKE', "%$request->searchParam%")
                 ->orderByDesc('ref_no')
                 // ->limit(10)
@@ -683,7 +684,8 @@ class ScmPoController extends Controller
         }
     }
 
-    public function getPoWiseMrr(){
+    public function getPoWiseMrr()
+    {
         try {
             $scmMrr = ScmMrr::query()
                 ->with('scmPo')
