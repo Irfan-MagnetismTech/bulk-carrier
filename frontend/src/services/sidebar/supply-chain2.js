@@ -54,6 +54,17 @@ export default [
                             subSubMenu: []
                         },
 
+                        {
+                            route: `${BASE}.work-bills.index`,
+                            label: 'Work Bills',
+                            preIcon: icons.User,
+                            postIcon: icons.DownArrow,
+                            is_active: false,
+                            is_open: false,
+                            permissionKey: '',
+                            subSubMenu: []
+                        },
+
             
                     ]
                 },
