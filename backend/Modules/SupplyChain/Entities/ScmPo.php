@@ -11,6 +11,7 @@ use Modules\SupplyChain\Entities\ScmMrr;
 use Modules\SupplyChain\Entities\ScmPoLine;
 use Modules\SupplyChain\Entities\ScmPoTerm;
 use Modules\SupplyChain\Entities\ScmVendor;
+use Modules\SupplyChain\Entities\ScmCosting;
 use Modules\SupplyChain\Entities\ScmLcRecord;
 use Modules\SupplyChain\Entities\ScmWarehouse;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -56,6 +57,8 @@ class ScmPo extends Model
     protected $features = [
         'scmLcRecords' => 'LC Records',
         'scmMrrs' => 'Material Receipt Reports',
+        'scmCostings' => 'Costings',
+
     ];
 
     public function scmPoLines(): HasMany
@@ -111,5 +114,10 @@ class ScmPo extends Model
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
+    }
+
+    public function scmCostings(): HasMany
+    {
+        return $this->hasMany(ScmCosting::class);
     }
 }

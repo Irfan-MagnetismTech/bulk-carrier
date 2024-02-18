@@ -28,14 +28,14 @@ use Modules\SupplyChain\Http\Requests\ScmPoRequest;
 class ScmPoController extends Controller
 {
     use HasRoles;
-    function __construct()
-    {
-        $this->middleware('permission:scm-purchase-order-view|scm-purchase-order-create|scm-purchase-order-edit|scm-purchase-order-delete|scm-purchase-order-close', ['only' => ['index', 'show']]);
-        $this->middleware('permission:scm-purchase-order-create', ['only' => ['store']]);
-        $this->middleware('permission:scm-purchase-order-edit', ['only' => ['update']]);
-        $this->middleware('permission:scm-purchase-order-delete', ['only' => ['destroy']]);
-        $this->middleware('permission:scm-purchase-order-close', ['only' => ['closePo', 'closePoLine']]);
-    }
+    // function __construct()
+    // {
+    //     $this->middleware('permission:scm-purchase-order-view|scm-purchase-order-create|scm-purchase-order-edit|scm-purchase-order-delete|scm-purchase-order-close', ['only' => ['index', 'show']]);
+    //     $this->middleware('permission:scm-purchase-order-create', ['only' => ['store']]);
+    //     $this->middleware('permission:scm-purchase-order-edit', ['only' => ['update']]);
+    //     $this->middleware('permission:scm-purchase-order-delete', ['only' => ['destroy']]);
+    //     $this->middleware('permission:scm-purchase-order-close', ['only' => ['closePo', 'closePoLine']]);
+    // }
 
     /**
      * Display a listing of the resource.

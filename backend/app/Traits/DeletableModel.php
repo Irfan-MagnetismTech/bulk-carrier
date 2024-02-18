@@ -46,7 +46,7 @@ trait DeletableModel
 
         if ($relatedAsString !== '') {
             $trimedRelatedAsString = rtrim($relatedAsString, ', ');
-            $finalRelatedAsString = preg_replace('/, /', ' and ', $trimedRelatedAsString);
+            $finalRelatedAsString = preg_replace('/,([^,]*)$/', ' and$1', $trimedRelatedAsString);
         }
 
         if ($totalCount > 0) {
