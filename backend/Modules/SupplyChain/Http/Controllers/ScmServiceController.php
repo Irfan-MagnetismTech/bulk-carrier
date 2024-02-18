@@ -10,6 +10,13 @@ use Modules\SupplyChain\Http\Requests\ScmServiceRequest;
 
 class ScmServiceController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:scm-service-view|scm-service-create|scm-service-edit|scm-service-delete|scm-service-close', ['only' => ['index', 'show']]);
+        $this->middleware('permission:scm-service-create', ['only' => ['store']]);
+        $this->middleware('permission:scm-service-edit', ['only' => ['update']]);
+        $this->middleware('permission:scm-service-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      * @return JsonResponse
