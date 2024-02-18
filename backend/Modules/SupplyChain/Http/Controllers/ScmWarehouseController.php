@@ -11,6 +11,13 @@ use Modules\SupplyChain\Http\Requests\ScmWarehouseRequest;
 
 class ScmWarehouseController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:scm-warehouse-view|scm-warehouse-create|scm-warehouse-edit|scm-warehouse-delete|scm-warehouse-close', ['only' => ['index', 'show']]);
+        $this->middleware('permission:scm-warehouse-create', ['only' => ['store']]);
+        $this->middleware('permission:scm-warehouse-edit', ['only' => ['update']]);
+        $this->middleware('permission:scm-warehouse-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      * @return JsonResponse
