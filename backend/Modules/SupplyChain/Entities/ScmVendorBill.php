@@ -8,6 +8,7 @@ use App\Traits\UniqueKeyGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmVendor;
 use Modules\SupplyChain\Entities\ScmWarehouse;
+use Modules\Accounts\Entities\AccCashRequisition;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\SupplyChain\Entities\ScmVendorBillLine;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -40,7 +41,8 @@ class ScmVendorBill extends Model
         'usd_to_bdt',
         'currency_to_usd',
         'scm_warehouse_id',
-        'bill_no'
+        'bill_no',
+        'acc_cash_requisition_id',
     ];
 
     public function scmVendorBillLines(): HasMany
@@ -61,5 +63,10 @@ class ScmVendorBill extends Model
     public function scmWarehouse(): BelongsTo
     {
         return $this->belongsTo(ScmWarehouse::class);
+    }
+
+    public function accCashRequisition(): BelongsTo
+    {
+        return $this->belongsTo(AccCashRequisition::class);
     }
 }

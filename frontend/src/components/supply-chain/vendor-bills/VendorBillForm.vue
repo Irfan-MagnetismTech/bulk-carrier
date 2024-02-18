@@ -67,14 +67,26 @@
       <span class="text-gray-700"><nobr>Exchange Rate</nobr> (USD To BDT)</span>
       <input type="text" @input="redoFullCalculation" v-model="form.usd_to_bdt" placeholder="Exchange Rate" class="form-input" autocomplete="off" :readonly="isBDTCurrency()"/>
     </label>
+    <label class="label-group">
+          <span class="label-item-title">Cash Requisition</span>
+          <v-select :options="filteredCashRequisitions" placeholder="--Choose an option--" :loading="isLoading" v-model="form.accCashRequisition" label="id" class="block form-input">
+                <template #search="{attributes, events}">
+                    <input
+                        class="vs__search"
+                        v-bind="attributes"
+                        v-on="events"
+                        />
+                </template>
+             </v-select>
+      </label>
+  </div>
+  <div class="input-group !w-3/4">
+    <label class="label-group">
+          <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
+    </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700">Upload File </span>
       <input type="file" @change="selectedFile" placeholder="Upload File" class="form-input" autocomplete="off" />
-    </label>
-  </div>
-  <div class="input-group !w-1/2">
-    <label class="label-group">
-          <RemarksComponet v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponet>
     </label>
   </div>
 
@@ -220,12 +232,14 @@
     import useBusinessInfo from "../../../composables/useBusinessInfo"
     import useHeroIcon from "../../../assets/heroIcon";
     import Swal from "sweetalert2";
+    import useMaterialReceiptReport from '../../../composables/supply-chain/useMaterialReceiptReport';
 
 
     const icons = useHeroIcon();
     const { vendors, searchVendor, scmVendorMrrs, searchMrrByVendor, isLoading, isMrrLoading } = useVendor();
     const { warehouses, searchWarehouse } = useWarehouse();
     const { getCurrencies, currencies, isCurrencyLoading } = useBusinessInfo();
+    const { isLoading:cashRequisitonLoader, getCashRequisitionNoList, filteredCashRequisitions } = useMaterialReceiptReport();
 
 
     const props = defineProps({
@@ -276,6 +290,12 @@
   function fetchVendors(search) {
     searchVendor(search, props.form.business_unit);
   }
+
+  watch(() => props?.form?.accCashRequisition, (newVal, oldVal) => {
+    if (newVal) {
+      props.form.acc_cash_requisition_id = newVal.id;
+    }
+  });
 
   function fetchWarehouses(search) {
     searchWarehouse(search, props.form.business_unit);
@@ -339,9 +359,9 @@ const calculateSingleItem = (index) => {
 
   const { amount, amount_usd, amount_bdt } = calculateInCurrency(props.form.scmVendorBillLines[index]);
 
-  props.form.scmVendorBillLines[index].amount_usd = parseFloat((amount_usd > 0) ? amount_usd : 0).toFixed(2);
-  props.form.scmVendorBillLines[index].amount_bdt = parseFloat((amount_bdt > 0) ? amount_bdt : 0).toFixed(2);
-  props.form.scmVendorBillLines[index].amount = parseFloat((amount > 0) ? amount : 0).toFixed(2);
+  props.form.scmVendorBillLines[index].amount_usd = parseFloat((amount_usd > 0) ? amount_usd : 0);
+  props.form.scmVendorBillLines[index].amount_bdt = parseFloat((amount_bdt > 0) ? amount_bdt : 0);
+  props.form.scmVendorBillLines[index].amount = parseFloat((amount > 0) ? amount : 0);
 
   calculateSubTotal();
 }
@@ -413,6 +433,7 @@ const calculateInCurrency = (item) => {
 
 
 onMounted(() => {
+  getCashRequisitionNoList();
   watchPostEffect(() => {
     getCurrencies();
   });
