@@ -8,17 +8,20 @@ use Modules\SupplyChain\Http\Controllers\ScmPoController;
 use Modules\SupplyChain\Http\Controllers\ScmPrController;
 use Modules\SupplyChain\Http\Controllers\ScmSiController;
 use Modules\SupplyChain\Http\Controllers\ScmSrController;
+use Modules\SupplyChain\Http\Controllers\ScmCsqController;
 use Modules\SupplyChain\Http\Controllers\ScmMmrController;
 use Modules\SupplyChain\Http\Controllers\ScmMrrController;
 use Modules\SupplyChain\Http\Controllers\ScmSirController;
 use Modules\SupplyChain\Http\Controllers\ScmUnitController;
 use Modules\SupplyChain\Http\Controllers\ScmVendorController;
+use Modules\SupplyChain\Http\Controllers\ScmCostingController;
 use Modules\SupplyChain\Http\Controllers\ScmServiceController;
 use Modules\SupplyChain\Http\Controllers\ScmLcRecordController;
 use Modules\SupplyChain\Http\Controllers\ScmMaterialController;
 use Modules\SupplyChain\Http\Controllers\SupplyChainController;
 use Modules\SupplyChain\Http\Controllers\ScmWarehouseController;
 use Modules\SupplyChain\Http\Controllers\ScmAdjustmentController;
+use Modules\SupplyChain\Http\Controllers\ScmVendorBillController;
 use Modules\SupplyChain\Http\Controllers\ScmStockLedgerController;
 use Modules\SupplyChain\Http\Controllers\ScmOpeningStockController;
 use Modules\SupplyChain\Http\Controllers\ScmMaterialCategoryController;
@@ -44,6 +47,8 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
         'movement-ins' => ScmMiController::class,
         'material-cs' => ScmCsController::class,
         'adjustments' => ScmAdjustmentController::class,
+        'vendor-bills' => ScmVendorBillController::class,
+        'material-costings' => ScmCostingController::class,
     ]);
 
     //Search Apis
@@ -72,27 +77,22 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
 
     Route::get('search-mrr', [ScmMrrController::class, "searchMrr"])->name('searchMrr');
 
-
-
-
-
     Route::get('search-mmr', [ScmMmrController::class, "searchMmr"])->name('searchMmr');
     Route::get('search-mo', [ScmMoController::class, "searchMo"])->name('searchMo');
 
     Route::get('get-material-for-mrr', [ScmMrrController::class, "getMaterialByPrId"])->name('getMaterialForMrrId');
+    Route::get('get-mrr-line-data', [ScmMrrController::class, "getMrrLineData"])->name('getMrrLineData');
+    Route::get('get-po-material-list', [ScmMrrController::class, "getPoMaterialList"])->name('getPoMaterialList');
     Route::get('get-current-stock-by-warehouse', [ScmMmrController::class, "getCurrentStockByWarehouse"])->name('getCurrentStockByWarehouse');
-
-
-
+    Route::get('get-vendor-wise-mrr', [ScmVendorBillController::class, "getVendorWiseMrr"])->name('getVendorWiseMrr');
 
     //Business Info Apis
     Route::get('store-categories', fn () => config('businessinfo.store_category'));
     Route::get('product-types', fn () => config('businessinfo.product_type'));
     Route::get('lc-cost-heads', fn () => config('businessinfo.lc_cost_heads'));
+    Route::get('material-costing-heads', fn () => config('businessinfo.material_costing_head'));
 
     //Laravel Excel Apis
-
-
 
     //Current Stock Apis
     Route::get('current-stock-by-material', [ScmStockLedgerController::class, "currentStock"])->name('currentStock');
@@ -119,14 +119,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::controller(ScmCsController::class)->group(function () {
         Route::post('store-cs-landed-cost', "storeCsLandedCost")->name('storeCsLandedCost');
         Route::post('update-cs-landed-cost', "updateCsLandedCost")->name('updateCsLandedCost');
-        Route::get('get-cs-data/{id}', "getCsWiseData")->name('getCsWiseData');
-
-        // CS quotation
-        Route::post('quotations', "storeQuotation")->name('quotations.create');
-        Route::get('quotations', "getQuotations")->name('quotations.index');
-        Route::get('quotations/{quotationId}', "showQuotation")->name('quotations.show');
-        Route::put('quotations/{quotationId}', "updateQuotation")->name('quotations.update');
-        Route::delete('quotations/{quotationId}', "deleteQuotation")->name('quotations.delete');
+        Route::get('get-cs-data/{id}', "getCsWiseData")->name('getCsWiseData');        
 
         Route::get('cs-wise-vendor-list', "csWiseVendorList")->name('cs-wise-vendor-list');
         Route::get('search-material-cs', "searchMaterialCs")->name('searchMaterialCs');
@@ -135,14 +128,30 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
         Route::get('selected-vendors', "selectedVendors")->name('selectedVendors');
     });
 
+    // CS quotation
+    Route::controller(ScmCsqController::class)->group(function () {
+        Route::post('quotations', "storeQuotation")->name('quotations.create');
+        Route::get('quotations', "getQuotations")->name('quotations.index');
+        Route::get('quotations/{quotationId}', "showQuotation")->name('quotations.show');
+        Route::put('quotations/{quotationId}', "updateQuotation")->name('quotations.update');
+        Route::delete('quotations/{quotationId}', "deleteQuotation")->name('quotations.delete');
+    });
+
     Route::controller(ScmPoController::class)->group(function () {
         Route::get('search-pr-wise-material', "getMaterialByPrId")->name('getMaterialByPrId');
         Route::get('search-po', "searchPo")->name('searchPo');
+        Route::get('get-po-list', "getPoListForMrr")->name('getPoListForMrr');
         Route::get('search-po-for-lc', "searchPoForLc")->name('searchPoForLc');
         Route::get('get-po-line-datas', "getPoLineDatas")->name('get-po-line-datas');
         Route::get('get-pr-cs-wise-po-data', "getPoOrPoCsWisePrData");
         Route::post('close-po', "closePo")->name('closePo');
         Route::post('close-poline', "closePoLine")->name('closePoLine');
+        Route::get('get-po-wise-pr-list', "getPoWisePrList")->name('getPoWisePrList');
+        Route::get('get-po-wise-mrr', "getPoWiseMrr")->name('getPoWiseMrr');
+    });
+
+    Route::controller(ScmCostingController::class)->group(function () {
+        Route::get('material-costing-approve/{materialCostingId}', "approve")->name('material-costings.approve');
     });
 });
 

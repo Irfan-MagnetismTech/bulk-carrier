@@ -4,6 +4,7 @@ namespace Modules\SupplyChain\Entities;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -58,5 +59,10 @@ class ScmWoItem extends Model
     public function closedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'closed_by' , 'id');
+    }
+
+    public function scmWrrLineItems(): HasMany
+    {
+        return $this->hasMany(ScmWrrItem::class, 'wo_composite_key', 'wo_composite_key');
     }
 }

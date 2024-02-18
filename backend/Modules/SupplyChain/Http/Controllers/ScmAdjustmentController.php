@@ -71,9 +71,10 @@ class ScmAdjustmentController extends Controller
 
             $linesData = CompositeKey::generateArray($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
             $adjustment->scmAdjustmentLines()->createMany($linesData);
+            $composite = collect($linesData)->pluck('ajt_composite_key')->toArray();
 
             if ($request->type === 'Addition') {
-                StockLedgerData::insert($adjustment, $linesData);
+                StockLedgerData::insert($adjustment, $linesData, $composite);
             } else {
                 $dataForStock = [];
                 foreach ($request->scmAdjustmentLines as $key => $value) {
@@ -131,9 +132,10 @@ class ScmAdjustmentController extends Controller
             $linesData = CompositeKey::generateArray($request->scmAdjustmentLines, $adjustment->id, 'scm_material_id', 'ajt');
 
             $adjustment->scmAdjustmentLines()->createMany($linesData);
+            $composite = collect($linesData)->pluck('ajt_composite_key')->toArray();
 
             if ($request->type === 'Addition') {
-                StockLedgerData::insert($adjustment, $linesData);
+                StockLedgerData::insert($adjustment, $linesData, $composite);
             } else {
                 $dataForStock = [];
                 foreach ($request->scmAdjustmentLines as $key => $value) {

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('scm_cs_vendor_id')->nullable();
             $table->string('scm_vendor_id')->nullable();
             $table->string('hs_codes')->nullable();
+            $table->string('price_per_piece')->nullable();
             $table->string('exchange_rate')->nullable();
             $table->string('product_price')->nullable();
             $table->string('freight_charge')->nullable();

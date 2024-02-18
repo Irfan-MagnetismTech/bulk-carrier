@@ -6,7 +6,7 @@ use Modules\SupplyChain\Entities\ScmStockLedger;
 
 /**
  * @package Modules\SupplyChain\Services
- * 
+ *
  * @class-type Service
  */
 class StockLedgerData
@@ -20,10 +20,10 @@ class StockLedgerData
      *
      * @return array
      */
-    public static function insert(object $parentModel, array $lines, bool $os = false): array
+    public static function insert(object $parentModel, array $lines,array $composites, bool $os = false): array
     {
         $stock_ledger_data = [];
-        collect($lines)->map(function ($line) use ($parentModel, &$stock_ledger_data, $os) {
+        collect($lines)->map(function ($line,$index) use ($parentModel, &$stock_ledger_data, $os,$composites) {
             $stock_ledger_data[] = [
                 'scm_material_id' => $line['scm_material_id'],
                 'scm_warehouse_id' => $parentModel->scm_warehouse_id ?? $parentModel->to_warehouse_id,
@@ -31,15 +31,46 @@ class StockLedgerData
                 'quantity' => $line['quantity'],
                 'gross_unit_price' => $line['rate'] ?? null,
                 'net_unit_price' => $os ? $line['rate'] : $line['net_rate'] ?? null,
-                'currency' => $line['currency'] ?? null,
+                'currency' => $parentModel['currency'] ?? "BDT",
                 'date' => now(),
                 'business_unit' => $parentModel->business_unit,
+                'composite_key' => $composites[$index] ?? null,
             ];
         });
 
         $parentModel->stockable()->createMany($stock_ledger_data);
         return (array) $stock_ledger_data;
     }
+        /**
+         * Inserts stock ledger data related to a parent model.
+         *
+         * @param object $parentModel
+         * @param array $lines
+         * @param bool $os (opening stock)
+         *
+         * @return array
+         */
+        public static function singleInsert(object $parentModel, array $lines, bool $os = false): array
+        {
+            $stock_ledger_data = [];
+            collect($lines)->map(function ($line) use ($parentModel, &$stock_ledger_data, $os) {
+                $stock_ledger_data[] = [
+                    'scm_material_id' => $line['scm_material_id'],
+                    'scm_warehouse_id' => $parentModel->scm_warehouse_id ?? $parentModel->to_warehouse_id,
+                    'acc_cost_center_id' => $parentModel->acc_cost_center_id ?? null,
+                    'quantity' => $line['quantity'],
+                    'gross_unit_price' => $line['rate'] ?? null,
+                    'net_unit_price' => $os ? $line['rate'] : $line['net_rate'] ?? null,
+                    'currency' => $line['currency'] ?? null,
+                    'date' => now(),
+                    'business_unit' => $parentModel->business_unit,
+                ];
+            });
+
+            $parentModel->stockable()->createMany($stock_ledger_data);
+            return (array) $stock_ledger_data;
+        }
+
 
     /**
      * Processes the outflow of a material from a warehouse.
@@ -48,7 +79,7 @@ class StockLedgerData
      * @param int $warehouseId
      * @param int $qty
      * @param string $method (Optional)
-     * 
+     *
      * @return array
      */
     public static function out(int $materialId, int $warehouseId, int $qty, string $method = 'fifo'): array

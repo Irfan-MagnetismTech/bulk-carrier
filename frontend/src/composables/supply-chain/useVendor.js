@@ -33,6 +33,8 @@ export default function useVendor() {
     const filterParams = ref(null);
     const errors = ref('');
     const isLoading = ref(false);
+    const isMrrLoading = ref(false)
+    const scmVendorMrrs = ref([])
 
     async function getVendors(filterOptions) {
         let loader = null;
@@ -81,10 +83,15 @@ export default function useVendor() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.post(`/${BASE}/vendors`, form);
-            vendor.value = data.value;
+
+            let formData = new FormData();
+            formData.append('attachment', form.attachment ?? null);
+            formData.append('data', JSON.stringify(form));
+
+            const { data, status } = await Api.post(`/${BASE}/vendors`, formData);
+            vendorBills.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.vendor.index` });
+            router.push({ name: `${BASE}.vendor-bills.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -100,8 +107,8 @@ export default function useVendor() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.get(`/${BASE}/vendors/${vendorId}`);
-            vendor.value = data.value;
+            const { data, status } = await Api.get(`/${BASE}/vendor-bills/${vendorId}`);
+            vendorBills.value = data.value;
             notification.showSuccess(status);
         } catch (error) {
             const { data, status } = error.response;
@@ -118,13 +125,18 @@ export default function useVendor() {
         isLoading.value = true;
 
         try {
+
+            let formData = new FormData();
+            formData.append('attachment', form.attachment ?? null);
+            formData.append('data', JSON.stringify(form));
+
             const { data, status } = await Api.put(
-                `/${BASE}/vendors/${vendorId}`,
-                form
+                `/${BASE}/vendor-bills/${vendorId}`,
+                formData
             );
-            vendor.value = data.value;
+            vendorBills.value = data.value;
             notification.showSuccess(status);
-            router.push({ name: `${BASE}.vendor.index` });
+            router.push({ name: `${BASE}.vendor-bills.index` });
         } catch (error) {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
@@ -139,7 +151,7 @@ export default function useVendor() {
         isLoading.value = true;
 
         try {
-            const { data, status } = await Api.delete( `/${BASE}/vendors/${vendorId}`);
+            const { data, status } = await Api.delete( `/${BASE}/vendor-bills/${vendorId}`);
             notification.showSuccess(status);
             await getVendors(filterParams.value);
         } catch (error) {
@@ -170,11 +182,32 @@ export default function useVendor() {
         }
     }
 
+    async function searchMrrByVendor(scmVendorId) {
+
+        // const loader = $loading.show(LoaderConfig);
+        isMrrLoading.value = true;
+
+        try {
+            const { data, status } = await Api.get(`${BASE}/get-vendor-wise-mrr`, {params: { scm_vendor_id: scmVendorId }});
+            scmVendorMrrs.value = data.value;
+            notification.showSuccess(status);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            // loader.hide();
+            isMrrLoading.value = false;
+            // loading(false)
+        }
+    }
+
     return {
         vendors,
         vendor,
+        scmVendorMrrs,
         getVendors,
         searchVendor,
+        searchMrrByVendor,
         storeVendor,
         showVendor,
         updateVendor,

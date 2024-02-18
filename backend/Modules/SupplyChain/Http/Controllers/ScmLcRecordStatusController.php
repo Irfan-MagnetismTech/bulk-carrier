@@ -71,11 +71,11 @@ class ScmLcRecordStatusController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy(Request $request)
+    public function lcStatusDelete(Request $request)
     {
-        //
+        // return response()->json($request->all(), 422);
         try {
-            $scmLcRecordStatus = ScmLcRecordStatus::where(['id' => $request->id, 'scm_lc_record_id' => $request->scm_lc_record_id])->first();
+            $scmLcRecordStatus = ScmLcRecordStatus::where(['id' => $request->status_id, 'scm_lc_record_id' => $request->scm_lc_record_id])->first();
             $scmLcRecordStatus->delete();
 
             return response()->success('Data deleted sucessfully!', null,  204);

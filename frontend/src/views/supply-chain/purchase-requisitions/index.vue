@@ -335,57 +335,33 @@ function confirmDelete(id) {
           <FilterComponent :filterOptions = "filterOptions"/>
 
           <tbody>
-            <tr v-for="(purchaseRequisition,index) in (purchaseRequisitions?.data ? purchaseRequisitions?.data : purchaseRequisitions)" :key="index">
-              <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1}}</td>
-              <td><nobr>{{ purchaseRequisition?.ref_no }}</nobr></td>
-              <td>{{ formatDate(purchaseRequisition?.raised_date) }}</td>
-              <td>{{ purchaseRequisition?.purchase_center }}</td>
+            <template v-for="(purchaseRequisition,index) in (purchaseRequisitions?.data ? purchaseRequisitions?.data : purchaseRequisitions)" :key="index">
+              <tr v-for="(line,itemIndex) in purchaseRequisition?.scmPrLines" :key="itemIndex">
+              <td v-if="itemIndex == 0" :rowspan="purchaseRequisition?.scmPrLines?.length">{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1}}</td>
+              <td v-if="itemIndex == 0" :rowspan="purchaseRequisition?.scmPrLines?.length"><nobr>{{ purchaseRequisition?.ref_no }}</nobr></td>
+              <td v-if="itemIndex == 0" :rowspan="purchaseRequisition?.scmPrLines?.length">{{ formatDate(purchaseRequisition?.raised_date) }}</td>
+              <td v-if="itemIndex == 0" :rowspan="purchaseRequisition?.scmPrLines?.length">{{ purchaseRequisition?.purchase_center }}</td>
               <td style="text-align: center !important;">
-                <!-- <span v-for="(line,index) in purchaseRequisition?.scmPrLines" :key="index" class="text-xs mr-2 mb-2 inline-block py-1 px-2.5 leading-none whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded">
-                  {{ line?.material_name_quantity_unit ?? '' }}
-                </span> -->
-                <table class="w-full">
-                  <tr v-for="(line,index) in purchaseRequisition?.scmPrLines" :key="index">
-                    <td><nobr>{{ line?.scmMaterial.name ?? '' }}</nobr></td>
-                  </tr>
-                </table>
+                <nobr>{{ line?.scmMaterial.name ?? '' }}</nobr>
               </td>
               <td style="text-align: center !important;">
-                <table class="w-full">
-                  <tr v-for="(line,index) in purchaseRequisition?.scmPrLines" :key="index">
-                    <td><nobr>{{ line?.scmMaterial.material_code ?? '' }}</nobr></td>
-                  </tr>
-                </table>
+                    <nobr>{{ line?.scmMaterial.material_code ?? '' }}</nobr>
               </td>
               <td style="text-align: center !important;">
-                <!-- <span v-for="(line,index) in purchaseRequisition?.scmPrLines" :key="index" class="text-xs mr-2 mb-2 inline-block py-1 px-2.5 leading-none whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded">
-                  {{ line?.material_name_quantity_unit ?? '' }}
-                </span> -->
-                <table class="w-full">
-                  <tr v-for="(line,index) in purchaseRequisition?.scmPrLines" :key="index">
-                    <td><nobr>{{ line?.quantity ?? '' }}</nobr></td>
-                  </tr>
-                </table>
+                <nobr>{{ line?.quantity ?? '' }}</nobr>
               </td>
               <td style="text-align: center !important;">
-                <table class="w-full">
-                  <tr v-for="(line,index) in purchaseRequisition?.scmPrLines" :key="index">
-                    <td><nobr>{{ line?.unit ?? '' }}</nobr></td>
-                  </tr>
-                </table>
+                <nobr>{{ line?.unit ?? '' }}</nobr>
               </td>
-              <td>{{ purchaseRequisition?.scmWarehouse?.name?? '' }}</td>
-              <td>{{ purchaseRequisition?.createdBy?.name }}</td>
-              <td>
-                <!-- <button v-if="purchaseRequisition.is_closed == 0" @click="showModal(purchaseRequisition.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Close</button>
-                <span v-else :class="purchaseRequisition?.is_closed === 0 ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.is_closed === 0 ? 'Open' : 'Closed' }}</span> -->
+              <td v-if="itemIndex == 0" :rowspan="purchaseRequisition?.scmPrLines?.length">{{ purchaseRequisition?.scmWarehouse?.name?? '' }}</td>
+              <td v-if="itemIndex == 0" :rowspan="purchaseRequisition?.scmPrLines?.length">{{ purchaseRequisition?.createdBy?.name }}</td>
+              <td v-if="itemIndex == 0" :rowspan="purchaseRequisition?.scmPrLines?.length">
                 <span :class="purchaseRequisition?.status === 'Pending' ? 'text-yellow-700 bg-yellow-100' : (purchaseRequisition?.status == 'WIP' ? 'text-blue-700 bg-blue-100' : 'text-red-700 bg-red-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.status ?? 'Closed' }}</span>
               </td>
-              
-              <td>
+              <td v-if="itemIndex == 0" :rowspan="purchaseRequisition?.scmPrLines?.length">
                 <span :class="purchaseRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.business_unit }}</span>
               </td>
-              <td>
+              <td v-if="itemIndex == 0" :rowspan="purchaseRequisition?.scmPrLines?.length">
                 <nobr>
                 <div class="">
                   <action-button v-show="purchaseRequisition.status !== 'Closed'" @click="showModal(purchaseRequisition?.id)" :action="'close'"></action-button>
@@ -399,7 +375,10 @@ function confirmDelete(id) {
                   </div>
                 </nobr>
               </td>
-            </tr>
+        
+              </tr>
+            </template>
+            
             <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && purchaseRequisitions?.data?.length"></LoaderComponent>
           </tbody>
          <FooterComponent :dataList="purchaseRequisitions" :isLoading="isLoading" :isTableLoading="isTableLoading" Colspan="9" />

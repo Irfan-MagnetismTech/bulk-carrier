@@ -57,7 +57,7 @@ export default function usePurchaseOrder() {
                         brand: null,
                         model: null,
                         required_date: null,
-                        tolarence_level: 0.0,
+                        tolerence_level: 0.0,
                         pr_composite_key: null,
                         cs_composite_key: null,
                         pr_quantity: 0.0,
@@ -86,7 +86,7 @@ export default function usePurchaseOrder() {
                 brand: null,
                 model: null,
                 required_date: null,
-                tolarence_level: 0.0,
+                tolerence_level: 0.0,
                 pr_composite_key: null,
                 cs_composite_key: null,
                 pr_quantity: 0.0,
@@ -427,7 +427,7 @@ export default function usePurchaseOrder() {
                 materialArray.push(material_key);
                 form.scmPoLines[scmPoLineIndex].scmPoItems[scmPoitemIndex].isAspectDuplicate = false;
               } else {
-                let data = `Duplicate Material Name Having Purchase Requisition ${scmPoLine.scmPr.ref_no} in ${scmPoLineIndex} Block Row: ${scmPoitemIndex + 1}`;
+                let data = `Duplicate Material Name Having Purchase Requisition ${scmPoLine.scmPr.ref_no} in ${scmPoLineIndex + 1} Block Row: ${scmPoitemIndex + 1}`;
                 messages.value.push(data);
                 form.scmPoLines[scmPoLineIndex].scmPoItems[scmPoitemIndex].isAspectDuplicate = true;
               }
@@ -453,6 +453,20 @@ export default function usePurchaseOrder() {
             }
         } else {
             return true;
+        }
+    }
+
+    async function getPoWiseMrr(poId) {
+        try {
+            const { data, status } = await Api.get(`/${BASE}/get-po-wise-mrr`, {
+                params: {
+                    scm_po_id: poId
+                }
+            });
+            return data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
         }
     }
 
@@ -482,6 +496,7 @@ export default function usePurchaseOrder() {
         closePo,
         closePoLines,
         materialList,
+        getPoWiseMrr,
         isLoading,
         errors,
     };
