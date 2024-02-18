@@ -11,6 +11,13 @@ use Modules\SupplyChain\Http\Requests\ScmVendorRequest;
 
 class ScmVendorController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:scm-vendor-view|scm-vendor-create|scm-vendor-edit|scm-vendor-delete|scm-vendor-close', ['only' => ['index', 'show']]);
+        $this->middleware('permission:scm-vendor-create', ['only' => ['store']]);
+        $this->middleware('permission:scm-vendor-edit', ['only' => ['update']]);
+        $this->middleware('permission:scm-vendor-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      * @return JsonResponse

@@ -11,6 +11,13 @@ use Modules\SupplyChain\Http\Requests\ScmMaterialCategoryRequest;
 
 class ScmMaterialCategoryController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:scm-material-category-view|scm-material-category-create|scm-material-category-edit|scm-material-category-delete|scm-material-category-close', ['only' => ['index', 'show']]);
+        $this->middleware('permission:scm-material-category-create', ['only' => ['store']]);
+        $this->middleware('permission:scm-material-category-edit', ['only' => ['update']]);
+        $this->middleware('permission:scm-material-category-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      * @return JsonResponse

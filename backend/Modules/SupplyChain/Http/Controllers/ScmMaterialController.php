@@ -5,6 +5,7 @@ namespace Modules\SupplyChain\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Exports\ScmMaterialsExport;
 use App\Imports\ScmMaterialsImport;
 use App\Services\FileUploadService;
@@ -20,10 +21,10 @@ class ScmMaterialController extends Controller
 
     function __construct(private FileUploadService $fileUpload)
     {
-        //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
-        //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
-        //     $this->middleware('permission:charterer-contract-edit', ['only' => ['update']]);
-        //     $this->middleware('permission:charterer-contract-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:scm-material-view|scm-material-create|scm-material-edit|scm-material-delete|scm-material-close', ['only' => ['index', 'show']]);
+        $this->middleware('permission:scm-material-create', ['only' => ['store']]);
+        $this->middleware('permission:scm-material-edit', ['only' => ['update']]);
+        $this->middleware('permission:scm-material-delete', ['only' => ['destroy']]);
     }
 
     /**
@@ -132,11 +133,14 @@ class ScmMaterialController extends Controller
     public function destroy(ScmMaterial $material): JsonResponse
     {
         try {
+            DB::beginTransaction();
             $this->fileUpload->deleteFile($material->sample_photo);
             $material->delete();
+            DB::commit();
 
             return response()->success('Data deleted sucessfully!', null,  204);
         } catch (\Exception $e) {
+            DB::rollBack();
 
             return response()->error($e->getMessage(), 500);
         }

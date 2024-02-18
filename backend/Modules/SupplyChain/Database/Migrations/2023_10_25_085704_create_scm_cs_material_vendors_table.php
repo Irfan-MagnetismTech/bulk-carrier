@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('origin')->nullable();
             $table->string('stock_type')->comment('ready_stock,manufacturer')->nullable();
             $table->string('manufacturing_days')->comment('if stock type manufacturer')->nullable();
-            $table->decimal('offered_price')->nullable();
+            $table->decimal('offered_price')->nullable()->default(0);
             $table->decimal('negotiated_price')->comment('for local it is `Price`')->nullable();
             $table->bigInteger('quantity')->nullable();
             $table->decimal('amount')->nullable();

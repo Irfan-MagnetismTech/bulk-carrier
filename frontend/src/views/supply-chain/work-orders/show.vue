@@ -188,8 +188,8 @@ onMounted(() => {
               <template v-for="(scmWoLine, index) in workOrder.scmWoLines" :key="index">
                 <template v-for="(scmWoItem, itemIndex) in scmWoLine?.scmWoItems" :key="itemIndex">
                   <tr>
-                    <td :rowspan="(scmWoLine?.length ?? 1)" v-if="itemIndex == 0">{{ scmWoLine?.scmWr?.ref_no }}</td>
-                    <td class="!text-center" :rowspan="(scmWoLine?.length ?? 1)" v-if="itemIndex == 0">{{ formatDate(scmWoLine.scmWr.raised_date) }}</td>
+                    <td :rowspan="(scmWoLine?.scmWoItems?.length ?? 1)" v-if="itemIndex == 0">{{ scmWoLine?.scmWr?.ref_no }}</td>
+                    <td class="!text-center" :rowspan="(scmWoLine?.scmWoItems?.length ?? 1)" v-if="itemIndex == 0">{{ formatDate(scmWoLine.scmWr.raised_date) }}</td>
                     <td>{{ scmWoItem?.scmService?.service_name_and_code }}</td>
                     <td class="!text-center">{{ formatDate(scmWoItem?.required_date) }}</td>
                     <td class="!text-right">{{ numberFormat(scmWoItem?.wr_quantity) }}</td>

@@ -8,6 +8,7 @@ import NProgress from 'nprogress';
 import useHelper from '../useHelper.js';
 import { merge } from 'lodash';
 import { loaderSetting as LoaderConfig} from '../../config/setting.js';
+import Swal from 'sweetalert2';
 
 export default function useMaterialReceiptReport() {
     const BASE = 'scm' 
@@ -16,6 +17,8 @@ export default function useMaterialReceiptReport() {
     const materialList = ref([]);
     const filteredMaterialReceiptReports = ref([]);
     const filteredCashRequisitions = ref([]);
+    const polist = ref([]);
+    const prlist = ref([]);
     const isTableLoading = ref(false);
     const $loading = useLoading();
     const notification = useNotification();
@@ -23,69 +26,100 @@ export default function useMaterialReceiptReport() {
     // const LoaderConfig = {'can-cancel': false, 'loader': 'dots', 'color': 'purple'};
 
     const materialReceiptReport = ref( {
-        ref_no: null,
-        type: null,        
+        ref_no: null,      
         date: null,        
         scm_po_id: null,        
         scmPo: null,
-        scm_po_no: null,
-        scm_po_date: null,
-        scmPr: null,
-        scm_pr_id: null,
-        scm_pr_no: null,
-        scm_cs_id: null,
-        scmCs: null,
-        scm_cs_no: null,
-        scm_lc_record_id: null,
-        scmLcRecord: null,        
+        // scmPr: null,
+        // scm_pr_id: null,
+        // scm_pr_no: null,      
         scm_warehouse_id: null,
         scmWarehouse: null,
-        accCashRequisition: null,
-        acc_cash_requisition_id: null,
-        acc_cost_center_id: null,
+        total_value: 0.0,
+        total_net_value: 0.0,
         remarks: null,
         challan_no: null,
         qc_remarks: null,
         attachment: null,
         purchase_center: null,
-        is_completed: 0,
         business_unit: null,
         scmMrrLines: [
             {
-                scmMaterial: '',
-                scm_material_id: '',
-                unit: '',
-                brand: '',
-                model: '',
+                scm_pr_id: null,
+                scmPr: null,
+                scmMrrLineItems: [
+                    {
+                        scm_mrr_item_id: null,
+                        scmMaterial: null,
+                        scm_material_id: null,
+                        unit: null,
+                        brand: null,
+                        model: null,
+                        quantity: 0.0,
+                        tolerence: 0.0,
+                        tolerence_qty: 0.0,
+                        rate: 0.0,
+                        net_rate: 0.0,
+                        po_qty: 0.0,
+                        pr_qty: 0.0,
+                        current_stock: 0.0,
+                        po_composite_key: null,
+                        pr_composite_key: null
+                    }
+                ],
+            }
+        ],
+    });
+    const mrrLineObject = {
+        scm_pr_id: null,
+        scmPr: null,
+        scmMrrLineItems: [
+            {
+                scm_mrr_item_id: null,
+                scmMaterial: null,
+                scm_material_id: null,
+                unit: null,
+                brand: null,
+                model: null,
                 quantity: 0.0,
+                tolerence: 0.0,
+                tolerence_qty: 0.0,
                 rate: 0.0,
                 net_rate: 0.0,
                 po_qty: 0.0,
                 pr_qty: 0.0,
                 current_stock: 0.0,
-                po_composite_key: '',
-                pr_composite_key: ''
+                po_composite_key: null,
+                pr_composite_key: null,
+                isAspectDuplicate: false,
             }
         ],
-    });
+    }
+
     const materialObject = {
-        scmMaterial: '',
-        scm_material_id: '',
-        unit: '',
-        brand: '',
-        model: '',
+        scm_mrr_item_id: null,
+        scmMaterial: null,
+        scm_material_id: null,
+        unit: null,
+        brand: null,
+        model: null,
         quantity: 0.0,
+        tolerence: 0.0,
+        tolerence_qty: 0.0,
         rate: 0.0,
         net_rate: 0.0,
         po_qty: 0.0,
         pr_qty: 0.0,
         current_stock: 0.0,
-        po_composite_key: '',
-        pr_composite_key: ''
+        po_composite_key: null,
+        pr_composite_key: null,
+        isAspectDuplicate: false,
     }
 
+    const poMaterialList = ref([]);
     const errors = ref('');
     const isLoading = ref(false);
+    const isPrLoading = ref(false);
     const filterParams = ref(null);
 
     async function getMaterialReceiptReports(filterOptions) {
@@ -126,7 +160,7 @@ export default function useMaterialReceiptReport() {
         }
     }
     async function storeMaterialReceiptReport(form) {
-
+        if (!checkUniqueArray(form)) return;
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -163,6 +197,7 @@ export default function useMaterialReceiptReport() {
     }
 
     async function updateMaterialReceiptReport(form, materialReceiptReportId) {
+        if (!checkUniqueArray(form)) return;
         const loader = $loading.show(LoaderConfig);
         isLoading.value = true;
 
@@ -198,6 +233,47 @@ export default function useMaterialReceiptReport() {
         } finally {
             // loader.hide();
             // isLoading.value = false;
+        }
+    }
+
+    function checkUniqueArray(form) {
+        let isHasError = false;
+        const messages = ref([]);
+        let materialArray = [];
+        form.scmMrrLines.map((scmMrrLine, scmMrrLineIndex) => {
+             
+            scmMrrLine.scmMrrLineItems.map((scmMrrLineItem, scmMrrLineItemIndex) => {
+            let material_key = scmMrrLineItem.po_composite_key;
+            if (materialArray.indexOf(material_key) === -1) {
+                materialArray.push(material_key);
+                form.scmMrrLines[scmMrrLineIndex].scmMrrLineItems[scmMrrLineItemIndex].isAspectDuplicate = false;
+              } else {
+                let data = `Duplicate Material Name Having Purchase Requisition ${scmMrrLine.scmPr.ref_no} in ${scmMrrLineIndex} Block Row: ${scmMrrLineItemIndex + 1}`;
+                messages.value.push(data);
+                form.scmMrrLines[scmMrrLineIndex].scmMrrLineItems[scmMrrLineItemIndex].isAspectDuplicate = true;
+              }
+            });
+        });
+        if (messages.value.length > 0) {
+            let rawHtml = ` <ul class="text-left list-disc text-red-500 mb-3 px-5 text-base"> `;
+            if (Object.keys(messages.value).length) {
+                for (const property in messages.value) {
+                    rawHtml += `<li> ${messages.value[property]} </li>`
+                }
+                rawHtml += `</ul>`;
+
+                Swal.fire({
+                    icon: "",
+                    title: "Correct Please!",
+                    html: `
+                ${rawHtml}
+                        `,
+                    customClass: "swal-width",
+                });
+                return false;
+            }
+        } else {
+            return true;
         }
     }
 
@@ -314,6 +390,105 @@ export default function useMaterialReceiptReport() {
         }
     }
 
+    async function getPoList(business_unit ,purchase_center,scm_warehouse_id) {
+        //NProgress.start();
+        //const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+        console.log(business_unit, purchase_center, scm_warehouse_id);
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-po-list`,{
+                params: {
+                    business_unit: business_unit,
+                    purchase_center: purchase_center,
+                    scm_warehouse_id: scm_warehouse_id,
+                },
+            });
+            polist.value = data.value;
+            console.log(polist.value);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            //loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
+    async function getPoWisePrList(po_id) {
+        //NProgress.start();
+        //const loader = $loading.show(LoaderConfig);
+        isPrLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-po-wise-pr-list`,{
+                params: {
+                    po_id: po_id,
+                },
+            });
+            prlist.value = data.value;
+            console.log(prlist.value);
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            //loader.hide();
+            isPrLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
+    async function getMrrLineData(po_id, pr_id, mrr_id = null) {
+        //NProgress.start();
+        //const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-mrr-line-data`,{
+                params: {
+                    scm_pr_id: pr_id,
+                    scm_po_id: po_id,
+                    scm_mrr_id: mrr_id,
+                },
+            });
+            console.log(data.value);
+            return data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            //loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
+    async function getPoMaterialList(po_id, pr_id, mrr_id = null) {
+        //NProgress.start();
+        //const loader = $loading.show(LoaderConfig);
+        isLoading.value = true;
+
+        try {
+            const {data, status} = await Api.get(`/${BASE}/get-po-material-list`,{
+                params: {
+                    scm_pr_id: pr_id,
+                    scm_po_id: po_id,
+                    scm_mrr_id: mrr_id,
+                },
+            });
+            console.log(data.value);
+            return data.value;
+        } catch (error) {
+            const { data, status } = error.response;
+            notification.showError(status);
+        } finally {
+            //loader.hide();
+            isLoading.value = false;
+            //NProgress.done();
+        }
+    }
+
     return {
         materialReceiptReports,
         filteredMaterialReceiptReports,
@@ -330,9 +505,18 @@ export default function useMaterialReceiptReport() {
         materialObject,
         searchMrr,
         isTableLoading,
+        getPoList,
+        polist,
         getCashRequisitionNoList,
         filteredCashRequisitions,
         isLoading,
+        isPrLoading,
+        prlist,
+        getPoWisePrList,
+        getMrrLineData,
+        getPoMaterialList,
+        poMaterialList,
+        mrrLineObject,
         errors,
     };
     

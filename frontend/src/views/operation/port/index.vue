@@ -11,6 +11,7 @@ import Store from './../../../store/index.js';
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import useEncryptDecrypt from "../../../services/useEncryptDecrypt";
 
 const props = defineProps({
   page: {
@@ -19,6 +20,7 @@ const props = defineProps({
   },
 });
 
+const encryptDecrypt = useEncryptDecrypt();
 const { setTitle } = Title();
 setTitle('Port List');
 
@@ -245,11 +247,11 @@ onMounted(() => {
                   </td>
                   <td class="items-center text-center justify-center space-x-1 text-gray-600">
                     <nobr>
-                      <action-button :action="'show'" :to="{ name: 'ops.configurations.ports.show', params: { portId: port.id } }"></action-button>
-                      <action-button :action="'edit'" :to="{ name: 'ops.configurations.ports.edit', params: { portId: port.id } }"></action-button>
-                      <action-button @click="confirmDelete(port.id)" :action="'delete'"></action-button>
+                      <action-button :action="'show'" :to="{ name: 'ops.configurations.ports.show', params: { portId: encryptDecrypt.encrypt('show', port.id)  } }"></action-button>
+                      <action-button :action="'edit'" :to="{ name: 'ops.configurations.ports.edit', params: { portId: encryptDecrypt.encrypt('edit', port.id) } }"></action-button>
+                      <action-button @click="confirmDelete(encryptDecrypt.encrypt('delete', port.id))" :action="'delete'"></action-button>
                     <!-- <action-button :action="'activity log'" :to="{ name: 'user.activity.log', params: { subject_type: port.subject_type,subject_id: port.id } }"></action-button> -->
-                    </nobr>  
+                    </nobr>
                   </td>
                 </tr>
                 <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && ports?.data?.length"></LoaderComponent>

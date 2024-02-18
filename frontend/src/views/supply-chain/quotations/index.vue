@@ -346,5 +346,5 @@ function confirmDelete(cs_id, id) {
   
   
 
-  <!-- <ErrorComponent :errors="errors"></ErrorComponent>   -->
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

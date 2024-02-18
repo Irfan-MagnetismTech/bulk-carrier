@@ -10,6 +10,13 @@ use Modules\SupplyChain\Http\Requests\ScmUnitRequest;
 
 class ScmUnitController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:scm-unit-view|scm-unit-create|scm-unit-edit|scm-unit-delete|scm-unit-close', ['only' => ['index', 'show']]);
+        $this->middleware('permission:scm-unit-create', ['only' => ['store']]);
+        $this->middleware('permission:scm-unit-edit', ['only' => ['update']]);
+        $this->middleware('permission:scm-unit-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      * @return JsonResponse

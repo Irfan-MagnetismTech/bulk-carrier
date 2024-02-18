@@ -13,9 +13,10 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
-import { formatDate, showErrorAlert } from '../../../config/setting';
+// import { formatDate, showErrorAlert } from '../../../config/setting';
+import { formatDate, showErrorAlert } from '../../../utils/helper';
 
-const { getLcRecords, lcRecords, deleteLcRecord, isLoading,isTableLoading , storeLcRecordStatus, showLcRecordStatuses, lcRecordStatuses, lcRecordStatus } = useLcRecord();
+const { getLcRecords, lcRecords, deleteLcRecord, isLoading,isTableLoading , storeLcRecordStatus, showLcRecordStatuses, deleteLcRecordStatus, lcRecordStatuses, lcRecordStatus } = useLcRecord();
 const { numberFormat } = useHelper();
 const { setTitle } = Title();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -79,6 +80,24 @@ function storeStatus() {
     console.error("Error closing WR:", error);
   });
 }
+
+function confirmPreviousStatusDelete(lcRecordStId, lcRecordStatusIndex) {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You want to delete this data!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            deleteLcRecordStatus(currentIndex.value, lcRecordStId).then(()=>{
+              lcRecordStatuses?.value?.scmLcRecordStatus.splice(lcRecordStatusIndex, 1);
+            });
+          }
+        })
+      }
 // Modal end
 
 function addStatus() {
@@ -311,7 +330,12 @@ function confirmDelete(id) {
             <span class="label-item-title">Date <span class="text-red-500">*</span></span>
             <VueDatePicker  v-model="lcRecordStatus.date" class="form-input" required auto-apply :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :auto-position="false" :min-date="lcRecordStatuses?.last_date"></VueDatePicker>
           </label>
-
+        </div>
+        <div class="flex justify-end mt-2">
+          <button type="button" @click="storeStatus" 
+                  class="w-full px-5 py-3 text-sm font-medium leading-5 text-white duration-150 rounded-lg sm:px-4 sm:py-2 sm:w-auto bg-green-500 hover:bg-green-700 ">
+            Save
+          </button>
         </div>
         <div class="mt-3 min-h-[250px]">
           <span class="label-item-title"> Previous Status </span>
@@ -321,6 +345,7 @@ function confirmDelete(id) {
               class="text-xs font-semibold tracking-wide text-gray-500  border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
             <th>Status</th>
             <th>Date</th>
+            <th>Action</th>
           </tr>
           </thead>
           <tbody >
@@ -333,10 +358,11 @@ function confirmDelete(id) {
                   {{ formatDate(lcRecordSt.date) }}
                 
                 </td>
+                <td><action-button @click="confirmPreviousStatusDelete(lcRecordSt.id, lcRecordStatusIndex)" :action="'delete'"></action-button></td>
                 
               </tr>
               <tr v-else>
-                <td colspan="2" class="h-[120px]">No data found</td>
+                <td colspan="3" class="h-[120px]">No data found</td>
               </tr>
            </tbody>
         </table>
@@ -352,10 +378,7 @@ function confirmDelete(id) {
                   class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 border border-gray-300 rounded-lg dark-disabled:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
             CLOSE
           </button>
-          <button type="button" @click="storeStatus" style="color: #1b1e21"
-                  class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 border border-gray-300 rounded-lg dark-disabled:text-gray-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray">
-            CONFIRM
-          </button>
+          
         </footer>
       </div>
     </form>
