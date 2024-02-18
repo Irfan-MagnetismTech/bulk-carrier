@@ -38,7 +38,16 @@ class ScmMrrController extends Controller
     {
         try {
             $mrr = ScmMrr::query()
-                ->with('scmMrrLines', 'scmPo', 'scmWarehouse', 'scmLcRecord', 'createdBy')
+                ->with('scmMrrLines', 'scmPo', 'scmWarehouse', 'scmLcRecord', 'createdBy','stockable',
+                'stockable.child','scmCostingAllocations')
+                ->withCount([
+                    'stockable as has_stockable_child' => function ($query) {
+                        $query->selectRaw('COUNT(*)')
+                            ->whereColumn('stockable_id', 'scm_mrrs.id')
+                            ->where('stockable_type', 'Modules\SupplyChain\Entities\ScmMrr')
+                            ->whereHas('child');
+                    },
+                ])
                 ->globalSearch(request()->all());
 
             return response()->success('Data list', $mrr, 200);
@@ -120,7 +129,7 @@ class ScmMrrController extends Controller
     public function show($id): JsonResponse
     {
         $scmMrr = ScmMrr::query()->find($id);
-        $scmMrr->load('scmMrrLines.scmMrrLineItems.scmMaterial', "scmMrrLines.scmPr", 'scmWarehouse', 'scmMrrLineItems', 'createdBy', 'scmMrrLines.scmMrrLineItems.scmPoItem.scmMaterial','scmPo');
+        $scmMrr->load('scmMrrLines.scmMrrLineItems.scmMaterial', "scmMrrLines.scmPr", 'scmWarehouse', 'scmMrrLineItems', 'createdBy', 'scmMrrLines.scmMrrLineItems.scmPoItem.scmMaterial','scmMrrLines.scmMrrLineItems.scmPrLine.scmMaterial','scmPo');
         $scmMrrLines = $scmMrr->scmMrrLines->map(function ($items) {
             $datas = $items;
             $adas = $items->scmMrrLineItems->map(function ($item) {
@@ -146,7 +155,7 @@ class ScmMrrController extends Controller
                             'max_quantity' => $max_quantity,
                             'remaining_quantity' => $remainingQuantity,
                             'pr_qty' => $item->scmPrLine->quantity,
-                            'po_qty' => $item->scmPrLine->quantity,
+                            'po_qty' => $item->scmPoItem->quantity,
                             'isAspectDuplicate' => false,
                         ];
             });
@@ -480,6 +489,9 @@ class ScmMrrController extends Controller
                     'tolerence_level' => $item->tolerence_level,
                     'tolerence_quantity' => $tolerence_quantity,
                 ];
+            })
+            ->filter(function ($item) {
+                return ($item['max_quantity'] > 0);
             });
         } else {
             $data = [];
@@ -523,6 +535,9 @@ class ScmMrrController extends Controller
             $data['tolerence_level'] = $item->tolerence_level;
             $data['tolerence_quantity'] = $tolerence_quantity;
             return $data;
+        })
+        ->filter(function ($item) {
+            return ($item['max_quantity'] > 0);
         });
 
         return response()->success('data', $data, 200);

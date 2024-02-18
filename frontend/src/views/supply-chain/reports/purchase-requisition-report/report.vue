@@ -1,43 +1,51 @@
 <script setup>
 // import JobReportForm from "../../../../components/maintenance/reports/job-report/JobReportForm.vue";
-import StockHistoryReportForm from "../../../../components/supply-chain/reports/stock-history-report/StockHistoryReportForm.vue";
+// import InventoryReportForm from "../../../../components/supply-chain/reports/inventory-report/InventoryReportForm.vue";
+import PurchaseRequisitionForm from "../../../../components/supply-chain/purchase-requisitions/PurchaseRequisitionForm.vue";
+
 import useAllJobsReport from "../../../../composables/maintenance/useAllJobsReport";
 import useInventoryReport from "../../../../composables/supply-chain/useInventoryReport";
-import useStockHistoryReport from "../../../../composables/supply-chain/useStockHistoryReport";
+import usePurchaseRequisitionReport from "../../../../composables/supply-chain/usePurchaseRequisitionReport";
 import Title from "../../../../services/title";
 import useHeroIcon from "../../../../assets/heroIcon";
 import DefaultButton from '../../../../components/buttons/DefaultButton.vue';
 import { formatDate } from "../../../../utils/helper";
+import PurchaseRequisitionReportForm from "../../../../components/supply-chain/reports/purchase-requisition-report/PurchaseRequisitionReportForm.vue";
 const icons = useHeroIcon();
 // const { formParams, allJobs, allJobsReport, downloadAllJobsReport, isLoading, showReport, errors } = useAllJobsReport();
-const { formParams, stockHistory, stockHistoryReport, downloadStockHistoryReport, isLoading, showReport, errors } = useStockHistoryReport();
+// const { formParams, inventory, inventoryReport, downloadInventoryReport, isLoading, showReport, errors } = useInventoryReport();
+
+const { formParams, purchaseRequisitions, purchaseRequisitionReport, downloadPurchaseRequisitionReport, isLoading, showReport, errors } = usePurchaseRequisitionReport();
+
 
 const { setTitle } = Title();
-setTitle('Stock History Report');
+setTitle('Purchase Requisition Report');
 
 </script>
 <template>
     <!-- Heading -->
     <div class="flex flex-col items-center justify-between w-full my-3 sm:flex-row" v-once>
-        <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Stock History Report</h2>
+        <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Purchase Requisition Report</h2>
     </div>
     <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
-        <form @submit.prevent="stockHistoryReport(formParams)">
+        <form @submit.prevent="purchaseRequisitionReport(formParams)">
             <!-- Form -->
 
-            <stock-history-report-form :page="page" v-model:form="formParams" :errors="errors"></stock-history-report-form>
+            <purchase-requisition-report-form :page="page" v-model:form="formParams" :errors="errors"></purchase-requisition-report-form>
+
+            
             
             <!-- Submit button -->
             <button type="submit" :disabled="isLoading" class="flex items-center justify-between px-4 py-2 mt-4 text-sm text-white bg-purple-600 border border-transparent rounded-lg fon2t-medium mt- active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Search</button>
         </form>
     </div>
     <div v-show="showReport">
-        <div v-if="stockHistory?.length" class="">
+        <div v-if="purchaseRequisitions?.length" class="">
     
             <div class="w-full my-2 overflow-hidden border shadow-xs dark-disabled:border-0 px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
                 <!-- Print Button -->
-                <!-- <div class="flex justify-end">
-                    <div title="Print" @click="downloadInventoryReport(formParams)" class="w-14 px-4 cursor-pointer py-2 text-sm text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <!-- <div class="flex justify-end mb-2">
+                    <div title="Print" @click="downloadPurchaseRequisitionReport(formParams)" class="w-14 px-4 cursor-pointer py-2 text-sm text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5zm-3 0h.008v.008H15V10.5z" />
                         </svg>
@@ -48,53 +56,28 @@ setTitle('Stock History Report');
                 <!-- <h1 class="py-1 font-bold text-center text-white bg-green-500 text-capitalize"> All Jobs </h1> -->
                 <div class="w-full">
                     
-                    <!-- <template v-for="(itemGroup, index) in allJobs" :key="index">
+                    <!-- <template v-for="(itemGroup, index) in in" :key="index">
                         <div class="my-2">
                             <h3 class="mb-1 font-bold mt-2" >{{ itemGroup.name  }}</h3>
-                            <table id="table" class="w-full whitespace-no-wrap">
-                                <thead>
-                                    <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-200 dark-disabled:bg-gray-700">
-                                        <th class="w-1/12"> Item Code </th>
-                                        <th class="w-2/12"> Item </th>
-                                        <th class="w-1/12"> Running Hours</th>
-                                        <th class="w-3/12"> Job Description </th>
-                                        <th class="w-1/12"> Cycle </th>
-                                        <th class="w-2/12"> Next Due </th>
-                                        <th class="w-2/12"> Last Done </th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-                                    <template  v-for="(item, itemIndex) in itemGroup.mntItems" :key="itemIndex">
-                                        <template v-for="(job, jobIndex) in item.mntJobs" :key="jobIndex">
-                                            <tr v-for="(jobLine, jobLineIndex) in job.mntJobLines" :key="jobLineIndex">
-                                                <td v-if="jobLineIndex == 0" :rowspan="job.mntJobLines.length ?? 1">{{ item.item_code }}</td>
-                                                <td class="text-left" v-if="jobLineIndex == 0" :rowspan="job.mntJobLines.length ?? 1">{{ item.name }}</td>
-                                                <td v-if="jobLineIndex == 0" :rowspan="job.mntJobLines.length ?? 1">{{ job.present_run_hour }} {{ job.present_run_hour!=null ? 'Hrs.' : '' }}</td>
-                                                <td class="text-left">{{ jobLine.job_description }}</td>
-                                                <td>{{ jobLine.cycle }} {{ jobLine.cycle_unit == "Hours" ? 'Hrs.' : jobLine.cycle_unit }}</td>
-                                                
-                                                <td>{{ jobLine.cycle_unit == "Hours" ? jobLine.next_due + " Hrs." : formatDate(jobLine.next_due) }}</td>
-                                                <td>{{ formatDate(jobLine.last_done) }}</td>
-                                            </tr>
-                                            
-                                        </template>
-                                        
-                                    </template>
-                                    
-                                    
-                                </tbody>
-                            </table>
+                            
                         </div>
                     </template> -->
                     <div class="grid grid-cols-1 md:grid-cols-3  gap-2 mb-2">
-                        <div class="p-2 text-base">
+                        <div class="p-2 text-base" v-if="formParams?.scmWarehouse">
                             <span><strong>Warehouse Name:</strong> {{ formParams?.scmWarehouse?.name }}</span>
                         </div>
 
                         
-                        <div class="p-2 text-base">
-                            <span><strong>Material Name:</strong> {{ formParams?.scmMaterial?.name }}</span>
+                        <div class="p-2 text-base" v-if="formParams?.purchase_center">
+                            <span><strong>Purchase Center:</strong> {{ formParams?.purchase_center }}</span>
                         </div>
+
+                        
+                        <div class="p-2 text-base" v-if="formParams?.status">
+                            <span><strong>Status:</strong> {{ formParams?.status }}</span>
+                        </div>
+
+
 
 
                         
@@ -112,21 +95,25 @@ setTitle('Stock History Report');
                             <thead>
                                 <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-200 dark-disabled:bg-gray-700">
                                     <th class="w-1/12"> # </th>
-                                    <th class="w-2/12"> Date </th>
-                                    <th class="w-2/12"> Opening Stock </th>
-                                    <th class="w-2/12"> Received </th>
-                                    <th class="w-2/12"> Issued </th>
-                                    <th class="w-2/12"> Closing Stock </th>
+                                    <th class="w-2/12"> PR No </th>
+                                    <th class="w-1/12"> Raised Date</th>
+                                    <th class="w-2/12"> Purchase Center</th>
+                                    <th class="w-2/12"> Warehouse </th>
+                                    <th class="w-2/12"> Requested By </th>
+                                    <th class="w-1/12"> Status </th>
+                                    <th class="w-1/12"> Business Unit </th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-                                <tr v-for="(sh, index) in stockHistory" :key="index">
+                                <tr v-for="(purchaseRequisition, index) in purchaseRequisitions" :key="index">
                                     <td>{{ index+1 }}</td>
-                                    <td class="!text-center">{{ formatDate(sh.date) }}</td>
-                                    <td class="!text-right">{{ sh?.opening_stock }}</td>
-                                    <td class="!text-right">{{ sh?.received }}</td>
-                                    <td class="!text-right">{{ sh?.issued }}</td>
-                                    <td class="!text-right">{{ sh?.closing_stock }}</td>
+                                    <td>{{ purchaseRequisition?.ref_no }}</td>
+                                    <td>{{ formatDate(purchaseRequisition?.raised_date) }}</td>
+                                    <td>{{ purchaseRequisition?.purchase_center }}</td>
+                                    <td>{{ purchaseRequisition?.scmWarehouse?.name }}</td>
+                                    <td>{{ purchaseRequisition?.createdBy?.name }}</td>
+                                    <td><span :class="purchaseRequisition?.status === 'Pending' ? 'text-yellow-700 bg-yellow-100' : (purchaseRequisition?.status == 'WIP' ? 'text-blue-700 bg-blue-100' : 'text-red-700 bg-red-100') " class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.status ?? 'Closed' }}</span></td>
+                                    <td><span :class="purchaseRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ purchaseRequisition?.business_unit }}</span></td>
                                     
                                 </tr>
                                 

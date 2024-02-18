@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('address')->nullable();
             $table->bigInteger('country_id')->nullable();
+            $table->bigInteger('acc_cash_requisition_id')->nullable();
             $table->string('country_name')->nullable();
             $table->string('vendor_type')->nullable()->comment('local, foreign');
             $table->string('account_ref_no')->nullable();

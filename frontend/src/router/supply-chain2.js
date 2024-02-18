@@ -231,6 +231,20 @@ export default [
 	/* Stock History Report End*/
 
 
+    
+	/* PR Report Start*/
+	{
+		path: `/${BASE}/reports/purchase-requisition-report`,
+		name: `${BASE}.reports.purchase-requisition-report`,
+		component: () => import(`../views/${PATH_BASE}/reports/purchase-requisition-report/report.vue`),
+		meta: { requiresAuth: true, role: ROLE, permission: 'purchase-requisition-report' },
+	},
+	/* PR Report End*/
+
+
+
+
+
 	
 	/* Report End */
 
