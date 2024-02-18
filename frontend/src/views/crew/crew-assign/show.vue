@@ -6,7 +6,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
-
+import { formatDate } from "../../../utils/helper.js";
 const icons = useHeroIcon();
 
 const route = useRoute();
@@ -24,7 +24,7 @@ onMounted(() => {
 
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">  Crew Assign Details  # {{crewAssignId}} </h2>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">  Crew Assign Details</h2>
     <default-button :title="' Crew Assign List'" :to="{ name: 'crw.crewAssigns.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
@@ -61,7 +61,7 @@ onMounted(() => {
             </tr>
             <tr>
               <th class="w-40"> Joining Date </th>
-              <td>{{ crewAssign?.joining_date }}</td>
+              <td>{{ formatDate(crewAssign?.joining_date) }}</td>
             </tr>
             <tr>
               <th class="w-40"> Joining Port Code </th>

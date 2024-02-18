@@ -10,6 +10,13 @@ use Modules\Accounts\Http\Requests\AccCashRequisitionRequest;
 
 class AccCashRequisitionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:acc-cash-requisition-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:acc-cash-requisition-create', ['only' => ['store']]);
+        $this->middleware('permission:acc-cash-requisition-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:acc-cash-requisition-delete', ['only' => ['destroy']]);
+    }
 
     /**
      * @param Request $request

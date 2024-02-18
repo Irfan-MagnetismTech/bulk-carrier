@@ -35,24 +35,6 @@ use Modules\Accounts\Http\Controllers\AisReportController;
 
 Route::middleware(['auth:api'])->prefix('acc')->as('acc.')->group(function ()
 {
-    Route::apiResource('acc-balance-and-income-lines', AccBalanceAndIncomeLineController::class);
-    Route::apiResource('acc-cost-centers', AccCostCenterController::class);
-    Route::apiResource('acc-accounts', AccAccountController::class);
-    Route::apiResource('acc-account-opening-balances', AccAccountOpeningBalanceController::class);
-    Route::apiResource('acc-bank-accounts', AccBankAccountController::class);
-    Route::apiResource('acc-cash-accounts', AccCashAccountController::class);
-    Route::apiResource('acc-transactions', AccTransactionController::class);
-    Route::apiResource('acc-bank-reconciliations', AccBankReconciliationController::class);
-    Route::apiResource('acc-loans', AccLoanController::class);
-    Route::apiResource('acc-loan-received', AccLoanReceivedController::class);
-    Route::apiResource('acc-fixed-assets', AccFixedAssetController::class);
-    Route::apiResource('acc-depreciations', AccDepreciationController::class);
-    Route::apiResource('acc-cash-requisitions', AccCashRequisitionController::class);
-    Route::apiResource('acc-advance-adjustments', AccAdvanceAdjustmentController::class);
-    Route::apiResource('acc-salary-heads', AccSalaryHeadController::class);
-    Route::apiResource('acc-salaries', AccSalaryController::class);
-
-
     //helper apis
     Route::post('get-cost-centers', [AccCommonController::class, 'getCostCenters']);
     Route::post('get-balance-income-lines-only', [AccCommonController::class, 'getBalanceIncomeLinesOnly']);
@@ -66,18 +48,34 @@ Route::middleware(['auth:api'])->prefix('acc')->as('acc.')->group(function ()
     Route::post('get-cash-requisitions', [AccCommonController::class, 'getCashRequisitions']);
     Route::post('get-salary-heads', [AccCommonController::class, 'getSalaryHeads']);
 
+    //Data Encoding 
+    Route::apiResource('acc-cost-centers', AccCostCenterController::class);
+    Route::apiResource('acc-balance-and-income-lines', AccBalanceAndIncomeLineController::class);
+    Route::apiResource('acc-accounts', AccAccountController::class);
+    Route::apiResource('acc-account-opening-balances', AccAccountOpeningBalanceController::class);
+    Route::apiResource('acc-bank-accounts', AccBankAccountController::class);
+    Route::apiResource('acc-cash-accounts', AccCashAccountController::class);
+    Route::apiResource('acc-salary-heads', AccSalaryHeadController::class);
+    
+    //Features
+    Route::apiResource('acc-transactions', AccTransactionController::class);
+    Route::apiResource('acc-bank-reconciliations', AccBankReconciliationController::class);
+    Route::apiResource('acc-loans', AccLoanController::class);
+    Route::apiResource('acc-loan-received', AccLoanReceivedController::class);
+    Route::apiResource('acc-fixed-assets', AccFixedAssetController::class);
+    Route::apiResource('acc-depreciations', AccDepreciationController::class);
+    Route::apiResource('acc-cash-requisitions', AccCashRequisitionController::class);
+    Route::apiResource('acc-advance-adjustments', AccAdvanceAdjustmentController::class);
+    Route::apiResource('acc-salaries', AccSalaryController::class);
 
-//    //Common routes
-//    Route::get('get-balance-income-lines-only', [AccountsCommonController::class, 'getBalanceIncomeLinesOnly']);
-//    Route::get('get-balance-income-accounts/{balance_and_income_line_id}', [AccountsCommonController::class, 'getBalanceIncomeAccounts']);
-//    Route::get('generate-account-code/{balance_and_income_line_id}', [AccountsCommonController::class, 'generateAccountCode']);
-//    Route::post('get-accounts', [AccountsCommonController::class, 'getAccounts']);
-//
-//    //AIS Reports
-    Route::post('day-book', [AisReportController::class, 'dayBook']);
+    //AIS Reports
+    Route::post('balance-sheet', [AisReportController::class, 'balanceSheet']);
+    Route::post('income-statement', [AisReportController::class, 'incomeStatement']);
     Route::post('ledgers', [AisReportController::class, 'ledger']);
     Route::post('trial-balance', [AisReportController::class, 'trialBalance']);
-    Route::post('income-statement', [AisReportController::class, 'incomeStatement']);
-    Route::post('balance-sheet', [AisReportController::class, 'balanceSheet']);
+    Route::post('day-book', [AisReportController::class, 'dayBook']);
     Route::post('fixed-asset-statement', [AisReportController::class, 'fixedAssetStatement']);
+    Route::post('cost-center-summary', [AisReportController::class, 'costCenterSummary']);
+    Route::post('cost-center-breakup', [AisReportController::class, 'costCenterBreakup']);
+    Route::post('payment-receipt-summary', [AisReportController::class, 'paymentReceiptSummary']);
 });

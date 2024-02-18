@@ -12,6 +12,7 @@ import Store from "../../../store";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import { formatMonthYear, formatDate } from "../../../utils/helper.js";
 const icons = useHeroIcon();
 
 const props = defineProps({
@@ -43,7 +44,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Year-Month",
+      "label": "Month - Year",
       "filter_type": "input"
     },
     // {
@@ -135,8 +136,8 @@ onMounted(() => {
           <tbody class="relative">
                 <tr v-for="(salaryData, index) in administrativeSalaries?.data" :key="index">
                   <td> {{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }} </td>
-                  <td> {{ salaryData?.year_month }} </td>
-                  <td> {{ salaryData?.total_salary }} </td>
+                  <td> {{ formatMonthYear(salaryData?.year_month) }} </td>
+                  <td class="text-right"> {{ salaryData?.total_salary }} </td>
                 <td>
                   <span :class="salaryData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">
                     {{ salaryData?.business_unit }}

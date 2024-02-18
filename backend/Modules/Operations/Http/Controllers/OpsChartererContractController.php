@@ -90,7 +90,7 @@ class OpsChartererContractController extends Controller
         */
     public function show(OpsChartererContract $charterer_contract): JsonResponse
     {
-        $charterer_contract->load('opsVessel','opsChartererProfile','opsChartererContractsFinancialTerms.opsCargoTariff',
+        $charterer_contract->load('opsVessel','opsChartererProfile','opsChartererContractsFinancialTerms',
         'opsChartererContractsLocalAgents.opsPort');
         try
         {
@@ -152,10 +152,13 @@ class OpsChartererContractController extends Controller
     {        
         try
         {
+            DB::beginTransaction();            
             $charterer_contract->opsChartererContractsFinancialTerms()->delete();
             $charterer_contract->opsChartererContractsLocalAgents()->delete();
             $this->fileUpload->deleteFile($charterer_contract->attachment);
             $charterer_contract->delete();
+            DB::commit();
+
 
             return response()->json([
                 'message' => 'Data deleted successfully.',
@@ -163,7 +166,8 @@ class OpsChartererContractController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($charterer_contract->preventDeletionIfRelated(), 422);  
         }
     }
 
@@ -182,14 +186,18 @@ class OpsChartererContractController extends Controller
         try {
             $charterer = OpsChartererContract::query()->with('opsVessel','opsChartererProfile','opsChartererContractsFinancialTerms.opsCargoTariff.opsCargoType','opsChartererContractsFinancialTerms.opsVoyage',
             'opsChartererContractsLocalAgents.opsPort','opsChartererInvoices','dayWiseInvoices')
-            ->when(isset(request()->ops_charterer_profile_id), function ($query) {
-                    $query->where('ops_charterer_profile_id',request()->charterer_profile_id);
+            ->when(is_numeric($request->ops_vessel_id), function ($query) {
+                $query->where('ops_vessel_id',request()->ops_vessel_id);
+            })
+            ->when(is_numeric($request->ops_charterer_profile_id), function ($query) {
+                    $query->where('ops_charterer_profile_id',request()->ops_charterer_profile_id);
             })
             ->get();            
-            // $charterer->load('opsChartererProfile');
+            $charterer->load('opsChartererProfile');
 
             return response()->success('Data retrieved successfully.', $charterer, 200);
         } catch (QueryException $e){
+            
             return response()->error($e->getMessage(), 500);
         }
     }

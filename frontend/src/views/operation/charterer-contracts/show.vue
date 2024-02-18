@@ -26,7 +26,7 @@
                       <td>{{  chartererContract.contract_type }}</td>
                   </tr>
                   <tr>
-                      <th class="w-40">Vessel</th>
+                      <th class="w-40">Vessel Name</th>
                       <td>{{  chartererContract.opsVessel?.name }}</td>
                   </tr>
                   <tr>
@@ -63,7 +63,7 @@
                   </tr>
                   <tr>
                       <th class="w-40">Attachment</th>
-                      <td> <a download :href="env.BASE_API_URL+chartererContract.attachment" target="_blank" class="mt-1 inline bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
+                      <td> <a download  v-if="chartererContract.attachment" :href="env.BASE_API_URL+chartererContract.attachment" target="_blank" class="mt-1 inline bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
                         Download Attachment
                         <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -131,7 +131,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <th class="w-40">Port</th>
+                    <th class="w-40">Port Code</th>
                     <td>{{ chartererContract.opsChartererContractsLocalAgents[0].opsPort?.code_name }}</td>
                 </tr>
                 <tr>
@@ -158,7 +158,7 @@
                     <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="2">Contract Validity and Billing</td>
                 </tr>
             </thead>
-            <tbody v-if="chartererContract.contract_type == 'Day Wise'">
+            <tbody>
                 <tr>
                     <th class="w-40">Credit Days</th>
                     <td>{{ chartererContract.opsChartererContractsFinancialTerms.credit_days }}</td>
@@ -174,9 +174,7 @@
                 <tr>
                     <th class="w-40">Valid Till</th>
                     <td>{{ formatDate(chartererContract.opsChartererContractsFinancialTerms.valid_till) }}</td>
-                </tr>                               
-            </tbody>
-            <tbody v-else>
+                </tr>         
                 <tr>
                     <th class="w-40">Status</th>
                     <td>{{ chartererContract.status }}</td>
@@ -199,23 +197,23 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                <tr v-if="chartererContract.contract_type == 'Day Wise'">
                     <th class="w-40">Per Day Charge</th>
                     <td>{{ chartererContract.opsChartererContractsFinancialTerms.per_day_charge }}</td>
                 </tr>
-                <tr>
+                <tr v-else>
                     <th class="w-40">Per MT Charge</th>
                     <td>{{ chartererContract.opsChartererContractsFinancialTerms.per_ton_charge }}</td>
                 </tr>
-                <tr v-if="chartererContract.contract_type == 'Voyage Wise'">
+                <tr>
                     <th class="w-40">Cleaning Fee</th>
                     <td>{{ chartererContract.opsChartererContractsFinancialTerms.cleaning_fee }}</td>
                 </tr>
-                <tr v-if="chartererContract.contract_type == 'Voyage Wise'">
+                <tr>
                     <th class="w-40">Cancellation Fee <small>(%)</small></th>
                     <td>{{ chartererContract.opsChartererContractsFinancialTerms.cancellation_fee }}</td>
                 </tr>
-                <tr v-if="chartererContract.contract_type == 'Voyage Wise'">
+                <tr>
                     <th class="w-40">Others Fee</th>
                     <td>{{ chartererContract.opsChartererContractsFinancialTerms.others_fee }}</td>
                 </tr>

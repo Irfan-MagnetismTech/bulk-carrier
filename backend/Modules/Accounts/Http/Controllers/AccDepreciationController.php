@@ -10,6 +10,13 @@ use Modules\Accounts\Http\Requests\AccDepreciationRequest;
 
 class AccDepreciationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:acc-depreciation-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:acc-depreciation-create', ['only' => ['store']]);
+        $this->middleware('permission:acc-depreciation-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:acc-depreciation-delete', ['only' => ['destroy']]);
+    }    
 
     /**
      * @param Request $request

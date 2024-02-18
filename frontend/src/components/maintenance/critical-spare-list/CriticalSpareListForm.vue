@@ -14,20 +14,20 @@
                 </template>
               </v-select>
               <input type="hidden" v-model="form.ops_vessel_id">
-          <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" />
+          <!-- <Error v-if="errors?.ops_vessel_id" :errors="errors.ops_vessel_id" /> -->
         </label>
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Record Date <span class="text-red-500">*</span></span>
         <!-- <input type="date" v-model="form.record_date" placeholder="Record date" class="form-input" required/> -->
         <VueDatePicker v-model="form.record_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
-        <Error v-if="errors?.record_date" :errors="errors.record_date" />
+        <!-- <Error v-if="errors?.record_date" :errors="errors.record_date" /> -->
       </label>
       
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Reference No <span class="text-red-500">*</span></span>
         <input type="text" v-model.trim="form.reference_no" placeholder="Reference No" class="form-input" required/>
-        <Error v-if="errors?.reference_no" :errors="errors.reference_no" />
+        <!-- <Error v-if="errors?.reference_no" :errors="errors.reference_no" /> -->
       </label>
     </div>
     

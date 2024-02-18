@@ -14,7 +14,7 @@ export default function useChartererInvoice() {
 	const notification = useNotification();
 
 	const chartererInvoice = ref({
-		business_unit: 'PSML',
+		business_unit: null,
 		ops_charterer_profile_id: null,
 		opsChartererProfile: null,
 		ops_charterer_contract_id: null,
@@ -44,7 +44,7 @@ export default function useChartererInvoice() {
 				charge_or_deduct: 'deduct',
 				particular: null,
 				cost_unit: null,
-				currency: null,
+				currency: '',
 				quantity: 0,
 				rate: 0,
 				exchange_rate_bdt: 0,
@@ -59,7 +59,7 @@ export default function useChartererInvoice() {
 				charge_or_deduct: 'charge',
 				particular: null,
 				cost_unit: null,
-				currency: null,
+				currency: '',
 				quantity: 0,
 				rate: 0,
 				exchange_rate_bdt: 0,

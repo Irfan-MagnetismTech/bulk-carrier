@@ -19,6 +19,7 @@ return new class extends Migration
 			$table->unsignedBigInteger('crw_crew_id');
 			$table->string('assignment_code'); // assignment code
 			$table->string('position_onboard'); // rank name
+			$table->tinyInteger('is_watchkeeper'); // rank name
 			$table->date('joining_date');
 			$table->string('joining_port_code'); // port code
 			$table->string('duration'); //4 months (+/-1)

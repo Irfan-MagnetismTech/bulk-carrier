@@ -12,6 +12,8 @@ import Store from "../../../store";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import { formatDate } from "../../../utils/helper.js";
+
 const icons = useHeroIcon();
 
 const props = defineProps({
@@ -172,7 +174,7 @@ onMounted(() => {
                   <td class="text-left"> <nobr> {{ fixedAsset?.asset_tag }} </nobr> </td>
                   <td> {{ fixedAsset?.useful_life }} </td>
                   <td> {{ fixedAsset?.depreciation_rate }} </td>
-                  <td> {{ fixedAsset?.acquisition_date }} </td>
+                  <td> {{ formatDate(fixedAsset?.acquisition_date) }} </td>
                 <td>
                   <span :class="fixedAsset?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">
                     {{ fixedAsset?.business_unit }}

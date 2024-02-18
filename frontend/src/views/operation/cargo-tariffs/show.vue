@@ -20,7 +20,7 @@
                   <td>{{ cargoTariff?.tariff_name }}</td>
               </tr>
               <tr>
-                  <th class="w-40">Vessel</th>
+                  <th class="w-40">Vessel Name</th>
                   <td>{{ cargoTariff?.opsVessel?.name }}</td>
               </tr>
               <tr>
@@ -56,7 +56,7 @@
                   <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="14"> Rate List </td>
                 </tr>
                 <tr class="w-full">
-                  <th class="block">Particulars</th>
+                  <th class="">Particulars</th>
                   <th>Unit</th>
                   <th>Jan</th>
                   <th>Feb</th>

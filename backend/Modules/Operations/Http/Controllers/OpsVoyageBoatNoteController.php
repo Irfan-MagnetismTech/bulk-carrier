@@ -10,8 +10,9 @@ use App\Services\FileUploadService;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\Operations\Entities\OpsVoyageBoatNote;
 use Modules\Operations\Entities\OpsVoyageSector;
+use Modules\Operations\Entities\OpsVoyageBoatNote;
+use Modules\Operations\Entities\OpsChartererInvoiceVoyage;
 use Modules\Operations\Http\Requests\OpsVoyageBoatNoteRequest;
 
 class OpsVoyageBoatNoteController extends Controller
@@ -54,6 +55,18 @@ class OpsVoyageBoatNoteController extends Controller
     public function store(OpsVoyageBoatNoteRequest $request): JsonResponse
     {
         // dd($request->opsVoyageBoatNoteLines);
+
+        $chartererInvoice = OpsChartererInvoiceVoyage::where('ops_voyage_id', $request->ops_voyage_id)->first();
+
+        if($chartererInvoice) {
+            $error= [
+                'message'=>'You cannot change this info for this voyage as this voyage is already billed.',
+                            'errors'=>[
+                                'note_type'=>['You cannot change this info for this voyage as this voyage is already billed.',
+                    ]]];
+            return response()->json($error, 422);
+        }
+
         try {
             DB::beginTransaction();
             $voyageBoatNoteInfo = $request->except(
@@ -150,6 +163,17 @@ class OpsVoyageBoatNoteController extends Controller
     public function update(OpsVoyageBoatNoteRequest $request, OpsVoyageBoatNote $voyage_boat_note): JsonResponse
     {
         // dd($request->opsVoyageBoatNoteLines);
+        $chartererInvoice = OpsChartererInvoiceVoyage::where('ops_voyage_id', $request->ops_voyage_id)->first();
+
+        if($chartererInvoice) {
+            $error= [
+                'message'=>'You cannot change this info for this voyage as this voyage is already billed.',
+                            'errors'=>[
+                                'note_type'=>['You cannot change this info for this voyage as this voyage is already billed.',
+                    ]]];
+            return response()->json($error, 422);
+        }
+        
         try {
             DB::beginTransaction();
             $voyageBoatNoteInfo = $request->except(
@@ -200,6 +224,7 @@ class OpsVoyageBoatNoteController extends Controller
     {
         try
         {
+            DB::beginTransaction();            
             $voyage_boat_note->load('opsVoyageBoatNoteLines');
             foreach($voyage_boat_note->opsVoyageBoatNoteLines as $boat_note_line){
                 $this->fileUpload->deleteFile($boat_note_line->attachment);
@@ -207,14 +232,16 @@ class OpsVoyageBoatNoteController extends Controller
 
             $voyage_boat_note->opsVoyageBoatNoteLines()->delete();
             $voyage_boat_note->delete();
-
+            DB::commit();
+            
             return response()->json([
                 'message' => 'Data deleted successfully.',
             ], 204);
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($voyage_boat_note->preventDeletionIfRelated(), 422);
         }
     }
 

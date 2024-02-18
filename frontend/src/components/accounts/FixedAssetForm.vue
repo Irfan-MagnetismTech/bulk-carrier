@@ -157,7 +157,7 @@ onMounted(() => {
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300"> Cost Center <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300"> Cost Center Name <span class="text-red-500">*</span></span>
         <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.acc_cost_center_name" label="name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.acc_cost_center_name" v-bind="attributes" v-on="events"/>
@@ -273,7 +273,7 @@ onMounted(() => {
                 </template>
                 <template v-else>
                   <select v-model.trim="form.fixedAssetCosts[index].particular" class="form-input" required>
-                    <option value="">Select</option>
+                    <option value="">--Choose an option--</option>
                     <option value="Carry Cost">Carry Cost</option>
                     <option value="Process Cost">Process Cost</option>
                     <option value="Installation Cost">Installation Cost</option>

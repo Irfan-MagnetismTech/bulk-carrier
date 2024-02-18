@@ -12,6 +12,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsCustomerInvoice;
 use Modules\Operations\Entities\OpsCustomerInvoiceVoyage;
 use Modules\Operations\Http\Requests\OpsCustomerInvoiceRequest;
+use Modules\Operations\Http\Requests\OpsCustomerInvoiceUpdateRequest;
 
 class OpsCustomerInvoiceController extends Controller
 {
@@ -141,11 +142,11 @@ class OpsCustomerInvoiceController extends Controller
     /**
      * Update the specified resource in storage.
     *
-    * @param OpsCustomerInvoiceRequest $request
+    * @param OpsCustomerInvoiceUpdateRequest $request
     * @param  OpsCustomerInvoice  $customer_invoice
     * @return JsonResponse
     */
-    public function update(OpsCustomerInvoiceRequest $request, OpsCustomerInvoice $customer_invoice): JsonResponse
+    public function update(OpsCustomerInvoiceUpdateRequest $request, OpsCustomerInvoice $customer_invoice): JsonResponse
     {
         if(isset($request->opsCustomerInvoiceVoyages)){
             $voyage_ids= [];
@@ -202,6 +203,7 @@ class OpsCustomerInvoiceController extends Controller
             $customer_invoice->opsCustomerInvoiceOthers()->delete();
             $customer_invoice->opsCustomerInvoiceServices()->delete();
             $customer_invoice->delete();
+            DB::commit();
 
             return response()->json([
                 'message' => 'Data deleted successfully.',
@@ -209,7 +211,8 @@ class OpsCustomerInvoiceController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($customer_invoice->preventDeletionIfRelated(), 422);
         }
     }
 }

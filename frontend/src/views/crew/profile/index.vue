@@ -28,7 +28,7 @@ const props = defineProps({
 const { crewProfiles, getCrewProfiles, deleteCrewProfile, isLoading, isTableLoading } = useCrewProfile();
 const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
-setTitle('Crew Profiles');
+setTitle('Crew Profile');
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 let filterOptions = ref( {
@@ -169,11 +169,11 @@ onMounted(() => {
           <tbody>
           <tr v-for="(crwProfileData,index) in crewProfiles?.data" :key="index">
             <td>{{ index + 1 }}</td>
-            <td>{{ crwProfileData?.full_name }}</td>
-            <td>{{ crwProfileData?.department_name }}</td>
-            <td>{{ crwProfileData?.crewRank?.name }}</td>
-            <td>{{ crwProfileData?.pre_mobile_no }}</td>
-            <td>{{ crwProfileData?.pre_email }}</td>
+            <td class="!text-left">{{ crwProfileData?.full_name }}</td>
+            <td class="!text-left">{{ crwProfileData?.department_name }}</td>
+            <td class="!text-left">{{ crwProfileData?.crewRank?.name }}</td>
+            <td class="!text-left">{{ crwProfileData?.pre_mobile_no }}</td>
+            <td class="!text-left">{{ crwProfileData?.pre_email }}</td>
             <td>{{ crwProfileData?.hired_by }}</td>
             <td>
               <span :class="crwProfileData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwProfileData?.business_unit }}</span>

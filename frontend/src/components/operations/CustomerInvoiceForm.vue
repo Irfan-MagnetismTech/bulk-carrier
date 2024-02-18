@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <business-unit-input v-model="form.business_unit" :page="'edit'"></business-unit-input>
+      <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
@@ -10,7 +10,7 @@
     <div class="flex flex-col w-full md:flex-row md:gap-2">
         <label class="block w-1/2 mt-2 text-sm">
               <span class="text-gray-700 dark-disabled:text-gray-300">Customer Name <span class="text-red-500">*</span></span>
-              <v-select :options="customers" placeholder="--Choose an option--" v-model="form.opsCustomer" label="name_code" class="block form-input" @update:modelValue="profileChanged">
+              <v-select :options="customers" :loading="isCustomerLoading" placeholder="--Choose an option--" v-model="form.opsCustomer" label="name_code" class="block form-input" @update:modelValue="profileChanged" :disabled="formType === 'edit'">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -35,8 +35,8 @@
       <table class="w-full whitespace-no-wrap" >
         <thead v-once>
             <tr class="w-full">
-              <th class="w-4/12">Voyage <span class="text-red-500">*</span></th>
-              <th class="w-2/12"><nobr>Vessel</nobr></th>
+              <th class="w-4/12">Voyage No <span class="text-red-500">*</span></th>
+              <th class="w-2/12"><nobr>Vessel Name</nobr></th>
               <th class="w-2/12"><nobr>Cargo Type</nobr></th>
               <th class="w-2/12"><nobr>Total Amount</nobr></th>
               <th class="w-1/12py-3 text-center align-center">Details</th>
@@ -50,7 +50,7 @@
                 <label class="block w-full mt-2 text-sm relative">
                   <!-- <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceVoyages[index].opsVoyage" placeholder="Quantity" class="form-input text-right" autocomplete="off" /> -->
                   <!-- <Error v-if="errors?.opsCustomerInvoiceOthers[index]?.quantity" :errors="errors.opsCustomerInvoiceOthers[index]?.quantity" /> -->
-                  <v-select :options="voyages" placeholder="--Choose an option--" :readonly="formType=='edit'" :disabled="formType=='edit'" v-model="form.
+                  <v-select :options="voyages" :loading="isVoyageLoading" placeholder="--Choose an option--" :readonly="formType=='edit'" :disabled="formType=='edit'" v-model="form.
                     opsCustomerInvoiceVoyages[index].opsVoyage" label="voyage_sequence" class="block form-input" @update:modelValue="opsCustomerInvoiceVoyageChanged(form.opsCustomerInvoiceVoyages[index])">
                     <template #search="{attributes, events}">
                         <input
@@ -129,16 +129,15 @@
       <table class="w-full whitespace-no-wrap" >
         <thead v-once>
             <tr class="w-full">
-              <th class=" w-4/12">Particulars</th>
-              <!-- <th class="">Currency</th> -->
+              <th class=" w-4/12">Particulars <span class="text-red-500">*</span></th>
+              <th class="">Currency</th>
               <th class=" w-1/12">Unit</th>
               <th class=" w-2/12">Quantity <span class="text-red-500">*</span></th>
               <th class=" w-2/12">Rate <span class="text-red-500">*</span></th>
-              <!-- <th>Exchange Rate (To USD)</th>
-              <th>Exchange Rate (USD To BDT)</th>
+              <th><nobr>Exchange Rate</nobr> (To USD)</th>
+              <th><nobr>Exchange Rate</nobr> (USD To BDT)</th>
               <th>Amount USD</th>
-              <th>Amount BDT</th> -->
-              <th class=" w-2/12">Amount</th>
+              <th>Amount BDT</th>
               <th class=" w-1/12py-3 text-center align-center"><button  type="button" @click="addOther()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
@@ -150,19 +149,25 @@
             <tr v-for="(sector, index) in form.opsCustomerInvoiceOthers" :key="index">
               <td>
                 <label class="block w-full mt-2 text-sm relative">
-                  <input type="text" step="0.001" v-model.trim="form.opsCustomerInvoiceOthers[index].particular" class="form-input" autocomplete="off" :class="{'pr-7' : form.opsCustomerInvoiceOthers[index].isParticularDuplicate}" />
+                  <input type="text" required step="0.001" v-model.trim="form.opsCustomerInvoiceOthers[index].particular" class="form-input" autocomplete="off" :class="{'pr-7' : form.opsCustomerInvoiceOthers[index].isParticularDuplicate}" />
                   <span v-show="form.opsCustomerInvoiceOthers[index].isParticularDuplicate" class="text-yellow-600 absolute pl-2 top-2 right-1" title="Duplicate Particular" v-html="icons.ExclamationTriangle"></span>
                   <!-- <Error v-if="errors?.opsCustomerInvoiceOthers[index]?.quantity" :errors="errors.opsCustomerInvoiceOthers[index]?.quantity" /> -->
                 </label>
               </td>
-              <!-- <td>
+              <td class="border-0 w-28 block">
                 <label class="block w-full mt-2 text-sm">
-                  <select v-model.trim="form.opsCustomerInvoiceOthers[index].currency" class="form-input" aria-placeholder="Select Currency" placeholder="Select Currency" @change="SetCurrencyData($event,index)">
-                    <option selected value="" disabled>Select Currency</option>
-                     <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
-                  </select>
+                  <v-select :options="currencies" :loading="isCurrencyLoading" placeholder="--Choose an option--" v-model="form.opsCustomerInvoiceOthers[index].currency" class="block form-input">
+                      <template #search="{attributes, events}">
+                          <input
+                              class="vs__search"
+                              :required="!form.opsCustomerInvoiceOthers[index].currency"
+                              v-bind="attributes"
+                              v-on="events"
+                              />
+                      </template>
+                  </v-select>
                 </label>
-              </td> -->
+              </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
                   <input type="text" step="0.001" v-model.trim="form.opsCustomerInvoiceOthers[index].cost_unit" class="form-input" autocomplete="off" />
@@ -179,7 +184,7 @@
                   <input type="number" step="0.001" min="1" v-model.trim="form.opsCustomerInvoiceOthers[index].rate" class="form-input text-right" autocomplete="off" required />
                 </label>
               </td>
-              <!-- <td>
+              <td>
                 <label class="block w-full mt-2 text-sm">
                   <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceOthers[index].exchange_rate_usd" class="form-input text-right" autocomplete="off" :readonly="isUSDCurrency(form.opsCustomerInvoiceOthers,index)"/>
                 </label>
@@ -196,12 +201,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceOthers[index].amount_bdt" class="form-input text-right" autocomplete="off" readonly/>
-                </label>
-              </td> -->
-              <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" min="1" v-model.trim="form.opsCustomerInvoiceOthers[index].amount" class="form-input text-right" autocomplete="off" readonly/>
+                  <input type="number" step="0.001" min="1" required v-model.trim="form.opsCustomerInvoiceOthers[index].amount_bdt" class="form-input text-right" autocomplete="off" readonly/>
                 </label>
               </td>
               <td class="px-1 py-1 text-center">
@@ -232,16 +232,15 @@
       <table class="w-full whitespace-no-wrap" >
           <thead v-once>
             <tr class="w-full">
-              <th class=" w-4/12">Particulars</th>
-              <!-- <th>Currency</th> -->
+              <th class=" w-4/12">Particulars <span class="text-red-500">*</span></th>
+              <th>Currency</th>
               <th class=" w-1/12">Unit</th>
               <th class=" w-2/12">Quantity <span class="text-red-500">*</span></th>
               <th class=" w-2/12">Rate <span class="text-red-500">*</span></th>
-              <!-- <th>Exchange Rate (To USD)</th>
-              <th>Exchange Rate (USD To BDT)</th>
+              <th><nobr>Exchange Rate</nobr> (To USD)</th>
+              <th><nobr>Exchange Rate</nobr> (USD To BDT)</th>
               <th>Amount USD</th>
-              <th>Amount BDT</th> -->
-              <th class=" w-2/12">Amount</th>
+              <th>Amount BDT</th>
               <th class=" w-1/12py-3 text-center align-center"><button type="button" @click="addService()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
@@ -253,19 +252,25 @@
             <tr v-for="(item, index) in form.opsCustomerInvoiceServices" :key="index">
               <td>
                 <label class="block w-full mt-2 text-sm relative">
-                  <input type="text" v-model.trim="form.opsCustomerInvoiceServices[index].particular" class="form-input" autocomplete="off" :class="{'pr-7' : form.opsCustomerInvoiceServices[index].isParticularDuplicate}" />
+                  <input type="text" required v-model.trim="form.opsCustomerInvoiceServices[index].particular" class="form-input" autocomplete="off" :class="{'pr-7' : form.opsCustomerInvoiceServices[index].isParticularDuplicate}" />
                   <span v-show="form.opsCustomerInvoiceServices[index].isParticularDuplicate" class="text-yellow-600 absolute top-2 right-1 " title="Duplicate Particular" v-html="icons.ExclamationTriangle"></span>
                   <!-- <Error v-if="errors?.opsCustomerInvoiceServices[index]?.quantity" :errors="errors.opsCustomerInvoiceServices[index]?.quantity" /> -->
                 </label>
               </td>
-              <!-- <td>
+              <td class="border-0 w-28 block">
                 <label class="block w-full mt-2 text-sm">
-                  <select v-model.trim="form.opsCustomerInvoiceServices[index].currency" class="form-input" aria-placeholder="Select Currency" placeholder="Select Currency" @change="SetCurrencyData($event,index)">
-                    <option selected value="" disabled>Select Currency</option>
-                     <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
-                  </select>
+                  <v-select :options="currencies" :loading="isCurrencyLoading" placeholder="--Choose an option--" v-model="form.opsCustomerInvoiceServices[index].currency" class="block form-input">
+                      <template #search="{attributes, events}">
+                          <input
+                              class="vs__search"
+                              :required="!form.opsCustomerInvoiceServices[index].currency"
+                              v-bind="attributes"
+                              v-on="events"
+                              />
+                      </template>
+                  </v-select>
                 </label>
-              </td> -->
+              </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
                   <input type="text" step="0.001" v-model.trim="form.opsCustomerInvoiceServices[index].cost_unit" class="form-input" autocomplete="off" />
@@ -282,7 +287,7 @@
                   <input type="number" step="0.001" min="1" v-model.trim="form.opsCustomerInvoiceServices[index].rate" class="form-input text-right" autocomplete="off" required />
                 </label>
               </td>
-              <!-- <td>
+              <td>
                 <label class="block w-full mt-2 text-sm">
                   <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceServices[index].exchange_rate_usd" class="form-input text-right" autocomplete="off" :readonly="isUSDCurrency(form.opsCustomerInvoiceServices,index)"/>
                 </label>
@@ -299,12 +304,7 @@
               </td>
               <td>
                 <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" v-model.trim="form.opsCustomerInvoiceServices[index].amount_bdt" class="form-input text-right" autocomplete="off" readonly/>
-                </label>
-              </td> -->
-              <td>
-                <label class="block w-full mt-2 text-sm">
-                  <input type="number" step="0.001" min="1" v-model.trim="form.opsCustomerInvoiceServices[index].amount" class="form-input text-right" autocomplete="off" readonly/>
+                  <input type="number" step="0.001" min="1" required v-model.trim="form.opsCustomerInvoiceServices[index].amount_bdt" class="form-input text-right" autocomplete="off" readonly/>
                 </label>
               </td>
               <td class="px-1 py-1 text-center">
@@ -371,7 +371,7 @@
       <table class="w-full whitespace-no-wrap" >
         <thead v-once>
               <tr class="w-full">
-                <th>Subtotal</th>
+                <th>Subtotal small</th>
                 <th>Total Service Fee (Deduction)</th>
                 <th>Discount (Deduction)</th>
                 <th>Grand Total</th>
@@ -509,12 +509,12 @@ const editInitiated = ref(false);
 const icons = useHeroIcon();
 
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
-const { currencies, getCurrencies } = useBusinessInfo();
-const { getCustomersByBusinessUnit, customers } = useCustomer();
+const { currencies, getCurrencies, isCurrencyLoading } = useBusinessInfo();
+const { getCustomersByBusinessUnit, customers, isCustomerLoading } = useCustomer();
 const { numberFormat } = useHelper();
 // const { voyage, voyages, showVoyage, searchVoyages } = useVoyage();
-const { vessel, showVessel } = useVessel();
-const { voyages, getVoyageByCustomer } = useVoyage();
+const { vessel, showVessel, isVesselLoading } = useVessel();
+const { voyages, getVoyageByCustomer, isVoyageLoading } = useVoyage();
 const { contractTariff, getContractTariffByVoyage } = useContractAssign();
 const props = defineProps({
     form: { required: false,default: {},},
@@ -628,16 +628,16 @@ watch(() => props?.form?.opsCustomerInvoiceServices, (newVal, oldVal) => {
       let total_usd = 0.0;
       let total_amount = 0.0;
       newVal?.forEach((line, index) => {
-        // const { amount_usd, amount_bdt } = calculateInCurrency(line, index);
-        // total_bdt += amount_bdt;
-        // total_usd += amount_usd;
+        const { amount_usd, amount_bdt } = calculateInCurrency(line, index);
+        total_bdt += amount_bdt;
+        total_usd += amount_usd;
         line.amount = parseFloat((line?.rate * line?.quantity).toFixed(2));
         total_amount += parseFloat((line?.rate * line?.quantity).toFixed(2));
 
       });
   // props.form.service_fee_deduction_amount_usd = total_usd;
-  // props.form.service_fee_deduction_amount = total_bdt ;
-  props.form.service_fee_deduction_amount = total_amount ;
+  props.form.service_fee_deduction_amount = total_bdt ;
+  // props.form.service_fee_deduction_amount = total_amount ;
   CalculateAll();
 }, { deep: true }); 
 
@@ -646,15 +646,15 @@ watch(() => props?.form?.opsCustomerInvoiceOthers, (newVal, oldVal) => {
   let total_usd = 0.0;
   let total_amount = 0.0;
       newVal?.forEach((line, index) => {
-        // const { amount_usd, amount_bdt } = calculateInCurrency(line, index);
-        // total_bdt += amount_bdt;
-        // total_usd += amount_usd;
+        const { amount_usd, amount_bdt } = calculateInCurrency(line, index);
+        total_bdt += amount_bdt;
+        total_usd += amount_usd;
         line.amount = parseFloat((line?.rate * line?.quantity).toFixed(2));
         total_amount += parseFloat((line?.rate * line?.quantity).toFixed(2));
       });
   // props.form.others_billable_amount_usd = total_usd;
-  // props.form.others_billable_amount = total_bdt;
-  props.form.others_billable_amount = total_amount;
+  props.form.others_billable_amount = total_bdt;
+  // props.form.others_billable_amount = total_amount;
   CalculateAll(); 
 }, { deep: true });
 
@@ -680,16 +680,23 @@ watch(() => props?.form?.discounted_amount, (newVal, oldVal) => {
   CalculateAll();
 });
 
-// function fetchVoyages(searchParam, loading) {
+// function fetchVoyages(searchParam) {
 //   loading(true)
-//   searchVoyages(searchParam, props.form.business_unit, loading)
+//   searchVoyages(searchParam, props.form.business_unit)
 // }
 
 
 
-// watch(() => props.form.opsCustomerProfile, (value) => {
-//     props.form.ops_customer_profile_id = value?.id;
-// })
+watch(() => props.form.business_unit, (value) => {
+  
+  if(props.formType == 'create') {
+    customers.value = []
+    props.form.opsCustomer = null
+    props.form.ops_customer_id = null
+  }
+  getCustomersByBusinessUnit(props.form.business_unit)
+
+}, { deep: true})
 
 function profileChanged() {
   let value = props.form.opsCustomer ?? null;
@@ -757,7 +764,6 @@ watch(() => props.form.opsCustomerContract, (value) => {
 onMounted(() => {
   // getAllCustomerProfiles();
   getCurrencies();
-  getCustomersByBusinessUnit(props.form.business_unit)
 })
 
 

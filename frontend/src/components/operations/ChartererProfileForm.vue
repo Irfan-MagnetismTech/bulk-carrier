@@ -50,7 +50,7 @@
       
       <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Website</span>
-          <input type="url" v-model.trim="form.website" placeholder="Website" class="form-input" autocomplete="off" />
+          <input type="url" v-model.trim="form.website" placeholder="http://example.com" class="form-input" autocomplete="off" />
       </label>
     </div>
     
@@ -85,10 +85,16 @@
       </label>
       <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Currency</span>
-              <select v-model="form.opsChartererBankAccounts[0].currency" class="form-input">
-                <option value="">Select Currency</option>
-                <option v-for="currency in currencies">{{ currency }}</option>
-              </select>
+              <v-select :options="currencies" :loading="isCurrencyLoading" placeholder="--Choose an option--" v-model="form.opsChartererBankAccounts[0].currency" label="cargo_type" class="block form-input">
+                <template #search="{attributes, events}">
+                    <input
+                        class="vs__search"
+                        :required="!form.opsChartererBankAccounts[0].currency"
+                        v-bind="attributes"
+                        v-on="events"
+                        />
+                </template>
+            </v-select>
       </label>
       <label class="block w-full mt-2 text-sm"></label>
     </div>
@@ -104,7 +110,7 @@ import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 
 const store = useStore();
 const editInitiated = ref(false);
-const { getCurrencies, currencies } = useBusinessInfo();
+const { getCurrencies, currencies, isCurrencyLoading } = useBusinessInfo();
 
 const props = defineProps({
     form: {

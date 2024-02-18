@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-      <business-unit-input v-model="form.business_unit" :page="'edit'"></business-unit-input>
+      <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
       <label class="block w-full mt-2 text-sm"></label>
@@ -11,8 +11,8 @@
 
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Owner <span class="text-red-500">*</span></span>
-              <v-select :options="chartererProfiles" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name_and_code" class="block form-input" @update:modelValue="profileChanged">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Charterer Name <span class="text-red-500">*</span></span>
+              <v-select :options="chartererProfiles" :loading="isChartererLoading" placeholder="--Choose an option--" v-model="form.opsChartererProfile" label="name_and_code" class="block form-input" @update:modelValue="profileChanged">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -24,8 +24,8 @@
               </v-select>
         </label>
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Contract <span class="text-red-500">*</span></span>
-              <v-select :options="chartererContracts" placeholder="--Choose an option--" v-model="form.opsChartererContract" label="contract_name" class="block form-input" @update:modelValue="chartererContractChange">
+              <span class="text-gray-700 dark-disabled:text-gray-300">Contract Name <span class="text-red-500">*</span></span>
+              <v-select :options="chartererContracts" :loading="isContractLoading" placeholder="--Choose an option--" v-model="form.opsChartererContract" label="contract_name" class="block form-input" @update:modelValue="chartererContractChange">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -47,8 +47,8 @@
     </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel <span class="text-red-500">*</span></span>
-              <input type="text" readonly :value="form.opsChartererContract?.opsVessel?.name" class="form-input bg-gray-100" autocomplete="off" />
+              <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
+              <input type="text" readonly :value="form.opsChartererContract?.opsVessel?.name" class="form-input bg-gray-100" placeholder="Vessel Name" autocomplete="off" />
         </label>
         <!-- <label class="block w-full mt-2 text-sm" v-if="form.contract_type == 'Voyage Wise'">
               <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Type</span>
@@ -124,7 +124,7 @@
       <table class="w-full whitespace-no-wrap" >
         <thead v-once>
             <tr class="w-full">
-              <th class="">Voyage <span class="text-red-500">*</span></th>
+              <th class="">Voyage No <span class="text-red-500">*</span></th>
               <th class="">
                 <nobr>Cargo Type</nobr>
               </th>
@@ -138,16 +138,22 @@
                 <nobr>Total Amount</nobr>
               </th>
               <th>Details</th>
-              <th class="py-3 text-center align-center">Action</th>
+              <th class="py-3 text-center align-center">
+                <button type="button" @click="addVoyage()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(sector, index) in form.opsChartererInvoiceVoyages">
+            <tr v-for="(sector, index) in form.opsChartererInvoiceVoyages" :key="index">
               <td class="!w-1/4">
                 <label class="block w-full mt-2 text-sm">
                   <!-- <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceVoyages[index].opsVoyage" placeholder="Quantity" class="form-input text-right" autocomplete="off" /> -->
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
-                  <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsChartererInvoiceVoyages[index].opsVoyage" label="voyage_sequence" class="block form-input">
+                  <v-select :options="voyages" :loading="isContractVoyageLoading" placeholder="--Choose an option--" v-model="form.opsChartererInvoiceVoyages[index].opsVoyage" label="voyage_sequence" class="block form-input">
                   <template #search="{attributes, events}">
                       <input
                           class="vs__search"
@@ -196,16 +202,12 @@
                 </a>
               </td>
               <td class="px-1 py-1 text-center">
-                <button v-if="index!=0" type="button" @click="removeVoyage(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                <button type="button" @click="removeVoyage(index)" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
                   </svg>
                 </button>
-                <button v-else type="button" @click="addVoyage()" class="px-3 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                  </svg>
-                </button>
+                
               </td>
             </tr>
           </tbody>
@@ -251,10 +253,16 @@
                 <label class="block w-full mt-2 text-sm">
                   <!-- <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceOthers[index].cost_unit" placeholder="Quantity" class="form-input text-right" autocomplete="off" /> -->
                   <!-- <Error v-if="errors?.opsChartererInvoiceOthers[index]?.quantity" :errors="errors.opsChartererInvoiceOthers[index]?.quantity" /> -->
-                  <select v-model.trim="form.opsChartererInvoiceOthers[index].currency" class="form-input" aria-placeholder="Select Currency" placeholder="Select Currency" @change="SetCurrencyData($event,index)">
-                    <option selected value="" disabled>Select Currency</option>
-                     <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
-                  </select>
+                  <v-select :options="currencies" :loading="isCurrencyLoading" placeholder="--Choose an option--" v-model.trim="form.opsChartererInvoiceOthers[index].currency" class="block form-input">
+                      <template #search="{attributes, events}">
+                          <input
+                              class="vs__search"
+                              :required="!form.opsChartererInvoiceOthers[index].currency"
+                              v-bind="attributes"
+                              v-on="events"
+                              />
+                      </template>
+                  </v-select>
                 </label>
               </td>
               <td>
@@ -354,10 +362,17 @@
                 <label class="block w-full mt-2 text-sm">
                   <!-- <input type="number" step="0.001" v-model.trim="form.opsChartererInvoiceServices[index].currency" placeholder="Quantity" class="form-input text-right" autocomplete="off" /> -->
                   <!-- <Error v-if="errors?.opsChartererInvoiceServices[index]?.quantity" :errors="errors.opsChartererInvoiceServices[index]?.quantity" /> -->
-                  <select v-model.trim="form.opsChartererInvoiceServices[index].currency" class="form-input" aria-placeholder="Select Currency" placeholder="Select Currency" @change="SetCurrencyData($event,index)">
-                    <option selected value="" disabled>Select Currency</option>
-                     <option v-for="currency in currencies" :value="currency" :key="currency">{{ currency }}</option>
-                  </select>
+
+                  <v-select :options="currencies" :loading="isCurrencyLoading" placeholder="--Choose an option--" v-model.trim="form.opsChartererInvoiceServices[index].currency" class="block form-input">
+                      <template #search="{attributes, events}">
+                          <input
+                              class="vs__search"
+                              :required="!form.opsChartererInvoiceServices[index].currency"
+                              v-bind="attributes"
+                              v-on="events"
+                              />
+                      </template>
+                  </v-select>
                 </label>
               </td>
               <td>
@@ -593,9 +608,9 @@ import useHelper from "../../composables/useHelper";
 
 const editInitiated = ref(false);
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
-const { currencies, getCurrencies } = useBusinessInfo();
-const { getAllChartererProfiles, chartererProfiles } = useChartererProfile();
-const { getChartererContractsByCharterOwner, chartererContracts,getContractWiseVoyage,voyages } = useChartererContract();
+const { currencies, getCurrencies, isCurrencyLoading } = useBusinessInfo();
+const { getAllChartererProfiles, chartererProfiles, isChartererLoading } = useChartererProfile();
+const { getChartererContractsByCharterOwner, chartererContracts,getContractWiseVoyage,voyages, isContractLoading, isContractVoyageLoading } = useChartererContract();
 const { numberFormat } = useHelper();
 // const { voyage, voyages, showVoyage, searchVoyages } = useVoyage();
 const { vessel, showVessel } = useVessel();
@@ -759,21 +774,31 @@ watch(() => props?.form?.discounted_amount, (newVal, oldVal) => {
   CalculateAll();
 });
 
-// function fetchVoyages(searchParam, loading) {
+// function fetchVoyages(searchParam) {
 //   loading(true)
-//   searchVoyages(searchParam, props.form.business_unit, loading)
+//   searchVoyages(searchParam, props.form.business_unit)
 // }
 
-// watch(() => props.form.business_unit, (value) => {
-//   // if(props?.formType != 'edit') {
-//   //   props.form.opsVoyage = null;
-//   //   vessel.value = null;
-//   //   props.form.opsVoyageSectors = null;
-//   //   props.form.vessel_name = null;
-//   //   props.form.ops_voyage_id = null;
-//   // }
-//   getAllChartererProfiles(value);
-// })
+watch(() => props.form.business_unit, (value) => {
+  if(props?.formType != 'edit') {
+  //   props.form.opsVoyage = null;
+  //   vessel.value = null;
+  //   props.form.opsVoyageSectors = null;
+  //   props.form.vessel_name = null;
+  //   props.form.ops_voyage_id = null;
+  props.form.opsChartererProfile = null;
+  props.form.ops_charterer_profile_id = null;
+  props.form.opsChartererContract = null;
+  props.form.ops_charterer_contract_id = null;
+  chartererProfiles.value = [];
+  chartererContracts.value = [];
+  props.form.contract_type = null;
+  props.form.opsChartererInvoiceVoyages = []
+  getAllChartererProfiles(props.form.business_unit);
+
+  }
+
+}, { deep: true })
 
 
 // watch(() => props.form.opsChartererProfile, (value) => {
@@ -781,13 +806,20 @@ watch(() => props?.form?.discounted_amount, (newVal, oldVal) => {
 // })
 
 function profileChanged() {
+  props.form.opsChartererInvoiceVoyages = []
+  voyages.value = []
   let val = props.form.opsChartererProfile ?? null;
   props.form.ops_charterer_profile_id = val?.id ?? null;
+
+  if(val == null) {
+    props.form.opsChartererContract = null;
+    props.form.ops_charterer_contract_id = null;
+  }
 }
 
 
-
 watch(() => props.form.ops_charterer_profile_id, (value) => {
+    chartererContracts.value = []
     if (editInitiated.value) {
       props.form.ops_charterer_contract_id = '';
       props.form.opsChartererContract = null;
@@ -796,12 +828,20 @@ watch(() => props.form.ops_charterer_profile_id, (value) => {
 })
 
 function chartererContractChange() {
+  props.form.opsChartererInvoiceVoyages = []
+  voyages.value = []
+
   let val = props.form.opsChartererContract ?? null;
   props.form.ops_charterer_contract_id = val?.id ?? null;
   props.form.contract_type = val?.contract_type ?? null;
+  voyages.value = [];
+
   if(val.contract_type == 'Voyage Wise') {
-    getContractWiseVoyage(val.id);
-    props.form.opsChartererInvoiceVoyages[0].rate_per_mt = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_ton_charge
+    getContractWiseVoyage(val.id).then(() => {
+      if(props.form.opsChartererInvoiceVoyages.length) {
+        props.form.opsChartererInvoiceVoyages[0].rate_per_mt = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_ton_charge
+      }
+    })
   } else {
     props.form.bill_from = props.form.opsChartererContract?.dayWiseInvoices[0]?.bill_till ? moment(props.form.opsChartererContract?.dayWiseInvoices[0]?.bill_till).add(1, 'days').format('YYYY-MM-DD') : moment(props.form.opsChartererContract.opsChartererContractsFinancialTerms.valid_from).format('YYYY-MM-DD');
     props.form.per_day_charge = props.form.opsChartererContract?.opsChartererContractsFinancialTerms?.per_day_charge;
@@ -810,20 +850,19 @@ function chartererContractChange() {
 
 }
 
-watch(() => props.form.opsChartererContract, (value) => {
-  if(value?.contract_type == 'Voyage Wise') {
-    getContractWiseVoyage(value.id);
-  } else {  
-    voyages.value = [];
-    }
-    editInitiated.value = true;
-})
+// watch(() => props.form.opsChartererContract, (value) => {
+//   if(value?.contract_type == 'Voyage Wise') {
+//     getContractWiseVoyage(value.id);
+//   } else {  
+//     voyages.value = [];
+//     }
+//     editInitiated.value = true;
+// })
 
 
 onMounted(() => {
   // getAllChartererProfiles();
   getCurrencies();
-  getAllChartererProfiles(props.form.business_unit);
 
 })
 

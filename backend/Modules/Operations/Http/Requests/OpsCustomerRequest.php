@@ -2,6 +2,7 @@
 
 namespace Modules\Operations\Http\Requests;
 
+use App\Rules\PhoneNumber;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -26,7 +27,7 @@ class OpsCustomerRequest extends FormRequest
             'business_license_no'   => ['nullable', 'string', 'max:255', Rule::unique('ops_customers')->ignore($this->route('customer'), 'id')],
             'bin_gst_sst_type'      => ['nullable', 'string', 'max:255'],
             'bin_gst_sst_no'        => ['nullable', 'string', 'max:255', Rule::unique('ops_customers')->ignore($this->route('customer'), 'id')],
-            'phone'                 => ['required', 'numeric', 'digits_between:10,15'],
+            'phone'                 => ['required', 'min:10', 'max:15', new PhoneNumber],
             'company_reg_no'        => ['nullable', 'string', 'max:255', Rule::unique('ops_customers')->ignore($this->route('customer'), 'id')],
             'email_general'         => ['nullable', 'email'],
             'email_agreement'       => ['nullable', 'email'],

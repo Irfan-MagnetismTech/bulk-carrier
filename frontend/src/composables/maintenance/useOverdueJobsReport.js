@@ -27,10 +27,12 @@ export default function useOverdueJobsReport() {
 
     const errors = ref(null);
     const isLoading = ref(false);
+    const showReport = ref(false);
     
     async function overdueJobsReport(form) {
         const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
+        showReport.value = true;
         try {
             const { data, status } = await Api.get('/mnt/report-overdue-jobs', { params: form });
             overdueJobs.value = data.value;
@@ -85,6 +87,7 @@ export default function useOverdueJobsReport() {
         overdueJobs,
         overdueJobsReport,
         downloadOverdueJobsReport,
+        showReport,
         isLoading,
         errors,
     };

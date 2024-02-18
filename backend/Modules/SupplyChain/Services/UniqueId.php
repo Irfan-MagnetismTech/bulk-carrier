@@ -14,9 +14,9 @@ class UniqueId
     /**
      * Generates a unique ID for any model.
      *
-     * @param string $model The model to generate the ID for.
-     * @param string $prefix The prefix to prepend to the ID.
-     * @return string The unique ID.
+     * @param int $modelId
+     * @param string $prefix
+     * @return string
      */
     public static function generate(string $model, string $prefix)
     {

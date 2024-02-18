@@ -131,8 +131,11 @@ class OpsChartererProfileController extends Controller
      {
          try
          {
-             $charterer_profile->opsChartererBankAccounts()->delete();
-             $charterer_profile->delete();
+  
+            DB::beginTransaction();            
+            $charterer_profile->opsChartererBankAccounts()->delete();
+            $charterer_profile->delete();
+            DB::commit();
  
              return response()->json([
                  'message' => 'Data deleted successfully.',
@@ -140,7 +143,8 @@ class OpsChartererProfileController extends Controller
          }
          catch (QueryException $e)
          {
-             return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($charterer_profile->preventDeletionIfRelated(), 422);  
          }
      }
  

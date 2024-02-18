@@ -205,16 +205,19 @@ class OpsVesselCertificateController extends Controller
     {
         try
         {
+            DB::beginTransaction();            
             $this->fileUpload->deleteFile($vessel_certificate->attachment);
             $vessel_certificate->delete();
-
+            DB::commit();
+            
             return response()->json([
                 'message' => 'Data deleted Successfully.',
             ], 204);
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($vessel_certificate->preventDeletionIfRelated(), 422);
         }
     }
 

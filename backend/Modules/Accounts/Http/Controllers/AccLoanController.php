@@ -10,6 +10,13 @@ use Modules\Accounts\Http\Requests\AccLoanRequest;
 
 class AccLoanController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:acc-loan-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:acc-loan-create', ['only' => ['store']]);
+        $this->middleware('permission:acc-loan-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:acc-loan-delete', ['only' => ['destroy']]);
+    }
 
     /**
      * @param Request $request

@@ -42,7 +42,7 @@ onMounted(() => {
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Type <span class="text-red-500">*</span></span>
         <select class="form-input" v-model.trim="form.type" autocomplete="off" required>
-          <option value="" disabled selected>Select</option>
+          <option value="" disabled selected>--Choose an Option--</option>
           <option value="Lighter Vessel">Lighter Vessel</option>
           <option value="Bulk Carrier">Bulk Carrier</option>
           <option value="Head Office">Head Office</option>

@@ -11,6 +11,14 @@ use Modules\Accounts\Http\Requests\AccTransactionRequest;
 
 class AccTransactionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:acc-voucher-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:acc-voucher-create', ['only' => ['store']]);
+        $this->middleware('permission:acc-voucher-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:acc-voucher-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *

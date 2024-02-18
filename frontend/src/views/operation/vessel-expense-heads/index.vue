@@ -45,7 +45,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Vessel",
+      "label": "Vessel Name",
       "filter_type": "input"
     },
    
@@ -109,7 +109,7 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Vessel Expense Head</h2>
+    <h2 class="text-2xl font-semibold text-gray-700">Vessel Expense Head List</h2>
     <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.vessel-expense-heads.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   

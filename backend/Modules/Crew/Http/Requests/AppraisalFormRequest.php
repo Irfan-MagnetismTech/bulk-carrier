@@ -10,22 +10,21 @@ class AppraisalFormRequest extends FormRequest
 
     protected function prepareForValidation()
     {
+        // $appraisalFormLines = [];
+        // foreach ($this->appraisalFormLines as $appraisalFormLine)
+        // {
+        //     foreach ($appraisalFormLine['aspects'] as $aspect)
+        //     {
+        //         $appraisalFormLines[] = [
+        //             'section_name' => $appraisalFormLine['section_name'],
+        //             'aspect'       => $aspect['aspect'],
+        //             'description'  => $aspect['description'],
+        //             'answer_type'  => $aspect['answer_type'],
+        //         ];
+        //     }
+        // }
 
-        $appraisalFormLines = [];
-        foreach ($this->appraisalFormLines as $appraisalFormLine)
-        {
-            foreach ($appraisalFormLine['aspects'] as $aspect)
-            {
-                $appraisalFormLines[] = [
-                    'section_name' => $appraisalFormLine['section_name'],
-                    'aspect'       => $aspect['aspect'],
-                    'description'  => $aspect['description'],
-                    'answer_type'  => $aspect['answer_type'],
-                ];
-            }
-        }
-
-        $this['appraisalFormLines'] = $appraisalFormLines;
+        // $this['appraisalFormLines'] = $appraisalFormLines;
     }
 
     /**
@@ -39,11 +38,11 @@ class AppraisalFormRequest extends FormRequest
             'form_no'                           => 'required|string|max:255',
             'form_name'                         => 'required|string|max:255',
             'version'                           => 'required|string|max:255',
-            'description'                       => 'nullable|string|max:255',
-            'appraisalFormLines.*.section_name' =>  ['required', 'string' , 'max:255', Rule::unique('appraisal_form_lines')],
-            'appraisalFormLines.*.aspect'       => 'required|string|max:255',
-            'appraisalFormLines.*.description'  => 'nullable|string|max:255',
-            'appraisalFormLines.*.answer_type'  => 'required|in:Number,Boolean,Grade',
+            // 'description'                       => 'nullable|string|max:255',
+            // 'appraisalFormLines.*.section_name' =>  ['required', 'string' , 'max:255', Rule::unique('appraisal_form_lines')],
+            // 'appraisalFormLines.*.aspect'       => 'required|string|max:255',
+            // 'appraisalFormLines.*.description'  => 'nullable|string|max:255',
+            // 'appraisalFormLines.*.answer_type'  => 'required|in:Number,Boolean,Grade',
         ];
     }
 

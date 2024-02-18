@@ -241,6 +241,7 @@ class OpsExpenseHeadController extends Controller
     {
         try
         {
+            DB::beginTransaction();
             if($expense_head->is_readonly){
                 return response()->error([
                     'message' => 'Data is read-only.',
@@ -249,6 +250,7 @@ class OpsExpenseHeadController extends Controller
 
             $expense_head->opsSubHeads()->delete();
             $expense_head->delete();
+            DB::commit();
 
             return response()->json([
                 'message' => 'Data deleted successfully.',
@@ -256,7 +258,9 @@ class OpsExpenseHeadController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($expense_head->preventDeletionIfRelated(), 422);
+            
         }
     }
 

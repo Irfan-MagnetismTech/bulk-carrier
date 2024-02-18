@@ -26,13 +26,13 @@
                 <td>{{ voyage?.mother_vessel }}</td>
               </tr>
               <tr>
-                <th class="w-32">Vessel</th>
+                <th class="w-32">Vessel Name</th>
                 <td>{{ voyage?.opsVessel?.name }}</td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <th class="w-32">Customer Name</th>
                 <td>{{ voyage?.opsCustomer?.name }}</td>
-              </tr>
+              </tr> -->
               <tr>
                 <th class="w-32">Cargo Type</th>
                 <td>{{ voyage?.opsCargoType?.cargo_type }}</td>
@@ -71,14 +71,20 @@
             </thead>
             <thead v-once>
               <tr class="w-full">
-                <th>SL</th>
-                <th>Loading Point</th>
-                <th>Unloading Point</th>
-                <th>Tonnage (Initial Survey) </th>
+                <th rowspan="2">SL</th>
+                <th rowspan="2">Loading Point</th>
+                <th rowspan="2">Unloading Point</th>
+                <th colspan="4" style="text-align: center">Tonnage</th>
+              </tr>
+              <tr>
+                <th>Initial Survey</th>
+                <th>Boat Note</th>
+                <th>Final Survey</th>
+                <th>Final Received</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(sector, index) in voyage.opsVoyageSectors">
+              <tr v-for="(sector, index) in voyage.opsVoyageSectors" :key="index">
                 <td>
                   {{ index+1 }}
                 </td>
@@ -88,52 +94,26 @@
                 <td>
                   <span v-if="sector.unloadingPoint?.name">{{ sector.unloadingPoint?.name }}</span>
                 </td>
-                <td>
+                <td style="text-align: right">
                   <span>
-                      {{ numberFormat(sector?.initial_survey_qty) }}
-                    </span>
-                </td>              
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="flex md:gap-4 mt-1 md:mt-2" v-if="voyage.opsVoyageSectors?.length">
-        <div class="w-full">
-          <table class="w-full">
-            <thead>
-                <tr>
-                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="7">Bunker Information</td>
-                </tr>
-            </thead>
-            <thead v-once>
-              <tr class="w-full">
-                <th>SL</th>
-                <th>Bunker Name</th>
-                <th>Unit</th>
-                <th>Presenet Stock</th>
-                <th>Stock In</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(bunker, index) in voyage.opsBunkers">
-                <td>
-                  {{ index+1 }}
-                </td>
-                <td>
-                  <span v-if="bunker.scmMaterial?.name">{{ bunker.scmMaterial?.name }}</span>
-                </td>
-                <td>
-                  <span >{{ bunker.unit }}</span>
-                </td>
-                <td>
-                  <span >{{ numberFormat(bunker.opening_balance) }}</span>
-                </td>
-                <td>
-                  <span>
-                    {{ numberFormat(bunker?.fuel_stock_l) }}
+                      {{ (sector.initial_survey_qty > 0 ) ? numberFormat(sector?.initial_survey_qty, 2) : null }}
                   </span>
-                </td>              
+                </td>   
+                <td style="text-align: right">
+                  <span>
+                      {{ (sector.boat_note_qty > 0 ) ? numberFormat(sector?.boat_note_qty, 2) : null }}
+                  </span>
+                </td>  
+                <td style="text-align: right">
+                  <span>
+                      {{ (sector.final_survey_qty > 0 ) ? numberFormat(sector?.final_survey_qty, 2) : null }}
+                  </span>
+                </td>  
+                <td style="text-align: right">
+                  <span>
+                      {{ (sector.final_received_qty > 0 ) ? numberFormat(sector?.final_received_qty, 2) : null }}
+                  </span>
+                </td>             
               </tr>
             </tbody>
           </table>
@@ -144,7 +124,7 @@
           <table class="w-full">
             <thead>
                 <tr>
-                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="7">Voyage Port Schedule</td>
+                    <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="7">Voyage Schedule</td>
                 </tr>
             </thead>
             <thead v-once>

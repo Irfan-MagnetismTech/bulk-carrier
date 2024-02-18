@@ -11,6 +11,8 @@ import useHeroIcon from "../../../assets/heroIcon";
 import Store from "../../../store";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import { formatDate } from "../../../utils/helper.js";
+
 const icons = useHeroIcon();
 
 const props = defineProps({
@@ -288,12 +290,12 @@ onMounted(() => {
           <tbody class="relative">
             <tr v-for="(loanReceived,index) in loansReceived?.data" :key="index">
               <td>{{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }}</td>
-              <td>{{ loanReceived?.loan?.loan_name }}</td>
-              <td>{{ loanReceived?.received_date }}</td>
+              <td class="text-left">{{ loanReceived?.loan?.loan_name }}</td>
+              <td>{{ formatDate(loanReceived?.received_date) }}</td>
               <td>{{ loanReceived?.payment_method }}</td>
-              <td>{{ loanReceived?.loan?.bank?.bank_name }} - {{ loanReceived?.loan?.bank?.account_type }}</td>
+              <td class="text-left">{{ loanReceived?.loan?.bank?.bank_name }} - {{ loanReceived?.loan?.bank?.account_type }}</td>
               <td>{{ loanReceived?.instrument_no }}</td>
-              <td>{{ loanReceived?.received_amount }}</td>
+              <td class="text-right">{{ loanReceived?.received_amount }}</td>
               <td>{{ loanReceived?.interest_rate }}</td>
             <td>
               <span :class="loanReceived?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">

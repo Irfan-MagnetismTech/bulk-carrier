@@ -58,13 +58,17 @@ class ScmMiController extends Controller
     {
         $requestData = $request->except('ref_no', 'mi_composite_key');
 
+        // $requestData['ref_no'] = UniqueId::generate(ScmMi::class, 'MI');
+
         try {
             DB::beginTransaction();
 
             $scmMi = ScmMi::create($requestData);
 
-            $linesData = CompositeKey::generateArray($request->scmMiLines, $scmMi->id, 'scm_material_id', 'mi');
+            // $ref_no = UniqueId::generate($scmMi->id, 'MI');
+            // $scmMi->update(['ref_no' => $ref_no]);
 
+            $linesData = CompositeKey::generateArray($request->scmMiLines, $scmMi->id, 'scm_material_id', 'mi');
             $scmMi->scmMiLines()->createMany($linesData);
             $composite = collect($linesData)->pluck('mi_composite_key')->toArray();
 

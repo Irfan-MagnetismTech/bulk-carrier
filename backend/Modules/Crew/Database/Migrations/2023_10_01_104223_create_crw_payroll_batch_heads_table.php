@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('crw_payroll_batch_heads', function (Blueprint $table) {
             $table->id();            
-            $table->unsignedBigInteger('crw_payroll_batch_id');
+            $table->foreignId('crw_payroll_batch_id')->constrained('crw_payroll_batches', 'id')->cascadeOnDelete();            
             $table->enum('head_type', ['addition', 'deduction']);
             $table->string('head_name');
             // $table->string('unit');

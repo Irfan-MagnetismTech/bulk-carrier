@@ -2,6 +2,7 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Operations\Entities\OpsBunker;
@@ -17,7 +18,7 @@ use Modules\Operations\Entities\OpsBulkNoonReportConsumptionHead;
 
 class OpsBulkNoonReport extends Model
 {
-    use HasFactory, GlobalSearchTrait;
+    use HasFactory, GlobalSearchTrait, DeletableModel;
 
     protected $fillable = [
         'ops_vessel_id',

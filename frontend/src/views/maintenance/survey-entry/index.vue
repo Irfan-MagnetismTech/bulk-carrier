@@ -15,6 +15,11 @@ import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import moment from "moment";
 import { formatDate } from "../../../utils/helper";
+import { indexPdfExport } from "../../../utils/helper.js";
+
+
+const rightAlign = [];
+const leftAlign = [1,2,3];
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 
@@ -199,22 +204,28 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Survey Entry List</h2>
-    <default-button :title="'Create Survey'" :to="{ name: 'mnt.survey-entries.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Create Survey'" :to="{ name: 'mnt.survey-entries.create' }" :icon="icons.AddIcon"></default-button>
+      <!-- <default-button :title="'Export'" @click :icon="icons.PdfExportIcon"></default-button> -->
+      <button title="Export" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red" @click="indexPdfExport(businessUnit,'l', 'Survey Entry List','survey-entry-list', leftAlign, rightAlign, false, false, false);">
+        <span v-html="icons.PdfExportIcon"></span>
+      </button>
+    </div>
   </div>
   
   <div id="customDataTable">
 
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="survey-entry-list">
           
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody class="relative">
           <tr v-for="(surveyEntry,index) in surveyEntries?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-            <td>{{ surveyEntry?.opsVessel?.name }}</td>
-            <td>{{ surveyEntry?.mntSurvey?.mntSurveyItem?.item_name }}</td>
-            <td>{{ surveyEntry?.mntSurvey?.survey_name }}</td>
+            <td :class= "{'!text-left' : leftAlign.indexOf(this.cellIndex)}">{{ surveyEntry?.opsVessel?.name }}</td>
+            <td :class= "{'!text-left' : leftAlign.indexOf(this.cellIndex)}">{{ surveyEntry?.mntSurvey?.mntSurveyItem?.item_name }}</td>
+            <td :class= "{'!text-left' : leftAlign.indexOf(this.cellIndex)}">{{ surveyEntry?.mntSurvey?.survey_name }}</td>
             <!-- <td><nobr>{{  formatDate(surveyEntry?.range_date_from) }}</nobr></td>
             <td><nobr>{{  formatDate(surveyEntry?.range_date_to) }}</nobr></td> -->
             <td><nobr>{{  formatDate(surveyEntry?.assigned_date) }}</nobr></td>

@@ -113,7 +113,7 @@ onMounted(() => {
         <VueDatePicker v-model.trim="form.applied_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
       </label>
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300"> Cost Center <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300"> Cost Center Name<span class="text-red-500">*</span></span>
         <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.acc_cost_center_name" label="name"  class="block w-full rounded form-input" @option:selected="callapi">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.acc_cost_center_name" v-bind="attributes" v-on="events"/>
@@ -122,7 +122,7 @@ onMounted(() => {
       </label>
     </div>
     <fieldset class="px-4 pb-4 mt-3 border border-gray-700 rounded dark-disabled:border-gray-400">
-        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300"> Depreciation Line <span class="text-red-500">*</span></legend>
+        <legend class="px-2 text-gray-700 dark-disabled:text-gray-300"> Depreciation Lines <span class="text-red-500">*</span></legend>
         <table class="w-full whitespace-no-wrap" id="table">
           <thead>
           <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
@@ -144,13 +144,13 @@ onMounted(() => {
               <input type="text" v-model.trim="form.accDepreciationLines[index].asset_tag" placeholder="Asset Tag" class="form-input vms-readonly-input" readonly autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.accDepreciationLines[index].useful_life" placeholder="Useful Life" class="form-input vms-readonly-input" readonly autocomplete="off" required />
+              <input type="text" v-model.trim="form.accDepreciationLines[index].useful_life" placeholder="Useful Life" class="form-input text-center vms-readonly-input" readonly autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.accDepreciationLines[index].depreciation_rate" placeholder="Depreciation Rate" class="form-input" autocomplete="off" required />
+              <input type="text" v-model.trim="form.accDepreciationLines[index].depreciation_rate" placeholder="Depreciation Rate" class="form-input text-right" autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
-              <input type="text" v-model.trim="form.accDepreciationLines[index].acquisition_cost" placeholder="Aquisition Cost" class="form-input vms-readonly-input" readonly autocomplete="off" required />
+              <input type="text" v-model.trim="form.accDepreciationLines[index].acquisition_cost" placeholder="Aquisition Cost" class="form-input text-right vms-readonly-input" readonly autocomplete="off" required />
             </td>
             <td class="px-1 py-1">
               <input type="number" step=".01" v-model.trim="form.accDepreciationLines[index].amount" class="form-input !text-right" autocomplete="off" required />

@@ -2,52 +2,53 @@
     <div class="justify-center w-full grid grid-cols-1 md:grid-cols-3 md:gap-2">
         <business-unit-input :page="page" v-model="form.business_unit"></business-unit-input>
         <label class="block w-full mt-2 text-sm col-start-1">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Crew <span class="text-red-500">*</span></span>
-            <v-select placeholder="Select Crew" :loading="isCrewLoading"  :options="crews" @search="" v-model="form.crw_crew_profile" label="full_name" @update:modelValue="crewProfileChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Crew Name <span class="text-red-500">*</span></span>
+            <v-select :loading="isCrewLoading"  :options="crews" v-model="form.crw_crew_profile" label="full_name" @update:modelValue="crewProfileChange"  class="block w-full mt-1 text-sm rounded dark-disabled:text-gray-300 dark-disabled:border-gray-600 dark-disabled:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-disabled:focus:shadow-outline-gray form-input">
                 <template #search="{attributes, events}">
                   <input
                       class="vs__search"
                       :required="!form.crw_crew_profile"
                       v-bind="attributes"
                       v-on="events"
+                      placeholder="--Choose an Option--"
                   />
                 </template>
             </v-select>
             <input type="hidden" v-model="form.crw_crew_id">
             <Error v-if="errors?.crw_crew_id" :errors="errors.crw_crew_id" />
         </label>
-        
+
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Contact No</span>
-            <input type="text" :value="form.crw_crew_profile?.pre_mobile_no" placeholder="Contact No" class="form-input vms-readonly-input" readonly />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Crew Contact</span>
+            <input type="text" :value="form.crw_crew_profile?.pre_mobile_no" placeholder="Crew contact" class="form-input vms-readonly-input" readonly />
             <Error v-if="errors?.contact_no" :errors="errors.contact_no" />
         </label>
 
-        
+
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Age</span>
-            <input type="text" :value="form.age = calculateAge(form.crw_crew_profile?.date_of_birth, null)" placeholder="Age" class="form-input vms-readonly-input" readonly />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Crew Age</span>
+            <input type="text" :value="form.age = calculateAge(form.crw_crew_profile?.date_of_birth, null)" placeholder="Crew age" class="form-input vms-readonly-input" readonly />
             <Error v-if="errors?.age" :errors="errors.age" />
         </label>
 
-        
+
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Passport No</span>
             <input type="text" :value="form.crw_crew_profile?.passport_no" placeholder="Passport No" class="form-input vms-readonly-input" readonly />
             <Error v-if="errors?.passport_no" :errors="errors.passport_no" />
         </label>
 
-        
+
         <!-- <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Seaman's Book No</span>
             <input type="text" :value="form.seaman_book_no" placeholder="Seaman's Book No" class="form-input vms-readonly-input" readonly />
             <Error v-if="errors?.seaman_book_no" :errors="errors.seaman_book_no" />
         </label> -->
 
-        
+
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Nationality</span>
-            <input type="text" :value="form.crw_crew_profile?.nationality" placeholder="Nationality" class="form-input vms-readonly-input" readonly />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Crew Nationality</span>
+            <input type="text" :value="form.crw_crew_profile?.nationality" placeholder="Crew nationality" class="form-input vms-readonly-input" readonly />
             <Error v-if="errors?.nationality" :errors="errors.nationality" />
         </label>
 
@@ -67,25 +68,25 @@
             <Error v-if="errors?.crw_crew_assignment_id" :errors="errors.crw_crew_assignment_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel</span>
-            <input type="text" :value="form.crw_crew_assignment?.opsVessel?.name" placeholder="Vessel" class="form-input vms-readonly-input" readonly />
-            <!-- <Error v-if="errors?.nationality" :errors="errors.nationality" /> -->
-        </label>
-        
-        <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Rank</span>
-            <input type="text" :value="form.crw_crew_assignment?.position_onboard" placeholder="Rank" class="form-input vms-readonly-input" readonly />
+            <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name</span>
+            <input type="text" :value="form.crw_crew_assignment?.opsVessel?.name" placeholder="Vessel name" class="form-input vms-readonly-input" readonly />
             <!-- <Error v-if="errors?.nationality" :errors="errors.nationality" /> -->
         </label>
 
-        
+        <label class="block w-full mt-2 text-sm">
+            <span class="text-gray-700 dark-disabled:text-gray-300">Crew Rank</span>
+            <input type="text" :value="form.crw_crew_assignment?.position_onboard" placeholder="Crew rank" class="form-input vms-readonly-input" readonly />
+            <!-- <Error v-if="errors?.nationality" :errors="errors.nationality" /> -->
+        </label>
+
+
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Service From</span>
             <input type="text" :value="formatDate(form.crw_crew_assignment?.joining_date)" placeholder="Service From" class="form-input vms-readonly-input" readonly />
             <!-- <Error v-if="errors?.nationality" :errors="errors.nationality" /> -->
         </label>
 
-        
+
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Service To</span>
             <input type="text" :value="formatDate(form.crw_crew_assignment?.completion_date)" placeholder="Service To" class="form-input vms-readonly-input" readonly />
@@ -114,7 +115,7 @@
             <Error v-if="errors?.version" :errors="errors.version" />
         </label>
 
-        
+
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Total Marks</span>
             <input type="text" :value="form.appraisal_form?.total_marks" placeholder="Total Marks" class="form-input vms-readonly-input" readonly />
@@ -122,26 +123,26 @@
         </label>
 
 
-        
+
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Obtained Marks</span>
             <input type="text" v-model="form.obtained_marks" placeholder="Obtained Marks" class="form-input vms-readonly-input" readonly />
             <Error v-if="errors?.obtained_marks" :errors="errors.obtained_marks" />
         </label>
 
-        
+
         <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Appraisal Date</span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Appraisal Date <span class="text-red-500">*</span></span>
             <VueDatePicker v-model="form.appraisal_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
             <Error v-if="errors?.appraisal_date" :errors="errors.appraisal_date" />
         </label>
 
       </div>
-      
+
       <div class="grid grid-cols-1 mt-2">
         <div class="">
             <!-- <legend class="px-2 text-gray-700 dark-disabled:text-gray-300">Aspects</legend> -->
-            <template class="px-2 py-2 mt-3 border border-gray-300 rounded dark-disabled:border-gray-400" v-for="(appraisalFormLine, index) in  
+            <template class="px-2 py-2 mt-3 border border-gray-300 rounded dark-disabled:border-gray-400" v-for="(appraisalFormLine, index) in
               form?.appraisalRecordLines" :key="index">
                 <!-- <div class="flex items-center gap-3 mb-2">
                   <div class="w-1/6 text-sm">
@@ -156,7 +157,7 @@
                         <Error v-if="errors?.section_name" :errors="errors.section_name" />
                       </div>
                   </div>
-                  
+
                   <div class="w-2/6 block  text-sm relative">
                       <span class="text-gray-700 dark-disabled:text-gray-300">Section Type <span class="text-red-500">*</span></span>
                       <select v-model.trim="appraisalFormLine.is_tabular" class="form-input" required>
@@ -173,9 +174,9 @@
                 <table class="w-full whitespace-no-wrap mt-2" id="table" v-if="appraisalFormLine.is_tabular">
                     <thead>
                         <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-                            <th colspan="4" class="px-4 py-2 text-center">{{ appraisalFormLine.section_no }}. {{ appraisalFormLine.section_name }}</th>    
+                            <th colspan="4" class="px-4 py-2 text-center">{{ appraisalFormLine.section_no }}. {{ appraisalFormLine.section_name }}</th>
                         </tr>
-                        
+
                         <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
                             <th class="w-2/5 px-4 py-2 text-center">Aspect</th>
                             <!-- <th class="w-2/5 px-4 py-2 text-center">Description</th> -->
@@ -185,8 +186,8 @@
 
                     </thead>
                     <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
-                      <template> 
-                        {{ appraisalFormLine.appraisalRecordLineItems = (page == 'create' ? appraisalFormLine?.appraisalFormLineItems : appraisalFormLine.appraisalRecordLineItems) }} 
+                      <template>
+                        {{ appraisalFormLine.appraisalRecordLineItems = (page == 'create' ? appraisalFormLine?.appraisalFormLineItems : appraisalFormLine.appraisalRecordLineItems) }}
                       </template>
 
                         <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(appraisalFormLineItem, appraisalFormLineItemIndex) in appraisalFormLine?.appraisalRecordLineItems" :key="appraisalFormLineItemIndex">
@@ -231,7 +232,7 @@
                 <table class="w-full whitespace-no-wrap  mt-2" id="table" v-else-if="appraisalFormLine.is_tabular != null">
                   <thead>
                         <tr class="text-xs font-semibold tracking-wide text-center text-gray-500  bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-                            <th class="px-4 py-2 text-center">{{ appraisalFormLine.section_no }}. {{ appraisalFormLine.section_name }}</th>    
+                            <th class="px-4 py-2 text-center">{{ appraisalFormLine.section_no }}. {{ appraisalFormLine.section_name }}</th>
                         </tr>
                   </thead>
                   <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800 ">
@@ -239,7 +240,7 @@
                             <td class="px-4 py-2 ">
                               <RemarksComponent v-model.trim="appraisalFormLine.comment" :maxlength="500" :fieldLabel="'Comment'"></RemarksComponent>
                               <!-- {{ appraisalFormLine.section_no }}. {{ appraisalFormLine.section_name }} -->
-                            </td>    
+                            </td>
                         </tr>
                         <!-- <tr class="text-gray-700 dark-disabled:text-gray-400 border-none" v-for="(appraisalFormLineItem, appraisalFormLineItemIndex) in appraisalFormLine?.appraisalFormLineItems" :key="appraisalFormLineItemIndex">
                           <td class="border-none ">
@@ -264,7 +265,7 @@
                                   <option value="5">{{ appraisalFormLineItem.answer_type == 'Grade' ? 'Excellent' : 5 }}</option>
                                 </select>
                               </div>
-                              
+
                               <div class="flex gap-2 justify-around flex-wrap" v-else >
                                 <input type="text" class="form-input"  v-model.trim="appraisalFormLineItem.comment" placeholder=""  />
 
@@ -273,24 +274,24 @@
                               </div>
 
                           </td>
-                            
+
                         </tr> -->
                     </tbody>
 
                 </table>
-                
+
             </template>
-           
+
         </div>
       </div>
 
-      <ErrorComponent :errors="errors"></ErrorComponent>   
+      <ErrorComponent :errors="errors"></ErrorComponent>
   </template>
   <script setup>
   // import Error from "../../Error.vue";
   import Error from "../Error.vue";
   import Editor from '@tinymce/tinymce-vue';
-  
+
   // import useShipDepartment from "../../../composables/maintenance/useShipDepartment";
   import {onMounted, watch, watchEffect, ref} from "vue";
   // import useItemGroup from "../../../composables/maintenance/useItemGroup";
@@ -306,15 +307,15 @@
   import useCrewCommonApiRequest from "../../composables/crew/useCrewCommonApiRequest";
 import useAppraisalForm from "../../composables/crew/useAppraisalForm";
 import { formatDate } from "../../utils/helper";
-  
-  
+
+
   // const { getItemCodeByGroupId } = useItem();
   // const { shipDepartmentWiseItemGroups, getShipDepartmentWiseItemGroups, isItemGroupLoading } = useItemGroup();
   const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
   const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 
   const icons = useHeroIcon();
-  
+
   const props = defineProps({
     form: {
       required: false,
@@ -327,18 +328,18 @@ import { formatDate } from "../../utils/helper";
     },
     errors: { type: [Object, Array], required: false },
   });
-  
+
 
   const { crews, appraisalUndoneAssignments, getCrews, getAppraisalUndoneAssignments, crwRankLists, getCrewRankLists, isLoading:isCrewLoading, isAppraisalUndoneAssignmentLoading } = useCrewCommonApiRequest();
   const { appraisalForms, appraisalForm, getAppraisalFormsWithoutPaginate, showAppraisalForm, isLoading:isAppraisalFormLoading } = useAppraisalForm();
- 
+
 
   const crewProfileChange = () => {
     props.form.crw_crew_id = props.form.crw_crew_profile?.id;
 
     props.form.crw_crew_assignment = null;
     props.form.crw_crew_assignment_id = null;
-    
+
     if(props.form.crw_crew_id){
         getAppraisalUndoneAssignments(props.form.crw_crew_id);
     }
@@ -362,7 +363,7 @@ import { formatDate } from "../../utils/helper";
       props.form.appraisalRecordLines = value?.appraisalFormLines;
   });
 
-  
+
   watch(() => appraisalUndoneAssignments.value, (value) => {
     props.form.appraisalUndoneAssignments = [];
     if(value)
@@ -375,13 +376,13 @@ import { formatDate } from "../../utils/helper";
         if (!dateOfBirth) return '';
         const dob = new Date(dateOfBirth);
         const now = currentDate ? new Date(currentDate) : new Date();
-        
+
         let age = now.getFullYear() - dob.getFullYear();
 
         if (now.getMonth() < dob.getMonth() || (now.getMonth() === dob.getMonth() && now.getDate() < dob.getDate())) {
             age--;
         }
-        
+
         return age;
   }
 
@@ -393,9 +394,9 @@ import { formatDate } from "../../utils/helper";
     }
     appraisalFormLineItem.answer = event.target.value;
   }
-  
 
-  
+
+
 //   function addRow() {
 //     props.form.description.push({ key: '', value: '' });
 //   }
@@ -424,56 +425,56 @@ import { formatDate } from "../../utils/helper";
 
 //   function printToLetter(number) {
 //       let result = "";
-      
+
 //       while (number > 0) {
 //           const remainder = (number - 1) % alphabet.length;
 //           result = alphabet.charAt(remainder) + result;
 //           number = Math.floor((number - 1) / alphabet.length);
 //       }
-      
+
 //       return result || alphabet[0];
 //   }
-  
-  
-  
+
+
+
   // const { shipDepartments, getShipDepartmentsWithoutPagination, isShipDepartmentLoading } = useShipDepartment();
-  
+
   watch(() => props.form.business_unit, (newValue, oldValue) => {
     businessUnit.value = newValue;
-    
+
   });
-  
-  
+
+
   onMounted(() => {
     watchEffect(() => {
       if(businessUnit.value && businessUnit.value != 'ALL'){
         getCrews(businessUnit.value);
         getAppraisalFormsWithoutPaginate(businessUnit.value);
       }
-        
+
     });
   });
-  
-  
-  
+
+
+
   </script>
-  
+
   <style lang="postcss" scoped>
   #table, #table th, #table td{
     @apply border border-collapse border-gray-400 text-left text-gray-700 px-1
   }
 
-  
+
   #table.text-center, #table th.text-center, #table td.text-center{
     @apply border border-collapse border-gray-400 text-center text-gray-700 px-1
   }
 
 
-  
+
   .input-group {
     @apply flex flex-col justify-center w-full h-full md:flex-row md:gap-2;
   }
-  
+
   .label-group {
     @apply block w-full mt-2 text-sm;
   }
@@ -494,22 +495,5 @@ import { formatDate } from "../../utils/helper";
 
   td label{
     font-size: 12px;
-  }
-  
-  >>> {
-    --vs-controls-color: #374151;
-    --vs-border-color: #4b5563;
-  
-    --vs-dropdown-bg: #282c34;
-    --vs-dropdown-color: #eeeeee;
-    --vs-dropdown-option-color: #eeeeee;
-  
-    --vs-selected-bg: #664cc3;
-    --vs-selected-color: #374151;
-  
-    --vs-search-input-color: #4b5563;
-  
-    --vs-dropdown-option--active-bg: #664cc3;
-    --vs-dropdown-option--active-color: #eeeeee;
   }
   </style>

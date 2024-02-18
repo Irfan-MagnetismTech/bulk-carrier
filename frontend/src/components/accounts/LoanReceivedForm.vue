@@ -98,7 +98,7 @@ onMounted(() => {
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Payment Type <span class="text-red-500">*</span></span>
         <select class="label-item-input" v-model.trim="form.payment_method" required>
-          <option value="" selected disabled>Select Value</option>
+          <option value="" selected disabled>--Choose an option--</option>
           <option value="A/C Payee">A/C Payee</option>
           <option value="Cheque">Cheque</option>
           <option value="Pay Order">Pay Order</option>

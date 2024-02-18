@@ -143,8 +143,10 @@ class OpsCargoTariffController extends Controller
     {
         try
         {
+            DB::beginTransaction();            
             $cargo_tariff->opsCargoTariffLines()->delete();
             $cargo_tariff->delete();
+            DB::commit();
 
             return response()->json([
                 'message' => 'Data deleted successfully.',
@@ -152,7 +154,8 @@ class OpsCargoTariffController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($cargo_tariff->preventDeletionIfRelated(), 422);  
         }
     }
     

@@ -142,6 +142,18 @@ onMounted(() => {
   </div>
 
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark-disabled:text-gray-300">Is Watchkeeper<span class="text-red-500">*</span></span>
+      <select v-model.trim="form.is_watchkeeper" class="form-input">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </label>
+    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm"></label>
+    <label class="block w-full mt-2 text-sm"></label>
+  </div>
+  <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <RemarksComponent v-model.trim="form.remarks" :maxlength="500" :fieldLabel="'Remarks'"></RemarksComponent>
   </div>
   <ErrorComponent :errors="errors"></ErrorComponent>
