@@ -8,6 +8,7 @@ use Modules\SupplyChain\Http\Controllers\ScmWcsController;
 use Modules\SupplyChain\Http\Controllers\ScmWrrController;
 use Modules\SupplyChain\Http\Controllers\ScmWcsqController;
 use Modules\SupplyChain\Http\Controllers\ScmReportController;
+use Modules\SupplyChain\Http\Controllers\ScmWorkBillController;
 use Modules\SupplyChain\Http\Controllers\ScmLcRecordStatusController;
 
 Route::middleware(['auth:api'])->prefix('scm')->group(function () {
@@ -18,6 +19,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
         'work-receipt-reports' => ScmWrrController::class,
         'work-orders' => ScmWoController::class,
         'lc-record-statuses' => ScmLcRecordStatusController::class,
+        'work-bills' => ScmWorkBillController::class,
     ]);
 
     Route::post('delete-lc-status', [ScmLcRecordStatusController::class, "lcStatusDelete"])->name('lcStatusDelete');

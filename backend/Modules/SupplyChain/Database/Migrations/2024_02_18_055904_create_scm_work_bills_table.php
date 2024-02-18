@@ -22,6 +22,10 @@ return new class extends Migration
             $table->bigInteger('scm_vendor_id')->nullable();
             $table->string('currency')->nullable();
             $table->float('conversion_rate', 20, 2)->nullable();
+            $table->float('bill_amount', 20, 2)->nullable();
+            $table->float('security_amount', 20, 2)->nullable();
+            $table->float('adjustment_amount', 20, 2)->nullable();
+            $table->float('net_amount', 20, 2)->nullable();
             $table->enum('status', ['Settled', 'Remaining'])->default('Remaining');
             $table->bigInteger('created_by')->comment('user_id')->nullable();
             $table->string('attachment')->nullable();

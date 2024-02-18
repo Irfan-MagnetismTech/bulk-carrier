@@ -2,78 +2,47 @@
 
 namespace Modules\SupplyChain\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\SupplyChain\Entities\ScmWorkBill;
+use Modules\SupplyChain\Http\Requests\ScmWorkBillRequest;
 
 class ScmWorkBillController extends Controller
 {
-    /**
+      /**
      * Display a listing of the resource.
-     * @return Renderable
+     * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request): JsonResponse
     {
-        return view('supplychain::index');
-    }
+        try {
+            $scm_work_bills = ScmWorkBill::query()
+                ->globalSearch($request->all());
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('supplychain::create');
+            return response()->success('Data list', $scm_work_bills, 200);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(ScmWorkBillRequest $request): JsonResponse
     {
-        //
+        try {
+            $scm_work_bill = ScmWorkBill::create($request->all());
+
+            return response()->success('Data created succesfully', $scm_work_bill, 201);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
+        }
     }
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
-        return view('supplychain::show');
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('supplychain::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }
