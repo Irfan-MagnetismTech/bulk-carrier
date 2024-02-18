@@ -210,6 +210,36 @@ export default [
 
     /* Work Receipt Report end */
 
+    /* Work Bill Route start */
+
+    {
+        path: `/${BASE}/work-bills`,
+        name: `${BASE}.work-bills.index`,
+        component: () => import(`../views/${PATH_BASE}/work-bill/index.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'work-bill-index' },
+        props: (route) => ({ page: parseInt(route.query.page) || 1 }),
+    },
+    {
+        path: `/${BASE}/work-bills/create`,
+        name: `${BASE}.work-bills.create`,
+        component: () => import(`../views/${PATH_BASE}/work-bill/create.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'work-bill-create' },
+    },
+    {
+        path: `/${BASE}/work-bills/:workBillId/edit`,
+        name: `${BASE}.work-bills.edit`,
+        component: () => import(`../views/${PATH_BASE}/work-bill/edit.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'work-bill-edit' },
+    },
+    {
+        path: `/${BASE}/work-bills/:workBillId`,
+        name: `${BASE}.work-bills.show`,
+        component: () => import(`../views/${PATH_BASE}/work-bill/show.vue`),
+        meta: { requiresAuth: true, role: ROLE, permission: 'work-bill-show'  },
+    },
+
+    /* Work Bill Route end */
+
     /* Report Start */
 	/* Inventory Report Start*/
 	{
