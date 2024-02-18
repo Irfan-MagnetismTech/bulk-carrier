@@ -11,6 +11,13 @@ use Modules\Crew\Http\Requests\CrwVesselRequiredCrewRequest;
 
 class CrwVesselRequiredCrewController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:crw-vessel-crew-manning-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:crw-vessel-crew-manning-create', ['only' => ['store']]);
+        $this->middleware('permission:crw-vessel-crew-manning-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:crw-vessel-crew-manning-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      *

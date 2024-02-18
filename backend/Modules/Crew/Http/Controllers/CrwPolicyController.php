@@ -17,7 +17,10 @@ class CrwPolicyController extends Controller
      */
     public function __construct(private FileUploadService $fileUpload)
     {
-
+        $this->middleware('permission:crw-policy-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:crw-policy-create', ['only' => ['store']]);
+        $this->middleware('permission:crw-policy-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:crw-policy-delete', ['only' => ['destroy']]);
     }
 
     /**

@@ -54,7 +54,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Department Name",
+      "label": "Department",
       "filter_type": "input"
     },
     {
@@ -64,7 +64,17 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Rank Name",
+      "label": "Joining Rank",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": 'crwCurrentRank',
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Current Rank",
       "filter_type": "input"
     },
     {
@@ -74,7 +84,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Mobile No.",
+      "label": "Crew Contact",
       "filter_type": "input"
     },
     {
@@ -171,7 +181,8 @@ onMounted(() => {
             <td>{{ index + 1 }}</td>
             <td class="!text-left">{{ crwProfileData?.full_name }}</td>
             <td class="!text-left">{{ crwProfileData?.department_name }}</td>
-            <td class="!text-left">{{ crwProfileData?.crewRank?.name }}</td>
+            <td class="!text-left">{{ crwProfileData?.crwRank?.name }}</td>
+            <td class="!text-left">{{ crwProfileData?.crwCurrentRank?.name }}</td>
             <td class="!text-left">{{ crwProfileData?.pre_mobile_no }}</td>
             <td class="!text-left">{{ crwProfileData?.pre_email }}</td>
             <td>{{ crwProfileData?.hired_by }}</td>
@@ -190,15 +201,15 @@ onMounted(() => {
           </tbody>
         <tfoot v-if="!crewProfiles?.data?.length" class="relative h-[250px]">
         <tr v-if="isLoading">
-          <td colspan="8"></td>
+          <td colspan="9"></td>
         </tr>
         <tr v-else-if="isTableLoading">
-          <td colspan="8">
+          <td colspan="9">
             <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>
           </td>
         </tr>
         <tr v-else-if="!crewProfiles?.data?.data?.length">
-          <td colspan="8">No data found.</td>
+          <td colspan="9">No data found.</td>
         </tr>
         </tfoot>
       </table>
