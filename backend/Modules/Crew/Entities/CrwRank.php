@@ -31,35 +31,33 @@ class CrwRank extends Model
         'crwCrewProfiles'             => 'Crew Profiles',
     ];
 
-    /**
-     * @return mixed
-     */
+    /* ------------------------- Associate Relationship Start ------------------------- */
+    /* ------------------------- Associate Relationship End ------------------------- */
+
+    /* -------------------------  Belongs Relationship Start ------------------------- */
+    /* -------------------------  Belongs Relationship End ------------------------- */
+	
+	/* -------------------------  Has Many Relationship Start ------------------------- */
     public function crwVesselRequiredCrewLines(): HasMany
     {
         return $this->hasMany(CrwVesselRequiredCrewLine::class, 'crw_rank_id', 'id');
     }
 
-    /**
-     * @return mixed
-     */
     public function crwCrewRequisitionLines(): HasMany
     {
         return $this->hasMany(CrwCrewRequisitionLine::class, 'crw_rank_id', 'id');
     }
 
-    /**
-     * @return mixed
-     */
     public function crwRecruitmentApprovalLines(): HasMany
     {
         return $this->hasMany(CrwRecruitmentApprovalLine::class, 'crw_rank_id', 'id');
     }
 
-    /**
-     * @return mixed
-     */
     public function crwCrewProfiles(): HasMany
     {
         return $this->hasMany(CrwCrewProfile::class, 'crw_rank_id', 'id');
-    }
+    }    
+	/* -------------------------  Has Many Relationship End ------------------------- */    
+
+
 }
