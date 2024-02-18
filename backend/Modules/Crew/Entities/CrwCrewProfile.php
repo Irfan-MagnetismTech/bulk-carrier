@@ -2,6 +2,7 @@
 
 namespace Modules\Crew\Entities;
 
+use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ use Modules\Crew\Entities\CrwCrewEducation;
 
 class CrwCrewProfile extends Model
 {
-    use HasFactory, GlobalSearchTrait;
+    use HasFactory, GlobalSearchTrait, DeletableModel;
 
     /**
      * @var array
@@ -37,12 +38,9 @@ class CrwCrewProfile extends Model
         'crwSalaryStructures'      => 'Crew Salary Structure',
         'crwBankAccounts'          => 'Crew Bank Accounts',
         'crwAttendanceLines'       => 'Crew Attendance',
-
-        'crwPayrollBatchHeadLines' => 'Recruitment Approvals',
-
-        'crwPayrollBatchLines'     => 'Crew Profiles',
-
-        'crewDocuments'            => 'Crew Profiles',
+        'crwPayrollBatchHeadLines' => 'Salary',
+        'crwPayrollBatchLines'     => 'Salary',
+        'crewDocuments'            => 'Crew Documents',
         'appraisalRecords'         => 'Appraisal Records',
         'crwRestHourEntryLines'    => 'Rest Hour Records',
         'crwIncidentParticipants'  => 'Incidents Records',
@@ -97,7 +95,6 @@ class CrwCrewProfile extends Model
     {
         return $this->hasMany(CrwCrewNominee::class);
     }
-
     /* -------------------------  Associate Relationship End ------------------------- */
 
     /* -------------------------  Belongs Relationship Start ------------------------- */
@@ -127,7 +124,7 @@ class CrwCrewProfile extends Model
 
     /* ------------------------- Belongs Relationship End ------------------------- */
 
-    /* -------------------------  Belongs Relationship Start ------------------------- */
+    /* -------------------------  Has Many Relationship Start ------------------------- */
     /**
      * @return mixed
      */
@@ -215,7 +212,6 @@ class CrwCrewProfile extends Model
     {
         return $this->hasMany(CrwIncidentParticipant::class, 'crw_crew_id', 'id');
     }
-
-    /* ------------------------- Belongs Relationship End ------------------------- */
+    /* -------------------------  Has Many Relationship Start ------------------------- */
 
 }
