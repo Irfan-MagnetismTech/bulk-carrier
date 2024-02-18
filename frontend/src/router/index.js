@@ -34,7 +34,6 @@ const router = createRouter({
                 ...maintenance,
                 ...operations,
                 ...supplyChain,
-                ...supplyChain2,
                 ...crew,
                 ...account,
                 { path: '/:pathMatch(.*)*', component: () => import ("../views/404.vue"), },

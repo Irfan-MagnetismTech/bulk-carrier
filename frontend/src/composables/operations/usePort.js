@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Api from '../../apis/Api';
 import Error from '../../services/error';
+import useEncryptDecrypt from '../../services/useEncryptDecrypt.js';
 import useNotification from '../../composables/useNotification.js';
 
 export default function usePort() {
@@ -13,6 +14,8 @@ export default function usePort() {
 	const portName = ref([]);
 	const voyagePorts = ref([]);
 	const notification = useNotification();
+	const encryptDecrypt = useEncryptDecrypt();
+
 	const port = ref({
 		code : '',
 		name : '',
@@ -96,9 +99,9 @@ export default function usePort() {
 		//NProgress.start();
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
-
+		
 		try {
-			const { data, status } = await Api.get(`/ops/ports/${portId}`);
+			const { data, status } = await Api.get(`/ops/ports/${encryptDecrypt.decrypt(portId)}`);
 			port.value = data.value;
 			notification.showSuccess(status);
 		} catch (error) {
@@ -118,7 +121,7 @@ export default function usePort() {
 
 		try {
 			const { data, status } = await Api.put(
-				`/ops/ports/${portId}`,
+				`/ops/ports/${encryptDecrypt.decrypt(portId)}`,
 				form
 			);
 			port.value = data.value;
@@ -141,7 +144,7 @@ export default function usePort() {
 		isLoading.value = true;
 
 		try {
-			const { data, status } = await Api.delete( `/ops/ports/${portId}`);
+			const { data, status } = await Api.delete( `/ops/ports/${encryptDecrypt.decrypt(portId)}`);
 			notification.showSuccess(status);
 			await getPorts(filterParams.value);
 		} catch (error) {

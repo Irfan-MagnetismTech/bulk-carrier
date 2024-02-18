@@ -29,8 +29,10 @@ return new class extends Migration
             $table->bigInteger('net_unit_price')->nullable();
             $table->bigInteger('net_foreign_unit_price')->nullable();
             $table->string('currency')->nullable();
+            $table->string('composite_key')->nullable();
             $table->decimal('exchange_rate')->nullable();
             $table->string('business_unit')->comment('ALL, PSML,TSLL')->nullable();
+            $table->string('composite_key')->nullable();
             $table->timestamp('date')->nullable();
             $table->timestamps();
         });

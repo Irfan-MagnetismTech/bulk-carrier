@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('po_composite_key')->nullable();
             $table->string('pr_composite_key')->nullable();
             $table->string('cs_composite_key')->nullable();
-            $table->integer('tolarence_level')->nullable();
+            $table->integer('tolerence_level')->nullable();
             $table->tinyInteger('is_closed')->default(0)->comment('0, 1');
             $table->integer('closed_by')->nullable();
             $table->datetime('closed_at')->nullable();

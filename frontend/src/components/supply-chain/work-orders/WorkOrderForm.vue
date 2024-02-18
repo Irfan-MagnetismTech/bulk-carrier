@@ -405,7 +405,7 @@
     
       if(props.formType == 'edit'){
         const editDatas = watch(()=> [props.form.business_unit,props.form.scm_warehouse_id,props.form.purchase_center,props.form.scm_wcs_id,props.form.scmWoLines], (newVal, oldVal) => {
-        searchWcs(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, null);
+        searchWcs(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, props.form?.id, null);
         if(props.form.scm_wcs_id){
           getWcsWiseVendorList(props.form.scm_wcs_id);
         }
@@ -480,7 +480,7 @@
       props.form.scm_wcs_id = null;
       props.form.wcs_no = null;
       wcsWiseVendorList.value = [];
-      searchWcs(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, null);
+      searchWcs(props.form.business_unit, props.form.scm_warehouse_id, props.form.purchase_center, props.form?.id, null);
     }
 
 
@@ -666,7 +666,7 @@
                   <th class="py-3 align-center !w-4/12">Service Details <br/> <span class="!text-[8px]"></span></th>
                   <!-- <th class="py-3 align-center !w-2/12">Required Date <span class="text-red-500">*</span></th> -->
                   <th class="py-3 align-center !w-2/12">Other Info</th>
-                  <!-- <th class="py-3 align-center !w-1/12">Tolarence</th> -->
+                  <!-- <th class="py-3 align-center !w-1/12">tolerence</th> -->
                   <th class="py-3 align-center !w-3/12">Order Details</th>
                   <th class="py-3 align-center !w-2/12">Total Price</th>
                   <th class="!w-1/12">
@@ -749,7 +749,7 @@
                     </table>
                   </td>
                   <!-- <td>
-                    <input type="number" v-model="form.scmPoLines[index].scmPoItems[itemIndex].tolarence_level" min=1 class="form-input">  
+                    <input type="number" v-model="form.scmPoLines[index].scmPoItems[itemIndex].tolerence_level" min=1 class="form-input">  
                   </td> -->
                   <td>
                     <table>

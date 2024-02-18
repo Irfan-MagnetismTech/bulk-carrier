@@ -20,14 +20,66 @@ return [
     'currencies' => [
         'BDT',
         'USD',
+        'INR'
     ],
-    
+
     'lc_cost_heads' => [
         'Bank Commision and Charges (BDT)(a)',
         'VAT (BDT)(b)',
         'Others (BDT)(c)',
         'Insurance Premium Amount (BDT)(d)',
     ],
+
+    'material_costing_head' => [
+            'cfr' => [
+                'Ex-Works (EXW) / Freight on Board (FOB)',
+                'Freight (Import)',
+            ],
+            'total_cfr' => [
+                'Total CFR',
+            ],
+            'cif' => [
+                'Insurance',
+            ],
+            'total_cif' => [
+                'Total CIF',
+            ],
+            'a' => [
+                'Landing Charge',
+            ],
+            'total_assessable' => [
+                'Total Assessable Value',
+            ],
+            'tti' => [
+                'Customs Duty (CD)',
+                'Regulatory Duty (RD)',
+                'Supplimentary Duty (SD)',
+                'Value Added Tax (VAT)',
+                'Advance Tax (AT)',
+                'Advance Income Tax (AIT)',
+            ],
+            'total_tti' => [
+                'Total Tax Incidence',
+            ],
+            'tc' => [
+                'Port Charges',
+                'Miscellaneous Custom Charges',
+                'C & F Agent Commission',
+                'Transport Charges',
+                'Unloading Charge',
+                'Survey Cost',
+                'Other Charges',
+            ],
+            'total_tc' => [
+                'Total Cost',
+            ],
+            'total_lc_cost' => [
+                'Total LC Cost(From LC Record)',
+            ],
+            'grand_total' => [
+                'Grand Total',
+            ],
+        ],
 
     'bunker_consumption_used_heads' => [
         'ME',

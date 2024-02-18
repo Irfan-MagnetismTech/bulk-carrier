@@ -207,7 +207,7 @@ export default function useLcRecord() {
     }
 
     async function storeLcRecordStatus(form) {
-        // const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
         
 
@@ -220,7 +220,7 @@ export default function useLcRecord() {
             const { data, status } = error.response;
             errors.value = notification.showError(status, data);
         } finally {
-            // loader.hide();
+            loader.hide();
             isLoading.value = false;
         }
     }
@@ -242,6 +242,30 @@ export default function useLcRecord() {
             isLoading.value = false;
         }
     }
+
+    async function deleteLcRecordStatus(lcRecordId, lcRecordStatusId) {
+
+        const loader = $loading.show(LoaderConfig);
+        // isLoading.value = true;
+
+        try {
+            const { data, status } = await Api.post( `/${BASE}/delete-lc-status`,{
+                scm_lc_record_id: lcRecordId, 
+                status_id: lcRecordStatusId, 
+            });
+            notification.showSuccess(status);
+            // await getLcRecords(filterParams.value);
+            return true;
+        } catch (error) {
+            const { data, status } = error.response;
+            errors.value = notification.showError(status, data);
+            return false;
+        } finally {
+            loader.hide();
+            // isLoading.value = false;
+        }
+    }
+
     
 
 
@@ -258,6 +282,7 @@ export default function useLcRecord() {
         deleteLcRecord,
         storeLcRecordStatus,
         showLcRecordStatuses,
+        deleteLcRecordStatus,
         lcRecordStatuses,
         lcRecordStatus,
         isTableLoading,

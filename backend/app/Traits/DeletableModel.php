@@ -39,21 +39,21 @@ trait DeletableModel
         foreach ($methods as $key => $method) {
             $relation = $this->{$method}();
             if ($relation instanceof Relation && $relation->count() > 0) {
-                $relatedAsString .= isset($this->features[$method]) ? $this->features[$method] : $method . ', ';
+                $relatedAsString .= isset($this->features[$method]) ? ($this->features[$method]. ', ') : ($method . ', ');
                 $totalCount += $relation->count();
             }
         }
 
         if ($relatedAsString !== '') {
-            $relatedAsString = rtrim($relatedAsString, ', ');
-            $relatedAsString = preg_replace('/,([^,]*)$/', ' and$1', $relatedAsString);
+            $trimedRelatedAsString = rtrim($relatedAsString, ', ');
+            $finalRelatedAsString = preg_replace('/, /', ' and ', $trimedRelatedAsString);
         }
 
         if ($totalCount > 0) {
             throw new HttpResponseException(response()->json([
-                "message" => "Data could not be deleted! It has references in the {$relatedAsString} table.",
+                "message" => "Data could not be deleted! It has references in the {$finalRelatedAsString} table.",
                 "errors" => [
-                    "id" => ["Data is in use and cannot be deleted! It has references in the {$relatedAsString}."]
+                    "id" => ["Data is in use and cannot be deleted! It has references in the {$finalRelatedAsString}."]
                 ]
             ], 422));
         }
