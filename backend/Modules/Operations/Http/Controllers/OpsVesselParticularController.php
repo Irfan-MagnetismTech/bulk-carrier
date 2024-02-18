@@ -141,16 +141,19 @@ class OpsVesselParticularController extends Controller
     {
         try
         {
+            DB::beginTransaction();
             $this->fileUpload->deleteFile($vessel_particular->attachment);
-            $vessel_particular->delete();
-
+            $vessel_particular->delete();            
+            DB::commit();
+            
             return response()->json([
                 'message' => 'Data deleted successfully.',
             ], 204);
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($vessel_particular->preventDeletionIfRelated(), 422);
         }
     }
 

@@ -2,17 +2,19 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Operations\Entities\OpsVoyageBudget;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsVoyage extends Model
 {
-    use HasFactory, GlobalSearchTrait;
+    use HasFactory, GlobalSearchTrait, DeletableModel;
 
     protected $fillable = [
-        'ops_customer_id',
+        // 'ops_customer_id',
         'ops_vessel_id',
         'mother_vessel',
         'ops_cargo_type_id',
@@ -63,10 +65,11 @@ class OpsVoyage extends Model
         return $this->hasMany(OpsVoyagePortSchedule::class);
     }
 
-    public function opsBunkers()
-    {
-        return $this->morphMany(OpsBunker::class, 'bunkerable');
-    }
+    // Bunker is Managed independently. So this is not necessary anymore.
+    // public function opsBunkers()
+    // {
+    //     return $this->morphMany(OpsBunker::class, 'bunkerable');
+    // }
 
     public function opsContractAssign() {
         return $this->hasMany(OpsContractAssign::class, 'ops_voyage_id','id');
@@ -90,6 +93,10 @@ class OpsVoyage extends Model
 
     public function opsVoyageExpenditureEntries() {
         return $this->hasMany(OpsVoyageExpenditureEntry::class, 'ops_voyage_id','id');
+    }
+
+    public function opsVoyageBudget() {
+        return $this->hasOne(OpsVoyageBudget::class);
     }
 
 }

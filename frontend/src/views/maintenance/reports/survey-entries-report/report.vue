@@ -50,7 +50,7 @@ setTitle('Survey Status');
                             <h3 class="mb-1 font-bold mt-2" >{{ mntSurveyItem.item_name  }}</h3>
                             <table id="table" class="w-full whitespace-no-wrap">
                                 <thead>
-                                    <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 border-b dark-disabled:border-gray-700 bg-gray-50 dark-disabled:text-gray-200 dark-disabled:bg-gray-700">
+                                    <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 border-b dark-disabled:border-gray-700 bg-gray-300 dark-disabled:text-gray-200 dark-disabled:bg-gray-700">
                                         <th class="w-3/12"> Survey Details </th>
                                         <th class="w-3/12"> Range Dates </th>
                                         <th class="w-2/12"> Status</th>
@@ -87,11 +87,11 @@ setTitle('Survey Status');
 
 <style lang="postcss" scoped>
 #table, #table th, #table td{
-  @apply border border-collapse border-gray-400 text-center text-gray-700 px-1
+  @apply border border-collapse border-gray-600 text-center text-black px-1
 }
 
 #table, #table th.text-left, #table td.text-left{
-  @apply border border-collapse border-gray-400 text-left text-gray-700 px-1
+  @apply border border-collapse border-gray-600 text-left text-black px-1
 }
 
 </style>

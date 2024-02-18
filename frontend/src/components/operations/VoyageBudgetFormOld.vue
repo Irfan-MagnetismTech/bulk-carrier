@@ -38,8 +38,8 @@ function fetchVesselExpenseHeads(ops_vessel_id, loading) {
     })
 }
 
-function fetchVesselWiseVoyages(ops_vessel_id, loading) {
-  searchVoyages("", props.form.business_unit, loading, ops_vessel_id)
+function fetchVesselWiseVoyages(ops_vessel_id) {
+  searchVoyages("", props.form.business_unit, ops_vessel_id)
 }
 
 watch(() => props.form.opsVoyage, (newValue, oldValue) => {

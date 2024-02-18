@@ -32,7 +32,7 @@ const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 
 let filterOptions = ref({
-  // "business_unit": businessUnit.value,
+  "business_unit": businessUnit.value,
   "items_per_page": 15,
   "page": props.page,
   "isFilter": false,
@@ -44,7 +44,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Charterer",
+      "label": "Charterer Name",
       "filter_type": "input"
     },
     {
@@ -64,7 +64,7 @@ let filterOptions = ref({
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Vessel",
+      "label": "Vessel Name",
       "filter_type": "input"
     },
     {
@@ -165,9 +165,9 @@ onMounted(() => {
                   <td>{{ chartererInvoice?.opsChartererContract?.opsVessel?.name }}</td>
                   <td>{{ chartererInvoice?.contract_type }}</td>
                   <td>{{ numberFormat(chartererInvoice?.grand_total) }}</td>
-                  <!-- <td>
+                  <td>
                     <span :class="chartererInvoice?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chartererInvoice?.business_unit }}</span>
-                  </td> -->
+                  </td>
                   <td class="items-center justify-center space-x-1 text-gray-600">
                     <nobr>
                       <action-button :action="'show'" :to="{ name: 'ops.charterer-invoices.show', params: { chartererInvoiceId: chartererInvoice.id } }"></action-button>

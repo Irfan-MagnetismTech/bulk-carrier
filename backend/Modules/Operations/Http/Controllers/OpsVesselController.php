@@ -81,6 +81,7 @@ class OpsVesselController extends Controller
 
             // create cost center
             $costCenter= [
+                'ops_vessel_id'=>$vessel->id,
                 'name'=>$request->name,
                 'short_name'=>$request->short_code,
                 'type'=>$request->vessel_type,
@@ -111,8 +112,6 @@ class OpsVesselController extends Controller
                 $bunker['quantity'] = $bunker->opening_balance;
                 return $bunker;
             });
-
-            (new StockLedgerData)->insert($vessel, $bunkers);
             
             $ware_house->scmWarehouseContactPersons()->create($wareHouseContact);
 
@@ -154,15 +153,30 @@ class OpsVesselController extends Controller
             $certificate->validity  =$certificate->opsMaritimeCertification->validity;
             $certificate->name = $certificate->opsMaritimeCertification->name;
             $certificate->id = $certificate->opsMaritimeCertification->id;
+            $certificate->certificate = [
+                'type' => $certificate->opsMaritimeCertification->type,
+                'validity'  => $certificate->opsMaritimeCertification->validity,
+                'name' => $certificate->opsMaritimeCertification->name,
+                'id' => $certificate->opsMaritimeCertification->id,
+            ];
             return $certificate;
         });
+        
 
         $vessel->opsBunkers->map(function($bunker) {
             $bunker->id = $bunker->scmMaterial->id;
             $bunker->name = $bunker->scmMaterial->name;
             $bunker->is_readonly = true;
+            $bunker->bunker = [
+                'id' => $bunker->scmMaterial->id,
+                'name' => $bunker->scmMaterial->name,
+                'unit' => $bunker->scmMaterial->unit,
+            ];
             return $bunker;
         });
+
+        $vessel->total_voyages = $vessel->opsVoyages->count();
+        $vessel->currentCharterer =  $vessel->currentCharterer;
 
         try
         {
@@ -219,16 +233,19 @@ class OpsVesselController extends Controller
     {
         try
         {
+            DB::beginTransaction();
             $vessel->opsVesselCertificates()->delete();
             // $vessel->opsBunkers()->delete();
-            $vessel->delete();
+            $vessel->delete();            
+            DB::commit();
             return response()->json([
                 'message' => 'Data deleted successfully.',
             ], 204);
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($vessel->preventDeletionIfRelated(), 422);
         }
     }
 

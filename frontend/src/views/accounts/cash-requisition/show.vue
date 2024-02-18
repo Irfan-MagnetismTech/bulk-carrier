@@ -6,6 +6,7 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
+import { formatMonthYear, formatDate } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 
@@ -47,7 +48,7 @@ onMounted(() => {
           </tr>
           <tr>
             <th class="w-40">Applied Date</th>
-            <td>{{ cashRequisition?.applied_date ?? '---' }}</td>
+            <td>{{ formatDate(cashRequisition?.applied_date) ?? '---' }}</td>
           </tr>
           <tr>
             <th class="w-40">Pr Ref</th>
@@ -62,9 +63,10 @@ onMounted(() => {
         <table class="w-full mt-2">
           <thead>
           <tr>
-            <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="5">Cash Requisition Line List </td>
+            <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="5">Cash Requisition Lines</td>
           </tr>
           <tr>
+            <th class="w-40 !text-center">#</th>
             <th class="w-40 !text-center">Particular</th>
             <th class="w-40 !text-center">Remarks</th>
             <th class="w-40 !text-center">Amount</th>
@@ -72,6 +74,7 @@ onMounted(() => {
           </thead>
           <tbody>
           <tr v-for="(cashRequisitionLine, index) in cashRequisition?.accCashRequisitionLines" :key="index">
+            <td class="!text-center">{{ index + 1 }}</td>
             <td class="text-left"> {{ cashRequisitionLine?.particular }} </td>
             <td class="text-left"> {{ cashRequisitionLine?.remarks }} </td>
             <td class="!text-right"> {{ cashRequisitionLine?.amount }} </td>

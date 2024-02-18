@@ -81,7 +81,7 @@ onMounted(() => {
       </v-select>
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark-disabled:text-gray-300"> Crew Contact <span class="text-red-500">*</span></span>
+      <span class="text-gray-700 dark-disabled:text-gray-300"> Crew Contact</span>
       <input type="text" :value="form.crw_crew_name?.pre_mobile_no" class="form-input vms-readonly-input" autocomplete="off" readonly/>
     </label>
   </div>

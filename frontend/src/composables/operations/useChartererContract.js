@@ -5,6 +5,8 @@ import { useRouter } from 'vue-router';
 import Api from '../../apis/Api';
 import Error from '../../services/error';
 import useNotification from '../useNotification.js';
+import moment from 'moment';
+import Swal from "sweetalert2";
 
 export default function useChartererContract() {
 	const router = useRouter();
@@ -73,6 +75,8 @@ export default function useChartererContract() {
 	const indexBusinessUnit = ref(null);
     const filterParams = ref(null);
 	const isTableLoading = ref(false);
+	const isContractLoading = ref(false);
+	const isContractVoyageLoading = ref(false);
 
 	async function getChartererContracts(filterOptions) {
 		//NProgress.start();
@@ -120,6 +124,19 @@ export default function useChartererContract() {
 
 	async function storeChartererContract(form) {
 		//NProgress.start();
+
+		let date1 = moment(form.opsChartererContractsFinancialTerms.valid_from);
+		let date2 = moment(form.opsChartererContractsFinancialTerms.valid_till);
+		if ( date2.diff(date1, "days") <= 0 ) {
+			Swal.fire({
+				icon: "",
+				title: "Correct Please!",
+				html: `Invalid Contract Validity.`,
+				customClass: "swal-width",
+			});
+			return false;
+		}
+
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
@@ -172,6 +189,19 @@ export default function useChartererContract() {
 
 	async function updateChartererContract(form, chartererContractId) {
 		//NProgress.start();
+		
+		let date1 = moment(form.opsChartererContractsFinancialTerms.valid_from);
+		let date2 = moment(form.opsChartererContractsFinancialTerms.valid_till);
+		if ( date2.diff(date1, "days") <= 0 ) {
+			Swal.fire({
+				icon: "",
+				title: "Correct Please!",
+				html: `Invalid Contract Validity.`,
+				customClass: "swal-width",
+			});
+			return false;
+		}
+
 		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
 		isLoading.value = true;
 
@@ -219,9 +249,9 @@ export default function useChartererContract() {
 		}
 	}
 
-	async function searchChartererContracts(searchParam, loading) {
+	async function searchChartererContracts(searchParam) {
 		//NProgress.start();
-
+		isContractLoading.value = true
 		try {
 			const { data, status } = await Api.get(`/ops/search-charterer-contracts?name=${searchParam}`);
 			chartererContracts.value = data.value;
@@ -230,15 +260,26 @@ export default function useChartererContract() {
 			const { data, status } = error.response;
 			notification.showError(status);
 		} finally {
-			loading(false)
+			// loading(false)
 			//NProgress.done();
+			isContractLoading.value = false
+
 		}
 	}
 
-	async function getChartererContractsByCharterOwner(chartererProfileId) {
+	async function getChartererContractsByCharterOwner(chartererProfileId, opsVesselId  = '', filter = '') {
+		isContractLoading.value = true
+
 		try {
-			const { data, status } = await Api.get(`/ops/get-charterer-contract-by-profile?charterer_profile_id=${chartererProfileId}`);
-			chartererContracts.value = data.value;
+			const { data, status } = await Api.get(`/ops/get-charterer-contract-by-profile?ops_charterer_profile_id=${chartererProfileId}&ops_vessel_id=${opsVesselId}`);
+
+			if(filter != '') {
+				const filteredData = data.value.filter(item => item.status == filter);
+
+				chartererContracts.value = filteredData;
+			} else {
+				chartererContracts.value = data.value;
+			}
 			notification.showSuccess(status);
 		} catch (error) {
 			const { data, status } = error.response;
@@ -247,11 +288,15 @@ export default function useChartererContract() {
 			//loader.hide();
 			//isLoading.value = false;
 			//NProgress.done();
+			isContractLoading.value = false
+
 		}
 	}
 
 	//get contract wise voyage
 	async function getContractWiseVoyage(contractId) {
+		isContractVoyageLoading.value = true
+
 		try {
 			const { data, status } = await Api.get(`/ops/get-voyage-by-contract?contract_id=${contractId}`);
 			voyages.value = data.value;
@@ -264,6 +309,8 @@ export default function useChartererContract() {
 			//loader.hide();
 			//isLoading.value = false;
 			//NProgress.done();
+			isContractVoyageLoading.value = false
+
 		}
 	}
 
@@ -301,10 +348,12 @@ export default function useChartererContract() {
             isLoading.value = false;
         });
 	}
-
+	
 	return {
 		chartererContracts,
 		chartererContract,
+		isContractLoading,
+		isContractVoyageLoading,
 		opsChartererLocalAgentObject,
 		getChartererContracts,
 		storeChartererContract,

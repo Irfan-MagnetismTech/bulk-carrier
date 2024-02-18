@@ -125,7 +125,7 @@ function fetchAccounts(search, loading) {
                   <td class="text-sm text-right font-bold">{{ expenseData?.closing_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ expenseData?.closing_balance_status }}</td>
                 </tr>
                 <tr style="background-color: #eff1f1" class="second_label">
-                  <td class="relative text-sm balance_line_style balance_line" :style="{'cursor': expenseDataLine.parent_accounts?.length ? 'pointer' : 'auto'}" :id="expenseDataLine?.line_id" @click="toggleBalanceLineTrID($event)">
+                  <td class="relative text-left text-sm balance_line_style balance_line" :style="{'cursor': expenseDataLine.parent_accounts?.length ? 'pointer' : 'auto'}" :id="expenseDataLine?.line_id" @click="toggleBalanceLineTrID($event)">
                     {{ expenseDataLine?.line_text }}
                     <svg v-if="expenseDataLine.parent_accounts?.length" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="custom_down_arrow w-3 h-3">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5" />
@@ -136,7 +136,7 @@ function fetchAccounts(search, loading) {
                 </tr>
                 <template v-for="(lineParentAccount, lineParentAccountIndex) in expenseDataLine.parent_accounts">
                   <tr :class="'balance_account_'+expenseDataLine?.line_id" style="display: none" class="third_label account_row">
-                    <td class="relative text-sm balance_line_parent account_name parent_account_line" :style="{'cursor': lineParentAccount.child_accounts?.length ? 'pointer' : 'auto'}" :id="lineParentAccount?.line_id" @click="toggleParentAccountTrID($event)">
+                    <td class="relative text-left text-sm balance_line_parent account_name parent_account_line" :style="{'cursor': lineParentAccount.child_accounts?.length ? 'pointer' : 'auto'}" :id="lineParentAccount?.line_id" @click="toggleParentAccountTrID($event)">
                       {{ lineParentAccount?.line_text }}
                       <svg v-if="lineParentAccount.child_accounts?.length" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="custom_down_arrow w-3 h-3">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5" />
@@ -147,7 +147,7 @@ function fetchAccounts(search, loading) {
                   </tr>
                   <template v-for="(lineChildAccount, lineChildAccountIndex) in lineParentAccount.child_accounts">
                     <tr :class="['parent_account_'+lineParentAccount?.line_id,'hide_balance_account_'+expenseDataLine?.line_id]" class="fourth_label account_row" style="display: none;background-color: #CAF1F1">
-                      <td class="relative text-sm balance_line_parent_child account_name child_account_line" :style="{'cursor': lineChildAccount.grandchild_accounts?.length ? 'pointer' : 'auto'}" :id="lineChildAccount?.line_id" @click="toggleChildAccountTrID($event)">
+                      <td class="relative text-left text-sm balance_line_parent_child account_name child_account_line" :style="{'cursor': lineChildAccount.grandchild_accounts?.length ? 'pointer' : 'auto'}" :id="lineChildAccount?.line_id" @click="toggleChildAccountTrID($event)">
                         {{ lineChildAccount?.line_text }}
                         <svg v-if="lineChildAccount.grandchild_accounts?.length" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="custom_down_arrow w-3 h-3">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5" />
@@ -158,7 +158,7 @@ function fetchAccounts(search, loading) {
                     </tr>
                     <template v-for="(lineGrandChildAccount, lineGrandChildAccountIndex) in lineChildAccount.grandchild_accounts">
                       <tr :class="['account_'+lineChildAccount?.line_id,'hide_balance_account_'+expenseDataLine?.line_id,'hide_parent_account_'+lineParentAccount?.line_id]" class="fifth_label" style="display: none;background-color: #e0edff">
-                        <td class="text-sm balance_line_parent_grand_child account_name account_line">{{ lineGrandChildAccount?.line_text }}</td>
+                        <td class="text-sm text-left balance_line_parent_grand_child account_name account_line">{{ lineGrandChildAccount?.line_text }}</td>
                         <td class="text-sm text-right">{{ lineGrandChildAccount?.closing_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ lineGrandChildAccount?.closing_balance_status }}</td>
                         <td class="text-sm text-right font-bold"></td>
                       </tr>
@@ -178,7 +178,7 @@ function fetchAccounts(search, loading) {
               </tr>
             </template>
             <tr v-if="incomeStatements?.performance?.profit > 0 && incomeStatements?.performance?.profit > 0">
-              <td class="text-sm balance_header">Net Profit</td>
+              <td class="text-sm !text-right balance_header">Net Profit</td>
               <td class="text-sm text-right font-bold"></td>
               <td class="text-sm text-right font-bold">{{ incomeStatements?.performance?.profit?.toLocaleString('en-IN', {maximumFractionDigits:2}) }}</td>
             </tr>
@@ -201,7 +201,7 @@ function fetchAccounts(search, loading) {
                   <td class="text-sm text-right font-bold">{{ incomeData?.closing_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ incomeData?.closing_balance_status }}</td>
                 </tr>
                 <tr style="background-color: #eff1f1" class="second_label">
-                  <td class="relative text-sm balance_line_style balance_line" :style="{'cursor': incomeDataLine.parent_accounts?.length ? 'pointer' : 'auto'}" :id="incomeDataLine?.line_id" @click="toggleBalanceLineTrID($event)">
+                  <td class="relative text-left text-sm balance_line_style balance_line" :style="{'cursor': incomeDataLine.parent_accounts?.length ? 'pointer' : 'auto'}" :id="incomeDataLine?.line_id" @click="toggleBalanceLineTrID($event)">
                     {{ incomeDataLine?.line_text }}
                     <svg v-if="incomeDataLine.parent_accounts?.length" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="custom_down_arrow w-3 h-3">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5" />
@@ -212,7 +212,7 @@ function fetchAccounts(search, loading) {
                 </tr>
                 <template v-for="(lineParentAccount, lineParentAccountIndex) in incomeDataLine.parent_accounts">
                   <tr :class="'balance_account_'+incomeDataLine?.line_id" style="display: none" class="third_label account_row">
-                    <td class="relative text-sm balance_line_parent account_name parent_account_line" :style="{'cursor': lineParentAccount.child_accounts?.length ? 'pointer' : 'auto'}" :id="lineParentAccount?.line_id" @click="toggleParentAccountTrID($event)">
+                    <td class="relative text-left text-sm balance_line_parent account_name parent_account_line" :style="{'cursor': lineParentAccount.child_accounts?.length ? 'pointer' : 'auto'}" :id="lineParentAccount?.line_id" @click="toggleParentAccountTrID($event)">
                       {{ lineParentAccount?.line_text }}
                       <svg v-if="lineParentAccount.child_accounts?.length" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="custom_down_arrow w-3 h-3">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5" />
@@ -223,7 +223,7 @@ function fetchAccounts(search, loading) {
                   </tr>
                   <template v-for="(lineChildAccount, lineChildAccountIndex) in lineParentAccount.child_accounts">
                     <tr :class="['parent_account_'+lineParentAccount?.line_id,'hide_balance_account_'+incomeDataLine?.line_id]" class="fourth_label account_row" style="display: none;background-color: #CAF1F1">
-                      <td class="relative text-sm balance_line_parent_child account_name child_account_line" :style="{'cursor': lineChildAccount.grandchild_accounts?.length ? 'pointer' : 'auto'}" :id="lineChildAccount?.line_id" @click="toggleChildAccountTrID($event)">
+                      <td class="relative text-left text-sm balance_line_parent_child account_name child_account_line" :style="{'cursor': lineChildAccount.grandchild_accounts?.length ? 'pointer' : 'auto'}" :id="lineChildAccount?.line_id" @click="toggleChildAccountTrID($event)">
                         {{ lineChildAccount?.line_text }}
                         <svg v-if="lineChildAccount.grandchild_accounts?.length" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="custom_down_arrow w-3 h-3">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 5.25l-7.5 7.5-7.5-7.5m15 6l-7.5 7.5-7.5-7.5" />
@@ -234,7 +234,7 @@ function fetchAccounts(search, loading) {
                     </tr>
                     <template v-for="(lineGrandChildAccount, lineGrandChildAccountIndex) in lineChildAccount.grandchild_accounts">
                       <tr :class="['account_'+lineChildAccount?.line_id,'hide_balance_account_'+incomeDataLine?.line_id,'hide_parent_account_'+lineParentAccount?.line_id]" class="fifth_label" style="display: none;background-color: #e0edff">
-                        <td class="text-sm balance_line_parent_grand_child account_name account_line">{{ lineGrandChildAccount?.line_text }}</td>
+                        <td class="text-sm text-left balance_line_parent_grand_child account_name account_line">{{ lineGrandChildAccount?.line_text }}</td>
                         <td class="text-sm text-right">{{ lineGrandChildAccount?.closing_balance_amount.toLocaleString('en-IN', {maximumFractionDigits:2}) }} {{ lineGrandChildAccount?.closing_balance_status }}</td>
                         <td class="text-sm text-right font-bold"></td>
                       </tr>

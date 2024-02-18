@@ -13,8 +13,8 @@ class CrwAgencyBillRequest extends FormRequest
      */
     public function rules(): array {
         return [
-            'crw_agency_id'                    => 'required|integer',
-            'crw_agency_contract_id'           => 'required|integer',
+            'crw_agency_id'                    => 'required|integer|exists:crw_agencies,id',
+            'crw_agency_contract_id'           => 'required|integer|exists:crw_agency_contracts,id',
             'applied_date'                     => 'required|date',
             'invoice_date'                     => 'required|date',
             'invoice_no'                       => 'required|string|max:255',
@@ -46,6 +46,8 @@ class CrwAgencyBillRequest extends FormRequest
             'crwAgencyBillLines.*.particular.max'  => 'Bill lines [line :position] particular field must not be greater than :max characters.',
             'crwAgencyBillLines.*.description.max' => 'Bill lines [line :position] description field must not be greater than :max characters.',
             'crwAgencyBillLines.*.per.max'         => 'Bill lines [line :position] per field must not be greater than :max characters.',
+            'crw_agency_id'                        => 'The Agency Name does not exists.',
+            'crw_agency_contract_id'               => 'The Agency Contract does not exists.',
         ];
     }
 

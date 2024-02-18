@@ -26,7 +26,7 @@
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 ">Report Type <span class="text-red-500">*</span></span>
             <select v-model="form.type" class="form-input" required :class="{ 'bg-gray-100 text-gray-900': formType === 'edit' }" :disabled="formType=='edit'" >
-              <option value="" disabled selected>Select Option</option>
+              <option value="" disabled selected>--Choose an option--</option>
               <option value="Noon Report">Noon Report</option>
               <option value="Arrival Report">Arrival Report</option>
               <option value="Departure Report">Departure Report</option>
@@ -44,8 +44,8 @@
 
       <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
         <label class="block w-full mt-2 text-sm">
-                <span class="text-gray-700 ">Vessel <span class="text-red-500">*</span></span>
-                <v-select :options="vessels" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
+                <span class="text-gray-700 ">Vessel Name <span class="text-red-500">*</span></span>
+                <v-select :options="vessels" :loading="isVesselLoading" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
                     <template #search="{attributes, events}">
                         <input
                             class="vs__search"
@@ -58,8 +58,8 @@
                 <input type="hidden" v-model="form.ops_vessel_id" />
         </label>
         <label class="block w-full mt-2 text-sm">
-                <span class="text-gray-700 ">Voyage <span class="text-red-500">*</span></span>
-                <v-select :options="voyages" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
+                <span class="text-gray-700 ">Voyage No <span class="text-red-500">*</span></span>
+                <v-select :options="voyages" :loading="isVoyageLoading" placeholder="--Choose an option--" v-model="form.opsVoyage" label="voyage_sequence" class="block form-input" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" >
                     <template #search="{attributes, events}">
                         <input
                             class="vs__search"
@@ -109,10 +109,10 @@
         <div class="dt-responsive table-responsive" v-for="(port, index) in form.opsBulkNoonReportPorts" :key="index">
           <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
             <label class="block w-full mt-2 text-sm">
-                    <span class="text-gray-700">Last Port <span class="text-red-500">*</span>
+                    <span class="text-gray-700">Last Port Code <span class="text-red-500">*</span>
                       <span v-show="isPortDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
                     </span>
-                    <v-select :options="ports" placeholder="Search Port" v-model="form.opsBulkNoonReportPorts[index].lastPort" label="code_name" class="block form-input">
+                    <v-select :options="ports" :loading="isPortLoading" placeholder="--Choose an option--" v-model="form.opsBulkNoonReportPorts[index].lastPort" label="code_name" class="block form-input">
                       <template #search="{attributes, events}">
                           <input
                               class="vs__search"
@@ -125,10 +125,10 @@
                     <input type="hidden" v-model="form.opsBulkNoonReportPorts[index].last_port" />
             </label>
             <label class="block w-full mt-2 text-sm">
-              <span class="text-gray-700">Next Port <span class="text-red-500">*</span>
+              <span class="text-gray-700">Next Port Code <span class="text-red-500">*</span>
                 <span v-show="isPortDuplicate" class="text-yellow-600 pl-1" title="Duplicate Material" v-html="icons.ExclamationTriangle"></span>
               </span>
-              <v-select :options="ports" placeholder="Search Port" v-model="form.opsBulkNoonReportPorts[index].nextPort" label="code_name" class="block form-input">
+              <v-select :options="ports" :loading="isPortLoading" placeholder="--Choose an option--" v-model="form.opsBulkNoonReportPorts[index].nextPort" label="code_name" class="block form-input">
                 <template #search="{attributes, events}">
                     <input
                         class="vs__search"
@@ -410,7 +410,7 @@
                   
                   <div class="flex items-center justify-between">
                     <select v-model.trim="item.type" class="form-input" required>
-                        <option value="" disabled selected>Select</option>
+                        <option value="" disabled selected>--Choose an option--</option>
                         <option value="engine_unit">Engine Unit</option>
                         <option v-for="(item, index2) in engineTemparatureTypes" :key="index2">{{ item }}</option>
                     </select>
@@ -506,7 +506,7 @@
               <tr v-for="(details, index) in bunkerConsumptionDetails" :key="index">
                 <td>
                   <select v-model.trim="details.type" class="form-input" required>
-                    <option value="" disabled selected>Select</option>
+                    <option value="" disabled selected>--Choose an option--</option>
                     <option v-for="(item, index2) in bunkerConsumptionHeads" :key="index2">{{ item }}</option>
                   </select>
                 </td>
@@ -574,9 +574,9 @@ import ErrorComponent from '../../components/utils/ErrorComponent.vue';
 import useHeroIcon from "../../assets/heroIcon";
 
 const icons = useHeroIcon();
-const { ports, searchPorts } = usePort();
-const { voyage, voyages, showVoyage, getVoyageList } = useVoyage();
-const { vessel, vessels, getVesselList, showVessel } = useVessel();
+const { ports, searchPorts, isPortLoading } = usePort();
+const { voyage, voyages, showVoyage, getVoyageList, isVoyageLoading } = useVoyage();
+const { vessel, vessels, getVesselList, showVessel, isVesselLoading } = useVessel();
 const { getBunkerConsumptionHeadList, getEngineTemparatureTypeList, bunkerConsumptionHeads, engineTemparatureTypes, isLoading, checkValidation } = useBulkNoonReport();
 const dateTimeFormat = ref(Store.getters.getVueDatePickerTextInputFormat.dateTime);
 const props = defineProps({
@@ -695,6 +695,9 @@ if(value) {
 }, { deep: true })
 
 watch(() => props.form.opsVessel, (value) => {
+  voyages.value = []
+  props.form.opsVoyage = null;
+  props.form.ops_voyage_id = null;
   props.form.ops_vessel_id = null;
   if(value) {
     props.form.ops_vessel_id = value?.id

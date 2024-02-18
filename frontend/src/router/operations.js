@@ -104,7 +104,7 @@ export default [
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 	{
-		path: `/${BASE}/cargo-tariffs/:cargoTariffId`,
+		path: `/${BASE}/cargo-tariffs/:cargoTariffId/show`,
 		name: `${BASE}.configurations.cargo-tariffs.show`,
 		component: () => import (`../views/${ViEWBASE}/cargo-tariffs/show.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
@@ -724,6 +724,18 @@ export default [
 		path: `/${BASE}/reports/gross-bunker-report`,
 		name: `${BASE}.reports.gross-bunker-report`,
 		component: () => import (`../views/${ViEWBASE}/reports/gross-bunker-report.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/reports/budget-vs-expense-report`,
+		name: `${BASE}.reports.budget-vs-expense-report`,
+		component: () => import (`../views/${ViEWBASE}/reports/budget-vs-expense-report.vue`),
+		meta: { requiresAuth: true, role: "all", permission: '' },
+	},
+	{
+		path: `/${BASE}/reports/month-wise-expense-report`,
+		name: `${BASE}.reports.month-wise-expense-report`,
+		component: () => import (`../views/${ViEWBASE}/reports/month-wise-expense-report.vue`),
 		meta: { requiresAuth: true, role: "all", permission: '' },
 	},
 ];

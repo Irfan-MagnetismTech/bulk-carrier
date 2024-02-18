@@ -114,7 +114,7 @@ onMounted(() => {
         <td class="px-1 py-1">
           <div style="position: relative;">
             <select class="form-input" v-model.trim="form.crwRecruitmentApprovalLines[index].crw_rank_id" required>
-              <option value="" disabled>Select</option>
+              <option value="" selected disabled>--Choose an option--</option>
               <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>
             </select>
             <span

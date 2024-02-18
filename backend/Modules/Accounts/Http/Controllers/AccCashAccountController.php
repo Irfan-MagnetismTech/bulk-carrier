@@ -10,6 +10,14 @@ use Modules\Accounts\Http\Requests\AccCashAccountRequest;
 
 class AccCashAccountController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:acc-cash-account-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:acc-cash-account-create', ['only' => ['store']]);
+        $this->middleware('permission:acc-cash-account-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:acc-cash-account-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *

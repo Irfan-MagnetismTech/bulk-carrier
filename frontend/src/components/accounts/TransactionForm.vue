@@ -135,7 +135,7 @@ onMounted(() => {
   </div>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
       <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Cost Center <span class="text-red-500">*</span></span>
+        <span class="text-gray-700 dark-disabled:text-gray-300">Cost Center Name <span class="text-red-500">*</span></span>
         <v-select :options="allCostCenterLists" placeholder="--Choose an option--" :loading="isLoading" v-model.trim="form.acc_cost_center_name" label="name"  class="block w-full rounded form-input">
           <template #search="{attributes, events}">
             <input class="vs__search w-full" style="width: 50%" :required="!form.acc_cost_center_name" v-bind="attributes" v-on="events"/>
@@ -146,7 +146,7 @@ onMounted(() => {
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Voucher Type <span class="text-red-500">*</span></span>
         <select class="label-item-input" v-model.trim="form.voucher_type" @change="changeBgColor()" required>
-          <option value="" selected disabled>Select Value</option>
+          <option value="" selected disabled>--Choose an option--</option>
           <option value="Receipt">Receipt</option>
           <option value="Payment">Payment</option>
           <option value="Journal">Journal</option>
@@ -159,36 +159,36 @@ onMounted(() => {
         <VueDatePicker v-model.trim="form.transaction_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
         <Error v-if="errors?.transaction_date" :errors="errors.transaction_date" />
       </label>
-      <label class="block w-full mt-2 text-sm">
-        <span class="text-gray-700 dark-disabled:text-gray-300">Instrument Type</span>
-        <select class="label-item-input" v-model.trim="form.instrument_type">
-          <option value="" selected disabled>Select Value</option>
-          <option value="A/C Payee">A/C Payee</option>
-          <option value="Cheque">Cheque</option>
-          <option value="Cash">Cash</option>
-          <option value="Pay Order">Pay Order</option>
-          <option value="Draft">Draft</option>
-          <option value="Same / Inter Bank">Same / Inter Bank</option></select>
-        <Error v-if="errors?.instrument_type" :errors="errors.instrument_type" />
+      <label class="label-group">
+        <span class="label-item-title"> Bill No </span>
+        <input type="text" class="label-item-input" placeholder="Bill No" v-model.trim="form.bill_no" />
       </label>
     </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
+    <label class="block w-full mt-2 text-sm">
+      <span class="text-gray-700 dark-disabled:text-gray-300">Instrument Type <span class="text-red-500">*</span></span>
+      <select class="label-item-input" v-model.trim="form.instrument_type" required>
+        <option value="" selected disabled>--Choose an option--</option>
+        <option value="A/C Payee">A/C Payee</option>
+        <option value="Cheque">Cheque</option>
+        <option value="Cash">Cash</option>
+        <option value="Pay Order">Pay Order</option>
+        <option value="Draft">Draft</option>
+        <option value="Same / Inter Bank">Same / Inter Bank</option></select>
+      <Error v-if="errors?.instrument_type" :errors="errors.instrument_type" />
+    </label>
     <label class="label-group">
-      <span class="label-item-title">Instrument Number</span>
-      <input type="text" class="label-item-input" placeholder="Cheque no." v-model.trim="form.instrument_no" />
+      <span class="label-item-title">Instrument Number <span v-if="form.instrument_type !== 'Cash'" class="text-red-500">*</span></span>
+      <input type="text" class="label-item-input" placeholder="Instrument Number" v-model.trim="form.instrument_no" :required="form.instrument_type !== 'Cash'" />
     </label>
     <label class="block w-full mt-2 text-sm">
-      <span class="text-gray-700 dark-disabled:text-gray-300">Instrument Date</span>
-      <VueDatePicker v-model.trim="form.instrument_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+      <span class="text-gray-700 dark-disabled:text-gray-300">Instrument Date <span v-if="form.instrument_type !== 'Cash'" class="text-red-500">*</span></span>
+      <VueDatePicker v-model.trim="form.instrument_date" class="form-input" auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }" :required="form.instrument_type !== 'Cash'"></VueDatePicker>
       <Error v-if="errors?.instrument_date" :errors="errors.instrument_date" />
     </label>
     <label class="label-group">
-      <span class="label-item-title"> Bill No.</span>
-      <input type="text" class="label-item-input" placeholder="Bill no." v-model.trim="form.bill_no" />
-    </label>
-    <label class="label-group">
-      <span class="label-item-title"> Instrument Amount</span>
-      <input type="number" step=".01" class="label-item-input" placeholder="Instrument Amount" v-model.trim="form.instrument_amount" />
+      <span class="label-item-title"> Instrument Amount <span v-if="form.instrument_type !== 'Cash'" class="text-red-500">*</span></span>
+      <input type="number" step=".01" class="label-item-input" placeholder="Instrument Amount" v-model.trim="form.instrument_amount" :required="form.instrument_type !== 'Cash'" />
     </label>
   </div>
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
@@ -202,7 +202,7 @@ onMounted(() => {
     <table class="w-full whitespace-no-wrap" id="table">
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-        <th class="px-4 py-3 align-bottom w-[40%]">Accounts <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 align-bottom w-[40%]">Account Name <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Ref Bill</th>
         <th class="px-4 py-3 align-bottom">Debit Amount <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Credit Amount <span class="text-red-500">*</span></th>
@@ -221,13 +221,13 @@ onMounted(() => {
           </v-select>
         </td>
         <td class="px-1 py-1">
-          <input type="text" v-model.trim="form.ledgerEntries[index].ref_bill" placeholder="Ref bill" class="form-input" autocomplete="off" />
+          <input type="text" v-model.trim="form.ledgerEntries[index].ref_bill" placeholder="Ref Bill" class="form-input" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
-          <input type="number" step=".01" v-model.trim="form.ledgerEntries[index].dr_amount" placeholder="Ex: 1500" required class="form-input" autocomplete="off" />
+          <input type="number" step=".01" v-model.trim="form.ledgerEntries[index].dr_amount" placeholder="Ex: 1500" required class="form-input text-right" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
-          <input type="number" step=".01" v-model.trim="form.ledgerEntries[index].cr_amount" placeholder="Ex: 1500" required class="form-input" autocomplete="off" />
+          <input type="number" step=".01" v-model.trim="form.ledgerEntries[index].cr_amount" placeholder="Ex: 1500" required class="form-input text-right" autocomplete="off" />
         </td>
         <td class="px-1 py-1">
           <input type="text" v-model.trim="form.ledgerEntries[index].remarks" placeholder="Remarks" class="form-input" autocomplete="off" />
@@ -248,10 +248,10 @@ onMounted(() => {
       <tr class="text-gray-700 dark-disabled:text-gray-400">
         <td class="px-1 py-1 font-bold text-right" colspan="2">Total Amount</td>
         <td class="px-1 py-1 font-bold text-right">
-          <input type="text" v-model.trim="form.total_debit_amount" class="block w-full rounded form-input vms-readonly-input" readonly>
+          <input type="text" v-model.trim="form.total_debit_amount" class="block w-full rounded form-input text-right vms-readonly-input" readonly>
         </td>
         <td class="px-1 py-1 font-bold text-right">
-          <input type="text" v-model.trim="form.total_credit_amount" class="block w-full rounded form-input vms-readonly-input" readonly>
+          <input type="text" v-model.trim="form.total_credit_amount" class="block w-full rounded form-input text-right vms-readonly-input" readonly>
         </td>
         <td class="px-1 py-1 font-bold text-right" colspan="2"></td>
       </tr>

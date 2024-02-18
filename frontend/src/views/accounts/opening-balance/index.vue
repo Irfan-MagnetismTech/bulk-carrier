@@ -12,6 +12,7 @@ import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusi
 import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
+import { formatDate } from "../../../utils/helper.js";
 const router = useRouter();
 
 const props = defineProps({
@@ -181,7 +182,7 @@ onMounted(() => {
             </th>
             <th>
               <div class="flex justify-evenly items-center">
-                <span>Cost Center</span>
+                <span>Cost Center Name</span>
                 <div class="flex flex-col cursor-pointer">
                   <div v-html="icons.descIcon" @click="setSortingState(0,'asc')" :class="{ 'text-gray-800': filterOptions.filter_options[0].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[0].order_by !== 'asc' }" class=" font-semibold"></div>
                   <div v-html="icons.ascIcon" @click="setSortingState(0,'desc')" :class="{'text-gray-800' : filterOptions.filter_options[0].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[0].order_by !== 'desc' }" class=" font-semibold"></div>
@@ -255,11 +256,11 @@ onMounted(() => {
           <tr v-for="(balanceData,index) in openingBalances?.data" :key="index">
             <!-- <td>{{ index + 1 }}</td> -->
             <td>{{ (paginatedPage  - 1) * filterOptions.items_per_page + index + 1 }}</td>
-            <td>{{ balanceData?.costCenter?.name }}</td>
-            <td>{{ balanceData?.account?.account_name }}</td>
-            <td>{{ balanceData?.date }}</td>
-            <td>{{ balanceData?.cr_amount }}</td>
-            <td>{{ balanceData?.dr_amount }}</td>
+            <td class="text-left">{{ balanceData?.costCenter?.name }}</td>
+            <td class="text-left">{{ balanceData?.account?.account_name }}</td>
+            <td>{{ formatDate(balanceData?.date) }}</td>
+            <td class="text-right">{{ balanceData?.cr_amount }}</td>
+            <td class="text-right">{{ balanceData?.dr_amount }}</td>
             <td>
               <span :class="balanceData?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ balanceData?.business_unit }}</span>
             </td>

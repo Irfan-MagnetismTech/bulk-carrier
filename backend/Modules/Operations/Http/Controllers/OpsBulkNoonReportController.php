@@ -310,6 +310,7 @@ class OpsBulkNoonReportController extends Controller
     {
         try
         {
+            DB::beginTransaction();
             $bulk_noon_report->opsBulkNoonReportPorts()->delete();
             $bulk_noon_report->opsBulkNoonReportCargoTanks()->delete();
             $bulk_noon_report->opsBulkNoonReportConsumptions()->delete();
@@ -318,6 +319,7 @@ class OpsBulkNoonReportController extends Controller
             // $bulk_noon_report->opsBulkNoonReportEngineInputTypes()->delete();
             $bulk_noon_report->opsBunkers()->delete();
             $bulk_noon_report->delete();
+            DB::commit();
 
             return response()->json([
                 'message' => 'Successfully deleted bulk noon report.',
@@ -325,7 +327,8 @@ class OpsBulkNoonReportController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($bulk_noon_report->preventDeletionIfRelated(), 422);
         }
     }
 

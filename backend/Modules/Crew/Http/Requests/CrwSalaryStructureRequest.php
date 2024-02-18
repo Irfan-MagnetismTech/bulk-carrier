@@ -40,6 +40,7 @@ class CrwSalaryStructureRequest extends FormRequest
     public function messages(): array {
         return [
             'crw_crew_id.unique'   => 'A record with the combination of crew name and gross salary already exists.',
+            'crw_crew_id.exists'   => 'The Crew Name does not exists.',
         ];
     }
 

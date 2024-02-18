@@ -15,9 +15,11 @@ class CrwVesselRequiredCrewRequest extends FormRequest
     public function rules(): array {
 
         return [
+            'ops_vessel_id'                                  => ['required', 'integer', 'exists:ops_vessels,id'],
             'total_crew'                                     => ['required', 'numeric', 'max:2000'],
             'effective_date'                                 => ['required', Rule::unique('crw_vessel_required_crews')->where('ops_vessel_id', $this->ops_vessel_id)->ignore($this->id)],
             'business_unit'                                  => ['required', 'string', 'max:255'],
+            'crwVesselRequiredCrewLines.*.crw_rank_id'       => ['required', 'integer', 'exists:crw_ranks,id'],
             'crwVesselRequiredCrewLines.*.required_manpower' => ['required', 'numeric', 'max:255'],
             'crwVesselRequiredCrewLines.*.eligibility'       => ['required', 'string', 'max:700'],
         ];
@@ -30,10 +32,12 @@ class CrwVesselRequiredCrewRequest extends FormRequest
      */
     public function messages(): array {
         return [
+            'ops_vessel_id.exists'                                    => 'The Vessel Name does not exists.',
             'effective_date.unique'                                   => 'A record with the combination of effective date and vessel name already exists.',
             'effective_date.required'                                 => 'The effective date field is required.',
             'total_crew.required'                                     => 'The total crew field is required.',
             'total_crew.max'                                          => 'The total crew field must not exceed 2000.',
+            'crwVesselRequiredCrewLines.*.crw_rank_id.exists'         => 'The Rank does not exists[:position].',
             'crwVesselRequiredCrewLines.*.required_manpower.required' => 'The required manpower[:position] field is required.',
             'crwVesselRequiredCrewLines.*.required_manpower.max'      => 'The required manpower[:position] field must not exceed 2000.',
             'crwVesselRequiredCrewLines.*.eligibility.max'            => 'The Eligibility[:position] field cannot exceed 700 characters.',

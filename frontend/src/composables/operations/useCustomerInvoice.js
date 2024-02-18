@@ -16,7 +16,7 @@ export default function useCustomerInvoice() {
 	const notification = useNotification();
 
 	const customerInvoice = ref({
-		business_unit: 'TSLL',
+		business_unit: '',
 		ops_customer_profile_id: null,
 		opsCustomerProfile: null,
 		ops_customer_contract_id: null,
@@ -165,10 +165,34 @@ export default function useCustomerInvoice() {
 
 		if (!checkUniqueArray(form)) return;
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
+		var loader = null;
 
 		try {
+
+			let hasError = 0;
+
+			form.opsCustomerInvoiceServices.map((element) => {
+				if(element.amount_bdt == 0) hasError++;
+			})
+
+			form.opsCustomerInvoiceOthers.map((element) => {
+				if(element.amount_bdt == 0) hasError++;
+			})
+
+
+			if(hasError > 0) {
+				Swal.fire({
+					icon: "",
+					title: "Correct Please!",
+					html: `BDT Amount is missing.`,
+					customClass: "swal-width",
+				});
+				return false;
+			}
+			loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+
+			isLoading.value = true;
+
 			let formData = new FormData();
 
 			formData.append('info', JSON.stringify(form));
@@ -208,10 +232,33 @@ export default function useCustomerInvoice() {
 	async function updateCustomerInvoice(form, customerInvoiceId) {
 		if (!checkUniqueArray(form)) return;
 		//NProgress.start();
-		const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-		isLoading.value = true;
-
+		var loader = null;
 		try {
+
+			let hasError = 0;
+
+			form.opsCustomerInvoiceServices.map((element) => {
+				if(element.amount_bdt == 0) hasError++;
+			})
+
+			form.opsCustomerInvoiceOthers.map((element) => {
+				if(element.amount_bdt == 0) hasError++;
+			})
+
+
+			if(hasError > 0) {
+				Swal.fire({
+					icon: "",
+					title: "Correct Please!",
+					html: `BDT Amount is missing.`,
+					customClass: "swal-width",
+				});
+				return false;
+			}
+
+			loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+
+			isLoading.value = true;
 
 			let formData = new FormData();
 

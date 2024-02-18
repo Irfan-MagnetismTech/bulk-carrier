@@ -144,16 +144,19 @@ class OpsVoyageBudgetController extends Controller
     {
         try
         {
+            DB::beginTransaction();            
             $voyage_budget->opsVoyageBudgetEntries()->delete();
             $voyage_budget->delete();
-
+            DB::commit();
+            
             return response()->json([
                 'message' => 'Data deleted successfully.',
             ], 204);
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($voyage_budget->preventDeletionIfRelated(), 422);
         }
     }
 

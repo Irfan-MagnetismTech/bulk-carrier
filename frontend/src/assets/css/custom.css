@@ -39,7 +39,11 @@
     font-size: 12px;
 }
 
-/* title-tip down */
+.custom_sidebar span{
+    font-size: 13px !important;
+}
+
+    /* title-tip down */
 [data-title]:hover {
     position: relative;
 }

@@ -139,7 +139,7 @@ onMounted(() => {
       <thead>
       <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
         <th class="px-4 py-3 w-2/6 align-bottom">Crew Name <span class="text-red-500">*</span></th>
-        <th class="px-4 py-3 w-1/6 align-bottom">Contact No. <span class="text-red-500">*</span></th>
+        <th class="px-4 py-3 w-1/6 align-bottom">Crew Contact <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 w-1/6 align-bottom">Injury Status <span class="text-red-500">*</span></th>
         <th class="px-4 py-3 align-bottom">Notes</th>
         <th class="px-4 py-3 text-center align-bottom">Action</th>

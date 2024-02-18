@@ -117,7 +117,9 @@ class OpsMaritimeCertificationController extends Controller
     {
         try
         {
+            DB::beginTransaction();            
             $maritime_certification->delete();
+            DB::commit();
 
             return response()->json([
                 'message' => 'Data deleted successfully.',
@@ -125,7 +127,8 @@ class OpsMaritimeCertificationController extends Controller
         }
         catch (QueryException $e)
         {
-            return response()->error($e->getMessage(), 500);
+            DB::rollBack();
+            return response()->json($maritime_certification->preventDeletionIfRelated(), 422);
         }
     }
 

@@ -396,8 +396,27 @@ export default [
                     is_open: false,
                     permissionKey: '',
                     subSubMenu: []
+                },
+                {
+                    route: 'ops.reports.budget-vs-expense-report',
+                    label: 'Budget vs Expense Report',
+                    preIcon: '',
+                    postIcon: icons.DownArrow,
+                    is_active: false,
+                    is_open: false,
+                    permissionKey: '',
+                    subSubMenu: []
+                },
+                {
+                    route: 'ops.reports.month-wise-expense-report',
+                    label: 'Month Wise Expense Report',
+                    preIcon: '',
+                    postIcon: icons.DownArrow,
+                    is_active: false,
+                    is_open: false,
+                    permissionKey: '',
+                    subSubMenu: []
                 }
-            
             
         ]
     },

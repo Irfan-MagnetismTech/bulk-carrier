@@ -10,6 +10,13 @@ use Modules\Accounts\Http\Requests\AccSalaryRequest;
 
 class AccSalaryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:acc-salary-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:acc-salary-create', ['only' => ['store']]);
+        $this->middleware('permission:acc-salary-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:acc-salary-delete', ['only' => ['destroy']]);
+    }
     /**
      * @param Request $request
      */

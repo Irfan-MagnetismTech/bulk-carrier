@@ -15,7 +15,7 @@ class OpsVoyageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ops_customer_id'       => ['required'],
+            // 'ops_customer_id'       => ['required'],
             'ops_vessel_id'         => ['required'],
             'mother_vessel'         => ['nullable'],
             'ops_cargo_type_id'     => ['required'],

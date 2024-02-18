@@ -1,10 +1,11 @@
 <script setup>
 import useTransaction from '../../../composables/accounts/useTransaction';
 import Title from "../../../services/title";
-import { ref } from "vue";
+import {onMounted, ref, watchEffect} from "vue";
 import useAisReport from "../../../composables/accounts/useAisReport";
 import Store from "../../../store";
 import useAccountCommonApiRequest from "../../../composables/accounts/useAccountCommonApiRequest";
+import { formatMonthYear, formatDate } from "../../../utils/helper.js";
 
 const { dayBooks, getDayBooks, isLoading} = useAisReport();
 const { bgColor, allAccount } = useTransaction();
@@ -24,13 +25,19 @@ const searchParams = ref({
 });
 
 
-function fetchAccounts(search, loading) {
-  if(search.length < 3) {
-    return;
-  } else {
-    getAccount(search, businessUnit.value, loading);
-  }
-}
+// function fetchAccounts(search, loading) {
+//   if(search.length < 3) {
+//     return;
+//   } else {
+//     getAccount(search, businessUnit.value, loading);
+//   }
+// }
+
+onMounted(() => {
+  watchEffect(() => {
+    getAccount(null, businessUnit.value, null);
+  });
+});
 </script>
 
 <template>
@@ -41,7 +48,7 @@ function fetchAccounts(search, loading) {
       <fieldset class="w-full grid grid-cols-4 gap-1 px-2 pb-3 border border-gray-700 rounded dark-disabled:border-gray-400">
         <legend class="px-2 text-gray-700 uppercase dark-disabled:text-gray-300">Day Book</legend>
         <div>
-          <label for="" class="text-xs" style="margin-left: .01rem">Account</label>
+          <label for="" class="text-xs" style="margin-left: .01rem">Account Name</label>
           <v-select :options="allAccountLists" placeholder="--Choose an option--" @search="fetchAccounts"  v-model="searchParams.acc_account_id" label="account_name" :reduce="allAccountLists=> allAccountLists.acc_account_id" class="block w-full rounded form-input"></v-select>
         </div>
         <div>
@@ -67,7 +74,7 @@ function fetchAccounts(search, loading) {
         <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
           <th class="px-4 py-3">#</th>
           <th class="px-4 py-3"> Date </th>
-          <th class="px-4 py-3"> Particulars </th>
+          <th class="px-4 py-3"> Particular </th>
           <th class="px-4 py-3"> Voucher Type </th>
           <th class="px-4 py-3"> Voucher No </th>
           <th class="px-4 py-3"> Debit Amount </th>
@@ -79,7 +86,7 @@ function fetchAccounts(search, loading) {
                 :class="{'bg-white': index % 2 === 0, 'bg-gray-100': index % 2 !== 0}"
             >
                 <td class="text-sm"> {{ ++index }} </td>
-                <td class="text-sm"> {{ bookData?.transaction?.transaction_date }} </td>
+                <td class="text-sm"> {{ formatDate(bookData?.transaction?.transaction_date) }} </td>
                 <td class="text-sm !text-left"> {{ bookData?.account?.account_name }} </td>
               <td class="text-sm"> {{ bookData?.transaction?.voucher_type }} </td>
               <td class="text-sm transaction_col" style="color: blueviolet">
@@ -87,8 +94,8 @@ function fetchAccounts(search, loading) {
                   {{ bookData?.transaction?.id }}
                 </router-link>
               </td>
-              <td class="text-sm"> {{ bookData?.dr_amount }} </td>
-              <td class="text-sm"> {{ bookData?.cr_amount }} </td>
+              <td class="text-sm !text-right"> {{ bookData?.dr_amount }} </td>
+              <td class="text-sm !text-right"> {{ bookData?.cr_amount }} </td>
               </tr>
         </tbody>
         <tfoot v-if="!dayBooks?.length" class="bg-white dark-disabled:bg-gray-800">
@@ -111,7 +118,7 @@ function fetchAccounts(search, loading) {
     @apply p-2.5 text-xs;
   }
   thead tr {
-    @apply font-semibold tracking-wide text-left text-gray-500 uppercase bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800;
+    @apply font-semibold tracking-wide text-left text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800;
   }
   th {
     @apply tab text-center;

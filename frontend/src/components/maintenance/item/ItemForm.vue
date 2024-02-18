@@ -14,7 +14,7 @@
           </template>
           </v-select>
           <input type="hidden" v-model="form.mnt_ship_department_id">
-          <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" />
+          <!-- <Error v-if="errors?.mnt_ship_department_id" :errors="errors.mnt_ship_department_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Item Group <span class="text-red-500">*</span></span>
@@ -29,17 +29,17 @@
           </template>
           </v-select>
           <input type="hidden" v-model="form.mnt_item_group_id">
-          <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" />
+          <!-- <Error v-if="errors?.mnt_item_group_id" :errors="errors.mnt_item_group_id" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Item Code <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.item_code" placeholder="Item Code" class="form-input" required />
-          <Error v-if="errors?.item_code" :errors="errors.item_code" />
+          <!-- <Error v-if="errors?.item_code" :errors="errors.item_code" /> -->
         </label>
         <label class="block w-full mt-2 text-sm">
           <span class="text-gray-700 dark-disabled:text-gray-300">Item Name <span class="text-red-500">*</span></span>
           <input type="text" v-model.trim="form.name" placeholder="Item Name" class="form-input" required />
-          <Error v-if="errors?.name" :errors="errors.name" />
+          <!-- <Error v-if="errors?.name" :errors="errors.name" /> -->
         </label>
     </div>
 
@@ -79,11 +79,11 @@
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300"> </span>
             <input type="checkbox" v-model="form.has_run_hour" :disabled="page === 'edit' && form.mntJobs?.length" /> Enable Regular Running Hour Entry
-          <Error v-if="errors?.has_run_hour" :errors="errors.has_run_hour" />
+          <!-- <Error v-if="errors?.has_run_hour" :errors="errors.has_run_hour" /> -->
         </label>        
     </div>
 
-    <ErrorComponent :errors="errors"></ErrorComponent>   
+    <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <script setup>
 import Error from "../../Error.vue";
@@ -127,7 +127,7 @@ watch(() => props.form.mnt_ship_department_name, (newValue, oldValue) => {
 
 watch(() => props.form.mnt_item_group_name, (newValue, oldValue) => {
   props.form.mnt_item_group_id = props.form.mnt_item_group_name?.id;
-  
+
   if((oldValue !== '' || props.page !== 'edit') && props.form.mnt_item_group_id){
     // fetchItemCode();
     props.form.item_code = '';
@@ -173,7 +173,7 @@ onMounted(() => {
     if(businessUnit.value && businessUnit.value != 'ALL'){
       getShipDepartmentsWithoutPagination(businessUnit.value);
     }
-      
+
   });
 });
 

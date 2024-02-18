@@ -10,6 +10,7 @@ export default function useBusinessInfo() {
   const currencies = ref([]);
   const lc_cost_heads = ref([]);
 
+	const isCurrencyLoading = ref(false);
 
   
   const getAllStoreCategories = async () => {
@@ -53,11 +54,14 @@ export default function useBusinessInfo() {
    *  
    */
   const getCurrencies = async () => {
+    isCurrencyLoading.value = true;
     try {
       const { data } = await Api.get(`/currencies`);
       currencies.value = data;
     } catch (error) {
       throw error;
+    } finally {
+      isCurrencyLoading.value = false;
     }
   };
 
@@ -101,7 +105,8 @@ export default function useBusinessInfo() {
     getCurrencies,
     currencies,
     getLcCostHeads,
+    lc_cost_heads,
+    isCurrencyLoading,
     getMaterialCostingHead,
-    lc_cost_heads
   };
 }

@@ -127,6 +127,14 @@ let filterOptions = ref( {
 			"order_by": null,
 			"date_from": null
 			},
+      {
+        "relation_name": null,
+        "field_name": "business_unit",
+        "search_param": "",
+        "action": null,
+        "order_by": null,
+        "date_from": null
+      }
 	]
 });
 
@@ -171,7 +179,7 @@ onMounted(() => {
 <template>
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700">Vessel Particulars List</h2>
+    <h2 class="text-2xl font-semibold text-gray-700">Vessel Particular List</h2>
   </div>
 
   <div id="customDataTable" class="mb-6">
@@ -275,7 +283,16 @@ onMounted(() => {
                   </div>
                 </div>
               </th>
-              <th>Download</th>
+              <th>
+                <div class="flex justify-evenly items-center">
+                  <span>Business Unit</span>
+                  <div class="flex flex-col cursor-pointer">
+                    <div v-html="icons.descIcon" @click="setSortingState(10,'asc',filterOptions)" :class="{ 'text-gray-800': filterOptions.filter_options[10].order_by === 'asc', 'text-gray-300': filterOptions.filter_options[10].order_by !== 'asc' }" class=" font-semibold"></div>
+                    <div v-html="icons.ascIcon" @click="setSortingState(10,'desc',filterOptions)" :class="{'text-gray-800' : filterOptions.filter_options[10].order_by === 'desc', 'text-gray-300' : filterOptions.filter_options[10].order_by !== 'desc' }" class=" font-semibold"></div>
+                  </div>
+                </div>
+              </th>
+              <th>Action</th>
             </tr>
             <tr class="w-full" v-if="showFilter">
 
@@ -298,6 +315,9 @@ onMounted(() => {
               <th><input v-model="filterOptions.filter_options[8].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th><input v-model="filterOptions.filter_options[9].search_param" type="text" placeholder="" class="filter_input" autocomplete="off" /></th>
               <th>
+                <filter-with-business-unit v-model="filterOptions.business_unit"></filter-with-business-unit>
+              </th>
+              <th>
                 <button title="Clear Filter" @click="clearFilter(filterOptions)" type="button" v-html="icons.NotFilterIcon"></button>
               </th>
             </tr>
@@ -315,19 +335,23 @@ onMounted(() => {
                   <td>{{ vesselParticular?.depth }}</td>
                   <td>{{ vesselParticular?.grt }}</td>
                   <td>{{ vesselParticular?.nrt }}</td>
+                <td>
+                  <span :class="vesselParticular?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ vesselParticular?.business_unit }}</span>
+                </td>
                   <td class="flex border-b-0 border-l-0 items-center justify-center space-x-2 text-gray-600 ">
+
                       <button @click="dlGeneralParticular(vesselParticular?.opsVessel?.name, vesselParticular.id)" class="flex bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
-                        General
+                        Download
                         <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
                       </button>
-                      <button @click="dlChartererParticular(vesselParticular?.opsVessel?.name, vesselParticular.id)" class="flex bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">
-                        Charterer
-                        <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                        </svg>
-                      </button>
+<!--                      <button @click="dlChartererParticular(vesselParticular?.opsVessel?.name, vesselParticular.id)" class="flex bg-blue-500 hover:bg-blue-700 duration-150 text-white p-1 text-xs rounded-md">-->
+<!--                        Charterer-->
+<!--                        <svg xmlns="http://www.w3.org/2000/svg" class="inline h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">-->
+<!--                          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />-->
+<!--                        </svg>-->
+<!--                      </button>-->
                 </td>
                 </tr>
                 <LoaderComponent :isLoading = isTableLoading v-if="isTableLoading && vesselParticulars?.data?.length"></LoaderComponent>

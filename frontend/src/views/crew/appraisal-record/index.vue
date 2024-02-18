@@ -29,7 +29,7 @@ const props = defineProps({
 
 const { appraisalRecords, getAppraisalRecords, deleteAppraisalRecord, isLoading, isTableLoading, errors } = useAppraisalRecord();
 const { setTitle } = Title();
-setTitle('Appraisal Record List');
+setTitle('Appraisal Record');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
@@ -67,7 +67,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Crew",
+      "label": "Crew Name",
       "filter_type": "input"
     },
     
@@ -104,7 +104,7 @@ let filterOptions = ref( {
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Vessel",
+      "label": "Vessel Name",
       "filter_type": "input"
     },
 
@@ -217,10 +217,10 @@ onMounted(() => {
 
           <tr v-for="(appraisalRecord,index) in appraisalRecords?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-            <td>{{ appraisalRecord?.crwCrew?.full_name }}</td>
-            <td>{{ appraisalRecord?.appraisalForm?.form_no }}</td>
-            <td>{{ appraisalRecord?.appraisalForm?.version }}</td>
-            <td>{{ appraisalRecord?.crwCrewAssignment?.opsVessel?.name }}</td>
+            <td class="text-left">{{ appraisalRecord?.crwCrew?.full_name }}</td>
+            <td class="text-left">{{ appraisalRecord?.appraisalForm?.form_no }}</td>
+            <td class="text-left">{{ appraisalRecord?.appraisalForm?.version }}</td>
+            <td class="text-left">{{ appraisalRecord?.crwCrewAssignment?.opsVessel?.name }}</td>
             <td>{{ formatDate(appraisalRecord?.crwCrewAssignment?.joining_date) }}</td>
             <td>{{ formatDate(appraisalRecord?.crwCrewAssignment?.completion_date) }}</td>
             <td><span :class="appraisalRecord?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ appraisalRecord?.business_unit }}</span></td>
@@ -237,15 +237,15 @@ onMounted(() => {
           </tbody>
           <tfoot v-if="!appraisalRecords?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="5">Loading...</td>
+            <td colspan="9"></td>
           </tr>
           <tr v-else-if="isTableLoading">
-              <td colspan="5">
+              <td colspan="9">
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
             </tr>
           <tr v-else-if="!appraisalRecords?.data?.length">
-            <td colspan="5">No appraisal record found.</td>
+            <td colspan="9">No appraisal record found.</td>
           </tr>
           </tfoot>
       </table>
