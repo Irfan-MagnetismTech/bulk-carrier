@@ -59,7 +59,7 @@ class CurrentStock
 
     //     return $currentStockIn;
     // }
-    
+
     /**
      * Counts the stock out of a material from a warehouse.
      *
@@ -84,7 +84,7 @@ class CurrentStock
     //     return $currentStockIn;
     // }
 
-    
+
     /**
      * Counts the stock in of a material in a warehouse.
      *

@@ -244,13 +244,16 @@
         }
         if(editinitaiated.value){
         var total_value = 0;
+        var total_net_value = 0;
         newVal.forEach((line, index) => {
           line.scmMrrLineItems.forEach((item, itemIndex) => {
             total_value += item.quantity * item.rate;
-            console.log(total_value);
+            total_net_value += item.quantity * item.net_rate;
           });
         });
         props.form.total_value = total_value;
+        props.form.total_net_value = total_net_value;
+        
       }
       editinitaiated.value = true;
       }, { deep: true });

@@ -34,6 +34,7 @@ return new class extends Migration
             // $table->bigInteger('acc_cash_requisition_id')->nullable();
             $table->string('purchase_center')->nullable();
             $table->double('total_value')->nullable();
+            $table->double('total_net_value')->nullable();
             $table->timestamps();
         });
     }

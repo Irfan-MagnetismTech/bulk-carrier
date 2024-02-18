@@ -38,7 +38,8 @@ class ScmMrr extends Model
         'created_by',
         'is_completed',
         'purchase_center',
-        'total_value'
+        'total_value',
+        'total_net_value',
     ];
 
     protected $refKeyPrefix = 'MRR';
