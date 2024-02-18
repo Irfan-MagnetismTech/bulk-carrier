@@ -6,6 +6,7 @@ use App\Traits\DeletableModel;
 use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AppraisalForm extends Model
 {
@@ -23,7 +24,8 @@ class AppraisalForm extends Model
     ];
 
     /* ------------------------- Associate Relationship Start ------------------------- */
-	public function appraisalFormLines(){
+	public function appraisalFormLines() : HasMany
+    {
 		return $this->hasMany(AppraisalFormLine::class);
 	}
     /* ------------------------- Associate Relationship End ------------------------- */
@@ -32,7 +34,8 @@ class AppraisalForm extends Model
     /* -------------------------  Belongs Relationship End ------------------------- */
 	
 	/* -------------------------  Has Many Relationship Start ------------------------- */
-	public function appraisalRecords(){
+	public function appraisalRecords() : HasMany
+    {
 		return $this->hasMany(AppraisalRecord::class, 'appraisal_form_id', 'id');
 	}	
 	/* -------------------------  Has Many Relationship End ------------------------- */

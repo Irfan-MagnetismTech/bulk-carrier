@@ -15,12 +15,30 @@ class CrwRecruitmentApproval extends Model
 
 	protected $fillable = ['applied_date', 'page_title', 'subject', 'total_approved', 'crew_agreed_to_join', 'crew_selected', 'crew_panel', 'crew_rest', 'body', 'remarks', 'business_unit'];
 
-	public function crwRecruitmentApprovalLines(){
-		return $this->hasMany(CrwRecruitmentApprovalLine::class);
-	}
+    protected $skipForDeletionCheck = ['crwRecruitmentApprovalLines'];
+    
+    protected $features = [
+        'crwCrewProfiles'             => 'Crew Profiles',
+    ];
 
+    /* ------------------------- Associate Relationship Start ------------------------- */
+	public function crwRecruitmentApprovalLines() : HasMany
+    {
+		return $this->hasMany(CrwRecruitmentApprovalLine::class);
+	}    
+    /* ------------------------- Associate Relationship End ------------------------- */
+
+
+    /* -------------------------  Belongs Relationship Start ------------------------- */
+    /* -------------------------  Belongs Relationship End ------------------------- */
+
+    
+	/* -------------------------  Has Many Relationship Start ------------------------- */
     public function crwCrewProfiles(): HasMany
     {
         return $this->hasMany(CrwCrewProfile::class, 'crw_recruitment_approval_id', 'id');
-    }	
+    }    
+	/* -------------------------  Has Many Relationship End ------------------------- */
+
+	
 }

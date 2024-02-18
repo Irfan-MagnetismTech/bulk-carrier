@@ -47,77 +47,49 @@ class CrwCrewProfile extends Model
     ];
 
     /* ------------------------- Associate Relationship Start ------------------------- */
-    //associate modules
-    /**
-     * @return mixed
-     */
-    public function educations()
+    public function educations() : HasMany
     {
         return $this->hasMany(CrwCrewEducation::class);
     }
 
-    /**
-     * @return mixed
-     */
-    public function trainings()
+    public function trainings() : HasMany
     {
         return $this->hasMany(CrwCrewTraining::class);
     }
 
-    /**
-     * @return mixed
-     */
-    public function experiences()
+    public function experiences() : HasMany
     {
         return $this->hasMany(CrwCrewExperience::class);
     }
 
-    /**
-     * @return mixed
-     */
-    public function languages()
+    public function languages() : HasMany
     {
         return $this->hasMany(CrwCrewLanguage::class);
     }
 
-    /**
-     * @return mixed
-     */
-    public function references()
+    public function references() : HasMany
     {
         return $this->hasMany(CrwCrewReference::class);
     }
 
-    /**
-     * @return mixed
-     */
-    public function nominees()
+    public function nominees() : HasMany
     {
         return $this->hasMany(CrwCrewNominee::class);
     }
     /* -------------------------  Associate Relationship End ------------------------- */
 
     /* -------------------------  Belongs Relationship Start ------------------------- */
-    /**
-     * @return mixed
-     */
-    public function crwRank()
+    public function crwRank() : BelongsTo
     {
         return $this->belongsTo(CrwRank::class);
     }
 
-    /**
-     * @return mixed
-     */
-    public function crwRecruitmentApproval()
+    public function crwRecruitmentApproval() : BelongsTo
     {
         return $this->belongsTo(CrwRecruitmentApproval::class);
     }
 
-    /**
-     * @return mixed
-     */
-    public function crwAgency()
+    public function crwAgency() : BelongsTo
     {
         return $this->belongsTo(CrwAgency::class, 'agency_id', 'id');
     }
@@ -125,90 +97,57 @@ class CrwCrewProfile extends Model
     /* ------------------------- Belongs Relationship End ------------------------- */
 
     /* -------------------------  Has Many Relationship Start ------------------------- */
-    /**
-     * @return mixed
-     */
-    public function crwCurrentRank(): BelongsTo
+    public function crwCurrentRank() : BelongsTo
     {
         return $this->belongsTo(CrwRank::class, 'crw_rank_id', 'id');
     }
 
-    /**
-     * @return mixed
-     */
-    public function crwCrewAssignments(): HasMany
+    public function crwCrewAssignments() : HasMany
     {
         return $this->hasMany(CrwCrewAssignment::class, 'crw_crew_id', 'id');
     }
 
-    /**
-     * @return mixed
-     */
-    public function crwSalaryStructures(): HasMany
+    public function crwSalaryStructures() : HasMany
     {
         return $this->hasMany(CrwSalaryStructure::class, 'crw_crew_id', 'id');
     }
 
-    /**
-     * @return mixed
-     */
-    public function crwBankAccounts(): HasMany
+    public function crwBankAccounts() : HasMany
     {
         return $this->hasMany(CrwBankAccount::class, 'crw_crew_id', 'id');
     }
 
-    /**
-     * @return mixed
-     */
-    public function crwAttendanceLines(): HasMany
+    public function crwAttendanceLines() : HasMany
     {
         return $this->hasMany(CrwAttendanceLine::class, 'crw_crew_id', 'id');
     }
 
-    /**
-     * @return mixed
-     */
-    public function crwPayrollBatchHeadLines(): HasMany
+    public function crwPayrollBatchHeadLines() : HasMany
     {
         return $this->hasMany(CrwPayrollBatchHeadLine::class, 'crw_crew_id', 'id');
     }
 
-    /**
-     * @return mixed
-     */
-    public function crwPayrollBatchLines(): HasMany
+    public function crwPayrollBatchLines() : HasMany
     {
         return $this->hasMany(CrwPayrollBatchLine::class, 'crw_crew_id', 'id');
     }
 
-    /**
-     * @return mixed
-     */
-    public function crewDocuments(): HasMany
+    public function crewDocuments() : HasMany
     {
-        return $this->hasMany(CrwCrewDocument::class);
+        return $this->hasMany(CrwCrewDocument::class, 'crw_crew_profile_id', 'id');
     }
 
-    /**
-     * @return mixed
-     */
-    public function appraisalRecords(): HasMany
+    public function appraisalRecords() : HasMany
     {
         return $this->hasMany(AppraisalRecord::class, 'crw_crew_id', 'id');
     }
 
-    /**
-     * @return mixed
-     */
-    public function crwRestHourEntryLines(): HasMany
+    public function crwRestHourEntryLines() : HasMany
     {
         return $this->hasMany(CrwRestHourEntryLine::class, 'crw_crew_id', 'id');
     }
 
-    /**
-     * @return mixed
-     */
-    public function crwIncidentParticipants(): HasMany
+    public function crwIncidentParticipants() : HasMany
     {
         return $this->hasMany(CrwIncidentParticipant::class, 'crw_crew_id', 'id');
     }

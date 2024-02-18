@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\GlobalSearchTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Modules\Operations\Entities\OpsVessel;
 
@@ -22,7 +24,7 @@ class CrwAttendance extends Model
         /**
      * @var array
      */
-    protected $skipForDeletionCheck = ['opsVessel'];
+    protected $skipForDeletionCheck = ['crwAttendanceLines', 'opsVessel'];
 
     /**
      * @var array
@@ -32,14 +34,15 @@ class CrwAttendance extends Model
     ];
 
     /* ------------------------- Associate Relationship Start ------------------------- */
-	public function crwAttendanceLines(){
+	public function crwAttendanceLines() : HasMany
+    {
 		return $this->hasMany(CrwAttendanceLine::class);
 	}
     /* ------------------------- Associate Relationship End ------------------------- */
 
 
     /* -------------------------  Belongs Relationship Start ------------------------- */
-    public function opsVessel()
+    public function opsVessel() : BelongsTo
     {
         return $this->belongsTo(OpsVessel::class);
     }

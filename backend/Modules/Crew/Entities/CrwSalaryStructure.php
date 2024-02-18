@@ -13,9 +13,6 @@ class CrwSalaryStructure extends Model
 {
     use HasFactory, GlobalSearchTrait, DeletableModel;
 
-    /**
-     * @var array
-     */
     protected $fillable = ['crw_crew_id', 'promotion_id', 'increment_sequence', 'effective_date', 'currency', 'gross_salary', 'addition', 'deduction', 'net_amount', 'is_active', 'business_unit', 'remarks'];
 
     /**
@@ -32,9 +29,6 @@ class CrwSalaryStructure extends Model
     ];
 
     /* ------------------------- Associate Relationship Start ------------------------- */
-    /**
-     * @return mixed
-     */
     public function crwSalaryStructureBreakdowns() : HasMany
     {
         return $this->hasMany(CrwSalaryStructureBreakdown::class);
@@ -43,9 +37,6 @@ class CrwSalaryStructure extends Model
     /* ------------------------- Associate Relationship End ------------------------- */
 
     /* -------------------------  Belongs Relationship Start ------------------------- */
-    /**
-     * @return mixed
-     */
     public function crwCrewProfile() : BelongsTo
     {
         return $this->belongsTo(CrwCrewProfile::class, 'crw_crew_id', 'id');
@@ -54,20 +45,14 @@ class CrwSalaryStructure extends Model
     /* -------------------------  Belongs Relationship End ------------------------- */
 
     /* -------------------------  Has Many Relationship Start ------------------------- */
-    /**
-     * @return mixed
-     */
     public function crwAttendanceLines(): HasMany
     {
-        return $this->hasMany(CrwAttendanceLine::class, 'crw_crew_id', 'id');
+        return $this->hasMany(CrwAttendanceLine::class, 'crw_crew_id', 'crw_crew_id');
     }
 
-    /**
-     * @return mixed
-     */
     public function crwPayrollBatchLines(): HasMany
     {
-        return $this->hasMany(CrwPayrollBatchLine::class, 'crw_crew_id', 'id');
+        return $this->hasMany(CrwPayrollBatchLine::class, 'crw_salary_structure_id', 'id');
     }
 
     /* -------------------------  Has Many Relationship End ------------------------- */
