@@ -10,6 +10,8 @@ class ScmWrrItem extends Model
 {
     use HasFactory;
 
+    protected $appends = ['amount'];
+
     protected $fillable = [
         'scm_wrr_id',
         'scm_wrr_line_id',
@@ -20,6 +22,11 @@ class ScmWrrItem extends Model
         'wr_composite_key',
         'net_rate',
     ];
+
+    public function getAmountAttribute(): string
+    {
+        return $this->quantity * $this->rate;
+    }
 
     public function scmWrrLine(): BelongsTo
     {

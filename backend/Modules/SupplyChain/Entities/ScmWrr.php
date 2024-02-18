@@ -29,6 +29,7 @@ class ScmWrr extends Model
         'challan_no',
         'is_qc_passed',
         'qc_remarks',
+        'total_amount',
         'business_unit',
         'created_by',
         'is_completed',

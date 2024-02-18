@@ -16,6 +16,7 @@ use Modules\SupplyChain\Entities\ScmWrLine;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Entities\ScmWcsService;
+use Modules\SupplyChain\Entities\ScmWrr;
 use Modules\SupplyChain\Http\Requests\ScmWoRequest;
 
 class ScmWoController extends Controller
@@ -686,6 +687,60 @@ class ScmWoController extends Controller
                 ->get();
 
             return response()->success('Data list', $scmWo, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+
+    public function getWoListForWorkBill(){
+        try {
+            $scmWo = ScmWo::query()
+                // ->with('scmWoLines.scmWoItems.scmService', 'scmWoTerms', 'scmVendor', 'scmWarehouse', 'scmWoItems.scmService')
+                ->whereNot('status', 'Pending')
+                ->where([                    
+                    'business_unit' => request()->business_unit,
+                    'scm_vendor_id' => request()->scm_vendor_id,
+                    'scm_warehouse_id' => request()->scm_warehouse_id,
+                ])
+                ->get();
+
+            return response()->success('Data list', $scmWo, 200);
+        } catch (\Exception $e) {
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+
+    public function getWoDataById(){
+        try {
+
+                $scmWo = ScmWo::query()
+                    ->with('scmWrrs.scmWrrLineItems','scmWrrs.scmWo.scmWoItems.scmService','scmWorkBills')
+                    ->where('id', request()->scm_wo_id)
+                    ->first();
+
+                if(count($scmWo->scmWrrs)){
+
+                    $data = $scmWo->scmWrrs->map(function ($item) use($scmWo){
+                        $totalWrrAmount = $item?->scmWrrLineItems?->sum('amount');        
+                        return [
+                            'total_amount' => $totalWrrAmount,
+                        ];
+                    });
+                    
+                    $remainingAmount = collect($data)->sum('total_amount') - $scmWo->scmWorkBills?->sum('bill_amount')??0;
+           
+                    $data['bill_amount']= collect($data)->sum('total_amount');
+                    $data['remaining_amount']= $remainingAmount;
+                    $data['security_money']= ScmWo::query()->where('id', $scmWo->id)->where('status', 'Closed')->first()?->security_money??0;
+                    $data['max_amount']= $remainingAmount;
+                }else{
+                    $data=[];
+                }
+            
+
+            return response()->success('data', $data, 200);
         } catch (\Exception $e) {
             return response()->error($e->getMessage(), 500);
         }

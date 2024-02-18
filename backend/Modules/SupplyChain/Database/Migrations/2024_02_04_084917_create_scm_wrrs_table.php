@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('challan_no')->nullable();
             $table->bigInteger('is_qc_passed')->nullable();
             $table->text('qc_remarks')->nullable();
+            $table->float('total_amount', 20, 2)->nullable();
             $table->string('business_unit')->comment('TSLL,PSML')->nullable();
             $table->bigInteger('created_by')->comment('user_id')->nullable();
             $table->tinyInteger('is_completed')->comment('0, 1')->nullable();

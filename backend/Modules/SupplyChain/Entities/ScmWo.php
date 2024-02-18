@@ -75,10 +75,15 @@ class ScmWo extends Model
     //     return $this->hasMany(ScmLcRecord::class);
     // }
 
-    // public function scmMrrs(): HasMany
-    // {
-    //     return $this->hasMany(ScmMrr::class);
-    // }
+    public function scmWrrs(): HasMany
+    {
+        return $this->hasMany(ScmWrr::class);
+    }
+    
+    public function scmWorkBills(): HasMany
+    {
+        return $this->hasMany(ScmWorkBill::class);
+    }
 
     public function scmWoItems(): HasManyThrough
     {
