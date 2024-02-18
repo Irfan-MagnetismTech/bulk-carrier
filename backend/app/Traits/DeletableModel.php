@@ -13,7 +13,7 @@ trait DeletableModel
      *
      * @return array
      */
-    public function preventDeletionIfRelated(): array|null
+    public function preventDeletionIfRelated(): ?array
     {
         $allMethods = $this->getRelationMethods();
 

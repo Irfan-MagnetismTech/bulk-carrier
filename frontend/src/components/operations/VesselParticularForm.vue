@@ -10,7 +10,7 @@
 
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Vessel Name <span class="text-red-500">*</span></span>
-      <v-select :options="vessels" :loading="isVesselLoading" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
+      <v-select :options="vessels" :disabled="formType == 'edit'" :loading="isVesselLoading" placeholder="--Choose an option--" v-model="form.opsVessel" label="name" class="block form-input">
           <template #search="{attributes, events}">
               <input
                   class="vs__search"
@@ -275,12 +275,12 @@ watch(() => props.form.business_unit, (value) => {
     vessels.value = []
     props.form.ops_vessel_id = null;
     props.form.vessel_owner = ''
+    props.form.port_of_registry = null;
   }
 
   getVesselList(props.form.business_unit);
   searchPorts("", props.form.business_unit);
   ports.value = []
-  props.form.port_of_registry = null;
 
   
 }, { deep : true })

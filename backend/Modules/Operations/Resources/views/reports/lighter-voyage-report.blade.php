@@ -53,7 +53,7 @@
 <body>    
     <table>
         <thead>
-            <tr>
+            {{-- <tr>
                 <td colspan="{{ count($data['opsContractTitle']) + count($data['opsExpenditureHeadTitle']) + 1 + 8 }}" style="text-align: center; 
                 font-size:24px;
                 padding:2px;"><h2>Voyage Report</h2></td>
@@ -68,7 +68,7 @@
             <tr>
                 <td colspan="{{ count($data['opsContractTitle']) + count($data['opsExpenditureHeadTitle']) + 1 + 4}}" style="text-align: right;">Time:</td>
                 <td colspan="4">{{ now()->format('g:i A') }}</td>
-            </tr>
+            </tr> --}}
             @if(isset($data['vesselBunkers']))
                 <tr>
                     <th rowspan="3">DATE</th>

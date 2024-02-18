@@ -359,7 +359,11 @@ function removeBunker(index){
 
 watch(() => props.form.business_unit, (value) => {
   ports.value = []
-  props.form.portOfRegistry = null
+  
+  if(props.formType == 'create') {
+    props.form.portOfRegistry = null
+  }
+
   searchPorts("", props.form.business_unit);
 }, { deep : true })
 

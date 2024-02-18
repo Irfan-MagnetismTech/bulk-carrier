@@ -15,6 +15,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Modules\Operations\Entities\OpsCustomer;
 use Modules\Operations\Entities\OpsCargoType;
 use Modules\Operations\Entities\OpsCargoTariff;
+use Modules\Operations\Entities\OpsExpenseHead;
 use Modules\Operations\Entities\OpsVoyageBoatNote;
 use Modules\Operations\Entities\OpsChartererInvoice;
 use Modules\Operations\Entities\OpsChartererProfile;
@@ -22,8 +23,8 @@ use Modules\Operations\Entities\OpsHandoverTakeover;
 use Modules\Operations\Entities\OpsVesselParticular;
 use Modules\Operations\Http\Requests\OpsPortRequest;
 use Modules\Operations\Entities\OpsChartererContract;
-use Modules\Operations\Entities\OpsLighterNoonReport;
 
+use Modules\Operations\Entities\OpsLighterNoonReport;
 use Modules\Operations\Entities\OpsVesselCertificate;
 use Modules\Operations\Entities\OpsMaritimeCertification;
 
@@ -233,4 +234,158 @@ class OpsCommonController extends Controller
             return response()->error($e->getMessage(), 500);
         }
     }
+
+
+    /**
+     * Display the specified port.
+     *
+     * @param  OpsPort  $port
+     * @return JsonResponse
+     */
+    public function getPortByID(OpsPort $port): JsonResponse
+    {
+        try {            
+            return response()->success('Data retrieved successfully.', $port, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Display the specified port.
+     *
+     * @param  OpsCargoType  $cargo_type
+     * @return JsonResponse
+     */
+    public function getCargoTypeById(OpsCargoType $cargo_type): JsonResponse
+    {
+        try {
+            return response()->success('Data retrieved successfully.', $cargo_type, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Display the specified customer.
+     *
+     * @param  OpsCustomer  $customer
+     * @return JsonResponse
+     */
+    public function getCustomerById(OpsCustomer $customer): JsonResponse
+    {
+        try {
+            return response()->success('Data retrieved successfully.', $customer, 200);
+        } catch (QueryException $e){
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+        /**
+     * Display the specified maritime certification.
+     *
+     * @param  OpsCargoTariff  $cargo_tariff
+     * @return JsonResponse
+     */
+    public function getCargoTariffById(OpsCargoTariff $cargo_tariff): JsonResponse
+    {
+        $cargo_tariff->load('opsVessel','opsCargoType','opsCargoTariffLines', 'loadingPoint', 'unloadingPoint');
+        try
+        {
+            return response()->success('Data retrieved successfully.', $cargo_tariff, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+
+    }
+
+
+
+        /**
+     * Display the specified maritime certification.
+     *
+     * @param  OpsVesselCertificate  $maritime_certification
+     * @return JsonResponse
+     */
+    public function getVesselCertificateById(OpsVesselCertificate $vessel_certificate): JsonResponse
+    {
+        $vessel_certificate->load(['opsVessel.opsVesselCertificates'
+        =>function ($query) {
+            $query->whereIn('ops_vessel_certificates.id', function($query2) {
+                $query2->select(DB::raw('MAX(id)'))
+                    ->from('ops_vessel_certificates')
+                    ->groupBy('ops_maritime_certification_id');
+            })->latest();
+        }, 'opsMaritimeCertification']);
+
+        $vessel_certificate->opsVessel->opsVesselCertificates->map(function($certificate) {
+            $certificate->name = $certificate->opsMaritimeCertification->name;
+            $certificate->id = $certificate->opsMaritimeCertification->id;
+            return $certificate;
+        });
+        
+        try
+        {
+            return response()->success('Data retrieved successfully.', $vessel_certificate, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+
+    }
+
+    /**
+     * Display the specified maritime certification.
+    *
+    * @param  OpsVoyage  $voyage
+    * @return JsonResponse
+    */
+    public function getVoyageById(OpsVoyage $voyage): JsonResponse
+    {
+    $voyage->load('opsCustomer','opsVessel','opsCargoType','opsVoyageSectors.loadingPoint',
+        'opsVoyageSectors.unloadingPoint','opsVoyagePortSchedules.portCode',
+        // 'opsBunkers.scmMaterial'
+    );
+
+        $voyage->opsVoyageSectors->map(function($sector) {
+            $sector->voyage_sector_id = $sector->id;
+            $sector->loading_point_name_code = $sector->loadingPoint->name.'-'.$sector->loadingPoint->code;
+            $sector->unloading_point_name_code = $sector->unloadingPoint->name.'-'.$sector->unloadingPoint->code;
+            return $sector;
+        });
+
+        try
+        {
+            return response()->success('Data retrieved successfully.', $voyage, 200);
+        }
+        catch (QueryException $e)
+        {
+            return response()->error($e->getMessage(), 500);
+        }
+
+    }
+
+
+        /**
+     * Display the specified maritime certification.
+    *
+    * @param  OpsExpenseHead  $expense_head
+    * @return JsonResponse
+    */
+    public function getExpenseHeadById(OpsExpenseHead $expense_head): JsonResponse
+    {
+    try
+    {
+        return response()->success('Data retrieved successfully.', $expense_head->load('opsSubHeads'), 200);
+    }
+    catch (QueryException $e)
+    {
+        return response()->error($e->getMessage(), 500);
+    }
+
+    }
+
 }

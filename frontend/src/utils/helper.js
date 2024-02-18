@@ -56,7 +56,7 @@ export const indexPdfExport = ( businessUnit, pageOridentation, heading, tableId
     const loader = $loading.show({ 'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2' });
     
     try {
-        let doc = new jsPDF(pageOridentation, 'pt', 'a4', true);
+        let doc = new jsPDF(pageOridentation, 'pt', 'a4');
         let pageSize = doc.internal.pageSize;
         let pageWidth = pageSize.width ? pageSize.width : pageSize.getWidth();
         let pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
@@ -67,7 +67,7 @@ export const indexPdfExport = ( businessUnit, pageOridentation, heading, tableId
             base64Img = base64;
             if(!useAllPageLogoAndHeading){ // first page logo & title
                 if (base64Img) {
-                    doc.addImage(base64Img, 'JPEG', pageWidth/2 - 40, 10, 80, 80, undefined, 'FAST');
+                    doc.addImage(base64Img, 'JPEG', pageWidth/2 - 40, 10, 80, 80);
                 }
                 doc.text((pageWidth / 2) - ((doc.getStringUnitWidth(heading) * doc.internal.getFontSize()) / 2), 115, heading);
             }
@@ -101,7 +101,7 @@ export const indexPdfExport = ( businessUnit, pageOridentation, heading, tableId
                     // All Page Logo & Heading start
                     if(useAllPageLogoAndHeading){
                         if (base64Img) {
-                            doc.addImage(base64Img, 'JPEG', pageWidth/2 - 40, 10, 80, 80, undefined, 'FAST');
+                            doc.addImage(base64Img, 'JPEG', pageWidth/2 - 40, 10, 80, 80);
                         }
                         doc.text((pageWidth / 2) - ((doc.getStringUnitWidth(heading) * doc.internal.getFontSize()) / 2), 115, heading);
                     }
@@ -185,7 +185,7 @@ export const showPdfExport = ( businessUnit, pageOridentation, heading, tableIds
     const loader = $loading.show({ 'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2' });
     
     try {
-        let doc = new jsPDF(pageOridentation, 'pt', 'a4', true);
+        let doc = new jsPDF(pageOridentation, 'pt', 'a4');
         let pageSize = doc.internal.pageSize;
         let pageWidth = pageSize.width ? pageSize.width : pageSize.getWidth();
         let pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
@@ -197,7 +197,7 @@ export const showPdfExport = ( businessUnit, pageOridentation, heading, tableIds
             base64Img = base64;
             if(!useAllPageLogoAndHeading){ // first page logo & title
                 if (base64Img) {
-                    doc.addImage(base64Img, 'JPEG', pageWidth/2 - 40, 10, 80, 80, undefined, 'FAST');
+                    doc.addImage(base64Img, 'JPEG', pageWidth/2 - 40, 10, 80, 80);
                 }
                 doc.text((pageWidth / 2) - ((doc.getStringUnitWidth(heading) * doc.internal.getFontSize()) / 2), 115, heading);
             }
@@ -219,7 +219,7 @@ export const showPdfExport = ( businessUnit, pageOridentation, heading, tableIds
                     // All Page Logo & Heading start
                     if(useAllPageLogoAndHeading && currentPage < doc.internal.getNumberOfPages()){
                         if (base64Img) {
-                            doc.addImage(base64Img, 'JPEG', pageWidth/2 - 40, 10, 80, 80, undefined, 'FAST');
+                            doc.addImage(base64Img, 'JPEG', pageWidth/2 - 40, 10, 80, 80);
                         }
                         doc.text((pageWidth / 2) - ((doc.getStringUnitWidth(heading) * doc.internal.getFontSize()) / 2), 115, heading);
                     }

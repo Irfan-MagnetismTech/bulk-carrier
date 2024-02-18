@@ -20,5 +20,6 @@ class OpsCargoType extends Model
     protected $fillable = [
         'cargo_type',
         'description',
+        'business_unit'
     ];
 }
