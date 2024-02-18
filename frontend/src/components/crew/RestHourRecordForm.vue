@@ -50,10 +50,10 @@ watch(() => vesselAssignedCrews.value, (items) => {
   props.form.total_crews = items.length;
   items.forEach(function(item){
     props.form.selectedCrews.push({
-      crw_full_name: item?.crwCrew?.full_name,
+      crw_full_name: item?.crwCrewProfile?.full_name,
       crw_position_onboard: item?.position_onboard,
       crw_crew_assignment_id : item.id,
-      crw_crew_id : item.crwCrew.id,
+      crw_crew_id : item.crwCrewProfile.id,
       service_start : item?.joining_date,
       comment : '',
       is_checked : false,

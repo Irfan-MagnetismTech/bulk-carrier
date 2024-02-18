@@ -197,24 +197,29 @@ export default function useCrewDocument() {
 
     async function storeCrewRenewDocument(form, currentCrewDocRenewData) {
 
-        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
-        isLoading.value = true;
+        if(form.expire_date && form.issue_date){
+            const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+            isLoading.value = true;
 
-        let formData = new FormData();
-        formData.append('attachment', form.attachment);
-        formData.append('data', JSON.stringify(form));
+            let formData = new FormData();
+            formData.append('attachment', form.attachment);
+            formData.append('data', JSON.stringify(form));
 
-        try {
-            const { data, status } = await Api.post('/crw/crw-crew-document-renewals', formData);
-            currentCrewDocRenewData.unshift(data.value);
-            isCrewDocumentRenewScheduleModalOpen.value = 0;
-            notification.showSuccess(status);
-        } catch (error) {
-            const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
-        } finally {
-            loader.hide();
-            isLoading.value = false;
+            try {
+                const { data, status } = await Api.post('/crw/crw-crew-document-renewals', formData);
+                currentCrewDocRenewData.unshift(data.value);
+                isCrewDocumentRenewScheduleModalOpen.value = 0;
+                notification.showSuccess(status);
+            } catch (error) {
+                const { data, status } = error.response;
+                errors.value = notification.showError(status, data);
+            } finally {
+                loader.hide();
+                isLoading.value = false;
+            }
+        } else {
+            alert("Please provide all required field.")
+            return;
         }
 
     }

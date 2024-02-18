@@ -14,7 +14,10 @@ class CrwAgencyController extends Controller
 {
     public function __construct(private FileUploadService $fileUpload)
     {
-
+        $this->middleware('permission:crw-agency-profile-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:crw-agency-profile-create', ['only' => ['store']]);
+        $this->middleware('permission:crw-agency-profile-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:crw-agency-profile-delete', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.

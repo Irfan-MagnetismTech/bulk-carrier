@@ -17,7 +17,7 @@ class AppraisalRecord extends Model
 		return $this->hasMany(AppraisalRecordLine::class);
 	}
 
-	public function crwCrew()
+	public function crwCrewProfile()
     {
         return $this->belongsTo(CrwCrewProfile::class, 'crw_crew_id', 'id');
     }

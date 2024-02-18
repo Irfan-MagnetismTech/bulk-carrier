@@ -56,7 +56,7 @@ export const indexPdfExport = ( businessUnit, pageOridentation, heading, tableId
     const loader = $loading.show({ 'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2' });
     
     try {
-        let doc = new jsPDF(pageOridentation, 'pt', 'a4');
+        let doc = new jsPDF(pageOridentation, 'pt', 'a4', true);
         let pageSize = doc.internal.pageSize;
         let pageWidth = pageSize.width ? pageSize.width : pageSize.getWidth();
         let pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
@@ -67,7 +67,7 @@ export const indexPdfExport = ( businessUnit, pageOridentation, heading, tableId
             base64Img = base64;
             if(!useAllPageLogoAndHeading){ // first page logo & title
                 if (base64Img) {
-                    doc.addImage(base64Img, 'JPEG', pageWidth/2 - 40, 10, 80, 80);
+                    doc.addImage(base64Img, 'JPEG', pageWidth/2 - 40, 10, 80, 80, undefined, 'FAST');
                 }
                 doc.text((pageWidth / 2) - ((doc.getStringUnitWidth(heading) * doc.internal.getFontSize()) / 2), 115, heading);
             }
@@ -101,7 +101,7 @@ export const indexPdfExport = ( businessUnit, pageOridentation, heading, tableId
                     // All Page Logo & Heading start
                     if(useAllPageLogoAndHeading){
                         if (base64Img) {
-                            doc.addImage(base64Img, 'JPEG', pageWidth/2 - 40, 10, 80, 80);
+                            doc.addImage(base64Img, 'JPEG', pageWidth/2 - 40, 10, 80, 80, undefined, 'FAST');
                         }
                         doc.text((pageWidth / 2) - ((doc.getStringUnitWidth(heading) * doc.internal.getFontSize()) / 2), 115, heading);
                     }
@@ -185,7 +185,7 @@ export const showPdfExport = ( businessUnit, pageOridentation, heading, tableIds
     const loader = $loading.show({ 'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2' });
     
     try {
-        let doc = new jsPDF(pageOridentation, 'pt', 'a4');
+        let doc = new jsPDF(pageOridentation, 'pt', 'a4', true);
         let pageSize = doc.internal.pageSize;
         let pageWidth = pageSize.width ? pageSize.width : pageSize.getWidth();
         let pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
@@ -197,7 +197,7 @@ export const showPdfExport = ( businessUnit, pageOridentation, heading, tableIds
             base64Img = base64;
             if(!useAllPageLogoAndHeading){ // first page logo & title
                 if (base64Img) {
-                    doc.addImage(base64Img, 'JPEG', pageWidth/2 - 40, 10, 80, 80);
+                    doc.addImage(base64Img, 'JPEG', pageWidth/2 - 40, 10, 80, 80, undefined, 'FAST');
                 }
                 doc.text((pageWidth / 2) - ((doc.getStringUnitWidth(heading) * doc.internal.getFontSize()) / 2), 115, heading);
             }
@@ -219,7 +219,7 @@ export const showPdfExport = ( businessUnit, pageOridentation, heading, tableIds
                     // All Page Logo & Heading start
                     if(useAllPageLogoAndHeading && currentPage < doc.internal.getNumberOfPages()){
                         if (base64Img) {
-                            doc.addImage(base64Img, 'JPEG', pageWidth/2 - 40, 10, 80, 80);
+                            doc.addImage(base64Img, 'JPEG', pageWidth/2 - 40, 10, 80, 80, undefined, 'FAST');
                         }
                         doc.text((pageWidth / 2) - ((doc.getStringUnitWidth(heading) * doc.internal.getFontSize()) / 2), 115, heading);
                     }
@@ -276,3 +276,28 @@ export const showPdfExport = ( businessUnit, pageOridentation, heading, tableIds
     }
 
 }
+
+export const tableToExcel = (tableId, name) => {
+
+    let template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="https://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>'+name+'</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body>';
+    let tab_text = template + "<table border='2px'><tr>";
+    let tab = document.getElementById(tableId); // id of table
+
+    for (let j = 0; j < tab.rows.length; j++) {
+        let row = tab.rows[j];
+        for (let i = 0; i < row.cells.length - 1; i++) { // Exclude last cell
+            tab_text += row.cells[i].outerHTML;
+        }
+        tab_text += "</tr><tr>"; // Close the row after excluding last cell
+    }
+
+    tab_text += "</tr></table></body></html>";
+
+    let a = document.createElement('a');
+    let data_type = 'data:application/vnd.ms-excel';
+    a.href = data_type + ', ' + encodeURIComponent(tab_text);
+    a.download = name + '.xls';
+    a.click();
+
+}
+

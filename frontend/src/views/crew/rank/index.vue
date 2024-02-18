@@ -13,6 +13,9 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import useGlobalFilter from "../../../composables/useGlobalFilter";
 import {useRouter} from "vue-router";
+import { indexPdfExport, tableToExcel } from "../../../utils/helper.js";
+import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 const props = defineProps({
   page: {
@@ -20,9 +23,13 @@ const props = defineProps({
     default: 1,
   },
 });
+
+const rightAlign = [];
+const leftAlign = [1,2,3];
+
 const router = useRouter();
 const icons = useHeroIcon();
-const { ranks, getRanks, deleteRank, isLoading, isTableLoading } = useRank();
+const { ranks, getRanks, deleteRank, errors, isLoading, isTableLoading } = useRank();
 const { showFilter, swapFilter, setSortingState, clearFilter } = useGlobalFilter();
 const { setTitle } = Title();
 setTitle('Rank List');
@@ -121,13 +128,23 @@ filterOptions.value.filter_options.forEach((option, index) => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Rank List</h2>
-    <default-button :title="'Create Rank'" :to="{ name: 'crw.ranks.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Create Rank'" :to="{ name: 'crw.ranks.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+          :businessUnit="businessUnit"
+          :pageOrientation="'l'"
+          :fileName="'Rank List'"
+          :tableId="'rank-list'"
+          :leftAlign="leftAlign"
+          :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="rank-list">
           <thead>
             <tr class="w-full">
               <th class="w-16">
@@ -218,4 +235,5 @@ filterOptions.value.filter_options.forEach((option, index) => {
     </div>
     <Paginate :data="ranks" to="crw.ranks.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
