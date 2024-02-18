@@ -537,7 +537,7 @@ watch(() => prlist.value, (newVal, oldVal) => {
                         <tr>
                           <td>Rate</td>
                           <td>
-                            <input type="number" required v-model="form.scmMrrLines[index].scmMrrLineItems[itemIndex].rate" min=1 class="!text-xs form-input text-right">
+                            <input type="number" required v-model="form.scmMrrLines[index].scmMrrLineItems[itemIndex].rate" min=1 class="!text-xs form-input text-right vms-readonly-input" readonly>
                           </td>
                         </tr>
                       </table>
