@@ -42,7 +42,7 @@ watch(() => vesselAssignedCrews.value, (items) => {
       crwCrewAssignment : item, 
       crw_crew_assignment_id : item.id,
       crw_crew_assignment_name : item,
-      crw_crew_id : item.crwCrewProfile.id,
+      crw_crew_id : item.crwCrew.id,
       attendance_line_composite : "BDCGP",
       present_days : "",
       absent_days : '',
@@ -140,10 +140,10 @@ onMounted(() => {
       <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
         <tr class="text-gray-700 dark-disabled:text-gray-400" v-for="(crwAttendanceLine, index) in form.crwAttendanceLines" :key="crwAttendanceLine.id">
           <td class="px-1 py-1">
-            <input type="text" :value="form.crwAttendanceLines[index]?.crwCrewAssignment?.crwCrewProfile?.full_name" class="form-input vms-readonly-input" autocomplete="off" readonly/>
+            <input type="text" :value="form.crwAttendanceLines[index]?.crwCrewAssignment?.crwCrew?.full_name" class="form-input vms-readonly-input" autocomplete="off" readonly/>
           </td>
           <td class="px-1 py-1">
-            <input type="text" :value="form.crwAttendanceLines[index]?.crwCrewAssignment?.crwCrewProfile?.pre_mobile_no" class="form-input vms-readonly-input" autocomplete="off" readonly/>
+            <input type="text" :value="form.crwAttendanceLines[index]?.crwCrewAssignment?.crwCrew?.pre_mobile_no" class="form-input vms-readonly-input" autocomplete="off" readonly/>
           </td>
           <td class="px-1 py-1">
             <input type="text" :value="form.crwAttendanceLines[index]?.crwCrewAssignment?.position_onboard" class="form-input vms-readonly-input" autocomplete="off" readonly/>

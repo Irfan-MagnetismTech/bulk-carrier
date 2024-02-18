@@ -67,9 +67,11 @@ onMounted(() => {
               <tr>
                 <th class="w-40 text-left">Attachment</th>
                 <td class="text-left">
-                  <a v-html="icons.Attachment" type="button" v-if="typeof agencyContract?.attachment === 'string'"
-                     class="text-green-800" target="_blank" :href="env.BASE_API_URL+'/'+agencyContract?.attachment"></a>
-                  <a v-else>---</a>
+                  <a class="text-red-700" target="_blank" :href="env.BASE_API_URL+'/'+agencyContract?.attachment">{{
+                      (typeof agencyContract?.attachment === 'string')
+                          ? '('+agencyContract?.attachment.split('/').pop()+')'
+                          : '----'
+                    }}</a>
                 </td>
               </tr>
               <tr>

@@ -6,7 +6,6 @@ import Title from "../../../services/title";
 import useHeroIcon from "../../../assets/heroIcon";
 import DefaultButton from "../../../components/buttons/DefaultButton.vue";
 import env from '../../../config/env';
-import { formatDate } from "../../../utils/helper.js";
 
 const icons = useHeroIcon();
 
@@ -60,7 +59,7 @@ onMounted(() => {
             </tr>
             <tr>
               <th class="w-40"> Process Date </th>
-              <td>{{ formatDate(payrollBatch?.process_date) }}</td>
+              <td>{{ payrollBatch?.process_date }}</td>
             </tr>
             <tr>
               <th class="w-40"> Currency </th>
@@ -72,6 +71,35 @@ onMounted(() => {
             </tr>
           </tbody>
         </table>
+ 
+<!--        <table class="w-full mt-2">-->
+<!--          <thead>-->
+<!--            <tr>-->
+<!--              <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="7"> Assigned Crew List (Attendance) </td>-->
+<!--            </tr>-->
+<!--            <tr class="bg-gray-200">-->
+<!--              <th class="w-40 !text-center">Crew Name</th>-->
+<!--              <th class="w-40 !text-center">Contact</th>-->
+<!--              <th class="w-40 !text-center">Net Salary</th>-->
+<!--              <th class="w-40 !text-center">Present Days</th>-->
+<!--              <th class="w-40 !text-center">Absent Days</th>-->
+<!--              <th class="w-40 !text-center">Payable Days</th>-->
+<!--              <th class="w-40 !text-center">Payable Amount</th>-->
+<!--            </tr>-->
+<!--          </thead>-->
+<!--          <tbody>-->
+<!--            <tr v-for="(crwPayrollBatchLine, crwPayrollBatchLineIndex) in payrollBatch?.crwPayrollBatchLines" :key="crwPayrollBatchLineIndex">-->
+<!--              <td class="text-left"> <nobr>{{ crwPayrollBatchLine?.crwCrew?.full_name }}</nobr> </td>-->
+<!--              <td class="text-left"> {{ crwPayrollBatchLine?.crwCrew?.pre_mobile_no }} </td>-->
+<!--              <td class="!text-right"> {{ crwPayrollBatchLine?.crwSalaryStructure?.net_amount }} </td>-->
+<!--              <td class="!text-center"> {{ crwPayrollBatchLine?.crwAttendanceLine?.present_days }} </td>-->
+<!--              <td class="!text-center"> {{ crwPayrollBatchLine?.crwAttendanceLine?.absent_days }} </td>-->
+<!--              <td class="!text-center"> {{ crwPayrollBatchLine?.crwAttendanceLine?.payable_days }} </td>-->
+<!--              <td class="!text-right"> {{ crwPayrollBatchLine?.payable_amount }} </td>-->
+<!--            </tr>-->
+<!--          </tbody>-->
+<!--        </table>-->
+
         <template v-if="payrollBatch?.crwPayrollBatchLines?.length">
           <div class="border-b-2 border-purple-700 mt-3"></div>
           <div class="dark-disabled:border-gray-700">
@@ -105,13 +133,13 @@ onMounted(() => {
                 <table class="w-full mt-2 whitespace-no-wrap" id="table">
                   <thead>
                   <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Crew Name</nobr></th>
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Crew Contact</nobr></th>
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Net Salary</nobr></th>
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Present Days</nobr></th>
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Absent Days</nobr></th>
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Payable Days</nobr></th>
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Payable Amount</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Crew Name</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Crew Contact</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Net Salary</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Present Days</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Absent Days</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Payable Days</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Payable Amount</nobr></th>
                   </tr>
                   </thead>
 
@@ -124,19 +152,19 @@ onMounted(() => {
                       <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].crw_contact_no" placeholder="Crew contact no" class="form-input vms-readonly-input" autocomplete="off" readonly />
                     </td>
                     <td class="px-1 py-1">
-                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].net_salary" placeholder="Net salary" class="form-input text-right vms-readonly-input" autocomplete="off" readonly />
+                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].net_salary" placeholder="Net salary" class="form-input vms-readonly-input" autocomplete="off" readonly />
                     </td>
                     <td class="px-1 py-1">
-                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].present_days" placeholder="Present days" class="form-input text-center vms-readonly-input" autocomplete="off" readonly />
+                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].present_days" placeholder="Present days" class="form-input vms-readonly-input" autocomplete="off" readonly />
                     </td>
                     <td class="px-1 py-1">
-                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].absent_days" placeholder="Absent days" class="form-input text-center vms-readonly-input" autocomplete="off" readonly />
+                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].absent_days" placeholder="Absent days" class="form-input vms-readonly-input" autocomplete="off" readonly />
                     </td>
                     <td class="px-1 py-1">
-                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].payable_days" placeholder="Payable days" class="form-input text-center vms-readonly-input" autocomplete="off" readonly />
+                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].payable_days" placeholder="Payable days" class="form-input vms-readonly-input" autocomplete="off" readonly />
                     </td>
                     <td class="px-1 py-1">
-                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].payable_amount" placeholder="Payable amount" class="form-input text-right vms-readonly-input" autocomplete="off" readonly />
+                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].payable_amount" placeholder="Payable amount" class="form-input vms-readonly-input" autocomplete="off" readonly />
                     </td>
                   </tr>
                   </tbody>
@@ -170,7 +198,7 @@ onMounted(() => {
                         <input type="text" v-model.trim="payrollBatch.crwPayrollBatchHeads[index].head_name" placeholder="Head name" class="form-input vms-readonly-input" autocomplete="off" readonly />
                       </td>
                       <td class="px-1 py-1">
-                        <input type="number" step=".01" v-model.trim="payrollBatch.crwPayrollBatchHeads[index].amount" placeholder="Amount" class="form-input text-right vms-readonly-input" autocomplete="off" readonly />
+                        <input type="number" step=".01" v-model.trim="payrollBatch.crwPayrollBatchHeads[index].amount" placeholder="Amount" class="form-input vms-readonly-input" autocomplete="off" readonly />
                       </td>
                     </tr>
                   </template>
@@ -189,12 +217,12 @@ onMounted(() => {
                 <table class="w-full mt-2 whitespace-no-wrap" id="table">
                   <thead>
                   <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Crew Name</nobr></th>
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Crew Contact</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Crew Name</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Crew Contact</nobr></th>
                     <template v-for="(batchHead, index) in payrollBatch.crwPayrollBatchHeads">
-                      <th class="px-4 py-3 align-bottom !text-center" v-if="batchHead?.head_type==='addition'"><nobr>{{ batchHead?.head_name }}</nobr></th>
+                      <th class="px-4 py-3 align-bottom" v-if="batchHead?.head_type==='addition'"><nobr>{{ batchHead?.head_name }}</nobr></th>
                     </template>
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Addition Amount</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Addition Amount</nobr></th>
                   </tr>
                   </thead>
                   <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
@@ -208,11 +236,11 @@ onMounted(() => {
                       </td>
                       <template v-for="(lineBatchHead, lineBatchHeadIndex) in payrollBatch.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads">
                         <td v-if="lineBatchHead?.head_type==='addition'" class="px-1 py-1">
-                          <input type="number" step=".01" v-model.trim="payrollBatch.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads[lineBatchHeadIndex].amount" placeholder="Amount" class="form-input !text-right vms-readonly-input" autocomplete="off" readonly />
+                          <input type="number" step=".01" v-model.trim="payrollBatch.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads[lineBatchHeadIndex].amount" placeholder="Amount" class="form-input vms-readonly-input" autocomplete="off" readonly />
                         </td>
                       </template>
                       <td class="px-1 py-1">
-                        <input type="number" step=".01" v-model.trim="payrollBatch.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount" placeholder="Amount" class="form-input !text-right vms-readonly-input" autocomplete="off" readonly />
+                        <input type="number" step=".01" v-model.trim="payrollBatch.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount" placeholder="Amount" class="form-input vms-readonly-input" autocomplete="off" readonly />
                       </td>
                     </tr>
                   </template>
@@ -244,7 +272,7 @@ onMounted(() => {
                         <input type="text" v-model.trim="payrollBatch.crwPayrollBatchHeads[index].head_name" placeholder="Head name" class="form-input vms-readonly-input" autocomplete="off" readonly />
                       </td>
                       <td class="px-1 py-1">
-                        <input type="number" step=".01" v-model.trim="payrollBatch.crwPayrollBatchHeads[index].amount" placeholder="Amount" class="form-input text-right vms-readonly-input" autocomplete="off" readonly />
+                        <input type="number" step=".01" v-model.trim="payrollBatch.crwPayrollBatchHeads[index].amount" placeholder="Amount" class="form-input vms-readonly-input" autocomplete="off" readonly />
                       </td>
                     </tr>
                   </template>
@@ -263,12 +291,12 @@ onMounted(() => {
                 <table class="w-full mt-2 whitespace-no-wrap" id="table">
                   <thead>
                   <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Crew Name</nobr></th>
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Crew Contact</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Crew Name</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Crew Contact</nobr></th>
                     <template v-for="(batchHead, index) in payrollBatch.crwPayrollBatchHeads">
-                      <th class="px-4 py-3 align-bottom !text-center" v-if="batchHead?.head_type==='deduction'"><nobr>{{ batchHead?.head_name }}</nobr></th>
+                      <th class="px-4 py-3 align-bottom" v-if="batchHead?.head_type==='deduction'"><nobr>{{ batchHead?.head_name }}</nobr></th>
                     </template>
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Deduction Amount</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Deduction Amount</nobr></th>
                   </tr>
                   </thead>
                   <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
@@ -282,11 +310,11 @@ onMounted(() => {
                       </td>
                       <template v-for="(lineBatchHead, lineBatchHeadIndex) in payrollBatch.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads">
                         <td v-if="lineBatchHead?.head_type==='deduction'" class="px-1 py-1">
-                          <input type="number" step=".01" v-model.trim="payrollBatch.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads[lineBatchHeadIndex].amount" placeholder="Amount" class="form-input text-right vms-readonly-input" autocomplete="off" readonly />
+                          <input type="number" step=".01" v-model.trim="payrollBatch.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].crew_batch_heads[lineBatchHeadIndex].amount" placeholder="Amount" class="form-input vms-readonly-input" autocomplete="off" readonly />
                         </td>
                       </template>
                       <td class="px-1 py-1">
-                        <input type="number" step=".01" v-model.trim="payrollBatch.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount" placeholder="Crew rank" class="form-input vms-readonly-input text-right" autocomplete="off" readonly />
+                        <input type="number" step=".01" v-model.trim="payrollBatch.crwPayrollBatchHeadLines[payrollBatchHeadLineIndex].amount" placeholder="Crew rank" class="form-input vms-readonly-input" autocomplete="off" readonly />
                       </td>
                     </tr>
                   </template>
@@ -307,13 +335,13 @@ onMounted(() => {
                 <table class="w-full mt-2 whitespace-no-wrap" id="table">
                   <thead>
                   <tr class="text-xs font-semibold tracking-wide text-center text-gray-500 bg-gray-50 dark-disabled:text-gray-400 dark-disabled:bg-gray-800">
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Crew Name</nobr></th>
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Crew Contact</nobr></th>
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Payable Days</nobr></th>
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Payable Amount</nobr></th>
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Addition Amount</nobr></th>
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Deduction Amount</nobr></th>
-                    <th class="px-4 py-3 align-bottom !text-center"><nobr>Net Payable Amount</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Crew Name</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Crew Contact</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Payable Days</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Payable Amount</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Addition Amount</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Deduction Amount</nobr></th>
+                    <th class="px-4 py-3 align-bottom"><nobr>Net Payable Amount</nobr></th>
                   </tr>
                   </thead>
 
@@ -326,19 +354,19 @@ onMounted(() => {
                       <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].crw_contact_no" placeholder="Crew ID" class="form-input vms-readonly-input" autocomplete="off" readonly />
                     </td>
                     <td class="px-1 py-1">
-                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].payable_days" placeholder="Payable days" class="form-input !text-center vms-readonly-input" autocomplete="off" readonly />
+                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].payable_days" placeholder="Payable days" class="form-input vms-readonly-input" autocomplete="off" readonly />
                     </td>
                     <td class="px-1 py-1">
-                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].payable_amount" placeholder="Payable amount" class="form-input !text-right vms-readonly-input" autocomplete="off" readonly />
+                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].payable_amount" placeholder="Payable amount" class="form-input vms-readonly-input" autocomplete="off" readonly />
                     </td>
                     <td class="px-1 py-1">
-                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].total_earnings" placeholder="Total earnings" class="form-input !text-right vms-readonly-input" autocomplete="off" readonly />
+                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].total_earnings" placeholder="Total earnings" class="form-input vms-readonly-input" autocomplete="off" readonly />
                     </td>
                     <td class="px-1 py-1">
-                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].total_deductions" placeholder="Total deductions" class="form-input !text-right vms-readonly-input" autocomplete="off" readonly />
+                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].total_deductions" placeholder="Total deductions" class="form-input vms-readonly-input" autocomplete="off" readonly />
                     </td>
                     <td class="px-1 py-1">
-                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].net_payable_amount" placeholder="Net payable amount" class="form-input !text-right vms-readonly-input" autocomplete="off" readonly />
+                      <input type="text" v-model.trim="payrollBatch.crwPayrollBatchLines[index].net_payable_amount" placeholder="Net payable amount" class="form-input vms-readonly-input" autocomplete="off" readonly />
                     </td>
                   </tr>
                   </tbody>

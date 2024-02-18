@@ -170,8 +170,9 @@ class CrwCommonController extends Controller
      */
     public function getVesselAssignedCrews(Request $request)
     {
+
         try {
-            $vesselAssignedCrews = CrwCrewAssignment::with('crwCrewProfile:id,full_name,pre_mobile_no,crw_rank_id')
+            $vesselAssignedCrews = CrwCrewAssignment::with('crwCrew:id,full_name,pre_mobile_no')
                 ->where('ops_vessel_id', $request->ops_vessel_id)
                 ->where('status', 'Onboard')
                 ->get();
@@ -207,7 +208,7 @@ class CrwCommonController extends Controller
     public function getCrewMonthlyAttendances(Request $request)
     {
         try {
-            $attendance = CrwAttendance::with('crwAttendanceLines.crwCrewProfile:id,full_name,pre_mobile_no,crw_rank_id', 'crwAttendanceLines.crwSalaryStructure')
+            $attendance = CrwAttendance::with('crwAttendanceLines.crwCrew:id,full_name,pre_mobile_no', 'crwAttendanceLines.crwSalaryStructure')
                 ->whereId($request->crw_attendance_id)
                 ->first();
 
@@ -228,10 +229,9 @@ class CrwCommonController extends Controller
                         'id'                        => $attendanceLine->id,
                         'crw_attendance_line_id'    => $attendanceLine->id,
                         'crw_salary_structure_id'   => $attendanceLine->crwSalaryStructure->id,
-                        'crw_crew_id'               => $attendanceLine->crwCrewProfile->id, 
-                        'crw_full_name'             => $attendanceLine->crwCrewProfile->full_name,
-                        'crw_contact_no'            => $attendanceLine->crwCrewProfile->pre_mobile_no,
-                        'crw_current_rank'          => $attendanceLine->crwCrewProfile?->crwCurrentRank?->name,
+                        'crw_crew_id'               => $attendanceLine->crwCrew->id,
+                        'crw_full_name'             => $attendanceLine->crwCrew->full_name,
+                        'crw_contact_no'            => $attendanceLine->crwCrew->pre_mobile_no,
                         'net_salary'                => $attendanceLine->crwSalaryStructure->net_amount,
                         'present_days'              => $attendanceLine->present_days,
                         'absent_days'               => $attendanceLine->absent_days,

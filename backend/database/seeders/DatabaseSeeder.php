@@ -12,7 +12,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(CrewPermissionSeeder::class);
-        $this->call(AccPermissionSeeder::class);
+        $this->call(AccPermissionSeeder::class); 
     }
 }

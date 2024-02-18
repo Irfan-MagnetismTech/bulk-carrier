@@ -12,7 +12,7 @@ class CrwAttendanceLine extends Model
 
 	protected $fillable = ['crw_crew_id', 'crw_crew_assignment_id', 'attendance_line_composite', 'present_days', 'absent_days', 'payable_days'];
 
-    public function crwCrewProfile()
+    public function crwCrew()
     {
         return $this->belongsTo(CrwCrewProfile::class, 'crw_crew_id', 'id');
     }

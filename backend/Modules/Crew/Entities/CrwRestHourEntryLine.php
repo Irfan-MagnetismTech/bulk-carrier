@@ -13,7 +13,7 @@ class CrwRestHourEntryLine extends Model
 
     protected $casts = ['hourly_records' => 'array'];    
 
-    public function crwCrewProfile()
+    public function crwCrew()
     {
         return $this->belongsTo(CrwCrewProfile::class, 'crw_crew_id', 'id');
     }    

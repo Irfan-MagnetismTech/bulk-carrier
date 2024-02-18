@@ -19,7 +19,7 @@ export default [
         postIcon: icons.DownArrow,
         is_active: false,
         is_open: false,
-        permissionKey: 'user-show',
+        permissionKey: '',
         subMenu: [
             {
                 route: 'administration.users.index',
@@ -28,7 +28,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'user-show',
+                permissionKey: '',
                 subSubMenu: [],
             },
             {
@@ -38,7 +38,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'role-show',
+                permissionKey: '',
                 subSubMenu: [],
             },
             {
@@ -48,7 +48,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'permission-show',
+                permissionKey: '',
                 subSubMenu: [],
             },
         ]

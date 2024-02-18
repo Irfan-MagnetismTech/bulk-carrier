@@ -79,12 +79,11 @@ onMounted(() => {
         <table class="w-full mt-2">
           <thead>
             <tr>
-              <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="6"> Participant List </td>
+              <td class="!text-center font-bold bg-green-600 uppercase text-white" colspan="5"> Participant List </td>
             </tr>
             <tr>
               <th class="w-5 !text-center">#</th>
               <th class="w-40 !text-center"> Crew Name </th>
-              <th class="w-40 !text-center"> Current Rank </th>
               <th class="w-40 !text-center"> Contact No </th>
               <th class="w-40 !text-center"> Injury Status </th>
               <th class="w-40 !text-center"> Notes </th>
@@ -93,9 +92,8 @@ onMounted(() => {
           <tbody>
             <tr v-for="(crwIncidentParticipant, index) in incidentRecord?.crwIncidentParticipants" :key="index">
               <td class="!text-center">{{ index + 1 }}</td>
-              <td class="text-left"> {{ crwIncidentParticipant?.crwCrewProfile?.full_name }} </td>
-              <td class="text-left"> {{ crwIncidentParticipant?.crwCrewProfile?.crwCurrentRank?.name }} </td>
-              <td class="!text-center"> {{ crwIncidentParticipant?.crwCrewProfile?.pre_mobile_no }} </td>
+              <td class="text-left"> {{ crwIncidentParticipant?.crwCrew?.full_name }} </td>
+              <td class="!text-center"> {{ crwIncidentParticipant?.crwCrew?.pre_mobile_no }} </td>
               <td class="text-left"> {{ crwIncidentParticipant?.injury_status }} </td>
               <td class="text-left"> {{ crwIncidentParticipant?.notes }} </td>
             </tr>

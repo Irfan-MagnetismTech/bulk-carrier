@@ -11,13 +11,6 @@ use Modules\SupplyChain\Services\UniqueId;
 
 class CrwCrewAssignmentController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('permission:crw-assignment-view', ['only' => ['index', 'show']]);
-        $this->middleware('permission:crw-assignment-create', ['only' => ['store']]);
-        $this->middleware('permission:crw-assignment-edit', ['only' => ['show', 'update']]);
-        $this->middleware('permission:crw-assignment-delete', ['only' => ['destroy']]);
-    }
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +19,8 @@ class CrwCrewAssignmentController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwCrewAssignments = CrwCrewAssignment::with('opsVessel:id,name','crwCrewProfile:id,full_name,pre_mobile_no,crw_rank_id', 'opsPort')
+            $crwCrewAssignments = CrwCrewAssignment::with('opsVessel:id,name','crwCrew:id,full_name,pre_mobile_no', 'opsPort')
+            // ->get();
             ->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwCrewAssignments, 200);
@@ -68,7 +62,7 @@ class CrwCrewAssignmentController extends Controller
     public function show(CrwCrewAssignment $crwCrewAssignment)
     {
         try {
-            return response()->success('Retrieved successfully', $crwCrewAssignment->load('opsVessel','crwCrewProfile.crwCurrentRank','opsPort'), 200);
+            return response()->success('Retrieved successfully', $crwCrewAssignment->load('opsVessel','crwCrew','opsPort'), 200);
         }
         catch (QueryException $e)
         {

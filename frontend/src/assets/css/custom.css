@@ -301,14 +301,6 @@ input.custom_date::-webkit-calendar-picker-indicator{
     @apply w-5 h-5 transition duration-150 ease-in-out hover:translate-y-1 hover:transform;
 }
 
-.pdf_button{
-    @apply px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red;
-}
-
-.excel_button{
-    @apply px-4 py-2 text-sm font-medium text-white bg-green-900 rounded-lg active:bg-green-900 hover:bg-green-700 focus:outline-none focus:shadow-outline-green;
-}
-
 .active-tab{
     font-weight: bold;
 }

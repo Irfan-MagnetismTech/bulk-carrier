@@ -18,7 +18,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'crw-rank-view',
+                permissionKey: '',
                 subSubMenu: [],
             },
             {
@@ -28,7 +28,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'crw-vessel-particular-view',
+                permissionKey: '',
                 subSubMenu: [],
             },
             {
@@ -38,7 +38,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'crw-policy-view',
+                permissionKey: '',
                 subSubMenu: [],
             },
             {
@@ -48,7 +48,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'crw-onboard-checklist-view',
+                permissionKey: '',
                 subSubMenu: [],
             },
             {
@@ -58,7 +58,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'crw-vessel-crew-manning-view',
+                permissionKey: '',
                 subSubMenu: [],
             },
             {
@@ -68,7 +68,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'crw-requisition-view',
+                permissionKey: '',
                 subSubMenu: [],
             },
             {
@@ -78,7 +78,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'crw-recruitment-approval-view',
+                permissionKey: '',
                 subSubMenu: [],
             },
             {
@@ -97,7 +97,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: 'crw-agency-profile-view',
+                        permissionKey: '',
                         subSubMenu: [],
                     },
                     {
@@ -107,7 +107,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: 'crw-agency-contract-view',
+                        permissionKey: '',
                         subSubMenu: [],
                     },
                     {
@@ -117,7 +117,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: 'crw-agency-bill-view',
+                        permissionKey: '',
                         subSubMenu: [],
                     },
                 ],
@@ -129,7 +129,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'crw-profile-view',
+                permissionKey: '',
                 subSubMenu: [],
             },
             {
@@ -148,7 +148,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: 'crw-document-view',
+                        permissionKey: '',
                         subSubMenu: [],
                     },
                     {
@@ -158,7 +158,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: 'crw-document-renew',
+                        permissionKey: '',
                         subSubMenu: [],
                     },
                 ],
@@ -170,7 +170,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'crw-assignment-view',
+                permissionKey: '',
                 subSubMenu: [],
             },
             {
@@ -180,7 +180,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'crw-attendance-view',
+                permissionKey: '',
                 subSubMenu: [],
             },
             {
@@ -190,7 +190,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'crw-incident-record-view',
+                permissionKey: '',
                 subSubMenu: [],
             },
             {
@@ -200,7 +200,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'crw-salary-structure-view',
+                permissionKey: '',
                 subSubMenu: [],
             },
             {
@@ -210,7 +210,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'crw-bank-account-view',
+                permissionKey: '',
                 subSubMenu: [],
             },
             {
@@ -229,7 +229,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: 'crw-salary-create',
+                        permissionKey: '',
                         subSubMenu: [],
                     },
                     {
@@ -239,7 +239,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: 'crw-salary-view',
+                        permissionKey: '',
                         subSubMenu: [],
                     },
                 ],
@@ -272,7 +272,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'crw-apprisal-form-view',
+                permissionKey: '',
                 subSubMenu: [],
             },
             {
@@ -282,7 +282,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'crw-apprisal-record-view',
+                permissionKey: '',
                 subSubMenu: [],
             },
 
@@ -293,7 +293,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'crw-rest-hour-view',
+                permissionKey: '',
                 subSubMenu: [],
             },
             {
@@ -303,7 +303,7 @@ export default [
                 postIcon: icons.DownArrow,
                 is_active: false,
                 is_open: false,
-                permissionKey: 'crw-rest-hour-record',
+                permissionKey: '',
                 subSubMenu: [],
             },
         ]

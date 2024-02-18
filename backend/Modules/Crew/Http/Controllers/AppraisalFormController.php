@@ -13,13 +13,6 @@ use Modules\Crew\Http\Requests\AppraisalFormRequest;
 
 class AppraisalFormController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('permission:crw-apprisal-form-view', ['only' => ['index', 'show']]);
-        $this->middleware('permission:crw-apprisal-form-create', ['only' => ['store']]);
-        $this->middleware('permission:crw-apprisal-form-edit', ['only' => ['show', 'update']]);
-        $this->middleware('permission:crw-apprisal-form-delete', ['only' => ['destroy']]);
-    }    
     /**
      * Display a listing of the resource.
      *

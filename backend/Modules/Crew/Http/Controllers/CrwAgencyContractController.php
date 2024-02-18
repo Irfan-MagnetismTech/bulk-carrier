@@ -15,10 +15,7 @@ class CrwAgencyContractController extends Controller
 
     public function __construct(private FileUploadService $fileUpload)
     {
-        $this->middleware('permission:crw-agency-contract-view', ['only' => ['index', 'show']]);
-        $this->middleware('permission:crw-agency-contract-create', ['only' => ['store']]);
-        $this->middleware('permission:crw-agency-contract-edit', ['only' => ['show', 'update']]);
-        $this->middleware('permission:crw-agency-contract-delete', ['only' => ['destroy']]);
+
     }
 
     /**

@@ -20,7 +20,7 @@ class CrwCrewAssignment extends Model
         return $this->belongsTo(OpsVessel::class);
     }
 
-    public function crwCrewProfile()
+    public function crwCrew()
     {
         return $this->belongsTo(CrwCrewProfile::class, 'crw_crew_id', 'id');
     }

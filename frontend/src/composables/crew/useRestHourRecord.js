@@ -222,9 +222,6 @@ export default function useRestHourRecord() {
             //await router.push({ name: "crw.rest-hour-records.index" });
         } catch (error) {
             const { data, status } = error.response;
-            if(status === 422){
-                restHourReport.value = [];
-            }
             errors.value = notification.showError(status, data);
         } finally {
             loader.hide();

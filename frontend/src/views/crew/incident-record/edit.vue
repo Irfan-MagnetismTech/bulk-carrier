@@ -23,8 +23,8 @@ watch(incidentRecord, (value) => {
     incidentRecord.value.ops_vessel_name = value?.opsVessel;
     incidentRecord.value.ops_vessel_id = value?.opsVessel?.id;
     value?.crwIncidentParticipants?.forEach((line, index) => {
-      incidentRecord.value.crwIncidentParticipants[index].crw_crew_name = value?.crwIncidentParticipants[index]?.crwCrewProfile ?? '';
-      incidentRecord.value.crwIncidentParticipants[index].crw_crew_contact = value?.crwIncidentParticipants[index]?.crwCrewProfile?.pre_mobile_no ?? '';
+      incidentRecord.value.crwIncidentParticipants[index].crw_crew_name = value?.crwIncidentParticipants[index]?.crwCrew ?? '';
+      incidentRecord.value.crwIncidentParticipants[index].crw_crew_contact = value?.crwIncidentParticipants[index]?.crwCrew?.pre_mobile_no ?? '';
     });
   }
 });

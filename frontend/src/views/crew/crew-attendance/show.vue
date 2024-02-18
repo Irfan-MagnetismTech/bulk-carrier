@@ -83,8 +83,8 @@ onMounted(() => {
           <tbody>
             <tr v-for="(crwAttendanceLine, index) in crwAttendance?.crwAttendanceLines" :key="index">
               <td class="!w-5 !text-center">{{ index + 1 }}</td>
-              <td class="text-left"> {{ crwAttendanceLine?.crwCrewAssignment?.crwCrewProfile?.full_name }} </td>
-              <td class="!text-center"> {{ crwAttendanceLine?.crwCrewAssignment?.crwCrewProfile?.pre_mobile_no }} </td>
+              <td class="text-left"> {{ crwAttendanceLine?.crwCrewAssignment?.crwCrew?.full_name }} </td>
+              <td class="!text-center"> {{ crwAttendanceLine?.crwCrewAssignment?.crwCrew?.pre_mobile_no }} </td>
               <td class="text-left"> {{ crwAttendanceLine?.crwCrewAssignment?.position_onboard }} </td>
               <td class="!text-center"> {{ crwAttendanceLine?.present_days }} </td>
               <td class="!text-center"> {{ crwAttendanceLine?.absent_days }} </td>

@@ -12,13 +12,6 @@ use Modules\Crew\Http\Requests\CrwAttendanceRequest;
 
 class CrwAttendanceController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('permission:crw-attendance-view', ['only' => ['index', 'show']]);
-        $this->middleware('permission:crw-attendance-create', ['only' => ['store']]);
-        $this->middleware('permission:crw-attendance-edit', ['only' => ['show', 'update']]);
-        $this->middleware('permission:crw-attendance-delete', ['only' => ['destroy']]);
-    }    
     /**
      * Display a listing of the resource.
      *
@@ -69,7 +62,7 @@ class CrwAttendanceController extends Controller
     public function show(CrwAttendance $crwAttendance)
     {
         try {
-            return response()->success('Retrieved succesfully', $crwAttendance->load('opsVessel:id,name', 'crwAttendanceLines.crwCrewAssignment.crwCrewProfile'), 200);
+            return response()->success('Retrieved succesfully', $crwAttendance->load('opsVessel:id,name', 'crwAttendanceLines.crwCrewAssignment.crwCrew'), 200);
         }
         catch (QueryException $e)
         {

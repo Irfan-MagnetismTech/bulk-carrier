@@ -12,9 +12,9 @@ class CrwPayrollBatchLine extends Model
 
     protected $fillable = ['crw_payroll_batch_id', 'crw_crew_id', 'crw_attendance_line_id', 'crw_salary_structure_id', 'payable_amount', 'total_earnings', 'total_deductions', 'net_payable_amount', 'payment_date', 'crw_bank_account_id'];
 
-    public function crwCrewProfile()
+    public function crwCrew()
     {
-        return $this->belongsTo(CrwCrewProfile::class, 'crw_crew_id', 'id');
+        return $this->belongsTo(CrwCrewProfile::class);
     }
 
     public function crwSalaryStructure()
@@ -25,10 +25,5 @@ class CrwPayrollBatchLine extends Model
     public function crwAttendanceLine()
     {
         return $this->belongsTo(CrwAttendanceLine::class);
-    }
-
-    public function crwBankAccount()
-    {
-        return $this->belongsTo(CrwBankAccount::class);
     }
 }

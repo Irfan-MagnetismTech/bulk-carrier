@@ -30,7 +30,7 @@ watch(() => props.form, (value) => {
 }, {deep: true});
 
 
-watch(() => props.form.crwCrewProfile, (value) => {
+watch(() => props.form.crwCrew, (value) => {
   if(value){
     props.form.crw_crew_name = value ?? '';
   }

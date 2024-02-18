@@ -12,13 +12,6 @@ use Modules\Crew\Entities\CrwPayrollBatchHeadLine;
 
 class CrwPayrollBatchController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('permission:crw-salary-view', ['only' => ['index', 'show']]);
-        $this->middleware('permission:crw-salary-create', ['only' => ['store']]);
-        $this->middleware('permission:crw-salary-edit', ['only' => ['show', 'update']]);
-        $this->middleware('permission:crw-salary-delete', ['only' => ['destroy']]);
-    }    
     /**
      * @param Request $request
      */
@@ -89,12 +82,14 @@ class CrwPayrollBatchController extends Controller
             $crwPayrollBatchData = $crwPayrollBatch
             ->load('opsVessel:id,name', 
             'crwAttendance', 
-            'crwPayrollBatchHeads',
-            'crwPayrollBatchHeadLines.crwCrewProfile:id,full_name,pre_mobile_no,crw_rank_id',
-            'crwPayrollBatchLines.crwCrewProfile:id,full_name,pre_mobile_no,crw_rank_id', 
+            'crwPayrollBatchHeads', 
+            // 'crwPayrollBatchHeads.crwPayrollBatchHeadLines.crwCrew:id,full_name,pre_mobile_no', 
+            'crwPayrollBatchHeadLines.crwCrew:id,full_name,pre_mobile_no',
+            'crwPayrollBatchLines.crwCrew:id,full_name,pre_mobile_no', 
             'crwPayrollBatchLines.crwSalaryStructure:id,net_amount', 
             'crwPayrollBatchLines.crwAttendanceLine:id,present_days,absent_days,payable_days'
-        );
+        ); 
+
 
             return response()->success('Retrieved succesfully', $crwPayrollBatchData, 200);
         }

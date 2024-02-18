@@ -105,14 +105,14 @@ onMounted(() => {
   <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Agency Name <span class="text-red-500">*</span></span>
-      <select class="form-input" v-model.trim="form.crw_agency_id" required>
+      <select class="form-input" v-model.trim="form.crw_agency_id">
         <option value="" selected disabled>--Choose an option--</option>
         <option v-for="(agency,index) in crwAgencies" :value="agency.id" :key="index">{{ agency?.agency_name }}</option>
       </select>
     </label>
     <label class="block w-full mt-2 text-sm">
       <span class="text-gray-700 dark-disabled:text-gray-300">Agency Contract <span class="text-red-500">*</span></span>
-      <select class="form-input" v-model.trim="form.crw_agency_contract_id" required>
+      <select class="form-input" v-model.trim="form.crw_agency_contract_id">
         <option value="" selected disabled>--Choose an option--</option>
         <option v-for="(agencyContract,index) in crwAgencyContracts" :value="agencyContract.id" :key="index">{{ agencyContract?.contract_name }}</option>
       </select>

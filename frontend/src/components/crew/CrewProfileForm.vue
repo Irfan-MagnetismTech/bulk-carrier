@@ -370,7 +370,7 @@ onMounted(() => {
         </div>
         <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
           <label class="block w-full mt-2 text-sm">
-            <span class="text-gray-700 dark-disabled:text-gray-300">Joining Rank<span class="text-red-500">*</span></span>
+            <span class="text-gray-700 dark-disabled:text-gray-300">Rank Name <span class="text-red-500">*</span></span>
             <select class="form-input" id="crw_rank_id" v-model.trim="form.crw_rank_id" required>
               <option value="" selected disabled>--Choose an option--</option>
               <option v-for="(crwRank,index) in crwRankLists" :value="crwRank.id">{{ crwRank?.name }}</option>

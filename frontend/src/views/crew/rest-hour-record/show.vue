@@ -112,7 +112,7 @@ onMounted(() => {
           <tbody>
           <tr v-for="(entryLine,index) in restHourRecord?.crwRestHourEntryLines" :key="index">
             <td class="text-center">{{ index + 1 }}</td>
-            <td>{{ entryLine?.crwCrewProfile?.full_name }}</td>
+            <td>{{ entryLine?.crwCrew?.full_name }}</td>
             <td class="text-center">{{ formatDate(entryLine?.crwCrewAssignment?.joining_date) }}</td>
             <td>{{ entryLine?.comments }}</td>
             <td :class="{ 'active_hour': entryLine?.hourly_records.find(record => record.hour === hourRecordIndex),

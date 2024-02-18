@@ -12,13 +12,6 @@ use Modules\Crew\Http\Requests\CrwRecruitmentApprovalRequest;
 
 class CrwRecruitmentApprovalController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('permission:crw-recruitment-approval-view', ['only' => ['index', 'show']]);
-        $this->middleware('permission:crw-recruitment-approval-create', ['only' => ['store']]);
-        $this->middleware('permission:crw-recruitment-approval-edit', ['only' => ['show', 'update']]);
-        $this->middleware('permission:crw-recruitment-approval-delete', ['only' => ['destroy']]);
-    }    
     /**
      * Display a listing of the resource.
      *

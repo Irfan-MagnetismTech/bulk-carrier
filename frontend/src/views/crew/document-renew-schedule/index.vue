@@ -9,7 +9,6 @@ import Swal from "sweetalert2";
 import useHeroIcon from "../../../assets/heroIcon";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import { formatDate } from "../../../utils/helper.js";
-import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 const icons = useHeroIcon();
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
@@ -27,7 +26,7 @@ const props = defineProps({
 });
 
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
-const { crewDocumentRenewSchedules, currentCrewDocRenewData, isCrewDocumentRenewScheduleModalOpen, getCrewDocumentRenewSchedules, storeCrewRenewDocument, errors, deleteCrewRenewDocument, updateCrewRenewDocument, isLoading, isTableLoading } = useCrewDocument();
+const { crewDocumentRenewSchedules, currentCrewDocRenewData, isCrewDocumentRenewScheduleModalOpen, getCrewDocumentRenewSchedules, storeCrewRenewDocument, deleteCrewRenewDocument, updateCrewRenewDocument, isLoading, isTableLoading } = useCrewDocument();
 const { crewDocumentRenewals, getCrewDocumentRenewals, isCrewDocumentRenewModalOpen } = useCrewCommonApiRequest();
 
 const { setTitle } = Title();
@@ -96,16 +95,6 @@ let filterOptions = ref( {
       "order_by": null,
       "date_from": null,
       "label": "Crew Name",
-      "filter_type": "input"
-    },
-    {
-      "relation_name": "crwCrewProfile.crwCurrentRank",
-      "field_name": "name",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Current Rank",
       "filter_type": "input"
     },
     {
@@ -204,7 +193,6 @@ filterOptions.value.filter_options.forEach((option, index) => {
             <th> Expire Date </th>
             <th> Left Days</th>
             <th> Crew Name </th>
-            <th> Current Rank </th>
             <th> Crew Contact </th>
             <th> Business Unit</th>
             <th> Action </th>
@@ -217,7 +205,6 @@ filterOptions.value.filter_options.forEach((option, index) => {
             <td>{{ formatDate(crwDocument?.crwCrewDocumentRenewal?.expire_date) }}</td>
             <td>{{ crwDocument?.crwCrewDocumentRenewal?.left_days }}</td>
             <td class="!text-left">{{ crwDocument?.crwCrewProfile?.full_name }}</td>
-            <td class="!text-left">{{ crwDocument?.crwCrewProfile?.crwCurrentRank?.name }}</td>
             <td>{{ crwDocument?.crwCrewProfile?.pre_mobile_no }}</td>
             <td>
               <span :class="crwDocument?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwDocument?.business_unit }}</span>
@@ -252,7 +239,7 @@ filterOptions.value.filter_options.forEach((option, index) => {
   <div v-show="isCrewDocumentRenewScheduleModalOpen" class="fixed inset-0 z-30 flex items-end overflow-y-auto bg-black bg-opacity-50 sm:items-center sm:justify-center">
     <!-- Modal -->
     <form @submit.prevent="" style="position: absolute;top: 0;">
-      <div class="w-full px-6 py-4 bg-white rounded-t-lg dark-disabled:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
+      <div class="w-full px-6 py-4 overflow-y-auto bg-white rounded-t-lg dark-disabled:bg-gray-800 sm:rounded-lg sm:m-4 sm:max-w-xl" role="dialog" id="modal">
         <!-- Remove header if you don't want a close icon. Use modal body to place modal tile. -->
         <header class="flex justify-end">
           <button type="button"
@@ -290,12 +277,10 @@ filterOptions.value.filter_options.forEach((option, index) => {
               <tbody class="bg-white divide-y dark-disabled:divide-gray-700 dark-disabled:bg-gray-800">
               <tr class="text-gray-700 dark-disabled:text-gray-400">
                 <td class="px-1 py-1">
-<!--                  <input type="date" v-model.trim="renewFormData.issue_date" class="form-input" autocomplete="off" required/>-->
-                  <VueDatePicker v-model="renewFormData.issue_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+                  <input type="date" v-model.trim="renewFormData.issue_date" class="form-input" autocomplete="off" required/>
                 </td>
                 <td class="px-1 py-1">
-<!--                  <input type="date" v-model.trim="renewFormData.expire_date" class="form-input" autocomplete="off" required/>-->
-                  <VueDatePicker v-model="renewFormData.expire_date" class="form-input" required auto-apply  :enable-time-picker = "false" placeholder="dd/mm/yyyy" format="dd/MM/yyyy" model-type="yyyy-MM-dd" :text-input="{ format: dateFormat }"></VueDatePicker>
+                  <input type="date" v-model.trim="renewFormData.expire_date" class="form-input" autocomplete="off" required/>
                 </td>
                 <td class="px-1 py-1">
                   <input type="text" v-model.trim="renewFormData.reference_no" placeholder="Reference" class="form-input" autocomplete="off" />
@@ -322,7 +307,6 @@ filterOptions.value.filter_options.forEach((option, index) => {
       </div>
     </form>
   </div>
-  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
 <style lang="postcss" scoped>
 #modal {

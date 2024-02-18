@@ -15,14 +15,6 @@ use Modules\Operations\Entities\OpsVessel;
 
 class CrwRestHourEntryController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('permission:crw-rest-hour-view', ['only' => ['index', 'show']]);
-        $this->middleware('permission:crw-rest-hour-create', ['only' => ['store']]);
-        $this->middleware('permission:crw-rest-hour-edit', ['only' => ['show', 'update']]);
-        $this->middleware('permission:crw-rest-hour-delete', ['only' => ['destroy']]);
-        $this->middleware('permission:crw-rest-hour-record', ['only' => ['crwRestHourReport']]);
-    }    
     /**
      * Display a listing of the resource.
      *
@@ -87,9 +79,11 @@ class CrwRestHourEntryController extends Controller
      */
     public function show(CrwRestHourEntry $crwRestHourEntry)
     {
+        // dd($crwRestHourEntry);
+
         try {
             return response()->success('Retrieved succesfully',
-                $crwRestHourEntry->load('opsVessel:id,name', 'crwRestHourEntryLines.crwCrewProfile:id,full_name,pre_mobile_no,crw_rank_id', 'crwRestHourEntryLines.crwCrewAssignment'), 200);
+                $crwRestHourEntry->load('opsVessel:id,name', 'crwRestHourEntryLines.crwCrew:id,full_name,pre_mobile_no', 'crwRestHourEntryLines.crwCrewAssignment'), 200);
         }
         catch (QueryException $e)
         {

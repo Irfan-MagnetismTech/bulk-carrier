@@ -18,9 +18,7 @@ const thisHeight = ref(0);
 const USER = Store.getters.getCurrentUser;
 const PERMISSIONS = USER?.permissions ?? [];
 
-const role = ref(computed(() => {
-  return Store?.getters?.getCurrentUser?.role ?? null;
-}));
+console.log(PERMISSIONS);
 
 function revealChild(items,elementIndex) {
   mainSidebar.value.forEach((element, index) => {
@@ -90,8 +88,7 @@ function replaceLastOccurrence(mainString, search, replacement) {
             </a>
               <div v-show="element.is_open" class="collapse" :class="{ 'slide_down': element.is_open }">
                 <template v-for="(elementSubMenu,elementSubIndex) in element.subMenu">
-                  <li v-if="role !== 'super-admin' ? elementSubMenu && elementSubMenu.permissionKey && PERMISSIONS.some(permission => elementSubMenu.permissionKey.includes(permission)) : true"
-                      class="relative ml-2 rounded-md">
+                  <li v-if="elementSubMenu && elementSubMenu.permissionKey && PERMISSIONS.some(permission => elementSubMenu.permissionKey.includes(permission))" class="relative ml-2 rounded-md">
                   <a @click="revealGrandChild(element.subMenu.length+elementSubMenu.subSubMenu.length,elementIndex,elementSubIndex)" class="flex cursor-pointer items-center justify-between w-full text-sm font-semibold transition-colors rounded-md group group-hover:text-white duration-200 ease-linear p-2" aria-haspopup="true">
                       <span class="inline-flex items-center">
                         <router-link :to="{ name: elementSubMenu.route }" class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-white">
@@ -102,7 +99,7 @@ function replaceLastOccurrence(mainString, search, replacement) {
                     </a>
                     <ul v-if="elementSubMenu?.subSubMenu?.length && elementSubMenu.is_open" :class="{ '': grandChildsVisible }" style="height: 100%" class="collapse overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner dark-disabled:text-gray-400 dark-disabled:bg-gray-900 grand-child" aria-label="submenu">
                       <template v-for="(elementSubSubMenu,elementSubSubIndex) in elementSubMenu.subSubMenu">
-                        <li v-if="role !== 'super-admin' ? PERMISSIONS.includes(elementSubSubMenu?.permissionKey) : true" @click="toggleActiveClass(elementIndex,elementSubIndex,elementSubSubIndex)" class="p-2 transition-colors duration-150  dark-disabled:hover:text-gray-200 rounded-md duration-200 ease-linear p-2" :class="{ 'active': isActive === 'New Fixed Contract' }">
+                        <li v-if="PERMISSIONS.includes(elementSubSubMenu?.permissionKey)" @click="toggleActiveClass(elementIndex,elementSubIndex,elementSubSubIndex)" class="p-2 transition-colors duration-150  dark-disabled:hover:text-gray-200 rounded-md duration-200 ease-linear p-2" :class="{ 'active': isActive === 'New Fixed Contract' }">
                           <router-link :to="{ name: elementSubSubMenu.route }" class="inline-flex items-center w-full text-sm transition-colors duration-150 hover:text-gray-800 dark-disabled:hover:text-gray-200 dark-disabled:text-gray-400">
                             -<span class="ml-1" :class="{'active_menu': elementSubSubMenu.route === currentRoute.name }">{{ elementSubSubMenu.label }}</span>
                           </router-link>

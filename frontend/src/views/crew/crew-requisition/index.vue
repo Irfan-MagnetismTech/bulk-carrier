@@ -14,9 +14,6 @@ import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import { formatDate } from "../../../utils/helper.js";
-import { indexPdfExport, tableToExcel } from "../../../utils/helper.js";
-import FileExportButton from "../../../components/buttons/FileExportButton.vue";
-
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 const props = defineProps({
@@ -26,8 +23,6 @@ const props = defineProps({
   },
 });
 
-const rightAlign = [];
-const leftAlign = [1,2];
 const { crewRequisitions, getCrewRequisitions, deleteCrewRequisition, isLoading, isTableLoading  } = useCrewRequisition();
 const { setTitle } = Title();
 setTitle('Crew Requisition');
@@ -146,21 +141,11 @@ filterOptions.value.filter_options.forEach((option, index) => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Crew Requisition List</h2>
-    <div class="flex gap-2">
-      <default-button :title="'Create Item'" :to="{ name: 'crw.crewRequisitions.create' }" :icon="icons.AddIcon"></default-button>
-      <file-export-button
-          :businessUnit="businessUnit"
-          :pageOrientation="'l'"
-          :fileName="'Crew requisition List'"
-          :tableId="'crew-requisition-list'"
-          :leftAlign="leftAlign"
-          :rightAlign="rightAlign"
-      ></file-export-button>
-    </div>
+    <default-button :title="'Create Item'" :to="{ name: 'crw.crewRequisitions.create' }" :icon="icons.AddIcon"></default-button>
   </div>
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
-      <table class="w-full whitespace-no-wrap" id="crew-requisition-list">
+      <table class="w-full whitespace-no-wrap" >
           <thead>
             <tr class="w-full">
               <th class="w-16">

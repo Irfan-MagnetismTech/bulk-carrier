@@ -13,7 +13,7 @@ class CrwBankAccount extends Model
 
 	protected $fillable = ['crw_crew_id', 'bank_name', 'branch_name', 'routing_number', 'account_name', 'account_number', 'benificiary_name', 'attachment', 'is_active', 'business_unit'];
 
-    public function crwCrewProfile()
+    public function crwCrew()
     {
         return $this->belongsTo(CrwCrewProfile::class, 'crw_crew_id', 'id');
     }  

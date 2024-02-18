@@ -13,10 +13,7 @@ class CrwBankAccountController extends Controller
 {
     public function __construct(private FileUploadService $fileUpload)
     {
-        $this->middleware('permission:crw-bank-account-view', ['only' => ['index', 'show']]);
-        $this->middleware('permission:crw-bank-account-create', ['only' => ['store']]);
-        $this->middleware('permission:crw-bank-account-edit', ['only' => ['show', 'update']]);
-        $this->middleware('permission:crw-bank-account-delete', ['only' => ['destroy']]);    
+    
     }
     /**
      * Display a listing of the resource.
@@ -26,7 +23,7 @@ class CrwBankAccountController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwBankAccounts = CrwBankAccount::with('crwCrewProfile')->globalSearch($request->all());
+            $crwBankAccounts = CrwBankAccount::with('crwCrew')->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwBankAccounts, 200);
         }
@@ -67,7 +64,7 @@ class CrwBankAccountController extends Controller
     public function show(CrwBankAccount $crwBankAccount)
     {
         try {
-            return response()->success('Retrieved Succesfully', $crwBankAccount->load('crwCrewProfile'), 200);
+            return response()->success('Retrieved Succesfully', $crwBankAccount->load('crwCrew'), 200);
         }
         catch (QueryException $e)
         {

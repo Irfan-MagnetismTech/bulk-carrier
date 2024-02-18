@@ -11,13 +11,6 @@ use Modules\Crew\Http\Requests\CrwSalaryStructureRequest;
 
 class CrwSalaryStructureController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('permission:crw-salary-structure-view', ['only' => ['index', 'show']]);
-        $this->middleware('permission:crw-salary-structure-create', ['only' => ['store']]);
-        $this->middleware('permission:crw-salary-structure-edit', ['only' => ['show', 'update']]);
-        $this->middleware('permission:crw-salary-structure-delete', ['only' => ['destroy']]);
-    }    
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +19,7 @@ class CrwSalaryStructureController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwSalaryStructures = CrwSalaryStructure::with('crwSalaryStructureBreakdowns','crwCrewProfile')->globalSearch($request->all());
+            $crwSalaryStructures = CrwSalaryStructure::with('crwSalaryStructureBreakdowns','crwCrew')->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwSalaryStructures, 200);
         }
@@ -65,7 +58,7 @@ class CrwSalaryStructureController extends Controller
     public function show(CrwSalaryStructure $crwSalaryStructure)
     {
         try {
-            return response()->success('Retrieved successfully', $crwSalaryStructure->load('crwSalaryStructureBreakdowns','crwCrewProfile'), 200);
+            return response()->success('Retrieved successfully', $crwSalaryStructure->load('crwSalaryStructureBreakdowns','crwCrew'), 200);
         }
         catch (QueryException $e)
         {

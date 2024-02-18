@@ -12,7 +12,7 @@ class CrwIncidentParticipant extends Model
 
 	protected $fillable = ['crw_crew_id', 'injury_status', 'notes'];
     
-    public function crwCrewProfile()
+    public function crwCrew()
     {
         return $this->belongsTo(CrwCrewProfile::class, 'crw_crew_id', 'id');
     }

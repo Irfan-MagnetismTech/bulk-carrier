@@ -135,7 +135,7 @@ export default function useRank() {
             await getRanks(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            errors.value = notification.showError(status, data);
+            notification.showError(status);
         } finally {
             //loader.hide();
             isLoading.value = false;

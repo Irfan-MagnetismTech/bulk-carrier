@@ -61,24 +61,13 @@ let filterOptions = ref( {
     
     {
       "rel_type": null,
-      "relation_name": 'crwCrewProfile',
+      "relation_name": 'crwCrew',
       "field_name": "full_name",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
       "label": "Crew Name",
-      "filter_type": "input"
-    },
-    {
-      "rel_type": null,
-      "relation_name": 'crwCrewProfile.crwCurrentRank',
-      "field_name": "name",
-      "search_param": "",
-      "action": null,
-      "order_by": null,
-      "date_from": null,
-      "label": "Current Rank",
       "filter_type": "input"
     },
     
@@ -228,8 +217,7 @@ onMounted(() => {
 
           <tr v-for="(appraisalRecord,index) in appraisalRecords?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-            <td class="text-left">{{ appraisalRecord?.crwCrewProfile?.full_name }}</td>
-            <td class="text-left">{{ appraisalRecord?.crwCrewProfile?.crwCurrentRank?.name }}</td>
+            <td class="text-left">{{ appraisalRecord?.crwCrew?.full_name }}</td>
             <td class="text-left">{{ appraisalRecord?.appraisalForm?.form_no }}</td>
             <td class="text-left">{{ appraisalRecord?.appraisalForm?.version }}</td>
             <td class="text-left">{{ appraisalRecord?.crwCrewAssignment?.opsVessel?.name }}</td>
