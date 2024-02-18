@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col justify-center w-full md:flex-row md:gap-2">
-        
+        <business-unit-input v-model="form.business_unit" :page="formType"></business-unit-input>
         <label class="block w-full mt-2 text-sm">
             <span class="text-gray-700 dark-disabled:text-gray-300">Cargo Type <span class="text-red-500">*</span></span>
             <input type="text" v-model.trim="form.cargo_type" placeholder="Cargo Type" class="form-input" required autocomplete="off" :class="{ 'bg-gray-100': formType === 'edit' }" :disabled="formType=='edit'" />
@@ -9,6 +9,7 @@
             <span class="text-gray-700 dark-disabled:text-gray-300">Description</span>
             <input type="text" v-model.trim="form.description" placeholder="Description" class="form-input" autocomplete="off" />
         </label>
+        <label class="block w-full mt-2 text-sm"></label>
     </div>
 
     <ErrorComponent :errors="errors"></ErrorComponent>
@@ -17,6 +18,7 @@
 <script setup>
 import Error from "../../Error.vue";
 import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
+import BusinessUnitInput from "../../input/BusinessUnitInput.vue";
 
 const props = defineProps({
     form: {
