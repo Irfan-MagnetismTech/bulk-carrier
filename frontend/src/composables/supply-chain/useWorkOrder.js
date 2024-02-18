@@ -33,6 +33,7 @@ export default function useWorkOrder() {
         foreign_to_bdt: 0,
         foreign_to_usd: 0,
         remarks: '',
+        security_money: 0,
         business_unit: '',
         date: '',
         wr_no: null,

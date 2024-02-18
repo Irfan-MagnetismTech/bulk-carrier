@@ -26,6 +26,7 @@ class ScmWo extends Model
         'currency',
         'usd_to_bdt',
         'foreign_to_usd',
+        'security_money',
         'sub_total',
         'total_amount',
         'net_amount',

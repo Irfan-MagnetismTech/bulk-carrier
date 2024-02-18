@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('currency')->nullable();
             $table->decimal('usd_to_bdt')->nullable();
             $table->decimal('foreign_to_usd')->nullable();
+            $table->decimal('security_money')->nullable();
             $table->decimal('sub_total')->nullable();
             $table->decimal('total_amount')->nullable();
             $table->decimal('net_amount')->nullable();

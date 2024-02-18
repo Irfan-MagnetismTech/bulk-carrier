@@ -624,6 +624,10 @@
         <span class="label-item-title">Convertion Rate( USD To BDT ) <span class="text-red-500">*</span></span>
         <input type="number" step="0.01" v-model="form.usd_to_bdt" required class="form-input" name="approved_date" :id="'usd_to_bdt'" />
     </label>
+    <label class="label-group">
+        <span class="label-item-title">Security Money <span class="text-red-500">*</span></span>
+        <input type="number" step="0.01" v-model="form.security_money" required class="form-input"/>
+    </label>
     <RemarksComponent class="col-span-1 md:col-span-3 lg:col-span-4" v-model="form.remarks" :maxlength="300" :fieldLabel="'Remarks'"></RemarksComponent>
   </div>
 
