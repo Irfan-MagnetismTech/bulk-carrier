@@ -11,21 +11,23 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Nwidart\Modules\Facades\Module;
 use Illuminate\Support\Facades\File;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmCs;
 use Modules\SupplyChain\Entities\ScmPo;
 use Modules\SupplyChain\Entities\ScmPr;
+use Modules\SupplyChain\Entities\ScmMrr;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmPoItem;
 use Modules\SupplyChain\Entities\ScmPrLine;
 use Modules\SupplyChain\Entities\ScmVendor;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Entities\ScmCsMaterial;
-use Modules\SupplyChain\Entities\ScmMrr;
 use Modules\SupplyChain\Http\Requests\ScmPoRequest;
 
 class ScmPoController extends Controller
 {
+    use HasRoles;
     function __construct()
     {
         $this->middleware('permission:scm-purchase-order-view|scm-purchase-order-create|scm-purchase-order-edit|scm-purchase-order-delete|scm-purchase-order-close', ['only' => ['index', 'show']]);
