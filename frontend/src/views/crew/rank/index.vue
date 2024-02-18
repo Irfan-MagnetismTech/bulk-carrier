@@ -204,15 +204,15 @@ filterOptions.value.filter_options.forEach((option, index) => {
           </tbody>
           <tfoot v-if="!ranks?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="4"></td>
+            <td colspan="5"></td>
           </tr>
           <tr v-else-if="isTableLoading">
-              <td colspan="4">
+              <td colspan="5">
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
             </tr>
           <tr v-else-if="!ranks?.data?.data?.length">
-            <td colspan="4">No data found.</td>
+            <td colspan="5">No data found.</td>
           </tr>
           </tfoot>
       </table>

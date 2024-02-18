@@ -11,6 +11,7 @@ import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -24,7 +25,7 @@ const props = defineProps({
   },
 });
 
-const { crewBankAccounts, getCrewBankAccounts, deleteCrewBankAccount, isLoading, isTableLoading } = useCrewBankAccount();
+const { crewBankAccounts, getCrewBankAccounts, deleteCrewBankAccount, isLoading, errors, isTableLoading } = useCrewBankAccount();
 
 const debouncedValue = useDebouncedRef('', 800);
 
@@ -230,4 +231,5 @@ onMounted(() => {
     </div>
     <Paginate :data="crewBankAccounts" to="crw.crewBankAccounts.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
