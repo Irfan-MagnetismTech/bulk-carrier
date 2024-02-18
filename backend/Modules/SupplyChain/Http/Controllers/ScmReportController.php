@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmPr;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmStockLedger;
+use Modules\SupplyChain\Entities\ScmWo;
 
 class ScmReportController extends Controller
 {
@@ -22,6 +23,9 @@ class ScmReportController extends Controller
             $result = ScmStockLedger::query()
                 ->when(request()->has('scm_warehouse_id'), function ($query) {
                     $query->where('scm_warehouse_id', request()->scm_warehouse_id);
+                })
+                ->when(request()->has('business_unit') && isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
+                    $query->where('business_unit', request()->business_unit);
                 })
                 ->get()
                 ->groupBy('scm_material_id');
@@ -70,6 +74,9 @@ class ScmReportController extends Controller
                 $query->where('scm_material_id', request()->scm_material_id);
             })
             ->whereBetween('date', [$request->from_date, $request->to_date])
+            ->when(request()->has('business_unit') && isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
+                $query->where('business_unit', request()->business_unit);
+            })
             ->get()
             ->groupBy(function($record) {
                 return Carbon::parse($record->date)->format('Y-m-d');
@@ -127,6 +134,9 @@ class ScmReportController extends Controller
                 })
                 ->when(request()->has('status') && isset(request()->status), function ($query) {
                     $query->where('status', request()->status);
+                })
+                ->when(request()->has('business_unit') && isset(request()->business_unit) && request()->business_unit != "ALL", function($query){
+                    $query->where('business_unit', request()->business_unit);
                 })
                 ->whereBetween('raised_date', [$request->from_date, $request->to_date])
                 ->get();
