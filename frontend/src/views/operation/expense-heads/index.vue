@@ -12,6 +12,7 @@ import Store from "../../../store";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 const { expenseHeads, getExpenseHeads, deleteExpenseHead, isLoading, isTableLoading, errors } = useExpenseHead();
 const icons = useHeroIcon();
@@ -28,6 +29,8 @@ setTitle('Expense Head List');
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const rightAlign = [];
+const leftAlign = [1,2];
 
 let filterOptions = ref({
   "business_unit": businessUnit.value,
@@ -127,23 +130,32 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Expense Head List</h2>
-    <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.expense-heads.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.expense-heads.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+        :businessUnit="businessUnit"
+        :pageOrientation="'l'"
+        :fileName="'Expense Head List'"
+        :tableId="'expense-head-list'"
+        :leftAlign="leftAlign"
+        :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
   
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="expense-head-list">
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="expenseHeads?.data?.length" class="relative">
               <tr v-for="(expenseHead, index) in expenseHeads.data" :key="expenseHead?.id">
                   <td class="text-center">{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
                   <td>{{ expenseHead?.name }}</td>
                   <td>
-                    <span v-for="(subhead,index) in expenseHead?.opsSubHeads" :key="index"
-                          class="text-xs mr-2 mb-2 inline-block py-1 px-2.5 leading-none whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded">
-                      {{ subhead?.name }}
+                    <span v-for="(subhead,index) in expenseHead?.opsSubHeads" :key="index">
+                      {{ subhead?.name }}<span v-if="index+1 < expenseHead?.opsSubHeads.length">, </span>
                     </span>
                   </td>
                   
