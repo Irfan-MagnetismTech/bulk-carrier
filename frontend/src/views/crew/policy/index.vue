@@ -15,6 +15,8 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import useGlobalFilter from "../../../composables/useGlobalFilter";
 import {useRouter} from "vue-router";
+import { indexPdfExport, tableToExcel } from "../../../utils/helper.js";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 const props = defineProps({
   page: {
@@ -22,6 +24,9 @@ const props = defineProps({
     default: 1,
   },
 });
+
+const rightAlign = [];
+const leftAlign = [1,2,3];
 
 const router = useRouter();
 const { policies, getPolicies, deletePolicy, isLoading, isTableLoading  } = usePolicy();
@@ -135,13 +140,23 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Policy List</h2>
-    <default-button :title="'Create Policy'" :to="{ name: 'crw.policies.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Create Policy'" :to="{ name: 'crw.policies.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+          :businessUnit="businessUnit"
+          :pageOrientation="'l'"
+          :fileName="'Policy List'"
+          :tableId="'policy-list'"
+          :leftAlign="leftAlign"
+          :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
 
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="policy-list">
           <thead>
             <tr class="w-full">
               <th class="w-16">
@@ -214,7 +229,7 @@ onMounted(() => {
             <td class="text-left">{{ crwPolicy?.name }}</td>
             <td class="text-left">{{ crwPolicy?.type }}</td>
             <td>
-              <a v-html="icons.Attachment" type="button" v-if="typeof crwPolicy?.attachment === 'string'" class="text-green-800" target="_blank" :href="env.BASE_API_URL+'/'+crwPolicy?.attachment"></a>
+              <a v-html="icons.Attachment" type="button" v-if="typeof crwPolicy?.attachment === 'string' && crwPolicy?.attachment !== 'null'" class="text-green-800" target="_blank" :href="env.BASE_API_URL+'/'+crwPolicy?.attachment"></a>
               <a v-else>---</a>
             </td>
             <td>

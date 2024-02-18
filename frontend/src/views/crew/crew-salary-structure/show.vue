@@ -52,11 +52,15 @@ onMounted(() => {
             </tr>
             <tr>
               <th class="w-40"> Crew Name </th>
-              <td>{{ crewSalaryStructure?.crwCrew?.full_name }}</td>
+              <td>{{ crewSalaryStructure?.crwCrewProfile?.full_name }}</td>
+            </tr>
+            <tr>
+              <th class="w-40"> Current Rank </th>
+              <td>{{ crewSalaryStructure?.crwCrewProfile?.crwCurrentRank?.name }}</td>
             </tr>
             <tr>
               <th class="w-40"> Crew Contact </th>
-              <td>{{ crewSalaryStructure?.crwCrew?.pre_mobile_no }}</td>
+              <td>{{ crewSalaryStructure?.crwCrewProfile?.pre_mobile_no }}</td>
             </tr>
             <tr>
               <th class="w-40"> Gross Salary </th>

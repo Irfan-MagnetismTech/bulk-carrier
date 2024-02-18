@@ -13,6 +13,8 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import { indexPdfExport, tableToExcel } from "../../../utils/helper.js";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 
 const icons = useHeroIcon();
@@ -25,6 +27,8 @@ const props = defineProps({
   },
 });
 
+const rightAlign = [];
+const leftAlign = [1,2];
 const { agencies, getAgencies, deleteAgency, isLoading, isTableLoading } = useAgency();
 const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
@@ -139,29 +143,39 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Agency List</h2>
-    <default-button :title="'Create Agency'" :to="{ name: 'crw.agencies.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Create Agency'" :to="{ name: 'crw.agencies.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+          :businessUnit="businessUnit"
+          :pageOrientation="'l'"
+          :fileName="'Agency List'"
+          :tableId="'crew-agency-list'"
+          :leftAlign="leftAlign"
+          :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="crew-agency-list">
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
-          <tr v-for="(crewAgency,index) in agencies?.data" :key="index">
+          <tr v-for="(crwAgency,index) in agencies?.data" :key="index">
             <td>{{ ((paginatedPage-1) * filterOptions.items_per_page) + index + 1 }}</td>
-            <td class="!text-left">{{ crewAgency?.agency_name }}</td>
-            <td class="!text-left">{{ crewAgency?.address }}</td>
-            <td class="!text-left">{{ crewAgency?.phone }}</td>
-            <td class="!text-left">{{ crewAgency?.email }}</td>
+            <td class="!text-left">{{ crwAgency?.agency_name }}</td>
+            <td class="!text-left">{{ crwAgency?.address }}</td>
+            <td class="!text-left">{{ crwAgency?.phone }}</td>
+            <td class="!text-left">{{ crwAgency?.email }}</td>
             <td>
-              <span :class="crewAgency?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crewAgency?.business_unit }}</span>
+              <span :class="crwAgency?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ crwAgency?.business_unit }}</span>
             </td>
             <td>
               <nobr>
-                <action-button :action="'show'" :to="{ name: 'crw.agencies.show', params: { agencyId: crewAgency?.id } }"></action-button>
-                <action-button :action="'edit'" :to="{ name: 'crw.agencies.edit', params: { agencyId: crewAgency?.id } }"></action-button>
-                <action-button @click="confirmDelete(crewAgency?.id)" :action="'delete'"></action-button>
+                <action-button :action="'show'" :to="{ name: 'crw.agencies.show', params: { agencyId: crwAgency?.id } }"></action-button>
+                <action-button :action="'edit'" :to="{ name: 'crw.agencies.edit', params: { agencyId: crwAgency?.id } }"></action-button>
+                <action-button @click="confirmDelete(crwAgency?.id)" :action="'delete'"></action-button>
               </nobr>
             </td>
           </tr>

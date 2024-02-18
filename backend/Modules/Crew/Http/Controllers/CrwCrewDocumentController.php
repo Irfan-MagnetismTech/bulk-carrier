@@ -19,7 +19,11 @@ class CrwCrewDocumentController extends Controller
 
     public function __construct(private FileUploadService $fileUpload)
     {
-
+        $this->middleware('permission:crw-document-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:crw-document-create', ['only' => ['store']]);
+        $this->middleware('permission:crw-document-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:crw-document-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:crw-document-renew', ['only' => ['renewScehdules']]);
     }
 
     /**
@@ -30,7 +34,7 @@ class CrwCrewDocumentController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwCrewDocuments = CrwCrewProfile::with('crewDocuments:id,crw_crew_profile_id,document_name', 'crwCurrentRank', 'crwRank')->globalSearch($request->all());
+            $crwCrewDocuments = CrwCrewProfile::with('crewDocuments:id,crw_crew_profile_id,document_name', 'crwCurrentRank')->globalSearch($request->all());
 
             return response()->success('Retrieved Successfully', $crwCrewDocuments, 200);
         }
@@ -135,33 +139,11 @@ class CrwCrewDocumentController extends Controller
         }
     }
 
-    // public function renewScehdules(Request $request){
-    //     try {
-    //         $requestCustom = json_decode($request['data']);
-    //         $requestedDays = intval($requestCustom->filter_options[1]->search_param); 
-    //         $tillDate = Carbon::today()->addDays($requestedDays); 
-
-    //         $documents = CrwCrewDocument::query()
-    //         ->where('validity_period_in_month', '>', 0)
-    //         ->with('crwCrewProfile:id,full_name,pre_mobile_no,pre_email')
-    //         ->withWhereHas('crwCrewDocumentRenewal', function ($q) use($tillDate) {
-    //             $q->latest()->where('expire_date', '<', Carbon::today()->addDays($tillDate));
-    //         })
-    //         ->globalSearch($request->all());
-
-    //         return response()->success('Retrieved Succesfully', $documents, 200);
-    //     }   
-    //     catch (QueryException $e)
-    //     {
-    //         return response()->error($e->getMessage(), 500);
-    //     }
-    // }
-
     public function renewScehdules(Request $request){
         try {
             $leftDays = request()->left_days ?? 30; 
 
-            $documents = CrwCrewDocument::with('crwCrewDocumentRenewal', 'crwCrewProfile:id,full_name,pre_mobile_no,pre_email')            
+            $documents = CrwCrewDocument::with('crwCrewDocumentRenewal', 'crwCrewProfile:id,full_name,pre_mobile_no,pre_email,crw_rank_id')            
             ->where('validity_period_in_month', '>', 0)
             ->get();
 

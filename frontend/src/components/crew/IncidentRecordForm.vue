@@ -13,6 +13,7 @@ import useHeroIcon from "../../assets/heroIcon";
 const icons = useHeroIcon();
 
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
+const dateTimeFormat = ref(Store.getters.getVueDatePickerTextInputFormat.dateTime);
 const props = defineProps({
   form: {
     required: false,
@@ -25,20 +26,6 @@ const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const selectedFile = (event) => {
   props.form.attachment = event.target.files[0];
 };
-
-// watch(() => props.form, (value) => {
-//   if(value){
-//     props.form.ops_vessel_id = props.form?.ops_vessel_name?.id ?? '';
-//     props.form.ops_vessel_name = value?.opsVessel;
-//     value?.crwIncidentParticipants?.forEach((line, index) => {
-//       props.form.crwIncidentParticipants[index].crw_crew_id = props.form.crwIncidentParticipants[index]?.crw_crew_name?.id ?? '';
-//
-//       props.form.crwIncidentParticipants[index].crw_crew_name = value?.crwIncidentParticipants[index]?.crwCrew ?? '';
-//
-//       props.form.crwIncidentParticipants[index].crw_crew_rank = props.form.crwIncidentParticipants[index].crw_crew_name?.crwCurrentRank?.name ?? '';
-//     });
-//   }
-// }, {deep: true});
 
 function addItem() {
   let obj = {
@@ -104,7 +91,8 @@ onMounted(() => {
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Incident Date & Time <span class="text-red-500">*</span></span>
-        <VueDatePicker v-model.trim="form.date_time" utc class="form-input" required auto-apply  :enable-time-picker = "true" placeholder="Select Date Time" :text-input="{ format: dateFormat }"></VueDatePicker>
+<!--        <input type="datetime-local" class="form-input"  v-model.trim="form.date_time">-->
+        <VueDatePicker v-model.trim="form.date_time" class="form-input" required auto-apply   format="dd/MM/yyyy hh:mm a" placeholder="Select Date Time" model-type="yyyy-MM-dd HH:mm:ss" :is-24="false"  :flow="['calendar', 'time']" :text-input="{ format: dateTimeFormat }" ></VueDatePicker>
       </label>
       <label class="block w-full mt-2 text-sm">
         <span class="text-gray-700 dark-disabled:text-gray-300">Incident Type <span class="text-red-500">*</span></span>

@@ -18,15 +18,6 @@ const { setTitle } = Title();
 
 setTitle('Edit Crew Document');
 
-watch(crewDocument, (value) => {
-  if(value) {
-    // incidentRecord.value.ops_vessel_name = value?.opsVessel;
-    // value?.crwIncidentParticipants?.forEach((line, index) => {
-    //   incidentRecord.value.crwIncidentParticipants[index].crw_crew_name = value?.crwIncidentParticipants[index]?.crwCrew ?? '';
-    // });
-  }
-});
-
 onMounted(() => {
   showCrewDocument(documentId);
 });

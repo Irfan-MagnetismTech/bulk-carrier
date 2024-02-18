@@ -11,6 +11,14 @@ use Modules\Crew\Http\Requests\CrwAgencyBillRequest;
 
 class CrwAgencyBillController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:crw-agency-bill-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:crw-agency-bill-create', ['only' => ['store']]);
+        $this->middleware('permission:crw-agency-bill-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:crw-agency-bill-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
