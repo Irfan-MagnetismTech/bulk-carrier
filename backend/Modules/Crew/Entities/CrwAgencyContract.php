@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\GlobalSearchTrait;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 
 class CrwAgencyContract extends Model
 {
@@ -16,5 +18,9 @@ class CrwAgencyContract extends Model
     public function crwAgency()
     {
         return $this->belongsTo(CrwAgency::class);
+    }
+    public function crwAgencyBill(): HasMany
+    {
+        return $this->hasMany(CrwAgencyBill::class, 'crw_agency_contract_id', 'id');
     }    
 }

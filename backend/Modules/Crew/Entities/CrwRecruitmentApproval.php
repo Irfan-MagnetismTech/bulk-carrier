@@ -6,6 +6,7 @@ use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CrwRecruitmentApproval extends Model
 {
@@ -16,4 +17,9 @@ class CrwRecruitmentApproval extends Model
 	public function crwRecruitmentApprovalLines(){
 		return $this->hasMany(CrwRecruitmentApprovalLine::class);
 	}
+
+    public function crwCrewProfiles(): HasMany
+    {
+        return $this->hasMany(CrwCrewProfile::class, 'crw_recruitment_approval_id', 'id');
+    }	
 }
