@@ -12,6 +12,7 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import useCustomer from '../../../composables/operations/useCustomer';
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 const icons = useHeroIcon();
 const { customers, getCustomers, deleteCustomer, isLoading, isTableLoading } = useCustomer();
@@ -30,7 +31,8 @@ setTitle('Customer List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
-
+const rightAlign = [];
+const leftAlign = [1,2,3,5];
 
 function confirmDelete(id) {
   Swal.fire({
@@ -165,13 +167,23 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Customer List</h2>
-    <default-button :title="'Create Customer'" :to="{ name: 'ops.configurations.customers.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Create Customer'" :to="{ name: 'ops.configurations.customers.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+        :businessUnit="businessUnit"
+        :pageOrientation="'l'"
+        :fileName="'Customer List'"
+        :tableId="'customer-list'"
+        :leftAlign="leftAlign"
+        :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="customer-list">
           <!-- <thead>
             <tr class="w-full">
               <th class="w-16">
