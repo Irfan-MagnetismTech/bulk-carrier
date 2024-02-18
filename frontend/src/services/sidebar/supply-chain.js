@@ -29,7 +29,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'scm-unit-view',
                         subSubMenu: [],
                     },
                     {
@@ -39,7 +39,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'scm-material-category-view',
                         subSubMenu: [],
                     },
                     {
@@ -49,7 +49,7 @@ export default [
                     postIcon: icons.DownArrow,
                     is_active: false,
                     is_open: false,
-                    permissionKey: '',
+                    permissionKey: 'scm-material-view',
                     subSubMenu: [],
                     },
                     {
@@ -59,7 +59,7 @@ export default [
                     postIcon: icons.DownArrow,
                     is_active: false,
                     is_open: false,
-                    permissionKey: '',
+                    permissionKey: 'scm-warehouse-view',
                     subSubMenu:[],
                     },
                     {
@@ -69,7 +69,7 @@ export default [
                     postIcon: icons.DownArrow,
                     is_active: false,
                     is_open: false,
-                    permissionKey: '',
+                    permissionKey: 'scm-service-view',
                     subSubMenu:[],
                     },
                     {
@@ -79,7 +79,7 @@ export default [
                     postIcon: icons.DownArrow,
                     is_active: false,
                     is_open: false,
-                    permissionKey: '',
+                    permissionKey: 'scm-vendor-view',
                     subSubMenu:[],
                     },
                     {
@@ -89,7 +89,7 @@ export default [
                     postIcon: icons.DownArrow,
                     is_active: false,
                     is_open: false,
-                    permissionKey: '',
+                    permissionKey: 'scm-opening-stock-view',
                     subSubMenu:[],
                     },
                     ]
@@ -110,7 +110,7 @@ export default [
                             postIcon: icons.DownArrow,
                             is_active: false,
                             is_open: false,
-                            permissionKey: '',
+                            permissionKey: 'scm-purchase-requisition-view',
                             subSubMenu: []
                         },
                         {
@@ -120,7 +120,7 @@ export default [
                             postIcon: icons.DownArrow,
                             is_active: false,
                             is_open: false,
-                            permissionKey: '',
+                            permissionKey: 'scm-material-cs-view',
                             subSubMenu: []
                         },
                         {
@@ -130,7 +130,7 @@ export default [
                             postIcon: icons.DownArrow,
                             is_active: false,
                             is_open: false,
-                            permissionKey: '',
+                            permissionKey: 'scm-purchase-order-view',
                             subSubMenu: []
                         },
                         {
@@ -140,7 +140,7 @@ export default [
                             postIcon: icons.DownArrow,
                             is_active: false,
                             is_open: false,
-                            permissionKey: '',
+                            permissionKey: 'scm-lc-records-view',
                             subSubMenu: []
                         },
                         {
@@ -150,7 +150,7 @@ export default [
                             postIcon: icons.DownArrow,
                             is_active: false,
                             is_open: false,
-                            permissionKey: '',
+                            permissionKey: 'scm-material-receipt-report-view',
                             subSubMenu: []
                         },
                         {
@@ -160,7 +160,7 @@ export default [
                             postIcon: icons.DownArrow,
                             is_active: false,
                             is_open: false,
-                            permissionKey: '',
+                            permissionKey: 'scm-material-costing-view',
                             subSubMenu: []
                         },
                         {
@@ -170,7 +170,7 @@ export default [
                             postIcon: icons.DownArrow,
                             is_active: false,
                             is_open: false,
-                            permissionKey: '',
+                            permissionKey: 'scm-vendor-bill-view',
                             subSubMenu: []
                         },
                         
@@ -192,7 +192,7 @@ export default [
                             postIcon: icons.DownArrow,
                             is_active: false,
                             is_open: false,
-                            permissionKey: '',
+                            permissionKey: 'scm-store-requisition-view',
                             subSubMenu: []
                         },
                         {
@@ -202,7 +202,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'scm-store-issue-view',
                         subSubMenu: []
                     },
                     {
@@ -212,7 +212,7 @@ export default [
                         postIcon: icons.DownArrow,
                         is_active: false,
                         is_open: false,
-                        permissionKey: '',
+                        permissionKey: 'scm-store-issue-return-view',
                         subSubMenu: []
                         },
                         {
@@ -222,7 +222,7 @@ export default [
                             postIcon: icons.DownArrow,
                             is_active: false,
                             is_open: false,
-                            permissionKey: '',
+                            permissionKey: 'scm-movement-requisition-view',
                             subSubMenu: []
                         },
                         {
@@ -232,7 +232,7 @@ export default [
                             postIcon: icons.DownArrow,
                             is_active: false,
                             is_open: false,
-                            permissionKey: '',
+                            permissionKey: 'scm-movement-out-view',
                             subSubMenu: []
                         },
                         {
@@ -242,7 +242,7 @@ export default [
                             postIcon: icons.DownArrow,
                             is_active: false,
                             is_open: false,
-                            permissionKey: '',
+                            permissionKey: 'scm-movement-in-view',
                             subSubMenu: []
                         },
                         {
@@ -252,7 +252,7 @@ export default [
                             postIcon: icons.DownArrow,
                             is_active: false,
                             is_open: false,
-                            permissionKey: '',
+                            permissionKey: 'scm-material-adjustment-view',
                             subSubMenu: []
                         },
                     ]
