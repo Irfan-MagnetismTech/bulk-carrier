@@ -21,10 +21,10 @@ class ScmMaterialController extends Controller
 
     function __construct(private FileUploadService $fileUpload)
     {
-        //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
-        //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
-        //     $this->middleware('permission:charterer-contract-edit', ['only' => ['update']]);
-        //     $this->middleware('permission:charterer-contract-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:scm-material-view|scm-material-create|scm-material-edit|scm-material-delete|scm-material-close', ['only' => ['index', 'show']]);
+        $this->middleware('permission:scm-material-create', ['only' => ['store']]);
+        $this->middleware('permission:scm-material-edit', ['only' => ['update']]);
+        $this->middleware('permission:scm-material-delete', ['only' => ['destroy']]);
     }
 
     /**
