@@ -13,6 +13,7 @@ import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -25,6 +26,8 @@ const props = defineProps({
   },
 });
 
+const rightAlign = [];
+const leftAlign = [1];
 const { crewProfiles, getCrewProfiles, deleteCrewProfile, isLoading, isTableLoading } = useCrewProfile();
 const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
@@ -169,12 +172,22 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Crew Profile List</h2>
-    <default-button :title="'Create Item'" :to="{ name: 'crw.profiles.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Create Item'" :to="{ name: 'crw.profiles.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+          :businessUnit="businessUnit"
+          :pageOrientation="'l'"
+          :fileName="'Crew Profile List'"
+          :tableId="'crew-profile-list'"
+          :leftAlign="leftAlign"
+          :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
-      <table class="w-full whitespace-no-wrap">
+      <table class="w-full whitespace-no-wrap" id="crew-profile-list">
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
           <tr v-for="(crwProfileData,index) in crewProfiles?.data" :key="index">

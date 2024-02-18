@@ -16,6 +16,7 @@ import { formatDate,formatMonthYear } from "../../../utils/helper.js";
 const icons = useHeroIcon();
 const router = useRouter();
 import env from '../../../config/env';
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 const props = defineProps({
   page: {
@@ -24,6 +25,8 @@ const props = defineProps({
   },
 });
 
+const rightAlign = [];
+const leftAlign = [1];
 const { crwAttendances, getCrwAttendances, deleteCrwAttendance, isLoading, isTableLoading } = useCrwAttendance();
 const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
@@ -137,13 +140,23 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Crew Attendance List</h2>
-    <default-button :title="'Create Item'" :to="{ name: 'crw.crwAttendances.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Create Item'" :to="{ name: 'crw.crwAttendances.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+          :businessUnit="businessUnit"
+          :pageOrientation="'l'"
+          :fileName="'Crew Attendance List'"
+          :tableId="'crew-attendance-list'"
+          :leftAlign="leftAlign"
+          :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="crew-attendance-list">
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
           <tr v-for="(crwAttendance,index) in crwAttendances?.data" :key="index">

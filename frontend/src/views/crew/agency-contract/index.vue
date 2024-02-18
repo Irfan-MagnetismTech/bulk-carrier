@@ -14,6 +14,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import { formatDate } from "../../../utils/helper.js";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -26,6 +27,8 @@ const props = defineProps({
   },
 });
 
+const rightAlign = [];
+const leftAlign = [1,2];
 const { agencyContracts, getAgencyContracts, deleteAgencyContract, isLoading, isTableLoading } = useAgencyContract();
 const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
@@ -158,13 +161,23 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Agency Contract List</h2>
-    <default-button :title="'Create Item'" :to="{ name: 'crw.agencyContracts.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Create Item'" :to="{ name: 'crw.agencyContracts.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+          :businessUnit="businessUnit"
+          :pageOrientation="'l'"
+          :fileName="'Agency contract List'"
+          :tableId="'crew-agency-contract'"
+          :leftAlign="leftAlign"
+          :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="crew-agency-contract">
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody>
           <tr v-for="(contract,index) in agencyContracts?.data" :key="index">

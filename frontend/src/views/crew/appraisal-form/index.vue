@@ -16,6 +16,8 @@ import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
+
 
 const icons = useHeroIcon();
 
@@ -26,6 +28,8 @@ const props = defineProps({
   },
 });
 
+const rightAlign = [];
+const leftAlign = [1];
 const { appraisalForms, getAppraisalForms, deleteAppraisalForm, isLoading, isTableLoading, errors } = useAppraisalForm();
 const { setTitle } = Title();
 setTitle('Appraisal Form');
@@ -106,17 +110,6 @@ let filterOptions = ref( {
       "label": "Total Marks",
       "filter_type": "input"
     },
-
-
-
-
-
-
-    
-    
-
-    
-    
   ]
 });
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
@@ -162,7 +155,17 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Appraisal Form List</h2>
-    <default-button :title="'Create Appraisal Form'" :to="{ name: 'crw.appraisal-forms.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Create Appraisal Form'" :to="{ name: 'crw.appraisal-forms.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+          :businessUnit="businessUnit"
+          :pageOrientation="'l'"
+          :fileName="'Appraisal Form List'"
+          :tableId="'crew-appraisal-form-list'"
+          :leftAlign="leftAlign"
+          :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
   <div class="flex items-center justify-between mb-2 select-none">
     <!-- <div class="relative w-full">
@@ -186,7 +189,7 @@ onMounted(() => {
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="crew-appraisal-form-list">
           
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody class="relative">

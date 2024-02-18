@@ -18,6 +18,7 @@ import useCrewDocument from "../../../composables/crew/useCrewDocument";
 import useCrewCommonApiRequest from "../../../composables/crew/useCrewCommonApiRequest";
 import env from '../../../config/env';
 import Store from "../../../store";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 const props = defineProps({
   page: {
@@ -25,6 +26,9 @@ const props = defineProps({
     default: 1,
   },
 });
+
+const rightAlign = [];
+const leftAlign = [1];
 
 const dateFormat = ref(Store.getters.getVueDatePickerTextInputFormat.date);
 const { crewDocumentRenewSchedules, currentCrewDocRenewData, isCrewDocumentRenewScheduleModalOpen, getCrewDocumentRenewSchedules, storeCrewRenewDocument, errors, deleteCrewRenewDocument, updateCrewRenewDocument, isLoading, isTableLoading } = useCrewDocument();
@@ -190,12 +194,21 @@ filterOptions.value.filter_options.forEach((option, index) => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Renew Schedule</h2>
-<!--    <default-button :title="'Create User'" :to="{ name: 'administration.users.create' }" :icon="icons.AddIcon"></default-button>-->
+    <div class="flex gap-2">
+      <file-export-button
+          :businessUnit="businessUnit"
+          :pageOrientation="'l'"
+          :fileName="'Renew Schedule List'"
+          :tableId="'crew-renew-schedule-list'"
+          :leftAlign="leftAlign"
+          :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="crew-renew-schedule-list">
         <!-- <FilterComponent :filterOptions = "filterOptions"/> -->
         <thead>
           <tr>
