@@ -13,6 +13,7 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
+import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 
 const icons = useHeroIcon();
@@ -25,7 +26,7 @@ const props = defineProps({
   },
 });
 
-const { agencies, getAgencies, deleteAgency, isLoading, isTableLoading } = useAgency();
+const { agencies, getAgencies, deleteAgency, isLoading, errors, isTableLoading } = useAgency();
 const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
 setTitle('Agency List');
@@ -184,4 +185,5 @@ onMounted(() => {
     </div>
     <Paginate :data="agencies" to="crw.agencies.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

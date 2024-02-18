@@ -13,6 +13,7 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import { formatDate,formatMonthYear,formatMonthYearWithTime } from "../../../utils/helper.js";
+import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -25,7 +26,7 @@ const props = defineProps({
   },
 });
 
-const { crewSalaryStructures, getCrewSalaryStructures, deleteCrewSalaryStructure, isLoading, isTableLoading } = useCrewSalaryStructure();
+const { crewSalaryStructures, getCrewSalaryStructures, deleteCrewSalaryStructure, isLoading, errors, isTableLoading } = useCrewSalaryStructure();
 
 const debouncedValue = useDebouncedRef('', 800);
 
@@ -243,6 +244,7 @@ onMounted(() => {
         </tfoot>
       </table>
     </div>
-    <Paginate :data="crewSalaryStructure" to="crw.crewSalaryStructures.index" :page="page"></Paginate>
+    <Paginate :data="crewSalaryStructures" to="crw.crewSalaryStructures.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

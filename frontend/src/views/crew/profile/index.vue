@@ -13,6 +13,7 @@ import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -25,7 +26,7 @@ const props = defineProps({
   },
 });
 
-const { crewProfiles, getCrewProfiles, deleteCrewProfile, isLoading, isTableLoading } = useCrewProfile();
+const { crewProfiles, getCrewProfiles, deleteCrewProfile, isLoading, errors, isTableLoading } = useCrewProfile();
 const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
 setTitle('Crew Profile');
@@ -216,4 +217,5 @@ onMounted(() => {
     </div>
     <Paginate :data="crewProfiles" to="crw.profiles.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

@@ -14,6 +14,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import RemarksComponent from "../../../components/utils/RemarksComponent.vue";
 import { formatDate } from "../../../utils/helper.js";
+import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -28,7 +29,7 @@ const props = defineProps({
 
 let statusFormData = ref({});
 
-const { crewAssigns, getCrewAssigns, deleteCrewAssign, updateCrewAssign, updateCrewAssignStatus, isCrewUpdateStatusModalOpen, isLoading, isTableLoading } = useCrewAssign();
+const { crewAssigns, getCrewAssigns, deleteCrewAssign, updateCrewAssign, updateCrewAssignStatus, isCrewUpdateStatusModalOpen, errors, isLoading, isTableLoading } = useCrewAssign();
 
 const debouncedValue = useDebouncedRef('', 800);
 
@@ -352,4 +353,5 @@ onMounted(() => {
       </div>
     </form>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>
