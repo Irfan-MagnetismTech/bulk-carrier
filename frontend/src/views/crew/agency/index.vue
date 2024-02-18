@@ -14,6 +14,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import { indexPdfExport, tableToExcel } from "../../../utils/helper.js";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 
 const icons = useHeroIcon();
@@ -144,12 +145,14 @@ onMounted(() => {
     <h2 class="text-2xl font-semibold text-gray-700">Agency List</h2>
     <div class="flex gap-2">
       <default-button :title="'Create Agency'" :to="{ name: 'crw.agencies.create' }" :icon="icons.AddIcon"></default-button>
-      <button title="Download PDF" class="pdf_button" @click="indexPdfExport(businessUnit,'l', 'Agency List','crew-agency-list', leftAlign, rightAlign, false, false, false);">
-        <span v-html="icons.PdfExportIcon"></span>
-      </button>
-      <button title="Download Excel" class="excel_button" @click="tableToExcel('crew-agency-list','Agency List');">
-        <span v-html="icons.ExcelExportIcon"></span>
-      </button>
+      <file-export-button
+          :businessUnit="businessUnit"
+          :pageOrientation="'l'"
+          :fileName="'Agency List'"
+          :tableId="'crew-agency-list'"
+          :leftAlign="leftAlign"
+          :rightAlign="rightAlign"
+      ></file-export-button>
     </div>
   </div>
 

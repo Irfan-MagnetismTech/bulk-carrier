@@ -16,6 +16,7 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import useGlobalFilter from "../../../composables/useGlobalFilter";
 import {useRouter} from "vue-router";
 import { indexPdfExport, tableToExcel } from "../../../utils/helper.js";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 const props = defineProps({
   page: {
@@ -141,12 +142,14 @@ onMounted(() => {
     <h2 class="text-2xl font-semibold text-gray-700">Policy List</h2>
     <div class="flex gap-2">
       <default-button :title="'Create Policy'" :to="{ name: 'crw.policies.create' }" :icon="icons.AddIcon"></default-button>
-      <button title="Download PDF" class="pdf_button" @click="indexPdfExport(businessUnit,'l', 'Policy List','policy-list', leftAlign, rightAlign, false, false, false);">
-        <span v-html="icons.PdfExportIcon"></span>
-      </button>
-      <button title="Download Excel" class="excel_button" @click="tableToExcel('policy-list','Policy List');">
-        <span v-html="icons.ExcelExportIcon"></span>
-      </button>
+      <file-export-button
+          :businessUnit="businessUnit"
+          :pageOrientation="'l'"
+          :fileName="'Policy List'"
+          :tableId="'policy-list'"
+          :leftAlign="leftAlign"
+          :rightAlign="rightAlign"
+      ></file-export-button>
     </div>
   </div>
 

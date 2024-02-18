@@ -277,34 +277,6 @@ export const showPdfExport = ( businessUnit, pageOridentation, heading, tableIds
 
 }
 
-
-// export const tableToExcel = (tableId, name) => {
-//     let template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="https://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>'+name+'</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body>';
-
-//     let tab_text = template + "<table border='2px'>";
-//     let tab = document.getElementById(tableId); // id of table
-
-//     // Iterate over all rows of the table
-//     for (let j = 0; j < tab.rows.length; j++) {
-//         let row = tab.rows[j];
-//         tab_text += "<tr>";
-//         // Iterate over all cells in the row
-//         for (let i = 0; i < row.cells.length; i++) {
-//             tab_text += row.cells[i].outerHTML;
-//         }
-//         tab_text += "</tr>";
-//     }
-
-//     tab_text += "</table></body></html>";
-
-//     let a = document.createElement('a');
-//     let data_type = 'data:application/vnd.ms-excel';
-//     a.href = data_type + ', ' + encodeURIComponent(tab_text);
-//     a.download = name + '.xls';
-//     a.click();
-// }
-
-
 export const tableToExcel = (tableId, name) => {
 
     let template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="https://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>'+name+'</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body>';

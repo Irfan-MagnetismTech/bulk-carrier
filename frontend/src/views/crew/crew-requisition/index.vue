@@ -15,6 +15,7 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import { formatDate } from "../../../utils/helper.js";
 import { indexPdfExport, tableToExcel } from "../../../utils/helper.js";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
@@ -147,12 +148,14 @@ filterOptions.value.filter_options.forEach((option, index) => {
     <h2 class="text-2xl font-semibold text-gray-700">Crew Requisition List</h2>
     <div class="flex gap-2">
       <default-button :title="'Create Item'" :to="{ name: 'crw.crewRequisitions.create' }" :icon="icons.AddIcon"></default-button>
-      <button title="Download PDF" class="pdf_button" @click="indexPdfExport(businessUnit,'l', 'Crew Requisition List','crew-requisition-list', leftAlign, rightAlign, false, false, false);">
-        <span v-html="icons.PdfExportIcon"></span>
-      </button>
-      <button title="Download Excel" class="excel_button" @click="tableToExcel('crew-requisition-list','Crew Requisition List');">
-        <span v-html="icons.ExcelExportIcon"></span>
-      </button>
+      <file-export-button
+          :businessUnit="businessUnit"
+          :pageOrientation="'l'"
+          :fileName="'Crew requisition List'"
+          :tableId="'crew-requisition-list'"
+          :leftAlign="leftAlign"
+          :rightAlign="rightAlign"
+      ></file-export-button>
     </div>
   </div>
   <div id="customDataTable">

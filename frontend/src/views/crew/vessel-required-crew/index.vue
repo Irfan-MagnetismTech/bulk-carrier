@@ -16,6 +16,7 @@ import useGlobalFilter from "../../../composables/useGlobalFilter";
 import {useRouter} from "vue-router";
 import { formatDate } from "../../../utils/helper.js";
 import { indexPdfExport, tableToExcel } from "../../../utils/helper.js";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 const props = defineProps({
   page: {
@@ -143,12 +144,14 @@ onMounted(() => {
     <h2 class="text-2xl font-semibold text-gray-700">Vessel Crew Manning List</h2>
     <div class="flex gap-2">
       <default-button :title="'Create Item'" :to="{ name: 'crw.vesselRequiredCrews.create' }" :icon="icons.AddIcon"></default-button>
-      <button title="Download PDF" class="pdf_button" @click="indexPdfExport(businessUnit,'l', 'Crew Manning List','crew-manning-list', leftAlign, rightAlign, false, false, false);">
-        <span v-html="icons.PdfExportIcon"></span>
-      </button>
-      <button title="Download Excel" class="excel_button" @click="tableToExcel('crew-manning-list','Crew Manning List');">
-        <span v-html="icons.ExcelExportIcon"></span>
-      </button>
+      <file-export-button
+          :businessUnit="businessUnit"
+          :pageOrientation="'l'"
+          :fileName="'Required crew List'"
+          :tableId="'crew-manning-list'"
+          :leftAlign="leftAlign"
+          :rightAlign="rightAlign"
+      ></file-export-button>
     </div>
   </div>
 

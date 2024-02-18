@@ -15,6 +15,7 @@ import useGlobalFilter from "../../../composables/useGlobalFilter";
 import {useRouter} from "vue-router";
 import { indexPdfExport, tableToExcel } from "../../../utils/helper.js";
 import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 const props = defineProps({
   page: {
@@ -129,12 +130,14 @@ filterOptions.value.filter_options.forEach((option, index) => {
     <h2 class="text-2xl font-semibold text-gray-700">Rank List</h2>
     <div class="flex gap-2">
       <default-button :title="'Create Rank'" :to="{ name: 'crw.ranks.create' }" :icon="icons.AddIcon"></default-button>
-      <button title="Download PDF" class="pdf_button" @click="indexPdfExport(businessUnit,'l', 'Rank List','rank-list', leftAlign, rightAlign, false, false, false);">
-        <span v-html="icons.PdfExportIcon"></span>
-      </button>
-      <button title="Download Excel" class="excel_button" @click="tableToExcel('rank-list','Rank List');">
-        <span v-html="icons.ExcelExportIcon"></span>
-      </button>
+      <file-export-button
+          :businessUnit="businessUnit"
+          :pageOrientation="'l'"
+          :fileName="'Rank List'"
+          :tableId="'rank-list'"
+          :leftAlign="leftAlign"
+          :rightAlign="rightAlign"
+      ></file-export-button>
     </div>
   </div>
 
