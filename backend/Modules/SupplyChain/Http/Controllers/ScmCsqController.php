@@ -16,10 +16,10 @@ class ScmCsqController extends Controller
 {
     function __construct()
     {
-        //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
-        //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
-        //     $this->middleware('permission:charterer-contract-edit', ['only' => ['update']]);
-        //     $this->middleware('permission:charterer-contract-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:scm-material-cs-qoutation-view', ['only' => ['getQuotations', 'showQuotation']]);
+        $this->middleware('permission:scm-material-cs-qoutation-create', ['only' => ['storeCsLandedCost']]);
+        $this->middleware('permission:scm-material-cs-qoutation-edit', ['only' => ['updateQuotation']]);
+        $this->middleware('permission:scm-material-cs-qoutation-delete', ['only' => ['deleteQuotation']]);
     }
 
     public function getQuotations(Request $request)
