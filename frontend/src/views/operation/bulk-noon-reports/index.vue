@@ -13,6 +13,7 @@ import moment from 'moment';
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 const { bulkNoonReports, getBulkNoonReports, deleteBulkNoonReport, isLoading, isTableLoading } = useBulkNoonReport();
 const icons = useHeroIcon();
@@ -106,6 +107,9 @@ let filterOptions = ref({
 
 const currentPage = ref(1);
 const paginatedPage = ref(1);
+const rightAlign = [];
+const leftAlign = [1,4];
+
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
 onMounted(() => {
@@ -151,13 +155,23 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Bulk Noon Report List</h2>
-    <default-button :title="'Create Bulk Noon Report'" :to="{ name: 'ops.bulk-noon-reports.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Create Bulk Noon Report'" :to="{ name: 'ops.bulk-noon-reports.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+        :businessUnit="businessUnit"
+        :pageOrientation="'l'"
+        :fileName="'Bulk Noon Report List'"
+        :tableId="'bulk-noon-report-list'"
+        :leftAlign="leftAlign"
+        :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="bulk-noon-report-list">
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="bulkNoonReports?.data?.length" class="relative">
               <tr v-for="(bulkNoonReport, index) in bulkNoonReports.data" :key="bulkNoonReport?.id">
