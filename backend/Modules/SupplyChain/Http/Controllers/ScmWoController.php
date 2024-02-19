@@ -712,7 +712,7 @@ class ScmWoController extends Controller
     }
 
 
-    public function getWoDataById(){
+    public function getWoDataForWorkBill(){
         try {
             $scmWo = ScmWo::query()
                 ->with('scmWrrs.scmWrrLineItems','scmVendor','scmWrrs.scmWo.scmWoItems.scmService','scmWorkBills')

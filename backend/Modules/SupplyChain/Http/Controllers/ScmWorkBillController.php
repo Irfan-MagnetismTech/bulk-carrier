@@ -44,5 +44,54 @@ class ScmWorkBillController extends Controller
         }
     }
 
- 
+    /**
+     * Show the specified resource.
+     * @param ScmWorkBill $work_bill
+     * @return JsonResponse
+     */
+    public function show(ScmWorkBill $work_bill): JsonResponse
+    {
+        try {
+            return response()->success('data', $work_bill, 200);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     * @param ScmWorkBillRequest $request
+     * @param ScmWorkBill $work_bill
+     * @return JsonResponse
+     */
+    public function update(ScmWorkBillRequest $request, ScmWorkBill $work_bill): JsonResponse
+    {
+        try {
+            $work_bill->update($request->all());
+
+            return response()->success('Data updated sucessfully!', $work_bill, 202);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     * @param ScmWorkBill $work_bill
+     * @return JsonResponse
+     */
+    public function destroy(ScmWorkBill $work_bill): JsonResponse
+    {
+        try {
+            $work_bill->delete();
+
+            return response()->success('Data deleted sucessfully!', null,  204);
+        } catch (\Exception $e) {
+
+            return response()->error($e->getMessage(), 500);
+        }
+    }
+
 }
