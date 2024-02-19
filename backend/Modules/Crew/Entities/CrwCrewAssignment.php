@@ -2,37 +2,94 @@
 
 namespace Modules\Crew\Entities;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Traits\DeletableModel;
+use App\Traits\GlobalSearchTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Modules\Operations\Entities\OpsPort;
 use Modules\Operations\Entities\OpsVessel;
-use App\Traits\GlobalSearchTrait;
 
 class CrwCrewAssignment extends Model
 {
-    use HasFactory, GlobalSearchTrait;
+    use HasFactory, GlobalSearchTrait, DeletableModel;
 
-	protected $fillable = ['ops_vessel_id', 'assignment_code', 'crw_crew_id', 'position_onboard', 'is_watchkeeper', 'joining_date', 'joining_port_code', 'duration', 'status', 'completion_date', 'completion_remarks', 'remarks', 'business_unit'];
+    /**
+     * @var array
+     */
+    protected $fillable = ['ops_vessel_id', 'assignment_code', 'crw_crew_id', 'position_onboard', 'is_watchkeeper', 'joining_date', 'joining_port_code', 'duration', 'status', 'completion_date', 'completion_remarks', 'remarks', 'business_unit'];
 
-	public function opsVessel()
+    /**
+     * @var array
+     */
+    protected $skipForDeletionCheck = ['opsVessel', 'crwCrewProfile', 'opsPort'];
+
+    /**
+     * @var array
+     */
+    protected $features = [
+        'crwAttendanceLines'    => 'Crew Attendance',
+        'appraisalRecord'       => 'Appraisal Records',
+        'crwRestHourEntryLines' => 'Rest Hour Records',
+    ];
+
+    /* ------------------------- Associate Relationship Start ------------------------- */
+    /* ------------------------- Associate Relationship End ------------------------- */
+
+    /* -------------------------  Belongs Relationship Start ------------------------- */
+    /**
+     * @return mixed
+     */
+    public function opsVessel(): BelongsTo
     {
         return $this->belongsTo(OpsVessel::class);
     }
 
-    public function crwCrew()
+    /**
+     * @return mixed
+     */
+    public function crwCrewProfile(): BelongsTo
     {
         return $this->belongsTo(CrwCrewProfile::class, 'crw_crew_id', 'id');
     }
 
-    public function opsPort()
+    /**
+     * @return mixed
+     */
+    public function opsPort(): BelongsTo
     {
-        return $this->hasOne(OpsPort::class,'code','joining_port_code');
+        return $this->belongsTo(OpsPort::class, 'code', 'joining_port_code');
     }
 
-    public function appraisalRecord()
+    /* -------------------------  Belongs Relationship End ------------------------- */
+
+    /* -------------------------  Has Many Relationship Start ------------------------- */
+    /**
+     * @return mixed
+     */
+    public function crwAttendanceLines(): HasMany
     {
-        return $this->hasOne(AppraisalRecord::class);
+        return $this->hasMany(CrwAttendanceLine::class, 'crw_crew_id', 'id');
     }
+
+    /**
+     * @return mixed
+     */
+    public function appraisalRecord(): HasOne
+    {
+        return $this->hasOne(AppraisalRecord::class, 'crw_crew_assignment_id', 'id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function crwRestHourEntryLines(): HasMany
+    {
+        return $this->hasMany(CrwRestHourEntryLine::class, 'crw_crew_id', 'id');
+    }
+
+    /* -------------------------  Has Many Relationship End ------------------------- */
 
 }

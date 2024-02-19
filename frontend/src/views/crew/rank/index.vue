@@ -13,6 +13,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import useGlobalFilter from "../../../composables/useGlobalFilter";
 import {useRouter} from "vue-router";
+import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 const props = defineProps({
   page: {
@@ -22,7 +23,7 @@ const props = defineProps({
 });
 const router = useRouter();
 const icons = useHeroIcon();
-const { ranks, getRanks, deleteRank, isLoading, isTableLoading } = useRank();
+const { ranks, getRanks, deleteRank, errors, isLoading, isTableLoading } = useRank();
 const { showFilter, swapFilter, setSortingState, clearFilter } = useGlobalFilter();
 const { setTitle } = Title();
 setTitle('Rank List');
@@ -203,19 +204,20 @@ filterOptions.value.filter_options.forEach((option, index) => {
           </tbody>
           <tfoot v-if="!ranks?.data?.length" class="relative h-[250px]">
           <tr v-if="isLoading">
-            <td colspan="4"></td>
+            <td colspan="5"></td>
           </tr>
           <tr v-else-if="isTableLoading">
-              <td colspan="4">
+              <td colspan="5">
                 <LoaderComponent :isLoading = isTableLoading ></LoaderComponent>                
               </td>
             </tr>
           <tr v-else-if="!ranks?.data?.data?.length">
-            <td colspan="4">No data found.</td>
+            <td colspan="5">No data found.</td>
           </tr>
           </tfoot>
       </table>
     </div>
     <Paginate :data="ranks" to="crw.ranks.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

@@ -12,6 +12,13 @@ use Modules\Crew\Http\Requests\CrwCrewRankRequest;
 
 class CrwCrewChecklistController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:crw-onboard-checklist-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:crw-onboard-checklist-create', ['only' => ['store']]);
+        $this->middleware('permission:crw-onboard-checklist-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:crw-onboard-checklist-delete', ['only' => ['destroy']]);
+    }
     /**
      * Display a listing of the resource.
      *

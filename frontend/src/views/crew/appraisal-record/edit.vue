@@ -38,7 +38,7 @@ import useCrewCommonApiRequest from '../../../composables/crew/useCrewCommonApiR
   setTitle('Edit Appraisal Record');
   
   watch(appraisalRecord, (value) => {
-    appraisalRecord.value.crw_crew_profile = value?.crwCrew;
+    appraisalRecord.value.crw_crew_profile = value?.crwCrewProfile;
     appraisalRecord.value.appraisal_form = value?.appraisalForm;
     appraisalRecord.value.crw_crew_assignment = value?.crwCrewAssignment;
   });

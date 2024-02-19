@@ -22,8 +22,8 @@ setTitle('Edit Crew Profile');
 
 watch(crewProfile, (value) => {
   if(value) {
-    crewProfile.value.crw_recruitment_approval_name = value?.crewRecruitmentApproval;
-    crewProfile.value.agency_name = value?.crewAgency;
+    crewProfile.value.crw_recruitment_approval_name = value?.crwRecruitmentApproval;
+    crewProfile.value.agency_name = value?.crwAgency;
 
     // training data
     if(crewProfile.value.trainings.length){

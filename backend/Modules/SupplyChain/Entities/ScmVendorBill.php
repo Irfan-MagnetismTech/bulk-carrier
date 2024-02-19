@@ -69,4 +69,6 @@ class ScmVendorBill extends Model
     {
         return $this->belongsTo(AccCashRequisition::class);
     }
+
+
 }

@@ -13,6 +13,7 @@ import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import { formatDate } from "../../../utils/helper.js";
+import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -24,7 +25,7 @@ const props = defineProps({
   },
 });
 
-const { recruitmentApprovals, getRecruitmentApprovals, deleteRecruitmentApproval, isLoading, isTableLoading  } = useRecruitmentApproval();
+const { recruitmentApprovals, getRecruitmentApprovals, deleteRecruitmentApproval, errors, isLoading, isTableLoading  } = useRecruitmentApproval();
 const { setTitle } = Title();
 setTitle('Recruitment Approval');
 
@@ -352,4 +353,5 @@ filterOptions.value.filter_options.forEach((option, index) => {
     </div>
     <Paginate :data="recruitmentApprovals" to="crw.recruitmentApprovals.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

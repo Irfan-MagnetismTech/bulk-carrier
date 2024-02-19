@@ -147,7 +147,7 @@ export default function useCrewSalaryStructure() {
             await getCrewSalaryStructures(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
             loader.hide();
             isLoading.value = false;

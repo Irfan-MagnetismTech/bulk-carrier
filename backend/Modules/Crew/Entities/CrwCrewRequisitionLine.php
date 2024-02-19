@@ -4,6 +4,7 @@ namespace Modules\Crew\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CrwCrewRequisitionLine extends Model
@@ -12,7 +13,7 @@ class CrwCrewRequisitionLine extends Model
 
 	protected $fillable = ['crw_crew_requisition_id', 'crw_rank_id', 'required_manpower', 'remarks'];
 
-    public function crwRank()
+    public function crwRank() : BelongsTo
     {
         return $this->belongsTo(CrwRank::class);
     }

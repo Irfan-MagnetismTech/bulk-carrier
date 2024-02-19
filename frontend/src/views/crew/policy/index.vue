@@ -15,6 +15,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import useGlobalFilter from "../../../composables/useGlobalFilter";
 import {useRouter} from "vue-router";
+import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 const props = defineProps({
   page: {
@@ -24,7 +25,7 @@ const props = defineProps({
 });
 
 const router = useRouter();
-const { policies, getPolicies, deletePolicy, isLoading, isTableLoading  } = usePolicy();
+const { policies, getPolicies, deletePolicy, errors, isLoading, isTableLoading  } = usePolicy();
 const { showFilter, swapFilter, setSortingState, clearFilter } = useGlobalFilter();
 const { setTitle } = Title();
 setTitle('Policy List');
@@ -214,7 +215,7 @@ onMounted(() => {
             <td class="text-left">{{ crwPolicy?.name }}</td>
             <td class="text-left">{{ crwPolicy?.type }}</td>
             <td>
-              <a v-html="icons.Attachment" type="button" v-if="typeof crwPolicy?.attachment === 'string'" class="text-green-800" target="_blank" :href="env.BASE_API_URL+'/'+crwPolicy?.attachment"></a>
+              <a v-html="icons.Attachment" type="button" v-if="typeof crwPolicy?.attachment === 'string' && crwPolicy?.attachment !== 'null'" class="text-green-800" target="_blank" :href="env.BASE_API_URL+'/'+crwPolicy?.attachment"></a>
               <a v-else>---</a>
             </td>
             <td>
@@ -254,4 +255,5 @@ onMounted(() => {
     </div>
     <Paginate :data="policies" to="crw.policies.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

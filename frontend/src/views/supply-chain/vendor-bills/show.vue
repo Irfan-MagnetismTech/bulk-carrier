@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center justify-between w-full my-3" v-once>
-    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Store Requistion Details</h2>
-    <default-button :title="'Store Requistion List'" :to="{ name: 'scm.store-requisitions.index' }" :icon="icons.DataBase"></default-button>
+    <h2 class="text-2xl font-semibold text-gray-700 dark-disabled:text-gray-200">Vendor Bill Details</h2>
+    <default-button :title="'Vendor Bill List'" :to="{ name: 'scm.vendor-bills.index' }" :icon="icons.DataBase"></default-button>
   </div>
   <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark-disabled:bg-gray-800">
     <div class="flex md:gap-4">
@@ -39,7 +39,7 @@
                     </tr>
                     <tr>
                         <th class="w-40">Foreign To USD</th>
-                        <td>{{ vendorBill?.foreign_to_usd }}</td>
+                        <td>{{ vendorBill?.foreign_to_usd ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <th class="w-40">USD To BDT</th>
@@ -47,7 +47,7 @@
                     </tr>
                     <tr>
                         <th class="w-40">Cash Requisition No</th>
-                        <td>{{ vendorBill?.scmCashRequisition?.no ?? '' }}</td>
+                        <td>{{ vendorBill?.scmCashRequisition?.no ?? 'N/A' }}</td>
                     </tr>
                     <tr>
                         <th class="w-40">Remarks </th>
@@ -92,14 +92,24 @@
                   <span v-if="vendorBill.scmVendorBillLines[index]?.scmMrr?.challan_no">{{ vendorBill.scmVendorBillLines[index]?.scmMrr?.challan_no }}</span>
                 </td>
                 <td>
-                  <span v-if="vendorBill.scmVendorBillLines[index]?.scmPo?.ref_no">{{ vendorBill.scmVendorBillLines[index]?.scmPo?.ref_no }}</span>
+                  <span v-if="vendorBill.scmVendorBillLines[index]?.scmMrr?.scmPo?.ref_no">{{ vendorBill.scmVendorBillLines[index]?.scmMrr?.scmPo?.ref_no }}</span>
                 </td>
                 <td>
-                <span>
-                    {{ numberFormat(vendorBill.scmVendorBillLines[index].amount) }}
+                    <span>
+                        {{ numberFormat(vendorBill.scmVendorBillLines[index].amount) }}
+                    </span>
+                </td>
+                <td>
+                    <span>
+                    {{ numberFormat(vendorBill.scmVendorBillLines[index].amount_usd) }}
                 </span>
-              </td>
-              </tr>
+                </td>
+                <td>
+                    <span>
+                        {{ numberFormat(vendorBill.scmVendorBillLines[index].amount_bdt) }}
+                    </span>
+                </td>
+            </tr>
             </tbody>
           </table>
         </div>
