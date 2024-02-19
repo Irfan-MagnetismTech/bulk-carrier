@@ -115,7 +115,7 @@ onMounted(() => {
                     <tr>
                         <th class="!text-center">PR No.</th>
                         <th class="!text-center">PR Date</th>
-                        <th class="!text-center">Service - Code</th>
+                        <th class="!text-center">Material - Code</th>
                         <th class="!text-center">PR Qty</th>
                         <th class="!text-center">PO Qty</th>
                         <th class="!text-center">Remaining Qty</th>
@@ -128,14 +128,14 @@ onMounted(() => {
                     <template v-for="(scmMrrLine, index) in materialReceiptReport.scmMrrLines" :key="index" >
                         <template v-for="(lineItem, itemIndex) in scmMrrLine.scmMrrLineItems" :key="itemIndex">
                           <tr>
-                            <td v-if="itemIndex == 0" :rowspan="scmMrrLine?.scmMrrLineItems?.length ?? 1">{{ scmMrrLine?.scmPr?.ref_no }}</td>
+                            <td v-if="itemIndex == 0" :rowspan="scmMrrLine?.scmMrrLineItems?.length ?? 1" class="!text-center">{{ scmMrrLine?.scmPr?.ref_no }}</td>
                             <td class="!text-center" v-if="itemIndex == 0" :rowspan="scmMrrLine?.scmMrrLineItems?.length ?? 1">{{ formatDate(scmMrrLine?.scmPr?.raised_date) }}</td>
-                            <td>{{ lineItem?.scmMaterial?.material_name_and_code }}</td>
-                            <td class="!text-right">{{ lineItem?.pr_qty }}</td>
-                            <td class="!text-right">{{ lineItem?.po_qty }}</td>
-                            <td class="!text-right">{{ lineItem?.remaining_quantity }}</td>
-                            <td class="!text-right">{{ lineItem?.quantity }}</td>
-                            <td class="!text-right">{{ lineItem?.rate }}</td>
+                            <td class="!text-center">{{ lineItem?.scmMaterial?.material_name_and_code }}</td>
+                            <td class="!text-center">{{ lineItem?.pr_qty }}</td>
+                            <td class="!text-center">{{ lineItem?.po_qty }}</td>
+                            <td class="!text-center">{{ lineItem?.remaining_quantity }}</td>
+                            <td class="!text-center">{{ lineItem?.quantity }}</td>
+                            <td class="!text-center">{{ lineItem?.rate }}</td>
                           </tr>
                         <!-- <tr v-if="index != 0">
                             <td><nobr>{{ scmSrLine?.scmMr?.ref_no }}</nobr></td>
