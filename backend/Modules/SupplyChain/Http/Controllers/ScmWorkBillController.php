@@ -5,12 +5,20 @@ namespace Modules\SupplyChain\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
+use App\Services\FileUploadService;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmWorkBill;
 use Modules\SupplyChain\Http\Requests\ScmWorkBillRequest;
 
 class ScmWorkBillController extends Controller
 {
+    function __construct(private FileUploadService $fileUpload)
+    {
+        //     $this->middleware('permission:work-bill-create|work-bill-edit|work-bill-show|work-bill-delete', ['only' => ['index','show']]);
+        //     $this->middleware('permission:work-bill-create', ['only' => ['store']]);
+        //     $this->middleware('permission:work-bill-edit', ['only' => ['update']]);
+        //     $this->middleware('permission:work-bill-delete', ['only' => ['destroy']]);
+    }
       /**
      * Display a listing of the resource.
      * @return JsonResponse
@@ -18,8 +26,7 @@ class ScmWorkBillController extends Controller
     public function index(Request $request): JsonResponse
     {
         try {
-            $scm_work_bills = ScmWorkBill::query()
-                ->globalSearch($request->all());
+            $scm_work_bills = ScmWorkBill::query()->globalSearch($request->all());
 
             return response()->success('Data list', $scm_work_bills, 200);
         } catch (\Exception $e) {

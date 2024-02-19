@@ -14,6 +14,15 @@ use Modules\SupplyChain\Entities\ScmWo;
 
 class ScmReportController extends Controller
 {
+    // use HasRoles;
+
+    function __construct()
+    {
+        //     $this->middleware('permission:inventory-report', ['only' => ['inventoryReport']]);
+        //     $this->middleware('permission:stock-history-report', ['only' => ['stockHistoryReport']]);
+        //     $this->middleware('permission:purchase-requisition-report', ['only' => ['purchaseRequisitionReport']]);
+    }
+
     // for inventory report api
     public function inventoryReport(Request $request): JsonResponse
     {

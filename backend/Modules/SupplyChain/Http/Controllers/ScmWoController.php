@@ -696,7 +696,9 @@ class ScmWoController extends Controller
     public function getWoListForWorkBill(){
         try {
             $scmWo = ScmWo::query()
-            ->with('scmVendor')
+            ->with(['scmVendor','scmWrrs' => function ($query) {
+                $query->latest('date')->first();
+            }])
             ->whereNot('status', 'Pending')
             ->where([
                 'business_unit' => request()->business_unit,
@@ -731,10 +733,17 @@ class ScmWoController extends Controller
                 
                 $remainingAmount = collect($data)->sum('total_amount') - $scmWo->scmWorkBills?->sum('bill_amount')??0;
                 $data['scmVendor'] = $scmWo->scmVendor;
-                $data['bill_amount']=number_format(collect($data)->sum('total_amount'), 2);
-                // $data['bill_amount']=number_format($remainingAmount, 2);
+                $data['wo_amount']=number_format($scmWo->total_amount??0, 2);
+                $data['bill_amount']=number_format($scmWo->scmWorkBills?->sum('bill_amount')??0, 2);
+                $data['receive_amount']=number_format(collect($data)->sum('total_amount'), 2);
                 $data['remaining_amount']= number_format($remainingAmount, 2);
-                $data['security_money']= number_format(ScmWo::query()->where('id', $scmWo->id)->where('status', 'Closed')->first()?->security_money??0, 2);
+
+                $security_money= ScmWo::query()->where('id', $scmWo->id)->where('status', 'Closed')->first()?->security_money??0;
+                if($security_money){
+                    $data['security_money']= number_format(ScmWo::query()->where('id', $scmWo->id)->where('status', 'Closed')->first()?->security_money??0, 2);
+                }else if($scmWo->total_amount == $data['bill_amount']){
+                    $data['security_money']= number_format(ScmWo::query()->where('id', $scmWo->id)->first()?->security_money??0, 2);
+                }
                 $data['max_amount']= number_format($remainingAmount, 2);
             }else{
                 $data=[];
