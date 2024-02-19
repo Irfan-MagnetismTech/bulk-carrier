@@ -44,30 +44,6 @@ export default function useMaterialReceiptReport() {
         purchase_center: null,
         business_unit: null,
         scmMrrLines: [
-            {
-                scm_pr_id: null,
-                scmPr: null,
-                scmMrrLineItems: [
-                    {
-                        scm_mrr_item_id: null,
-                        scmMaterial: null,
-                        scm_material_id: null,
-                        unit: null,
-                        brand: null,
-                        model: null,
-                        quantity: 0.0,
-                        tolerence: 0.0,
-                        tolerence_qty: 0.0,
-                        rate: 0.0,
-                        net_rate: 0.0,
-                        po_qty: 0.0,
-                        pr_qty: 0.0,
-                        current_stock: 0.0,
-                        po_composite_key: null,
-                        pr_composite_key: null
-                    }
-                ],
-            }
         ],
     });
     const mrrLineObject = {
