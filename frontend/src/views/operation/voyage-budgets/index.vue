@@ -15,7 +15,7 @@ import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import {useRouter} from "vue-router";
 import useHelper from "../../../composables/useHelper";
 import { formatDate } from "../../../utils/helper";
-
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 const { voyageBudgets, getVoyageBudgets, deleteVoyageBudget, isLoading, isTableLoading, errors } = useVoyageBudget();
 const icons = useHeroIcon();
@@ -108,6 +108,8 @@ let filterOptions = ref({
 
 const currentPage = ref(1);
 const paginatedPage = ref(1);
+const rightAlign = [6];
+const leftAlign = [1,2];
 
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
@@ -164,14 +166,24 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Voyage Budget List</h2>
-    <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.voyage-budgets.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.voyage-budgets.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+        :businessUnit="businessUnit"
+        :pageOrientation="'l'"
+        :fileName="'Voyage Budget List'"
+        :tableId="'voyage-budget-list'"
+        :leftAlign="leftAlign"
+        :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
   
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap mb-5" >
+      <table class="w-full whitespace-no-wrap mb-5" id="voyage-budget-list">
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="voyageBudgets?.data?.length" class="relative">
               <tr v-for="(voyageBudget, index) in voyageBudgets.data" :key="voyageBudget?.id">
