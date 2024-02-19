@@ -38,7 +38,7 @@ class CrwCrewProfile extends Model
         'crwSalaryStructures'      => 'Crew Salary Structure',
         'crwBankAccounts'          => 'Crew Bank Accounts',
         'crwAttendanceLines'       => 'Crew Attendance',
-        'crwPayrollBatchHeadLines' => 'Salary',
+        'crwPayrollBatchHeadLines' => 'Salary [Addition/Deduction]',
         'crwPayrollBatchLines'     => 'Salary',
         'crewDocuments'            => 'Crew Documents',
         'appraisalRecords'         => 'Appraisal Records',

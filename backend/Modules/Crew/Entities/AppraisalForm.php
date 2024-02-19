@@ -20,7 +20,7 @@ class AppraisalForm extends Model
      * @var array
      */
     protected $features = [
-        'appraisalRecords' => 'Rest Hour',
+        'appraisalRecords' => 'Appraisal Records',
     ];
 
     /* ------------------------- Associate Relationship Start ------------------------- */
