@@ -14,6 +14,7 @@ import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import useHelper from "../../../composables/useHelper";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 const { chartererInvoices, getChartererInvoices, deleteChartererInvoice, isLoading,isTableLoading ,errors } = useChartererInvoice();
 const { numberFormat } = useHelper();
@@ -96,7 +97,8 @@ const paginatedPage = ref(1);
 
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
-
+const rightAlign = [5];
+const leftAlign = [1,2,3];
 
 
 function confirmDelete(id) {
@@ -153,14 +155,24 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Charterer Invoice List</h2>
-    <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.charterer-invoices.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.charterer-invoices.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+        :businessUnit="businessUnit"
+        :pageOrientation="'l'"
+        :fileName="'Charterer Invoice List'"
+        :tableId="'charterer-invoice-list'"
+        :leftAlign="leftAlign"
+        :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
   
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="charterer-invoice-list">
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="chartererInvoices?.data?.length" class="relative">
               <tr v-for="(chartererInvoice, index) in chartererInvoices.data" :key="chartererInvoice?.id">
@@ -169,7 +181,7 @@ onMounted(() => {
                   <td>{{ chartererInvoice?.opsChartererContract?.contract_name }}</td>
                   <td>{{ chartererInvoice?.opsChartererContract?.opsVessel?.name }}</td>
                   <td>{{ chartererInvoice?.contract_type }}</td>
-                  <td>{{ numberFormat(chartererInvoice?.grand_total) }}</td>
+                  <td class="!text-right">{{ numberFormat(chartererInvoice?.grand_total) }}</td>
                   <td class="text-center">
                     <span :class="chartererInvoice?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ chartererInvoice?.business_unit }}</span>
                   </td>
