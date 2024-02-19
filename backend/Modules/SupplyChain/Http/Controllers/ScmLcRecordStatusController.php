@@ -10,6 +10,11 @@ use Modules\SupplyChain\Entities\ScmLcRecordStatus;
 
 class ScmLcRecordStatusController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:scm-lc-records-close', ['only' => ['store', 'show', 'lcStatusDelete']]);
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable

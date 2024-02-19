@@ -58,7 +58,6 @@ class ScmPo extends Model
         'scmLcRecords' => 'LC Records',
         'scmMrrs' => 'Material Receipt Reports',
         'scmCostings' => 'Costings',
-
     ];
 
     public function scmPoLines(): HasMany

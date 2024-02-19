@@ -13,10 +13,10 @@ class ScmLcRecordController extends Controller
 {
     function __construct(private FileUploadService $fileUpload)
     {
-        //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
-        //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
-        //     $this->middleware('permission:charterer-contract-edit', ['only' => ['update']]);
-        //     $this->middleware('permission:charterer-contract-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:scm-lc-records-view|scm-lc-records-create|scm-lc-records-edit|scm-lc-records-delete|scm-lc-records-close', ['only' => ['index', 'show']]);
+        $this->middleware('permission:scm-lc-records-create', ['only' => ['store']]);
+        $this->middleware('permission:scm-lc-records-edit', ['only' => ['update']]);
+        $this->middleware('permission:scm-lc-records-delete', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.
@@ -80,7 +80,7 @@ class ScmLcRecordController extends Controller
                     'status' => $item['status'],
                 ];
             })->unique('scm_material_id')->values()->all();
-            return response()->success('data', $lcRecord , 200);
+            return response()->success('data', $lcRecord, 200);
         } catch (\Exception $e) {
 
 
