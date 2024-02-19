@@ -742,7 +742,7 @@ class ScmWoController extends Controller
                     $security_money= ScmWo::query()->where('id', $scmWo->id)->where('status', 'Closed')->first()?->security_money??0;
                     if($security_money){
                         $data['security_money']= number_format(ScmWo::query()->where('id', $scmWo->id)->where('status', 'Closed')->first()?->security_money??0, 2);
-                    }else if($scmWo->total_amount == $data['bill_amount']){
+                    }else if($scmWo->total_amount == $scmWo->scmWorkBills?->sum('bill_amount')??0){
                         $data['security_money']= number_format(ScmWo::query()->where('id', $scmWo->id)->first()?->security_money??0, 2);
                     }else{
                         $data['security_money']=number_format(0, 2);
