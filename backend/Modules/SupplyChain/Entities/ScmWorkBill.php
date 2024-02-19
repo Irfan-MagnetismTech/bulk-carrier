@@ -21,6 +21,7 @@ class ScmWorkBill extends Model
         'security_amount',
         'adjustment_amount',
         'net_amount',
+        'purchase_center',
         'status',
         'created_by',
         'attachment',

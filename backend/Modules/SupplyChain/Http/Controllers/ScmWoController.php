@@ -696,13 +696,14 @@ class ScmWoController extends Controller
     public function getWoListForWorkBill(){
         try {
             $scmWo = ScmWo::query()
-                ->whereNot('status', 'Pending')
-                ->where([
-                    'business_unit' => request()->business_unit,
-                    'scm_vendor_id' => request()->scm_vendor_id,
-                    'scm_warehouse_id' => request()->scm_warehouse_id,
-                ])
-                ->get();
+            ->with('scmVendor')
+            ->whereNot('status', 'Pending')
+            ->where([
+                'business_unit' => request()->business_unit,
+                'purchase_center' => request()->purchase_center,
+                'scm_warehouse_id' => request()->scm_warehouse_id,
+            ])
+            ->get();
 
             return response()->success('Data list', $scmWo, 200);
         } catch (\Exception $e) {
@@ -714,14 +715,14 @@ class ScmWoController extends Controller
     public function getWoDataById(){
         try {
             $scmWo = ScmWo::query()
-                ->with('scmWrrs.scmWrrLineItems','scmWrrs.scmWo.scmWoItems.scmService','scmWorkBills')
+                ->with('scmWrrs.scmWrrLineItems','scmVendor','scmWrrs.scmWo.scmWoItems.scmService','scmWorkBills')
                 ->where('id', request()->scm_wo_id)
                 ->first();
 
             if(count($scmWo->scmWrrs)){
                 $data = $scmWo->scmWrrs->map(function ($item) use($scmWo){
                     $totalWrrAmount = $item?->scmWrrLineItems?->sum('amount');
-                    return [
+                    return [                        
                         'scm_wrr_id' => $item->id,
                         'scm_wo_id' => $item->scmWo->id,
                         'total_amount' => $totalWrrAmount,
@@ -729,7 +730,7 @@ class ScmWoController extends Controller
                 });
                 
                 $remainingAmount = collect($data)->sum('total_amount') - $scmWo->scmWorkBills?->sum('bill_amount')??0;
-        
+                $data['scmVendor'] = $scmWo->scmVendor;
                 $data['bill_amount']=number_format(collect($data)->sum('total_amount'), 2);
                 // $data['bill_amount']=number_format($remainingAmount, 2);
                 $data['remaining_amount']= number_format($remainingAmount, 2);
