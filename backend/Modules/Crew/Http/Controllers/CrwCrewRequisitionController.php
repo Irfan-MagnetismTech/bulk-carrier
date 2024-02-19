@@ -11,6 +11,13 @@ use Modules\Crew\Http\Requests\CrwRequisitionRequest;
 
 class CrwCrewRequisitionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:crw-requisition-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:crw-requisition-create', ['only' => ['store']]);
+        $this->middleware('permission:crw-requisition-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:crw-requisition-delete', ['only' => ['destroy']]);
+    }
 
     public function index(Request $request)
     {

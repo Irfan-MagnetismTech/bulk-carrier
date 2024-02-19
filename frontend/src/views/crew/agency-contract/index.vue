@@ -14,6 +14,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import FilterWithBusinessUnit from "../../../components/searching/FilterWithBusinessUnit.vue";
 import { formatDate } from "../../../utils/helper.js";
+import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -26,7 +27,7 @@ const props = defineProps({
   },
 });
 
-const { agencyContracts, getAgencyContracts, deleteAgencyContract, isLoading, isTableLoading } = useAgencyContract();
+const { agencyContracts, getAgencyContracts, deleteAgencyContract, isLoading, errors, isTableLoading } = useAgencyContract();
 const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
 setTitle('Agency Contract');
@@ -209,4 +210,5 @@ onMounted(() => {
     </div>
     <Paginate :data="agencyContracts" to="crw.agencyContracts.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

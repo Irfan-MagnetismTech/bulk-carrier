@@ -20,7 +20,7 @@ setTitle('Edit Crew Bank Account');
 
 watch(crewBankAccount, (value) => {
   if(value) {
-    crewBankAccount.value.crw_crew_name = crewBankAccount.value.crwCrew;
+    crewBankAccount.value.crw_crew_name = crewBankAccount.value.crwCrewProfile;
   }
 });
 

@@ -13,6 +13,9 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import { formatDate,formatMonthYear } from "../../../utils/helper.js";
+import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
+
+
 const icons = useHeroIcon();
 const router = useRouter();
 import env from '../../../config/env';
@@ -24,7 +27,7 @@ const props = defineProps({
   },
 });
 
-const { crwAttendances, getCrwAttendances, deleteCrwAttendance, isLoading, isTableLoading } = useCrwAttendance();
+const { crwAttendances, getCrwAttendances, deleteCrwAttendance, isLoading, errors, isTableLoading } = useCrwAttendance();
 const debouncedValue = useDebouncedRef('', 800);
 const { setTitle } = Title();
 setTitle('Crew Attendance');
@@ -182,4 +185,5 @@ onMounted(() => {
     </div>
     <Paginate :data="crwAttendances" to="crw.crwAttendances.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

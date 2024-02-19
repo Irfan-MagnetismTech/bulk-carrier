@@ -126,7 +126,7 @@ export default function useRank() {
 
     async function deleteRank(rankId) {
 
-        //const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
@@ -135,9 +135,9 @@ export default function useRank() {
             await getRanks(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
-            //loader.hide();
+            loader.hide();
             isLoading.value = false;
         }
     }

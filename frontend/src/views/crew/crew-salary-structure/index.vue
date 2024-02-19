@@ -13,6 +13,7 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import { formatDate,formatMonthYear,formatMonthYearWithTime } from "../../../utils/helper.js";
+import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -25,7 +26,7 @@ const props = defineProps({
   },
 });
 
-const { crewSalaryStructures, getCrewSalaryStructures, deleteCrewSalaryStructure, isLoading, isTableLoading } = useCrewSalaryStructure();
+const { crewSalaryStructures, getCrewSalaryStructures, deleteCrewSalaryStructure, isLoading, errors, isTableLoading } = useCrewSalaryStructure();
 
 const debouncedValue = useDebouncedRef('', 800);
 
@@ -42,7 +43,7 @@ let filterOptions = ref( {
   "isFilter": false,
   "filter_options": [
     {
-      "relation_name": "crwCrew",
+      "relation_name": "crwCrewProfile",
       "field_name": "full_name",
       "search_param": "",
       "action": null,
@@ -52,13 +53,23 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     {
-      "relation_name": "crwCrew",
+      "relation_name": "crwCrewProfile.crwCurrentRank",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Current Rank",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": "crwCrewProfile",
       "field_name": "pre_mobile_no",
       "search_param": "",
       "action": null,
       "order_by": null,
       "date_from": null,
-      "label": "Crew Contact",
+      "label": "Contact",
       "filter_type": "input"
     },
     {
@@ -196,8 +207,9 @@ onMounted(() => {
         <tbody class="relative">
         <tr v-for="(crewSalaryStructureData,index) in crewSalaryStructures?.data" :key="index">
           <td>{{ (paginatedPage - 1) * filterOptions.items_per_page + index + 1 }}</td>
-          <td class="!text-left">{{ crewSalaryStructureData?.crwCrew?.full_name }}</td>
-          <td>{{ crewSalaryStructureData?.crwCrew?.pre_mobile_no }}</td>
+          <td class="!text-left">{{ crewSalaryStructureData?.crwCrewProfile?.full_name }}</td>
+          <td class="!text-left">{{ crewSalaryStructureData?.crwCrewProfile?.crwCurrentRank?.name }}</td>
+          <td>{{ crewSalaryStructureData?.crwCrewProfile?.pre_mobile_no }}</td>
           <td class="!text-right">{{ crewSalaryStructureData?.gross_salary }}</td>
           <td class="!text-right">{{ crewSalaryStructureData?.addition }}</td>
           <td class="!text-right">{{ crewSalaryStructureData?.deduction }}</td>
@@ -232,6 +244,7 @@ onMounted(() => {
         </tfoot>
       </table>
     </div>
-    <Paginate :data="crewSalaryStructure" to="crw.crewSalaryStructures.index" :page="page"></Paginate>
+    <Paginate :data="crewSalaryStructures" to="crw.crewSalaryStructures.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

@@ -36,7 +36,7 @@ watch(() => props.form.opsVessel, (value) => {
   }
 }, {deep: true});
 
-watch(() => props.form.crwCrew, (value) => {
+watch(() => props.form.crwCrewProfile, (value) => {
   if(value){
     props.form.crw_crew_name = value ?? '';
   }
