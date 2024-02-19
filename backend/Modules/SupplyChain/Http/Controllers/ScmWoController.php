@@ -721,7 +721,7 @@ class ScmWoController extends Controller
                 ->where('id', request()->scm_wo_id)
                 ->first();
 
-            if(count($scmWo->scmWrrs)){
+            if(count($scmWo?->scmWrrs)){
                 $data = $scmWo->scmWrrs->map(function ($item) use($scmWo){
                     $totalWrrAmount = $item?->scmWrrLineItems?->sum('amount');
                     return [                        
