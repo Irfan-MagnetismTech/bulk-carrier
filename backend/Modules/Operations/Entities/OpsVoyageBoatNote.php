@@ -21,6 +21,19 @@ class OpsVoyageBoatNote extends Model
         'business_unit'
     ];
 
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = [''];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
+
     public function opsVoyage()
     {
         return $this->belongsTo(OpsVoyage::class, 'ops_voyage_id' , 'id');

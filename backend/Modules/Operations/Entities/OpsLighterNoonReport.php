@@ -28,6 +28,19 @@ class OpsLighterNoonReport extends Model
         'lat_long'
     ];
 
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = [''];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
+
 
     public function opsVessel()
     {

@@ -2,13 +2,14 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\DeletableModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OpsVoyageBoatNoteLine extends Model
 {
-    use HasFactory;
+    use HasFactory, DeletableModel;
 
     protected $fillable = [
         'ops_voyage_boat_note_id',
@@ -22,6 +23,19 @@ class OpsVoyageBoatNoteLine extends Model
         'attachment',
         'business_unit'
     ];
+
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = [''];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
 
     public function opsVoyageBoatNote()
     {

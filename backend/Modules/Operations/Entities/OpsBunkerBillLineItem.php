@@ -2,12 +2,13 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\DeletableModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsBunkerBillLineItem extends Model
 {
-    use HasFactory;
+    use HasFactory, DeletableModel;
 
     protected $fillable = [
         'ops_bunker_bill_id',
@@ -32,4 +33,17 @@ class OpsBunkerBillLineItem extends Model
         'amount_bdt' => 'float',
         'amount_usd' => 'float',
     ];
+
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = ['relationName'];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
 }

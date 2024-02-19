@@ -2,6 +2,7 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\DeletableModel;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SupplyChain\Entities\ScmMaterial;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OpsBulkNoonReportConsumption extends Model
 {
-    use HasFactory;
+    use HasFactory, DeletableModel;
 
     protected $fillable = [
         'ops_bulk_noon_report_id',
@@ -20,6 +21,18 @@ class OpsBulkNoonReportConsumption extends Model
         'received',
         'consumption',
         'rob',
+    ];
+
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = ['relationName'];
+
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
     ];
 
     public function opsBulkNoonReport():BelongsTo

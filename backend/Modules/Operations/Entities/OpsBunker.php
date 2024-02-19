@@ -2,6 +2,7 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\DeletableModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\SupplyChain\Entities\ScmVendor;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsBunker extends Model
 {
-    use HasFactory;
+    use HasFactory, DeletableModel;
 
     protected $fillable = [
         'bunkerable_type',
@@ -54,6 +55,18 @@ class OpsBunker extends Model
     //     return $this->scmMaterial->name . ' - ' . $this->quantity;
     // }
 
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = ['relationName'];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
     public function scmVendor()
     {
         return $this->belongsTo(ScmVendor::class, 'scm_vendor_id' , 'id');

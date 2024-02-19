@@ -2,12 +2,13 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\DeletableModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsChartererContractsFinancialTerm extends Model
 {
-    use HasFactory;
+    use HasFactory, DeletableModel;
 
     protected $fillable = [
         'ops_charterer_contract_id',
@@ -28,6 +29,18 @@ class OpsChartererContractsFinancialTerm extends Model
         'bunker_provider',
     ];
 
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = [''];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
     public function opsVoyage()
     {
         return $this->belongsTo(OpsVoyage::class, 'ops_voyage_id' , 'id');

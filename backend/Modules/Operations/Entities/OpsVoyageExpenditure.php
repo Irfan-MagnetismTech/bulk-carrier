@@ -32,6 +32,18 @@ class OpsVoyageExpenditure extends Model
         'business_unit',
     ];
 
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = [''];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
     public function port() {
         return $this->belongsTo(OpsPort::class, 'port_code', 'code');
     }

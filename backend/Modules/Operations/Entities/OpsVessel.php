@@ -22,15 +22,6 @@ class OpsVessel extends Model
      * @var string[]
      */
 
-    //  protected $skipForDeletionCheck = ['opsBunkers','opsVesselCertificates'];
-
-    //  protected $features = [
-    //      'mntCriticalVesselItems' => 'Critical Vessel Records',
-    //      'opsCargoTariffs' => 'Cargo Tariff Records', 
-    //      'scmWareHouse' => 'Warehouse Records',
-    //  ];
-
-
 
     protected $fillable = [
         'vessel_type',
@@ -72,6 +63,19 @@ class OpsVessel extends Model
      * @var string[]
      */
     protected $appends = ['code_name'];
+
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = ['relationName'];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
 
     /**
      * Concatenate the short code and name of the port.

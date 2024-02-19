@@ -31,6 +31,19 @@ class OpsPort extends Model
     protected $appends = ['code_name'];
 
     /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = [''];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
+    
+    /**
      * Concatenate the code and name of the port.
      *
      * @return string

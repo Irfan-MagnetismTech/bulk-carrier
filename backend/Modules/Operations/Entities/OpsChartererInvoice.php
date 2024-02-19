@@ -31,6 +31,19 @@ class OpsChartererInvoice extends Model
 
     ];
 
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = [''];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
+
     public function opsChartererProfile()
     {
         return $this->belongsTo(OpsChartererProfile::class, 'ops_charterer_profile_id' , 'id');

@@ -27,6 +27,19 @@ class OpsChartererProfile extends Model
 
     protected $appends = ['name_and_code'];
 
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = [''];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
+
     public function opsChartererBankAccounts()
     {
         return $this->hasMany(OpsChartererBankAccount::class, 'ops_charterer_profile_id', 'id');

@@ -31,6 +31,19 @@ class OpsBunkerBill extends Model
         'grand_total_bdt' => 'float',
     ];
 
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = ['relationName'];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
+
     public function scmVendor()
     {
         return $this->belongsTo(ScmVendor::class, 'scm_vendor_id' , 'id');

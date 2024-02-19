@@ -20,6 +20,18 @@ class OpsExpenseHead extends Model
         'business_unit'
     ];
 
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = [''];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
         
     public function opsHeads()
     {

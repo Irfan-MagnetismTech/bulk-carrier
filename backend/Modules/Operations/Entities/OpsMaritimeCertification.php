@@ -24,5 +24,18 @@ class OpsMaritimeCertification extends Model
         'authority',
         'business_unit'
     ];    
+
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = [''];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
     
 }

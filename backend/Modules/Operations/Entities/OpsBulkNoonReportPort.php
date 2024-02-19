@@ -2,12 +2,13 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\DeletableModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsBulkNoonReportPort extends Model
 {
-    use HasFactory;
+    use HasFactory, DeletableModel;
 
     protected $fillable = [
         'ops_bulk_noon_report_id',
@@ -19,6 +20,18 @@ class OpsBulkNoonReportPort extends Model
         'remarks',
     ];
 
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = ['relationName'];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
     public function opsBulkNoonReport()
     {
         return $this->belongsTo(OpsBulkNoonReport::class, 'ops_bulk_noon_report_id' , 'id');

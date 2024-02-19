@@ -24,6 +24,18 @@ class OpsContractAssign extends Model
         'business_unit',
     ];
 
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = [''];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
     public function opsVessel()
     {
         return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');

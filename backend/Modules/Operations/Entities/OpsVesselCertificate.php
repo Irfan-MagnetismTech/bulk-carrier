@@ -28,6 +28,19 @@ class OpsVesselCertificate extends Model
         'created_by'
     ];
 
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = [''];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
+
     public function opsVessel()
     {
         return $this->belongsTo(OpsVessel::class);

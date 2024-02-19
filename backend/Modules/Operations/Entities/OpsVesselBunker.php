@@ -29,6 +29,19 @@ class OpsVesselBunker extends Model
         'business_unit'
     ];
 
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = [''];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
+
     public function opsBunkers()
     {
         return $this->morphMany(OpsBunker::class, 'bunkerable');

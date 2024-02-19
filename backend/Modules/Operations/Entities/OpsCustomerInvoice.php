@@ -26,6 +26,19 @@ class OpsCustomerInvoice extends Model
 
     ];
 
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = [''];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
+
     public function opsCustomer()
     {
         return $this->belongsTo(OpsCustomer::class, 'ops_customer_id' , 'id');

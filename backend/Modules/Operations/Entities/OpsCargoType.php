@@ -22,4 +22,17 @@ class OpsCargoType extends Model
         'description',
         'business_unit'
     ];
+
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = ['relationName'];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
 }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsVoyagePortSchedule extends Model
 {
-    use HasFactory;
+    use HasFactory, DeletableModel;
 
     protected $fillable = [
         'ops_voyage_id',
@@ -26,6 +26,19 @@ class OpsVoyagePortSchedule extends Model
         'operation_type',
         'business_unit'
     ];
+
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = ['relationName'];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
     
     public function opsVoyage()
     {

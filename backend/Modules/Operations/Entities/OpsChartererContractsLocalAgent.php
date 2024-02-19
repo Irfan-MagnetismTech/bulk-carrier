@@ -2,12 +2,13 @@
 
 namespace Modules\Operations\Entities;
 
+use App\Traits\DeletableModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OpsChartererContractsLocalAgent extends Model
 {
-    use HasFactory;
+    use HasFactory, DeletableModel;
 
     protected $fillable = [
         'ops_charterer_contract_id',
@@ -18,6 +19,18 @@ class OpsChartererContractsLocalAgent extends Model
         'ops_charterer_contract_id',
     ];
 
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = [''];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
     public function opsPort()
     {
         return $this->belongsTo(OpsPort::class, 'port_code' , 'code');

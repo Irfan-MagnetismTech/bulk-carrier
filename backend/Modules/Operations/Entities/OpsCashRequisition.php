@@ -33,4 +33,17 @@ class OpsCashRequisition extends Model
         'amount_bdt',
         'amount_usd',
     ];
+
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = ['relationName'];
+    
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
 }

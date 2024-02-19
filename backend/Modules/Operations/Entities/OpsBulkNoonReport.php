@@ -48,7 +48,18 @@ class OpsBulkNoonReport extends Model
 
     ];
 
+    /**
+    * @var array
+    */
+    protected $skipForDeletionCheck = ['relationName'];
 
+    /**
+    * @var array
+    */
+    protected $features = [
+    // 'relationName'           => 'Menu',
+    ];
+    
     public function opsVessel():BelongsTo
     {
         return $this->belongsTo(OpsVessel::class, 'ops_vessel_id' , 'id');
