@@ -197,7 +197,7 @@ function confirmDelete(id) {
                   <!-- <button @click="navigateToPOCreate(materialCosting.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create PO</button>
                   <button @click="navigateToMRRCreate(materialCosting.id)" class="px-2 py-1 font-semibold leading-tight rounded-full text-white bg-purple-600 hover:bg-purple-700">Create MRR</button> -->
                   <action-button :action="'approve'" @click="approveData(materialCosting.id)" v-if="materialCosting.status == 0"></action-button>
-                  <!-- <action-button :action="'show'" :to="{ name: 'scm.material-costings.show', params: { materialCostingId: materialCosting.id } }"></action-button> -->
+                  <action-button :action="'show'" :to="{ name: 'scm.material-costings.show', params: { materialCostingId: materialCosting.id } }"></action-button>
                   <!-- <action-button :action="'edit'" :to="{ name: 'scm.material-costings.edit', params: { materialCostingId: materialCosting.id } }" v-if="(materialCosting?.scmSis.length <= 0)"></action-button> -->
                    <action-button :action="'edit'" :to="{ name: 'scm.material-costings.edit', params: { materialCostingId: materialCosting.id } }" v-if="materialCosting.status == 0"></action-button>
                   <action-button @click="confirmDelete(materialCosting.id)" :action="'delete'" v-if="materialCosting.status == 0"></action-button>
