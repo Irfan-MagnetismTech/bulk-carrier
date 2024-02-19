@@ -11,6 +11,7 @@ import {useRouter} from "vue-router/dist/vue-router";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -24,7 +25,7 @@ const props = defineProps({
   },
 });
 
-const { crewBankAccounts, getCrewBankAccounts, deleteCrewBankAccount, isLoading, isTableLoading } = useCrewBankAccount();
+const { crewBankAccounts, getCrewBankAccounts, deleteCrewBankAccount, isLoading, errors, isTableLoading } = useCrewBankAccount();
 
 const debouncedValue = useDebouncedRef('', 800);
 
@@ -41,7 +42,7 @@ let filterOptions = ref( {
   "isFilter": false,
   "filter_options": [
     {
-      "relation_name": "crwCrew",
+      "relation_name": "crwCrewProfile",
       "field_name": "full_name",
       "search_param": "",
       "action": null,
@@ -51,7 +52,17 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     {
-      "relation_name": "crwCrew",
+      "relation_name": "crwCrewProfile.crwCurrentRank",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Current Rank",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": "crwCrewProfile",
       "field_name": "pre_mobile_no",
       "search_param": "",
       "action": null,
@@ -175,8 +186,9 @@ onMounted(() => {
           <tbody>
             <tr v-for="(crewBankAccount,index) in crewBankAccounts?.data" :key="index">
               <td> {{ index + 1 }} </td>
-              <td class="!text-left"> {{ crewBankAccount?.crwCrew?.full_name }} </td>
-              <td> {{ crewBankAccount?.crwCrew?.pre_mobile_no }} </td>
+              <td class="!text-left"> {{ crewBankAccount?.crwCrewProfile?.full_name }} </td>
+              <td class="!text-left"> {{ crewBankAccount?.crwCrewProfile?.crwCurrentRank?.name }} </td>
+              <td> {{ crewBankAccount?.crwCrewProfile?.pre_mobile_no }} </td>
               <td class="!text-left"> {{ crewBankAccount?.bank_name }} </td>
               <td class="!text-left"> {{ crewBankAccount?.account_name }} </td>
               <td class="!text-left"> {{ crewBankAccount?.account_number }} </td>
@@ -219,4 +231,5 @@ onMounted(() => {
     </div>
     <Paginate :data="crewBankAccounts" to="crw.crewBankAccounts.index" :page="page"></Paginate>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

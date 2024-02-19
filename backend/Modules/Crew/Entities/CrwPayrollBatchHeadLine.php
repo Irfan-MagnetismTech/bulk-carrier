@@ -12,8 +12,8 @@ class CrwPayrollBatchHeadLine extends Model
 
     protected $fillable = ['crw_payroll_batch_id','crw_payroll_batch_head_id','crw_crew_id', 'head_type', 'amount'];
 
-    public function crwCrew()
+    public function crwCrewProfile()
     {
-        return $this->belongsTo(CrwCrewProfile::class);
+        return $this->belongsTo(CrwCrewProfile::class, 'crw_crew_id', 'id');
     }  
 }

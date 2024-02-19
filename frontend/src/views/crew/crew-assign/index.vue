@@ -14,6 +14,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import RemarksComponent from "../../../components/utils/RemarksComponent.vue";
 import { formatDate } from "../../../utils/helper.js";
+import ErrorComponent from '../../../components/utils/ErrorComponent.vue';
 
 const icons = useHeroIcon();
 const router = useRouter();
@@ -28,7 +29,7 @@ const props = defineProps({
 
 let statusFormData = ref({});
 
-const { crewAssigns, getCrewAssigns, deleteCrewAssign, updateCrewAssign, updateCrewAssignStatus, isCrewUpdateStatusModalOpen, isLoading, isTableLoading } = useCrewAssign();
+const { crewAssigns, getCrewAssigns, deleteCrewAssign, updateCrewAssign, updateCrewAssignStatus, isCrewUpdateStatusModalOpen, errors, isLoading, isTableLoading } = useCrewAssign();
 
 const debouncedValue = useDebouncedRef('', 800);
 
@@ -66,7 +67,7 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     {
-      "relation_name": "crwCrew",
+      "relation_name": "crwCrewProfile",
       "field_name": "full_name",
       "search_param": "",
       "action": null,
@@ -76,7 +77,17 @@ let filterOptions = ref( {
       "filter_type": "input"
     },
     {
-      "relation_name": "crwCrew",
+      "relation_name": "crwCrewProfile.crwCurrentRank",
+      "field_name": "name",
+      "search_param": "",
+      "action": null,
+      "order_by": null,
+      "date_from": null,
+      "label": "Current Rank",
+      "filter_type": "input"
+    },
+    {
+      "relation_name": "crwCrewProfile",
       "field_name": "pre_mobile_no",
       "search_param": "",
       "action": null,
@@ -242,8 +253,9 @@ onMounted(() => {
               <td> {{ index + 1 }} </td>
               <td class="!text-left"> <nobr> {{ crwAssign?.assignment_code }} </nobr> </td>
               <td class="!text-left"> <nobr> {{ crwAssign?.opsVessel?.name }} </nobr> </td>
-              <td class="!text-left"> <nobr> {{ crwAssign?.crwCrew?.full_name }} </nobr> </td>
-              <td> <nobr> {{ crwAssign?.crwCrew?.pre_mobile_no }} </nobr> </td>
+              <td class="!text-left"> <nobr> {{ crwAssign?.crwCrewProfile?.full_name }} </nobr> </td>
+              <td class="!text-left"> <nobr> {{ crwAssign?.crwCrewProfile?.crwCurrentRank?.name }} </nobr> </td>
+              <td> <nobr> {{ crwAssign?.crwCrewProfile?.pre_mobile_no }} </nobr> </td>
               <td class="!text-left"> <nobr> {{ crwAssign?.position_onboard }} </nobr> </td>
               <td> <nobr> {{ formatDate(crwAssign?.joining_date) }} </nobr> </td>
               <td class="!text-left"> <nobr> {{ crwAssign?.joining_port_code }} </nobr> </td>
@@ -341,4 +353,5 @@ onMounted(() => {
       </div>
     </form>
   </div>
+  <ErrorComponent :errors="errors"></ErrorComponent>
 </template>

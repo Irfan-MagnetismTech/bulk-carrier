@@ -131,7 +131,7 @@ export default function usePolicy() {
 
     async function deletePolicy(policyId) {
 
-        //const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
+        const loader = $loading.show({'can-cancel': false, 'loader': 'dots', 'color': '#7e3af2'});
         isLoading.value = true;
 
         try {
@@ -140,9 +140,9 @@ export default function usePolicy() {
             await getPolicies(filterParams.value);
         } catch (error) {
             const { data, status } = error.response;
-            notification.showError(status);
+            errors.value = notification.showError(status, data);
         } finally {
-            //loader.hide();
+            loader.hide();
             isLoading.value = false;
         }
     }

@@ -17,7 +17,10 @@ class CrwCrewProfileController extends Controller
      */
     public function __construct(private FileUploadService $fileUpload)
     {
-
+        $this->middleware('permission:crw-profile-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:crw-profile-create', ['only' => ['store']]);
+        $this->middleware('permission:crw-profile-edit', ['only' => ['show', 'update']]);
+        $this->middleware('permission:crw-profile-delete', ['only' => ['destroy']]);
     }
 
     /**
@@ -28,7 +31,7 @@ class CrwCrewProfileController extends Controller
     public function index(Request $request)
     {
         try {
-            $crwCrewProfiles = CrwCrewProfile::with('educations', 'trainings', 'experiences', 'languages', 'references', 'nominees', 'crewRank')
+            $crwCrewProfiles = CrwCrewProfile::with('educations', 'trainings', 'experiences', 'languages', 'references', 'nominees', 'crwRank', 'crwCurrentRank')
                 ->globalSearch($request->all());
 
             return response()->success('Retrieved Succesfully', $crwCrewProfiles, 200);
@@ -84,7 +87,7 @@ class CrwCrewProfileController extends Controller
     public function show(CrwCrewProfile $crwCrewProfile)
     {
         try {
-            return response()->success('Retrieved successfully', $crwCrewProfile->load('crewRank','crewRecruitmentApproval','crewAgency','educations', 'trainings', 'experiences', 'languages', 'references', 'nominees',  'crewRank', 'crewRecruitmentApproval', 'crewAgency'), 200);
+            return response()->success('Retrieved successfully', $crwCrewProfile->load('crwRank', 'crwCurrentRank','crwRecruitmentApproval','crwAgency','educations', 'trainings', 'experiences', 'languages', 'references', 'nominees'), 200);
         }
         catch (QueryException $e)
         {

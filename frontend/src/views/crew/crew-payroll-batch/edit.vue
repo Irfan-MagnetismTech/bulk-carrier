@@ -24,8 +24,8 @@ watch(payrollBatch, (value) => {
     payrollBatch.value.ops_vessel_name = value?.opsVessel;
     payrollBatch.value.ops_vessel_id = value?.opsVessel?.id;
     value?.crwIncidentParticipants?.forEach((line, index) => {
-      payrollBatch.value.crwIncidentParticipants[index].crw_crew_name = value?.crwIncidentParticipants[index]?.crwCrew ?? '';
-      payrollBatch.value.crwIncidentParticipants[index].crw_crew_contact = value?.crwIncidentParticipants[index]?.crwCrew?.pre_mobile_no ?? '';
+      payrollBatch.value.crwIncidentParticipants[index].crw_crew_name = value?.crwIncidentParticipants[index]?.crwCrewProfile ?? '';
+      payrollBatch.value.crwIncidentParticipants[index].crw_crew_contact = value?.crwIncidentParticipants[index]?.crwCrewProfile?.pre_mobile_no ?? '';
     });
   }
 });
