@@ -744,6 +744,8 @@ class ScmWoController extends Controller
                         $data['security_money']= number_format(ScmWo::query()->where('id', $scmWo->id)->where('status', 'Closed')->first()?->security_money??0, 2);
                     }else if($scmWo->total_amount == $data['bill_amount']){
                         $data['security_money']= number_format(ScmWo::query()->where('id', $scmWo->id)->first()?->security_money??0, 2);
+                    }else{
+                        $data['security_money']=number_format(0, 2);
                     }
                     $data['max_amount']= number_format($remainingAmount, 2);
                 }else{
