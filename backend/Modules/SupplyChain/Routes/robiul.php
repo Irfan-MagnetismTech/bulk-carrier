@@ -57,7 +57,7 @@ Route::middleware(['auth:api'])->prefix('scm')->group(function () {
     Route::get('work-orders-close', [ScmWoController::class, "woCloseIndex"])->name('woCloseIndex');
     Route::get('get-wo-list', [ScmWoController::class, "getWoListForWrr"])->name('getWoListForWrr');
     Route::get('get-wo-wise-wr-list', [ScmWoController::class, "getWoWiseWrList"])->name('getWoWiseWrList');
-    Route::get('get-wo-list-work-list', [ScmWoController::class, "getWoListForWorkBill"])->name('getWoListForWorkBill');
+    Route::get('get-wo-list-for-work-bill', [ScmWoController::class, "getWoListForWorkBill"])->name('getWoListForWorkBill');
     Route::get('get-wo-data-for-work-bill', [ScmWoController::class, "getWoDataForWorkBill"])->name('getWoDataForWorkBill');
 
 
