@@ -8,11 +8,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmSi;
 use Modules\SupplyChain\Entities\ScmSir;
-use Modules\SupplyChain\Entities\ScmSr;
 use Modules\SupplyChain\Entities\ScmStockLedger;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
-use Modules\SupplyChain\Services\CurrentStock;
 use Modules\SupplyChain\Http\Requests\ScmSiRequest;
 use Modules\SupplyChain\Http\Requests\ScmSirRequest;
 

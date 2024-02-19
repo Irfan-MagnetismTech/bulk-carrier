@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 use App\Services\FileUploadService;
 use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmWcs;
-use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmWcsVendor;
 use Modules\SupplyChain\Entities\ScmWcsService;
 use Modules\SupplyChain\Entities\ScmWcsVendorService;

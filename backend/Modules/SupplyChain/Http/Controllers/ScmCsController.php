@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Modules\SupplyChain\Entities\ScmCs;
 use Modules\SupplyChain\Entities\ScmPr;
-use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Entities\ScmPoItem;
 use Modules\SupplyChain\Entities\ScmPrLine;
 use Illuminate\Contracts\Support\Renderable;
@@ -22,7 +21,6 @@ use Modules\SupplyChain\Http\Requests\ScmCsRequest;
 use Modules\SupplyChain\Entities\ScmCsStockQuantity;
 use Modules\SupplyChain\Entities\ScmCsMaterialVendor;
 use Modules\SupplyChain\Http\Requests\CsLandedCostRequest;
-use Modules\SupplyChain\Http\Requests\ScmQuotationRequest;
 use Modules\SupplyChain\Http\Requests\SupplierSelectionRequest;
 
 class ScmCsController extends Controller

@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\SupplyChain\Entities\ScmLcRecord;
 use Modules\SupplyChain\Entities\ScmLcRecordStatus;
 
 class ScmLcRecordStatusController extends Controller

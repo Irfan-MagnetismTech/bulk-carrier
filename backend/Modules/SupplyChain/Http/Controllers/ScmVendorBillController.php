@@ -7,7 +7,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Services\FileUploadService;
-use Faker\Provider\ar_EG\Person;
 use Modules\SupplyChain\Entities\ScmMrr;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmVendorBill;

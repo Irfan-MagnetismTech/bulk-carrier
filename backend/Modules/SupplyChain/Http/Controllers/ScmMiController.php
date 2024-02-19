@@ -11,9 +11,7 @@ use Modules\SupplyChain\Entities\ScmMo;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
-use Modules\SupplyChain\Entities\ScmMiShortage;
 use Modules\SupplyChain\Entities\ScmMiShortageLine;
-use Modules\SupplyChain\Entities\ScmStockLedger;
 use Modules\SupplyChain\Services\StockLedgerData;
 use Modules\SupplyChain\Http\Requests\ScmMiRequest;
 
