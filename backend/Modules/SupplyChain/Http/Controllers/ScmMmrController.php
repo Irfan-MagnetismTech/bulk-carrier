@@ -11,7 +11,6 @@ use Modules\SupplyChain\Entities\ScmMmrLine;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
-use Modules\SupplyChain\Entities\ScmStockLedger;
 use Modules\SupplyChain\Http\Requests\ScmMmrRequest;
 
 class ScmMmrController extends Controller

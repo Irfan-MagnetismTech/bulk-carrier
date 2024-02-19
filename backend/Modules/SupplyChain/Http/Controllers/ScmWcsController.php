@@ -18,9 +18,6 @@ use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Entities\ScmWcsService;
 use Modules\SupplyChain\Http\Requests\ScmWcsRequest;
 use Modules\SupplyChain\Entities\ScmWcsVendorService;
-use Modules\SupplyChain\Http\Requests\ScmWcsQuotationRequest;
-use Modules\SupplyChain\Http\Requests\WcsSupplierSelectionRequest;
-
 class ScmWcsController extends Controller
 {
     function __construct(private FileUploadService $fileUpload)

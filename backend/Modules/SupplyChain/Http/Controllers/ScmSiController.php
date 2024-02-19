@@ -9,14 +9,11 @@ use Illuminate\Support\Facades\DB;
 use Modules\SupplyChain\Entities\ScmSi;
 use Modules\SupplyChain\Entities\ScmSiLine;
 use Modules\SupplyChain\Entities\ScmSr;
-use Modules\SupplyChain\Entities\ScmSrLine;
 use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
 use Modules\SupplyChain\Services\CurrentStock;
 use Modules\SupplyChain\Services\StockLedgerData;
 use Modules\SupplyChain\Http\Requests\ScmSiRequest;
-use Illuminate\Support\Arr;
-use Modules\SupplyChain\Entities\ScmStockLedger;
 
 class ScmSiController extends Controller
 {

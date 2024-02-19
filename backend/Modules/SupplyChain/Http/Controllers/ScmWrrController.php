@@ -10,9 +10,7 @@ use App\Services\FileUploadService;
 use Modules\SupplyChain\Entities\ScmWrr;
 use Modules\SupplyChain\Entities\ScmWoLine;
 use Modules\SupplyChain\Entities\ScmWrLine;
-use Illuminate\Contracts\Support\Renderable;
 use Modules\SupplyChain\Entities\ScmWrrItem;
-use Modules\SupplyChain\Entities\ScmWrrLine;
 use Modules\SupplyChain\Http\Requests\ScmWrrRequest;
 
 class ScmWrrController extends Controller
@@ -29,7 +27,7 @@ class ScmWrrController extends Controller
 
     /**
      * Display a listing of the resource.
-     * @return Renderable
+     * @return JsonResponse
      */
     public function index(): JsonResponse
     {

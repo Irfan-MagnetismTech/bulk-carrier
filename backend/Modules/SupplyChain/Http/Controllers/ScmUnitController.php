@@ -17,6 +17,7 @@ class ScmUnitController extends Controller
         $this->middleware('permission:scm-unit-edit', ['only' => ['update']]);
         $this->middleware('permission:scm-unit-delete', ['only' => ['destroy']]);
     }
+    
     /**
      * Display a listing of the resource.
      * @return JsonResponse

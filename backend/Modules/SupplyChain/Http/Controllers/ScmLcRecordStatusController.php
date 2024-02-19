@@ -6,11 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\SupplyChain\Entities\ScmLcRecord;
 use Modules\SupplyChain\Entities\ScmLcRecordStatus;
 
 class ScmLcRecordStatusController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:scm-lc-records-close', ['only' => ['store', 'show', 'lcStatusDelete']]);
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable

@@ -3,17 +3,13 @@
 namespace Modules\SupplyChain\Http\Controllers;
 
 
-use Illuminate\Http\Request;
+use App\Services\UniqueId;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
-use Modules\SupplyChain\Services\UniqueId;
 use Modules\SupplyChain\Services\CompositeKey;
-use Modules\SupplyChain\Services\CurrentStock;
 use Modules\SupplyChain\Entities\ScmAdjustment;
-use Modules\SupplyChain\Entities\ScmStockLedger;
-use Modules\SupplyChain\Entities\TestStock;
 use Modules\SupplyChain\Services\StockLedgerData;
 use Modules\SupplyChain\Http\Requests\ScmAdjustmentRequest;
 

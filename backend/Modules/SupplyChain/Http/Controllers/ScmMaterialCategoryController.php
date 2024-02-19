@@ -2,7 +2,6 @@
 
 namespace Modules\SupplyChain\Http\Controllers;
 
-use Nwidart\Modules\Facades\Module;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Database\QueryException;
