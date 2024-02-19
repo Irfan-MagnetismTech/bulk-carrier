@@ -15,6 +15,7 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import useGlobalFilter from "../../../composables/useGlobalFilter";
 import { formatDateTime } from "../../../utils/helper";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 const { lighterNoonReports, getLighterNoonReports, deleteLighterNoonReport, isLoading, isTableLoading} = useLighterNoonReport();
 const { showFilter,  swapFilter, setSortingState, clearFilter } = useGlobalFilter()
@@ -124,7 +125,8 @@ function confirmDelete(id) {
   })
 }
 
-
+const rightAlign = [];
+const leftAlign = [2,6];
 const currentPage = ref(1);
 const paginatedPage = ref(1);
 
@@ -167,13 +169,23 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Lighterage Noon Report List</h2>
-    <default-button :title="'Create Lighter Noon Report'" :to="{ name: 'ops.lighter-noon-reports.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Create Lighter Noon Report'" :to="{ name: 'ops.lighter-noon-reports.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+        :businessUnit="businessUnit"
+        :pageOrientation="'l'"
+        :fileName="'Lighterage Noon Report List'"
+        :tableId="'lighterage-noon-report-list'"
+        :leftAlign="leftAlign"
+        :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="lighterage-noon-report-list">
 
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="lighterNoonReports?.data?.length" class="relative">
