@@ -29,10 +29,13 @@ class ScmCsController extends Controller
 {
     function __construct()
     {
-        //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
-        //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
-        //     $this->middleware('permission:charterer-contract-edit', ['only' => ['update']]);
-        //     $this->middleware('permission:charterer-contract-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:scm-material-cs-view', ['only' => ['index', 'show']]);
+        $this->middleware('permission:scm-material-cs-create', ['only' => ['store']]);
+        $this->middleware('permission:scm-material-cs-edit', ['only' => ['update']]);
+        $this->middleware('permission:scm-material-cs-delete', ['only' => ['destroy']]);
+        
+        $this->middleware('permission:scm-material-cs-supplier-selection', ['only' => ['selectedSupplierstore']]);
+        $this->middleware('permission:scm-material-cs-cost-projection', ['only' => ['storeCsLandedCost', 'updateCsLandedCost']]);
     }
     /**
      * Display a listing of the resource.
@@ -337,8 +340,8 @@ class ScmCsController extends Controller
                 })
                 ->whereDate('expire_date', '>=', date('Y-m-d'))
                 ->doesntHave('scmPo')
-                ->filter(function($item){
-                    return $item->scmCsMaterials->filter(function($material){
+                ->filter(function ($item) {
+                    return $item->scmCsMaterials->filter(function ($material) {
                         return $material->quantity > $material->scmPoItems->sum('quantity');
                     })->isNotEmpty();
                 })
