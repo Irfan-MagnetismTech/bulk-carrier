@@ -12,6 +12,14 @@ use Modules\SupplyChain\Services\StockLedgerData;
 
 class ScmOpeningStockController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:scm-opening-stock-view|scm-opening-stock-create|scm-opening-stock-edit|scm-opening-stock-delete|scm-opening-stock-close', ['only' => ['index', 'show']]);
+        $this->middleware('permission:scm-opening-stock-create', ['only' => ['store']]);
+        $this->middleware('permission:scm-opening-stock-edit', ['only' => ['update']]);
+        $this->middleware('permission:scm-opening-stock-delete', ['only' => ['destroy']]);
+    }
+    
     /**
      * Display a listing of the resource.
      * @return JsonResponse
