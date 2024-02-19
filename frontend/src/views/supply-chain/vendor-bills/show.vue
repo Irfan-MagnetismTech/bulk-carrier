@@ -15,33 +15,53 @@
                 <tbody>
                     <tr>
                         <th class="w-40">Business Unit</th>
-                        <td><span :class="storeRequisition?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ storeRequisition?.business_unit }}</span></td>
+                        <td><span :class="vendorBill?.business_unit === 'PSML' ? 'text-green-700 bg-green-100' : 'text-orange-700 bg-orange-100'" class="px-2 py-1 font-semibold leading-tight rounded-full">{{ vendorBill?.business_unit }}</span></td>
                     </tr>
                     <tr>
-                        <th class="w-40">Requisition No.</th>
-                        <td>{{ storeRequisition?.ref_no }}</td>
+                      <th class="w-40">Date.</th>
+                      <td>{{ vendorBill?.date }}</td>
+                    </tr>
+                    <tr>
+                      <th class="w-40">Vendor Name</th>
+                      <td>{{ vendorBill.scmVendor?.name }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Bill No.</th>
+                        <td>{{ vendorBill?.bill_no }}</td>
                     </tr>
                     <tr>
                         <th class="w-40">Warehouse</th>
-                        <td>{{ storeRequisition.scmWarehouse?.name }}</td>
+                        <td>{{ vendorBill.scmWarehouse?.name }}</td>
                     </tr>
                     <tr>
-                        <th class="w-40">Department</th>
-                        <td>{{ DEPARTMENTS[storeRequisition.department_id] }}</td>
+                        <th class="w-40">Currency</th>
+                        <td>{{ vendorBill.currency }}</td>
                     </tr>
                     <tr>
-                        <th class="w-40">Requisition Date</th>
-                        <td>{{ formatDate(storeRequisition?.date) }}</td>
+                        <th class="w-40">Foreign To USD</th>
+                        <td>{{ vendorBill?.foreign_to_usd }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">USD To BDT</th>
+                        <td>{{ vendorBill?.usd_to_bdt }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Cash Requisition No</th>
+                        <td>{{ vendorBill?.scmCashRequisition?.no ?? '' }}</td>
                     </tr>
                     <tr>
                         <th class="w-40">Remarks </th>
-                        <td>{{ storeRequisition?.remarks }}</td>
+                        <td>{{ vendorBill?.remarks }}</td>
+                    </tr>
+                    <tr>
+                        <th class="w-40">Attachment </th>
+                        <td>{{ vendorBill?.remarks }}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
-    <div class="flex md:gap-4 mt-1 md:mt-2" v-if="storeRequisition.scmSrLines?.length">
+    <div class="flex md:gap-4 mt-1 md:mt-2" v-if="vendorBill.scmVendorBillLines?.length">
         <div class="w-full">
           <table class="w-full">
             <thead>
@@ -52,29 +72,31 @@
             <thead v-once>
               <tr class="w-full">
                 <th>SL</th>
-                <th class="w-72">Material Name</th>
-                <th>Specification</th>
-                <th>Unit</th>
-                <th>Quantity</th>
+                <th class="w-72">MRR No</th>
+                <th>Challan No</th>
+                <th>PO No</th>
+                <th>Amount</th>
+                <th>Amount USD</th>
+                <th>Amount BDT</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(certificate, index) in storeRequisition.scmSrLines">
+              <tr v-for="(certificate, index) in vendorBill.scmVendorBillLines">
                 <td>
                   {{ index+1 }}
                 </td>
                 <td>
-                  <span v-if="storeRequisition.scmSrLines[index]?.scmMaterial?.name">{{ storeRequisition.scmSrLines[index]?.scmMaterial?.name }}</span>
+                  <span v-if="vendorBill.scmVendorBillLines[index]?.scmMrr?.ref_no">{{ vendorBill.scmVendorBillLines[index]?.scmMrr?.ref_no }}</span>
                 </td>
                 <td>
-                  <span v-if="storeRequisition.scmSrLines[index]?.specification">{{ storeRequisition.scmSrLines[index]?.specification }}</span>
+                  <span v-if="vendorBill.scmVendorBillLines[index]?.scmMrr?.challan_no">{{ vendorBill.scmVendorBillLines[index]?.scmMrr?.challan_no }}</span>
                 </td>
                 <td>
-                  <span v-if="storeRequisition.scmSrLines[index]?.unit">{{ storeRequisition.scmSrLines[index]?.unit }}</span>
+                  <span v-if="vendorBill.scmVendorBillLines[index]?.scmPo?.ref_no">{{ vendorBill.scmVendorBillLines[index]?.scmPo?.ref_no }}</span>
                 </td>
                 <td>
                 <span>
-                    {{ numberFormat(storeRequisition.scmSrLines[index].quantity) }}
+                    {{ numberFormat(vendorBill.scmVendorBillLines[index].amount) }}
                 </span>
               </td>
               </tr>
@@ -104,19 +126,20 @@ import useHeroIcon from "../../../assets/heroIcon";
 import useStoreRequisition from "../../../composables/supply-chain/useStoreRequisition";
 import StoreRequisitionShow from "../../../components/supply-chain/store-requisitions/StoreRequisitionShow.vue";
 import { formatDate } from '../../../utils/helper';
+import useVendor from '../../../composables/supply-chain/useVendor';
+import useVendorBill from '../../../composables/supply-chain/useVendorBill';
 
 const icons = useHeroIcon();
 
 const route = useRoute();
-const storeRequisitionId = route.params.storeRequisitionId;
+const vendorBillId = route.params.vendorBillId;
 
-const { getStoreRequisition, showStoreRequisition, storeRequisition, updateStoreRequisition,materialObject, errors, isLoading } = useStoreRequisition();
-
+const { getVendorBill, showVendorBill, vendorBill, updateVendorBill,materialObject, errors } = useVendorBill();
 const { numberFormat } = useHelper();
 
 const { setTitle } = Title();
 
-setTitle('Store Requistion Details');
+setTitle('Vendor Bill Details');
 
 const DEPARTMENTS = ['', 'Store Department', 'Engine Department', 'Provision Department'];
 
@@ -125,7 +148,7 @@ const DEPARTMENTS = ['', 'Store Department', 'Engine Department', 'Provision Dep
 // });
 
 onMounted(() => {
-    showStoreRequisition(storeRequisitionId);
+  showVendorBill(vendorBillId);
 });
 
 
