@@ -15,6 +15,9 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
+
+
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 
@@ -109,7 +112,8 @@ let filterOptions = ref( {
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 const currentPage = ref(1);
 const paginatedPage = ref(1);
-
+const rightAlign = [];
+const leftAlign = [2,3];
 
 onMounted(() => {
   watchPostEffect(() => {
@@ -149,13 +153,23 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Bunker Requisition List</h2>
-    <default-button :title="'Create Bunker Requisition'" :to="{ name: 'ops.bunker-requisitions.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Create Bunker Requisition'" :to="{ name: 'ops.bunker-requisitions.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+        :businessUnit="businessUnit"
+        :pageOrientation="'l'"
+        :fileName="'Bunker Requisition List'"
+        :tableId="'bunker-requisition-list'"
+        :leftAlign="leftAlign"
+        :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="bunker-requisition-list">
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="bunkerRequisitions?.data?.length" class="relative">
               <tr v-for="(bunkerRequisition, index) in bunkerRequisitions.data" :key="bunkerRequisition?.id">
