@@ -14,7 +14,7 @@ import useHelper from "../../../composables/useHelper";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
-
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 const { deliveryRedeliveries, getDeliveryRedeliverys, deleteDeliveryRedelivery, isLoading, isTableLoading } = useDeliveryRedelivery();
 const icons = useHeroIcon();
@@ -68,6 +68,8 @@ function confirmDelete(id) {
   })
 }
 
+const rightAlign = [4,5];
+const leftAlign = [1,2];
 
 let filterOptions = ref( {
   "business_unit": businessUnit.value,
@@ -180,12 +182,22 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Delivery Redelivery List</h2>
-    <default-button :title="'Create Delivery Redelivery'" :to="{ name: 'ops.delivery-redelivery.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Create Delivery Redelivery'" :to="{ name: 'ops.delivery-redelivery.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+        :businessUnit="businessUnit"
+        :pageOrientation="'l'"
+        :fileName="'Delivery Redelivery List'"
+        :tableId="'delivery-redelivery-list'"
+        :leftAlign="leftAlign"
+        :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="delivery-redelivery-list">
         <FilterComponent :filterOptions = "filterOptions"/>
 
           <tbody v-if="deliveryRedeliveries?.data?.length" class="relative">
@@ -195,13 +207,13 @@ onMounted(() => {
                 <td>{{ deliveryRedelivery?.opsVessel?.name }}</td>
                 
                 <td>{{ deliveryRedelivery?.note_type }}</td>
-                <td>
+                <td class="!text-right">
                   {{ numberFormat((deliveryRedelivery?.opsBunkers.reduce((accumulator, currentObject) => {
                     return accumulator + (currentObject.amount_usd ? parseFloat(currentObject.amount_usd) : 0);
                   }, 0)) || 0) }}
 
                 </td>
-                <td>                  
+                <td class="!text-right">                  
                     {{ numberFormat((deliveryRedelivery?.opsBunkers.reduce((accumulator, currentObject) => {
                       return accumulator + (currentObject.amount_bdt ? parseFloat(currentObject.amount_bdt) : 0);
                     }, 0)) || 0) }}

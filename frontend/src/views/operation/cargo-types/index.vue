@@ -12,7 +12,10 @@ import Store from './../../../store/index.js';
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
+const rightAlign = [];
+const leftAlign = [1,2];
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
 const { cargoTypes, getCargoTypes, deleteCargoType, isLoading, isTableLoading } = useCargoType();
 const icons = useHeroIcon();
@@ -139,14 +142,24 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Cargo Type List</h2>
-    <default-button :title="'Create Cargo Type'" :to="{ name: 'ops.configurations.cargo-types.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Create Cargo Type'" :to="{ name: 'ops.configurations.cargo-types.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+        :businessUnit="businessUnit"
+        :pageOrientation="'l'"
+        :fileName="'Cargo Type List'"
+        :tableId="'cargo-type-list'"
+        :leftAlign="leftAlign"
+        :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
 
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="cargo-type-list">
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="cargoTypes?.data?.length" class="relative">
               <tr v-for="(cargoType, index) in cargoTypes.data" :key="cargoType?.id">

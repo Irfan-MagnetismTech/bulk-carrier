@@ -13,6 +13,8 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import {useRouter} from "vue-router";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
+
 
 const { vesselExpenseHeads, getVesselExpenseHeads, deleteVesselExpenseHead, isLoading, isTableLoading, errors } = useVesselExpenseHead();
 const icons = useHeroIcon();
@@ -31,6 +33,8 @@ setTitle('Vessel Expense Head List');
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
+const rightAlign = [];
+const leftAlign = [1];
 
 let filterOptions = ref({
   "business_unit": businessUnit.value,
@@ -110,14 +114,25 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Vessel Expense Head List</h2>
-    <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.vessel-expense-heads.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.vessel-expense-heads.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+          :businessUnit="businessUnit"
+          :pageOrientation="'l'"
+          :fileName="'Vessel Expense Head List'"
+          :tableId="'vessel-expense-head-list'"
+          :leftAlign="leftAlign"
+          :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
+
   </div>
   
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap mb-5" >
+      <table class="w-full whitespace-no-wrap mb-5" id="vessel-expense-head-list">
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="vesselExpenseHeads?.data?.length" class="relative">
               <tr v-for="(vesselExpenseHead, index) in vesselExpenseHeads.data" :key="vesselExpenseHead?.id">

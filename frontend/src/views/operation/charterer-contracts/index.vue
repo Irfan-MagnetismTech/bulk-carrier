@@ -13,6 +13,7 @@ import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
 import { formatDate } from "../../../utils/helper.js"
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 
 const { chartererContracts, getChartererContracts, deleteChartererContract, isLoading, isTableLoading } = useChartererContract();
@@ -38,6 +39,9 @@ let showFilter = ref(false);
 function swapFilter() {
   showFilter.value = !showFilter.value;
 }
+
+const rightAlign = [];
+const leftAlign = [2,3,4];
 
 watch(
 
@@ -159,11 +163,21 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Charterer Contract List</h2>
-    <default-button :title="'Create Charterer Contract'" :to="{ name: 'ops.charterer-contracts.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Create Charterer Contract'" :to="{ name: 'ops.charterer-contracts.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+        :businessUnit="businessUnit"
+        :pageOrientation="'l'"
+        :fileName="'Charterer Contract List'"
+        :tableId="'charterer-contract-list'"
+        :leftAlign="leftAlign"
+        :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="charterer-contract-list">
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="chartererContracts?.data?.length" class="relative">
               <tr v-for="(chartererContract, index) in chartererContracts.data" :key="chartererContract?.id">

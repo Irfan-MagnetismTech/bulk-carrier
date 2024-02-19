@@ -14,6 +14,8 @@ import useDebouncedRef from "../../../composables/useDebouncedRef";
 import LoaderComponent from "../../../components/utils/LoaderComponent.vue";
 import ErrorComponent from "../../../components/utils/ErrorComponent.vue";
 import FilterComponent from "../../../components/utils/FilterComponent.vue";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
+
 const router = useRouter();
 const debouncedValue = useDebouncedRef('', 800);
 
@@ -135,7 +137,8 @@ let filterOptions = ref( {
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 const currentPage = ref(1);
 const paginatedPage = ref(1);
-
+const rightAlign = [];
+const leftAlign = [1,3,4,5];
 
 onMounted(() => {
   watchPostEffect(() => {
@@ -175,7 +178,17 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Contract Assign List</h2>
-    <default-button :title="'Contract Assign'" :to="{ name: 'ops.contract-assigns.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Contract Assign'" :to="{ name: 'ops.contract-assigns.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+        :businessUnit="businessUnit"
+        :pageOrientation="'l'"
+        :fileName="'Contract Assign List'"
+        :tableId="'contract-assign-list'"
+        :leftAlign="leftAlign"
+        :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
   <!-- <div class="flex items-center justify-between mb-2 select-none">
     <filter-with-business-unit v-model="businessUnit"></filter-with-business-unit>
@@ -191,7 +204,7 @@ onMounted(() => {
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="contract-assign-list">
           <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="contractAssigns?.data?.length" class="relative">
               <tr v-for="(contractAssign, index) in contractAssigns.data" :key="contractAssign?.id">

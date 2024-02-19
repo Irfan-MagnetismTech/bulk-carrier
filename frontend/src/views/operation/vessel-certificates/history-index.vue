@@ -12,6 +12,7 @@ import Store from './../../../store/index.js';
 import moment from 'moment';
 import { useRoute } from 'vue-router';
 import { formatDate } from "../../../utils/helper";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 const icons = useHeroIcon();
 const businessUnit = ref(Store.getters.getCurrentUser.business_unit);
@@ -34,7 +35,8 @@ setTitle('Vessel Certificate List');
 
 const tableScrollWidth = ref(null);
 const screenWidth = (screen.width > 768) ? screen.width - 260 : screen.width;
-
+const rightAlign = [];
+const leftAlign = [1,2];
 function setBusinessUnit($el){
   businessUnit.value = $el.target.value;
 }
@@ -79,7 +81,17 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Vessel Certificate History</h2>
-    <default-button :title="'Vessel Certificate List'" :to="{ name: 'ops.vessel-certificates.index' }" :icon="icons.DataBase"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Vessel Certificate List'" :to="{ name: 'ops.vessel-certificates.index' }" :icon="icons.DataBase"></default-button>
+      <file-export-button
+        :businessUnit="businessUnit"
+        :pageOrientation="'l'"
+        :fileName="'Vessel Cerificate History List'"
+        :tableId="'certificate-history-list'"
+        :leftAlign="leftAlign"
+        :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
   <!-- <div class="flex items-center justify-between mb-2 select-none">
 
@@ -103,7 +115,7 @@ onMounted(() => {
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap" >
+      <table class="w-full whitespace-no-wrap" id="certificate-history-list">
           <thead v-once>
           <tr class="w-full">
             <th>#</th>
