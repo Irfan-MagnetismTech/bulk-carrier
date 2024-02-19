@@ -16,6 +16,7 @@ import {useRouter} from "vue-router";
 import moment from "moment";
 import useHelper from "../../../composables/useHelper";
 import useDebouncedRef from "../../../composables/useDebouncedRef";
+import FileExportButton from "../../../components/buttons/FileExportButton.vue";
 
 
 const { vesselBunkers, getVesselBunkers, deleteVesselBunker, isLoading, isTableLoading, errors } = useVesselBunker();
@@ -79,6 +80,8 @@ let filterOptions = ref({
 
 const currentPage = ref(1);
 const paginatedPage = ref(1);
+const rightAlign = [];
+const leftAlign = [1];
 
 let stringifiedFilterOptions = JSON.stringify(filterOptions.value);
 
@@ -137,14 +140,24 @@ onMounted(() => {
   <!-- Heading -->
   <div class="flex items-center justify-between w-full my-3" v-once>
     <h2 class="text-2xl font-semibold text-gray-700">Vessel Bunker List</h2>
-    <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.vessel-bunkers.create' }" :icon="icons.AddIcon"></default-button>
+    <div class="flex gap-2">
+      <default-button :title="'Charterer Invoice'" :to="{ name: 'ops.vessel-bunkers.create' }" :icon="icons.AddIcon"></default-button>
+      <file-export-button
+        :businessUnit="businessUnit"
+        :pageOrientation="'l'"
+        :fileName="'Vessel Bunker List'"
+        :tableId="'vessel-bunker-list'"
+        :leftAlign="leftAlign"
+        :rightAlign="rightAlign"
+      ></file-export-button>
+    </div>
   </div>
   
 
   <div id="customDataTable">
     <div  class="table-responsive max-w-screen" :class="{ 'overflow-x-auto': tableScrollWidth > screenWidth }">
       
-      <table class="w-full whitespace-no-wrap mb-5" >
+      <table class="w-full whitespace-no-wrap mb-5" id="vessel-bunker-list">
         <FilterComponent :filterOptions = "filterOptions"/>
           <tbody v-if="vesselBunkers?.data?.length" class="relative">
               <tr v-for="(vesselBunker, index) in vesselBunkers.data" :key="vesselBunker?.id">
