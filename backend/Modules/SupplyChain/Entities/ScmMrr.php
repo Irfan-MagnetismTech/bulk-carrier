@@ -15,6 +15,7 @@ use Modules\SupplyChain\Entities\ScmStockLedger;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Modules\SupplyChain\Entities\ScmCostingAllocation;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class ScmMrr extends Model
@@ -37,7 +38,8 @@ class ScmMrr extends Model
         'created_by',
         'is_completed',
         'purchase_center',
-        'total_value'
+        'total_value',
+        'total_net_value',
     ];
 
     protected $refKeyPrefix = 'MRR';
@@ -76,4 +78,26 @@ class ScmMrr extends Model
     {
         return $this->hasManyThrough(ScmMrrLineItem::class, ScmMrrLine::class);
     }
+
+    public function scmCostingAllocations(): HasMany
+    {
+        return $this->hasMany(ScmCostingAllocation::class, 'scm_mrr_id', 'id');
+    }
+
+//     public function scopeWithStockableChild($query)
+// {
+    // return $query->addSelect(['has_stockable_child' => ScmStockLedger::selectRaw('COUNT(*)')
+    //     ->whereColumn('stockable_id', 'scm_mrrs.id')
+    //     ->where('stockable_type', 'Modules\SupplyChain\Entities\ScmMrr')
+    //     ->whereHas('child')
+    // ]);
+// }
+public function scopeWithStockableChild($query)
+{
+    return $query->addSelect(['has_stockable_child' => ScmStockLedger::selectRaw('COUNT(*)')
+        ->whereColumn('stockable_id', 'scm_mrrs.id')
+        ->where('stockable_type', 'Modules\SupplyChain\Entities\ScmMrr')
+        ->whereHas('child')
+    ]);
+}
 }

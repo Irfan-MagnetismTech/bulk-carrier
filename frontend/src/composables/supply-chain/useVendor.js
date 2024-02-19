@@ -20,6 +20,7 @@ export default function useVendor() {
         vendor_type: '',
         product_source_type: '',
         product_type: '',
+        acc_cash_requisition_id: '',
         scmVendorContactPersons: [{
             name:'',
             designation:'',
