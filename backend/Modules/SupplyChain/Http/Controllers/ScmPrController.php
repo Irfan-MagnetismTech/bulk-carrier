@@ -26,10 +26,11 @@ class ScmPrController extends Controller
 {
     function __construct(private FileUploadService $fileUpload)
     {
-        //     $this->middleware('permission:charterer-contract-create|charterer-contract-edit|charterer-contract-show|charterer-contract-delete', ['only' => ['index','show']]);
-        //     $this->middleware('permission:charterer-contract-create', ['only' => ['store']]);
-        //     $this->middleware('permission:charterer-contract-edit', ['only' => ['update']]);
-        //     $this->middleware('permission:charterer-contract-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:scm-purchase-requisition-view|scm-purchase-requisition-create|scm-purchase-requisition-edit|scm-purchase-requisition-delete|scm-purchase-requisition-close', ['only' => ['index', 'show']]);
+        $this->middleware('permission:scm-purchase-requisition-create', ['only' => ['store']]);
+        $this->middleware('permission:scm-purchase-requisition-edit', ['only' => ['update']]);
+        $this->middleware('permission:scm-purchase-requisition-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:scm-purchase-requisition-close', ['only' => ['closePr', 'closePrLine']]);
     }
 
     /**
@@ -190,7 +191,7 @@ class ScmPrController extends Controller
     {
         $requestData = $request->except('ref_no', 'pr_composite_key', 'created_by');
 
-        $linesData = CompositeKey::generateArray($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');        
+        $linesData = CompositeKey::generateArray($request->scmPrLines, $purchase_requisition->id, 'scm_material_id', 'pr');
 
         try {
             DB::beginTransaction();
